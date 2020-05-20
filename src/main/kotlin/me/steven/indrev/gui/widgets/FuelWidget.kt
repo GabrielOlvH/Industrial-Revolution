@@ -19,8 +19,8 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
     init {
         this.setSize(14, 14)
     }
-    var lastHeightUpdate = 14
-    var lastVUpdate = 0f
+    private var lastHeightUpdate = 14
+    private var lastVUpdate = 0f
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, UNLIT_TEXTURE_ID, -1)
         val burnTime = propertyDelegate.get(0)

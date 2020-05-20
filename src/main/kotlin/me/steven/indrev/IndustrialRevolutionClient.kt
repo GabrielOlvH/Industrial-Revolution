@@ -12,7 +12,7 @@ import net.minecraft.util.PacketByteBuf
 class IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         ScreenProviderRegistry.INSTANCE.registerFactory(IndustrialRevolution.COAL_GENERATOR_SCREEN_ID
-        ) { syncId: Int, identifier: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorScreen(
                 CoalGeneratorController(
                     syncId,

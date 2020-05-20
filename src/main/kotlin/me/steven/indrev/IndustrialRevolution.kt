@@ -21,7 +21,7 @@ class IndustrialRevolution : EnergyModInitializer() {
         Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
         GeneratorRegistry().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_SCREEN_ID
-        ) { syncId: Int, id: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(
                 syncId,
                 player.inventory,
