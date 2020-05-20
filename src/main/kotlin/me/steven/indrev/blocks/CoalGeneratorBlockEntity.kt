@@ -15,9 +15,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import team.reborn.energy.EnergyTier
 
-class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.1, EnergyTier.LOW), PropertyDelegateHolder {
+class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.1, EnergyTier.LOW, 2), PropertyDelegateHolder {
     private val inventory = DefaultSidedInventory(ItemStack.EMPTY)
-    private val delegate = ArrayPropertyDelegate(2)
     var burnTime: Int = 0
     var maxBurnTime: Int = 0
 
@@ -25,14 +24,14 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GEN
         super.tick()
             if (shouldGenerate()) {
                 burnTime--
-                delegate[0] = burnTime
+                delegate[2] = burnTime
             }
             else if (maxStoredPower > energy) {
                 val invStack = inventory.getInvStack(0)
                 if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                     burnTime = BURN_TIME_MAP[invStack.item] ?: return
                     maxBurnTime = burnTime
-                    delegate[1] = maxBurnTime
+                    delegate[3] = maxBurnTime
                     invStack.count--
                     if (invStack.isEmpty) inventory.setInvStack(0, ItemStack.EMPTY)
                     else inventory.setInvStack(0, invStack)
@@ -45,14 +44,28 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GEN
         super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        delegate[0] = burnTime
-        delegate[1] = maxBurnTime
+        delegate[2] = burnTime
+        delegate[3] = maxBurnTime
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toTag(tag)
+    }
+
+    override fun fromClientTag(tag: CompoundTag?) {
+        super.fromClientTag(tag)
+        burnTime = tag?.getInt("BurnTime") ?: 0
+        maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
+        delegate[2] = burnTime
+        delegate[3] = maxBurnTime
+    }
+
+    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+        tag?.putInt("BurnTime", burnTime)
+        tag?.putInt("MaxBurnTime", maxBurnTime)
+        return super.toClientTag(tag)
     }
 
     override fun getInventory(): Inventory = inventory
@@ -66,8 +79,9 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GEN
     }
 
     override fun getPropertyDelegate(): PropertyDelegate {
-        delegate[0] = burnTime
-        delegate[1] = maxBurnTime
+        super.getPropertyDelegate()
+        delegate[2] = burnTime
+        delegate[3] = maxBurnTime
         return delegate
     }
 }

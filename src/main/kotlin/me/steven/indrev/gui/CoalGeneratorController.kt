@@ -3,6 +3,7 @@ package me.steven.indrev.gui
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.FuelWidget
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
@@ -14,14 +15,17 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        root.setSize(200, 100)
+        root.setSize(150, 120)
+
+
+        root.add(createPlayerInventoryPanel(), 0, 4)
+
+        root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
         val itemSlot = WItemSlot.of(blockInventory, 0)
-        root.add(itemSlot, 4, 1)
+        root.add(itemSlot, 4, 2)
 
-        root.add(createPlayerInventoryPanel(), 0, 3)
-
-        root.add(FuelWidget(propertyDelegate), 3, 1)
+        root.add(FuelWidget(propertyDelegate), 4, 1)
 
         root.validate(this)
     }

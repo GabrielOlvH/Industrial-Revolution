@@ -10,10 +10,7 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.awt.Color
-import kotlin.math.abs
-import kotlin.math.ceil
-import kotlin.math.floor
-import kotlin.math.max
+import kotlin.math.*
 
 class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
     init {
@@ -23,12 +20,13 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
     private var lastVUpdate = 0f
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, UNLIT_TEXTURE_ID, -1)
-        val burnTime = propertyDelegate.get(0)
-        val maxBurnTime = propertyDelegate.get(1)
+        val burnTime = propertyDelegate.get(2)
+        val maxBurnTime = propertyDelegate.get(3)
         if (burnTime > 0 && maxBurnTime > 0) {
             val v = ((burnTime.toFloat() * 13 / maxBurnTime) + 1) / 14f
             val h = ceil(v * height).toInt()
-            if (abs(lastHeightUpdate - h) > 1) {
+            val diff = lastHeightUpdate - h
+            if (diff > 1 ) {
                 lastHeightUpdate = h
                 lastVUpdate = 1f - v
             }
