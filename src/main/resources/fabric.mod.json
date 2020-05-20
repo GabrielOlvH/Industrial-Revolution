@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "indrev",
   "version": "${version}",
 
-  "name": "Example Mod",
+  "name": "Industrial Revolution",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Me!"
@@ -14,16 +14,19 @@
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/indrev/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.fabricmc.example.ExampleModKt::init"
+      "me.steven.indrev.IndustrialRevolution"
+    ],
+    "client": [
+      "me.steven.indrev.IndustrialRevolutionClient"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "indrev.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.7.1",

@@ -17,6 +17,10 @@ minecraft {
 
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
+    maven {
+        name = "CottonMC"
+        url = "http://server.bbkr.space:8081/artifactory/libs-release"
+    }
 }
 
 dependencies {
@@ -29,6 +33,11 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+    modApi 'teamreborn:energy:0.1.0'
+    include 'teamreborn:energy:0.1.0'
+
+    modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
