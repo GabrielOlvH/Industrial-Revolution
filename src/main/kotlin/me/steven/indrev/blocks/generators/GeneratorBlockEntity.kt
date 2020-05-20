@@ -17,7 +17,8 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, private val tier: EnergyTier, extraProperties: Int = 0) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, Tickable, InventoryProvider, PropertyDelegateHolder {
+abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, private val tier: EnergyTier, extraProperties: Int = 0)
+    : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, Tickable, InventoryProvider, PropertyDelegateHolder {
     var energy: Double = 0.0
     protected var delegate = ArrayPropertyDelegate(2 + extraProperties)
 

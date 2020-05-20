@@ -20,7 +20,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class GeneratorBlock(settings: Settings, val screenId: Identifier, val maxBuffer: Double, val blockEntityProvider: () -> GeneratorBlockEntity) : Block(settings), BlockEntityProvider {
+class GeneratorBlock(settings: Settings, private val screenId: Identifier, val maxBuffer: Double, val blockEntityProvider: () -> GeneratorBlockEntity) : Block(settings), BlockEntityProvider {
     init {
         this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
     }
@@ -35,11 +35,6 @@ class GeneratorBlock(settings: Settings, val screenId: Identifier, val maxBuffer
         if (world.isClient) return ActionResult.PASS
         val blockEntity = world.getBlockEntity(pos)
         if (blockEntity is GeneratorBlockEntity) {
-            if (player?.isSneaking == true) {
-                blockEntity as CoalGeneratorBlockEntity
-                player.addChatMessage(TranslatableText("Energy: ${blockEntity.energy}"), false)
-                player.addChatMessage(TranslatableText("Generating 0.1U/tick for the next ${blockEntity.burnTime} ticks"), false)
-            }
             ContainerProviderRegistry.INSTANCE.openContainer(
                 screenId,
                 player
