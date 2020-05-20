@@ -1,8 +1,9 @@
 package me.steven.indrev
 
+import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.CoalGeneratorController
-import me.steven.indrev.registry.GeneratorRegistry
+import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
@@ -18,8 +19,8 @@ class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
         Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
-        GeneratorRegistry().registerAll()
-        ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_SCREEN_ID
+        MachineRegistry().registerAll()
+        ContainerProviderRegistry.INSTANCE.registerFactory(GeneratorBlock.COAL_GENERATOR_SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(
                 syncId,
@@ -32,8 +33,6 @@ class IndustrialRevolution : EnergyModInitializer() {
     companion object {
         const val MOD_ID = "indrev"
 
-        val MOD_GROUP = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(GeneratorRegistry.COAL_GENERATOR_BLOCK_ITEM) }
-
-        val COAL_GENERATOR_SCREEN_ID = identifier("coal_generator_screen")
+        val MOD_GROUP = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
     }
 }

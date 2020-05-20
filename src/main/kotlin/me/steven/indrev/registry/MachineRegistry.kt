@@ -15,17 +15,16 @@ import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
 import java.util.function.Supplier
 
-class GeneratorRegistry {
+class MachineRegistry {
 
     fun registerAll() {
         identifier("coal_generator").generator(COAL_GENERATOR, COAL_GENERATOR_BLOCK_ENTITY).item(COAL_GENERATOR_BLOCK_ITEM)
     }
 
     companion object {
-
         val COAL_GENERATOR: GeneratorBlock = GeneratorBlock(
                 FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
-                IndustrialRevolution.COAL_GENERATOR_SCREEN_ID,
+                GeneratorBlock.COAL_GENERATOR_SCREEN_ID,
                 1000.0
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))

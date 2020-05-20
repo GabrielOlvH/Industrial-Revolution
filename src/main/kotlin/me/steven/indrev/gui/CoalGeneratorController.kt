@@ -6,12 +6,10 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.FuelWidget
 import me.steven.indrev.gui.widgets.StringWidget
-import me.steven.indrev.registry.GeneratorRegistry
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.recipe.RecipeType
-import team.reborn.energy.EnergyTier
 
 class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext) :
     CottonCraftingController(RecipeType.SMELTING, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
