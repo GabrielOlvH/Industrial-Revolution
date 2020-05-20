@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import team.reborn.energy.EnergyTier
 
-class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.1, EnergyTier.LOW, 2), PropertyDelegateHolder {
+class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.1, EnergyTier.LOW, 4), PropertyDelegateHolder {
     private val inventory = DefaultSidedInventory(ItemStack.EMPTY)
     var burnTime: Int = 0
     var maxBurnTime: Int = 0
@@ -82,6 +82,8 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(GeneratorRegistry.COAL_GEN
         super.getPropertyDelegate()
         delegate[2] = burnTime
         delegate[3] = maxBurnTime
+        delegate[4] = 0
+        delegate[5] = tier.maxOutput
         return delegate
     }
 }

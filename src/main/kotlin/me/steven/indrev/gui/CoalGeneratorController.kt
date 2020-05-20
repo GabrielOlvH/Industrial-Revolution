@@ -5,10 +5,13 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.FuelWidget
+import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.registry.GeneratorRegistry
+import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.recipe.RecipeType
-
+import team.reborn.energy.EnergyTier
 
 class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext) :
     CottonCraftingController(RecipeType.SMELTING, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
@@ -16,7 +19,6 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(150, 120)
-
 
         root.add(createPlayerInventoryPanel(), 0, 4)
 
@@ -26,6 +28,8 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
         root.add(itemSlot, 4, 2)
 
         root.add(FuelWidget(propertyDelegate), 4, 1)
+        val string = I18n.translate("gui.widget.output", 0, EnergyTier.LOW.maxOutput)
+        root.add(StringWidget(string), 4, 0)
 
         root.validate(this)
     }
