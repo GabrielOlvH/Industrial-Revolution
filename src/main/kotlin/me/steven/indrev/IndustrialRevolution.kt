@@ -1,10 +1,9 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.GeneratorBlockEntity
+import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.CoalGeneratorController
 import me.steven.indrev.registry.GeneratorRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.fabricmc.fabric.api.container.ContainerFactory
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity

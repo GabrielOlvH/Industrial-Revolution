@@ -1,5 +1,4 @@
 {
   "gui.widget.energy": "Energy: %s / %s",
-  "gui.widget.output": "Output: %s U/s",
-  "gui.widget.maxoutput": "Maximum output: %s U/s"
+  "gui.widget.output": "Output: %s U/s"
 }

@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.generators
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
@@ -11,7 +11,6 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.util.Tickable
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
@@ -80,10 +79,6 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
         }
         tag.put("Inventory", tagList)
         return tag
-    }
-
-    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket? {
-        return super.toUpdatePacket()
     }
 
     override fun setStored(amount: Double) {

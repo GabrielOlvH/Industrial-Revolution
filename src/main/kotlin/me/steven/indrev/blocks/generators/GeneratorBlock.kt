@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.generators
 
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.Block

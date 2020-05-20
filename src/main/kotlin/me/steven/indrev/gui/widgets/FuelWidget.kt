@@ -1,15 +1,9 @@
 package me.steven.indrev.gui.widgets
 
-import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.blocks.CoalGeneratorBlockEntity
 import me.steven.indrev.identifier
-import net.minecraft.container.BlockContext
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-import java.awt.Color
 import kotlin.math.*
 
 class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {

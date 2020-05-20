@@ -1,11 +1,9 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.generators
 
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.GeneratorRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
-import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory

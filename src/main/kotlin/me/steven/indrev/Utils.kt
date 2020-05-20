@@ -1,7 +1,7 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.GeneratorBlock
-import me.steven.indrev.blocks.GeneratorBlockEntity
+import me.steven.indrev.blocks.generators.GeneratorBlock
+import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.Item
