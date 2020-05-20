@@ -5,8 +5,8 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.Alignment
 import java.awt.Color
 
-class StringWidget(private val string: String) : WWidget() {
+open class StringWidget(private val string: String, private val color: Int) : WWidget() {
     override fun paintBackground(x: Int, y: Int) {
-        ScreenDrawing.drawString(string, Alignment.CENTER, x, y, this.width, Color.BLACK.rgb)
+        ScreenDrawing.drawString(string, Alignment.CENTER, x, y, this.width, color)
     }
 }

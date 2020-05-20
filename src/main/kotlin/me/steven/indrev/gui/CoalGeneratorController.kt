@@ -28,8 +28,8 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
         root.add(itemSlot, 4, 2)
 
         root.add(FuelWidget(propertyDelegate), 4, 1)
-        val string = I18n.translate("gui.widget.output", 0, EnergyTier.LOW.maxOutput)
-        root.add(StringWidget(string), 4, 0)
+        val string = I18n.translate("gui.widget.output", 0)
+        root.add(StringWidget(string, this.titleColor), 4, 0)
 
         root.validate(this)
     }
