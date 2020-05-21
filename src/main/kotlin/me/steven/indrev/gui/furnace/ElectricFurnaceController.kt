@@ -21,10 +21,12 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
 
         val inputSlot = WItemSlot.of(blockInventory, 0)
         root.add(inputSlot, 3, 2)
+        inputSlot.setLocation((2.5 * 18).toInt(), (1.5 * 18).toInt())
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 1)
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 6, 2)
+        outputSlot.setLocation((5.5 * 18).toInt(), (1.5 * 18).toInt())
 
         root.validate(this)
     }
