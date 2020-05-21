@@ -52,7 +52,7 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
             val slot = stackTag.getInt("Slot")
             getInventory().setInvStack(slot, ItemStack.fromTag(stackTag))
         }
-        super.fromTag(tag)
+        super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
