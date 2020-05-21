@@ -24,6 +24,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
         for (direction in Direction.values()) {
             val targetPos = pos.offset(direction)
             block.tryProvideEnergyTo(world, pos, targetPos)
+            markDirty()
         }
     }
 

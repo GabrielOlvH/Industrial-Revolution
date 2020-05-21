@@ -25,6 +25,7 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     var output: ItemStack? = null
     var processTime: Int = 0
     var totalProcessTime: Int = 0
+
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
