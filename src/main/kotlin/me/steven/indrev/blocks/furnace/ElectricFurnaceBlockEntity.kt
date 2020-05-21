@@ -11,10 +11,10 @@ class ElectricFurnaceBlockEntity : ElectricCraftingBlockEntity(MachineRegistry.E
         val outputStack = inventory.getInvStack(1).copy()
         world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)?.ifPresent { recipe ->
             if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
-                cookTime = recipe.cookTime
+                processTime = recipe.cookTime
                 processingItem = inputStack.item
                 output = recipe.output
-                maxCookTime = recipe.cookTime
+                totalProcessTime = recipe.cookTime
             }
         }
     }

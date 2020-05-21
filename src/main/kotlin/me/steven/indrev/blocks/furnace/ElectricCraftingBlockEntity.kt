@@ -23,8 +23,8 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     private val inventory = DefaultSidedInventory(2)
     var processingItem: Item? = null
     var output: ItemStack? = null
-    var cookTime: Int = 0
-    var maxCookTime: Int = 0
+    var processTime: Int = 0
+    var totalProcessTime: Int = 0
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
@@ -32,9 +32,9 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
         val outputStack = inventory.getInvStack(1).copy()
         if (isProcessing()) {
             if (inputStack.item == processingItem) {
-                cookTime--
+                processTime--
                 if (!takeEnergy(1.0)) return
-                if (cookTime <= 0) {
+                if (processTime <= 0) {
                     inventory.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)
                         inventory.setInvStack(1, outputStack.apply { increment(output?.count ?: 0) })
@@ -43,19 +43,19 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
                 }
             } else
                 reset()
-        } else if (getEnergy() > 0 && !inputStack.isEmpty && cookTime <= 0) {
+        } else if (getEnergy() > 0 && !inputStack.isEmpty && processTime <= 0) {
             reset()
             findRecipe(inventory)
         }
-        propertyDelegate[2] = cookTime
-        propertyDelegate[3] = maxCookTime
+        propertyDelegate[2] = processTime
+        propertyDelegate[3] = totalProcessTime
     }
 
     abstract fun findRecipe(inventory: Inventory)
 
     private fun reset() {
-        cookTime = 0
-        maxCookTime = 0
+        processTime = 0
+        totalProcessTime = 0
         processingItem = null
         output = null
     }
@@ -66,14 +66,14 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
 
     override fun getMaxOutput(): Double = 0.0
 
-    private fun isProcessing() = cookTime > 0 && getEnergy() > 0 && processingItem != null && output != null
+    private fun isProcessing() = processTime > 0 && getEnergy() > 0 && processingItem != null && output != null
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
-        cookTime = tag?.getInt("CookTime") ?: 0
-        propertyDelegate[2] = cookTime
-        maxCookTime = tag?.getInt("MaxCookTime") ?: 0
-        propertyDelegate[3] = maxCookTime
+        processTime = tag?.getInt("ProcessTime") ?: 0
+        propertyDelegate[2] = processTime
+        totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
+        propertyDelegate[3] = totalProcessTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
@@ -83,8 +83,8 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
-        tag?.putInt("CookTime", cookTime)
-        tag?.putInt("MaxCookTime", maxCookTime)
+        tag?.putInt("ProcessTime", processTime)
+        tag?.putInt("MaxProcessTime", totalProcessTime)
         val tagList = ListTag()
         for (i in 0 until inventory.invSize) {
             val stackTag = CompoundTag()
@@ -97,10 +97,10 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
 
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
-        cookTime = tag?.getInt("CookTime") ?: 0
-        propertyDelegate[2] = cookTime
-        maxCookTime = tag?.getInt("MaxCookTime") ?: 0
-        propertyDelegate[3] = maxCookTime
+        processTime = tag?.getInt("ProcessTime") ?: 0
+        propertyDelegate[2] = processTime
+        totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
+        propertyDelegate[3] = totalProcessTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
@@ -110,8 +110,8 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        tag?.putInt("CookTime", cookTime)
-        tag?.putInt("MaxCookTime", maxCookTime)
+        tag?.putInt("ProcessTime", processTime)
+        tag?.putInt("MaxProcessTime", totalProcessTime)
         val tagList = ListTag()
         for (i in 0 until inventory.invSize) {
             val stackTag = CompoundTag()
