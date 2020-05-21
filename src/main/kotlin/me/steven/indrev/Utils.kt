@@ -1,7 +1,5 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.generators.GeneratorBlock
-import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.Item
@@ -24,5 +22,3 @@ fun Identifier.blockEntityType(entityType: BlockEntityType<*>): Identifier {
     Registry.register(Registry.BLOCK_ENTITY_TYPE, this, entityType)
     return this
 }
-
-fun Identifier.generator(generatorBlock: GeneratorBlock, entityType: BlockEntityType<out GeneratorBlockEntity>): Identifier = this.block(generatorBlock).blockEntityType(entityType)

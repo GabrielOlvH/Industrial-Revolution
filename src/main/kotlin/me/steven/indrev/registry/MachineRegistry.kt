@@ -17,7 +17,7 @@ import java.util.function.Supplier
 class MachineRegistry {
 
     fun registerAll() {
-        identifier("coal_generator").generator(COAL_GENERATOR, COAL_GENERATOR_BLOCK_ENTITY).item(COAL_GENERATOR_BLOCK_ITEM)
+        identifier("coal_generator").block(COAL_GENERATOR).blockEntityType(COAL_GENERATOR_BLOCK_ENTITY).item(COAL_GENERATOR_BLOCK_ITEM)
         identifier("electric_furnace").block(ELECTRIC_FURNACE).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY).item(ELECTRIC_FURNACE_BLOCK_ITEM)
     }
 
