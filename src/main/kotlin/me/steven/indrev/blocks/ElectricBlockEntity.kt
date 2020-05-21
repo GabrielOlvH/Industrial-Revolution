@@ -1,7 +1,6 @@
 package me.steven.indrev.blocks
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.blocks.generators.GeneratorBlock
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
@@ -18,7 +17,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     private var delegate: PropertyDelegate? = null
 
     override fun tick() {
-        if (world?.isClient== true) return
+        if (world?.isClient == true) return
 
         val block = this.cachedState.block
         if (block !is ElectricBlock) return
@@ -71,6 +70,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     }
 
     override fun getMaxStoredPower(): Double {
+        if (world == null) return 0.0
         val block = this.cachedState.block
         if (block is ElectricBlock) return block.maxBuffer
         return 0.0
