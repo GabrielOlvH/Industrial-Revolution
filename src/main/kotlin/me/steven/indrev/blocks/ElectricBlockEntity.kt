@@ -37,9 +37,9 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     }
 
     fun addEnergy(amount: Double): Double {
-        val amount = (maxStoredPower - getEnergy()).coerceAtMost(amount)
-        energy += amount
-        return amount
+        val added = (maxStoredPower - getEnergy()).coerceAtMost(amount)
+        energy += added
+        return added
     }
 
     fun setEnergy(amount: Double) {
