@@ -1,7 +1,7 @@
 package me.steven.indrev.registry
 
 import me.steven.indrev.*
-import me.steven.indrev.blocks.furnace.ElectricFurnaceBlock
+import me.steven.indrev.blocks.furnace.ElectricCraftingBlock
 import me.steven.indrev.blocks.furnace.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blocks.generators.GeneratorBlock
@@ -31,9 +31,9 @@ class MachineRegistry {
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> =
             BlockEntityType.Builder.create(Supplier { CoalGeneratorBlockEntity() }, COAL_GENERATOR).build(null)
 
-        val ELECTRIC_FURNACE: ElectricFurnaceBlock = ElectricFurnaceBlock(
+        val ELECTRIC_FURNACE: ElectricCraftingBlock = ElectricCraftingBlock(
                 FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
-                ElectricFurnaceBlock.SCREEN_ID,
+                ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
                  250.0
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))

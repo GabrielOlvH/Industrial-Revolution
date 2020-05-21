@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.furnace.ElectricFurnaceBlock
+import me.steven.indrev.blocks.furnace.ElectricCraftingBlock
 import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
@@ -17,7 +17,6 @@ import net.minecraft.util.PacketByteBuf
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
 
-
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
@@ -32,7 +31,7 @@ class IndustrialRevolution : EnergyModInitializer() {
             )
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceBlock.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceController(
                     syncId,

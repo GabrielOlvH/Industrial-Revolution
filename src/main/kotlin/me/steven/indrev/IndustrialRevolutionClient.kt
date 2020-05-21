@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.furnace.ElectricFurnaceBlock
+import me.steven.indrev.blocks.furnace.ElectricCraftingBlock
 import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
@@ -27,7 +27,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceBlock.SCREEN_ID
+        ScreenProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceScreen(
                     ElectricFurnaceController(
