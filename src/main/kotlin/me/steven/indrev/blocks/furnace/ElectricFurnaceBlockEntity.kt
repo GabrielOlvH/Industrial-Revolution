@@ -46,7 +46,7 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
                 }
             } else
                 reset()
-        } else if (energy > 0) {
+        } else if (energy > 0 && !inputStack.isEmpty) {
             reset()
             world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)?.ifPresent { recipe ->
                 if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
