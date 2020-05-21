@@ -26,9 +26,9 @@ open class ElectricBlock(settings: Settings, open val maxBuffer: Double, open va
 
     fun tryProvideEnergyTo(world: World?, sourcePos: BlockPos, targetPos: BlockPos): Double {
         val sourceBlockEntity = world?.getBlockEntity(sourcePos)
-        if (sourceBlockEntity !is ElectricBlockEntity) return 0.0
+        if (sourceBlockEntity == null || !Energy.valid(sourceBlockEntity)) return 0.0
         val targetBlockEntity = world.getBlockEntity(targetPos)
-        if (targetBlockEntity !is ElectricBlockEntity) return 0.0
+        if (targetBlockEntity == null || !Energy.valid(targetBlockEntity)) return 0.0
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targetHandler = Energy.of(targetBlockEntity)
         return sourceHandler.into(targetHandler).move()
