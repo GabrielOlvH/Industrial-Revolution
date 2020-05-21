@@ -1,4 +1,4 @@
-package me.steven.indrev.gui
+package me.steven.indrev.gui.generators
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel

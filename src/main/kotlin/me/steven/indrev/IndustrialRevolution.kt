@@ -1,13 +1,16 @@
 package me.steven.indrev
 
+import me.steven.indrev.blocks.furnace.ElectricFurnaceBlock
 import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
-import me.steven.indrev.gui.CoalGeneratorController
+import me.steven.indrev.gui.furnace.ElectricFurnaceController
+import me.steven.indrev.gui.generators.CoalGeneratorController
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.PacketByteBuf
@@ -23,9 +26,18 @@ class IndustrialRevolution : EnergyModInitializer() {
         ContainerProviderRegistry.INSTANCE.registerFactory(GeneratorBlock.COAL_GENERATOR_SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(
-                syncId,
-                player.inventory,
-                BlockContext.create(player.world, buf.readBlockPos())
+                    syncId,
+                    player.inventory,
+                    BlockContext.create(player.world, buf.readBlockPos())
+            )
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceBlock.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            ElectricFurnaceController(
+                    syncId,
+                    player.inventory,
+                    BlockContext.create(player.world, buf.readBlockPos())
             )
         }
     }
@@ -33,6 +45,6 @@ class IndustrialRevolution : EnergyModInitializer() {
     companion object {
         const val MOD_ID = "indrev"
 
-        val MOD_GROUP = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
+        val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
     }
 }

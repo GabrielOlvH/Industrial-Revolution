@@ -12,7 +12,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import team.reborn.energy.Energy
-import kotlin.math.max
 
 open class ElectricBlock(settings: Settings, open val maxBuffer: Double, open val blockEntityProvider: () -> ElectricBlockEntity) : Block(settings), BlockEntityProvider {
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
@@ -25,15 +24,14 @@ open class ElectricBlock(settings: Settings, open val maxBuffer: Double, open va
         builder?.add(FACING)
     }
 
-    fun tryProvideEnergyTo(world: World, sourcePos: BlockPos, targetPos: BlockPos): Double {
-        val sourceBlockEntity = world.getBlockEntity(sourcePos)
+    fun tryProvideEnergyTo(world: World?, sourcePos: BlockPos, targetPos: BlockPos): Double {
+        val sourceBlockEntity = world?.getBlockEntity(sourcePos)
         if (sourceBlockEntity !is ElectricBlockEntity) return 0.0
         val targetBlockEntity = world.getBlockEntity(targetPos)
         if (targetBlockEntity !is ElectricBlockEntity) return 0.0
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targetHandler = Energy.of(targetBlockEntity)
-        val amount = if (sourceHandler.maxOutput > targetHandler.maxInput) targetHandler.maxInput else sourceHandler.maxOutput
-        return sourceHandler.into(targetHandler).move(amount)
+        return sourceHandler.into(targetHandler).move()
     }
 
     companion object {

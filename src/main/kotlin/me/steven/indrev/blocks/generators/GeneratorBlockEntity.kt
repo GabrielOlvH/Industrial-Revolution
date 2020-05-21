@@ -10,17 +10,21 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.Tickable
-import team.reborn.energy.Energy
+import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
-abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, tier: EnergyTier)
-    : ElectricBlockEntity(type, tier), Tickable, InventoryProvider {
+abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double)
+    : ElectricBlockEntity(type), InventoryProvider {
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 
     override fun tick() {
+        super.tick()
+        if (world?.isClient == true) return
         if (shouldGenerate()) {
-            val amountInserted = Energy.of(this).insert(generationRatio)
+            val amountInserted = (maxStoredPower - energy).coerceAtMost(generationRatio)
+            energy += amountInserted
+            getOrCreateDelegate()[0] = energy.toInt()
             if (amountInserted > 0)
                 markDirty()
         }
@@ -70,6 +74,8 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
         tag.put("Inventory", tagList)
         return super.toClientTag(tag)
     }
+
+    override fun getMaxInput(): Double = 0.0
 
     abstract fun shouldGenerate(): Boolean
 

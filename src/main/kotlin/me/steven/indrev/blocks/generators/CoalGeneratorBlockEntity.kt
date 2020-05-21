@@ -14,14 +14,15 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import team.reborn.energy.EnergyTier
 
-class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.1, EnergyTier.LOW) {
-    private val inventory = DefaultSidedInventory(ItemStack.EMPTY)
+class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.5) {
+    private val inventory = DefaultSidedInventory(1)
     var burnTime: Int = 0
     var maxBurnTime: Int = 0
 
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(6)
+    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 
     override fun tick() {
+        if (world?.isClient == true) return
         super.tick()
             if (shouldGenerate()) {
                 burnTime--
@@ -81,6 +82,8 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         delegate[3] = maxBurnTime
         return delegate
     }
+
+    override fun getMaxOutput(): Double = 8.0
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()

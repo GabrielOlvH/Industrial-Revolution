@@ -7,13 +7,26 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.Tickable
+import net.minecraft.util.math.Direction
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class ElectricBlockEntity(type: BlockEntityType<*>, private val tier: EnergyTier) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder {
+abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
     private var delegate: PropertyDelegate? = null
+
+    override fun tick() {
+        if (world?.isClient== true) return
+
+        val block = this.cachedState.block
+        if (block !is ElectricBlock) return
+        for (direction in Direction.values()) {
+            val targetPos = pos.offset(direction)
+            block.tryProvideEnergyTo(world, pos, targetPos)
+        }
+    }
 
     protected abstract fun createDelegate(): PropertyDelegate
 
@@ -39,11 +52,22 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>, private val tier: E
 
     override fun getMaxStoredPower(): Double {
         val block = this.cachedState.block
-        if (block is GeneratorBlock) return block.maxBuffer
+        if (block is ElectricBlock) return block.maxBuffer
         return 0.0
     }
 
-    override fun getTier(): EnergyTier = tier
+    abstract fun getMaxInput(): Double
+
+    abstract fun getMaxOutput(): Double
+
+    @Deprecated("unsupported")
+    override fun getTier(): EnergyTier = throw UnsupportedOperationException()
+
+    @Deprecated("use getMaxOutput() instead", ReplaceWith("getMaxOutput()"))
+    override fun getMaxOutput(side: EnergySide?): Double = getMaxOutput()
+
+    @Deprecated("use getMaxInput() instead!", ReplaceWith("getMaxInput()"))
+    override fun getMaxInput(side: EnergySide?): Double = getMaxInput()
 
     override fun getStored(side: EnergySide?): Double {
         val direction = EnergySide.fromMinecraft(this.cachedState[ElectricBlock.FACING])
