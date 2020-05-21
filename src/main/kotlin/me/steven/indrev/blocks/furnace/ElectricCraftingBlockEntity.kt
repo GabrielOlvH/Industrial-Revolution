@@ -49,6 +49,7 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
         }
         propertyDelegate[2] = processTime
         propertyDelegate[3] = totalProcessTime
+        markDirty()
     }
 
     abstract fun findRecipe(inventory: Inventory)
