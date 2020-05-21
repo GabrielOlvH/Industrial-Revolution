@@ -26,14 +26,14 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         super.tick()
             if (shouldGenerate()) {
                 burnTime--
-                getOrCreateDelegate()[2] = burnTime
+                propertyDelegate[2] = burnTime
             }
-            else if (maxStoredPower > energy) {
+            else if (maxStoredPower > getEnergy()) {
                 val invStack = inventory.getInvStack(0)
                 if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                     burnTime = BURN_TIME_MAP[invStack.item] ?: return
                     maxBurnTime = burnTime
-                    getOrCreateDelegate()[3] = maxBurnTime
+                    propertyDelegate[3] = maxBurnTime
                     invStack.count--
                     if (invStack.isEmpty) inventory.setInvStack(0, ItemStack.EMPTY)
                     else inventory.setInvStack(0, invStack)
@@ -46,8 +46,8 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        getOrCreateDelegate()[2] = burnTime
-        getOrCreateDelegate()[3] = maxBurnTime
+        propertyDelegate[2] = burnTime
+        propertyDelegate[3] = maxBurnTime
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -60,8 +60,8 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         super.fromClientTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        getOrCreateDelegate()[2] = burnTime
-        getOrCreateDelegate()[3] = maxBurnTime
+        propertyDelegate[2] = burnTime
+        propertyDelegate[3] = maxBurnTime
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
@@ -74,7 +74,7 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
-    override fun shouldGenerate(): Boolean = burnTime > 0 && energy < maxStoredPower
+    override fun shouldGenerate(): Boolean = burnTime > 0 && getEnergy() < maxStoredPower
 
     override fun getPropertyDelegate(): PropertyDelegate {
         val delegate = super.getPropertyDelegate()

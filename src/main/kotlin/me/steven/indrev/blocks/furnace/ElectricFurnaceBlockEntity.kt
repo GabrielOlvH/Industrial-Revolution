@@ -35,7 +35,7 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
         if (isProcessing()) {
             if (inputStack.item == processingItem) {
                 processTime--
-                energy--
+                if (!takeEnergy(1.0)) return
                 if (processTime <= 0) {
                     inventory.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)
@@ -46,7 +46,7 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
                 }
             } else
                 reset()
-        } else if (energy > 0 && !inputStack.isEmpty) {
+        } else if (getEnergy() > 0 && !inputStack.isEmpty && processTime <= 0) {
             reset()
             world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)?.ifPresent { recipe ->
                 if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
@@ -56,8 +56,7 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
                 }
             }
         }
-        getOrCreateDelegate()[0] = energy.toInt()
-        getOrCreateDelegate()[2] = processTime
+        propertyDelegate[2] = processTime
     }
 
     private fun reset() {
@@ -72,12 +71,12 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
 
     override fun getMaxOutput(): Double = 0.0
 
-    private fun isProcessing() = processTime > 0 && energy > 0 && processingItem != null && output != null
+    private fun isProcessing() = processTime > 0 && getEnergy() > 0 && processingItem != null && output != null
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
-        getOrCreateDelegate()[2] = processTime
+        propertyDelegate[2] = processTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
@@ -101,7 +100,7 @@ class ElectricFurnaceBlockEntity : ElectricBlockEntity(MachineRegistry.ELECTRIC_
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
-        getOrCreateDelegate()[2] = processTime
+        propertyDelegate[2] = processTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)

@@ -14,7 +14,7 @@ import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
 abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
-    var energy = 0.0
+    private var energy = 0.0
     private var delegate: PropertyDelegate? = null
 
     override fun tick() {
@@ -28,9 +28,29 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
         }
     }
 
+    fun getEnergy() = energy
+
+    fun takeEnergy(amount: Double): Boolean {
+        return if (amount < energy) {
+            setEnergy(energy - amount)
+            true
+        } else false
+    }
+
+    fun addEnergy(amount: Double): Double {
+        val amount = (maxStoredPower - getEnergy()).coerceAtMost(amount)
+        energy += amount
+        return amount
+    }
+
+    fun setEnergy(amount: Double) {
+        energy = amount
+        propertyDelegate[0] = energy.toInt()
+    }
+
     protected abstract fun createDelegate(): PropertyDelegate
 
-    protected fun getOrCreateDelegate(): PropertyDelegate {
+    private fun getOrCreateDelegate(): PropertyDelegate {
         if (delegate == null) {
             delegate = createDelegate()
             return delegate!!
@@ -47,7 +67,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
 
     override fun setStored(amount: Double) {
         this.energy = amount
-        getOrCreateDelegate()[0] = energy.toInt()
+        propertyDelegate[0] = energy.toInt()
     }
 
     override fun getMaxStoredPower(): Double {
@@ -78,7 +98,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
-        getOrCreateDelegate()[0] = energy.toInt()
+        propertyDelegate[0] = energy.toInt()
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -88,7 +108,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
 
     override fun fromClientTag(tag: CompoundTag?) {
         energy = tag?.getDouble("Energy") ?: 0.0
-        getOrCreateDelegate()[0] = energy.toInt()
+        propertyDelegate[0] = energy.toInt()
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {

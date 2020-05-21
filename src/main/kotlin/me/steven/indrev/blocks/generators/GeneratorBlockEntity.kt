@@ -20,14 +20,8 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
 
     override fun tick() {
         super.tick()
-        if (world?.isClient == true) return
-        if (shouldGenerate()) {
-            val amountInserted = (maxStoredPower - energy).coerceAtMost(generationRatio)
-            energy += amountInserted
-            getOrCreateDelegate()[0] = energy.toInt()
-            if (amountInserted > 0)
-                markDirty()
-        }
+        if (world?.isClient == false && shouldGenerate() && addEnergy(generationRatio) > 0)
+            markDirty()
     }
 
     override fun fromTag(tag: CompoundTag?) {
