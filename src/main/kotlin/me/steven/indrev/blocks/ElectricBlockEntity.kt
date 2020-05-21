@@ -13,7 +13,11 @@ import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
 abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
-    private var energy = 0.0
+    var energy = 0.0
+        set(value) {
+            propertyDelegate[0] = value.toInt()
+            field = value
+        }
     private var delegate: PropertyDelegate? = null
 
     override fun tick() {
@@ -28,24 +32,17 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
         }
     }
 
-    fun getEnergy() = energy
-
     fun takeEnergy(amount: Double): Boolean {
         return if (amount < energy) {
-            setEnergy(energy - amount)
+            energy -= amount
             true
         } else false
     }
 
     fun addEnergy(amount: Double): Double {
-        val added = (maxStoredPower - getEnergy()).coerceAtMost(amount)
+        val added = (maxStoredPower - energy).coerceAtMost(amount)
         energy += added
         return added
-    }
-
-    fun setEnergy(amount: Double) {
-        energy = amount
-        propertyDelegate[0] = energy.toInt()
     }
 
     protected abstract fun createDelegate(): PropertyDelegate
@@ -60,14 +57,12 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
 
     override fun getPropertyDelegate(): PropertyDelegate {
         val delegate = getOrCreateDelegate()
-        delegate[0] = energy.toInt()
         delegate[1] = maxStoredPower.toInt()
         return delegate
     }
 
     override fun setStored(amount: Double) {
         this.energy = amount
-        propertyDelegate[0] = energy.toInt()
     }
 
     override fun getMaxStoredPower(): Double {
@@ -117,6 +112,4 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
         tag.putDouble("Energy", energy)
         return tag
     }
-
-
 }

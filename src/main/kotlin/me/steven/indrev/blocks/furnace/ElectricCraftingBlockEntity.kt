@@ -24,7 +24,15 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     var processingItem: Item? = null
     var output: ItemStack? = null
     var processTime: Int = 0
+        set(value) {
+            propertyDelegate[2] = value
+            field = value
+        }
     var totalProcessTime: Int = 0
+        set(value) {
+            propertyDelegate[3] = value
+            field = value
+        }
 
     override fun tick() {
         super.tick()
@@ -44,12 +52,10 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
                 }
             } else
                 reset()
-        } else if (getEnergy() > 0 && !inputStack.isEmpty && processTime <= 0) {
+        } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
             reset()
             findRecipe(inventory)
         }
-        propertyDelegate[2] = processTime
-        propertyDelegate[3] = totalProcessTime
         markDirty()
     }
 
@@ -68,14 +74,12 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
 
     override fun getMaxOutput(): Double = 0.0
 
-    private fun isProcessing() = processTime > 0 && getEnergy() > 0 && processingItem != null && output != null
+    private fun isProcessing() = processTime > 0 && energy > 0 && processingItem != null && output != null
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
-        propertyDelegate[2] = processTime
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        propertyDelegate[3] = totalProcessTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
@@ -100,9 +104,7 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
-        propertyDelegate[2] = processTime
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        propertyDelegate[3] = totalProcessTime
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)

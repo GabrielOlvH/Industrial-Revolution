@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.identifier
 import net.minecraft.container.PropertyDelegate
+import kotlin.math.abs
 import kotlin.math.ceil
 
 class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
@@ -14,12 +15,12 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
     private var lastVUpdate = 0f
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, UNLIT_TEXTURE_ID, -1)
-        val burnTime = propertyDelegate.get(2)
-        val maxBurnTime = propertyDelegate.get(3)
+        val burnTime = propertyDelegate[2]
+        val maxBurnTime = propertyDelegate[3]
         if (burnTime > 0 && maxBurnTime > 0) {
             val v = ((burnTime.toFloat() * 13 / maxBurnTime) + 1) / 14f
             val h = ceil(v * height).toInt()
-            val diff = lastHeightUpdate - h
+            val diff = abs(lastHeightUpdate - h)
             if (diff > 1 ) {
                 lastHeightUpdate = h
                 lastVUpdate = 1f - v

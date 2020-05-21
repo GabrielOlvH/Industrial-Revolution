@@ -16,7 +16,15 @@ import net.minecraft.world.IWorld
 class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.5) {
     private val inventory = DefaultSidedInventory(1)
     var burnTime: Int = 0
+        set(value)  {
+            propertyDelegate[2] = value
+            field = value
+        }
     var maxBurnTime: Int = 0
+        set(value) {
+            propertyDelegate[3] = value
+            field = value
+        }
 
     override fun tick() {
         if (world?.isClient == true) return
@@ -25,7 +33,7 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
                 burnTime--
                 propertyDelegate[2] = burnTime
             }
-            else if (maxStoredPower > getEnergy()) {
+            else if (maxStoredPower > energy) {
                 val invStack = inventory.getInvStack(0)
                 if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                     burnTime = BURN_TIME_MAP[invStack.item] ?: return
@@ -47,8 +55,6 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        propertyDelegate[2] = burnTime
-        propertyDelegate[3] = maxBurnTime
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -61,8 +67,6 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         super.fromClientTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        propertyDelegate[2] = burnTime
-        propertyDelegate[3] = maxBurnTime
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
@@ -75,14 +79,7 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
-    override fun shouldGenerate(): Boolean = burnTime > 0 && getEnergy() < maxStoredPower
-
-    override fun getPropertyDelegate(): PropertyDelegate {
-        val delegate = super.getPropertyDelegate()
-        delegate[2] = burnTime
-        delegate[3] = maxBurnTime
-        return delegate
-    }
+    override fun shouldGenerate(): Boolean = burnTime > 0 && energy < maxStoredPower
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()
