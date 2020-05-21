@@ -25,7 +25,8 @@ class MachineRegistry {
         val COAL_GENERATOR: GeneratorBlock = GeneratorBlock(
                 FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
                 GeneratorBlock.COAL_GENERATOR_SCREEN_ID,
-                1000.0
+                1000.0,
+                { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> =
@@ -35,7 +36,7 @@ class MachineRegistry {
                 FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
                 ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
                  250.0,
-                { blockEntity -> blockEntity is ElectricFurnaceBlockEntity }
+                { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = BlockEntityType.Builder.create(Supplier { ElectricFurnaceBlockEntity() }, ELECTRIC_FURNACE).build(null)
