@@ -11,5 +11,6 @@ class ElectricCraftingBlock(
 
     companion object {
         val ELECTRIC_FURNACE_SCREEN_ID = identifier("electric_furnace_screen")
+        val PULVERIZER_SCREEN_ID = identifier("pulverizer_screen")
     }
 }

@@ -74,6 +74,8 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
 
     abstract fun startRecipe(recipe: T)
 
+    abstract fun createInventory(): SidedInventory
+
     private fun reset() {
         processTime = 0
         totalProcessTime = 0
@@ -145,8 +147,6 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         for (i in 0 until inventory!!.invSize)
             recipeFinder?.addItem(inventory!!.getInvStack(i))
     }
-
-    abstract fun createInventory(): SidedInventory
 
     open fun onCraft() {}
 }

@@ -5,6 +5,7 @@ import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.generators.CoalGeneratorController
+import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -36,6 +37,15 @@ class IndustrialRevolution : EnergyModInitializer() {
         ContainerProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceController(
+                    syncId,
+                    player.inventory,
+                    BlockContext.create(player.world, buf.readBlockPos())
+            )
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.PULVERIZER_SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            PulverizerController(
                     syncId,
                     player.inventory,
                     BlockContext.create(player.world, buf.readBlockPos())
