@@ -1,4 +1,4 @@
-package me.steven.indrev.registry
+package me.steven.indrev.content
 
 import me.steven.indrev.*
 import me.steven.indrev.blocks.BasicMachineBlock

@@ -1,6 +1,9 @@
 package me.steven.indrev
 
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
+import me.steven.indrev.content.ItemRegistry
+import me.steven.indrev.content.MachineRegistry
+import me.steven.indrev.content.registerWorldFeatures
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorController
@@ -8,8 +11,6 @@ import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.recipes.PulverizerRecipe
-import me.steven.indrev.registry.ItemRegistry
-import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
@@ -21,6 +22,7 @@ import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
+
 
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
@@ -57,6 +59,7 @@ class IndustrialRevolution : EnergyModInitializer() {
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
+        registerWorldFeatures()
     }
 
     companion object {

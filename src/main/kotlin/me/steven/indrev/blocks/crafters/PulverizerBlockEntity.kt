@@ -1,9 +1,9 @@
 package me.steven.indrev.blocks.crafters
 
+import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.recipes.PulverizerRecipe
-import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory

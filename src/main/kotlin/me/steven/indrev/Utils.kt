@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import java.util.function.Supplier
 
+
 fun identifier(id: String) = Identifier(IndustrialRevolution.MOD_ID, id)
 
 fun Identifier.block(block: Block): Identifier {
@@ -30,12 +31,10 @@ fun Identifier.blockEntityType(entityType: BlockEntityType<*>): Identifier {
 }
 
 fun Identifier.ore(pulverizable: Boolean): Block {
-    val key = this.namespace
-
+    val key = this.path
     val block = Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES))
     identifier("${key}_ore").block(block).item(Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP)))
     if (pulverizable) identifier("pulverized_$key").item(Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP)))
     return block
 }
-
 fun <T : BlockEntity> Block.blockEntityType(supplier: () -> T): BlockEntityType<T> = BlockEntityType.Builder.create(Supplier(supplier), this).build(null)
