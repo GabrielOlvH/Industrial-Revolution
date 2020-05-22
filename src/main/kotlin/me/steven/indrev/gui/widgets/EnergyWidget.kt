@@ -11,6 +11,7 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
     init {
         this.setSize(16, 64)
     }
+
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
         val energy = delegate[0]

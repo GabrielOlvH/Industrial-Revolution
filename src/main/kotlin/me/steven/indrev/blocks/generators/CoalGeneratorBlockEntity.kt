@@ -32,8 +32,7 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
             if (shouldGenerate()) {
                 burnTime--
                 propertyDelegate[2] = burnTime
-            }
-            else if (maxStoredPower > energy) {
+            } else if (maxStoredPower > energy) {
                 val invStack = inventory.getInvStack(0)
                 if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                     burnTime = BURN_TIME_MAP[invStack.item] ?: return

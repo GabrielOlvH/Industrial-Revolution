@@ -15,8 +15,7 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
 
     override fun tick() {
         super.tick()
-        if (world?.isClient == false && shouldGenerate() && addEnergy(generationRatio) > 0)
-            markDirty()
+        if (world?.isClient == false && shouldGenerate() && addEnergy(generationRatio) > 0) markDirty()
     }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
