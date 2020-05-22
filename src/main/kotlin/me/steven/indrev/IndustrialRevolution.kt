@@ -8,6 +8,7 @@ import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.recipes.PulverizerRecipe
+import me.steven.indrev.registry.ItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
@@ -26,6 +27,7 @@ class IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
         MachineRegistry().registerAll()
+        ItemRegistry().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(
