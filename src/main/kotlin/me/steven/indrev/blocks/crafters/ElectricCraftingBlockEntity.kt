@@ -21,7 +21,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>) : ElectricBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
-    val inventory = DefaultSidedInventory(2)
+    var inventory: SidedInventory? = DefaultSidedInventory(2)
+        get() {
+            if (field == null)
+                field = createInventory()
+            return field
+        }
     var processingItem: Item? = null
     var output: ItemStack? = null
     var processTime: Int = 0
@@ -38,11 +43,11 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inputStack = inventory.getInvStack(0)
-        val outputStack = inventory.getInvStack(1).copy()
+        val inputStack = inventory!!.getInvStack(0)
+        val outputStack = inventory!!.getInvStack(1).copy()
         if (isProcessing()) {
             if (processingItem == null || outputStack == null)
-                findRecipe(inventory)?.also { recipe ->
+                findRecipe(inventory!!)?.also { recipe ->
                     processingItem = inputStack.item
                     output = recipe.output
                 } ?: reset()
@@ -50,17 +55,17 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
                 if (!takeEnergy(1.0)) return
                 processTime--
                 if (processTime <= 0) {
-                    inventory.setInvStack(0, inputStack.apply { count-- })
+                    inventory!!.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)
-                        inventory.setInvStack(1, outputStack.apply { increment(output?.count ?: 0) })
+                        inventory!!.setInvStack(1, outputStack.apply { increment(output?.count ?: 0) })
                     else if (outputStack.isEmpty)
-                        inventory.setInvStack(1, output?.copy())
+                        inventory!!.setInvStack(1, output?.copy())
                     onCraft()
                 }
             } else reset()
         } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
             reset()
-            findRecipe(inventory)?.apply { startRecipe(this) }
+            findRecipe(inventory!!)?.apply { startRecipe(this) }
         }
         markDirty()
     }
@@ -92,7 +97,7 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
             val slot = stackTag.getInt("Slot")
-            inventory.setInvStack(slot, ItemStack.fromTag(stackTag))
+            inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
         }
     }
 
@@ -100,10 +105,10 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
         val tagList = ListTag()
-        for (i in 0 until inventory.invSize) {
+        for (i in 0 until inventory!!.invSize) {
             val stackTag = CompoundTag()
             stackTag.putInt("Slot", i)
-            tagList.add(inventory.getInvStack(i).toTag(stackTag))
+            tagList.add(inventory!!.getInvStack(i).toTag(stackTag))
         }
         tag?.put("Inventory", tagList)
         return super.toTag(tag)
@@ -117,7 +122,7 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
             val slot = stackTag.getInt("Slot")
-            inventory.setInvStack(slot, ItemStack.fromTag(stackTag))
+            inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
         }
     }
 
@@ -125,21 +130,23 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
         val tagList = ListTag()
-        for (i in 0 until inventory.invSize) {
+        for (i in 0 until inventory!!.invSize) {
             val stackTag = CompoundTag()
             stackTag.putInt("Slot", i)
-            tagList.add(inventory.getInvStack(i).toTag(stackTag))
+            tagList.add(inventory!!.getInvStack(i).toTag(stackTag))
         }
         tag?.put("Inventory", tagList)
         return super.toClientTag(tag)
     }
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory!!
 
     override fun provideRecipeInputs(recipeFinder: RecipeFinder?) {
-        for (i in 0 until inventory.invSize)
-            recipeFinder?.addItem(inventory.getInvStack(i))
+        for (i in 0 until inventory!!.invSize)
+            recipeFinder?.addItem(inventory!!.getInvStack(i))
     }
+
+    abstract fun createInventory(): SidedInventory
 
     open fun onCraft() {}
 }

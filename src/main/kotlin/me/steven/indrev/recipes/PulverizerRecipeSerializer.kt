@@ -6,6 +6,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.util.Identifier
 import net.minecraft.util.PacketByteBuf
+import net.minecraft.util.Pair
 import net.minecraft.util.registry.Registry
 
 class PulverizerRecipeSerializer : RecipeSerializer<PulverizerRecipe> {
@@ -13,6 +14,8 @@ class PulverizerRecipeSerializer : RecipeSerializer<PulverizerRecipe> {
         recipe.input.write(buf)
         buf.writeInt(recipe.processTime)
         buf.writeItemStack(recipe.output)
+        buf.writeItemStack(recipe.extraOutput.left)
+        buf.writeDouble(recipe.extraOutput.right)
     }
 
     override fun read(id: Identifier, json: JsonObject): PulverizerRecipe {
@@ -24,13 +27,20 @@ class PulverizerRecipeSerializer : RecipeSerializer<PulverizerRecipe> {
         }
         output.count = result.get("count").asInt
         val ticks = json.get("processTime").asInt
-        return PulverizerRecipe(id, ticks, output, input)
+        val extraOutputStack =ItemStack {
+            Registry.ITEM.getOrEmpty(Identifier(json.getAsJsonObject("extra").get("item").asString)).orElse(null)
+                    ?: throw IllegalArgumentException("no such item $result")
+        }
+        val chance = json.getAsJsonObject("extra").get("chance").asDouble
+        return PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)
     }
 
     override fun read(id: Identifier, buf: PacketByteBuf): PulverizerRecipe {
         val input = Ingredient.fromPacket(buf)
         val processTime = buf.readInt()
         val output = buf.readItemStack()
-        return PulverizerRecipe(id, processTime, output, input)
+        val extraOutputStack = buf.readItemStack()
+        val chance = buf.readDouble()
+        return PulverizerRecipe(id, processTime, output, Pair(extraOutputStack, chance), input)
     }
 }

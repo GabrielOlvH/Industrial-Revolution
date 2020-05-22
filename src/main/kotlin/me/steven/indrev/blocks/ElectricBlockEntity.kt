@@ -19,6 +19,10 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
             field = value
         }
     private var delegate: PropertyDelegate? = null
+        get() {
+            if (field == null) field = createDelegate()
+            return field
+        }
 
     override fun tick() {
         if (world?.isClient == true) return
@@ -47,16 +51,8 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
 
     protected abstract fun createDelegate(): PropertyDelegate
 
-    private fun getOrCreateDelegate(): PropertyDelegate {
-        if (delegate == null) {
-            delegate = createDelegate()
-            return delegate!!
-        }
-        return delegate!!
-    }
-
     override fun getPropertyDelegate(): PropertyDelegate {
-        val delegate = getOrCreateDelegate()
+        val delegate = this.delegate!!
         delegate[1] = maxStoredPower.toInt()
         return delegate
     }
