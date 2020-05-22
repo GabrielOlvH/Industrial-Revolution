@@ -1,6 +1,8 @@
 package me.steven.indrev.blocks.crafters
 
 import me.steven.indrev.blocks.BasicMachineBlockEntity
+import me.steven.indrev.blocks.Upgradeable
+import me.steven.indrev.items.Upgrade
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType
@@ -18,8 +20,9 @@ import net.minecraft.recipe.RecipeInputProvider
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
+import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>) : BasicMachineBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, Upgradeable {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
@@ -51,8 +54,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
                     output = recipe.output
                 } ?: reset()
             if (inputStack.item == processingItem) {
-                if (!takeEnergy(1.0)) return
-                processTime--
+                if (!takeEnergy(1.0 / getModifier(inventory!!, Upgrade.ENERGY))) return
+                processTime = (processTime - ceil(1 * getModifier(inventory!!, Upgrade.SPEED)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
                     inventory!!.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)
@@ -82,6 +85,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
         output = null
     }
 
+    override fun getMaxStoredPower(): Double = super.getMaxStoredPower() * getModifier(inventory!!, Upgrade.BUFFER)
+
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 
     override fun getMaxInput(): Double = 1.0
@@ -91,7 +96,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     private fun isProcessing() = processTime > 0 && energy > 0
 
     override fun fromTag(tag: CompoundTag?) {
-        super.fromTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
@@ -100,6 +104,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
             val slot = stackTag.getInt("Slot")
             inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
         }
+        super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -116,7 +121,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
-        super.fromClientTag(tag)
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
@@ -125,6 +129,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
             val slot = stackTag.getInt("Slot")
             inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
         }
+        super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {

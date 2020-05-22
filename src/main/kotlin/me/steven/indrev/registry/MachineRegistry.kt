@@ -31,7 +31,6 @@ class MachineRegistry {
         val COAL_GENERATOR: BasicMachineBlock = BasicMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
                 CoalGeneratorScreen.SCREEN_ID,
-                1000.0,
                 { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
@@ -40,7 +39,6 @@ class MachineRegistry {
         val ELECTRIC_FURNACE: BasicMachineBlock = BasicMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
                 ElectricFurnaceScreen.SCREEN_ID,
-                 250.0,
                 { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
@@ -49,7 +47,6 @@ class MachineRegistry {
         val PULVERIZER: BasicMachineBlock = BasicMachineBlock(
             MACHINE_BLOCK_SETTINGS,
             PulverizerScreen.SCREEN_ID,
-            250.0,
             { it is ElectricPulverizerBlockEntity }
         ) { ElectricPulverizerBlockEntity() }
         val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))

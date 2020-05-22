@@ -3,6 +3,7 @@ package me.steven.indrev.gui.pulverizer
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blocks.Upgradeable
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
@@ -20,7 +21,7 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockC
 
         root.add(StringWidget(I18n.translate("block.indrev.pulverizer"), titleColor), 4, 0)
 
-        root.add(createPlayerInventoryPanel(), 0, 4)
+        root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
@@ -41,6 +42,16 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockC
         extraOutputSlot.isInsertingAllowed = false
         root.add(extraOutputSlot, 6, 3)
         extraOutputSlot.setLocation((5.5 * 18).toInt(), (2.8 * 18).toInt())
+
+        blockContext.run { world, pos ->
+            val blockEntity = world.getBlockEntity(pos)
+            if (blockEntity is Upgradeable) {
+                for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
+                    val s = WItemSlot.of(blockInventory, slot)
+                    root.add(s, 8, i)
+                }
+            }
+        }
 
         root.validate(this)
     }

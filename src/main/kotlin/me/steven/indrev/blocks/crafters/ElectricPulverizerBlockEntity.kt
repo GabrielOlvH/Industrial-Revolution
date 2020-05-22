@@ -1,13 +1,14 @@
 package me.steven.indrev.blocks.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.Upgrade
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 
-class ElectricPulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY) {
+class ElectricPulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, 250.0) {
     var recipe: PulverizerRecipe? = null
     override fun findRecipe(inventory: Inventory): PulverizerRecipe? {
         val inputStack = inventory.getInvStack(0)
@@ -27,7 +28,7 @@ class ElectricPulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecip
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(3)
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(7)
 
     override fun onCraft() {
         if (this.inventory!!.invSize < 3) return
@@ -43,4 +44,8 @@ class ElectricPulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecip
             }
         }
     }
+
+    override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
+
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 }

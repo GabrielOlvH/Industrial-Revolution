@@ -10,8 +10,8 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
-abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double)
-    : BasicMachineBlockEntity(type), InventoryProvider {
+abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, maxBuffer: Double)
+    : BasicMachineBlockEntity(type, maxBuffer), InventoryProvider {
 
     override fun tick() {
         super.tick()
@@ -23,13 +23,13 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
     override fun getMaxInput(): Double = 0.0
 
     override fun fromTag(tag: CompoundTag?) {
-        super.fromTag(tag)
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
             val slot = stackTag.getInt("Slot")
             getInventory().setInvStack(slot, ItemStack.fromTag(stackTag))
         }
+        super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {

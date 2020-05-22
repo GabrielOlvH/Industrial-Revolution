@@ -19,7 +19,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 
-open class BasicMachineBlock(settings: Settings, private val screenId: Identifier, val maxBuffer: Double, private val test: (BlockEntity?) -> Boolean, val blockEntityProvider: () -> BasicMachineBlockEntity) : Block(settings), BlockEntityProvider {
+open class BasicMachineBlock(settings: Settings, private val screenId: Identifier, private val test: (BlockEntity?) -> Boolean, val blockEntityProvider: () -> BasicMachineBlockEntity) : Block(settings), BlockEntityProvider {
 
     override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
         if (world.isClient) return ActionResult.PASS

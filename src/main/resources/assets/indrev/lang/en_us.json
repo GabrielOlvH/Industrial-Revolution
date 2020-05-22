@@ -1,4 +1,6 @@
 {
+  "block.indrev.electric_furnace": "Electric Furnace",
+  "block.indrev.pulverizer": "Pulverizer",
   "gui.widget.energy": "Energy: %s / %s",
   "gui.widget.output": "Output: %s U/s"
 }

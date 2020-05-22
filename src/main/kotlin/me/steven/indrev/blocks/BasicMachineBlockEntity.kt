@@ -12,11 +12,15 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class BasicMachineBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
+abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val baseBuffer: Double) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
             propertyDelegate[0] = value.toInt()
-            field = value
+            field = value.coerceAtMost(maxStoredPower)
+        }
+        get() {
+            field = field.coerceAtMost(maxStoredPower)
+            return field
         }
     private var delegate: PropertyDelegate? = null
         get() {
@@ -61,12 +65,7 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>) : BlockEntity(t
         this.energy = amount
     }
 
-    override fun getMaxStoredPower(): Double {
-        if (world == null) return 0.0
-        val block = this.cachedState.block
-        if (block is BasicMachineBlock) return block.maxBuffer
-        return 0.0
-    }
+    override fun getMaxStoredPower(): Double = baseBuffer
 
     abstract fun getMaxInput(): Double
 
@@ -90,7 +89,6 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>) : BlockEntity(t
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
-        propertyDelegate[0] = energy.toInt()
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -100,7 +98,6 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>) : BlockEntity(t
 
     override fun fromClientTag(tag: CompoundTag?) {
         energy = tag?.getDouble("Energy") ?: 0.0
-        propertyDelegate[0] = energy.toInt()
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {

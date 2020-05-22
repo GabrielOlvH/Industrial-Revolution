@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
@@ -8,7 +9,7 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
-class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY) {
+class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY, 250.0) {
     override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
         val inputStack = inventory.getInvStack(0)
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world) ?: return null
@@ -26,5 +27,9 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(2)
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(6)
+
+    override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
+
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 }

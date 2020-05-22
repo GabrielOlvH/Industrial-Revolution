@@ -3,6 +3,7 @@ package me.steven.indrev.gui.furnace
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blocks.Upgradeable
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
@@ -36,6 +37,16 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 6, 2)
         outputSlot.setLocation((5.5 * 18).toInt(), (1.5 * 18).toInt())
+
+        blockContext.run { world, pos ->
+            val blockEntity = world.getBlockEntity(pos)
+            if (blockEntity is Upgradeable) {
+                for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
+                    val s = WItemSlot.of(blockInventory, slot)
+                    root.add(s, 8, i)
+                }
+            }
+        }
 
         root.validate(this)
     }
