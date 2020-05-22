@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
@@ -52,13 +53,16 @@ class IndustrialRevolution : EnergyModInitializer() {
             )
         }
 
-        Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
+        identifier("pulverized_iron").item(PULVERIZED_IRON)
     }
 
     companion object {
         const val MOD_ID = "indrev"
 
         val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
+
+        val PULVERIZED_IRON = Item(Item.Settings().group(MOD_GROUP))
     }
 }

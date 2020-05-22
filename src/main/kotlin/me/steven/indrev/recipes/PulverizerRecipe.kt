@@ -29,6 +29,6 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
     companion object {
         val TYPE = object : RecipeType<PulverizerRecipe> {}
         val SERIALIZER = PulverizerRecipeSerializer()
-        val IDENTIFIER = identifier("pulverizer")
+        val IDENTIFIER = identifier("pulverize")
     }
 }
