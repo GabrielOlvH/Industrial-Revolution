@@ -47,8 +47,8 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
                     output = recipe.output
                 } ?: reset()
             if (inputStack.item == processingItem) {
-                processTime--
                 if (!takeEnergy(1.0)) return
+                processTime--
                 if (processTime <= 0) {
                     inventory.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)

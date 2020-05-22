@@ -33,7 +33,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     }
 
     fun takeEnergy(amount: Double): Boolean {
-        return if (amount < energy) {
+        return if (amount <= energy) {
             energy -= amount
             true
         } else false
