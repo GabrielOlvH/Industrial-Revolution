@@ -3,7 +3,7 @@ package me.steven.indrev.registry
 import me.steven.indrev.*
 import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
-import me.steven.indrev.blocks.crafters.ElectricPulverizerBlockEntity
+import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
@@ -47,9 +47,9 @@ class MachineRegistry {
         val PULVERIZER: BasicMachineBlock = BasicMachineBlock(
             MACHINE_BLOCK_SETTINGS,
             PulverizerScreen.SCREEN_ID,
-            { it is ElectricPulverizerBlockEntity }
-        ) { ElectricPulverizerBlockEntity() }
+            { it is PulverizerBlockEntity }
+        ) { PulverizerBlockEntity() }
         val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<ElectricPulverizerBlockEntity> = PULVERIZER.blockEntityType { ElectricPulverizerBlockEntity() }
+        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
     }
 }

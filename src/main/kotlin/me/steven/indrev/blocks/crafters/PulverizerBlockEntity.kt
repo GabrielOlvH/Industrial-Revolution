@@ -8,7 +8,7 @@ import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 
-class ElectricPulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, 250.0) {
+class PulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, 250.0) {
     var recipe: PulverizerRecipe? = null
     override fun findRecipe(inventory: Inventory): PulverizerRecipe? {
         val inputStack = inventory.getInvStack(0)
