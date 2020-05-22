@@ -13,7 +13,7 @@ import net.minecraft.world.World
 
 class InterfacedMachineBlock(settings: Settings, private val screenId: Identifier, private val openInterface: (BlockEntity?) -> Boolean, blockEntityProvider: () -> BasicMachineBlockEntity) : BasicMachineBlock(settings, blockEntityProvider) {
     override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
-        if (world.isClient) return ActionResult.PASS
+        if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
         if (openInterface(blockEntity)) {
             ContainerProviderRegistry.INSTANCE.openContainer(
