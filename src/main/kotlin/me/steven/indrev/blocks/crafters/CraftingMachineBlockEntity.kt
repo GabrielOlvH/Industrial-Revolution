@@ -1,6 +1,6 @@
 package me.steven.indrev.blocks.crafters
 
-import me.steven.indrev.blocks.ElectricBlockEntity
+import me.steven.indrev.blocks.BasicMachineBlockEntity
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType
@@ -19,7 +19,7 @@ import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>) : ElectricBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>) : BasicMachineBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)

@@ -1,11 +1,13 @@
 package me.steven.indrev.registry
 
 import me.steven.indrev.*
-import me.steven.indrev.blocks.crafters.ElectricCraftingBlock
+import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.ElectricPulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blocks.generators.GeneratorBlock
+import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
+import me.steven.indrev.gui.generators.CoalGeneratorScreen
+import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Material
@@ -26,27 +28,27 @@ class MachineRegistry {
 
         private val MACHINE_BLOCK_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
-        val COAL_GENERATOR: GeneratorBlock = GeneratorBlock(
+        val COAL_GENERATOR: BasicMachineBlock = BasicMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
-                GeneratorBlock.COAL_GENERATOR_SCREEN_ID,
+                CoalGeneratorScreen.SCREEN_ID,
                 1000.0,
                 { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
 
-        val ELECTRIC_FURNACE: ElectricCraftingBlock = ElectricCraftingBlock(
+        val ELECTRIC_FURNACE: BasicMachineBlock = BasicMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
-                ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
+                ElectricFurnaceScreen.SCREEN_ID,
                  250.0,
                 { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
 
-        val PULVERIZER: ElectricCraftingBlock = ElectricCraftingBlock(
+        val PULVERIZER: BasicMachineBlock = BasicMachineBlock(
             MACHINE_BLOCK_SETTINGS,
-            ElectricCraftingBlock.PULVERIZER_SCREEN_ID,
+            PulverizerScreen.SCREEN_ID,
             250.0,
             { it is ElectricPulverizerBlockEntity }
         ) { ElectricPulverizerBlockEntity() }

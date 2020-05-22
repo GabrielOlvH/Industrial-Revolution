@@ -12,7 +12,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
+abstract class BasicMachineBlockEntity(type: BlockEntityType<*>) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
             propertyDelegate[0] = value.toInt()
@@ -28,7 +28,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
         if (world?.isClient == true) return
 
         val block = this.cachedState.block
-        if (block !is ElectricBlock) return
+        if (block !is BasicMachineBlock) return
         for (direction in Direction.values()) {
             val targetPos = pos.offset(direction)
             block.tryProvideEnergyTo(world, pos, targetPos)
@@ -64,7 +64,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     override fun getMaxStoredPower(): Double {
         if (world == null) return 0.0
         val block = this.cachedState.block
-        if (block is ElectricBlock) return block.maxBuffer
+        if (block is BasicMachineBlock) return block.maxBuffer
         return 0.0
     }
 
@@ -82,7 +82,7 @@ abstract class ElectricBlockEntity(type: BlockEntityType<*>) : BlockEntity(type)
     override fun getMaxInput(side: EnergySide?): Double = getMaxInput()
 
     override fun getStored(side: EnergySide?): Double {
-        val direction = EnergySide.fromMinecraft(this.cachedState[ElectricBlock.FACING])
+        val direction = EnergySide.fromMinecraft(this.cachedState[BasicMachineBlock.FACING])
         if (direction == EnergySide.UNKNOWN || direction == side) return 0.0
         return energy
     }

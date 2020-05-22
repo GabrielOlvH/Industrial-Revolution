@@ -1,11 +1,12 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.crafters.ElectricCraftingBlock
-import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
+import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorController
+import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
+import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -26,7 +27,7 @@ class IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
         MachineRegistry().registerAll()
-        ContainerProviderRegistry.INSTANCE.registerFactory(GeneratorBlock.COAL_GENERATOR_SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(
                     syncId,
@@ -35,7 +36,7 @@ class IndustrialRevolution : EnergyModInitializer() {
             )
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceController(
                     syncId,
@@ -44,7 +45,7 @@ class IndustrialRevolution : EnergyModInitializer() {
             )
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricCraftingBlock.PULVERIZER_SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             PulverizerController(
                     syncId,

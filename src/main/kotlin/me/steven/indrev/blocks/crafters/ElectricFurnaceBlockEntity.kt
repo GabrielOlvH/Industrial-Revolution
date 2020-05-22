@@ -8,7 +8,7 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
-class ElectricFurnaceBlockEntity : ElectricCraftingBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY) {
+class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY) {
     override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
         val inputStack = inventory.getInvStack(0)
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world) ?: return null

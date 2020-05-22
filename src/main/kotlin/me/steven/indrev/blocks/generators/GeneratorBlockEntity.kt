@@ -1,6 +1,6 @@
 package me.steven.indrev.blocks.generators
 
-import me.steven.indrev.blocks.ElectricBlockEntity
+import me.steven.indrev.blocks.BasicMachineBlockEntity
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
 abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double)
-    : ElectricBlockEntity(type), InventoryProvider {
+    : BasicMachineBlockEntity(type), InventoryProvider {
 
     override fun tick() {
         super.tick()
