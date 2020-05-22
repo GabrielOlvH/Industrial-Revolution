@@ -5,7 +5,9 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
+import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.recipes.PulverizerRecipe
+import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
 
@@ -15,6 +17,8 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockC
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(150, 120)
+
+        root.add(StringWidget(I18n.translate("block.indrev.pulverizer"), titleColor), 4, 0)
 
         root.add(createPlayerInventoryPanel(), 0, 4)
 

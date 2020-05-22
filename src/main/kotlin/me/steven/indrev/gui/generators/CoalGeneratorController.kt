@@ -18,6 +18,8 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
         setRootPanel(root)
         root.setSize(150, 120)
 
+        root.add(StringWidget(I18n.translate("block.indrev.coal_generator"), titleColor), 4, 0)
+
         root.add(createPlayerInventoryPanel(), 0, 4)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
