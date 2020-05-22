@@ -13,14 +13,15 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeFinder
 import net.minecraft.recipe.RecipeInputProvider
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
-abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
-    private val inventory = DefaultSidedInventory(2)
+abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>) : ElectricBlockEntity(type), Tickable, InventoryProvider, RecipeInputProvider {
+    val inventory = DefaultSidedInventory(2)
     var processingItem: Item? = null
     var output: ItemStack? = null
     var processTime: Int = 0
@@ -40,6 +41,11 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
         val inputStack = inventory.getInvStack(0)
         val outputStack = inventory.getInvStack(1).copy()
         if (isProcessing()) {
+            if (processingItem == null || outputStack == null)
+                findRecipe(inventory)?.also { recipe ->
+                    processingItem = inputStack.item
+                    output = recipe.output
+                } ?: reset()
             if (inputStack.item == processingItem) {
                 processTime--
                 if (!takeEnergy(1.0)) return
@@ -50,16 +56,17 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
                     else if (outputStack.isEmpty)
                         inventory.setInvStack(1, output?.copy())
                 }
-            } else
-                reset()
+            } else reset()
         } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
             reset()
-            findRecipe(inventory)
+            findRecipe(inventory)?.apply { startRecipe(this) }
         }
         markDirty()
     }
 
-    abstract fun findRecipe(inventory: Inventory)
+    abstract fun findRecipe(inventory: Inventory): T?
+
+    abstract fun startRecipe(recipe: T)
 
     private fun reset() {
         processTime = 0
@@ -74,7 +81,7 @@ abstract class ElectricCraftingBlockEntity(type: BlockEntityType<*>) : ElectricB
 
     override fun getMaxOutput(): Double = 0.0
 
-    private fun isProcessing() = processTime > 0 && energy > 0 && processingItem != null && output != null
+    private fun isProcessing() = processTime > 0 && energy > 0
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)

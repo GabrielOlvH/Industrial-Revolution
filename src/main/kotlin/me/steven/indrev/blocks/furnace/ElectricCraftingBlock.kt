@@ -6,7 +6,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.Identifier
 
 class ElectricCraftingBlock(
-        settings: Settings, screenId: Identifier, maxBuffer: Double, test: (BlockEntity?) -> Boolean, blockEntityProvider: () -> ElectricCraftingBlockEntity
+        settings: Settings, screenId: Identifier, maxBuffer: Double, test: (BlockEntity?) -> Boolean, blockEntityProvider: () -> ElectricCraftingBlockEntity<*>
 ) : ElectricBlock(settings, screenId, maxBuffer, test, blockEntityProvider) {
 
     companion object {
