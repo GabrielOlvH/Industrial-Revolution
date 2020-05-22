@@ -1,7 +1,7 @@
 package me.steven.indrev.content
 
 import me.steven.indrev.*
-import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
@@ -28,7 +28,7 @@ class MachineRegistry {
 
         private val MACHINE_BLOCK_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
-        val COAL_GENERATOR: BasicMachineBlock = BasicMachineBlock(
+        val COAL_GENERATOR: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
                 CoalGeneratorScreen.SCREEN_ID,
                 { it is CoalGeneratorBlockEntity }
@@ -36,7 +36,7 @@ class MachineRegistry {
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
 
-        val ELECTRIC_FURNACE: BasicMachineBlock = BasicMachineBlock(
+        val ELECTRIC_FURNACE: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
                 ElectricFurnaceScreen.SCREEN_ID,
                 { it is ElectricFurnaceBlockEntity }
@@ -44,7 +44,7 @@ class MachineRegistry {
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
 
-        val PULVERIZER: BasicMachineBlock = BasicMachineBlock(
+        val PULVERIZER: InterfacedMachineBlock = InterfacedMachineBlock(
             MACHINE_BLOCK_SETTINGS,
             PulverizerScreen.SCREEN_ID,
             { it is PulverizerBlockEntity }
