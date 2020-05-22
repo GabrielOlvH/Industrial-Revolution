@@ -17,7 +17,6 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import team.reborn.energy.Energy
 
 open class BasicMachineBlock(settings: Settings, private val screenId: Identifier, private val test: (BlockEntity?) -> Boolean, val blockEntityProvider: () -> BasicMachineBlockEntity) : Block(settings), BlockEntityProvider {
 
@@ -41,16 +40,6 @@ open class BasicMachineBlock(settings: Settings, private val screenId: Identifie
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         builder?.add(FACING)
-    }
-
-    fun tryProvideEnergyTo(world: World?, sourcePos: BlockPos, targetPos: BlockPos): Double {
-        val sourceBlockEntity = world?.getBlockEntity(sourcePos)
-        if (sourceBlockEntity == null || !Energy.valid(sourceBlockEntity)) return 0.0
-        val targetBlockEntity = world.getBlockEntity(targetPos)
-        if (targetBlockEntity == null || !Energy.valid(targetBlockEntity)) return 0.0
-        val sourceHandler = Energy.of(sourceBlockEntity)
-        val targetHandler = Energy.of(targetBlockEntity)
-        return sourceHandler.into(targetHandler).move()
     }
 
     companion object {

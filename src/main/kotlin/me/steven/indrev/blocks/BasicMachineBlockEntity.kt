@@ -8,6 +8,7 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
@@ -32,12 +33,26 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val bas
         if (world?.isClient == true) return
 
         val block = this.cachedState.block
-        if (block !is BasicMachineBlock) return
-        for (direction in Direction.values()) {
-            val targetPos = pos.offset(direction)
-            block.tryProvideEnergyTo(world, pos, targetPos)
-            markDirty()
-        }
+        if (block !is BasicMachineBlock || this.getMaxOutput() <= 0) return
+        val handler = Energy.of(this)
+        Direction.values()
+                .map { direction ->
+                    val targetPos = pos.offset(direction)
+                    val target = world?.getBlockEntity(targetPos)
+                    if (target !is EnergyStorage) return@map null
+                    val targetHandler = Energy.of(target)
+                    if (targetHandler.energy >= targetHandler.maxStored) null
+                    else targetHandler.side(direction)
+                }
+                .filterNotNull()
+                .apply {
+                    forEach { targetHandler ->
+                        val targetMaxInput = targetHandler.maxInput
+                        val weight = (targetMaxInput / getMaxOutput()) / size
+                        if (weight > 0)
+                            handler.into(targetHandler).move(weight * getMaxOutput())
+                    }
+                }
     }
 
     fun takeEnergy(amount: Double): Boolean {
