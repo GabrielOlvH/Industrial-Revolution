@@ -52,7 +52,6 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val bas
                         val weight = (targetMaxInput / sum) * getMaxOutput()
                         if (weight > 0)
                             handler.into(targetHandler).move(weight * getMaxOutput())
-                        else println("weight is zero?")
                     }
                 }
     }
