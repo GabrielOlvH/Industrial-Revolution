@@ -1,6 +1,21 @@
 {
+  "itemGroup.indrev.indrev_group": "Industrial Revolution",
+  "block.indrev.coal_generator": "Coal Generator",
   "block.indrev.electric_furnace": "Electric Furnace",
   "block.indrev.pulverizer": "Pulverizer",
-  "gui.widget.energy": "Energy: %s / %s",
-  "gui.widget.output": "Output: %s U/s"
+  "block.indrev.cable": "Cable",
+  "block.indrev.copper_ore": "Copper Ore",
+  "item.indrev.pulverized_copper": "Pulverized Copper",
+  "item.indrev.copper_ingot": "Copper Ingot",
+  "block.indrev.tin_ore": "Tin Ore",
+  "item.indrev.pulverized_tin": "Pulverized Tin",
+  "item.indrev.tin_ingot": "Tin Ingot",
+  "item.indrev.pulverized_iron": "Pulverized Iron",
+  "item.indrev.pulverized_gold": "Pulverized Gold",
+  "item.indrev.pulverized_coal": "Pulverized Coal",
+  "item.indrev.pulverized_diamond": "Pulverized Diamond",
+  "item.indrev.buffer_upgrade": "Buffer Upgrade",
+  "item.indrev.energy_upgrade": "Energy Efficiency Upgrade",
+  "item.indrev.speed_upgrade": "Speed Upgrade",
+  "gui.widget.energy": "Energy: %s / %s"
 }
