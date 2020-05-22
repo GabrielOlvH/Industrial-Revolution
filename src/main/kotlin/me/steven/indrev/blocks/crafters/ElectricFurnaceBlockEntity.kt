@@ -9,7 +9,7 @@ import net.minecraft.recipe.SmeltingRecipe
 class ElectricFurnaceBlockEntity : ElectricCraftingBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY) {
     override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
         val inputStack = inventory.getInvStack(0)
-        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)?: return null
+        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world) ?: return null
         return if (optional.isPresent) optional.get() else null
     }
 

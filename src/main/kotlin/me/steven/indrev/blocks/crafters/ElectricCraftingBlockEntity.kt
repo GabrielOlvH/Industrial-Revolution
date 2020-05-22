@@ -141,5 +141,5 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
             recipeFinder?.addItem(inventory.getInvStack(i))
     }
 
-    fun onCraft() {}
+    open fun onCraft() {}
 }

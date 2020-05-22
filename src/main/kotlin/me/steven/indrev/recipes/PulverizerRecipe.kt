@@ -8,9 +8,10 @@ import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
+import net.minecraft.util.Pair
 import net.minecraft.world.World
 
-class PulverizerRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val input: Ingredient) : Recipe<Inventory> {
+class PulverizerRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val extraOutput: Pair<ItemStack, Double>, val input: Ingredient) : Recipe<Inventory> {
     override fun craft(inv: Inventory?): ItemStack = output.copy()
 
     override fun getId(): Identifier = id
