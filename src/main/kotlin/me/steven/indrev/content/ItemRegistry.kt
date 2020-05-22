@@ -13,11 +13,17 @@ import net.minecraft.block.Material
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.util.Identifier
 
 class ItemRegistry {
 
     fun registerAll() {
+        identifier("copper_ore").block(COPPER_ORE).item(COPPER_ORE_ITEM)
+        identifier("pulverized_copper").item(PULVERIZED_COPPER)
+        identifier("copper_ingot").item(COPPER_INGOT)
+        identifier("tin_ore").block(TIN_ORE).item(TIN_ORE_ITEM)
+        identifier("pulverized_tin").item(PULVERIZED_TIN)
+        identifier("tin_ingot").item(TIN_INGOT)
+
         identifier("pulverized_iron").item(PULVERIZED_IRON)
         identifier("pulverized_gold").item(PULVERIZED_GOLD)
         identifier("pulverized_coal").item(PULVERIZED_COAL)
@@ -29,9 +35,16 @@ class ItemRegistry {
     }
 
     companion object {
+        private val ORE_BLOCK_SETTINGS: FabricBlockSettings = FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
 
-        val COPPER_ORE = identifier("copper").ore(true)
-        val TIN_ORE = identifier("tin").ore(true)
+        val COPPER_ORE = Block(ORE_BLOCK_SETTINGS)
+        val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val PULVERIZED_COPPER = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val COPPER_INGOT = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val TIN_ORE = Block(ORE_BLOCK_SETTINGS)
+        val TIN_ORE_ITEM = BlockItem(TIN_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val PULVERIZED_TIN = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val TIN_INGOT = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
 
         val PULVERIZED_IRON = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val PULVERIZED_GOLD = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
@@ -41,13 +54,5 @@ class ItemRegistry {
         val BUFFER_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.BUFFER)
         val SPEED_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.SPEED)
         val ENERGY_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.ENERGY)
-
-        private fun Identifier.ore(pulverizable: Boolean): Block {
-            val key = this.path
-            val block = Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES))
-            identifier("${key}_ore").block(block).item(BlockItem(block, Item.Settings().group(IndustrialRevolution.MOD_GROUP)))
-            if (pulverizable) identifier("pulverized_$key").item(Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP)))
-            return block
-        }
     }
 }
