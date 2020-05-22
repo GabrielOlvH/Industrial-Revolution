@@ -47,11 +47,9 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
         else state.with(getProperty(facing), true)
     }
 
-    private fun isConnected(state: BlockState, direction: Direction) = state[getProperty(direction)]
-
     companion object {
 
-        val CENTER_SHAPE = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75)
+        val CENTER_SHAPE: VoxelShape = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75)
 
         val NORTH: BooleanProperty = BooleanProperty.of("north")
         val SOUTH: BooleanProperty = BooleanProperty.of("south")
