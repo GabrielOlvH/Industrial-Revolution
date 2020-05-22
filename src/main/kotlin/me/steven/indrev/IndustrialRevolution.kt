@@ -7,15 +7,12 @@ import me.steven.indrev.gui.generators.CoalGeneratorController
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
-import me.steven.indrev.items.Upgrade
-import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
@@ -58,10 +55,6 @@ class IndustrialRevolution : EnergyModInitializer() {
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
-        identifier("pulverized_iron").item(PULVERIZED_IRON)
-        identifier("buffer_upgrade").item(BUFFER_UPGRADE)
-        identifier("speed_upgrade").item(SPEED_UPGRADE)
-        identifier("energy_upgrade").item(ENERGY_UPGRADE)
     }
 
     companion object {
@@ -69,10 +62,5 @@ class IndustrialRevolution : EnergyModInitializer() {
 
         val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
 
-        val PULVERIZED_IRON = Item(Item.Settings().group(MOD_GROUP))
-
-        val BUFFER_UPGRADE = UpgradeItem(Item.Settings().group(MOD_GROUP).maxCount(1), Upgrade.BUFFER)
-        val SPEED_UPGRADE = UpgradeItem(Item.Settings().group(MOD_GROUP).maxCount(1), Upgrade.SPEED)
-        val ENERGY_UPGRADE = UpgradeItem(Item.Settings().group(MOD_GROUP).maxCount(1), Upgrade.ENERGY)
     }
 }
