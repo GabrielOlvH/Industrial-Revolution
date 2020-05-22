@@ -39,18 +39,20 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val bas
                 .map { direction ->
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
-                    if (target !is EnergyStorage) return@map null
+                    if (target == null || !Energy.valid(target)) return@map null
                     val targetHandler = Energy.of(target)
                     if (targetHandler.energy >= targetHandler.maxStored) null
                     else targetHandler.side(direction)
                 }
                 .filterNotNull()
                 .apply {
+                    val sum = sumByDouble { it.maxInput }
                     forEach { targetHandler ->
                         val targetMaxInput = targetHandler.maxInput
-                        val weight = (targetMaxInput / getMaxOutput()) / size
+                        val weight = (targetMaxInput / sum) * getMaxOutput()
                         if (weight > 0)
                             handler.into(targetHandler).move(weight * getMaxOutput())
+                        else println("weight is zero?")
                     }
                 }
     }
@@ -95,11 +97,7 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val bas
     @Deprecated("use getMaxInput() instead!", ReplaceWith("getMaxInput()"))
     override fun getMaxInput(side: EnergySide?): Double = getMaxInput()
 
-    override fun getStored(side: EnergySide?): Double {
-        val direction = EnergySide.fromMinecraft(this.cachedState[BasicMachineBlock.FACING])
-        if (direction == EnergySide.UNKNOWN || direction == side) return 0.0
-        return energy
-    }
+    override fun getStored(side: EnergySide?): Double = energy
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
