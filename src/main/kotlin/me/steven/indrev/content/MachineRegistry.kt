@@ -2,6 +2,8 @@ package me.steven.indrev.content
 
 import me.steven.indrev.*
 import me.steven.indrev.blocks.InterfacedMachineBlock
+import me.steven.indrev.blocks.cables.CableBlock
+import me.steven.indrev.blocks.cables.CableBlockEntity
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
@@ -22,6 +24,7 @@ class MachineRegistry {
         identifier("coal_generator").block(COAL_GENERATOR).item(COAL_GENERATOR_BLOCK_ITEM).blockEntityType(COAL_GENERATOR_BLOCK_ENTITY)
         identifier("electric_furnace").block(ELECTRIC_FURNACE).item(ELECTRIC_FURNACE_BLOCK_ITEM).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY)
         identifier("pulverizer").block(PULVERIZER).item(PULVERIZER_BLOCK_ITEM).blockEntityType(PULVERIZER_BLOCK_ENTITY)
+        identifier("cable").block(CABLE).item(CABLE_ITEM).blockEntityType(CABLE_BLOCK_ENTITY)
     }
 
     companion object {
@@ -51,5 +54,9 @@ class MachineRegistry {
         ) { PulverizerBlockEntity() }
         val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
+
+        val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS)
+        val CABLE_ITEM: BlockItem = BlockItem(CABLE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val CABLE_BLOCK_ENTITY: BlockEntityType<CableBlockEntity> = CABLE.blockEntityType { CableBlockEntity() }
     }
 }
