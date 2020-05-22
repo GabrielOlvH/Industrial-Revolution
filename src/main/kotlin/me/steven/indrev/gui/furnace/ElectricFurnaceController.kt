@@ -21,7 +21,7 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
 
         root.add(StringWidget(I18n.translate("block.indrev.electric_furnace"), titleColor), 4, 0)
 
-        root.add(createPlayerInventoryPanel(), 0, 4)
+        root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
