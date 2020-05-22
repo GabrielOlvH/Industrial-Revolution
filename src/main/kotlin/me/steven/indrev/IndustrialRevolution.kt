@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.furnace.ElectricCraftingBlock
+import me.steven.indrev.blocks.crafters.ElectricCraftingBlock
 import me.steven.indrev.blocks.generators.GeneratorBlock
 import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceController

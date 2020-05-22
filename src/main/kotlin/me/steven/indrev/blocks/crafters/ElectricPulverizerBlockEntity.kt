@@ -1,24 +1,23 @@
-package me.steven.indrev.blocks.furnace
+package me.steven.indrev.blocks.crafters
 
+import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
-import net.minecraft.recipe.RecipeType
-import net.minecraft.recipe.SmeltingRecipe
 
-class ElectricFurnaceBlockEntity : ElectricCraftingBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY) {
-    override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
+class ElectricPulverizerBlockEntity : ElectricCraftingBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY) {
+    override fun findRecipe(inventory: Inventory): PulverizerRecipe? {
         val inputStack = inventory.getInvStack(0)
-        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)?: return null
+        val optional = world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, BasicInventory(inputStack), world)?: return null
         return if (optional.isPresent) optional.get() else null
     }
 
-    override fun startRecipe(recipe: SmeltingRecipe) {
+    override fun startRecipe(recipe: PulverizerRecipe) {
         val inputStack = inventory.getInvStack(0)
         val outputStack = inventory.getInvStack(1).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            processTime = recipe.cookTime
-            totalProcessTime = recipe.cookTime
+            processTime = recipe.processTime
+            totalProcessTime = recipe.processTime
             processingItem = inputStack.item
             output = recipe.output
         }

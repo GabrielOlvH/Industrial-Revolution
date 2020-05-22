@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.furnace
+package me.steven.indrev.blocks.crafters
 
 import me.steven.indrev.blocks.ElectricBlockEntity
 import me.steven.indrev.inventories.DefaultSidedInventory
