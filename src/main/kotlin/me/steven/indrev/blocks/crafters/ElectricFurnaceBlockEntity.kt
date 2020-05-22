@@ -26,5 +26,5 @@ class ElectricFurnaceBlockEntity : ElectricCraftingBlockEntity<SmeltingRecipe>(M
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(3)
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(2)
 }

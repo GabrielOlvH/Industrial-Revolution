@@ -36,7 +36,7 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockC
         val extraOutputSlot = WItemSlot.of(blockInventory, 2)
         extraOutputSlot.isInsertingAllowed = false
         root.add(extraOutputSlot, 6, 3)
-        extraOutputSlot.setLocation((5.5 * 18).toInt(), (2.5 * 18).toInt())
+        extraOutputSlot.setLocation((5.5 * 18).toInt(), (2.8 * 18).toInt())
 
         root.validate(this)
     }

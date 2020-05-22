@@ -46,7 +46,7 @@ class MachineRegistry {
 
         val PULVERIZER: ElectricCraftingBlock = ElectricCraftingBlock(
             MACHINE_BLOCK_SETTINGS,
-            ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
+            ElectricCraftingBlock.PULVERIZER_SCREEN_ID,
             250.0,
             { it is ElectricPulverizerBlockEntity }
         ) { ElectricPulverizerBlockEntity() }
