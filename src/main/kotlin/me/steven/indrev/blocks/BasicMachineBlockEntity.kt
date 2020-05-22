@@ -15,8 +15,8 @@ import team.reborn.energy.EnergyTier
 abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val baseBuffer: Double) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
-            propertyDelegate[0] = value.toInt()
             field = value.coerceAtMost(maxStoredPower)
+            propertyDelegate[0] = field.toInt()
         }
         get() {
             field = field.coerceAtMost(maxStoredPower)
