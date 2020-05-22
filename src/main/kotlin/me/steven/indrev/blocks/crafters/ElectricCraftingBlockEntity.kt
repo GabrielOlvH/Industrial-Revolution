@@ -55,6 +55,7 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
                         inventory.setInvStack(1, outputStack.apply { increment(output?.count ?: 0) })
                     else if (outputStack.isEmpty)
                         inventory.setInvStack(1, output?.copy())
+                    onCraft()
                 }
             } else reset()
         } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
@@ -139,4 +140,6 @@ abstract class ElectricCraftingBlockEntity<T : Recipe<Inventory>>(type: BlockEnt
         for (i in 0 until inventory.invSize)
             recipeFinder?.addItem(inventory.getInvStack(i))
     }
+
+    fun onCraft() {}
 }
