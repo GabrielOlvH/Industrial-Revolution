@@ -13,7 +13,6 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
-import java.util.function.Supplier
 
 class MachineRegistry {
 
@@ -24,32 +23,34 @@ class MachineRegistry {
     }
 
     companion object {
+
+        private val MACHINE_BLOCK_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
+
         val COAL_GENERATOR: GeneratorBlock = GeneratorBlock(
-                FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
+                MACHINE_BLOCK_SETTINGS,
                 GeneratorBlock.COAL_GENERATOR_SCREEN_ID,
                 1000.0,
                 { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> =
-            BlockEntityType.Builder.create(Supplier { CoalGeneratorBlockEntity() }, COAL_GENERATOR).build(null)
+        val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
 
         val ELECTRIC_FURNACE: ElectricCraftingBlock = ElectricCraftingBlock(
-                FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
+                MACHINE_BLOCK_SETTINGS,
                 ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
                  250.0,
                 { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = BlockEntityType.Builder.create(Supplier { ElectricFurnaceBlockEntity() }, ELECTRIC_FURNACE).build(null)
+        val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
 
         val PULVERIZER: ElectricCraftingBlock = ElectricCraftingBlock(
-            FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES),
+            MACHINE_BLOCK_SETTINGS,
             ElectricCraftingBlock.ELECTRIC_FURNACE_SCREEN_ID,
             250.0,
             { it is ElectricPulverizerBlockEntity }
         ) { ElectricPulverizerBlockEntity() }
         val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<ElectricPulverizerBlockEntity> = BlockEntityType.Builder.create(Supplier { ElectricPulverizerBlockEntity() }, PULVERIZER).build(null)
+        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<ElectricPulverizerBlockEntity> = PULVERIZER.blockEntityType { ElectricPulverizerBlockEntity() }
     }
 }
