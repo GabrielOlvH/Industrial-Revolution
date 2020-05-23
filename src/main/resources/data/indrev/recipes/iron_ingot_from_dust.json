@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:iron_dust"
+  },
+  "output": {
+    "item": "indrev:iron_ingot"
+  },
+  "processTime": 200
+}

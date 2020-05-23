@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:copper_dust"
+  },
+  "output": {
+    "item": "indrev:copper_ingot"
+  },
+  "processTime": 200
+}

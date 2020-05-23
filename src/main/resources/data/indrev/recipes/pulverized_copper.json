@@ -1,15 +1,15 @@
 {
   "type": "indrev:pulverize",
   "ingredient": {
-    "item": "minecraft:iron_ore"
+    "tag": "c:copper_ore"
   },
   "output": {
-    "item": "indrev:pulverized_iron",
+    "item": "indrev:pulverized_copper",
     "count": 2
   },
   "processTime": 200,
   "extra": {
-    "item": "indrev:pulverized_iron",
+    "item": "indrev:pulverized_copper",
     "count": 1,
     "chance": 0.9
   }

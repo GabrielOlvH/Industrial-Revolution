@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:pulverized_tin"
+  },
+  "output": {
+    "item": "indrev:tin_ingot"
+  },
+  "processTime": 200
+}
