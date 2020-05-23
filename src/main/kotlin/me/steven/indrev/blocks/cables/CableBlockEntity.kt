@@ -17,7 +17,8 @@ class CableBlockEntity : BasicMachineBlockEntity(MachineRegistry.CABLE_BLOCK_ENT
     override fun getMaxOutput(): Double = 32.0
 
     override fun fromTag(tag: CompoundTag?) {
-        cover = Identifier(tag?.getString("cover"))
+        if (tag?.contains("cover") == true)
+            cover =  Identifier(tag.getString("cover"))
         super.fromTag(tag)
     }
 
@@ -27,7 +28,8 @@ class CableBlockEntity : BasicMachineBlockEntity(MachineRegistry.CABLE_BLOCK_ENT
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
-        cover = Identifier(tag?.getString("cover"))
+        if (tag?.contains("cover") == true)
+            cover =  Identifier(tag.getString("cover"))
         super.fromClientTag(tag)
     }
 

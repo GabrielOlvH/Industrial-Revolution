@@ -52,6 +52,8 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
             val coverId = blockEntity.cover
             val block = Registry.BLOCK.get(coverId).asItem()
             ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(block)))
+            blockEntity.cover = null
+            blockEntity.markDirty()
         }
     }
 
