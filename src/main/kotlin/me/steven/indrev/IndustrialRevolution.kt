@@ -57,6 +57,5 @@ class IndustrialRevolution : EnergyModInitializer() {
         const val MOD_ID = "indrev"
 
         val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
-
     }
 }
