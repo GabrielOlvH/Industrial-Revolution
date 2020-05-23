@@ -32,28 +32,19 @@ class IndustrialRevolution : EnergyModInitializer() {
         ItemRegistry().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CoalGeneratorController(
-                    syncId,
-                    player.inventory,
-                    BlockContext.create(player.world, buf.readBlockPos())
+            CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
             )
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            ElectricFurnaceController(
-                    syncId,
-                    player.inventory,
-                    BlockContext.create(player.world, buf.readBlockPos())
+            ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
             )
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            PulverizerController(
-                    syncId,
-                    player.inventory,
-                    BlockContext.create(player.world, buf.readBlockPos())
+            PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
             )
         }
 
