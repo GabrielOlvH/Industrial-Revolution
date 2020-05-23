@@ -54,8 +54,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
                     output = recipe.output
                 } ?: reset()
             if (inputStack.item == processingItem) {
-                if (!takeEnergy(1.0 / getModifier(inventory!!, Upgrade.ENERGY))) return
-                processTime = (processTime - ceil(1 * getModifier(inventory!!, Upgrade.SPEED)).toInt()).coerceAtLeast(0)
+                if (!takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) return
+                processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
                     inventory!!.setInvStack(0, inputStack.apply { count-- })
                     if (outputStack.item == output?.item)
@@ -85,7 +85,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
         output = null
     }
 
-    override fun getMaxStoredPower(): Double = super.getMaxStoredPower() * getModifier(inventory!!, Upgrade.BUFFER)
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventory!!)
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 

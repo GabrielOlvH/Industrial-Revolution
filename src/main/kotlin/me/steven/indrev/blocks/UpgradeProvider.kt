@@ -11,6 +11,8 @@ interface UpgradeProvider {
 
     fun getAvailableUpgrades(): Array<Upgrade>
 
+    fun getBaseValue(upgrade: Upgrade): Double
+
     fun getUpgrades(inventory: Inventory): Array<ItemStack> {
         val upgrades = mutableListOf<ItemStack>()
         for (i in getUpgradeSlots()) {
@@ -18,15 +20,5 @@ interface UpgradeProvider {
             if (invStack.item is UpgradeItem) upgrades.add(invStack)
         }
         return upgrades.toTypedArray()
-    }
-
-    fun getModifier(inventory: Inventory, upgrade: Upgrade): Double {
-        var count = 0
-        for (i in getUpgradeSlots()) {
-            val invStack = inventory.getInvStack(i)
-            val item = invStack.item
-            if (item is UpgradeItem && item.upgrade == upgrade) count++
-        }
-        return if (count > 0) count.coerceAtMost(upgrade.maxCount) * upgrade.modifier else 1.0
     }
 }
