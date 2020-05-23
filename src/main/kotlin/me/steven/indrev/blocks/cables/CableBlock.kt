@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.cables
 
 import me.steven.indrev.blocks.BasicMachineBlock
 import net.minecraft.block.Block
+import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.entity.EntityContext
 import net.minecraft.entity.player.PlayerEntity
@@ -44,9 +45,8 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
     }
 
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
-        if (world?.isClient == true) return
-        if (state[COVERED]) {
-            val blockEntity = world?.getBlockEntity(pos)
+        if (world?.isClient == false && state[COVERED]) {
+            val blockEntity = world.getBlockEntity(pos)
             if (blockEntity !is CableBlockEntity) return
             world.setBlockState(pos, state.with(COVERED, false))
             val coverId = blockEntity.cover
@@ -58,12 +58,15 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
     }
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
-        val handStack = player?.getStackInHand(hand)
-        if (state == null) return ActionResult.FAIL
-        else if (!state[COVERED] && handStack?.isEmpty == false && world?.isClient == false) {
+        val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
+        if (state?.get(COVERED) == true && handStack.isEmpty && world?.isClient == false) {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity !is CableBlockEntity) return ActionResult.FAIL
-            blockEntity.cover = Registry.ITEM.getId(handStack.item)
+            val id = Registry.ITEM.getId(handStack.item)
+            if (!Registry.BLOCK.containsId(id)) return ActionResult.FAIL
+            val block = Registry.BLOCK.get(id)
+            if (block is BlockEntityProvider || !block.defaultState.isFullCube(world, pos)) return ActionResult.FAIL
+            blockEntity.cover = id
             blockEntity.markDirty()
             world.setBlockState(pos, state.with(COVERED, true))
             handStack.count--
@@ -101,8 +104,7 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
 
         val COVERED: BooleanProperty = BooleanProperty.of("covered")
 
-
-        fun getProperty(facing: Direction?): AbstractProperty<Boolean> {
+        fun getProperty(facing: Direction): AbstractProperty<Boolean> {
             return when (facing) {
                 Direction.EAST -> EAST
                 Direction.WEST -> WEST
