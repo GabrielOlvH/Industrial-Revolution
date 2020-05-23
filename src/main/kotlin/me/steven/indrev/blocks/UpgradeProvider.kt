@@ -5,7 +5,7 @@ import me.steven.indrev.items.UpgradeItem
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 
-interface Upgradeable {
+interface UpgradeProvider {
 
     fun getUpgradeSlots(): IntArray
 

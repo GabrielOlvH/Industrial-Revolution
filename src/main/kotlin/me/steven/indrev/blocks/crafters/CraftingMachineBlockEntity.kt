@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.crafters
 
 import me.steven.indrev.blocks.BasicMachineBlockEntity
-import me.steven.indrev.blocks.Upgradeable
+import me.steven.indrev.blocks.UpgradeProvider
 import me.steven.indrev.items.Upgrade
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, Upgradeable {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
