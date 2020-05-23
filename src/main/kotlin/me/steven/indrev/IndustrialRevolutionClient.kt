@@ -21,36 +21,21 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorScreen(
-                    CoalGeneratorController(
-                            syncId,
-                            player.inventory,
-                            BlockContext.create(player.world, buf.readBlockPos())
-                    ),
-                    player
+                    CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceScreen(
-                    ElectricFurnaceController(
-                            syncId,
-                            player.inventory,
-                            BlockContext.create(player.world, buf.readBlockPos())
-                    ),
-                    player
+                    ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             PulverizerScreen(
-                    PulverizerController(
-                            syncId,
-                            player.inventory,
-                            BlockContext.create(player.world, buf.readBlockPos())
-                    ),
-                    player
+                    PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
         BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) { CableBlockEntityRenderer(it) }
