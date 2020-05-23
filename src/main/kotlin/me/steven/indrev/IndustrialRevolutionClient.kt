@@ -1,5 +1,7 @@
 package me.steven.indrev
 
+import me.steven.indrev.blocks.cables.CableBlockEntityRenderer
+import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorController
@@ -7,6 +9,7 @@ import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
@@ -50,5 +53,6 @@ class IndustrialRevolutionClient : ClientModInitializer {
                     player
             )
         }
+        BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) { CableBlockEntityRenderer(it) }
     }
 }
