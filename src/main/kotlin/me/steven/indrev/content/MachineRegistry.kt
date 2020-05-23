@@ -1,12 +1,14 @@
 package me.steven.indrev.content
 
 import me.steven.indrev.*
+import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.cables.CableBlock
 import me.steven.indrev.blocks.cables.CableBlockEntity
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
+import me.steven.indrev.blocks.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
@@ -22,6 +24,7 @@ class MachineRegistry {
 
     fun registerAll() {
         identifier("coal_generator").block(COAL_GENERATOR).item(COAL_GENERATOR_BLOCK_ITEM).blockEntityType(COAL_GENERATOR_BLOCK_ENTITY)
+        identifier("solar_generator").block(SOLAR_GENERATOR).item(SOLAR_GENERATOR_ITEM).blockEntityType(SOLAR_GENERATOR_BLOCK_ENTITY)
         identifier("electric_furnace").block(ELECTRIC_FURNACE).item(ELECTRIC_FURNACE_BLOCK_ITEM).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY)
         identifier("pulverizer").block(PULVERIZER).item(PULVERIZER_BLOCK_ITEM).blockEntityType(PULVERIZER_BLOCK_ENTITY)
         identifier("cable").block(CABLE).item(CABLE_ITEM).blockEntityType(CABLE_BLOCK_ENTITY)
@@ -38,6 +41,10 @@ class MachineRegistry {
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
+
+        val SOLAR_GENERATOR: BasicMachineBlock = BasicMachineBlock(MACHINE_BLOCK_SETTINGS) { SolarGeneratorBlockEntity() }
+        val SOLAR_GENERATOR_ITEM: BlockItem = BlockItem(SOLAR_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val SOLAR_GENERATOR_BLOCK_ENTITY: BlockEntityType<SolarGeneratorBlockEntity> = SOLAR_GENERATOR.blockEntityType { SolarGeneratorBlockEntity() }
 
         val ELECTRIC_FURNACE: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS,
