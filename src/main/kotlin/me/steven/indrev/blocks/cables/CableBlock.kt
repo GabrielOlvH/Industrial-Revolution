@@ -59,7 +59,7 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
 
     override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
-        if (state?.get(COVERED) == true && handStack.isEmpty && world?.isClient == false) {
+        if (state?.get(COVERED) == false && !handStack.isEmpty && world?.isClient == false) {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity !is CableBlockEntity) return ActionResult.FAIL
             val id = Registry.ITEM.getId(handStack.item)
