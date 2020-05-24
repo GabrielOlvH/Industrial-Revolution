@@ -56,14 +56,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
         if (world?.isClient == true) return
         val inputStack = inventory!!.getInvStack(0)
         val outputStack = inventory!!.getInvStack(1).copy()
-        if (isProcessing()) {
+        if (!isProcessing()) {
             if (processingItem == null || outputStack == null)
                 findRecipe(inventory!!)?.also { recipe ->
                     processingItem = inputStack.item
                     output = recipe.output
-                } ?: reset()
-            if (inputStack.item == processingItem) {
-                if (!takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) return
+                }
+            else if (inputStack.item == processingItem && takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
                     inventory!!.setInvStack(0, inputStack.apply { count-- })
