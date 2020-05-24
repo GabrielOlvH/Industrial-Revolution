@@ -29,7 +29,9 @@ class PulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(Machi
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(7) { slot, stack -> if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true }
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(7) { slot, stack ->
+        if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else slot == 0
+    }.also { it.addListener(this) }
 
     override fun onCraft() {
         if (this.inventory!!.invSize < 3) return

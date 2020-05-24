@@ -61,7 +61,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
                 findRecipe(inventory!!)?.also { recipe ->
                     processingItem = inputStack.item
                     output = recipe.output
-                }
+                } ?: reset()
             else if (inputStack.item == processingItem && takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
