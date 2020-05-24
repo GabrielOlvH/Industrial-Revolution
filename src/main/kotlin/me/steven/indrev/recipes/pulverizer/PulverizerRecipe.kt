@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.pulverizer
 
 import me.steven.indrev.identifier
 import net.minecraft.inventory.Inventory

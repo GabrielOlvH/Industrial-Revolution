@@ -10,7 +10,7 @@ import me.steven.indrev.gui.generators.CoalGeneratorController
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
-import me.steven.indrev.recipes.PulverizerRecipe
+import me.steven.indrev.recipes.pulverizer.PulverizerRecipe
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.container.BlockContext

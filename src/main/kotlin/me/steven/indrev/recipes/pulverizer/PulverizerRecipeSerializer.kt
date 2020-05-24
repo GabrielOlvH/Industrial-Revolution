@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.pulverizer
 
 import com.google.gson.JsonObject
 import net.minecraft.item.ItemStack
