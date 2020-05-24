@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.5, 1000.0) {
-    private val inventory = DefaultSidedInventory(1)
+    private val inventory = DefaultSidedInventory(1) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) } .also { it.addListener(this) }
     var burnTime: Int = 0
         set(value)  {
             propertyDelegate[2] = value
