@@ -7,7 +7,7 @@ import me.steven.indrev.blocks.UpgradeProvider
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
-import me.steven.indrev.recipes.pulverizer.PulverizerRecipe
+import me.steven.indrev.recipes.PulverizerRecipe
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
