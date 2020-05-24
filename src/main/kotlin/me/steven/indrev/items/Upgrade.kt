@@ -4,9 +4,9 @@ import me.steven.indrev.blocks.UpgradeProvider
 import net.minecraft.inventory.Inventory
 
 enum class Upgrade(private val apply: (Double, Int) -> Double) {
-    SPEED({ base, count -> base * 1.2 * count }),
-    ENERGY({ base, count -> base / (1.2 * count) }),
-    BUFFER({ base, count -> base * 2.0 * count });
+    SPEED({ base, count -> base * if (count < 1) 1.0 else 1.2 * count }),
+    ENERGY({ base, count -> base / if (count < 1) 1.0 else 1.2 * count }),
+    BUFFER({ base, count -> base * if (count < 1) 1.0 else 2.0 * count });
 
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
         var count = 0
