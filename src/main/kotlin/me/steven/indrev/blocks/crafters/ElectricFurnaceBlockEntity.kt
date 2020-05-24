@@ -13,7 +13,8 @@ import net.minecraft.recipe.SmeltingRecipe
 class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY, 250.0) {
     override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
         val inputStack = inventory.getInvStack(0)
-        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world) ?: return null
+        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)
+                ?: return null
         return if (optional.isPresent) optional.get() else null
     }
 
@@ -28,7 +29,9 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(6) { slot, stack -> if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true }
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(6) { slot, stack ->
+        if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true
+    }.also { it.addListener(this) }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 

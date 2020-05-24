@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.InventoryListener
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -22,7 +23,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, val maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, val maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, InventoryListener, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
@@ -36,10 +37,18 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
             propertyDelegate[2] = value
             field = value
         }
+        get() {
+            propertyDelegate[2] = field
+            return field
+        }
     var totalProcessTime: Int = 0
         set(value) {
             propertyDelegate[3] = value
             field = value
+        }
+        get() {
+            propertyDelegate[3] = field
+            return field
         }
 
     override fun tick() {
@@ -150,6 +159,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     override fun provideRecipeInputs(recipeFinder: RecipeFinder?) {
         for (i in 0 until inventory!!.invSize)
             recipeFinder?.addItem(inventory!!.getInvStack(i))
+    }
+
+    override fun onInvChange(inventory: Inventory?) {
+        propertyDelegate
+        energy
+        processTime
+        totalProcessTime
     }
 
     open fun onCraft() {}

@@ -21,6 +21,7 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, private val bas
         }
         get() {
             field = field.coerceAtMost(maxStoredPower)
+            propertyDelegate[0] = field.toInt()
             return field
         }
     private var delegate: PropertyDelegate? = null

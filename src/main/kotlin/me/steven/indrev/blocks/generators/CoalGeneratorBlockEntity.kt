@@ -20,10 +20,18 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
             propertyDelegate[2] = value
             field = value
         }
+        get() {
+            propertyDelegate[2] = field
+            return field
+        }
     var maxBurnTime: Int = 0
         set(value) {
             propertyDelegate[3] = value
             field = value
+        }
+        get() {
+            propertyDelegate[3] = field
+            return field
         }
 
     override fun tick() {
@@ -49,6 +57,12 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 
     override fun getMaxOutput(): Double = 8.0
+
+    override fun onInvChange(inventory: Inventory?) {
+        super.onInvChange(inventory)
+        burnTime
+        maxBurnTime
+    }
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
