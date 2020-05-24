@@ -23,6 +23,8 @@ class ItemRegistry {
         identifier("tin_ore").block(TIN_ORE).item(TIN_ORE_ITEM)
         identifier("pulverized_tin").item(PULVERIZED_TIN)
         identifier("tin_ingot").item(TIN_INGOT)
+        identifier("nikolite_ore").block(NIKOLITE_ORE).item(NIKOLITE_ORE_ITEM)
+        identifier("nikolite").item(NIKOLITE)
 
         identifier("pulverized_iron").item(PULVERIZED_IRON)
         identifier("pulverized_gold").item(PULVERIZED_GOLD)
@@ -45,6 +47,9 @@ class ItemRegistry {
         val TIN_ORE_ITEM = BlockItem(TIN_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val PULVERIZED_TIN = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val TIN_INGOT = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
+        val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val NIKOLITE = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
 
         val PULVERIZED_IRON = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val PULVERIZED_GOLD = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
