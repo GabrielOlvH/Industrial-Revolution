@@ -26,6 +26,7 @@ class MachineRegistry {
         identifier("coal_generator").block(COAL_GENERATOR).item(COAL_GENERATOR_BLOCK_ITEM).blockEntityType(COAL_GENERATOR_BLOCK_ENTITY)
         identifier("solar_generator").block(SOLAR_GENERATOR).item(SOLAR_GENERATOR_ITEM).blockEntityType(SOLAR_GENERATOR_BLOCK_ENTITY)
         identifier("electric_furnace").block(ELECTRIC_FURNACE).item(ELECTRIC_FURNACE_BLOCK_ITEM).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY)
+        identifier("compressor").block(COMPRESSOR).item(COMPRESSOR_BLOCK_ITEM).blockEntityType(COMPRESSOR_BLOCK_ENTITY)
         identifier("pulverizer").block(PULVERIZER).item(PULVERIZER_BLOCK_ITEM).blockEntityType(PULVERIZER_BLOCK_ENTITY)
         identifier("cable").block(CABLE).item(CABLE_ITEM).blockEntityType(CABLE_BLOCK_ENTITY)
     }

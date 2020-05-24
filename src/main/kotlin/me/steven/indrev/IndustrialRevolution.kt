@@ -4,6 +4,8 @@ import me.steven.indrev.blocks.generators.GeneratorBlockEntity
 import me.steven.indrev.content.ItemRegistry
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.content.registerWorldFeatures
+import me.steven.indrev.gui.compressor.CompressorController
+import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorController
@@ -45,6 +47,12 @@ class IndustrialRevolution : EnergyModInitializer() {
         ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
+            )
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(CompressorScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
             )
         }
 

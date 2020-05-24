@@ -2,6 +2,8 @@ package me.steven.indrev
 
 import me.steven.indrev.blocks.cables.CableBlockEntityRenderer
 import me.steven.indrev.content.MachineRegistry
+import me.steven.indrev.gui.compressor.CompressorController
+import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorController
@@ -38,6 +40,14 @@ class IndustrialRevolutionClient : ClientModInitializer {
                     PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
+
+        ScreenProviderRegistry.INSTANCE.registerFactory(CompressorScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            CompressorScreen(
+                    CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+            )
+        }
+
         BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) { CableBlockEntityRenderer(it) }
     }
 }
