@@ -3,6 +3,7 @@ package me.steven.indrev.blocks.crafters
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
+import me.steven.indrev.items.UpgradeItem
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
@@ -27,7 +28,7 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
         }
     }
 
-    override fun createInventory(): SidedInventory = DefaultSidedInventory(6)
+    override fun createInventory(): SidedInventory = DefaultSidedInventory(6) { slot, stack -> if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 
@@ -36,6 +37,6 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0
         Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> maxStoredPower
+        Upgrade.BUFFER -> maxBuffer
     }
 }

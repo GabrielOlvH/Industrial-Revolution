@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, val maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
