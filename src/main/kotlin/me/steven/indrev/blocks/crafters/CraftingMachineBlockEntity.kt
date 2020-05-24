@@ -71,6 +71,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
                     else if (outputStack.isEmpty)
                         inventory!!.setInvStack(1, output?.copy())
                     onCraft()
+                    reset()
                 }
             } else reset()
         } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
