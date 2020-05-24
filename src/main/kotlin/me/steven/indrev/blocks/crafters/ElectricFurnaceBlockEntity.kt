@@ -31,7 +31,7 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
 
     override fun createInventory(): SidedInventory = DefaultSidedInventory(6, intArrayOf(0), intArrayOf(1)) { slot, stack ->
         if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true
-    }.also { it.addListener(this) }
+    }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 

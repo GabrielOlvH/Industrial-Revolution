@@ -9,7 +9,6 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.InventoryListener
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -23,7 +22,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) : BasicMachineBlockEntity(type, baseBuffer), Tickable, InventoryProvider, InventoryListener, RecipeInputProvider, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) : BasicMachineBlockEntity(type, baseBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
@@ -160,13 +159,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     override fun provideRecipeInputs(recipeFinder: RecipeFinder?) {
         for (i in 0 until inventory!!.invSize)
             recipeFinder?.addItem(inventory!!.getInvStack(i))
-    }
-
-    override fun onInvChange(inventory: Inventory?) {
-        propertyDelegate
-        energy
-        processTime
-        totalProcessTime
     }
 
     open fun onCraft() {}

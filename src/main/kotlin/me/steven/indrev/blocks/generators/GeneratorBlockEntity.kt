@@ -6,13 +6,12 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.InventoryListener
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
 abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, maxBuffer: Double)
-    : BasicMachineBlockEntity(type, maxBuffer), InventoryProvider, InventoryListener {
+    : BasicMachineBlockEntity(type, maxBuffer), InventoryProvider {
 
     override fun tick() {
         super.tick()
@@ -22,10 +21,6 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 
     override fun getMaxInput(): Double = 0.0
-
-    override fun onInvChange(inventory: Inventory?) {
-        energy
-    }
 
     override fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
