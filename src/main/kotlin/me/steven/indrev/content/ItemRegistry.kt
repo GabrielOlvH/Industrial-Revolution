@@ -1,9 +1,9 @@
 package me.steven.indrev.content
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.block
 import me.steven.indrev.identifier
 import me.steven.indrev.item
+import me.steven.indrev.itemSettings
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -40,24 +40,24 @@ class ItemRegistry {
         private val ORE_BLOCK_SETTINGS: FabricBlockSettings = FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
 
         val COPPER_ORE = Block(ORE_BLOCK_SETTINGS)
-        val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZED_COPPER = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val COPPER_INGOT = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, itemSettings())
+        val PULVERIZED_COPPER = Item(itemSettings())
+        val COPPER_INGOT = Item(itemSettings())
         val TIN_ORE = Block(ORE_BLOCK_SETTINGS)
-        val TIN_ORE_ITEM = BlockItem(TIN_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZED_TIN = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val TIN_INGOT = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val TIN_ORE_ITEM = BlockItem(TIN_ORE, itemSettings())
+        val PULVERIZED_TIN = Item(itemSettings())
+        val TIN_INGOT = Item(itemSettings())
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
-        val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val NIKOLITE = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
+        val NIKOLITE = Item(itemSettings())
 
-        val PULVERIZED_IRON = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZED_GOLD = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZED_COAL = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
-        val PULVERIZED_DIAMOND = Item(Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val PULVERIZED_IRON = Item(itemSettings())
+        val PULVERIZED_GOLD = Item(itemSettings())
+        val PULVERIZED_COAL = Item(itemSettings())
+        val PULVERIZED_DIAMOND = Item(itemSettings())
 
-        val BUFFER_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.BUFFER)
-        val SPEED_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.SPEED)
-        val ENERGY_UPGRADE = UpgradeItem(Item.Settings().group(IndustrialRevolution.MOD_GROUP).maxCount(1), Upgrade.ENERGY)
+        val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
+        val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
+        val ENERGY_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
     }
 }
