@@ -35,9 +35,7 @@ class MachineRegistry {
         private val MACHINE_BLOCK_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
         val COAL_GENERATOR: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS,
-                CoalGeneratorScreen.SCREEN_ID,
-                { it is CoalGeneratorBlockEntity }
+                MACHINE_BLOCK_SETTINGS, CoalGeneratorScreen.SCREEN_ID, { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
         val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
@@ -47,17 +45,13 @@ class MachineRegistry {
         val SOLAR_GENERATOR_BLOCK_ENTITY: BlockEntityType<SolarGeneratorBlockEntity> = SOLAR_GENERATOR.blockEntityType { SolarGeneratorBlockEntity() }
 
         val ELECTRIC_FURNACE: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS,
-                ElectricFurnaceScreen.SCREEN_ID,
-                { it is ElectricFurnaceBlockEntity }
+                MACHINE_BLOCK_SETTINGS, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
         val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
 
         val PULVERIZER: InterfacedMachineBlock = InterfacedMachineBlock(
-            MACHINE_BLOCK_SETTINGS,
-            PulverizerScreen.SCREEN_ID,
-            { it is PulverizerBlockEntity }
+                MACHINE_BLOCK_SETTINGS, PulverizerScreen.SCREEN_ID, { it is PulverizerBlockEntity }
         ) { PulverizerBlockEntity() }
         val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
         val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
