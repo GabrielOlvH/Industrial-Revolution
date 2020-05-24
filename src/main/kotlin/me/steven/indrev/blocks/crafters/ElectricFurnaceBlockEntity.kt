@@ -40,6 +40,6 @@ class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(Ma
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0
         Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> maxBuffer
+        Upgrade.BUFFER -> baseBuffer
     }
 }

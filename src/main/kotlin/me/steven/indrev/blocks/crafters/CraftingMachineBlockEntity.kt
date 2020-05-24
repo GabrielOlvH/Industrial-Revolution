@@ -23,7 +23,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, val maxBuffer: Double) : BasicMachineBlockEntity(type, maxBuffer), Tickable, InventoryProvider, InventoryListener, RecipeInputProvider, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) : BasicMachineBlockEntity(type, baseBuffer), Tickable, InventoryProvider, InventoryListener, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
@@ -57,7 +57,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
         val inputStack = inventory!!.getInvStack(0)
         val outputStack = inventory!!.getInvStack(1).copy()
         if (isProcessing()) {
-            if (processingItem == null || outputStack == null)
+            if (inputStack.isEmpty) reset()
+            else if (!inputStack.isEmpty && inputStack.item != processingItem)
                 findRecipe(inventory!!)?.also { recipe ->
                     processingItem = inputStack.item
                     output = recipe.output
