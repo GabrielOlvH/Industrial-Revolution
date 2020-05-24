@@ -10,6 +10,7 @@ import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blocks.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
@@ -58,7 +59,7 @@ class MachineRegistry {
         val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
 
         val COMPRESSOR: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, PulverizerScreen.SCREEN_ID, { it is CompressorBlockEntity }
+                MACHINE_BLOCK_SETTINGS, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
         ) { CompressorBlockEntity() }
         val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(COMPRESSOR, itemSettings())
         val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> = COMPRESSOR.blockEntityType { CompressorBlockEntity() }
