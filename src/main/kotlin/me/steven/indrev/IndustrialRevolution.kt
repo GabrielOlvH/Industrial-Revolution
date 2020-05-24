@@ -24,7 +24,6 @@ import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
 
-
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
@@ -53,6 +52,7 @@ class IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CompressorRecipe.IDENTIFIER, CompressorRecipe.TYPE)
+
         registerWorldFeatures()
     }
 

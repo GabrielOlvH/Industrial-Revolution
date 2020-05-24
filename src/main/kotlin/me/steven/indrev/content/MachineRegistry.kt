@@ -5,6 +5,7 @@ import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.cables.CableBlock
 import me.steven.indrev.blocks.cables.CableBlockEntity
+import me.steven.indrev.blocks.crafters.CompressorBlockEntity
 import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
@@ -17,7 +18,6 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
 
 class MachineRegistry {
@@ -37,27 +37,33 @@ class MachineRegistry {
         val COAL_GENERATOR: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS, CoalGeneratorScreen.SCREEN_ID, { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
-        val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, itemSettings())
         val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
 
         val SOLAR_GENERATOR: BasicMachineBlock = BasicMachineBlock(MACHINE_BLOCK_SETTINGS) { SolarGeneratorBlockEntity() }
-        val SOLAR_GENERATOR_ITEM: BlockItem = BlockItem(SOLAR_GENERATOR, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val SOLAR_GENERATOR_ITEM: BlockItem = BlockItem(SOLAR_GENERATOR, itemSettings())
         val SOLAR_GENERATOR_BLOCK_ENTITY: BlockEntityType<SolarGeneratorBlockEntity> = SOLAR_GENERATOR.blockEntityType { SolarGeneratorBlockEntity() }
 
         val ELECTRIC_FURNACE: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
         ) { ElectricFurnaceBlockEntity() }
-        val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, itemSettings())
         val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
 
         val PULVERIZER: InterfacedMachineBlock = InterfacedMachineBlock(
                 MACHINE_BLOCK_SETTINGS, PulverizerScreen.SCREEN_ID, { it is PulverizerBlockEntity }
         ) { PulverizerBlockEntity() }
-        val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, itemSettings())
         val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
 
+        val COMPRESSOR: InterfacedMachineBlock = InterfacedMachineBlock(
+                MACHINE_BLOCK_SETTINGS, PulverizerScreen.SCREEN_ID, { it is CompressorBlockEntity }
+        ) { CompressorBlockEntity() }
+        val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(COMPRESSOR, itemSettings())
+        val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> = COMPRESSOR.blockEntityType { CompressorBlockEntity() }
+
         val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS)
-        val CABLE_ITEM: BlockItem = BlockItem(CABLE, Item.Settings().group(IndustrialRevolution.MOD_GROUP))
+        val CABLE_ITEM: BlockItem = BlockItem(CABLE, itemSettings())
         val CABLE_BLOCK_ENTITY: BlockEntityType<CableBlockEntity> = CABLE.blockEntityType { CableBlockEntity() }
     }
 }
