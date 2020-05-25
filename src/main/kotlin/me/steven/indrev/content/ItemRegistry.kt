@@ -5,6 +5,7 @@ import me.steven.indrev.identifier
 import me.steven.indrev.item
 import me.steven.indrev.itemSettings
 import me.steven.indrev.items.CraftingTool
+import me.steven.indrev.items.RechargeableItem
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -29,6 +30,8 @@ class ItemRegistry {
         identifier("tin_ingot").item(DEFAULT_ITEM())
         identifier("nikolite_ore").block(NIKOLITE_ORE).item(NIKOLITE_ORE_ITEM)
         identifier("nikolite").item(DEFAULT_ITEM())
+
+        identifier("mining_drill").item(MINING_DRILL)
 
         identifier("pulverized_iron").item(DEFAULT_ITEM())
         identifier("pulverized_gold").item(DEFAULT_ITEM())
@@ -63,6 +66,8 @@ class ItemRegistry {
         val TIN_ORE_ITEM = BlockItem(TIN_ORE, itemSettings())
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
+
+        val MINING_DRILL = RechargeableItem(itemSettings().maxDamage(32000),  32.0)
 
         val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
         val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
