@@ -4,6 +4,7 @@ import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableToolItem
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
@@ -23,7 +24,7 @@ class BatteryBlockEntity(tier: Tier) :
         super.tick()
         if (world?.isClient == true) return
         val stack = inventory.getInvStack(0)
-        if (stack.item is RechargeableToolItem && stack.isDamaged) {
+        if (stack.item is RechargeableItem && stack.isDamaged) {
             inventory.setInvStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
         }

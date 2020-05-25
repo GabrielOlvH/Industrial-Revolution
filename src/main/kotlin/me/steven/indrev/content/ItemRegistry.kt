@@ -3,6 +3,7 @@ package me.steven.indrev.content
 import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableToolItem
 import me.steven.indrev.utils.block
 import me.steven.indrev.utils.identifier
@@ -71,8 +72,8 @@ class ItemRegistry {
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
 
-        val BATTERY = RechargeableToolItem(itemSettings().maxDamage(256))
-        val ADVANCED_BATTERY = RechargeableToolItem(itemSettings().maxDamage(1024))
+        val BATTERY = RechargeableItem(itemSettings().maxDamage(256))
+        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(1024))
 
         val MINING_DRILL = RechargeableToolItem(itemSettings().maxDamage(32000))
 
