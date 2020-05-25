@@ -7,20 +7,15 @@ import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Identifier
-import team.reborn.energy.EnergySide
 
-class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CABLE_BLOCK_ENTITY, tier, 10.0) {
+class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CABLE_BLOCK_ENTITY, tier, 16.0) {
     var cover: Identifier? = null
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
-
-    override fun getMaxInput(side: EnergySide?): Double = 32.0
-
-    override fun getMaxOutput(side: EnergySide?): Double = 32.0
-
+    
     override fun fromTag(tag: CompoundTag?) {
         if (tag?.contains("cover") == true)
-            cover =  Identifier(tag.getString("cover"))
+            cover = Identifier(tag.getString("cover"))
         super.fromTag(tag)
     }
 

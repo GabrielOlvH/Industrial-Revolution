@@ -92,9 +92,9 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier,
     @Deprecated("unsupported", level = DeprecationLevel.ERROR)
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
 
-    abstract override fun getMaxOutput(side: EnergySide?): Double
+    override fun getMaxOutput(side: EnergySide?): Double = tier.io
 
-    abstract override fun getMaxInput(side: EnergySide?): Double
+    override fun getMaxInput(side: EnergySide?): Double = tier.io
 
     fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
 

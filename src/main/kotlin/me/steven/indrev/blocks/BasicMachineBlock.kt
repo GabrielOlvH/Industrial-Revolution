@@ -7,16 +7,21 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.util.TextFormat
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.text.Text
-import net.minecraft.util.registry.Registry
+import net.minecraft.text.TranslatableText
 import net.minecraft.world.BlockView
 
-open class BasicMachineBlock(settings: Settings, tier: Tier, val blockEntityProvider: () -> BasicMachineBlockEntity) :
+open class BasicMachineBlock(
+    settings: Settings,
+    val tier: Tier,
+    val blockEntityProvider: () -> BasicMachineBlockEntity
+) :
     Block(settings), BlockEntityProvider {
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
@@ -27,9 +32,7 @@ open class BasicMachineBlock(settings: Settings, tier: Tier, val blockEntityProv
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        val id = Registry.ITEM.getId(stack?.item)
-        if (!Registry.BLOCK.containsId(id)) return
-        val block = Registry.BLOCK.get(id)
+        tooltip?.add(TranslatableText("block.machines.tooltip.io", TextFormat.BLUE, TextFormat.WHITE, tier.io))
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
