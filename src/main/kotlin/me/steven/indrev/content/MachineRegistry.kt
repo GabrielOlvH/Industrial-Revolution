@@ -31,6 +31,7 @@ class MachineRegistry {
         identifier("electric_furnace").block(ELECTRIC_FURNACE).item(ELECTRIC_FURNACE_BLOCK_ITEM).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY)
         identifier("compressor").block(COMPRESSOR).item(COMPRESSOR_BLOCK_ITEM).blockEntityType(COMPRESSOR_BLOCK_ENTITY)
         identifier("pulverizer").block(PULVERIZER).item(PULVERIZER_BLOCK_ITEM).blockEntityType(PULVERIZER_BLOCK_ENTITY)
+        identifier("battery").block(BATTERY_BLOCK).item(BATTERY_BLOCK_ITEM).blockEntityType(BATTERY_BLOCK_ENTITY)
         identifier("cable").block(CABLE).item(CABLE_ITEM).blockEntityType(CABLE_BLOCK_ENTITY)
     }
 

@@ -16,7 +16,7 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, blockCont
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
-        root.add(WItemSlot.of(blockInventory, 0), 5, 2)
+        root.add(WItemSlot.of(blockInventory, 0), 4, 2)
 
         root.add(createPlayerInventoryPanel(), 0, 4)
 
