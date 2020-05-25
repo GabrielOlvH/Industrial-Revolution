@@ -4,7 +4,7 @@ import me.steven.indrev.block
 import me.steven.indrev.identifier
 import me.steven.indrev.item
 import me.steven.indrev.itemSettings
-import me.steven.indrev.items.ItemTool
+import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -54,8 +54,8 @@ class ItemRegistry {
 
         private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
 
-        val HAMMER = ItemTool(itemSettings().maxDamage(32))
-        val CUTTER = ItemTool(itemSettings().maxDamage(32))
+        val HAMMER = CraftingTool(itemSettings().maxDamage(32))
+        val CUTTER = CraftingTool(itemSettings().maxDamage(32))
 
         val COPPER_ORE = Block(ORE_BLOCK_SETTINGS)
         val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, itemSettings())
