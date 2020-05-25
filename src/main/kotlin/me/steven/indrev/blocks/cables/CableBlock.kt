@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks.cables
 
+import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
