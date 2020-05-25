@@ -14,7 +14,7 @@ import net.minecraft.util.Pair
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
-class PulverizerRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val extraOutput: Pair<ItemStack, Double>, val input: Ingredient) : Recipe<Inventory> {
+class PulverizerRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val extraOutput: Pair<ItemStack, Double>?, val input: Ingredient) : Recipe<Inventory> {
     override fun craft(inv: Inventory?): ItemStack = output.copy()
 
     override fun getId(): Identifier = id
@@ -39,8 +39,10 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 recipe.input.write(buf)
                 buf.writeInt(recipe.processTime)
                 buf.writeItemStack(recipe.output)
-                buf.writeItemStack(recipe.extraOutput.left)
-                buf.writeDouble(recipe.extraOutput.right)
+                if (recipe.extraOutput != null) {
+                    buf.writeItemStack(recipe.extraOutput.left)
+                    buf.writeDouble(recipe.extraOutput.right)
+                }
             }
 
             override fun read(id: Identifier, json: JsonObject): PulverizerRecipe {
@@ -52,12 +54,16 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
-                val extraOutputStack =ItemStack {
-                    Registry.ITEM.getOrEmpty(Identifier(json.getAsJsonObject("extra").get("item").asString)).orElse(null)
+                return if (json.has("extra")) {
+                    val extra = json.getAsJsonObject("extra")
+                    val extraOutputStack = ItemStack {
+                        Registry.ITEM.getOrEmpty(Identifier(extra.get("item").asString))
+                            .orElse(null)
                             ?: throw IllegalArgumentException("no such item $result")
-                }
-                val chance = json.getAsJsonObject("extra").get("chance").asDouble
-                return PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)
+                    }
+                    val chance = extra.get("chance").asDouble
+                    PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)
+                } else PulverizerRecipe(id, ticks, output, null, input)
             }
 
             override fun read(id: Identifier, buf: PacketByteBuf): PulverizerRecipe {

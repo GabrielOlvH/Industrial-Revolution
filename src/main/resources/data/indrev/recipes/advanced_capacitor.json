@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NRN",
+    "PBP",
+    "NPN"
+  ],
+  "key": {
+    "N": {
+      "item": "indrev:nikolite"
+    },
+    "P": {
+      "item": "indrev:pulverized_obsidian"
+    },
+    "B": {
+      "item": "indrev:basic_capacitor"
+    },
+    "R": {
+      "item": "indrev:steel_plate"
+    }
+  },
+  "result": {
+    "item": "indrev:basic_capacitor"
+  }
+}

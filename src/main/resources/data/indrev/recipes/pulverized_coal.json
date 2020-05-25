@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredient": {
+    "item": "minecraft:coal"
+  },
+  "output": {
+    "item": "indrev:pulverized_coal",
+    "count": 2
+  },
+  "processTime": 300
+}

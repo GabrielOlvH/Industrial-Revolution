@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:copper_ingot"
+    },
+    {
+      "item": "indrev:cutter"
+    }
+  ],
+  "result": {
+    "item": "indrev:wire"
+  }
+}

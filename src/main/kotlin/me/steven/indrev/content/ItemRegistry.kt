@@ -22,21 +22,27 @@ class ItemRegistry {
         identifier("cutter").item(CUTTER)
 
         identifier("copper_ore").block(COPPER_ORE).item(COPPER_ORE_ITEM)
-        identifier("pulverized_copper").item(BASIC_ITEM())
-        identifier("copper_ingot").item(BASIC_ITEM())
+        identifier("pulverized_copper").item(DEFAULT_ITEM())
+        identifier("copper_ingot").item(DEFAULT_ITEM())
         identifier("tin_ore").block(TIN_ORE).item(TIN_ORE_ITEM)
-        identifier("pulverized_tin").item(BASIC_ITEM())
-        identifier("tin_ingot").item(BASIC_ITEM())
+        identifier("pulverized_tin").item(DEFAULT_ITEM())
+        identifier("tin_ingot").item(DEFAULT_ITEM())
         identifier("nikolite_ore").block(NIKOLITE_ORE).item(NIKOLITE_ORE_ITEM)
-        identifier("nikolite").item(BASIC_ITEM())
+        identifier("nikolite").item(DEFAULT_ITEM())
 
-        identifier("pulverized_iron").item(BASIC_ITEM())
-        identifier("pulverized_gold").item(BASIC_ITEM())
-        identifier("pulverized_coal").item(BASIC_ITEM())
-        identifier("pulverized_diamond").item(BASIC_ITEM())
-
-        identifier("iron_plate").item(BASIC_ITEM())
-        identifier("basic_capacitor").item(BASIC_ITEM())
+        identifier("pulverized_iron").item(DEFAULT_ITEM())
+        identifier("pulverized_gold").item(DEFAULT_ITEM())
+        identifier("pulverized_coal").item(DEFAULT_ITEM())
+        identifier("pulverized_diamond").item(DEFAULT_ITEM())
+        identifier("pulverized_obsidian").item(DEFAULT_ITEM())
+        identifier("steel_blend").item(DEFAULT_ITEM())
+        identifier("steel_ingot").item(DEFAULT_ITEM())
+        identifier("steel_plate").item(DEFAULT_ITEM())
+        identifier("iron_plate").item(DEFAULT_ITEM())
+        identifier("wire").item(DEFAULT_ITEM())
+        identifier("basic_capacitor").item(DEFAULT_ITEM())
+        identifier("advanced_capacitor").item(DEFAULT_ITEM())
+        identifier("basic_circuit").item(DEFAULT_ITEM())
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
@@ -46,7 +52,7 @@ class ItemRegistry {
     companion object {
         private val ORE_BLOCK_SETTINGS: FabricBlockSettings = FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
 
-        private val BASIC_ITEM: () -> Item = { Item(itemSettings()) }
+        private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
 
         val HAMMER = ItemTool(itemSettings().maxDamage(32))
         val CUTTER = ItemTool(itemSettings().maxDamage(32))
