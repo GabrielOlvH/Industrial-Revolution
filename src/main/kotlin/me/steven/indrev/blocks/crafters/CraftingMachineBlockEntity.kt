@@ -20,6 +20,7 @@ import net.minecraft.recipe.RecipeInputProvider
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
+import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) : BasicMachineBlockEntity(type, baseBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
@@ -98,9 +99,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 
-    override fun getMaxInput(): Double = 1.0
+    override fun getMaxInput(side: EnergySide?): Double = 1.0
 
-    override fun getMaxOutput(): Double = 0.0
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     private fun isProcessing() = processTime > 0 && energy > 0
 

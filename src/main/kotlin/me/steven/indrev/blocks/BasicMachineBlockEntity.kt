@@ -34,16 +34,16 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer:
         if (world?.isClient == true) return
 
         val block = this.cachedState.block
-        if (block !is BasicMachineBlock || this.getMaxOutput() <= 0) return
         val handler = Energy.of(this)
         Direction.values()
             .associate { direction ->
+                if (block !is BasicMachineBlock || this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
                 val targetPos = pos.offset(direction)
                 val target = world?.getBlockEntity(targetPos)
                 if (target == null || !Energy.valid(target)) return@associate Pair(null, null)
-                val targetHandler = Energy.of(target).side(direction)
+                val targetHandler = Energy.of(target).side(direction.opposite)
                 if (targetHandler.energy >= targetHandler.maxStored) Pair(null, null)
-                else Pair(direction, targetHandler.side(direction.opposite))
+                else Pair(direction, targetHandler)
             }
             .filter { (left, right) -> left != null && right != null }
             .apply {
@@ -85,17 +85,14 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer:
     }
 
     override fun getMaxStoredPower(): Double = baseBuffer
-
-    abstract fun getMaxInput(): Double
-
-    abstract fun getMaxOutput(): Double
-
     @Deprecated("unsupported")
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
 
-    override fun getMaxOutput(side: EnergySide?): Double = getMaxOutput()
+    abstract override fun getMaxOutput(side: EnergySide?): Double
 
-    override fun getMaxInput(side: EnergySide?): Double = getMaxInput()
+    fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
+
+    abstract override fun getMaxInput(side: EnergySide?): Double
 
     override fun getStored(side: EnergySide?): Double = energy
 

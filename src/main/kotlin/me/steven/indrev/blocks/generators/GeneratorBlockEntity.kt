@@ -9,6 +9,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import team.reborn.energy.EnergySide
 
 abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val generationRatio: Double, maxBuffer: Double)
     : BasicMachineBlockEntity(type, maxBuffer), InventoryProvider {
@@ -20,7 +21,7 @@ abstract class GeneratorBlockEntity(type: BlockEntityType<*>, private val genera
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 
-    override fun getMaxInput(): Double = 0.0
+    override fun getMaxInput(side: EnergySide?): Double = 0.0
 
     override fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
