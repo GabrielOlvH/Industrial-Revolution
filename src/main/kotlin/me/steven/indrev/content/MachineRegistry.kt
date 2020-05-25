@@ -9,8 +9,8 @@ import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
-import me.steven.indrev.blocks.cables.CableBlock
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
@@ -64,15 +64,18 @@ class MachineRegistry {
                 MACHINE_BLOCK_SETTINGS, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
         ) { CompressorBlockEntity() }
         val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(COMPRESSOR, itemSettings())
-        val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> = COMPRESSOR.blockEntityType { CompressorBlockEntity() }
+        val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> =
+            COMPRESSOR.blockEntityType { CompressorBlockEntity() }
 
         val BATTERY_BLOCK: InterfacedMachineBlock = InterfacedMachineBlock(
             MACHINE_BLOCK_SETTINGS, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
         ) { BatteryBlockEntity() }
         val BATTERY_BLOCK_ITEM: BlockItem = BlockItem(BATTERY_BLOCK, itemSettings())
-        val BATTERY_BLOCK_ENTITY: BlockEntityType<BatteryBlockEntity> = BATTERY_BLOCK.blockEntityType { BatteryBlockEntity() }
+        val BATTERY_BLOCK_ENTITY: BlockEntityType<BatteryBlockEntity> =
+            BATTERY_BLOCK.blockEntityType { BatteryBlockEntity() }
 
-        val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS)
+        val CABLE: CableBlock =
+            CableBlock(MACHINE_BLOCK_SETTINGS)
         val CABLE_ITEM: BlockItem = BlockItem(CABLE, itemSettings())
         val CABLE_BLOCK_ENTITY: BlockEntityType<CableBlockEntity> = CABLE.blockEntityType { CableBlockEntity() }
     }

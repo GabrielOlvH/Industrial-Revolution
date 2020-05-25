@@ -1,7 +1,6 @@
-package me.steven.indrev.blocks.cables
+package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blocks.BasicMachineBlock
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -31,8 +30,12 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
 
     init {
         this.defaultState = stateManager.defaultState
-                .with(NORTH, false).with(SOUTH, false)
-                .with(EAST, false).with(WEST, false)
+            .with(NORTH, false).with(
+                SOUTH, false
+            )
+            .with(EAST, false).with(
+                WEST, false
+            )
                 .with(UP, false).with(DOWN, false)
                 .with(COVERED, false)
     }
@@ -42,7 +45,15 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        builder?.add(NORTH, SOUTH, EAST, WEST, UP, DOWN, COVERED)
+        builder?.add(
+            NORTH,
+            SOUTH,
+            EAST,
+            WEST,
+            UP,
+            DOWN,
+            COVERED
+        )
     }
 
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
@@ -81,14 +92,22 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
         val blockPos = ctx?.blockPos ?: return state
         for (direction in Direction.values()) {
             val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            if (Energy.valid(neighbor)) state = state.with(getProperty(direction), true)
+            if (Energy.valid(neighbor)) state = state.with(
+                getProperty(
+                    direction
+                ), true
+            )
         }
         return state
     }
 
     override fun getStateForNeighborUpdate(state: BlockState, facing: Direction, neighborState: BlockState?, world: IWorld?, pos: BlockPos?, neighborPos: BlockPos?): BlockState {
         val neighborBlockEntity = world?.getBlockEntity(neighborPos)
-        return if (neighborBlockEntity == null || !Energy.valid(neighborBlockEntity)) state.with(getProperty(facing), false)
+        return if (neighborBlockEntity == null || !Energy.valid(neighborBlockEntity)) state.with(
+            getProperty(
+                facing
+            ), false
+        )
         else state.with(getProperty(facing), true)
     }
 
