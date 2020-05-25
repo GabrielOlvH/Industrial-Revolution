@@ -14,7 +14,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 
-class BatteryBlockEntity(tier: Tier) : InterfacedMachineBlockEntity(MachineRegistry.BATTERY_BLOCK_ENTITY, tier, 750.0) {
+class BatteryBlockEntity(tier: Tier) :
+    InterfacedMachineBlockEntity(MachineRegistry.BATTERY_BLOCK_ENTITY, tier, 256 * 3.0) {
     val inventory: SidedInventory =
         DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is RechargeableToolItem }
 
@@ -34,11 +35,11 @@ class BatteryBlockEntity(tier: Tier) : InterfacedMachineBlockEntity(MachineRegis
 
     override fun getMaxOutput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side != EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) 32.0 else 0.0
+        return if (side != EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) this.tier.io else 0.0
     }
 
     override fun getMaxInput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side == EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) 32.0 else 0.0
+        return if (side == EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) this.tier.io else 0.0
     }
 }

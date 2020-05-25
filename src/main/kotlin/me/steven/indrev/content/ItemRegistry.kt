@@ -30,6 +30,7 @@ class ItemRegistry {
         identifier("tin_ingot").item(DEFAULT_ITEM())
         identifier("nikolite_ore").block(NIKOLITE_ORE).item(NIKOLITE_ORE_ITEM)
         identifier("nikolite").item(DEFAULT_ITEM())
+        identifier("powered_nikolite").item(DEFAULT_ITEM())
 
         identifier("mining_drill").item(MINING_DRILL)
 
@@ -46,6 +47,9 @@ class ItemRegistry {
         identifier("basic_capacitor").item(DEFAULT_ITEM())
         identifier("advanced_capacitor").item(DEFAULT_ITEM())
         identifier("basic_circuit").item(DEFAULT_ITEM())
+        identifier("advanced_circuit").item(DEFAULT_ITEM())
+        identifier("battery").item(BATTERY)
+        identifier("advanced_battery").item(ADVANCED_BATTERY)
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
@@ -66,6 +70,9 @@ class ItemRegistry {
         val TIN_ORE_ITEM = BlockItem(TIN_ORE, itemSettings())
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
+
+        val BATTERY = RechargeableToolItem(itemSettings().maxDamage(256))
+        val ADVANCED_BATTERY = RechargeableToolItem(itemSettings().maxDamage(1024))
 
         val MINING_DRILL = RechargeableToolItem(itemSettings().maxDamage(32000))
 

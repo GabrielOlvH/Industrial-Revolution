@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "C C",
+    "IFI",
+    "CBC"
+  ],
+  "key": {
+    "B": {
+      "item": "indrev:battery"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "C": {
+      "item": "indrev:basic_capacitor"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "indrev:electric_furnace"
+  }
+}

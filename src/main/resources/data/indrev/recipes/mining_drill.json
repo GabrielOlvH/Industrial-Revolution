@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PSP",
+    "SAS",
+    "BCB"
+  ],
+  "key": {
+    "S": {
+      "item": "indrev:steel_plate"
+    },
+    "P": {
+      "item": "indrev:powered_nikolite"
+    },
+    "C": {
+      "item": "indrev:cable"
+    },
+    "B": {
+      "item": "indrev:advanced_capacitor"
+    },
+    "A": {
+      "item": "indrev:advanced_battery"
+    }
+  },
+  "result": {
+    "item": "indrev:mining_drill"
+  }
+}

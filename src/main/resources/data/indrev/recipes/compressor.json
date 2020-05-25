@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CHC",
+    "IFI",
+    "CBC"
+  ],
+  "key": {
+    "B": {
+      "item": "indrev:battery"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "C": {
+      "item": "indrev:basic_capacitor"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "H": {
+      "item": "indrev:hammer"
+    }
+  },
+  "result": {
+    "item": "indrev:coal_generator"
+  }
+}

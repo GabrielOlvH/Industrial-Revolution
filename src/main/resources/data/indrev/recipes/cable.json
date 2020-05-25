@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " N ",
+    "IWI",
+    " N "
+  ],
+  "key": {
+    "N": {
+      "item": "indrev:nikolite"
+    },
+    "I": {
+      "item": "indrev:iron_plate"
+    },
+    "W": {
+      "item": "indrev:wire"
+    }
+  },
+  "result": {
+    "item": "indrev:coal_generator"
+  }
+}

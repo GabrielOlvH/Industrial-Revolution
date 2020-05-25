@@ -1,28 +1,28 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ARA",
-    "PBP",
-    "NPN"
+    "PCP",
+    "ABA",
+    "NCN"
   ],
   "key": {
     "N": {
       "item": "indrev:nikolite"
     },
-    "A": {
+    "P": {
       "item": "indrev:powered_nikolite"
     },
-    "P": {
-      "item": "indrev:pulverized_obsidian"
+    "C": {
+      "item": "indrev:cable"
     },
     "B": {
-      "item": "indrev:basic_capacitor"
+      "item": "indrev:basic_circuit"
     },
-    "R": {
-      "item": "indrev:steel_plate"
+    "A": {
+      "item": "indrev:advanced_capacitor"
     }
   },
   "result": {
-    "item": "indrev:basic_capacitor"
+    "item": "indrev:advanced_circuit"
   }
 }

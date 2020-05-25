@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:pulverized_obsidian"
+    },
+    {
+      "item": "indrev:nikolite"
+    },
+    {
+      "item": "indrev:nikolite"
+    },
+    {
+      "item": "indrev:pulverized_diamond"
+    }
+  ],
+  "result": {
+    "item": "indrev:powered_nikolite",
+    "count": 2
+  }
+}

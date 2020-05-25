@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "BAB",
+    "NBN"
+  ],
+  "key": {
+    "N": {
+      "item": "indrev:nikolite"
+    },
+    "C": {
+      "item": "indrev:cable"
+    },
+    "B": {
+      "item": "indrev:iron_plate"
+    },
+    "A": {
+      "item": "indrev:basic_capacitor"
+    }
+  },
+  "result": {
+    "item": "indrev:battery"
+  }
+}
