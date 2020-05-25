@@ -37,24 +37,26 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer:
         if (block !is BasicMachineBlock || this.getMaxOutput() <= 0) return
         val handler = Energy.of(this)
         Direction.values()
-                .map { direction ->
-                    val targetPos = pos.offset(direction)
-                    val target = world?.getBlockEntity(targetPos)
-                    if (target == null || !Energy.valid(target)) return@map null
-                    val targetHandler = Energy.of(target)
-                    if (targetHandler.energy >= targetHandler.maxStored) null
-                    else targetHandler.side(direction)
+            .associate { direction ->
+                val targetPos = pos.offset(direction)
+                val target = world?.getBlockEntity(targetPos)
+                if (target == null || !Energy.valid(target)) return@associate Pair(null, null)
+                val targetHandler = Energy.of(target).side(direction)
+                if (targetHandler.energy >= targetHandler.maxStored) Pair(null, null)
+                else Pair(direction, targetHandler.side(direction.opposite))
+            }
+            .filter { (left, right) -> left != null && right != null }
+            .apply {
+                val sum = values.sumByDouble { it!!.maxInput }
+                forEach { pair ->
+                    val targetHandler = pair.value
+                    handler.side(pair.key)
+                    val targetMaxInput = targetHandler!!.maxInput
+                    val weight = (targetMaxInput / sum) * handler.maxOutput
+                    if (weight > 0)
+                        handler.into(targetHandler).move(weight)
                 }
-                .filterNotNull()
-                .apply {
-                    val sum = sumByDouble { it.maxInput }
-                    forEach { targetHandler ->
-                        val targetMaxInput = targetHandler.maxInput
-                        val weight = (targetMaxInput / sum) * getMaxOutput()
-                        if (weight > 0)
-                            handler.into(targetHandler).move(weight)
-                    }
-                }
+            }
     }
 
     fun takeEnergy(amount: Double): Boolean {
