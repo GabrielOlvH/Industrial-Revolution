@@ -27,7 +27,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 
-class CableBlock(settings: Settings, tier: Tier) : BasicMachineBlock(settings, tier, { CableBlockEntity() }) {
+class CableBlock(settings: Settings, tier: Tier) : BasicMachineBlock(settings, tier, { CableBlockEntity(tier) }) {
 
     init {
         this.defaultState = stateManager.defaultState
