@@ -4,6 +4,7 @@ import me.steven.indrev.block
 import me.steven.indrev.identifier
 import me.steven.indrev.item
 import me.steven.indrev.itemSettings
+import me.steven.indrev.items.ItemTool
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -17,6 +18,9 @@ import net.minecraft.sound.BlockSoundGroup
 class ItemRegistry {
 
     fun registerAll() {
+        identifier("hammer").item(HAMMER)
+        identifier("cutter").item(CUTTER)
+
         identifier("copper_ore").block(COPPER_ORE).item(COPPER_ORE_ITEM)
         identifier("pulverized_copper").item(BASIC_ITEM())
         identifier("copper_ingot").item(BASIC_ITEM())
@@ -43,6 +47,9 @@ class ItemRegistry {
         private val ORE_BLOCK_SETTINGS: FabricBlockSettings = FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
 
         private val BASIC_ITEM: () -> Item = { Item(itemSettings()) }
+
+        val HAMMER = ItemTool(itemSettings().maxDamage(32))
+        val CUTTER = ItemTool(itemSettings().maxDamage(32))
 
         val COPPER_ORE = Block(ORE_BLOCK_SETTINGS)
         val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, itemSettings())
