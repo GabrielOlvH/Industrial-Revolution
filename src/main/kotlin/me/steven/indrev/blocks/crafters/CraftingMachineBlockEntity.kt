@@ -1,10 +1,9 @@
 package me.steven.indrev.blocks.crafters
 
-import me.steven.indrev.blocks.BasicMachineBlockEntity
+import me.steven.indrev.blocks.InterfacedMachineBlockEntity
 import me.steven.indrev.blocks.UpgradeProvider
 import me.steven.indrev.items.Upgrade
 import net.minecraft.block.BlockState
-import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
@@ -13,7 +12,6 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeFinder
 import net.minecraft.recipe.RecipeInputProvider
@@ -23,7 +21,8 @@ import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) : BasicMachineBlockEntity(type, baseBuffer), Tickable, InventoryProvider, RecipeInputProvider, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) :
+    InterfacedMachineBlockEntity(type, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)
@@ -108,50 +107,24 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     override fun fromTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
-        tagList.indices.forEach { i ->
-            val stackTag = tagList.getCompound(i)
-            val slot = stackTag.getInt("Slot")
-            inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
-        }
         super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
-        val tagList = ListTag()
-        for (i in 0 until inventory!!.invSize) {
-            val stackTag = CompoundTag()
-            stackTag.putInt("Slot", i)
-            tagList.add(inventory!!.getInvStack(i).toTag(stackTag))
-        }
-        tag?.put("Inventory", tagList)
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
-        tagList.indices.forEach { i ->
-            val stackTag = tagList.getCompound(i)
-            val slot = stackTag.getInt("Slot")
-            inventory!!.setInvStack(slot, ItemStack.fromTag(stackTag))
-        }
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
-        val tagList = ListTag()
-        for (i in 0 until inventory!!.invSize) {
-            val stackTag = CompoundTag()
-            stackTag.putInt("Slot", i)
-            tagList.add(inventory!!.getInvStack(i).toTag(stackTag))
-        }
-        tag?.put("Inventory", tagList)
         return super.toClientTag(tag)
     }
 

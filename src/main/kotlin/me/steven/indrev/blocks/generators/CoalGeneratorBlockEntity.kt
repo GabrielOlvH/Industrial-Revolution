@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
@@ -82,8 +81,6 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)
     }
-
-    override fun getInventory(): Inventory = inventory
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
