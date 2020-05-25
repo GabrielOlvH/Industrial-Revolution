@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.items.Upgrade
+import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
@@ -20,8 +21,12 @@ import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) :
-    InterfacedMachineBlockEntity(type, baseBuffer), Tickable, RecipeInputProvider,
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
+    type: BlockEntityType<*>,
+    tier: Tier,
+    baseBuffer: Double
+) :
+    InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider,
     UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
@@ -97,8 +102,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEnti
     override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventory!!)
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
-
-    override fun getMaxInput(side: EnergySide?): Double = 1.0
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 

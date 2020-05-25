@@ -5,15 +5,18 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.recipes.PulverizerRecipe
+import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 
-class PulverizerBlockEntity : CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, 250.0) {
+class PulverizerBlockEntity(tier: Tier) :
+    CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, tier, 250.0) {
     var recipe: PulverizerRecipe? = null
     override fun findRecipe(inventory: Inventory): PulverizerRecipe? {
         val inputStack = inventory.getInvStack(0)
-        val optional = world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, BasicInventory(inputStack), world)?: return null
+        val optional =
+            world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, BasicInventory(inputStack), world) ?: return null
         return if (optional.isPresent) optional.get().apply { recipe = this } else null
     }
 

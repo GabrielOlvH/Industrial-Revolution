@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
@@ -14,7 +15,8 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer: Double) : BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
+abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier, val baseBuffer: Double) :
+    BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
             field = value.coerceAtMost(maxStoredPower)
@@ -86,14 +88,15 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer:
     }
 
     override fun getMaxStoredPower(): Double = baseBuffer
-    @Deprecated("unsupported")
+
+    @Deprecated("unsupported", level = DeprecationLevel.ERROR)
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
 
     abstract override fun getMaxOutput(side: EnergySide?): Double
 
-    fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
-
     abstract override fun getMaxInput(side: EnergySide?): Double
+
+    fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
 
     override fun getStored(side: EnergySide?): Double = energy
 

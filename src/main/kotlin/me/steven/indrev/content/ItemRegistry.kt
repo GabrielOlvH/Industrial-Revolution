@@ -1,13 +1,13 @@
 package me.steven.indrev.content
 
-import me.steven.indrev.block
-import me.steven.indrev.identifier
-import me.steven.indrev.item
-import me.steven.indrev.itemSettings
 import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.items.rechargeable.RechargeableToolItem
+import me.steven.indrev.utils.block
+import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.item
+import me.steven.indrev.utils.itemSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block

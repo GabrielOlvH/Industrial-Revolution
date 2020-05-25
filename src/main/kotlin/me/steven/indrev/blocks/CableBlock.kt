@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -26,7 +27,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 
-class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockEntity() }) {
+class CableBlock(settings: Settings, tier: Tier) : BasicMachineBlock(settings, tier, { CableBlockEntity() }) {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -36,7 +37,7 @@ class CableBlock(settings: Settings) : BasicMachineBlock(settings, { CableBlockE
             .with(EAST, false).with(
                 WEST, false
             )
-                .with(UP, false).with(DOWN, false)
+            .with(UP, false).with(DOWN, false)
                 .with(COVERED, false)
     }
 

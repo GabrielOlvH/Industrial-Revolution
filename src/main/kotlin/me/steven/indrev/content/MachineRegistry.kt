@@ -1,6 +1,5 @@
 package me.steven.indrev.content
 
-import me.steven.indrev.*
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.CompressorBlockEntity
@@ -16,6 +15,7 @@ import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Material
@@ -37,47 +37,70 @@ class MachineRegistry {
 
     companion object {
 
-        private val MACHINE_BLOCK_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
+        private val MACHINE_BLOCK_SETTINGS =
+            FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
         val COAL_GENERATOR: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, CoalGeneratorScreen.SCREEN_ID, { it is CoalGeneratorBlockEntity }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, CoalGeneratorScreen.SCREEN_ID, { it is CoalGeneratorBlockEntity }
         ) { CoalGeneratorBlockEntity() }
-        val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(COAL_GENERATOR, itemSettings())
-        val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> = COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
+        val COAL_GENERATOR_BLOCK_ITEM: BlockItem = BlockItem(
+            COAL_GENERATOR,
+            itemSettings()
+        )
+        val COAL_GENERATOR_BLOCK_ENTITY: BlockEntityType<CoalGeneratorBlockEntity> =
+            COAL_GENERATOR.blockEntityType { CoalGeneratorBlockEntity() }
 
-        val SOLAR_GENERATOR: BasicMachineBlock = BasicMachineBlock(MACHINE_BLOCK_SETTINGS) { SolarGeneratorBlockEntity() }
-        val SOLAR_GENERATOR_ITEM: BlockItem = BlockItem(SOLAR_GENERATOR, itemSettings())
-        val SOLAR_GENERATOR_BLOCK_ENTITY: BlockEntityType<SolarGeneratorBlockEntity> = SOLAR_GENERATOR.blockEntityType { SolarGeneratorBlockEntity() }
+        val SOLAR_GENERATOR: BasicMachineBlock =
+            BasicMachineBlock(MACHINE_BLOCK_SETTINGS, Tier.LOW) { SolarGeneratorBlockEntity() }
+        val SOLAR_GENERATOR_ITEM: BlockItem = BlockItem(
+            SOLAR_GENERATOR,
+            itemSettings()
+        )
+        val SOLAR_GENERATOR_BLOCK_ENTITY: BlockEntityType<SolarGeneratorBlockEntity> =
+            SOLAR_GENERATOR.blockEntityType { SolarGeneratorBlockEntity() }
 
         val ELECTRIC_FURNACE: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
-        ) { ElectricFurnaceBlockEntity() }
-        val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(ELECTRIC_FURNACE, itemSettings())
-        val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> = ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity() }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
+        ) { ElectricFurnaceBlockEntity(Tier.LOW) }
+        val ELECTRIC_FURNACE_BLOCK_ITEM: BlockItem = BlockItem(
+            ELECTRIC_FURNACE,
+            itemSettings()
+        )
+        val ELECTRIC_FURNACE_BLOCK_ENTITY: BlockEntityType<ElectricFurnaceBlockEntity> =
+            ELECTRIC_FURNACE.blockEntityType { ElectricFurnaceBlockEntity(Tier.LOW) }
 
         val PULVERIZER: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, PulverizerScreen.SCREEN_ID, { it is PulverizerBlockEntity }
-        ) { PulverizerBlockEntity() }
-        val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(PULVERIZER, itemSettings())
-        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> = PULVERIZER.blockEntityType { PulverizerBlockEntity() }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, PulverizerScreen.SCREEN_ID, { it is PulverizerBlockEntity }
+        ) { PulverizerBlockEntity(Tier.LOW) }
+        val PULVERIZER_BLOCK_ITEM: BlockItem = BlockItem(
+            PULVERIZER,
+            itemSettings()
+        )
+        val PULVERIZER_BLOCK_ENTITY: BlockEntityType<PulverizerBlockEntity> =
+            PULVERIZER.blockEntityType { PulverizerBlockEntity(Tier.LOW) }
 
         val COMPRESSOR: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
-        ) { CompressorBlockEntity() }
-        val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(COMPRESSOR, itemSettings())
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
+        ) { CompressorBlockEntity(Tier.LOW) }
+        val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(
+            COMPRESSOR,
+            itemSettings()
+        )
         val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> =
-            COMPRESSOR.blockEntityType { CompressorBlockEntity() }
+            COMPRESSOR.blockEntityType { CompressorBlockEntity(Tier.LOW) }
 
         val BATTERY_BLOCK: InterfacedMachineBlock = InterfacedMachineBlock(
-            MACHINE_BLOCK_SETTINGS, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
-        ) { BatteryBlockEntity() }
-        val BATTERY_BLOCK_ITEM: BlockItem = BlockItem(BATTERY_BLOCK, itemSettings())
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
+        ) { BatteryBlockEntity(Tier.LOW) }
+        val BATTERY_BLOCK_ITEM: BlockItem = BlockItem(
+            BATTERY_BLOCK,
+            itemSettings()
+        )
         val BATTERY_BLOCK_ENTITY: BlockEntityType<BatteryBlockEntity> =
-            BATTERY_BLOCK.blockEntityType { BatteryBlockEntity() }
+            BATTERY_BLOCK.blockEntityType { BatteryBlockEntity(Tier.LOW) }
 
-        val CABLE: CableBlock =
-            CableBlock(MACHINE_BLOCK_SETTINGS)
+        val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS, Tier.LOW)
         val CABLE_ITEM: BlockItem = BlockItem(CABLE, itemSettings())
-        val CABLE_BLOCK_ENTITY: BlockEntityType<CableBlockEntity> = CABLE.blockEntityType { CableBlockEntity() }
+        val CABLE_BLOCK_ENTITY: BlockEntityType<CableBlockEntity> = CABLE.blockEntityType { CableBlockEntity(Tier.LOW) }
     }
 }

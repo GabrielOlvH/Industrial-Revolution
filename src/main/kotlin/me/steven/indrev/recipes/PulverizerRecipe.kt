@@ -1,7 +1,7 @@
 package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
-import me.steven.indrev.identifier
+import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.Ingredient

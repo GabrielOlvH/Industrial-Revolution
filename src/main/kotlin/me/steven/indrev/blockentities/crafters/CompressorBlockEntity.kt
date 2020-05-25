@@ -5,11 +5,13 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.recipes.CompressorRecipe
+import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 
-class CompressorBlockEntity : CraftingMachineBlockEntity<CompressorRecipe>(MachineRegistry.COMPRESSOR_BLOCK_ENTITY, 250.0) {
+class CompressorBlockEntity(tier: Tier) :
+    CraftingMachineBlockEntity<CompressorRecipe>(MachineRegistry.COMPRESSOR_BLOCK_ENTITY, tier, 250.0) {
     override fun findRecipe(inventory: Inventory): CompressorRecipe? {
         val inputStack = inventory.getInvStack(0)
         val optional = world?.recipeManager?.getFirstMatch(CompressorRecipe.TYPE, BasicInventory(inputStack), world)

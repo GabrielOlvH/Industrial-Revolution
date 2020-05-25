@@ -1,7 +1,7 @@
 package me.steven.indrev.gui.furnace
 
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
-import me.steven.indrev.identifier
+import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 
 class ElectricFurnaceScreen(controller: ElectricFurnaceController, playerEntity: PlayerEntity) : CottonInventoryScreen<ElectricFurnaceController>(controller, playerEntity) {

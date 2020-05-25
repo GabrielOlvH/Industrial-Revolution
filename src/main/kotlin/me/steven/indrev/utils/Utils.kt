@@ -1,5 +1,6 @@
-package me.steven.indrev
+package me.steven.indrev.utils
 
+import me.steven.indrev.IndustrialRevolution
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType

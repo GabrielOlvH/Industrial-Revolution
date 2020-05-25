@@ -2,7 +2,7 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.identifier
+import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.PropertyDelegate
 import kotlin.math.round
@@ -31,7 +31,9 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
     }
 
     companion object {
-        private val ENERGY_EMPTY = identifier("textures/gui/widget_energy_empty.png")
-        private val ENERGY_FULL = identifier("textures/gui/widget_energy_full.png")
+        private val ENERGY_EMPTY =
+            identifier("textures/gui/widget_energy_empty.png")
+        private val ENERGY_FULL =
+            identifier("textures/gui/widget_energy_full.png")
     }
 }

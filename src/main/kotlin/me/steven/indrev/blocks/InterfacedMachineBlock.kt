@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
@@ -15,14 +16,27 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class InterfacedMachineBlock(settings: Settings, private val screenId: Identifier, private val openInterface: (BlockEntity?) -> Boolean, blockEntityProvider: () -> BasicMachineBlockEntity) : BasicMachineBlock(settings, blockEntityProvider), InventoryProvider {
-    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
+class InterfacedMachineBlock(
+    settings: Settings,
+    tier: Tier,
+    private val screenId: Identifier,
+    private val openInterface: (BlockEntity?) -> Boolean,
+    blockEntityProvider: () -> BasicMachineBlockEntity
+) : BasicMachineBlock(settings, tier, blockEntityProvider), InventoryProvider {
+    override fun onUse(
+        state: BlockState?,
+        world: World,
+        pos: BlockPos?,
+        player: PlayerEntity?,
+        hand: Hand?,
+        hit: BlockHitResult?
+    ): ActionResult? {
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
         if (openInterface(blockEntity)) {
             ContainerProviderRegistry.INSTANCE.openContainer(
-                    screenId,
-                    player
+                screenId,
+                player
             ) { packetByteBuf -> packetByteBuf.writeBlockPos(pos) }
         }
         return ActionResult.SUCCESS

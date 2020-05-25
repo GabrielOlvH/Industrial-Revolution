@@ -4,17 +4,19 @@ import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
+import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
-class ElectricFurnaceBlockEntity : CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY, 250.0) {
+class ElectricFurnaceBlockEntity(tier: Tier) :
+    CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY, tier, 250.0) {
     override fun findRecipe(inventory: Inventory): SmeltingRecipe? {
         val inputStack = inventory.getInvStack(0)
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, BasicInventory(inputStack), world)
-                ?: return null
+            ?: return null
         return if (optional.isPresent) optional.get() else null
     }
 

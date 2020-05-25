@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.container.ArrayPropertyDelegate
@@ -11,12 +12,13 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
-import team.reborn.energy.EnergySide
 
-class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, 0.5, 1000.0) {
-    private val inventory = DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
+class CoalGeneratorBlockEntity :
+    GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, Tier.LOW, 0.5, 1000.0) {
+    private val inventory =
+        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
     var burnTime: Int = 0
-        set(value)  {
+        set(value) {
             propertyDelegate[2] = value
             field = value
         }
@@ -55,8 +57,6 @@ class CoalGeneratorBlockEntity : GeneratorBlockEntity(MachineRegistry.COAL_GENER
     }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
-
-    override fun getMaxOutput(side: EnergySide?): Double = 8.0
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)

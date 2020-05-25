@@ -2,7 +2,7 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.identifier
+import me.steven.indrev.utils.identifier
 import net.minecraft.container.PropertyDelegate
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -30,7 +30,9 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
     }
 
     companion object {
-        val LIT_TEXTURE_ID = identifier("textures/gui/widget_fuel_burning.png")
-        val UNLIT_TEXTURE_ID = identifier("textures/gui/widget_fuel_not_burning.png")
+        val LIT_TEXTURE_ID =
+            identifier("textures/gui/widget_fuel_burning.png")
+        val UNLIT_TEXTURE_ID =
+            identifier("textures/gui/widget_fuel_not_burning.png")
     }
 }

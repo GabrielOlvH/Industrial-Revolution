@@ -1,14 +1,20 @@
 package me.steven.indrev.blockentities
 
+import me.steven.indrev.utils.Tier
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import team.reborn.energy.EnergySide
 
-abstract class InterfacedMachineBlockEntity(type: BlockEntityType<*>, baseBuffer: Double) :
-    BasicMachineBlockEntity(type, baseBuffer), InventoryProvider {
+abstract class InterfacedMachineBlockEntity(type: BlockEntityType<*>, tier: Tier, baseBuffer: Double) :
+    BasicMachineBlockEntity(type, tier, baseBuffer), InventoryProvider {
     private fun getInventory() = getInventory(null, null, null)
+
+    override fun getMaxInput(side: EnergySide?): Double = tier.maxInput
+
+    override fun getMaxOutput(side: EnergySide?): Double = tier.maxOutput
 
     override fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()

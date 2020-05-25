@@ -2,7 +2,7 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.identifier
+import me.steven.indrev.utils.identifier
 import net.minecraft.container.PropertyDelegate
 import kotlin.math.round
 
@@ -22,7 +22,9 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
     }
 
     companion object {
-        private val PROCESS_EMPTY = identifier("textures/gui/widget_processing_empty.png")
-        private val PROCESS_FULL = identifier("textures/gui/widget_processing_full.png")
+        private val PROCESS_EMPTY =
+            identifier("textures/gui/widget_processing_empty.png")
+        private val PROCESS_FULL =
+            identifier("textures/gui/widget_processing_full.png")
     }
 }
