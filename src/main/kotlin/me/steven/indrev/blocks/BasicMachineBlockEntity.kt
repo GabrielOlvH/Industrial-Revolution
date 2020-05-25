@@ -91,10 +91,8 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val baseBuffer:
     @Deprecated("unsupported")
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
 
-    @Deprecated("use getMaxOutput() instead", ReplaceWith("getMaxOutput()"))
     override fun getMaxOutput(side: EnergySide?): Double = getMaxOutput()
 
-    @Deprecated("use getMaxInput() instead!", ReplaceWith("getMaxInput()"))
     override fun getMaxInput(side: EnergySide?): Double = getMaxInput()
 
     override fun getStored(side: EnergySide?): Double = energy
