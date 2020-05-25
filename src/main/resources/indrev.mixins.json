@@ -1,8 +1,9 @@
 {
   "required": true,
-  "package": "",
+  "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinCraftingResultSlot"
   ],
   "client": [
   ],
