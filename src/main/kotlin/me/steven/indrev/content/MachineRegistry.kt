@@ -3,6 +3,7 @@ package me.steven.indrev.content
 import me.steven.indrev.*
 import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
+import me.steven.indrev.blocks.battery.BatteryBlockEntity
 import me.steven.indrev.blocks.cables.CableBlock
 import me.steven.indrev.blocks.cables.CableBlockEntity
 import me.steven.indrev.blocks.crafters.CompressorBlockEntity
@@ -10,6 +11,7 @@ import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
 import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blocks.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
@@ -63,6 +65,12 @@ class MachineRegistry {
         ) { CompressorBlockEntity() }
         val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(COMPRESSOR, itemSettings())
         val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> = COMPRESSOR.blockEntityType { CompressorBlockEntity() }
+
+        val BATTERY_BLOCK: InterfacedMachineBlock = InterfacedMachineBlock(
+            MACHINE_BLOCK_SETTINGS, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
+        ) { BatteryBlockEntity() }
+        val BATTERY_BLOCK_ITEM: BlockItem = BlockItem(BATTERY_BLOCK, itemSettings())
+        val BATTERY_BLOCK_ENTITY: BlockEntityType<BatteryBlockEntity> = BATTERY_BLOCK.blockEntityType { BatteryBlockEntity() }
 
         val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS)
         val CABLE_ITEM: BlockItem = BlockItem(CABLE, itemSettings())
