@@ -1,6 +1,7 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.blocks.BasicMachineBlock
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType

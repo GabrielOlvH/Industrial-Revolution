@@ -1,7 +1,6 @@
-package me.steven.indrev.blocks.crafters
+package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.blocks.InterfacedMachineBlockEntity
-import me.steven.indrev.blocks.UpgradeProvider
+import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.items.Upgrade
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
@@ -22,7 +21,8 @@ import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(type: BlockEntityType<*>, baseBuffer: Double) :
-    InterfacedMachineBlockEntity(type, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider {
+    InterfacedMachineBlockEntity(type, baseBuffer), Tickable, RecipeInputProvider,
+    UpgradeProvider {
     var inventory: SidedInventory? = null
         get() {
             if (field == null)

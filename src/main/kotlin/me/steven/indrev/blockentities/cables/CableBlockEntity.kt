@@ -1,6 +1,6 @@
-package me.steven.indrev.blocks.cables
+package me.steven.indrev.blockentities.cables
 
-import me.steven.indrev.blocks.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.BasicMachineBlockEntity
 import me.steven.indrev.content.MachineRegistry
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate

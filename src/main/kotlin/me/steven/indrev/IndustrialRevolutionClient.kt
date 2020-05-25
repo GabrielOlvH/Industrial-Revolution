@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.cables.CableBlockEntityRenderer
+import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
@@ -43,20 +43,26 @@ class IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(CompressorScreen.SCREEN_ID
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            CompressorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CompressorScreen(
-                    CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+                CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
             )
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(BatteryScreen.SCREEN_ID
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            BatteryScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             BatteryScreen(
-                BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+                BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
             )
         }
 
-        BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) { CableBlockEntityRenderer(it) }
+        BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) {
+            CableBlockEntityRenderer(it)
+        }
     }
 }

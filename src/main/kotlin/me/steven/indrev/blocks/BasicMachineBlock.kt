@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks
 
+import me.steven.indrev.blockentities.BasicMachineBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState

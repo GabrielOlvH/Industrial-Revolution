@@ -1,6 +1,6 @@
-package me.steven.indrev.blocks.generators
+package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.blocks.InterfacedMachineBlockEntity
+import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate

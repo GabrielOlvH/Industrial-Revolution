@@ -1,7 +1,7 @@
-package me.steven.indrev.blocks.battery
+package me.steven.indrev.blockentities.battery
 
+import me.steven.indrev.blockentities.BasicMachineBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
-import me.steven.indrev.blocks.BasicMachineBlockEntity
 import me.steven.indrev.content.MachineRegistry
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate

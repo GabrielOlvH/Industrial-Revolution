@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.items.Upgrade
 

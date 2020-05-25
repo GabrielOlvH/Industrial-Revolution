@@ -1,6 +1,6 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.blocks.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import net.minecraft.inventory.Inventory
 
 enum class Upgrade(private val apply: (Double, Int) -> Double) {

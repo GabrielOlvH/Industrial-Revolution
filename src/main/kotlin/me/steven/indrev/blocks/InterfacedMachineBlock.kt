@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks
 
+import me.steven.indrev.blockentities.BasicMachineBlockEntity
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider

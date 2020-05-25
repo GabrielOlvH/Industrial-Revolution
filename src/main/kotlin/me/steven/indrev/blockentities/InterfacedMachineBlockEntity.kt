@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blockentities
 
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntityType

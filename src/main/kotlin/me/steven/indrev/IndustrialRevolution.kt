@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blocks.generators.GeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.GeneratorBlockEntity
 import me.steven.indrev.content.ItemRegistry
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.content.registerWorldFeatures

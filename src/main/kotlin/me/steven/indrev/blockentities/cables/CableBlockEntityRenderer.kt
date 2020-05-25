@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.cables
+package me.steven.indrev.blockentities.cables
 
 import net.minecraft.block.Blocks
 import net.minecraft.client.MinecraftClient

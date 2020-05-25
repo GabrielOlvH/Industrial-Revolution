@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.crafters
+package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory

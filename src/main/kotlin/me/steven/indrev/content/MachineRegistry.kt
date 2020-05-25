@@ -1,16 +1,16 @@
 package me.steven.indrev.content
 
 import me.steven.indrev.*
+import me.steven.indrev.blockentities.battery.BatteryBlockEntity
+import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.blockentities.crafters.CompressorBlockEntity
+import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
+import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
+import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
-import me.steven.indrev.blocks.battery.BatteryBlockEntity
 import me.steven.indrev.blocks.cables.CableBlock
-import me.steven.indrev.blocks.cables.CableBlockEntity
-import me.steven.indrev.blocks.crafters.CompressorBlockEntity
-import me.steven.indrev.blocks.crafters.ElectricFurnaceBlockEntity
-import me.steven.indrev.blocks.crafters.PulverizerBlockEntity
-import me.steven.indrev.blocks.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blocks.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen

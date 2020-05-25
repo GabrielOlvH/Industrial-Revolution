@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.generators
+package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
