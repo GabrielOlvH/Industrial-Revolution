@@ -4,8 +4,7 @@ import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
 import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.rechargeable.RechargeableItem
-import me.steven.indrev.items.rechargeable.RechargeableToolItem
+import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.container.ArrayPropertyDelegate
@@ -18,13 +17,13 @@ import team.reborn.energy.EnergySide
 class BatteryBlockEntity(tier: Tier) :
     InterfacedMachineBlockEntity(MachineRegistry.BATTERY_BLOCK_ENTITY, tier, 256 * 3.0) {
     val inventory: SidedInventory =
-        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is RechargeableToolItem }
+            DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
         val stack = inventory.getInvStack(0)
-        if (stack.item is RechargeableItem && stack.isDamaged) {
+        if (stack.item is Rechargeable && stack.isDamaged) {
             inventory.setInvStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
         }
