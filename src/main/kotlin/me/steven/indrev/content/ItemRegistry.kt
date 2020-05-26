@@ -4,7 +4,7 @@ import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
-import me.steven.indrev.items.rechargeable.RechargeableToolItem
+import me.steven.indrev.items.rechargeable.RechargeableMiningItem
 import me.steven.indrev.utils.block
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.item
@@ -75,7 +75,7 @@ class ItemRegistry {
         val BATTERY = RechargeableItem(itemSettings().maxDamage(256))
         val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(1024))
 
-        val MINING_DRILL = RechargeableToolItem(itemSettings().maxDamage(32000))
+        val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 
         val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
         val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
