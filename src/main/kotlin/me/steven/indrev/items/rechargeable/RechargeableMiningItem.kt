@@ -17,16 +17,16 @@ class RechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIA
     companion object {
         private val SUPPORTED_MATERIALS = arrayOf(
                 Material.METAL,
-            Material.ANVIL,
-            Material.STONE,
-            Material.EARTH,
-            Material.ORGANIC,
-            Material.WOOD,
-            Material.BAMBOO,
-            Material.CLAY,
-            Material.COBWEB,
-            Material.PUMPKIN,
-            Material.PISTON
+                Material.ANVIL,
+                Material.STONE,
+                Material.EARTH,
+                Material.ORGANIC,
+                Material.WOOD,
+                Material.BAMBOO,
+                Material.CLAY,
+                Material.COBWEB,
+                Material.PUMPKIN,
+                Material.PISTON
         )
     }
 }
