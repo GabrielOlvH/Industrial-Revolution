@@ -1,6 +1,7 @@
 package me.steven.indrev.mixin;
 
 import me.steven.indrev.FabricRecipeRemainder;
+import me.steven.indrev.ItemCraftCallback;
 import net.minecraft.container.CraftingResultSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
@@ -10,7 +11,9 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CraftingResultSlot.class)
 public abstract class MixinCraftingResultSlot {
@@ -34,5 +37,10 @@ public abstract class MixinCraftingResultSlot {
         }
 
         return list;
+    }
+
+    @Inject(method = "onCrafted(Lnet/minecraft/item/ItemStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;onCraft(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;I)V", shift = At.Shift.AFTER))
+    private void onCrafted(ItemStack itemStack, CallbackInfo info) {
+        ItemCraftCallback.EVENT.invoker().onCraft(itemStack, craftingInv, player);
     }
 }
