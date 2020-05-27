@@ -36,25 +36,24 @@ class CoalGeneratorBlockEntity :
             return field
         }
 
-    override fun tick() {
-        if (world?.isClient == true) return
-        super.tick()
-            if (shouldGenerate()) {
-                burnTime--
-                propertyDelegate[2] = burnTime
-            } else if (maxStoredPower > energy) {
-                val invStack = inventory.getInvStack(0)
-                if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
-                    burnTime = BURN_TIME_MAP[invStack.item] ?: return
-                    maxBurnTime = burnTime
-                    propertyDelegate[3] = maxBurnTime
-                    invStack.count--
-                    if (invStack.isEmpty) inventory.setInvStack(0, ItemStack.EMPTY)
-                    else inventory.setInvStack(0, invStack)
-                }
+    override fun shouldGenerate(): Boolean {
+        if (burnTime > 0) burnTime--
+        else if (maxStoredPower > energy) {
+            val invStack = inventory.getInvStack(0)
+            if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
+                burnTime = BURN_TIME_MAP[invStack.item] ?: return false
+                maxBurnTime = burnTime
+                invStack.count--
+                if (invStack.isEmpty) inventory.setInvStack(0, ItemStack.EMPTY)
+                else inventory.setInvStack(0, invStack)
             }
+        }
         markDirty()
+        return burnTime > 0 && energy < maxStoredPower
     }
+
+
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
 
@@ -81,10 +80,6 @@ class CoalGeneratorBlockEntity :
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)
     }
-
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
-
-    override fun shouldGenerate(): Boolean = burnTime > 0 && energy < maxStoredPower
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()
