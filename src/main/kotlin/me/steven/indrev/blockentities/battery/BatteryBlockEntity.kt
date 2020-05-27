@@ -35,11 +35,11 @@ class BatteryBlockEntity(tier: Tier) :
 
     override fun getMaxOutput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side != EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) this.tier.io else 0.0
+        return if (side != EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) super.getMaxOutput(side) else 0.0
     }
 
     override fun getMaxInput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side == EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) this.tier.io else 0.0
+        return if (side == EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) super.getMaxInput(side) else 0.0
     }
 }
