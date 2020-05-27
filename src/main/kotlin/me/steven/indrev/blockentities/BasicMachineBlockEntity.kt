@@ -19,19 +19,11 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier,
     BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
-            field = value.coerceAtMost(maxStoredPower)
-            propertyDelegate[0] = field.toInt()
+            field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }
         }
-        get() {
-            field = field.coerceAtMost(maxStoredPower)
-            propertyDelegate[0] = field.toInt()
-            return field
-        }
+        get() = field.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }
     private var delegate: PropertyDelegate? = null
-        get() {
-            if (field == null) field = createDelegate()
-            return field
-        }
+        get() = field ?: createDelegate().apply { field = this }
 
     override fun tick() {
         if (world?.isClient == true) return

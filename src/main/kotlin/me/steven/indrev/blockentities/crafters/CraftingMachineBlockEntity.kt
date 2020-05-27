@@ -22,38 +22,25 @@ import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
-    type: BlockEntityType<*>,
-    tier: Tier,
-    baseBuffer: Double
+        type: BlockEntityType<*>,
+        tier: Tier,
+        baseBuffer: Double
 ) :
-    InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider,
-    UpgradeProvider {
+        InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider {
     var inventory: SidedInventory? = null
-        get() {
-            if (field == null)
-                field = createInventory()
-            return field
-        }
+        get() = field ?: createInventory().apply { field = this }
     var processingItem: Item? = null
     var output: ItemStack? = null
     var processTime: Int = 0
         set(value) {
-            propertyDelegate[2] = value
-            field = value
+            field = value.apply { propertyDelegate[2] = this }
         }
-        get() {
-            propertyDelegate[2] = field
-            return field
-        }
+        get() = field.apply { propertyDelegate[2] = this }
     var totalProcessTime: Int = 0
         set(value) {
-            propertyDelegate[3] = value
-            field = value
+            field = value.apply { propertyDelegate[3] = this }
         }
-        get() {
-            propertyDelegate[3] = field
-            return field
-        }
+        get() = field.apply { propertyDelegate[3] = this }
 
     override fun tick() {
         super.tick()

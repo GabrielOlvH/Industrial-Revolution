@@ -15,26 +15,17 @@ import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, Tier.LOW, 0.5, 1000.0) {
-    private val inventory =
-        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
+    private val inventory = DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
     var burnTime: Int = 0
         set(value) {
-            propertyDelegate[2] = value
-            field = value
+            field = value.apply { propertyDelegate[2] = this }
         }
-        get() {
-            propertyDelegate[2] = field
-            return field
-        }
+        get() = field.apply { propertyDelegate[2] = this }
     var maxBurnTime: Int = 0
         set(value) {
-            propertyDelegate[3] = value
-            field = value
+            field = value.apply { propertyDelegate[3] = this }
         }
-        get() {
-            propertyDelegate[3] = field
-            return field
-        }
+        get() = field.apply { propertyDelegate[3] = this }
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
