@@ -1,4 +1,4 @@
-package me.steven.indrev.content
+package me.steven.indrev.registry
 
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
@@ -31,8 +31,7 @@ class MachineRegistry {
         identifier("electric_furnace").block(ELECTRIC_FURNACE).item(ELECTRIC_FURNACE_BLOCK_ITEM).blockEntityType(ELECTRIC_FURNACE_BLOCK_ENTITY)
         identifier("compressor").block(COMPRESSOR).item(COMPRESSOR_BLOCK_ITEM).blockEntityType(COMPRESSOR_BLOCK_ENTITY)
         identifier("pulverizer").block(PULVERIZER).item(PULVERIZER_BLOCK_ITEM).blockEntityType(PULVERIZER_BLOCK_ENTITY)
-        identifier("lazuli_flux_container").block(BATTERY_BLOCK).item(BATTERY_BLOCK_ITEM)
-            .blockEntityType(BATTERY_BLOCK_ENTITY)
+        identifier("lazuli_flux_container").block(BATTERY_BLOCK).item(BATTERY_BLOCK_ITEM).blockEntityType(BATTERY_BLOCK_ENTITY)
         identifier("cable").block(CABLE).item(CABLE_ITEM).blockEntityType(CABLE_BLOCK_ENTITY)
     }
 

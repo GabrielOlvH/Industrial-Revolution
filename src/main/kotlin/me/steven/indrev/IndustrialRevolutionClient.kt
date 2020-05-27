@@ -1,7 +1,6 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
-import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -12,6 +11,7 @@ import me.steven.indrev.gui.generators.CoalGeneratorController
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry

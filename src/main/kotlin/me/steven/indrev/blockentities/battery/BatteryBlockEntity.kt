@@ -2,9 +2,9 @@ package me.steven.indrev.blockentities.battery
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blocks.BasicMachineBlock
-import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.container.ArrayPropertyDelegate

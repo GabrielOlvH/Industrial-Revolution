@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.content.MachineRegistry
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.inventory.SidedInventory

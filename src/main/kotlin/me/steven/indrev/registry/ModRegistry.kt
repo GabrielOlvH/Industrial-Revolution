@@ -1,4 +1,4 @@
-package me.steven.indrev.content
+package me.steven.indrev.registry
 
 import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.Upgrade
@@ -17,7 +17,7 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
 
-class ItemRegistry {
+class ModRegistry {
 
     fun registerAll() {
         identifier("hammer").item(HAMMER)

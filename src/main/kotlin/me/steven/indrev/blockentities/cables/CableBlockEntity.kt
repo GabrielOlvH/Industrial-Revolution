@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.cables
 
 import me.steven.indrev.blockentities.BasicMachineBlockEntity
-import me.steven.indrev.content.MachineRegistry
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate

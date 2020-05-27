@@ -1,9 +1,6 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.generators.GeneratorBlockEntity
-import me.steven.indrev.content.ItemRegistry
-import me.steven.indrev.content.MachineRegistry
-import me.steven.indrev.content.registerWorldFeatures
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -17,6 +14,9 @@ import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.recipes.CompressorRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
+import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.registry.WorldGeneration
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
@@ -35,7 +35,8 @@ class IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
         MachineRegistry().registerAll()
-        ItemRegistry().registerAll()
+        ModRegistry().registerAll()
+        WorldGeneration().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
@@ -71,8 +72,6 @@ class IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CompressorRecipe.IDENTIFIER, CompressorRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
-
-        registerWorldFeatures()
     }
 
     companion object {
