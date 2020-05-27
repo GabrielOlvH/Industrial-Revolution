@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "indrev:crafting_shaped",
   "pattern": [
     "PCP",
     "BAB",
