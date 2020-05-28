@@ -54,10 +54,4 @@ class PulverizerBlockEntity(tier: Tier) :
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
-
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 1.0
-        Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> baseBuffer
-    }
 }

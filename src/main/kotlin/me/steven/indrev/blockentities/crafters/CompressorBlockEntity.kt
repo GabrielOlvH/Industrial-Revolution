@@ -36,10 +36,4 @@ class CompressorBlockEntity(tier: Tier) :
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
-
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.SPEED -> 1.0
-        Upgrade.ENERGY -> 1.0
-        Upgrade.BUFFER -> baseBuffer
-    }
 }

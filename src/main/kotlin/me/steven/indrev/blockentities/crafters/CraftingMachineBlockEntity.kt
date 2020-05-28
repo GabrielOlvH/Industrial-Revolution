@@ -94,6 +94,12 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
 
     private fun isProcessing() = processTime > 0 && energy > 0
 
+    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
+        Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)
+        Upgrade.SPEED -> 1.0
+        Upgrade.BUFFER -> baseBuffer
+    }
+
     override fun fromTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
