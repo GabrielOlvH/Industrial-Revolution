@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
-    GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, Tier.LOW, 0.5, 1000.0) {
+        GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_BLOCK_ENTITY, Tier.LOW, 1000.0) {
     private val inventory = DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
     var burnTime: Int = 0
         set(value) {
@@ -43,6 +43,7 @@ class CoalGeneratorBlockEntity :
         return burnTime > 0 && energy < maxStoredPower
     }
 
+    override fun getGenerationRatio(): Double = 0.5
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 

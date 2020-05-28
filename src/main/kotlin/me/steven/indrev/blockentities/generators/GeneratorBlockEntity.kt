@@ -10,14 +10,13 @@ import team.reborn.energy.EnergySide
 abstract class GeneratorBlockEntity(
     type: BlockEntityType<*>,
     tier: Tier,
-    private val generationRatio: Double,
     maxBuffer: Double
 ) :
     InterfacedMachineBlockEntity(type, tier, maxBuffer) {
 
     override fun tick() {
         super.tick()
-        if (world?.isClient == false && shouldGenerate() && addEnergy(generationRatio) > 0) markDirty()
+        if (world?.isClient == false && shouldGenerate() && addEnergy(getGenerationRatio()) > 0) markDirty()
     }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
@@ -25,4 +24,6 @@ abstract class GeneratorBlockEntity(
     override fun getMaxInput(side: EnergySide?): Double = 0.0
 
     abstract fun shouldGenerate(): Boolean
+
+    abstract fun getGenerationRatio(): Double
 }
