@@ -42,36 +42,40 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inputInventory = inventory!!.getInputInventory()
-        if (isProcessing()) {
-            val recipe = getCurrentRecipe()
+        inventory?.also { inventory ->
+            val inputInventory = inventory.getInputInventory()
             if (inputInventory.isInvEmpty)
                 reset()
-            else if (recipe?.matches(inputInventory, this.world) == false)
-                tryStartRecipe(inventory!!) ?: reset()
-            else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
-                processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
-                if (processTime <= 0) {
-                    (inventory!!.inputSlots).forEachIndexed { index, slot -> inventory!!.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) }) }
-                    val output = recipe?.output ?: return
-                    for (outputSlot in inventory!!.outputSlots) {
-                        val outputStack = inventory!!.getInvStack(outputSlot)
-                        if (outputStack.item == output.item)
-                            inventory!!.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
-                        else if (outputStack.isEmpty)
-                            inventory!!.setInvStack(outputSlot, output.copy())
-                        else continue
-                        break
+            if (isProcessing()) {
+                val recipe = getCurrentRecipe()
+                if (recipe?.matches(inputInventory, this.world) == false)
+                    tryStartRecipe(inventory) ?: reset()
+                else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
+                    processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
+                    if (processTime <= 0) {
+                        inventory.inputSlots.forEachIndexed { index, slot ->
+                            inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
+                        }
+                        val output = recipe?.output ?: return
+                        for (outputSlot in inventory.outputSlots) {
+                            val outputStack = inventory.getInvStack(outputSlot)
+                            if (outputStack.item == output.item)
+                                inventory.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
+                            else if (outputStack.isEmpty)
+                                inventory.setInvStack(outputSlot, output.copy())
+                            else continue
+                            break
+                        }
+                        onCraft()
+                        reset()
                     }
-                    onCraft()
-                    reset()
-                }
-            } else reset()
-        } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
-            reset()
-            tryStartRecipe(inventory!!)
+                } else reset()
+            } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
+                reset()
+                tryStartRecipe(inventory)
+            }
+            markDirty()
         }
-        markDirty()
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
