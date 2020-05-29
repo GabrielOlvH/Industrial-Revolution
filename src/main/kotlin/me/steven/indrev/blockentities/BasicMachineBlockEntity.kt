@@ -10,7 +10,6 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
-import net.minecraft.world.explosion.Explosion
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
@@ -51,10 +50,6 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier,
                     val amount = (targetMaxInput / sum) * handler.maxOutput
                     if (amount > 0) {
                         handler.into(targetHandler).move(amount)
-                        if (amount > targetHandler.maxInput) {
-                            val pos = pos.offset(pair.key)
-                            world?.createExplosion(null, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), 0.1F, Explosion.DestructionType.BREAK)
-                        }
                     }
                 }
             }

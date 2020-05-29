@@ -12,6 +12,7 @@ import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.recipes.CompressorRecipe
+import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.registry.MachineRegistry
@@ -72,6 +73,8 @@ class IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CompressorRecipe.IDENTIFIER, CompressorRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, InfuserRecipe.IDENTIFIER, InfuserRecipe.SERIALIZER)
     }
 
     companion object {

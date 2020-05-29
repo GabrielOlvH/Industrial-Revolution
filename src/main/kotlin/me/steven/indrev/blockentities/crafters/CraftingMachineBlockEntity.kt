@@ -1,16 +1,16 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
+import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
+import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeFinder
@@ -27,10 +27,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
         baseBuffer: Double
 ) :
         InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider {
-    var inventory: SidedInventory? = null
+    var inventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
-    var processingItem: Item? = null
-    var output: ItemStack? = null
     var processTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[2] = this }
@@ -45,45 +43,41 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inputStack = inventory!!.getInvStack(0)
+        val inputInventory = BasicInventory(*(inventory!!.inputSlots).map { inventory!!.getInvStack(it) }.toTypedArray())
         val outputStack = inventory!!.getInvStack(1).copy()
         if (isProcessing()) {
-            if (inputStack.isEmpty) reset()
-            else if (!inputStack.isEmpty && inputStack.item != processingItem)
-                findRecipe(inventory!!)?.also { recipe ->
-                    processingItem = inputStack.item
-                    output = recipe.output
-                } ?: reset()
-            else if (inputStack.item == processingItem && takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
+            val recipe = getCurrentRecipe()
+            if (inputInventory.isInvEmpty) reset()
+            else if (recipe?.matches(inputInventory, this.world) == false) tryStartRecipe(inventory!!) ?: reset()
+            else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
-                    inventory!!.setInvStack(0, inputStack.apply { count-- })
-                    if (outputStack.item == output?.item)
-                        inventory!!.setInvStack(1, outputStack.apply { increment(output?.count ?: 0) })
+                    (inventory!!.inputSlots).forEachIndexed { index, slot -> inventory!!.setInvStack(slot, inputInventory.getInvStack(index).apply { count-- }) }
+                    val output = recipe?.output ?: return
+                    if (outputStack.item == output.item)
+                        inventory!!.setInvStack(1, outputStack.apply { increment(output.count) })
                     else if (outputStack.isEmpty)
-                        inventory!!.setInvStack(1, output?.copy())
+                        inventory!!.setInvStack(1, output.copy())
                     onCraft()
                     reset()
                 }
             } else reset()
-        } else if (energy > 0 && !inputStack.isEmpty && processTime <= 0) {
+        } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
             reset()
-            findRecipe(inventory!!)?.apply { startRecipe(this) }
+            tryStartRecipe(inventory!!)
         }
         markDirty()
     }
 
-    abstract fun findRecipe(inventory: Inventory): T?
+    abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
 
-    abstract fun startRecipe(recipe: T)
+    abstract fun getCurrentRecipe(): T?
 
-    abstract fun createInventory(): SidedInventory
+    abstract fun createInventory(): DefaultSidedInventory
 
     private fun reset() {
         processTime = 0
         totalProcessTime = 0
-        processingItem = null
-        output = null
     }
 
     override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventory!!)
@@ -92,7 +86,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    private fun isProcessing() = processTime > 0 && energy > 0
+    fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)
