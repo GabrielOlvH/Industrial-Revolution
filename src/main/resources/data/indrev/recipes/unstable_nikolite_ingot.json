@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    {
+      "item": "minecraft:dragon_breath"
+    }
+  ],
+  "output": {
+    "item": "indrev:withered_ingot",
+    "count": 1
+  },
+  "processTime": 800
+}

@@ -34,6 +34,7 @@ class ModRegistry {
         identifier("nikolite_ingot").item(DEFAULT_ITEM())
         identifier("enriched_nikolite").item(DEFAULT_ITEM())
         identifier("enriched_nikolite_ingot").item(DEFAULT_ITEM())
+        identifier("unstable_nikolite_ingot").item(DEFAULT_ITEM())
 
         identifier("mining_drill").item(MINING_DRILL)
 
@@ -47,12 +48,12 @@ class ModRegistry {
         identifier("steel_plate").item(DEFAULT_ITEM())
         identifier("iron_plate").item(DEFAULT_ITEM())
         identifier("wire").item(DEFAULT_ITEM())
-        identifier("basic_capacitor").item(DEFAULT_ITEM())
-        identifier("advanced_capacitor").item(DEFAULT_ITEM())
-        identifier("basic_circuit").item(DEFAULT_ITEM())
-        identifier("advanced_circuit").item(DEFAULT_ITEM())
-        identifier("battery").item(BATTERY)
+        identifier("basic_battery").item(BASIC_BATTERY)
+        identifier("intermediary_battery").item(INTERMEDIARY_BATTERY)
         identifier("advanced_battery").item(ADVANCED_BATTERY)
+        identifier("basic_circuit").item(DEFAULT_ITEM())
+        identifier("intermediary_circuit").item(DEFAULT_ITEM())
+        identifier("advanced_circuit").item(DEFAULT_ITEM())
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
@@ -74,8 +75,9 @@ class ModRegistry {
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
 
-        val BATTERY = RechargeableItem(itemSettings().maxDamage(256))
-        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(1024))
+        val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256))
+        val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024))
+        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096))
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 
