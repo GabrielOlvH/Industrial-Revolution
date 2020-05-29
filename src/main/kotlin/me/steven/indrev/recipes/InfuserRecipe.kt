@@ -27,7 +27,9 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
 
     override fun getOutput(): ItemStack = output
 
-    override fun matches(inv: Inventory?, world: World?): Boolean = ingredients.all { it.test(inv?.getInvStack(0)) }
+    override fun matches(inv: Inventory?, world: World?): Boolean = ingredients.all { ingredient ->
+        (0 until (inv?.invSize ?: 0)).any { ingredient.test(inv?.getInvStack(it)) }
+    }
 
     companion object {
         val TYPE = object : RecipeType<InfuserRecipe> {}
