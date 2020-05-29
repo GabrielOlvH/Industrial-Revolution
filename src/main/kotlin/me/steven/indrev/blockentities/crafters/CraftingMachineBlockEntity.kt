@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
@@ -43,21 +42,27 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inputInventory = BasicInventory(*(inventory!!.inputSlots).map { inventory!!.getInvStack(it) }.toTypedArray())
-        val outputStack = inventory!!.getInvStack(1).copy()
+        val inputInventory = inventory!!.getInputInventory()
         if (isProcessing()) {
             val recipe = getCurrentRecipe()
-            if (inputInventory.isInvEmpty) reset()
-            else if (recipe?.matches(inputInventory, this.world) == false) tryStartRecipe(inventory!!) ?: reset()
+            if (inputInventory.isInvEmpty)
+                reset()
+            else if (recipe?.matches(inputInventory, this.world) == false)
+                tryStartRecipe(inventory!!) ?: reset()
             else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory!!))) {
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory!!)).toInt()).coerceAtLeast(0)
                 if (processTime <= 0) {
-                    (inventory!!.inputSlots).forEachIndexed { index, slot -> inventory!!.setInvStack(slot, inputInventory.getInvStack(index).apply { count-- }) }
+                    (inventory!!.inputSlots).forEachIndexed { index, slot -> inventory!!.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) }) }
                     val output = recipe?.output ?: return
-                    if (outputStack.item == output.item)
-                        inventory!!.setInvStack(1, outputStack.apply { increment(output.count) })
-                    else if (outputStack.isEmpty)
-                        inventory!!.setInvStack(1, output.copy())
+                    for (outputSlot in inventory!!.outputSlots) {
+                        val outputStack = inventory!!.getInvStack(outputSlot)
+                        if (outputStack.item == output.item)
+                            inventory!!.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
+                        else if (outputStack.isEmpty)
+                            inventory!!.setInvStack(outputSlot, output.copy())
+                        else continue
+                        break
+                    }
                     onCraft()
                     reset()
                 }

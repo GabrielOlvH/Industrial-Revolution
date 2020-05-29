@@ -5,7 +5,7 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
-class DefaultSidedInventory(amount: Int, val inputSlots: IntArray, private val outputSlots: IntArray, val slotPredicate: (Int, ItemStack?) -> Boolean = { _, _ -> true })
+class DefaultSidedInventory(amount: Int, val inputSlots: IntArray, val outputSlots: IntArray, val slotPredicate: (Int, ItemStack?) -> Boolean = { _, _ -> true })
     : BasicInventory(amount), SidedInventory {
 
     override fun getInvAvailableSlots(var1: Direction?): IntArray? = IntArray(invSize) { i -> i }
@@ -15,4 +15,8 @@ class DefaultSidedInventory(amount: Int, val inputSlots: IntArray, private val o
     override fun canInsertInvStack(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot)
 
     override fun isValidInvStack(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack)
+
+    fun getInputInventory() = BasicInventory(*inputSlots.map { getInvStack(it) }.toTypedArray())
+
+    fun getOutputInventory() = BasicInventory(*outputSlots.map { getInvStack(it) }.toTypedArray())
 }

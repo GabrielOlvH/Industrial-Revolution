@@ -27,7 +27,6 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
 
     override fun getOutput(): ItemStack = output
 
-    //TODO this is wrong
     override fun matches(inv: Inventory?, world: World?): Boolean = ingredients.all { it.test(inv?.getInvStack(0)) }
 
     companion object {
