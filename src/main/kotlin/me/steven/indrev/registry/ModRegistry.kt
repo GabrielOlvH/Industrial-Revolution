@@ -32,6 +32,7 @@ class ModRegistry {
         identifier("nikolite_ore").block(NIKOLITE_ORE).item(NIKOLITE_ORE_ITEM)
         identifier("nikolite").item(DEFAULT_ITEM())
         identifier("powered_nikolite").item(DEFAULT_ITEM())
+        identifier("nikolite_ingot").item(DEFAULT_ITEM())
 
         identifier("mining_drill").item(MINING_DRILL)
 
