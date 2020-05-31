@@ -1,8 +1,10 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -27,8 +29,15 @@ class PulverizerBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(7, intArrayOf(0), intArrayOf(1, 2)) { slot, stack ->
-        if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true
+    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
+        val item = stack?.item
+        when {
+            item is UpgradeItem -> getUpgradeSlots().contains(slot)
+            item is RechargeableItem && item.canOutput -> slot == 0
+            item is CoolerItem -> slot == 1
+            slot == 2 -> true
+            else -> false
+        }
     }
 
     override fun onCraft() {
@@ -39,14 +48,14 @@ class PulverizerBlockEntity(tier: Tier) :
             val invStack = this.inventory!!.getInvStack(2).copy()
             if (invStack.item == extra.item && invStack.count < invStack.maxCount + extra.count) {
                 invStack.count += extra.count
-                this.inventory!!.setInvStack(2, invStack)
+                this.inventory!!.setInvStack(4, invStack)
             } else if (invStack.isEmpty) {
-                this.inventory!!.setInvStack(2, extra.copy())
+                this.inventory!!.setInvStack(4, extra.copy())
             }
         }
     }
 
-    override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
+    override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 

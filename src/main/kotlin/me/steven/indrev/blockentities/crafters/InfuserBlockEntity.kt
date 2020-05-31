@@ -1,8 +1,10 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -26,11 +28,18 @@ class InfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<InfuserRecipe>
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(7, intArrayOf(0, 1), intArrayOf(2)) { slot, stack ->
-        if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true
+    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
+        val item = stack?.item
+        when {
+            item is UpgradeItem -> getUpgradeSlots().contains(slot)
+            item is RechargeableItem && item.canOutput -> slot == 0
+            item is CoolerItem -> slot == 1
+            slot == 2 || slot == 3 -> true
+            else -> false
+        }
     }
 
-    override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
+    override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 

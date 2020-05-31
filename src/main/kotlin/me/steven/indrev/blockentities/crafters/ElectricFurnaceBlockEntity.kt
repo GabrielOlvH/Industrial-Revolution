@@ -1,8 +1,10 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.items.UpgradeItem
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
@@ -27,11 +29,18 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(6, intArrayOf(0), intArrayOf(1)) { slot, stack ->
-        if (stack?.item is UpgradeItem) getUpgradeSlots().contains(slot) else true
+    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+        val item = stack?.item
+        when {
+            item is UpgradeItem -> getUpgradeSlots().contains(slot)
+            item is RechargeableItem && item.canOutput -> slot == 0
+            item is CoolerItem -> slot == 1
+            slot == 2 -> true
+            else -> false
+        }
     }
 
-    override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
+    override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
