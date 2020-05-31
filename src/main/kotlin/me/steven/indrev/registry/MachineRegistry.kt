@@ -83,35 +83,35 @@ class MachineRegistry {
             PULVERIZER.blockEntityType { PulverizerBlockEntity(Tier.LOW) }
 
         val COMPRESSOR: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, Tier.LOW, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
         ) { CompressorBlockEntity(Tier.LOW) }
         val COMPRESSOR_BLOCK_ITEM: BlockItem = BlockItem(
-                COMPRESSOR,
-                itemSettings()
+            COMPRESSOR,
+            itemSettings()
         )
         val COMPRESSOR_BLOCK_ENTITY: BlockEntityType<CompressorBlockEntity> =
-                COMPRESSOR.blockEntityType { CompressorBlockEntity(Tier.LOW) }
+            COMPRESSOR.blockEntityType { CompressorBlockEntity(Tier.LOW) }
 
         val INFUSER: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, Tier.LOW, InfuserScreen.SCREEN_ID, { it is InfuserBlockEntity }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, InfuserScreen.SCREEN_ID, { it is InfuserBlockEntity }
         ) { InfuserBlockEntity(Tier.LOW) }
         val INFUSER_BLOCK_ITEM: BlockItem = BlockItem(
-                INFUSER,
-                itemSettings()
+            INFUSER,
+            itemSettings()
         )
         val INFUSER_BLOCK_ENTITY: BlockEntityType<InfuserBlockEntity> =
-                INFUSER.blockEntityType { InfuserBlockEntity(Tier.LOW) }
+            INFUSER.blockEntityType { InfuserBlockEntity(Tier.LOW) }
 
 
         val BATTERY_BLOCK: InterfacedMachineBlock = InterfacedMachineBlock(
-                MACHINE_BLOCK_SETTINGS, Tier.LOW, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
+            MACHINE_BLOCK_SETTINGS, Tier.LOW, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
         ) { BatteryBlockEntity(Tier.LOW) }
         val BATTERY_BLOCK_ITEM: BlockItem = BlockItem(
-                BATTERY_BLOCK,
-                itemSettings()
+            BATTERY_BLOCK,
+            itemSettings()
         )
         val BATTERY_BLOCK_ENTITY: BlockEntityType<BatteryBlockEntity> =
-                BATTERY_BLOCK.blockEntityType { BatteryBlockEntity(Tier.LOW) }
+            BATTERY_BLOCK.blockEntityType { BatteryBlockEntity(Tier.LOW) }
 
         val CABLE: CableBlock = CableBlock(MACHINE_BLOCK_SETTINGS, Tier.LOW)
         val CABLE_ITEM: BlockItem = BlockItem(CABLE, itemSettings())

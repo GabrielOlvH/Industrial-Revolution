@@ -34,8 +34,8 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
 
     companion object {
         private val EMPTY_HEAT =
-                identifier("textures/gui/widget_energy_empty.png")
+            identifier("textures/gui/widget_energy_empty.png")
         private val FULL_HEAT =
-                identifier("textures/gui/widget_heat_full.png")
+            identifier("textures/gui/widget_heat_full.png")
     }
 }

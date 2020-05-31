@@ -16,7 +16,7 @@ class PulverizerBlockEntity(tier: Tier) :
     override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
         val optional =
-                world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)
+            world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
         val outputStack = inventory.getInvStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {

@@ -17,7 +17,7 @@ import team.reborn.energy.EnergySide
 class BatteryBlockEntity(tier: Tier) :
     InterfacedMachineBlockEntity(MachineRegistry.BATTERY_BLOCK_ENTITY, tier, 256 * 3.0) {
     val inventory: SidedInventory =
-            DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
+        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 
     override fun tick() {
         super.tick()

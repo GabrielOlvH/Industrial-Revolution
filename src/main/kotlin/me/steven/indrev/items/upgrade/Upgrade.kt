@@ -17,6 +17,7 @@ enum class Upgrade(val apply: (Double, Int) -> Double) {
         }
         return apply(provider.getBaseValue(this), count)
     }
+
     companion object {
         val ALL = arrayOf(SPEED, ENERGY, BUFFER)
     }

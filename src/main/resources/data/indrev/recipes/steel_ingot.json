@@ -3,6 +3,6 @@
   "ingredient": {
     "item": "indrev:steel_blend"
   },
-  "result":  "indrev:steel_ingot",
+  "result": "indrev:steel_ingot",
   "cookingTime": 200
 }

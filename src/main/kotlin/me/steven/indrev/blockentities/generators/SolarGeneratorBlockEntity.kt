@@ -10,7 +10,7 @@ import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 
 class SolarGeneratorBlockEntity :
-        GeneratorBlockEntity(MachineRegistry.SOLAR_GENERATOR_BLOCK_ENTITY, Tier.LOW, 32.0) {
+    GeneratorBlockEntity(MachineRegistry.SOLAR_GENERATOR_BLOCK_ENTITY, Tier.LOW, 32.0) {
     private val inventory = DefaultSidedInventory(0, intArrayOf(), intArrayOf())
 
     override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true

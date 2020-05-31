@@ -7,10 +7,11 @@ import net.minecraft.container.PropertyDelegate
 import kotlin.math.abs
 import kotlin.math.ceil
 
-class FuelWidget(private val propertyDelegate: PropertyDelegate): WWidget() {
+class FuelWidget(private val propertyDelegate: PropertyDelegate) : WWidget() {
     init {
         this.setSize(14, 14)
     }
+
     private var lastHeightUpdate = 14
     private var lastVUpdate = 0f
     override fun paintBackground(x: Int, y: Int) {

@@ -3,6 +3,6 @@
   "ingredient": {
     "tag": "c:tin_dust"
   },
-  "result":  "indrev:tin_ingot",
+  "result": "indrev:tin_ingot",
   "cookingTime": 200
 }

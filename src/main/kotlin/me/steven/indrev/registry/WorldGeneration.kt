@@ -20,7 +20,7 @@ class WorldGeneration {
 
     private fun configureOre(ore: Block, decorator: ConfiguredDecorator<*>): ConfiguredFeature<*, *> {
         return Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, ore.defaultState, 8)
+            OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, ore.defaultState, 8)
         ).createDecoratedFeature(decorator)
     }
 

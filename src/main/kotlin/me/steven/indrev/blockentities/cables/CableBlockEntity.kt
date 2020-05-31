@@ -12,7 +12,7 @@ class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CAB
     var cover: Identifier? = null
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
-    
+
     override fun fromTag(tag: CompoundTag?) {
         if (tag?.contains("cover") == true)
             cover = Identifier(tag.getString("cover"))
@@ -26,7 +26,7 @@ class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CAB
 
     override fun fromClientTag(tag: CompoundTag?) {
         if (tag?.contains("cover") == true)
-            cover =  Identifier(tag.getString("cover"))
+            cover = Identifier(tag.getString("cover"))
         super.fromClientTag(tag)
     }
 

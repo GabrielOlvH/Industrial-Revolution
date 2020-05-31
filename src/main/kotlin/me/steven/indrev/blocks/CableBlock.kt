@@ -31,14 +31,13 @@ class CableBlock(settings: Settings, tier: Tier) : BasicMachineBlock(settings, t
 
     init {
         this.defaultState = stateManager.defaultState
-            .with(NORTH, false).with(
-                SOUTH, false
-            )
-            .with(EAST, false).with(
-                WEST, false
-            )
-            .with(UP, false).with(DOWN, false)
-                .with(COVERED, false)
+            .with(NORTH, false)
+            .with(SOUTH, false)
+            .with(EAST, false)
+            .with(WEST, false)
+            .with(UP, false)
+            .with(DOWN, false)
+            .with(COVERED, false)
     }
 
     override fun getOutlineShape(state: BlockState?, view: BlockView?, pos: BlockPos?, context: EntityContext?): VoxelShape {

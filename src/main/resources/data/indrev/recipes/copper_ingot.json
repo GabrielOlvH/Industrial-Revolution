@@ -3,6 +3,6 @@
   "ingredient": {
     "tag": "c:copper_ore"
   },
-  "result":  "indrev:copper_ingot",
+  "result": "indrev:copper_ingot",
   "cookingTime": 200
 }

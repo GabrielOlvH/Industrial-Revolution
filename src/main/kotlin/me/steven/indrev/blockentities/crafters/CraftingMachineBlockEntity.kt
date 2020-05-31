@@ -23,11 +23,11 @@ import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
-        type: BlockEntityType<*>,
-        tier: Tier,
-        baseBuffer: Double
+    type: BlockEntityType<*>,
+    tier: Tier,
+    baseBuffer: Double
 ) :
-        InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider, TemperatureController {
+    InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider, TemperatureController {
     var temperature = 300.0
         set(value) {
             field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }
@@ -93,18 +93,18 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
 
         if (isProcessing()) {
             temperature +=
-                    if (coolerItem is CoolerItem
-                            && coolerStack.damage < coolerStack.maxDamage
-                            && (cooling > 0
-                                    || temperature + 50 >= getOptimalRange().last)) {
-                        cooling--
-                        if (temperature + 150 < getOptimalRange().last) cooling = 0
-                        else if (cooling <= 0) {
-                            cooling = 200
-                            coolerStack.damage++
-                        }
-                        getBaseHeatingEfficiency() * coolerItem.coolingModifier
-                    } else getBaseHeatingEfficiency()
+                if (coolerItem is CoolerItem
+                    && coolerStack.damage < coolerStack.maxDamage
+                    && (cooling > 0
+                        || temperature + 50 >= getOptimalRange().last)) {
+                    cooling--
+                    if (temperature + 150 < getOptimalRange().last) cooling = 0
+                    else if (cooling <= 0) {
+                        cooling = 200
+                        coolerStack.damage++
+                    }
+                    getBaseHeatingEfficiency() * coolerItem.coolingModifier
+                } else getBaseHeatingEfficiency()
         } else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
     }
 

@@ -10,6 +10,7 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
     init {
         this.setSize(24, 17)
     }
+
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
         val burnTime = delegate[3]

@@ -19,7 +19,7 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
         if (energy > 0) {
             val v = ((energy.toFloat() * 63 / maxEnergy) + 1) / 64
             val h = round(v * height).toInt()
-            ScreenDrawing.texturedRect(x, y + (height - h), width, h, ENERGY_FULL, 0f, 1f-v, 1f, 1f, -1)
+            ScreenDrawing.texturedRect(x, y + (height - h), width, h, ENERGY_FULL, 0f, 1f - v, 1f, 1f, -1)
         }
     }
 

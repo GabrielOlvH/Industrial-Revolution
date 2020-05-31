@@ -27,21 +27,21 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorScreen(
-                    CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+                CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             ElectricFurnaceScreen(
-                    ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+                ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             PulverizerScreen(
-                    PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+                PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 
@@ -55,20 +55,20 @@ class IndustrialRevolutionClient : ClientModInitializer {
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(
-                BatteryScreen.SCREEN_ID
+            BatteryScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             BatteryScreen(
-                    BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
-                    player
+                BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
             )
         }
 
         ScreenProviderRegistry.INSTANCE.registerFactory(
-                InfuserScreen.SCREEN_ID
+            InfuserScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             InfuserScreen(
-                    InfuserController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
-                    player
+                InfuserController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
             )
         }
 

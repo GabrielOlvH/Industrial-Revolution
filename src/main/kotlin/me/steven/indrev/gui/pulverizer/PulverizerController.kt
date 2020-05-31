@@ -16,7 +16,7 @@ import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
 
 class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext) :
-        CottonCraftingController(PulverizerRecipe.TYPE, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+    CottonCraftingController(PulverizerRecipe.TYPE, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
     init {
         val root = WGridPanel()
         setRootPanel(root)

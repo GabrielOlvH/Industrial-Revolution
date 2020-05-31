@@ -54,7 +54,7 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
                 val result = json.get("output").asJsonObject
                 val output = ItemStack {
                     Registry.ITEM.getOrEmpty(Identifier(result.get("item").asString)).orElse(null)
-                            ?: throw IllegalArgumentException("no such item $result")
+                        ?: throw IllegalArgumentException("no such item $result")
                 }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt

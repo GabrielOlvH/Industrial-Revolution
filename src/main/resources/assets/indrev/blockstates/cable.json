@@ -1,31 +1,65 @@
 {
   "multipart": [
     {
-      "apply": {"model": "indrev:block/cable_center"}
+      "apply": {
+        "model": "indrev:block/cable_center"
+      }
     },
     {
-      "when": { "north": "true" },
-      "apply": { "model": "indrev:block/cable_side", "x": 270 }
+      "when": {
+        "north": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side",
+        "x": 270
+      }
     },
     {
-      "when": { "east": "true" },
-      "apply": { "model": "indrev:block/cable_side", "x": 270, "y": 90 }
+      "when": {
+        "east": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side",
+        "x": 270,
+        "y": 90
+      }
     },
     {
-      "when": { "south": "true" },
-      "apply": { "model": "indrev:block/cable_side", "x": 270, "y": 180}
+      "when": {
+        "south": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side",
+        "x": 270,
+        "y": 180
+      }
     },
     {
-      "when": { "west": "true" },
-      "apply": { "model": "indrev:block/cable_side", "x": 270, "y": 270 }
+      "when": {
+        "west": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side",
+        "x": 270,
+        "y": 270
+      }
     },
     {
-      "when": { "up": "true" },
-      "apply": { "model": "indrev:block/cable_side", "x": 180}
+      "when": {
+        "up": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side",
+        "x": 180
+      }
     },
     {
-      "when": { "down": "true" },
-      "apply": { "model": "indrev:block/cable_side"}
+      "when": {
+        "down": "true"
+      },
+      "apply": {
+        "model": "indrev:block/cable_side"
+      }
     }
   ]
 }
