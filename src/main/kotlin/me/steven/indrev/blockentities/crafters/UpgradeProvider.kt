@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.items.Upgrade
+import me.steven.indrev.items.upgrade.Upgrade
 
 interface UpgradeProvider {
 

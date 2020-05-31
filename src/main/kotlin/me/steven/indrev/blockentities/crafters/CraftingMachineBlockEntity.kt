@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.Upgrade
+import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType

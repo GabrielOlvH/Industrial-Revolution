@@ -2,9 +2,9 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
-import me.steven.indrev.items.Upgrade
-import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
+import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
