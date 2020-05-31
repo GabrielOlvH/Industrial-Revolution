@@ -3,10 +3,12 @@ package me.steven.indrev.gui.pulverizer
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.recipes.PulverizerRecipe
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
@@ -50,6 +52,9 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, blockC
                     val s = WItemSlot.of(blockInventory, slot)
                     root.add(s, 8, i)
                 }
+            }
+            if (blockEntity is TemperatureController) {
+                root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
             }
         }
 

@@ -3,10 +3,12 @@ package me.steven.indrev.gui.infuser
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.recipes.InfuserRecipe
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
@@ -22,7 +24,6 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
         root.add(StringWidget(I18n.translate("block.indrev.infuser"), titleColor), 4, 0)
 
         root.add(createPlayerInventoryPanel(), 0, 5)
-
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
         val firstInput = WItemSlot.of(blockInventory, 0)
@@ -35,12 +36,12 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
 
         val processWidget = ProcessWidget(propertyDelegate)
         root.add(processWidget, 4, 2)
-        processWidget.setLocation(4 * 18, (1.5 * 18).toInt())
+        processWidget.setLocation(4 * 112, (1.5 * 18).toInt())
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 2)
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 6, 2)
-        outputSlot.setLocation(6 * 18, (1.5 * 18).toInt())
+        outputSlot.setLocation(6 * 112, (1.5 * 18).toInt())
 
         blockContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
@@ -49,6 +50,9 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
                     val s = WItemSlot.of(blockInventory, slot)
                     root.add(s, 8, i)
                 }
+            }
+            if (blockEntity is TemperatureController) {
+                root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
             }
         }
 

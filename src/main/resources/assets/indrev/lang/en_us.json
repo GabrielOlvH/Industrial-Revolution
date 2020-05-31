@@ -20,5 +20,6 @@
   "item.indrev.buffer_upgrade": "Buffer Upgrade",
   "item.indrev.energy_upgrade": "Energy Efficiency Upgrade",
   "item.indrev.speed_upgrade": "Speed Upgrade",
-  "gui.widget.energy": "Energy: %s / %s"
+  "gui.widget.energy": "Energy: %s / %s",
+  "gui.widget.temperature": "Temperature: %sK / %sK"
 }

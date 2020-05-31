@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
+import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.Upgrade
 import me.steven.indrev.utils.Tier
@@ -25,19 +26,24 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
         tier: Tier,
         baseBuffer: Double
 ) :
-        InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider {
+        InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider, TemperatureController {
+    var temperature = 300.0
+        set(value) {
+            field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }
+        }
+        get() = field.apply { propertyDelegate[2] = this.toInt() }
     var inventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
     var processTime: Int = 0
         set(value) {
-            field = value.apply { propertyDelegate[2] = this }
-        }
-        get() = field.apply { propertyDelegate[2] = this }
-    var totalProcessTime: Int = 0
-        set(value) {
             field = value.apply { propertyDelegate[3] = this }
         }
         get() = field.apply { propertyDelegate[3] = this }
+    var totalProcessTime: Int = 0
+        set(value) {
+            field = value.apply { propertyDelegate[4] = this }
+        }
+        get() = field.apply { propertyDelegate[4] = this }
 
     override fun tick() {
         super.tick()
@@ -52,6 +58,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
                     tryStartRecipe(inventory) ?: reset()
                 else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
                     processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
+                    this.temperature += this.getBaseHeatingEfficiency()
                     if (processTime <= 0) {
                         inventory.inputSlots.forEachIndexed { index, slot ->
                             inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
@@ -72,8 +79,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
                 } else reset()
             } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
                 reset()
-                tryStartRecipe(inventory)
-            }
+                if (tryStartRecipe(inventory) == null)
+                    this.temperature -= this.getBaseHeatingEfficiency() / 2
+            } else this.temperature -= this.getBaseHeatingEfficiency() / 2
             markDirty()
         }
     }
@@ -91,11 +99,23 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
 
     override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventory!!)
 
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
+    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
+
+    override fun getCurrentTemperature(): Double = temperature
+
+    override fun setCurrentTemperature(temperature: Double) {
+        this.temperature = temperature
+    }
+
+    override fun getOptimalRange(): IntRange = 300..700
+
+    override fun getBaseHeatingEfficiency(): Double = 0.3
+
+    override fun getLimitTemperature(): Double = 1300.0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)
@@ -106,24 +126,28 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
     override fun fromTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
+        temperature = tag?.getDouble("Temperature") ?: 0.0
         super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
+        tag?.putDouble("Temperature", temperature)
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
+        temperature = tag?.getDouble("Temperature") ?: 0.0
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
+        tag?.putDouble("Temperature", temperature)
         return super.toClientTag(tag)
     }
 

@@ -12,8 +12,8 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
     }
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
-        val burnTime = delegate[2]
-        val maxBurnTime = delegate[3]
+        val burnTime = delegate[3]
+        val maxBurnTime = delegate[4]
         if (burnTime > 0) {
             val v = 1f - (((burnTime.toFloat() * 23 / maxBurnTime) + 1) / 24)
             val w = round(v * width).toInt()
