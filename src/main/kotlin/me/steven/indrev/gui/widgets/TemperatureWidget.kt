@@ -26,8 +26,9 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
 
     override fun addInformation(information: MutableList<String>?) {
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.getLimitTemperature()
-        information?.add(I18n.translate("gui.widget.temperature", temperature, maxTemperature))
+        val maxTemperature = temperatureController.getLimitTemperature().toInt()
+        information?.add(I18n.translate("gui.widget.temperature"))
+        information?.add("$temperature / $maxTemperature K")
         super.addInformation(information)
     }
 

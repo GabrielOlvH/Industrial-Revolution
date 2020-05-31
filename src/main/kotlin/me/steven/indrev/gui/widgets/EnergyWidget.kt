@@ -26,7 +26,8 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
     override fun addInformation(information: MutableList<String>?) {
         val energy = delegate[0]
         val maxEnergy = delegate[1]
-        information?.add(I18n.translate("gui.widget.energy", energy, maxEnergy))
+        information?.add(I18n.translate("gui.widget.energy"))
+        information?.add("$energy / $maxEnergy LF")
         super.addInformation(information)
     }
 

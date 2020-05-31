@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.CraftingTool
 import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableMiningItem
@@ -55,6 +56,8 @@ class ModRegistry {
         identifier("intermediary_circuit").item(DEFAULT_ITEM())
         identifier("advanced_circuit").item(DEFAULT_ITEM())
 
+        identifier("cooler_cell").item(COOLER_CELL)
+
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
@@ -78,6 +81,8 @@ class ModRegistry {
         val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256), true)
         val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024), true)
         val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096), true)
+
+        val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.5)
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 

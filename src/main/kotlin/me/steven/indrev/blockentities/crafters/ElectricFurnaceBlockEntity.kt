@@ -18,7 +18,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(1).copy()
+        val outputStack = inventory.getInvStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.cookTime
@@ -45,4 +45,10 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getCurrentRecipe(): SmeltingRecipe? = currentRecipe
+
+    override fun getOptimalRange(): IntRange = 1600..2000
+
+    override fun getBaseHeatingEfficiency(): Double = 0.06
+
+    override fun getLimitTemperature(): Double = 2200.0
 }

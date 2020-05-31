@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
@@ -32,6 +33,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
             field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }
         }
         get() = field.apply { propertyDelegate[2] = this.toInt() }
+    var cooling = 0
     var inventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
     var processTime: Int = 0
@@ -58,7 +60,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
                     tryStartRecipe(inventory) ?: reset()
                 else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
                     processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
-                    temperature += getBaseHeatingEfficiency()
                     if (processTime <= 0) {
                         inventory.inputSlots.forEachIndexed { index, slot ->
                             inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
@@ -79,11 +80,32 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
                 } else reset()
             } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
                 reset()
-                if (tryStartRecipe(inventory) == null)
-                    temperature -= getBaseHeatingEfficiency() / 2
-            } else temperature -= getBaseHeatingEfficiency() / 2
+                tryStartRecipe(inventory)
+            }
+            tickTemperature()
             markDirty()
         }
+    }
+
+    private fun tickTemperature() {
+        val coolerStack = this.inventory!!.getInvStack(1)
+        val coolerItem = coolerStack.item
+
+        if (isProcessing()) {
+            temperature +=
+                    if (coolerItem is CoolerItem
+                            && coolerStack.damage < coolerStack.maxDamage
+                            && (cooling > 0
+                                    || temperature + 50 >= getOptimalRange().last)) {
+                        cooling--
+                        if (temperature + 150 < getOptimalRange().last) cooling = 0
+                        else if (cooling <= 0) {
+                            cooling = 200
+                            coolerStack.damage++
+                        }
+                        getBaseHeatingEfficiency() * coolerItem.coolingModifier
+                    } else getBaseHeatingEfficiency()
+        } else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
@@ -111,11 +133,11 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
         this.temperature = temperature
     }
 
-    override fun getOptimalRange(): IntRange = 300..700
+    override fun getOptimalRange(): IntRange = 700..1100
 
     override fun getBaseHeatingEfficiency(): Double = 0.06
 
-    override fun getLimitTemperature(): Double = 1300.0
+    override fun getLimitTemperature(): Double = 1400.0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)

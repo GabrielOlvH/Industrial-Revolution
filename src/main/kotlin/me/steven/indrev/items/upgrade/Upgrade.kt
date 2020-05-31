@@ -5,7 +5,7 @@ import net.minecraft.inventory.Inventory
 
 enum class Upgrade(val apply: (Double, Int) -> Double) {
     SPEED({ base, count -> (base * 1.2 * count).coerceAtLeast(base) }),
-    ENERGY({ base, count -> (base / 1.2 * count.coerceAtLeast(0)) }),
+    ENERGY({ base, count -> (base / 1.2 * count.coerceAtLeast(0)).coerceAtLeast(base) }),
     BUFFER({ base, count -> (base * 2.0 * count).coerceAtLeast(base) });
 
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
