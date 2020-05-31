@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventory
 
 enum class Upgrade(val apply: (Double, Int) -> Double) {
     SPEED({ base, count -> (base * 1.2 * count).coerceAtLeast(base) }),
-    TEMPERATURE({ base, count -> (base / (1.5 * count.coerceAtLeast(0)).coerceAtLeast(1.0)) }),
     ENERGY({ base, count -> (base / 1.2 * count.coerceAtLeast(0)) }),
     BUFFER({ base, count -> (base * 2.0 * count).coerceAtLeast(base) });
 
@@ -19,6 +18,6 @@ enum class Upgrade(val apply: (Double, Int) -> Double) {
         return apply(provider.getBaseValue(this), count)
     }
     companion object {
-        val ALL = arrayOf(SPEED, ENERGY, BUFFER, TEMPERATURE)
+        val ALL = arrayOf(SPEED, ENERGY, BUFFER)
     }
 }
