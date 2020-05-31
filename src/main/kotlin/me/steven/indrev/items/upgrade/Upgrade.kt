@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.upgrade
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import net.minecraft.inventory.Inventory

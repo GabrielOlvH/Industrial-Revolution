@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.upgrade
 
 import net.minecraft.item.Item
 

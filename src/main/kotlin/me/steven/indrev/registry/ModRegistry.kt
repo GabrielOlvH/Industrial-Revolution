@@ -1,10 +1,10 @@
 package me.steven.indrev.registry
 
 import me.steven.indrev.items.CraftingTool
-import me.steven.indrev.items.Upgrade
-import me.steven.indrev.items.UpgradeItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableMiningItem
+import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.utils.block
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.item
@@ -76,9 +76,9 @@ class ModRegistry {
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
 
-        val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256))
-        val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024))
-        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096))
+        val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256), true)
+        val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024), true)
+        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096), true)
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 
