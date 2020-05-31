@@ -58,6 +58,7 @@ class ModRegistry {
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
+        identifier("temperature_upgrade").item(TEMPERATURE_UPGRADE)
     }
 
     companion object {
@@ -84,5 +85,6 @@ class ModRegistry {
         val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
         val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
         val ENERGY_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+        val TEMPERATURE_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.TEMPERATURE)
     }
 }

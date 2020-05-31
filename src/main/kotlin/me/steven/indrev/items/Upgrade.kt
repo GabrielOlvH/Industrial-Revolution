@@ -3,10 +3,11 @@ package me.steven.indrev.items
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import net.minecraft.inventory.Inventory
 
-enum class Upgrade(private val apply: (Double, Int) -> Double) {
-    SPEED({ base, count -> base * if (count < 1) 1.0 else 1.2 * count }),
-    ENERGY({ base, count -> base / if (count < 1) 1.0 else 1.2 * count }),
-    BUFFER({ base, count -> base * if (count < 1) 1.0 else 2.0 * count });
+enum class Upgrade(val apply: (Double, Int) -> Double) {
+    SPEED({ base, count -> (base * 1.2 * count).coerceAtLeast(base) }),
+    TEMPERATURE({ base, count -> (base / (1.5 * count.coerceAtLeast(0)).coerceAtLeast(1.0)) }),
+    ENERGY({ base, count -> (base / 1.2 * count.coerceAtLeast(0)) }),
+    BUFFER({ base, count -> (base * 2.0 * count).coerceAtLeast(base) });
 
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
         var count = 0
@@ -17,8 +18,7 @@ enum class Upgrade(private val apply: (Double, Int) -> Double) {
         }
         return apply(provider.getBaseValue(this), count)
     }
-
     companion object {
-        val ALL = arrayOf(SPEED, ENERGY, BUFFER)
+        val ALL = arrayOf(SPEED, ENERGY, BUFFER, TEMPERATURE)
     }
 }

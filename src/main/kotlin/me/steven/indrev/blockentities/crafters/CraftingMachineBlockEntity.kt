@@ -58,7 +58,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
                     tryStartRecipe(inventory) ?: reset()
                 else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
                     processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
-                    this.temperature += this.getBaseHeatingEfficiency()
+                    temperature += Upgrade.TEMPERATURE.apply(this, inventory)
                     if (processTime <= 0) {
                         inventory.inputSlots.forEachIndexed { index, slot ->
                             inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
@@ -80,8 +80,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
             } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
                 reset()
                 if (tryStartRecipe(inventory) == null)
-                    this.temperature -= this.getBaseHeatingEfficiency() / 2
-            } else this.temperature -= this.getBaseHeatingEfficiency() / 2
+                    temperature -= getBaseHeatingEfficiency() / 2
+            } else temperature -= getBaseHeatingEfficiency() / 2
             markDirty()
         }
     }
@@ -113,14 +113,15 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
 
     override fun getOptimalRange(): IntRange = 300..700
 
-    override fun getBaseHeatingEfficiency(): Double = 0.3
+    override fun getBaseHeatingEfficiency(): Double = 0.06
 
     override fun getLimitTemperature(): Double = 1300.0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)
-        Upgrade.SPEED -> 1.0
+        Upgrade.SPEED -> if (temperature.toInt() in this.getOptimalRange()) 1.5 else 1.0
         Upgrade.BUFFER -> baseBuffer
+        Upgrade.TEMPERATURE -> this.getBaseHeatingEfficiency()
     }
 
     override fun fromTag(tag: CompoundTag?) {
