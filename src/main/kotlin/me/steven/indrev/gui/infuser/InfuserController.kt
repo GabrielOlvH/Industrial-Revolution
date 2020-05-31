@@ -23,10 +23,10 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
         root.setSize(150, 120)
 
         root.add(StringWidget(I18n.translate("block.indrev.infuser"), titleColor), 4, 0)
-
         root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
+
         val batterySlot = WItemSlot.of(blockInventory, 0)
         root.add(batterySlot, 0.0, 3.7)
 

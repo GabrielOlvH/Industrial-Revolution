@@ -22,10 +22,10 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
         root.setSize(150, 120)
 
         root.add(StringWidget(I18n.translate("block.indrev.coal_generator"), titleColor), 4, 0)
-
         root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
+
         val batterySlot = WItemSlot.of(blockInventory, 0)
         root.add(batterySlot, 0.0, 3.7)
 
