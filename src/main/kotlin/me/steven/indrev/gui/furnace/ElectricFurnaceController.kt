@@ -9,6 +9,7 @@ import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
+import me.steven.indrev.utils.add
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
@@ -27,21 +28,17 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
         val batterySlot = WItemSlot.of(blockInventory, 0)
-        root.add(batterySlot, 0, 4)
-        batterySlot.setLocation(0, (3.7 * 18).toInt())
+        root.add(batterySlot, 0.0, 3.7)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3, 2)
-        inputSlot.setLocation((2.3 * 18).toInt(), (1.5 * 18).toInt())
+        root.add(inputSlot, 2.3, 1.5)
 
         val processWidget = ProcessWidget(propertyDelegate)
-        root.add(processWidget, 4, 2)
-        processWidget.setLocation((3.5 * 18).toInt(), (1.5 * 18).toInt())
+        root.add(processWidget, 3.5, 1.5)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6, 2)
-        outputSlot.setLocation((5.5 * 18).toInt(), (1.5 * 18).toInt())
+        root.add(outputSlot, 5.5, 1.5)
 
         blockContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
@@ -54,8 +51,7 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
             if (blockEntity is TemperatureController) {
                 root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
-                root.add(coolerSlot, 1, 4)
-                coolerSlot.setLocation(1 * 18, (3.7 * 18).toInt())
+                root.add(coolerSlot, 1.0, 3.7)
             }
         }
 

@@ -10,6 +10,7 @@ import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.recipes.InfuserRecipe
+import me.steven.indrev.utils.add
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory
@@ -27,25 +28,20 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
         val batterySlot = WItemSlot.of(blockInventory, 0)
-        root.add(batterySlot, 0, 4)
-        batterySlot.setLocation(0, (3.7 * 18).toInt())
+        root.add(batterySlot, 0.0, 3.7)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 2, 2)
-        firstInput.setLocation(2 * 18, (1.5 * 18).toInt())
+        root.add(firstInput, 2.0, 1.5)
 
         val secondInput = WItemSlot.of(blockInventory, 3)
-        root.add(secondInput, 3, 2)
-        secondInput.setLocation(3 * 18, (1.5 * 18).toInt())
+        root.add(secondInput, 3.0, 1.5)
 
         val processWidget = ProcessWidget(propertyDelegate)
-        root.add(processWidget, 4, 2)
-        processWidget.setLocation((4.2 * 18).toInt(), (1.5 * 18).toInt())
+        root.add(processWidget, 4.2, 1.5)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 4)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6, 2)
-        outputSlot.setLocation(6 * 18, (1.5 * 18).toInt())
+        root.add(outputSlot, 6.0, 1.5)
 
         blockContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
@@ -58,8 +54,7 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
             if (blockEntity is TemperatureController) {
                 root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
-                root.add(coolerSlot, 1, 4)
-                coolerSlot.setLocation(1 * 18, (3.7 * 18).toInt())
+                root.add(coolerSlot, 1.0, 3.7)
             }
         }
 
