@@ -12,7 +12,7 @@ import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_BLOCK_ENTITY, tier, 250.0) {
+    CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_REGISTRY[tier], tier, 250.0) {
     private var currentRecipe: SmeltingRecipe? = null
     override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())

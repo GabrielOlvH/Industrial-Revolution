@@ -8,7 +8,7 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Identifier
 
-class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CABLE_BLOCK_ENTITY, tier, 16.0) {
+class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CABLE_REGISTRY[tier], tier, 16.0) {
     var cover: Identifier? = null
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)

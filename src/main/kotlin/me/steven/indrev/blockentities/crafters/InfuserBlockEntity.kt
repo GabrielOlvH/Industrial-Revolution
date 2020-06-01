@@ -10,7 +10,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 
-class InfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<InfuserRecipe>(MachineRegistry.INFUSER_BLOCK_ENTITY, tier, 1000.0) {
+class InfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<InfuserRecipe>(MachineRegistry.INFUSER_REGISTRY[tier], tier, 1000.0) {
     private var currentRecipe: InfuserRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): InfuserRecipe? {

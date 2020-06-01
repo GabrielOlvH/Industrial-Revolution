@@ -1,5 +1,6 @@
 package me.steven.indrev
 
+import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
@@ -17,6 +18,8 @@ import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
+import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
@@ -72,8 +75,11 @@ class IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
-        BlockEntityRendererRegistry.INSTANCE.register(MachineRegistry.CABLE_BLOCK_ENTITY) {
-            CableBlockEntityRenderer(it)
+        MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
+            blockEntity as BlockEntityType<CableBlockEntity>
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity) {
+                CableBlockEntityRenderer(it)
+            }
         }
     }
 }

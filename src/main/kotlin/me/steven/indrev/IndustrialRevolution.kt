@@ -1,7 +1,6 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.BasicMachineBlockEntity
-import me.steven.indrev.blockentities.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -38,7 +37,6 @@ class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
         Energy.registerHolder(BasicMachineBlockEntity::class.java) { obj -> obj as BasicMachineBlockEntity }
-        MachineRegistry().registerAll()
         ModRegistry().registerAll()
         WorldGeneration().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
@@ -83,6 +81,6 @@ class IndustrialRevolution : EnergyModInitializer() {
     companion object {
         const val MOD_ID = "indrev"
 
-        val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(MachineRegistry.COAL_GENERATOR_BLOCK_ITEM) }
+        val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.COPPER_ORE_ITEM) }
     }
 }

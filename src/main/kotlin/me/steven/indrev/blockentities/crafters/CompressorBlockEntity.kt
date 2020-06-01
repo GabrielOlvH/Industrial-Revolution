@@ -11,7 +11,7 @@ import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 
 class CompressorBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<CompressorRecipe>(MachineRegistry.COMPRESSOR_BLOCK_ENTITY, tier, 250.0) {
+    CraftingMachineBlockEntity<CompressorRecipe>(MachineRegistry.COMPRESSOR_REGISTRY[tier], tier, 250.0) {
 
     private var currentRecipe: CompressorRecipe? = null
 

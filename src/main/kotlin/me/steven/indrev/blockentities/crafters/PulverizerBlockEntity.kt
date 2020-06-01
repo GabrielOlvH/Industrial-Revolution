@@ -11,7 +11,7 @@ import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 
 class PulverizerBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_BLOCK_ENTITY, tier, 250.0) {
+    CraftingMachineBlockEntity<PulverizerRecipe>(MachineRegistry.PULVERIZER_REGISTRY[tier], tier, 250.0) {
     private var currentRecipe: PulverizerRecipe? = null
     override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
