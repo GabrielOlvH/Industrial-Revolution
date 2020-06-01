@@ -65,18 +65,20 @@ class ModRegistry {
     }
 
     companion object {
-        private val ORE_BLOCK_SETTINGS: FabricBlockSettings = FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
+        private val ORE_BLOCK_SETTINGS = {
+            FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES).strength(3.0F, 3.0F)
+        }
 
         private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
 
         val HAMMER = CraftingTool(itemSettings().maxDamage(32))
         val CUTTER = CraftingTool(itemSettings().maxDamage(32))
 
-        val COPPER_ORE = Block(ORE_BLOCK_SETTINGS)
+        val COPPER_ORE = Block(ORE_BLOCK_SETTINGS())
         val COPPER_ORE_ITEM = BlockItem(COPPER_ORE, itemSettings())
-        val TIN_ORE = Block(ORE_BLOCK_SETTINGS)
+        val TIN_ORE = Block(ORE_BLOCK_SETTINGS())
         val TIN_ORE_ITEM = BlockItem(TIN_ORE, itemSettings())
-        val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
+        val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS())
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
 
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
