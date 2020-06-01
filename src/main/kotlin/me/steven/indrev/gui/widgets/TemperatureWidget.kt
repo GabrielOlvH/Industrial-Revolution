@@ -2,13 +2,13 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.blockentities.TemperatureController
+import me.steven.indrev.blockentities.HeatMachineBlockEntity
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.PropertyDelegate
 import kotlin.math.round
 
-class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
+class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: HeatMachineBlockEntity) : WWidget() {
     init {
         this.setSize(16, 64)
     }

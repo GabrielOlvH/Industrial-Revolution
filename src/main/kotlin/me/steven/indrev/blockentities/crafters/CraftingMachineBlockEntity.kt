@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
-import me.steven.indrev.blockentities.TemperatureController
+import me.steven.indrev.blockentities.HeatMachineBlockEntity
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -23,7 +21,7 @@ import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
-    TemperatureController(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider {
+    HeatMachineBlockEntity(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider {
     var inventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
     var processTime: Int = 0

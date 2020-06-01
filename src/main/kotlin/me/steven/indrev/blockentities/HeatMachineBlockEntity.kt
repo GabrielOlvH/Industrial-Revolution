@@ -5,7 +5,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.nbt.CompoundTag
 
-abstract class TemperatureController(tier: Tier, registry: MachineRegistry) :
+abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
     InterfacedMachineBlockEntity(tier, registry) {
     var temperature = 300.0
         set(value) {

@@ -3,7 +3,7 @@ package me.steven.indrev.gui.furnace
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.blockentities.TemperatureController
+import me.steven.indrev.blockentities.HeatMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
@@ -48,7 +48,7 @@ class ElectricFurnaceController(syncId: Int, playerInventory: PlayerInventory, b
                     root.add(s, 8, i)
                 }
             }
-            if (blockEntity is TemperatureController) {
+            if (blockEntity is HeatMachineBlockEntity) {
                 root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
                 root.add(coolerSlot, 1.0, 3.7)

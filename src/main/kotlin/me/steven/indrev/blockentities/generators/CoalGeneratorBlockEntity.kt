@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
