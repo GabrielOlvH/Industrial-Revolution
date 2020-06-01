@@ -6,10 +6,7 @@ import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableMiningItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.items.upgrade.UpgradeItem
-import me.steven.indrev.utils.block
-import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.item
-import me.steven.indrev.utils.itemSettings
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
@@ -48,14 +45,16 @@ class ModRegistry {
         identifier("steel_plate").item(DEFAULT_ITEM())
         identifier("iron_plate").item(DEFAULT_ITEM())
         identifier("wire").item(DEFAULT_ITEM())
-        identifier("basic_battery").item(BASIC_BATTERY)
-        identifier("medium_battery").item(INTERMEDIARY_BATTERY)
-        identifier("advanced_battery").item(ADVANCED_BATTERY)
-        identifier("ultimate_battery").item(ULTIMATE_BATTERY)
-        identifier("basic_circuit").item(DEFAULT_ITEM())
-        identifier("intermediary_circuit").item(DEFAULT_ITEM())
-        identifier("advanced_circuit").item(DEFAULT_ITEM())
-        identifier("ultimate_circuit").item(DEFAULT_ITEM())
+        identifier("battery").tierBasedItem { tier ->
+            val dmg = when (tier) {
+                Tier.MK1 -> 256
+                Tier.MK2 -> 1024
+                Tier.MK3 -> 4096
+                Tier.MK4 -> 8192
+            }
+            RechargeableItem(itemSettings().maxDamage(dmg), true)
+        }
+        identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
