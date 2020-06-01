@@ -50,7 +50,7 @@ class CoalGeneratorBlockEntity :
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 0.15
+    override fun getGenerationRatio(): Double = if (temperature.toInt() in getOptimalRange()) 0.15 else 0.1
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
@@ -94,7 +94,7 @@ class CoalGeneratorBlockEntity :
         this.temperature = temperature
     }
 
-    override fun getOptimalRange(): IntRange = 1000..1750
+    override fun getOptimalRange(): IntRange = 1750..2200
 
     override fun getBaseHeatingEfficiency(): Double = 0.5
 
