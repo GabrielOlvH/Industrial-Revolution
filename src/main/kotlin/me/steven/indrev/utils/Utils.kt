@@ -28,5 +28,3 @@ fun Identifier.blockEntityType(entityType: BlockEntityType<*>): Identifier {
 }
 
 fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.MOD_GROUP)
-
-fun <T : BlockEntity> Block.blockEntityType(supplier: () -> T): BlockEntityType<T> = BlockEntityType.Builder.create(Supplier(supplier), this).build(null)

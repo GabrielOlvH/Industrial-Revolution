@@ -26,20 +26,22 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
+import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, private vararg val tiers: Tier = Tier.values()) {
 
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
 
-    fun register(machineBlock: (Tier) -> BasicMachineBlock, entityType: (Tier) -> () -> BasicMachineBlockEntity) {
+    fun register(blockProvider: (Tier) -> BasicMachineBlock, entityProvider: (Tier) -> () -> BasicMachineBlockEntity) {
         tiers.forEach { tier ->
-            val id = identifier("${tier.toString().toLowerCase()}_${identifier.path}")
-            val block = machineBlock(tier)
-            id.block(block)
+            val block = blockProvider(tier)
             val blockItem = BlockItem(block, itemSettings())
-            id.item(blockItem)
-            val blockEntityType = block.blockEntityType(entityType(tier))
-            id.blockEntityType(blockEntityType)
+            val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
+            identifier("${tier.toString().toLowerCase()}_${identifier.path}").apply {
+                block(block)
+                item(blockItem)
+                blockEntityType(blockEntityType)
+            }
             blockEntities[tier] = blockEntityType
         }
     }
