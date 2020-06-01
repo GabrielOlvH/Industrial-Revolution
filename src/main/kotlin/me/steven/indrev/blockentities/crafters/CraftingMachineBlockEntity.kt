@@ -52,9 +52,8 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
         if (world?.isClient == true) return
         inventory?.also { inventory ->
             val inputInventory = inventory.getInputInventory()
-            if (inputInventory.isInvEmpty)
-                reset()
-            if (isProcessing()) {
+            if (inputInventory.isInvEmpty) reset()
+            else if (isProcessing()) {
                 val recipe = getCurrentRecipe()
                 if (recipe?.matches(inputInventory, this.world) == false)
                     tryStartRecipe(inventory) ?: reset()
@@ -91,21 +90,23 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
         val coolerStack = this.inventory!!.getInvStack(1)
         val coolerItem = coolerStack.item
 
-        if (isProcessing()) {
-            temperature +=
-                if (coolerItem is CoolerItem
-                    && coolerStack.damage < coolerStack.maxDamage
-                    && (cooling > 0
-                        || temperature + 50 >= getOptimalRange().last)) {
-                    cooling--
-                    if (temperature + 150 < getOptimalRange().last) cooling = 0
-                    else if (cooling <= 0) {
-                        cooling = 200
-                        coolerStack.damage++
-                    }
-                    getBaseHeatingEfficiency() * coolerItem.coolingModifier
-                } else getBaseHeatingEfficiency()
-        } else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
+        val processing = isProcessing()
+
+        if (processing && coolerItem is CoolerItem
+            && coolerStack.damage < coolerStack.maxDamage
+            && (cooling > 0
+                || temperature + 250 >= getOptimalRange().last)
+        ) {
+            cooling--
+            if (temperature + 350 < getOptimalRange().last && cooling <= 0) {
+                cooling = 200
+                coolerStack.damage++
+            }
+            val modifier =
+                if (temperature + 25 >= getOptimalRange().last) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
+            temperature += getBaseHeatingEfficiency() + modifier
+        } else if (processing) temperature += getBaseHeatingEfficiency()
+        else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?

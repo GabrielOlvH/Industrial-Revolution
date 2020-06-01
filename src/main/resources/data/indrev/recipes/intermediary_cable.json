@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " N ",
+    "NBN",
+    " N "
+  ],
+  "key": {
+    "N": {
+      "item": "indrev:nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:basic_cable"
+    }
+  },
+  "result": {
+    "item": "indrev:medium_cable"
+  }
+}

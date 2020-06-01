@@ -1,12 +1,6 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "indrev:infuse",
   "ingredients": [
-    {
-      "item": "indrev:pulverized_obsidian"
-    },
-    {
-      "item": "indrev:nikolite"
-    },
     {
       "item": "indrev:nikolite"
     },
@@ -14,8 +8,9 @@
       "item": "indrev:pulverized_diamond"
     }
   ],
-  "result": {
+  "output": {
     "item": "indrev:enriched_nikolite",
     "count": 2
-  }
+  },
+  "processTime": 600
 }

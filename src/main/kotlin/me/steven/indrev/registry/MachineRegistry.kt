@@ -56,7 +56,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
 
-        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.LOW).also { registry ->
+        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.BASIC).also { registry ->
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
@@ -67,7 +67,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             )
         }
 
-        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.LOW, Tier.HIGH).also { registry ->
+        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.BASIC, Tier.ADVANCED).also { registry ->
             registry.register(
                 { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS, tier) { SolarGeneratorBlockEntity(tier) } },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }

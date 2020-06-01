@@ -35,7 +35,6 @@ class ModRegistry {
         identifier("nikolite_ingot").item(DEFAULT_ITEM())
         identifier("enriched_nikolite").item(DEFAULT_ITEM())
         identifier("enriched_nikolite_ingot").item(DEFAULT_ITEM())
-        identifier("unstable_nikolite_ingot").item(DEFAULT_ITEM())
 
         identifier("mining_drill").item(MINING_DRILL)
 
@@ -50,12 +49,15 @@ class ModRegistry {
         identifier("iron_plate").item(DEFAULT_ITEM())
         identifier("wire").item(DEFAULT_ITEM())
         identifier("basic_battery").item(BASIC_BATTERY)
-        identifier("intermediary_battery").item(INTERMEDIARY_BATTERY)
+        identifier("medium_battery").item(INTERMEDIARY_BATTERY)
         identifier("advanced_battery").item(ADVANCED_BATTERY)
+        identifier("ultimate_battery").item(ULTIMATE_BATTERY)
         identifier("basic_circuit").item(DEFAULT_ITEM())
         identifier("intermediary_circuit").item(DEFAULT_ITEM())
         identifier("advanced_circuit").item(DEFAULT_ITEM())
+        identifier("ultimate_circuit").item(DEFAULT_ITEM())
 
+        identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
@@ -81,8 +83,10 @@ class ModRegistry {
         val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256), true)
         val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024), true)
         val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096), true)
+        val ULTIMATE_BATTERY = RechargeableItem(itemSettings().maxDamage(8192), true)
 
-        val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.5)
+        val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
+        val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 
