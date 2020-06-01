@@ -1,14 +1,14 @@
 package me.steven.indrev.blockentities
 
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.InventoryProvider
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
-abstract class InterfacedMachineBlockEntity(type: BlockEntityType<*>, tier: Tier, baseBuffer: Double) :
-    MachineBlockEntity(type, tier, baseBuffer), InventoryProvider {
+abstract class InterfacedMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
+    MachineBlockEntity(tier, registry), InventoryProvider {
     private fun getInventory() = getInventory(null, null, null)
 
     override fun fromTag(tag: CompoundTag?) {

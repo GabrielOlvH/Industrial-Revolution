@@ -31,8 +31,9 @@ import java.util.function.Supplier
 class MachineRegistry(private val identifier: Identifier, private vararg val tiers: Tier = Tier.values()) {
 
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
+    private val baseInternalBuffers: MutableMap<Tier, Double> = mutableMapOf()
 
-    fun register(blockProvider: (Tier) -> MachineBlock, entityProvider: (Tier) -> () -> MachineBlockEntity) {
+    fun register(blockProvider: (Tier) -> MachineBlock, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
             val blockItem = BlockItem(block, itemSettings())
@@ -44,11 +45,22 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             }
             blockEntities[tier] = blockEntityType
         }
+        return this
+    }
+
+    fun buffer(bufferProvider: (Tier) -> Double): MachineRegistry {
+        tiers.forEach { tier ->
+            val buffer = bufferProvider(tier)
+            baseInternalBuffers[tier] = buffer
+        }
+        return this
     }
 
     fun forEach(action: (Tier, BlockEntityType<*>) -> Unit) = blockEntities.forEach(action)
 
-    operator fun get(tier: Tier) = blockEntities[tier] ?: throw IllegalStateException("invalid tier for machine $identifier")
+    fun blockEntityType(tier: Tier) = blockEntities[tier] ?: throw IllegalStateException("invalid tier for machine $identifier")
+
+    fun buffer(tier: Tier) = baseInternalBuffers[tier] ?: throw IllegalStateException("invalid tier for machine $identifier")
 
     companion object {
 
@@ -64,14 +76,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { CoalGeneratorBlockEntity() }
                 },
                 { { CoalGeneratorBlockEntity() } }
-            )
+            ).buffer { 1000.0 }
         }
 
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.BASIC, Tier.ADVANCED).also { registry ->
             registry.register(
                 { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS, tier) { SolarGeneratorBlockEntity(tier) } },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
-            )
+            ).buffer { 32.0 }
         }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).also { registry ->
@@ -81,7 +93,15 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                         MACHINE_BLOCK_SETTINGS, tier, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
                     ) { ElectricFurnaceBlockEntity(tier) }
                 },
-                { tier -> { ElectricFurnaceBlockEntity(tier) } })
+                { tier -> { ElectricFurnaceBlockEntity(tier) } }
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.BASIC -> 1000.0
+                    Tier.INTERMEDIARY -> 5000.0
+                    Tier.ADVANCED -> 10000.0
+                    Tier.ULTIMATE -> 100000.0
+                }
+            }
         }
 
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).also { registry ->
@@ -92,7 +112,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { PulverizerBlockEntity(tier) }
                 },
                 { tier -> { PulverizerBlockEntity(tier) } }
-            )
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.BASIC -> 1000.0
+                    Tier.INTERMEDIARY -> 5000.0
+                    Tier.ADVANCED -> 10000.0
+                    Tier.ULTIMATE -> 100000.0
+                }
+            }
         }
 
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).also { registry ->
@@ -103,7 +130,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { CompressorBlockEntity(tier) }
                 },
                 { tier -> { CompressorBlockEntity(tier) } }
-            )
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.BASIC -> 1000.0
+                    Tier.INTERMEDIARY -> 5000.0
+                    Tier.ADVANCED -> 10000.0
+                    Tier.ULTIMATE -> 100000.0
+                }
+            }
         }
 
         val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).also { registry ->
@@ -114,7 +148,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { InfuserBlockEntity(tier) }
                 },
                 { tier -> { InfuserBlockEntity(tier) } }
-            )
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.BASIC -> 1000.0
+                    Tier.INTERMEDIARY -> 5000.0
+                    Tier.ADVANCED -> 10000.0
+                    Tier.ULTIMATE -> 100000.0
+                }
+            }
         }
 
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container")).also { registry ->
@@ -125,14 +166,21 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { BatteryBlockEntity(tier) }
                 },
                 { tier -> { InfuserBlockEntity(tier) } }
-            )
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.BASIC -> 5000.0
+                    Tier.INTERMEDIARY -> 10000.0
+                    Tier.ADVANCED -> 50000.0
+                    Tier.ULTIMATE -> 200000.0
+                }
+            }
         }
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable")).also { registry ->
             registry.register(
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS, tier) },
                 { tier -> { CableBlockEntity(tier) } }
-            )
+            ).buffer { tier -> tier.io * 2 }
         }
     }
 }

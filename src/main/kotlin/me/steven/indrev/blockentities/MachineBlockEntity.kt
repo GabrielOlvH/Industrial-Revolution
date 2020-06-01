@@ -2,10 +2,10 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
@@ -15,8 +15,10 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class MachineBlockEntity(type: BlockEntityType<*>, val tier: Tier, val baseBuffer: Double) :
-    BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
+abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
+    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
+    Tickable {
+    val baseBuffer = registry.buffer(tier)
     var energy = 0.0
         set(value) {
             field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }

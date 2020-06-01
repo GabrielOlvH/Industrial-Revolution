@@ -5,9 +5,9 @@ import me.steven.indrev.blockentities.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
@@ -22,12 +22,9 @@ import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
-abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(
-    type: BlockEntityType<*>,
-    tier: Tier,
-    baseBuffer: Double
-) :
-    InterfacedMachineBlockEntity(type, tier, baseBuffer), Tickable, RecipeInputProvider, UpgradeProvider, TemperatureController {
+abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
+    InterfacedMachineBlockEntity(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider,
+    TemperatureController {
     var temperature = 300.0
         set(value) {
             field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }

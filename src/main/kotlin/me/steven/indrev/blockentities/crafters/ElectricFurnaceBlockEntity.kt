@@ -12,7 +12,7 @@ import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<SmeltingRecipe>(MachineRegistry.ELECTRIC_FURNACE_REGISTRY[tier], tier, 250.0) {
+    CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
     private var currentRecipe: SmeltingRecipe? = null
     override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
@@ -29,16 +29,17 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
-        val item = stack?.item
-        when {
-            item is UpgradeItem -> getUpgradeSlots().contains(slot)
-            item is RechargeableItem && item.canOutput -> slot == 0
-            item is CoolerItem -> slot == 1
-            slot == 2 -> true
-            else -> false
+    override fun createInventory(): DefaultSidedInventory =
+        DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+            val item = stack?.item
+            when {
+                item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                item is RechargeableItem && item.canOutput -> slot == 0
+                item is CoolerItem -> slot == 1
+                slot == 2 -> true
+                else -> false
+            }
         }
-    }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

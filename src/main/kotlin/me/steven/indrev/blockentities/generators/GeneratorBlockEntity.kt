@@ -1,18 +1,14 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import team.reborn.energy.EnergySide
 
-abstract class GeneratorBlockEntity(
-    type: BlockEntityType<*>,
-    tier: Tier,
-    maxBuffer: Double
-) :
-    InterfacedMachineBlockEntity(type, tier, maxBuffer) {
+abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
+    InterfacedMachineBlockEntity(tier, registry) {
 
     override fun tick() {
         super.tick()

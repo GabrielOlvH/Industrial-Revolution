@@ -10,7 +10,8 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 
-class InfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<InfuserRecipe>(MachineRegistry.INFUSER_REGISTRY[tier], tier, 1000.0) {
+class InfuserBlockEntity(tier: Tier) :
+    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
     private var currentRecipe: InfuserRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): InfuserRecipe? {
@@ -28,16 +29,17 @@ class InfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<InfuserRecipe>
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
-        val item = stack?.item
-        when {
-            item is UpgradeItem -> getUpgradeSlots().contains(slot)
-            item is RechargeableItem && item.canOutput -> slot == 0
-            item is CoolerItem -> slot == 1
-            slot == 2 || slot == 3 -> true
-            else -> false
+    override fun createInventory(): DefaultSidedInventory =
+        DefaultSidedInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
+            val item = stack?.item
+            when {
+                item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                item is RechargeableItem && item.canOutput -> slot == 0
+                item is CoolerItem -> slot == 1
+                slot == 2 || slot == 3 -> true
+                else -> false
+            }
         }
-    }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 

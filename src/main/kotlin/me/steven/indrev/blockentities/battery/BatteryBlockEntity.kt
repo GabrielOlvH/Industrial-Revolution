@@ -15,7 +15,7 @@ import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
-    InterfacedMachineBlockEntity(MachineRegistry.CONTAINER_REGISTRY[tier], tier, 256 * 3.0) {
+    InterfacedMachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
     val inventory: SidedInventory =
         DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 

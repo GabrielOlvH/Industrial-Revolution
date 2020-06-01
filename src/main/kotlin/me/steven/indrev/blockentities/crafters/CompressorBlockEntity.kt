@@ -11,7 +11,7 @@ import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.BasicInventory
 
 class CompressorBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<CompressorRecipe>(MachineRegistry.COMPRESSOR_REGISTRY[tier], tier, 250.0) {
+    CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
 
     private var currentRecipe: CompressorRecipe? = null
 
@@ -30,16 +30,17 @@ class CompressorBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory = DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
-        val item = stack?.item
-        when {
-            item is UpgradeItem -> getUpgradeSlots().contains(slot)
-            item is RechargeableItem && item.canOutput -> slot == 0
-            item is CoolerItem -> slot == 1
-            slot == 2 -> true
-            else -> false
+    override fun createInventory(): DefaultSidedInventory =
+        DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+            val item = stack?.item
+            when {
+                item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                item is RechargeableItem && item.canOutput -> slot == 0
+                item is CoolerItem -> slot == 1
+                slot == 2 -> true
+                else -> false
+            }
         }
-    }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

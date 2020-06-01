@@ -15,8 +15,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
-    GeneratorBlockEntity(MachineRegistry.COAL_GENERATOR_REGISTRY[Tier.BASIC], Tier.BASIC, 1000.0), TemperatureController {
-    private val inventory = DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
+    GeneratorBlockEntity(Tier.BASIC, MachineRegistry.COAL_GENERATOR_REGISTRY), TemperatureController {
+    private val inventory =
+        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
     var temperature = 300.0
         set(value) {
             field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[2] = this.toInt() }
