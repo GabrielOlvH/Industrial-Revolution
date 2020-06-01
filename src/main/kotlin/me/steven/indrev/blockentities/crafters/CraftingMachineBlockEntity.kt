@@ -23,14 +23,7 @@ import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
-    InterfacedMachineBlockEntity(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider,
-    TemperatureController {
-    var temperature = 300.0
-        set(value) {
-            field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }
-        }
-        get() = field.apply { propertyDelegate[2] = this.toInt() }
-    var cooling = 0
+    TemperatureController(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider {
     var inventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
     var processTime: Int = 0
@@ -78,32 +71,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                 reset()
                 tryStartRecipe(inventory)
             }
-            tickTemperature()
+            tickTemperature(isProcessing())
             markDirty()
         }
-    }
-
-    private fun tickTemperature() {
-        val coolerStack = this.inventory!!.getInvStack(1)
-        val coolerItem = coolerStack.item
-
-        val processing = isProcessing()
-
-        if (processing && coolerItem is CoolerItem
-            && coolerStack.damage < coolerStack.maxDamage
-            && (cooling > 0
-                || temperature + 250 >= getOptimalRange().last)
-        ) {
-            cooling--
-            if (temperature + 350 < getOptimalRange().last && cooling <= 0) {
-                cooling = 200
-                coolerStack.damage++
-            }
-            val modifier =
-                if (temperature + 25 >= getOptimalRange().last) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
-            temperature += getBaseHeatingEfficiency() + modifier
-        } else if (processing) temperature += getBaseHeatingEfficiency()
-        else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
@@ -146,28 +116,24 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun fromTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        temperature = tag?.getDouble("Temperature") ?: 0.0
         super.fromTag(tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
-        tag?.putDouble("Temperature", temperature)
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        temperature = tag?.getDouble("Temperature") ?: 0.0
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
-        tag?.putDouble("Temperature", temperature)
         return super.toClientTag(tag)
     }
 

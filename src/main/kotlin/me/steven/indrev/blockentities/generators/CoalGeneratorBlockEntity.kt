@@ -15,14 +15,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
-    GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY), TemperatureController {
+    GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
     private val inventory =
         DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
-    var temperature = 300.0
-        set(value) {
-            field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[2] = this.toInt() }
-        }
-        get() = field.coerceAtMost(maxStoredPower).apply { propertyDelegate[2] = this.toInt() }
     var burnTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
@@ -50,7 +45,7 @@ class CoalGeneratorBlockEntity :
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = if (temperature.toInt() in getOptimalRange()) 0.15 else 0.1
+    override fun getGenerationRatio(): Double = 0.15
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
@@ -60,13 +55,11 @@ class CoalGeneratorBlockEntity :
         super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        temperature = tag?.getDouble("Temperature") ?: 0.0
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        tag?.putDouble("Temperature", temperature)
         return super.toTag(tag)
     }
 
@@ -74,29 +67,15 @@ class CoalGeneratorBlockEntity :
         super.fromClientTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        temperature = tag?.getDouble("Temperature") ?: 0.0
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        tag?.putDouble("Temperature", temperature)
         return super.toClientTag(tag)
     }
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()
     }
-
-    override fun getCurrentTemperature(): Double = temperature
-
-    override fun setCurrentTemperature(temperature: Double) {
-        this.temperature = temperature
-    }
-
-    override fun getOptimalRange(): IntRange = 1750..2200
-
-    override fun getBaseHeatingEfficiency(): Double = 0.5
-
-    override fun getLimitTemperature(): Double = 2500.0
 }
