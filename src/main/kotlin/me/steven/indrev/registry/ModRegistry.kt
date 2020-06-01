@@ -79,11 +79,6 @@ class ModRegistry {
         val NIKOLITE_ORE = Block(ORE_BLOCK_SETTINGS)
         val NIKOLITE_ORE_ITEM = BlockItem(NIKOLITE_ORE, itemSettings())
 
-        val BASIC_BATTERY = RechargeableItem(itemSettings().maxDamage(256), true)
-        val INTERMEDIARY_BATTERY = RechargeableItem(itemSettings().maxDamage(1024), true)
-        val ADVANCED_BATTERY = RechargeableItem(itemSettings().maxDamage(4096), true)
-        val ULTIMATE_BATTERY = RechargeableItem(itemSettings().maxDamage(8192), true)
-
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
         val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
 
