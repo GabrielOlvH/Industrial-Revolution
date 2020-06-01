@@ -1,6 +1,6 @@
 package me.steven.indrev.blocks
 
-import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -17,10 +17,10 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.world.BlockView
 
-open class BasicMachineBlock(
+open class MachineBlock(
     settings: Settings,
     val tier: Tier,
-    val blockEntityProvider: () -> BasicMachineBlockEntity
+    val blockEntityProvider: () -> MachineBlockEntity
 ) :
     Block(settings), BlockEntityProvider {
 

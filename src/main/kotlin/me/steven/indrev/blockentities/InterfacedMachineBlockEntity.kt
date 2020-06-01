@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
 abstract class InterfacedMachineBlockEntity(type: BlockEntityType<*>, tier: Tier, baseBuffer: Double) :
-    BasicMachineBlockEntity(type, tier, baseBuffer), InventoryProvider {
+    MachineBlockEntity(type, tier, baseBuffer), InventoryProvider {
     private fun getInventory() = getInventory(null, null, null)
 
     override fun fromTag(tag: CompoundTag?) {

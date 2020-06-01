@@ -1,6 +1,6 @@
 package me.steven.indrev
 
-import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -17,7 +17,6 @@ import me.steven.indrev.recipes.CompressorRecipe
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
-import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.registry.WorldGeneration
 import me.steven.indrev.utils.identifier
@@ -36,7 +35,7 @@ import team.reborn.energy.minecraft.EnergyModInitializer
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
-        Energy.registerHolder(BasicMachineBlockEntity::class.java) { obj -> obj as BasicMachineBlockEntity }
+        Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry().registerAll()
         WorldGeneration().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID

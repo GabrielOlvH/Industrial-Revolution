@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.entity.BlockEntity
@@ -15,7 +15,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier, val baseBuffer: Double) :
+abstract class MachineBlockEntity(type: BlockEntityType<*>, val tier: Tier, val baseBuffer: Double) :
     BlockEntity(type), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, Tickable {
     var energy = 0.0
         set(value) {
@@ -32,7 +32,7 @@ abstract class BasicMachineBlockEntity(type: BlockEntityType<*>, val tier: Tier,
         val handler = Energy.of(this)
         Direction.values()
             .associate { direction ->
-                if (block !is BasicMachineBlock || this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
+                if (block !is MachineBlock || this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
                 val targetPos = pos.offset(direction)
                 val target = world?.getBlockEntity(targetPos)
                 if (target == null || !Energy.valid(target)) return@associate Pair(null, null)

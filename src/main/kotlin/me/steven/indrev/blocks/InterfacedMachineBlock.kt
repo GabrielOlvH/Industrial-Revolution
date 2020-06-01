@@ -1,6 +1,6 @@
 package me.steven.indrev.blocks
 
-import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.BlockState
@@ -21,8 +21,8 @@ class InterfacedMachineBlock(
     tier: Tier,
     private val screenId: Identifier,
     private val openInterface: (BlockEntity?) -> Boolean,
-    blockEntityProvider: () -> BasicMachineBlockEntity
-) : BasicMachineBlock(settings, tier, blockEntityProvider), InventoryProvider {
+    blockEntityProvider: () -> MachineBlockEntity
+) : MachineBlock(settings, tier, blockEntityProvider), InventoryProvider {
     override fun onUse(
         state: BlockState?,
         world: World,

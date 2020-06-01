@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.battery
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
-import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
@@ -35,11 +35,11 @@ class BatteryBlockEntity(tier: Tier) :
 
     override fun getMaxOutput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side != EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) super.getMaxOutput(side) else 0.0
+        return if (side != EnergySide.fromMinecraft(state[MachineBlock.FACING])) super.getMaxOutput(side) else 0.0
     }
 
     override fun getMaxInput(side: EnergySide?): Double {
         val state = this.cachedState
-        return if (side == EnergySide.fromMinecraft(state[BasicMachineBlock.FACING])) super.getMaxInput(side) else 0.0
+        return if (side == EnergySide.fromMinecraft(state[MachineBlock.FACING])) super.getMaxInput(side) else 0.0
     }
 }

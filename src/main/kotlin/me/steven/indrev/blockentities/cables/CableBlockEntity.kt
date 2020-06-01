@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.cables
 
-import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
@@ -8,7 +8,7 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Identifier
 
-class CableBlockEntity(tier: Tier) : BasicMachineBlockEntity(MachineRegistry.CABLE_REGISTRY[tier], tier, 16.0) {
+class CableBlockEntity(tier: Tier) : MachineBlockEntity(MachineRegistry.CABLE_REGISTRY[tier], tier, 16.0) {
     var cover: Identifier? = null
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)

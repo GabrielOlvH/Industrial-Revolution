@@ -1,6 +1,6 @@
 package me.steven.indrev.registry
 
-import me.steven.indrev.blockentities.BasicMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.CompressorBlockEntity
@@ -9,7 +9,7 @@ import me.steven.indrev.blockentities.crafters.InfuserBlockEntity
 import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
-import me.steven.indrev.blocks.BasicMachineBlock
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.gui.battery.BatteryScreen
@@ -32,7 +32,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
 
-    fun register(blockProvider: (Tier) -> BasicMachineBlock, entityProvider: (Tier) -> () -> BasicMachineBlockEntity) {
+    fun register(blockProvider: (Tier) -> MachineBlock, entityProvider: (Tier) -> () -> MachineBlockEntity) {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
             val blockItem = BlockItem(block, itemSettings())
@@ -69,7 +69,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.LOW, Tier.HIGH).also { registry ->
             registry.register(
-                { tier -> BasicMachineBlock(MACHINE_BLOCK_SETTINGS, tier) { SolarGeneratorBlockEntity(tier) } },
+                { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS, tier) { SolarGeneratorBlockEntity(tier) } },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
             )
         }
