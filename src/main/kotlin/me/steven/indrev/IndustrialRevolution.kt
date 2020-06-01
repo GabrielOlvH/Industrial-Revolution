@@ -1,5 +1,6 @@
 package me.steven.indrev
 
+import me.steven.indrev.blockentities.BasicMachineBlockEntity
 import me.steven.indrev.blockentities.generators.GeneratorBlockEntity
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
@@ -36,38 +37,33 @@ import team.reborn.energy.minecraft.EnergyModInitializer
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
-        Energy.registerHolder(GeneratorBlockEntity::class.java) { obj -> obj as GeneratorBlockEntity }
+        Energy.registerHolder(BasicMachineBlockEntity::class.java) { obj -> obj as BasicMachineBlockEntity }
         MachineRegistry().registerAll()
         ModRegistry().registerAll()
         WorldGeneration().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
-            )
+            CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
-            )
+            ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
-            )
+            PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(CompressorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
-            )
+            CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(BatteryScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())
-            )
+            BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(InfuserScreen.SCREEN_ID
