@@ -20,6 +20,7 @@
   "item.indrev.buffer_upgrade": "Buffer Upgrade",
   "item.indrev.energy_upgrade": "Energy Efficiency Upgrade",
   "item.indrev.speed_upgrade": "Speed Upgrade",
+  "item.indrev.rechargeable.tooltip": "Rechargeable",
   "gui.widget.energy": "Energy",
   "gui.widget.temperature": "Temperature"
 }
