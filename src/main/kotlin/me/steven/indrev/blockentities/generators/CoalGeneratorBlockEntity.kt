@@ -49,7 +49,7 @@ class CoalGeneratorBlockEntity :
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 10.0
+    override fun getGenerationRatio(): Double = 0.15
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
 
