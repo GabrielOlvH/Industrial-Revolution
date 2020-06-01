@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "EME",
+    " E "
+  ],
+  "key": {
+    "E": {
+      "item": "indrev:enriched_nikolite"
+    },
+    "M": {
+      "item": "indrev:mk2_cable"
+    }
+  },
+  "result": {
+    "item": "indrev:cable_mk3"
+  }
+}

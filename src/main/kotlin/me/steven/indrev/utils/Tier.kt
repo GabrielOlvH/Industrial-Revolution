@@ -1,8 +1,8 @@
 package me.steven.indrev.utils
 
 enum class Tier(val io: Double) {
-    BASIC(16.0),
-    INTERMEDIARY(64.0),
-    ADVANCED(512.0),
-    ULTIMATE(4096.0)
+    MK1(16.0),
+    MK2(64.0),
+    MK3(512.0),
+    MK4(4096.0)
 }

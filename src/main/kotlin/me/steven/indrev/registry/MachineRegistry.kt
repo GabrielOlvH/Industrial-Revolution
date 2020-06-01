@@ -38,7 +38,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             val block = blockProvider(tier)
             val blockItem = BlockItem(block, itemSettings())
             val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
-            identifier("${tier.toString().toLowerCase()}_${identifier.path}").apply {
+            identifier("${identifier.path}_${tier.toString().toLowerCase()}").apply {
                 block(block)
                 item(blockItem)
                 blockEntityType(blockEntityType)
@@ -68,7 +68,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES)
 
 
-        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.BASIC).also { registry ->
+        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.MK1).also { registry ->
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
@@ -79,7 +79,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             ).buffer { 1000.0 }
         }
 
-        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.BASIC, Tier.ADVANCED).also { registry ->
+        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3).also { registry ->
             registry.register(
                 { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS, tier) { SolarGeneratorBlockEntity(tier) } },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -96,10 +96,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { ElectricFurnaceBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
-                    Tier.BASIC -> 1000.0
-                    Tier.INTERMEDIARY -> 5000.0
-                    Tier.ADVANCED -> 10000.0
-                    Tier.ULTIMATE -> 100000.0
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 100000.0
                 }
             }
         }
@@ -114,10 +114,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { PulverizerBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
-                    Tier.BASIC -> 1000.0
-                    Tier.INTERMEDIARY -> 5000.0
-                    Tier.ADVANCED -> 10000.0
-                    Tier.ULTIMATE -> 100000.0
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 100000.0
                 }
             }
         }
@@ -132,10 +132,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { CompressorBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
-                    Tier.BASIC -> 1000.0
-                    Tier.INTERMEDIARY -> 5000.0
-                    Tier.ADVANCED -> 10000.0
-                    Tier.ULTIMATE -> 100000.0
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 100000.0
                 }
             }
         }
@@ -150,10 +150,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { InfuserBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
-                    Tier.BASIC -> 1000.0
-                    Tier.INTERMEDIARY -> 5000.0
-                    Tier.ADVANCED -> 10000.0
-                    Tier.ULTIMATE -> 100000.0
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 100000.0
                 }
             }
         }
@@ -168,10 +168,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { InfuserBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
-                    Tier.BASIC -> 5000.0
-                    Tier.INTERMEDIARY -> 10000.0
-                    Tier.ADVANCED -> 50000.0
-                    Tier.ULTIMATE -> 200000.0
+                    Tier.MK1 -> 5000.0
+                    Tier.MK2 -> 10000.0
+                    Tier.MK3 -> 50000.0
+                    Tier.MK4 -> 200000.0
                 }
             }
         }

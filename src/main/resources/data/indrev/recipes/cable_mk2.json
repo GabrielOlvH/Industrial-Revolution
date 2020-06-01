@@ -10,10 +10,10 @@
       "item": "indrev:nikolite_ingot"
     },
     "B": {
-      "item": "indrev:basic_cable"
+      "item": "indrev:cable_mk1"
     }
   },
   "result": {
-    "item": "indrev:medium_cable"
+    "item": "indrev:cable_mk2"
   }
 }
