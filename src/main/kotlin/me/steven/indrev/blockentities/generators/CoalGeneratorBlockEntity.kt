@@ -3,15 +3,11 @@ package me.steven.indrev.blockentities.generators
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
@@ -43,7 +39,6 @@ class CoalGeneratorBlockEntity :
 
     override fun getGenerationRatio(): Double = 0.15
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = getInventory()
     override fun createInventory(): DefaultSidedInventory =
         DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
 
