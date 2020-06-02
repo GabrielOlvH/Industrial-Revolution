@@ -45,7 +45,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                         { WorldChunkVeinData() },
                         WorldChunkVeinData.STATE_KEY
                     )
-                state.veins[chunkPos]?.richness?.dec()
+                state.veins[chunkPos]?.size?.dec()
                 state.markDirty()
                 mining = 0.0
                 getInventory().add(ItemStack(chunkVeinType!!.ores.random()))
