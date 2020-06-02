@@ -16,20 +16,20 @@ import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
     InterfacedMachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
-    val inventory: SidedInventory =
-        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
+        val inventory = getInventory()
         val stack = inventory.getInvStack(0)
         if (stack.item is Rechargeable && stack.isDamaged) {
             inventory.setInvStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
         }
     }
-
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
+    
+    override fun createInventory(): DefaultSidedInventory =
+        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 

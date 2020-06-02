@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.crafters.InfuserBlockEntity
 import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.MachineBlock
@@ -17,6 +18,7 @@ import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.infuser.InfuserScreen
+import me.steven.indrev.gui.miner.MinerScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -166,13 +168,31 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                         MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
                     ) { BatteryBlockEntity(tier) }
                 },
-                { tier -> { InfuserBlockEntity(tier) } }
+                { tier -> { BatteryBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
                     Tier.MK1 -> 5000.0
                     Tier.MK2 -> 10000.0
                     Tier.MK3 -> 50000.0
                     Tier.MK4 -> 200000.0
+                }
+            }
+        }
+
+        val MINER_REGISTRY = MachineRegistry(identifier("miner")).also { registry ->
+            registry.register(
+                { tier ->
+                    InterfacedMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, MinerScreen.SCREEN_ID, { it is MinerBlockEntity }
+                    ) { MinerBlockEntity(tier) }
+                },
+                { tier -> { MinerBlockEntity(tier) } }
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.MK1 -> 10000.0
+                    Tier.MK2 -> 100000.0
+                    Tier.MK3 -> 200000.0
+                    Tier.MK4 -> 500000.0
                 }
             }
         }

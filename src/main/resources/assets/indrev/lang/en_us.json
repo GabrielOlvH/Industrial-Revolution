@@ -6,6 +6,8 @@
   "block.indrev.pulverizer": "Pulverizer",
   "block.indrev.compressor": "Compressor",
   "block.indrev.infuser": "Infuser",
+  "block.indrev.miner": "Miner",
+  "block.indrev.miner.gui": "Vein type: %s",
   "block.indrev.cable": "Cable",
   "block.indrev.copper_ore": "Copper Ore",
   "item.indrev.pulverized_copper": "Pulverized Copper",
@@ -21,6 +23,10 @@
   "item.indrev.energy_upgrade": "Energy Efficiency Upgrade",
   "item.indrev.speed_upgrade": "Speed Upgrade",
   "item.indrev.rechargeable.tooltip": "Rechargeable",
+  "item.indrev.chunk_scanner.scanning": "Scanning...",
+  "item.indrev.chunk_scanner.scanned1": "Finished Scanning!",
+  "item.indrev.chunk_scanner.scanned2": "Vein type: %s",
+  "item.indrev.chunk_scanner.already_scanned": "This chunk is already scanned and it has a %s vein",
   "gui.widget.energy": "Energy",
   "gui.widget.temperature": "Temperature"
 }

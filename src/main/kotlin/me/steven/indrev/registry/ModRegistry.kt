@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.CraftingTool
+import me.steven.indrev.items.ChunkScannerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableMiningItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -58,6 +59,8 @@ class ModRegistry {
 
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
+
+        identifier("chunk_scanner").item(ChunkScannerItem(itemSettings()))
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)

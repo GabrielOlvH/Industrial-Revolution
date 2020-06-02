@@ -42,16 +42,17 @@ class PulverizerBlockEntity(tier: Tier) :
         }
 
     override fun onCraft() {
-        if (this.inventory!!.invSize < 3) return
+        val inventory = getInventory()
+        if (inventory.invSize < 3) return
         val chance = this.currentRecipe?.extraOutput?.right ?: return
         if (chance < this.world?.random?.nextDouble() ?: 0.0) {
             val extra = this.currentRecipe?.extraOutput?.left ?: return
-            val invStack = this.inventory!!.getInvStack(2).copy()
+            val invStack = inventory.getInvStack(2).copy()
             if (invStack.item == extra.item && invStack.count < invStack.maxCount + extra.count) {
                 invStack.count += extra.count
-                this.inventory!!.setInvStack(4, invStack)
+                inventory.setInvStack(4, invStack)
             } else if (invStack.isEmpty) {
-                this.inventory!!.setInvStack(4, extra.copy())
+                inventory.setInvStack(4, extra.copy())
             }
         }
     }

@@ -22,8 +22,6 @@ import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
     HeatMachineBlockEntity(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider {
-    var inventory: DefaultSidedInventory? = null
-        get() = field ?: createInventory().apply { field = this }
     var processTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
@@ -38,66 +36,58 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        inventory?.also { inventory ->
-            val inputInventory = inventory.getInputInventory()
-            if (inputInventory.isInvEmpty) reset()
-            else if (isProcessing()) {
-                val recipe = getCurrentRecipe()
-                if (recipe?.matches(inputInventory, this.world) == false)
-                    tryStartRecipe(inventory) ?: reset()
-                else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
-                    processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
-                    if (processTime <= 0) {
-                        inventory.inputSlots.forEachIndexed { index, slot ->
-                            inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
-                        }
-                        val output = recipe?.output ?: return
-                        for (outputSlot in inventory.outputSlots) {
-                            val outputStack = inventory.getInvStack(outputSlot)
-                            if (outputStack.item == output.item)
-                                inventory.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
-                            else if (outputStack.isEmpty)
-                                inventory.setInvStack(outputSlot, output.copy())
-                            else continue
-                            break
-                        }
-                        onCraft()
-                        reset()
+        val inventory = getInventory()
+        val inputInventory = inventory.getInputInventory()
+        if (inputInventory.isInvEmpty) reset()
+        else if (isProcessing()) {
+            val recipe = getCurrentRecipe()
+            if (recipe?.matches(inputInventory, this.world) == false)
+                tryStartRecipe(inventory) ?: reset()
+            else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
+                processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
+                if (processTime <= 0) {
+                    inventory.inputSlots.forEachIndexed { index, slot ->
+                        inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
                     }
-                } else reset()
-            } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
-                reset()
-                tryStartRecipe(inventory)
-            }
-            tickTemperature(isProcessing())
-            markDirty()
+                    val output = recipe?.output ?: return
+                    for (outputSlot in inventory.outputSlots) {
+                        val outputStack = inventory.getInvStack(outputSlot)
+                        if (outputStack.item == output.item)
+                            inventory.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
+                        else if (outputStack.isEmpty)
+                            inventory.setInvStack(outputSlot, output.copy())
+                        else continue
+                        break
+                    }
+                    onCraft()
+                    reset()
+                }
+            } else reset()
+        } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
+            reset()
+            tryStartRecipe(inventory)
         }
+        tickTemperature(isProcessing())
+        markDirty()
+
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
 
     abstract fun getCurrentRecipe(): T?
 
-    abstract fun createInventory(): DefaultSidedInventory
-
     private fun reset() {
         processTime = 0
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventory!!)
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, getInventory())
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
-
-    override fun getCurrentTemperature(): Double = temperature
-
-    override fun setCurrentTemperature(temperature: Double) {
-        this.temperature = temperature
-    }
 
     override fun getOptimalRange(): IntRange = 700..1100
 
@@ -106,7 +96,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun getLimitTemperature(): Double = 1400.0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventory!!)
+        Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, getInventory())
         Upgrade.SPEED -> if (temperature.toInt() in this.getOptimalRange()) 2.0 else 1.0
         Upgrade.BUFFER -> baseBuffer
     }
@@ -135,11 +125,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         return super.toClientTag(tag)
     }
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory!!
-
     override fun provideRecipeInputs(recipeFinder: RecipeFinder?) {
-        for (i in 0 until inventory!!.invSize)
-            recipeFinder?.addItem(inventory!!.getInvStack(i))
+        for (i in 0 until getInventory().invSize)
+            recipeFinder?.addItem(getInventory().getInvStack(i))
     }
 
     open fun onCraft() {}

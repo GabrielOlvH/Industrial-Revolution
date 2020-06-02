@@ -15,8 +15,6 @@ import net.minecraft.world.IWorld
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
-    private val inventory =
-        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
     var burnTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
@@ -31,6 +29,7 @@ class CoalGeneratorBlockEntity :
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
+            val inventory = getInventory()
             val invStack = inventory.getInvStack(2)
             if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                 burnTime = BURN_TIME_MAP[invStack.item] ?: return false
@@ -46,7 +45,9 @@ class CoalGeneratorBlockEntity :
 
     override fun getGenerationRatio(): Double = 0.15
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = inventory
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = getInventory()
+    override fun createInventory(): DefaultSidedInventory =
+        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 

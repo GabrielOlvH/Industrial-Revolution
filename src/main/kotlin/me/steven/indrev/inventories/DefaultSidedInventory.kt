@@ -19,4 +19,48 @@ class DefaultSidedInventory(amount: Int, val inputSlots: IntArray, val outputSlo
     fun getInputInventory() = BasicInventory(*inputSlots.map { getInvStack(it) }.toTypedArray())
 
     fun getOutputInventory() = BasicInventory(*outputSlots.map { getInvStack(it) }.toTypedArray())
+
+    override fun add(itemStack: ItemStack?): ItemStack {
+        val itemStack2 = itemStack!!.copy()
+        addToExistingSlot(itemStack2)
+        return if (itemStack2.isEmpty) {
+            ItemStack.EMPTY
+        } else {
+            addToNewSlot(itemStack2)
+            if (itemStack2.isEmpty) ItemStack.EMPTY else itemStack2
+        }
+    }
+
+    private fun addToNewSlot(stack: ItemStack) {
+        for (i in 0 until invSize) {
+            val itemStack = getInvStack(i)
+            if (itemStack.isEmpty && isValidInvStack(i, itemStack)) {
+                setInvStack(i, stack.copy())
+                stack.count = 0
+                return
+            }
+        }
+    }
+
+    private fun addToExistingSlot(stack: ItemStack) {
+        for (i in 0 until invSize) {
+            val itemStack = getInvStack(i)
+            if (ItemStack.areItemsEqualIgnoreDamage(itemStack, stack)) {
+                transfer(stack, itemStack)
+                if (stack.isEmpty) {
+                    return
+                }
+            }
+        }
+    }
+
+    private fun transfer(source: ItemStack, target: ItemStack) {
+        val i = this.invMaxStackAmount.coerceAtMost(target.maxCount)
+        val j = source.count.coerceAtMost(i - target.count)
+        if (j > 0) {
+            target.increment(j)
+            source.decrement(j)
+            markDirty()
+        }
+    }
 }

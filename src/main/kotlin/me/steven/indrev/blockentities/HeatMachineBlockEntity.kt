@@ -37,6 +37,7 @@ abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
         tag?.putInt("Cooling", cooling)
         return super.toClientTag(tag)
     }
+
     protected fun tickTemperature(isHeatingUp: Boolean) {
         val coolerStack = this.getInventory(null, null, null).getInvStack(1)
         val coolerItem = coolerStack.item
@@ -58,8 +59,13 @@ abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
         else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
     }
 
-    abstract fun getCurrentTemperature(): Double
-    abstract fun setCurrentTemperature(temperature: Double)
+
+    fun getCurrentTemperature(): Double = temperature
+
+    fun setCurrentTemperature(temperature: Double) {
+        this.temperature = temperature
+    }
+
     abstract fun getOptimalRange(): IntRange
     abstract fun getBaseHeatingEfficiency(): Double
     abstract fun getLimitTemperature(): Double

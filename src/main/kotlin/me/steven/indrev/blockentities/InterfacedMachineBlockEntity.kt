@@ -1,15 +1,28 @@
 package me.steven.indrev.blockentities
 
+import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
+import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.IWorld
 
 abstract class InterfacedMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity(tier, registry), InventoryProvider {
-    private fun getInventory() = getInventory(null, null, null)
+
+    private var machineInventory: DefaultSidedInventory? = null
+        get() = field ?: createInventory().apply { field = this }
+
+    fun getInventory(): DefaultSidedInventory = machineInventory!!
+
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = machineInventory!!
+
+    abstract fun createInventory(): DefaultSidedInventory
 
     override fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
