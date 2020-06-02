@@ -41,7 +41,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
             markDirty()
         } else if (takeEnergy(Upgrade.ENERGY.apply(this, getInventory()))) {
             mining += Upgrade.SPEED.apply(this, getInventory())
-            if (mining > 20) {
+            if (mining > 10) {
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
@@ -57,7 +57,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                 propertyDelegate[4] = data.explored * 100 / data.size
                 state.markDirty()
                 mining = 0.0
-                getInventory().add(ItemStack(chunkVeinType!!.ores.random()))
+                getInventory().add(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
                 markDirty()
             }
             tickTemperature(true)

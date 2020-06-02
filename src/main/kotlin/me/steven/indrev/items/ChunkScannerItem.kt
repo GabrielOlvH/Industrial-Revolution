@@ -1,8 +1,8 @@
 package me.steven.indrev.items
 
 import me.steven.indrev.world.ChunkVeinData
-import me.steven.indrev.world.WorldChunkVeinData
 import me.steven.indrev.world.ChunkVeinType
+import me.steven.indrev.world.WorldChunkVeinData
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -28,7 +28,8 @@ class ChunkScannerItem(settings: Settings) : Item(settings){
                         { WorldChunkVeinData() },
                         WorldChunkVeinData.STATE_KEY
                     )
-                val data = ChunkVeinData(ChunkVeinType.values().random(rnd), (300..1200).random(rnd))
+                val type = ChunkVeinType.values().random(rnd)
+                val data = ChunkVeinData(type, type.sizeRange.random(rnd))
                 state.veins[chunkPos] = data
                 state.markDirty()
 
