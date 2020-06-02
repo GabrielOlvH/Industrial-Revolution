@@ -45,7 +45,13 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                         { WorldChunkVeinData() },
                         WorldChunkVeinData.STATE_KEY
                     )
-                state.veins[chunkPos]?.size?.dec()
+                val data = state.veins[chunkPos]
+                if (data == null) {
+                    chunkVeinType = null
+                    return
+                } else if (data.explored >= data.size) return
+                data.explored++
+                propertyDelegate[4] = data.explored * 100 / data.size
                 state.markDirty()
                 mining = 0.0
                 getInventory().add(ItemStack(chunkVeinType!!.ores.random()))
@@ -72,7 +78,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
         }
     }
 
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(4)
+    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(11, 12, 13, 14)
 

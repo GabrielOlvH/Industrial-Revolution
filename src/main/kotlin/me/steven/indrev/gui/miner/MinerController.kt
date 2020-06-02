@@ -41,9 +41,14 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, blockContex
             root.add(itemSlot, x, y)
         }
 
-        val typeId = propertyDelegate[3]
-        val type = if (typeId >= 0) ChunkVeinType.values()[typeId] else null
-        root.add(StringWidget(I18n.translate("block.indrev.miner.gui", type), titleColor), 4, 4)
+        root.add(StringWidget({
+            val typeId = propertyDelegate[3]
+            val type = if (typeId >= 0) ChunkVeinType.values()[typeId] else null
+            I18n.translate("block.indrev.miner.gui1", type)
+        }, titleColor), 4.0, 3.5)
+        root.add(StringWidget({
+            I18n.translate("block.indrev.miner.gui2","${propertyDelegate[4]}%")
+        }, titleColor), 4, 4)
 
         blockContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
