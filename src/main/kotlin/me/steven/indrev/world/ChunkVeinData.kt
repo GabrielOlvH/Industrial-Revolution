@@ -1,5 +1,6 @@
 package me.steven.indrev.world
 
+import me.steven.indrev.LOGGER
 import net.minecraft.nbt.CompoundTag
 
 class ChunkVeinData(var chunkVeinType: ChunkVeinType?, var size: Int, var explored: Int = 0) {
@@ -11,7 +12,13 @@ class ChunkVeinData(var chunkVeinType: ChunkVeinType?, var size: Int, var explor
     }
 
     fun fromTag(tag: CompoundTag?) {
-        chunkVeinType = ChunkVeinType.valueOf(tag?.getString("ChunkVeinType"))
+        if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
+            try {
+                chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
+            } catch (e: Throwable) {
+                tag.remove("ChunkVeinType")
+                LOGGER.warn("Miner had invalid chunk vein type \"${tag.getString("ChunkVeinType")}\"")
+            }
         size = tag?.getInt("Size") ?: 0
         explored = tag?.getInt("Explored") ?: 0
     }

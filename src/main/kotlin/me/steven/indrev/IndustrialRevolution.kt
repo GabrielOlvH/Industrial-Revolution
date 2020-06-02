@@ -31,8 +31,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.registry.Registry
+import org.apache.logging.log4j.LogManager
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
+
+val LOGGER = LogManager.getLogger(IndustrialRevolution::javaClass)
 
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
@@ -40,7 +43,8 @@ class IndustrialRevolution : EnergyModInitializer() {
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry().registerAll()
         WorldGeneration().registerAll()
-        ContainerProviderRegistry.INSTANCE.registerFactory(CoalGeneratorScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(
+            CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }

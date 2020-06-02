@@ -39,6 +39,9 @@ dependencies {
 
     modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
 
+    modApi  "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+    include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
