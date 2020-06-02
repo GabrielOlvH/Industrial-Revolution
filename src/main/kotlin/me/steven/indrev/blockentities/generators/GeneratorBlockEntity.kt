@@ -12,7 +12,10 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
 
     override fun tick() {
         super.tick()
-        if (world?.isClient == false && shouldGenerate() && addEnergy(getGenerationRatio()) > 0) markDirty()
+        if (world?.isClient == false && shouldGenerate() && addEnergy(getGenerationRatio()) > 0) {
+            sync()
+            markDirty()
+        }
     }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)

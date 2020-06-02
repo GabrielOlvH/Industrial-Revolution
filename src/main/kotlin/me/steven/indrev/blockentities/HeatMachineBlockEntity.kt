@@ -11,7 +11,6 @@ abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
         set(value) {
             field = value.coerceAtLeast(0.0).apply { propertyDelegate[2] = this.toInt() }
         }
-        get() = field.apply { propertyDelegate[2] = this.toInt() }
     var cooling = 0
 
     override fun fromTag(tag: CompoundTag?) {

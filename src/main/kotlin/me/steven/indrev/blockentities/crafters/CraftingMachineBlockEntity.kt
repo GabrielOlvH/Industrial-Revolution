@@ -5,18 +5,14 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.block.BlockState
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeFinder
 import net.minecraft.recipe.RecipeInputProvider
 import net.minecraft.util.Tickable
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
@@ -26,12 +22,10 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
         }
-        get() = field.apply { propertyDelegate[3] = this }
     var totalProcessTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[4] = this }
         }
-        get() = field.apply { propertyDelegate[4] = this }
 
     override fun tick() {
         super.tick()
@@ -68,6 +62,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             tryStartRecipe(inventory)
         }
         tickTemperature(isProcessing())
+        sync()
         markDirty()
 
     }

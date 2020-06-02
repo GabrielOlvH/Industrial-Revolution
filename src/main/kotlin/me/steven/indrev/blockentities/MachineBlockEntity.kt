@@ -22,9 +22,9 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     val baseBuffer = registry.buffer(tier)
     var energy = 0.0
         set(value) {
+            if (world?.isClient == false) sync()
             field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }
         }
-        get() = field.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }
     private var delegate: PropertyDelegate? = null
         get() = field ?: createDelegate().apply { field = this }
 

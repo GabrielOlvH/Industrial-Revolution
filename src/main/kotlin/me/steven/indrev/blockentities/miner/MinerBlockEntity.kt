@@ -37,7 +37,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                     WorldChunkVeinData.STATE_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
-            this.sync()
+            sync()
             markDirty()
         } else if (takeEnergy(Upgrade.ENERGY.apply(this, getInventory()))) {
             mining += Upgrade.SPEED.apply(this, getInventory())
