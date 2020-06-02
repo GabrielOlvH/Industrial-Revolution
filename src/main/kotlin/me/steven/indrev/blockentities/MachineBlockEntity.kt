@@ -18,6 +18,7 @@ import team.reborn.energy.EnergyTier
 abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
     Tickable {
+    private var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
     var energy = 0.0
         set(value) {
@@ -40,17 +41,24 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
                 if (target == null || !Energy.valid(target)) return@associate Pair(null, null)
                 val targetHandler = Energy.of(target).side(direction.opposite)
                 if (targetHandler.energy >= targetHandler.maxStored) Pair(null, null)
-                else Pair(direction, targetHandler)
+                else Pair(direction, Pair(target, targetHandler))
             }
-            .filter { (left, right) -> left != null && right != null }
+            .filter { (left, right) -> left != null && right != null && right.second != null }
             .apply {
-                val sum = values.sumByDouble { (it!!.maxStored - it.energy).coerceAtMost(it.maxInput) }
+                val sum = values.sumByDouble { pair ->
+                    val targetHandler = pair!!.second
+                    (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
+                }
                 forEach { pair ->
-                    val targetHandler = pair.value
-                    handler.side(pair.key)
+                    val target = pair.value?.first
+                    val targetHandler = pair.value?.second
+                    val direction = pair.key
+                    handler.side(direction)
                     val targetMaxInput = targetHandler!!.maxInput
                     val amount = (targetMaxInput / sum) * handler.maxOutput
-                    if (amount > 0) {
+                    if (amount > 0 && lastInputFrom != direction) {
+                        if (target is MachineBlockEntity)
+                            target.lastInputFrom = direction?.opposite
                         handler.into(targetHandler).move(amount)
                     }
                 }
