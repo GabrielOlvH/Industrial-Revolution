@@ -9,8 +9,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.world.WorldChunkVeinData
 import me.steven.indrev.world.ChunkVeinType
+import me.steven.indrev.world.WorldChunkVeinData
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.item.ItemStack
@@ -37,6 +37,8 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                     WorldChunkVeinData.STATE_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
+            this.sync()
+            markDirty()
         } else if (takeEnergy(Upgrade.ENERGY.apply(this, getInventory()))) {
             mining += Upgrade.SPEED.apply(this, getInventory())
             if (mining > 20) {
@@ -56,10 +58,11 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                 state.markDirty()
                 mining = 0.0
                 getInventory().add(ItemStack(chunkVeinType!!.ores.random()))
+                markDirty()
             }
             tickTemperature(true)
         } else tickTemperature(false)
-        markDirty()
+
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
@@ -116,5 +119,4 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
         chunkVeinType = ChunkVeinType.valueOf(tag?.getString("ChunkVeinType"))
         super.fromClientTag(tag)
     }
-
 }
