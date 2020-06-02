@@ -47,13 +47,13 @@ abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
             && (cooling > 0
                 || temperature + 250 >= getOptimalRange().last)
         ) {
-            cooling--
-            if (temperature + 350 < getOptimalRange().last && cooling <= 0) {
+            if (cooling > 0) cooling--
+            else if (temperature + 75 > getOptimalRange().last) {
                 cooling = 200
                 coolerStack.damage++
             }
             val modifier =
-                if (temperature + 25 >= getOptimalRange().last) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
+                if (cooling > 0) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
             temperature += getBaseHeatingEfficiency() + modifier
         } else if (isHeatingUp) temperature += getBaseHeatingEfficiency()
         else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2

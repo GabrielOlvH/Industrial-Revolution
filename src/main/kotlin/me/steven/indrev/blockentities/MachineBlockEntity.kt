@@ -44,7 +44,7 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
             }
             .filter { (left, right) -> left != null && right != null }
             .apply {
-                val sum = values.sumByDouble { it!!.maxInput }
+                val sum = values.sumByDouble { (it!!.maxStored - it.energy).coerceAtMost(it.maxInput) }
                 forEach { pair ->
                     val targetHandler = pair.value
                     handler.side(pair.key)

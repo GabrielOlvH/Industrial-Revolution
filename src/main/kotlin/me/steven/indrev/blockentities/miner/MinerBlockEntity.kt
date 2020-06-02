@@ -16,6 +16,7 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
+import team.reborn.energy.EnergySide
 
 class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
@@ -61,9 +62,11 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
         markDirty()
     }
 
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
     override fun getOptimalRange(): IntRange = 200..800
 
-    override fun getBaseHeatingEfficiency(): Double = 0.5
+    override fun getBaseHeatingEfficiency(): Double = 0.06
 
     override fun getLimitTemperature(): Double = 1000.0
 
@@ -85,7 +88,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 2.0 + Upgrade.SPEED.apply(this, getInventory())
+        Upgrade.ENERGY -> 128.0 + Upgrade.SPEED.apply(this, getInventory())
         Upgrade.SPEED -> if (temperature.toInt() in this.getOptimalRange()) 0.03 else 0.01
         Upgrade.BUFFER -> baseBuffer
     }
