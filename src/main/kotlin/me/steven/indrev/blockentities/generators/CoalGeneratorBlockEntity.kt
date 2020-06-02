@@ -19,12 +19,10 @@ class CoalGeneratorBlockEntity :
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
         }
-        get() = field.apply { propertyDelegate[3] = this }
     var maxBurnTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[4] = this }
         }
-        get() = field.apply { propertyDelegate[4] = this }
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
