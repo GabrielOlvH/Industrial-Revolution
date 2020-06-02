@@ -50,7 +50,8 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
                 mining = 0.0
                 getInventory().add(ItemStack(chunkVeinType!!.ores.random()))
             }
-        }
+            tickTemperature(true)
+        } else tickTemperature(false)
         markDirty()
     }
 
