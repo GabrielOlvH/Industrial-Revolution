@@ -95,8 +95,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
-            blockEntity as BlockEntityType<CableBlockEntity>
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity) {
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>) {
                 CableBlockEntityRenderer(it)
             }
         }
