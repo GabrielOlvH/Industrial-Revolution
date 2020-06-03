@@ -1,16 +1,16 @@
 {
   "type": "indrev:pulverize",
   "ingredient": {
-    "tag": "c:tin_ore"
+    "tag": "c:copper_ore"
   },
   "output": {
-    "item": "indrev:tin_ingot",
+    "item": "c:copper_dust",
     "count": 2
   },
   "processTime": 200,
   "extra": {
-    "item": "indrev:tin_ingot",
+    "item": "c:copper_dust",
     "count": 1,
-    "chance": 0.8
+    "chance": 0.9
   }
 }

@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "c:tin_ore"
-  },
-  "result": "indrev:tin_ingot",
-  "cookingTime": 200
-}

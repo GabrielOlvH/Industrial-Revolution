@@ -91,6 +91,7 @@ class IndustrialRevolution : EnergyModInitializer() {
     companion object {
         const val MOD_ID = "indrev"
 
-        val MOD_GROUP: ItemGroup = FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.COPPER_ORE_ITEM) }
+        val MOD_GROUP: ItemGroup =
+            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE_ORE_ITEM) }
     }
 }

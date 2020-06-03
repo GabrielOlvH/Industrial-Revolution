@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "c:iron_dust"
-  },
-  "result": "minecraft:iron_ingot",
-  "cookingTime": 200
-}

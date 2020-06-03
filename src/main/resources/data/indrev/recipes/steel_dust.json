@@ -2,13 +2,13 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "indrev:pulverized_coal"
+      "item": "c:coal_dust"
     },
     {
       "tag": "c:iron_dust"
     }
   ],
   "result": {
-    "item": "indrev:steel_blend"
+    "item": "c:steel_dust"
   }
 }

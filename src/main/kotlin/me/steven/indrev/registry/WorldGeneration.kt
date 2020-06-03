@@ -14,8 +14,6 @@ import net.minecraft.world.gen.feature.OreFeatureConfig
 
 class WorldGeneration {
 
-    private val copperFeature = configureOre(ModRegistry.COPPER_ORE, Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(10, 0, 0, 64)))
-    private val tinFeature = configureOre(ModRegistry.TIN_ORE, Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(8, 0, 0, 32)))
     private val nikoliteFeature = configureOre(ModRegistry.NIKOLITE_ORE, Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(8, 0, 0, 16)))
 
     private fun configureOre(ore: Block, decorator: ConfiguredDecorator<*>): ConfiguredFeature<*, *> {
@@ -29,7 +27,7 @@ class WorldGeneration {
     }
 
     private fun handleBiome(biome: Biome) {
-        arrayOf(copperFeature, tinFeature, nikoliteFeature).forEach {
+        arrayOf(nikoliteFeature).forEach {
             if (biome.category !== Biome.Category.NETHER && biome.category !== Biome.Category.THEEND)
                 addFeature(it, GenerationStep.Feature.UNDERGROUND_ORES, biome)
         }

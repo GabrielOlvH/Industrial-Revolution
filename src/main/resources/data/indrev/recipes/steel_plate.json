@@ -1,10 +1,10 @@
 {
   "type": "indrev:compress",
   "ingredient": {
-    "item": "indrev:steel_ingot"
+    "tag": "c:steel_ingot"
   },
   "output": {
-    "item": "indrev:steel_plate",
+    "item": "c:steel_plate",
     "count": 1
   },
   "processTime": 600
