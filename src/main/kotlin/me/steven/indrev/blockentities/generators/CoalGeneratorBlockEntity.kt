@@ -1,6 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.items.CoolerItem
+import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
@@ -40,7 +42,15 @@ class CoalGeneratorBlockEntity :
     override fun getGenerationRatio(): Double = 0.15
 
     override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { _, stack -> BURN_TIME_MAP.containsKey(stack?.item) }
+        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
+            val item = stack?.item
+            when {
+                item is RechargeableItem && item.canOutput -> slot == 0
+                item is CoolerItem -> slot == 1
+                slot == 2 -> BURN_TIME_MAP.containsKey(stack?.item)
+                else -> false
+            }
+        }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
@@ -67,6 +77,12 @@ class CoalGeneratorBlockEntity :
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)
     }
+
+    override fun getOptimalRange(): IntRange = 900..2000
+
+    override fun getBaseHeatingEfficiency(): Double = 0.08
+
+    override fun getLimitTemperature(): Double = 2500.0
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()

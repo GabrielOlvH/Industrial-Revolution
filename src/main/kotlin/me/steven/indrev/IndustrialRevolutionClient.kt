@@ -4,23 +4,24 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorController
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
-import me.steven.indrev.gui.generators.CoalGeneratorController
-import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.infuser.InfuserController
 import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerController
 import me.steven.indrev.gui.miner.MinerScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.solargenerator.SolarGeneratorController
+import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
@@ -33,6 +34,13 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorScreen(
                 CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
+            )
+        }
+
+        ScreenProviderRegistry.INSTANCE.registerFactory(SolarGeneratorScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            SolarGeneratorScreen(
+                SolarGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())), player
             )
         }
 

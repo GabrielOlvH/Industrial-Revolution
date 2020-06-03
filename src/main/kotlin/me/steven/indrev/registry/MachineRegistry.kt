@@ -14,12 +14,13 @@ import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.gui.battery.BatteryScreen
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
-import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -84,7 +85,11 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3).also { registry ->
             registry.register(
-                { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS(), tier) { SolarGeneratorBlockEntity(tier) } },
+                { tier ->
+                    InterfacedMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorScreen.SCREEN_ID, { it is SolarGeneratorBlockEntity }
+                    ) { SolarGeneratorBlockEntity(tier) }
+                },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
             ).buffer { 32.0 }
         }

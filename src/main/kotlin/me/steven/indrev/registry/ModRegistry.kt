@@ -14,6 +14,8 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Material
 import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.util.Identifier
+import net.minecraft.util.registry.Registry
 
 class ModRegistry {
 
@@ -59,12 +61,15 @@ class ModRegistry {
         val HAMMER = CraftingTool(itemSettings().maxDamage(32))
         val CUTTER = CraftingTool(itemSettings().maxDamage(32))
 
-        val NIKOLITE = GenericResourceType.Builder("nikolite").allOres()
-            .withDustAffix()
+        val NIKOLITE = GenericResourceType.Builder("nikolite")
+            .allOres()
             .withDustAffix()
             .noBlock()
             .build()
             .withItemAffixes("ingot")
+
+        val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
+        val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
 
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
         val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)

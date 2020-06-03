@@ -3,18 +3,20 @@ package me.steven.indrev
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorController
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
-import me.steven.indrev.gui.generators.CoalGeneratorController
-import me.steven.indrev.gui.generators.CoalGeneratorScreen
 import me.steven.indrev.gui.infuser.InfuserController
 import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerController
 import me.steven.indrev.gui.miner.MinerScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.solargenerator.SolarGeneratorController
+import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.recipes.CompressorRecipe
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
@@ -41,10 +43,16 @@ class IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry().registerAll()
+
         ContainerProviderRegistry.INSTANCE.registerFactory(
             CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(SolarGeneratorScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            SolarGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
@@ -90,6 +98,6 @@ class IndustrialRevolution : EnergyModInitializer() {
         const val MOD_ID = "indrev"
 
         val MOD_GROUP: ItemGroup =
-            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.ore.get()) }
+            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
     }
 }

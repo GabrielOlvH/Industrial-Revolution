@@ -1,6 +1,6 @@
 package me.steven.indrev.world
 
-import io.github.cottonmc.resources.BuiltinResources
+import me.steven.indrev.registry.ModRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.WeightedList
@@ -42,17 +42,17 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
     ),
     CHALCOPRYTE(
         600..1200,
-        WeightedList<Block>().add(BuiltinResources.COPPER.ore.get(), 6).add(Blocks.IRON_ORE, 8).add(Blocks.STONE, 10)
+        WeightedList<Block>().add(ModRegistry.COPPER_ORE, 6).add(Blocks.IRON_ORE, 8).add(Blocks.STONE, 10)
             .add(Blocks.DIRT, 5).add(Blocks.CLAY, 1)
     ),
     CUPRITE(
         800..1900,
-        WeightedList<Block>().add(BuiltinResources.COPPER.ore.get(), 6).add(Blocks.STONE, 10).add(Blocks.DIRT, 5)
+        WeightedList<Block>().add(ModRegistry.COPPER_ORE, 6).add(Blocks.STONE, 10).add(Blocks.DIRT, 5)
             .add(Blocks.CLAY, 1)
     ),
     CASSITERITE(
         800..1900,
-        WeightedList<Block>().add(BuiltinResources.TIN.ore.get(), 6).add(Blocks.STONE, 10).add(Blocks.DIRT, 5)
+        WeightedList<Block>().add(ModRegistry.TIN_ORE, 6).add(Blocks.STONE, 10).add(Blocks.DIRT, 5)
             .add(Blocks.CLAY, 1)
     );
 }

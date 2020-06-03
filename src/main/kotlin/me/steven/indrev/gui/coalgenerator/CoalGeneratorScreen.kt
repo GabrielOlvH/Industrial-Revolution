@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.generators
+package me.steven.indrev.gui.coalgenerator
 
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
 import me.steven.indrev.utils.identifier

@@ -28,7 +28,9 @@ class ChunkScannerItem(settings: Settings) : Item(settings){
                         { WorldChunkVeinData() },
                         WorldChunkVeinData.STATE_KEY
                     )
-                val type = ChunkVeinType.values().random(rnd)
+                val type = ChunkVeinType
+                    .values()
+                    .random(rnd)
                 val data = ChunkVeinData(type, type.sizeRange.random(rnd))
                 state.veins[chunkPos] = data
                 state.markDirty()
