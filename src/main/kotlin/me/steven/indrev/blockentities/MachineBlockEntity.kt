@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
@@ -35,7 +34,7 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         val handler = Energy.of(this)
         Direction.values()
             .associate { direction ->
-                if (block !is MachineBlock || this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
+                if (this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
                 val targetPos = pos.offset(direction)
                 val target = world?.getBlockEntity(targetPos)
                 if (target == null || !Energy.valid(target)) return@associate Pair(null, null)
