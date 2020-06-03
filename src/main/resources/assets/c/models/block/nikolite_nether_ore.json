@@ -1,0 +1,8 @@
+{
+  "parent": "c:block/ore",
+  "textures": {
+    "particle": "minecraft:block/netherrack",
+    "stone": "minecraft:block/netherrack",
+    "ore": "c:block/nikolite_ore"
+  }
+}

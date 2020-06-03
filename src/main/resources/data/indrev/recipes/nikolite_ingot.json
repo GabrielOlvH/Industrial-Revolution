@@ -2,14 +2,14 @@
   "type": "indrev:infuse",
   "ingredients": [
     {
-      "item": "indrev:nikolite"
+      "item": "c:nikolite_dust"
     },
     {
       "item": "minecraft:iron_ingot"
     }
   ],
   "output": {
-    "item": "indrev:nikolite_ingot",
+    "item": "c:nikolite_ingot",
     "count": 1
   },
   "processTime": 600

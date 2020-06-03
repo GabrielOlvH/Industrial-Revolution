@@ -2,7 +2,7 @@
   "type": "indrev:infuse",
   "ingredients": [
     {
-      "item": "indrev:nikolite"
+      "item": "c:nikolite_dust"
     },
     {
       "item": "c:diamond_dust"

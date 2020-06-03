@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/copper_ingot"
+    "layer0": "indrev:item/enriched_nikolite_ingot"
   }
 }

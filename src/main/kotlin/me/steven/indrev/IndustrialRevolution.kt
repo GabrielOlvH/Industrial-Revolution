@@ -20,7 +20,6 @@ import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.registry.ModRegistry
-import me.steven.indrev.registry.WorldGeneration
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
@@ -42,7 +41,6 @@ class IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry().registerAll()
-        WorldGeneration().registerAll()
         ContainerProviderRegistry.INSTANCE.registerFactory(
             CoalGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
@@ -92,6 +90,6 @@ class IndustrialRevolution : EnergyModInitializer() {
         const val MOD_ID = "indrev"
 
         val MOD_GROUP: ItemGroup =
-            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE_ORE_ITEM) }
+            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.ore.get()) }
     }
 }

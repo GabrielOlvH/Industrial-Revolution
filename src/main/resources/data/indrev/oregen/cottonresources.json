@@ -2,6 +2,27 @@
   "ores": [
     "copper",
     "tin",
-    "uranium"
-  ]
+    "uranium",
+    "nikolite"
+  ],
+  "generators": {
+    "nikolite": {
+      "dimensions": [
+        {
+          "tag": "c:overworlds"
+        }
+      ],
+      "ore_block": "nikolite_ore",
+      "max_height": 16,
+      "cluster_count": 5,
+      "cluster_size": 8
+    }
+  },
+  "replacements": {
+    "nikolite": {
+      "#c:natural_stones": "c:ruby_ore",
+      "#c:netherracks": "c:nikolite_nether_ore",
+      "#c:end_stones": "c:nikolite_end_ore"
+    }
+  }
 }
