@@ -13,10 +13,7 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
     override fun tick() {
         super.tick()
         if (world?.isClient == false) {
-            if (shouldGenerate() && addEnergy(getGenerationRatio()) > 0)
-                tickTemperature(true)
-            else
-                tickTemperature(false)
+            tickTemperature(shouldGenerate() && addEnergy(getGenerationRatio()) > 0)
             sync()
             markDirty()
         }
