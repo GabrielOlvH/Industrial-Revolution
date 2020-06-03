@@ -39,8 +39,15 @@ dependencies {
 
     modImplementation "io.github.cottonmc:LibGui:1.10.0+1.15.2"
 
-    modApi  "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+    modImplementation ("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}") {
+        exclude(group: "me.shedaniel", module: "RoughlyEnoughItems")
+        exclude(group: "io.github.prospector", module: "modmenu")
+    }
+
     include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
+
+    modCompileOnly "io.github.prospector:modmenu:1.10.2+build.32"
+    modRuntime "me.shedaniel:RoughlyEnoughItems:3.6.14"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
