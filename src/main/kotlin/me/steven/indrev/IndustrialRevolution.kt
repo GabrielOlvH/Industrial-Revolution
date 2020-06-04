@@ -2,7 +2,7 @@ package me.steven.indrev
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
-import me.steven.indrev.blocks.MultiBlockPart
+import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
@@ -52,7 +52,7 @@ class IndustrialRevolution : EnergyModInitializer() {
             obj as BlockEntity
             if (obj.hasWorld()) {
                 val block = obj.cachedState.block
-                if (block is MultiBlockPart && block is EnergyStorage)
+                if (block is ProxyBlock && block is EnergyStorage)
                     return@registerHolder obj.world?.getBlockEntity(block.getBlockEntityPos(obj.cachedState, obj.pos)) as EnergyStorage
             }
             return@registerHolder EMPTY_ENERGY_STORAGE

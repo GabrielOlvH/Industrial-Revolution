@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities
 
-import me.steven.indrev.blocks.MultiBlockPart
+import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -23,7 +23,7 @@ abstract class InterfacedMachineBlockEntity(tier: Tier, registry: MachineRegistr
     fun getInventory(): DefaultSidedInventory {
         if (this.world != null) {
             val block = this.cachedState.block
-            if (block is MultiBlockPart) {
+            if (block is ProxyBlock) {
                 val center = block.getBlockEntityPos(this.cachedState, this.pos)
                 val blockEntity = world?.getBlockEntity(center)
                 if (blockEntity is InventoryProvider) return blockEntity.getInventory(cachedState, world, pos) as DefaultSidedInventory

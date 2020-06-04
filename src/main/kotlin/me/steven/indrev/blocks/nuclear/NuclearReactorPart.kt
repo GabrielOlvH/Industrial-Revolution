@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.nuclear
 
 import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
-import me.steven.indrev.blocks.MultiBlockPart
+import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.blocks.nuclear.NuclearCoreSide.Companion.offset
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -17,7 +17,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, MultiBlockPart {
+class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, ProxyBlock {
 
     init {
         this.defaultState = stateManager.defaultState.with(CORE_DIRECTION, NuclearCoreSide.UNKNOWN)
