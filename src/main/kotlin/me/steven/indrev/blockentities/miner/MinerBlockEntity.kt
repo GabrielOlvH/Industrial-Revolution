@@ -11,8 +11,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.world.ChunkVeinType
-import me.steven.indrev.world.WorldChunkVeinData
+import me.steven.indrev.world.chunkveins.ChunkVeinType
+import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.BlockContext
 import net.minecraft.container.PropertyDelegate

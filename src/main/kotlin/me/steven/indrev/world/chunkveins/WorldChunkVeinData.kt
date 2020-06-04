@@ -1,4 +1,4 @@
-package me.steven.indrev.world
+package me.steven.indrev.world.chunkveins
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.ChunkPos

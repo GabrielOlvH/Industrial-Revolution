@@ -10,7 +10,7 @@ import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
-import me.steven.indrev.world.ChunkVeinType
+import me.steven.indrev.world.chunkveins.ChunkVeinType
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerInventory

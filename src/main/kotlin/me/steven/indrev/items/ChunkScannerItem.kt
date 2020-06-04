@@ -1,8 +1,8 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.world.ChunkVeinData
-import me.steven.indrev.world.ChunkVeinType
-import me.steven.indrev.world.WorldChunkVeinData
+import me.steven.indrev.world.chunkveins.ChunkVeinData
+import me.steven.indrev.world.chunkveins.ChunkVeinType
+import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item

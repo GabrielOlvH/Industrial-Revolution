@@ -1,4 +1,4 @@
-package me.steven.indrev.world
+package me.steven.indrev.world.chunkveins
 
 import me.steven.indrev.registry.ModRegistry
 import net.minecraft.block.Block
