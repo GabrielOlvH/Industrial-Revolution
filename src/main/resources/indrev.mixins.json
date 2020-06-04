@@ -3,7 +3,8 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinCraftingResultSlot"
+    "MixinCraftingResultSlot",
+    "MixinEnergyHandler"
   ],
   "client": [
   ],
