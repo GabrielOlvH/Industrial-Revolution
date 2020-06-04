@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.miner
 
-import me.steven.indrev.LOGGER
 import me.steven.indrev.blockentities.HeatMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.inventories.DefaultSidedInventory
@@ -107,12 +106,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
     override fun fromTag(tag: CompoundTag?) {
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
-            try {
-                chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
-            } catch (e: Throwable) {
-                tag.remove("ChunkVeinType")
-                LOGGER.warn("Miner had invalid chunk vein type \"${tag.getString("ChunkVeinType")}\"")
-            }
+            chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
         super.fromTag(tag)
     }
 
@@ -126,12 +120,7 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
     override fun fromClientTag(tag: CompoundTag?) {
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
-            try {
-                chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
-            } catch (e: Throwable) {
-                tag.remove("ChunkVeinType")
-                LOGGER.warn("Miner had invalid chunk vein type \"${tag.getString("ChunkVeinType")}\"")
-            }
+            chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
         super.fromClientTag(tag)
     }
 }
