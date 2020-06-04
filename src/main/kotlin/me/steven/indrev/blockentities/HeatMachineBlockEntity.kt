@@ -55,7 +55,7 @@ abstract class HeatMachineBlockEntity(tier: Tier, registry: MachineRegistry) :
                 if (cooling > 0) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
             temperature += getBaseHeatingEfficiency() + modifier
         } else if (isHeatingUp) temperature += getBaseHeatingEfficiency()
-        else if (temperature > 310) temperature -= getBaseHeatingEfficiency() / 2
+        else if (temperature > 310) temperature -= 0.1
     }
 
 

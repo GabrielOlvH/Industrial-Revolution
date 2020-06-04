@@ -38,7 +38,7 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
 
     override fun getOptimalRange(): IntRange = 2000..3000
 
-    override fun getBaseHeatingEfficiency(): Double = 15.1
+    override fun getBaseHeatingEfficiency(): Double = 2.3
 
     override fun getLimitTemperature(): Double = 4000.0
 
@@ -48,7 +48,8 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
             when {
                 item is RechargeableItem && item.canOutput -> slot == 0
                 item is CoolerItem -> slot == 1
-                else -> item is UraniumRodItem
+                item is UraniumRodItem -> slot != 1 && slot != 0
+                else -> false
             }
         }
 }
