@@ -30,8 +30,8 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         get() = field ?: createDelegate().apply { field = this }
 
     override fun tick() {
-        if (world?.isClient == true) return
-        EnergyMovement(this, pos).spread(*Direction.values())
+        if (world?.isClient == false)
+            EnergyMovement(this, pos).spread(*Direction.values())
     }
 
     fun takeEnergy(amount: Double): Boolean {
