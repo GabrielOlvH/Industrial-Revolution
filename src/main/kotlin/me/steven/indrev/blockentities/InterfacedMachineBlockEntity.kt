@@ -10,7 +10,6 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
-import net.minecraft.util.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
@@ -33,14 +32,6 @@ abstract class InterfacedMachineBlockEntity(tier: Tier, registry: MachineRegistr
     }
 
     override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = getInventory()
-
-    override fun getInvStackList(): DefaultedList<ItemStack> = getInventory().stackList
-
-    override fun setInvStackList(list: DefaultedList<ItemStack>?) {
-        if (list != null) getInventory().stackList = list
-    }
-
-    override fun getInvSize(): Int = invStackList.size
 
     abstract fun createInventory(): DefaultSidedInventory
 

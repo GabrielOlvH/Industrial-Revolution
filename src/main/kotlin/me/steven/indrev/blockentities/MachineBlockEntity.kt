@@ -5,11 +5,9 @@ import me.steven.indrev.EnergyMovement
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
-import net.minecraft.block.entity.LootableContainerBlockEntity
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.DefaultedList
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
 import team.reborn.energy.EnergySide
@@ -17,7 +15,7 @@ import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
 abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
-    LootableContainerBlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
+    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
     Tickable {
     var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
@@ -71,12 +69,6 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
 
     override fun getStored(side: EnergySide?): Double = energy
-
-    override fun getInvStackList(): DefaultedList<ItemStack> = throw IllegalArgumentException("cannot retrieve inventory for basic machine block entity!")
-
-    override fun setInvStackList(list: DefaultedList<ItemStack>?): Unit = throw IllegalArgumentException("cannot set inventory for basic machine block entity!")
-
-    override fun getInvSize(): Int = throw IllegalArgumentException("cannot retrieve inventory size for basic machine block entity!")
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)

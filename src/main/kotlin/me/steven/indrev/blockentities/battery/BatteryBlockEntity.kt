@@ -2,18 +2,12 @@ package me.steven.indrev.blockentities.battery
 
 import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
 import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.BlockContext
-import net.minecraft.container.Container
 import net.minecraft.container.PropertyDelegate
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
@@ -29,10 +23,6 @@ class BatteryBlockEntity(tier: Tier) :
             takeEnergy(1.0)
         }
     }
-
-    override fun createContainer(i: Int, playerInventory: PlayerInventory): Container = BatteryController(i, playerInventory, BlockContext.create(world, pos))
-
-    override fun getContainerName(): Text = TranslatableText("block.indrev.battery")
 
     override fun createInventory(): DefaultSidedInventory =
         DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }

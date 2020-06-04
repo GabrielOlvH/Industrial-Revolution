@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.gui.infuser.InfuserController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -9,11 +8,7 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.BlockContext
-import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.BasicInventory
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 
 class InfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
@@ -51,10 +46,4 @@ class InfuserBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getCurrentRecipe(): InfuserRecipe? = currentRecipe
-
-    override fun createContainer(i: Int, playerInventory: PlayerInventory): InfuserController {
-        return InfuserController(i, playerInventory, BlockContext.create(world, pos))
-    }
-
-    override fun getContainerName(): Text = TranslatableText("")
 }

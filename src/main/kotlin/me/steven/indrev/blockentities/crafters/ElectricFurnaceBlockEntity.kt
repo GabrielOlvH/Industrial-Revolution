@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.gui.furnace.ElectricFurnaceController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -8,13 +7,9 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.BlockContext
-import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.BasicInventory
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
@@ -57,10 +52,4 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     override fun getBaseHeatingEfficiency(): Double = 0.06
 
     override fun getLimitTemperature(): Double = 2200.0
-
-    override fun createContainer(i: Int, playerInventory: PlayerInventory): ElectricFurnaceController {
-        return ElectricFurnaceController(i, playerInventory, BlockContext.create(world, pos))
-    }
-
-    override fun getContainerName(): Text = TranslatableText("")
 }

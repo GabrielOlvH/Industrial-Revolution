@@ -1,13 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.gui.solargenerator.SolarGeneratorController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.BlockContext
-import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import team.reborn.energy.EnergySide
 
 class SolarGeneratorBlockEntity(tier: Tier) :
@@ -27,10 +22,4 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     override fun getBaseHeatingEfficiency(): Double = if (temperature > 600) 0.001 else 0.1
 
     override fun getLimitTemperature(): Double = 1000.0
-
-    override fun createContainer(i: Int, playerInventory: PlayerInventory): SolarGeneratorController {
-        return SolarGeneratorController(i, playerInventory, BlockContext.create(world, pos))
-    }
-
-    override fun getContainerName(): Text = TranslatableText("")
 }

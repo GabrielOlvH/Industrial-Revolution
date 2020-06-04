@@ -77,7 +77,7 @@ class ModRegistry {
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
         val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
 
-        val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings())
+        val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings().maxDamage(1024))
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 
