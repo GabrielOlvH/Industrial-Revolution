@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class InterfacedMachineBlock(
+open class InterfacedMachineBlock(
     settings: Settings,
     tier: Tier,
     private val screenId: Identifier,

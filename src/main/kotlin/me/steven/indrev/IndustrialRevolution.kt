@@ -1,6 +1,8 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
+import me.steven.indrev.blocks.MultiBlockPart
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
@@ -13,6 +15,8 @@ import me.steven.indrev.gui.infuser.InfuserController
 import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerController
 import me.steven.indrev.gui.miner.MinerScreen
+import me.steven.indrev.gui.nuclearreactor.NuclearReactorController
+import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorController
@@ -22,9 +26,11 @@ import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.utils.EMPTY_ENERGY_STORAGE
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemGroup
@@ -34,6 +40,7 @@ import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import team.reborn.energy.Energy
+import team.reborn.energy.EnergyStorage
 import team.reborn.energy.minecraft.EnergyModInitializer
 
 val LOGGER = LogManager.getLogger(IndustrialRevolution::javaClass)
@@ -41,6 +48,15 @@ val LOGGER = LogManager.getLogger(IndustrialRevolution::javaClass)
 class IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
+        Energy.registerHolder(NuclearReactorProxyBlockEntity::class.java) { obj ->
+            obj as BlockEntity
+            if (obj.hasWorld()) {
+                val block = obj.cachedState.block
+                if (block is MultiBlockPart && block is EnergyStorage)
+                    return@registerHolder obj.world?.getBlockEntity(block.getBlockEntityPos(obj.cachedState, obj.pos)) as EnergyStorage
+            }
+            return@registerHolder EMPTY_ENERGY_STORAGE
+        }
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry().registerAll()
 
@@ -53,6 +69,11 @@ class IndustrialRevolution : EnergyModInitializer() {
         ContainerProviderRegistry.INSTANCE.registerFactory(SolarGeneratorScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             SolarGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(NuclearReactorScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            NuclearReactorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID

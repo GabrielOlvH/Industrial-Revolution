@@ -4,6 +4,7 @@ import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.items.ChunkScannerItem
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.CraftingTool
+import me.steven.indrev.items.UraniumRodItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.items.rechargeable.RechargeableMiningItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -43,6 +44,8 @@ class ModRegistry {
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
 
+        identifier("uranium_rod").item(URANIUM_ROD_ITEM)
+
         identifier("chunk_scanner").item(ChunkScannerItem(itemSettings()))
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
@@ -73,6 +76,8 @@ class ModRegistry {
 
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
         val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
+
+        val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings())
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
 

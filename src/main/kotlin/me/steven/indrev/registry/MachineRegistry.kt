@@ -8,17 +8,22 @@ import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blockentities.crafters.InfuserBlockEntity
 import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.NuclearReactorBlockEntity
+import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.blocks.nuclear.NuclearReactorCore
+import me.steven.indrev.blocks.nuclear.NuclearReactorPart
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
 import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerScreen
+import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.utils.*
@@ -93,6 +98,18 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
             ).buffer { 32.0 }
         }
+
+        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
+            registry.register(
+                { NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorScreen.SCREEN_ID, { it is NuclearReactorBlockEntity }) { NuclearReactorBlockEntity() } },
+                { { NuclearReactorBlockEntity() } }
+            ).buffer { 100000.0 }
+        }
+
+        val NUCLEAR_PART_BLOCK = NuclearReactorPart(MACHINE_BLOCK_SETTINGS()).also { identifier("nuclear_reactor_part").block(it) }
+        val NUCLEAR_PART_BLOCK_ITEM = BlockItem(NUCLEAR_PART_BLOCK, itemSettings()).also { identifier("nuclear_reactor_part").item(it) }
+        val NUCLEAR_PART_BLOCK_ENTITY =
+            BlockEntityType.Builder.create(Supplier { NuclearReactorProxyBlockEntity() }, NUCLEAR_PART_BLOCK).build(null).also { identifier("nuclear_reactor_part").blockEntityType(it) }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).also { registry ->
             registry.register(

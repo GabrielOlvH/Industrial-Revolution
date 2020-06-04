@@ -1,23 +1,25 @@
 package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.EnergyMovement
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
-import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.container.PropertyDelegate
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
-import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
 abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
-    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
+    LootableContainerBlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
     Tickable {
-    private var lastInputFrom: Direction? = null
+    var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
     var energy = 0.0
         set(value) {
@@ -29,39 +31,7 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
 
     override fun tick() {
         if (world?.isClient == true) return
-
-        val block = this.cachedState.block
-        val handler = Energy.of(this)
-        Direction.values()
-            .associate { direction ->
-                if (this.getMaxOutput(direction) <= 0) return@associate Pair(null, null)
-                val targetPos = pos.offset(direction)
-                val target = world?.getBlockEntity(targetPos)
-                if (target == null || !Energy.valid(target)) return@associate Pair(null, null)
-                val targetHandler = Energy.of(target).side(direction.opposite)
-                if (targetHandler.energy >= targetHandler.maxStored) Pair(null, null)
-                else Pair(direction, Pair(target, targetHandler))
-            }
-            .filter { (left, right) -> left != null && right != null && right.second != null }
-            .apply {
-                val sum = values.sumByDouble { pair ->
-                    val targetHandler = pair!!.second
-                    (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
-                }
-                forEach { pair ->
-                    val target = pair.value?.first
-                    val targetHandler = pair.value?.second
-                    val direction = pair.key
-                    handler.side(direction)
-                    val targetMaxInput = targetHandler!!.maxInput
-                    val amount = (targetMaxInput / sum) * handler.maxOutput
-                    if (amount > 0 && lastInputFrom != direction) {
-                        if (target is MachineBlockEntity)
-                            target.lastInputFrom = direction?.opposite
-                        handler.into(targetHandler).move(amount)
-                    }
-                }
-            }
+        EnergyMovement(this, pos).spread(*Direction.values())
     }
 
     fun takeEnergy(amount: Double): Boolean {
@@ -101,6 +71,12 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
 
     override fun getStored(side: EnergySide?): Double = energy
+
+    override fun getInvStackList(): DefaultedList<ItemStack> = throw IllegalArgumentException("cannot retrieve inventory for basic machine block entity!")
+
+    override fun setInvStackList(list: DefaultedList<ItemStack>?): Unit = throw IllegalArgumentException("cannot set inventory for basic machine block entity!")
+
+    override fun getInvSize(): Int = throw IllegalArgumentException("cannot retrieve inventory size for basic machine block entity!")
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)

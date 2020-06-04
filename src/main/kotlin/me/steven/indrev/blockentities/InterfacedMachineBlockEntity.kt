@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities
 
+import me.steven.indrev.blocks.MultiBlockPart
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -9,6 +10,7 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.IWorld
 
@@ -18,9 +20,27 @@ abstract class InterfacedMachineBlockEntity(tier: Tier, registry: MachineRegistr
     private var machineInventory: DefaultSidedInventory? = null
         get() = field ?: createInventory().apply { field = this }
 
-    fun getInventory(): DefaultSidedInventory = machineInventory!!
+    fun getInventory(): DefaultSidedInventory {
+        if (this.world != null) {
+            val block = this.cachedState.block
+            if (block is MultiBlockPart) {
+                val center = block.getBlockEntityPos(this.cachedState, this.pos)
+                val blockEntity = world?.getBlockEntity(center)
+                if (blockEntity is InventoryProvider) return blockEntity.getInventory(cachedState, world, pos) as DefaultSidedInventory
+            }
+        }
+        return machineInventory!!
+    }
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = machineInventory!!
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory = getInventory()
+
+    override fun getInvStackList(): DefaultedList<ItemStack> = getInventory().stackList
+
+    override fun setInvStackList(list: DefaultedList<ItemStack>?) {
+        if (list != null) getInventory().stackList = list
+    }
+
+    override fun getInvSize(): Int = invStackList.size
 
     abstract fun createInventory(): DefaultSidedInventory
 

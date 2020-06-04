@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.miner
 import me.steven.indrev.LOGGER
 import me.steven.indrev.blockentities.HeatMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.gui.miner.MinerController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -13,10 +14,14 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.world.ChunkVeinType
 import me.steven.indrev.world.WorldChunkVeinData
 import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.container.BlockContext
 import net.minecraft.container.PropertyDelegate
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import team.reborn.energy.EnergySide
 
 class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
@@ -90,6 +95,12 @@ class MinerBlockEntity(tier: Tier) : HeatMachineBlockEntity(tier, MachineRegistr
     override fun getUpgradeSlots(): IntArray = intArrayOf(11, 12, 13, 14)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+
+    override fun createContainer(i: Int, playerInventory: PlayerInventory): MinerController {
+        return MinerController(i, playerInventory, BlockContext.create(world, pos))
+    }
+
+    override fun getContainerName(): Text = TranslatableText("")
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 128.0 + Upgrade.SPEED.apply(this, getInventory())

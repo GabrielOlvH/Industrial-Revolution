@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -8,7 +9,11 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.container.BlockContext
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.BasicInventory
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 
 class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
@@ -62,4 +67,10 @@ class PulverizerBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getCurrentRecipe(): PulverizerRecipe? = currentRecipe
+
+    override fun createContainer(i: Int, playerInventory: PlayerInventory): PulverizerController {
+        return PulverizerController(i, playerInventory, BlockContext.create(world, pos))
+    }
+
+    override fun getContainerName(): Text = TranslatableText("")
 }

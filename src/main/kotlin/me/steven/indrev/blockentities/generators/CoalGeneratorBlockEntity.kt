@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -7,9 +8,13 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.container.BlockContext
 import net.minecraft.container.PropertyDelegate
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
@@ -53,6 +58,12 @@ class CoalGeneratorBlockEntity :
         }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
+
+    override fun createContainer(i: Int, playerInventory: PlayerInventory): CoalGeneratorController {
+        return CoalGeneratorController(i, playerInventory, BlockContext.create(world, pos))
+    }
+
+    override fun getContainerName(): Text = TranslatableText("")
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
