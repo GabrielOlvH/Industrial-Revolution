@@ -201,7 +201,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             }
         }
 
-        val MINER_REGISTRY = MachineRegistry(identifier("miner")).also { registry ->
+        val MINER_REGISTRY = MachineRegistry(identifier("miner"), Tier.MK4).also { registry ->
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
@@ -209,14 +209,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { MinerBlockEntity(tier) }
                 },
                 { tier -> { MinerBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 10000.0
-                    Tier.MK2 -> 100000.0
-                    Tier.MK3 -> 200000.0
-                    Tier.MK4 -> 500000.0
-                }
-            }
+            ).buffer { 500000.0 }
         }
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable")).also { registry ->
