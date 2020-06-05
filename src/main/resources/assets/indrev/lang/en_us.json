@@ -56,5 +56,8 @@
   "item.c.nikolite_end_ore": "Nikolite End Ore",
   "item.indrev.uranium_rod": "Uranium Rod",
   "gui.widget.energy": "Energy",
-  "gui.widget.temperature": "Temperature"
+  "gui.widget.temperature": "Temperature",
+  "gui.widget.temperature_info.high": "Too hot!",
+  "gui.widget.temperature_info.medium": "Full potential.",
+  "gui.widget.temperature_info.low": "Not heated up."
 }
