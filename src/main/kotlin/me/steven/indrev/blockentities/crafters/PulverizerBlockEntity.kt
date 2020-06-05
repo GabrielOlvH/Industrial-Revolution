@@ -32,6 +32,7 @@ class PulverizerBlockEntity(tier: Tier) :
     }
 
     private var currentRecipe: PulverizerRecipe? = null
+
     override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
         val optional =

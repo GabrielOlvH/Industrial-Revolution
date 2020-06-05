@@ -33,6 +33,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     }
 
     private var currentRecipe: SmeltingRecipe? = null
+
     override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, inputStacks, world)

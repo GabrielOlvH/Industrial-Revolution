@@ -1,10 +1,10 @@
 package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.EnergyMovement
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
@@ -33,7 +33,6 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         }
     private var delegate: PropertyDelegate? = null
         get() = field ?: createDelegate().apply { field = this }
-
     var inventoryController: InventoryController? = null
     var temperatureController: TemperatureController? = null
 

@@ -1,4 +1,4 @@
-package me.steven.indrev
+package me.steven.indrev.utils
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.mixin.MixinEnergyHandler

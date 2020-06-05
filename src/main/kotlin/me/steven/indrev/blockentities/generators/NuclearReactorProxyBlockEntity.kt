@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.EnergyMovement
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.EnergyMovement
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
