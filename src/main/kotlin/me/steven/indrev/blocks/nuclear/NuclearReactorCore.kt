@@ -62,7 +62,7 @@ class NuclearReactorCore(
             val partPos = ctx?.blockPos?.offset(direction)
             val partState = ctx?.world?.getBlockState(partPos)
             val partBlock = partState?.block
-            val isPart = partBlock is NuclearReactorPart && partState.get(NuclearReactorPart.CORE_DIRECTION) == NuclearCoreSide.UNKNOWN
+            val isPart = isStatePart(partState, direction.opposite)
             if (isPart)
                 ctx?.world?.setBlockState(partPos, partState?.with(NuclearReactorPart.CORE_DIRECTION, NuclearCoreSide.fromMinecraft(direction.opposite)))
             state = state?.with(getProperty(direction), isPart)
@@ -78,10 +78,17 @@ class NuclearReactorCore(
         pos: BlockPos?,
         neighborPos: BlockPos?
     ): BlockState {
-        val isPart = neighborState?.block is NuclearReactorPart && neighborState.get(NuclearReactorPart.CORE_DIRECTION) == NuclearCoreSide.UNKNOWN
+        val isPart = isStatePart(neighborState, facing.opposite)
         if (isPart)
             world?.setBlockState(neighborPos, neighborState?.with(NuclearReactorPart.CORE_DIRECTION, NuclearCoreSide.fromMinecraft(facing.opposite)), 3)
         return state.with(getProperty(facing), isPart)
+    }
+
+    fun isStatePart(blockState: BlockState?, direction: Direction): Boolean {
+        val block = blockState?.block
+        if (block !is NuclearReactorPart) return false
+        val corePart = blockState.get(NuclearReactorPart.CORE_DIRECTION)
+        return corePart == NuclearCoreSide.UNKNOWN || corePart == NuclearCoreSide.fromMinecraft(direction)
     }
 
     fun isFormed(state: BlockState?): Boolean = state != null && state[NORTH] && state[SOUTH] && state[EAST] && state[WEST] && state[UP] && state[DOWN]

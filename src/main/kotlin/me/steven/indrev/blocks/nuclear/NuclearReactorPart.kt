@@ -6,8 +6,10 @@ import me.steven.indrev.blocks.nuclear.NuclearCoreSide.Companion.offset
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
+import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.SidedInventory
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.EnumProperty
 import net.minecraft.util.ActionResult
@@ -15,9 +17,10 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
+import net.minecraft.world.IWorld
 import net.minecraft.world.World
 
-class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, ProxyBlock {
+class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, InventoryProvider, ProxyBlock {
 
     init {
         this.defaultState = stateManager.defaultState.with(CORE_DIRECTION, NuclearCoreSide.UNKNOWN)
@@ -39,9 +42,15 @@ class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvi
         return blockPos.offset(state[CORE_DIRECTION])
     }
 
+    override fun createBlockEntity(view: BlockView?): BlockEntity? = NuclearReactorProxyBlockEntity()
+
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+        val blockEntity = world?.getBlockEntity(getBlockEntityPos(state!!, pos!!))
+        if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
+        return blockEntity.getInventory(state, world, pos)
+    }
+
     companion object {
         val CORE_DIRECTION: EnumProperty<NuclearCoreSide> = EnumProperty.of("core_direction", NuclearCoreSide::class.java)
     }
-
-    override fun createBlockEntity(view: BlockView?): BlockEntity? = NuclearReactorProxyBlockEntity()
 }
