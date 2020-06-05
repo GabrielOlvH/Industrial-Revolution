@@ -2,12 +2,12 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.blockentities.HeatMachineBlockEntity
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.PropertyDelegate
 
-class TemperatureInfoWidget(private val delegate: PropertyDelegate, private val temperatureController: HeatMachineBlockEntity) : WWidget() {
+class TemperatureInfoWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
     init {
         this.setSize(8, 8)
     }
@@ -15,8 +15,8 @@ class TemperatureInfoWidget(private val delegate: PropertyDelegate, private val 
     override fun paintBackground(x: Int, y: Int) {
         val temperature = delegate[2]
         val widgetToDraw = when {
-            temperature > temperatureController.getOptimalRange().last -> HIGH_HEAT
-            temperature in temperatureController.getOptimalRange() -> MEDIUM_HEAT
+            temperature > temperatureController.optimalRange.last -> HIGH_HEAT
+            temperature in temperatureController.optimalRange -> MEDIUM_HEAT
             else -> HEAT_LOW
         }
         ScreenDrawing.texturedRect(x, y, width, height, widgetToDraw, 0f, 0f, 1f, 1f, -1)
@@ -25,8 +25,8 @@ class TemperatureInfoWidget(private val delegate: PropertyDelegate, private val 
     override fun addInformation(information: MutableList<String>?) {
         val temperature = delegate[2]
         val key = when {
-            temperature > temperatureController.getOptimalRange().last -> "gui.widget.temperature_info.high"
-            temperature in temperatureController.getOptimalRange() -> "gui.widget.temperature_info.medium"
+            temperature > temperatureController.optimalRange.last -> "gui.widget.temperature_info.high"
+            temperature in temperatureController.optimalRange -> "gui.widget.temperature_info.medium"
             else -> "gui.widget.temperature_info.low"
         }
         information?.add(I18n.translate(key))

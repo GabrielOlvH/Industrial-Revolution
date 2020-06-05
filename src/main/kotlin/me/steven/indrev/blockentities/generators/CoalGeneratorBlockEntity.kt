@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -13,6 +15,22 @@ import net.minecraft.nbt.CompoundTag
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
+
+    init {
+        this.inventoryController = InventoryController({ this }) {
+            DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
+                val item = stack?.item
+                when {
+                    item is RechargeableItem && item.canOutput -> slot == 0
+                    item is CoolerItem -> slot == 1
+                    slot == 2 -> BURN_TIME_MAP.containsKey(stack?.item)
+                    else -> false
+                }
+            }
+        }
+        this.temperatureController = TemperatureController({ this }, 0.08, 900..2000, 2500.0)
+    }
+
     var burnTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
@@ -25,7 +43,7 @@ class CoalGeneratorBlockEntity :
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            val inventory = getInventory()
+            val inventory = inventoryController?.getInventory() ?: return false
             val invStack = inventory.getInvStack(2)
             if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                 burnTime = BURN_TIME_MAP[invStack.item] ?: return false
@@ -40,17 +58,6 @@ class CoalGeneratorBlockEntity :
     }
 
     override fun getGenerationRatio(): Double = 0.15
-
-    override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
-            val item = stack?.item
-            when {
-                item is RechargeableItem && item.canOutput -> slot == 0
-                item is CoolerItem -> slot == 1
-                slot == 2 -> BURN_TIME_MAP.containsKey(stack?.item)
-                else -> false
-            }
-        }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
@@ -77,12 +84,6 @@ class CoalGeneratorBlockEntity :
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)
     }
-
-    override fun getOptimalRange(): IntRange = 900..2000
-
-    override fun getBaseHeatingEfficiency(): Double = 0.08
-
-    override fun getLimitTemperature(): Double = 2500.0
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()

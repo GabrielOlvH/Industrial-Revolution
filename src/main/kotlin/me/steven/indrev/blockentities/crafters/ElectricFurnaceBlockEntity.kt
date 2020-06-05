@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -13,6 +15,23 @@ import net.minecraft.recipe.SmeltingRecipe
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
+
+    init {
+        this.inventoryController = InventoryController({ this }) {
+            DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+                val item = stack?.item
+                when {
+                    item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                    item is RechargeableItem && item.canOutput -> slot == 0
+                    item is CoolerItem -> slot == 1
+                    slot == 2 -> true
+                    else -> false
+                }
+            }
+        }
+        this.temperatureController = TemperatureController({ this }, 0.06, 1600..2000, 2200.0)
+    }
+
     private var currentRecipe: SmeltingRecipe? = null
     override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
@@ -29,27 +48,9 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
-            val item = stack?.item
-            when {
-                item is UpgradeItem -> getUpgradeSlots().contains(slot)
-                item is RechargeableItem && item.canOutput -> slot == 0
-                item is CoolerItem -> slot == 1
-                slot == 2 -> true
-                else -> false
-            }
-        }
-
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getCurrentRecipe(): SmeltingRecipe? = currentRecipe
-
-    override fun getOptimalRange(): IntRange = 1600..2000
-
-    override fun getBaseHeatingEfficiency(): Double = 0.06
-
-    override fun getLimitTemperature(): Double = 2200.0
 }

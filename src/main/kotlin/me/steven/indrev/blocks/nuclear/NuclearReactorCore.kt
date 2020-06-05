@@ -5,7 +5,6 @@ import me.steven.indrev.blocks.InterfacedMachineBlock
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
@@ -23,10 +22,9 @@ import net.minecraft.world.World
 class NuclearReactorCore(
     settings: Settings,
     screenId: Identifier,
-    openInterface: (BlockEntity?) -> Boolean,
     blockEntityProvider: () -> MachineBlockEntity
 ) :
-    InterfacedMachineBlock(settings, Tier.MK4, screenId, openInterface, blockEntityProvider) {
+    InterfacedMachineBlock(settings, Tier.MK4, screenId, blockEntityProvider) {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -61,7 +59,6 @@ class NuclearReactorCore(
         Direction.values().forEach { direction ->
             val partPos = ctx?.blockPos?.offset(direction)
             val partState = ctx?.world?.getBlockState(partPos)
-            val partBlock = partState?.block
             val isPart = isStatePart(partState, direction.opposite)
             if (isPart)
                 ctx?.world?.setBlockState(partPos, partState?.with(NuclearReactorPart.CORE_DIRECTION, NuclearCoreSide.fromMinecraft(direction.opposite)))

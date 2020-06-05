@@ -2,13 +2,13 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.blockentities.HeatMachineBlockEntity
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.PropertyDelegate
 import kotlin.math.round
 
-class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: HeatMachineBlockEntity) : WWidget() {
+class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
     init {
         this.setSize(16, 64)
     }
@@ -16,7 +16,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
     override fun paintBackground(x: Int, y: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, EMPTY_HEAT, -1)
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.getLimitTemperature().toFloat()
+        val maxTemperature = temperatureController.limit.toFloat()
         if (temperature > 0) {
             val v = ((temperature.toFloat() * 63 / maxTemperature) + 1) / 64
             val h = round(v * height).toInt()
@@ -26,7 +26,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
 
     override fun addInformation(information: MutableList<String>?) {
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.getLimitTemperature().toInt()
+        val maxTemperature = temperatureController.limit.toInt()
         information?.add(I18n.translate("gui.widget.temperature"))
         information?.add("$temperature / $maxTemperature K")
         super.addInformation(information)

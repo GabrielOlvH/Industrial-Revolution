@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -12,6 +14,22 @@ import net.minecraft.inventory.BasicInventory
 
 class CompressorBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
+
+    init {
+        this.inventoryController = InventoryController({ this }) {
+            DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+                val item = stack?.item
+                when {
+                    item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                    item is RechargeableItem && item.canOutput -> slot == 0
+                    item is CoolerItem -> slot == 1
+                    slot == 2 -> true
+                    else -> false
+                }
+            }
+        }
+        this.temperatureController = TemperatureController({ this }, 0.06, 700..1100, 1400.0)
+    }
 
     private var currentRecipe: CompressorRecipe? = null
 
@@ -29,18 +47,6 @@ class CompressorBlockEntity(tier: Tier) :
         }
         return recipe
     }
-
-    override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
-            val item = stack?.item
-            when {
-                item is UpgradeItem -> getUpgradeSlots().contains(slot)
-                item is RechargeableItem && item.canOutput -> slot == 0
-                item is CoolerItem -> slot == 1
-                slot == 2 -> true
-                else -> false
-            }
-        }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

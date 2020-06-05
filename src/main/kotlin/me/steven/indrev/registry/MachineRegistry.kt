@@ -81,7 +81,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorScreen.SCREEN_ID, { it is CoalGeneratorBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorScreen.SCREEN_ID
                     ) { CoalGeneratorBlockEntity() }
                 },
                 { { CoalGeneratorBlockEntity() } }
@@ -92,7 +92,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorScreen.SCREEN_ID, { it is SolarGeneratorBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorScreen.SCREEN_ID
                     ) { SolarGeneratorBlockEntity(tier) }
                 },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -101,7 +101,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
         val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
             registry.register(
-                { NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorScreen.SCREEN_ID, { it is NuclearReactorBlockEntity }) { NuclearReactorBlockEntity() } },
+                {
+                    NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorScreen.SCREEN_ID)
+                    { NuclearReactorBlockEntity() }
+                },
                 { { NuclearReactorBlockEntity() } }
             ).buffer { 100000.0 }
         }
@@ -115,7 +118,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceScreen.SCREEN_ID, { it is ElectricFurnaceBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceScreen.SCREEN_ID
                     ) { ElectricFurnaceBlockEntity(tier) }
                 },
                 { tier -> { ElectricFurnaceBlockEntity(tier) } }
@@ -133,7 +136,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, PulverizerScreen.SCREEN_ID, { it is PulverizerBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, PulverizerScreen.SCREEN_ID
                     ) { PulverizerBlockEntity(tier) }
                 },
                 { tier -> { PulverizerBlockEntity(tier) } }
@@ -151,7 +154,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CompressorScreen.SCREEN_ID, { it is CompressorBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, CompressorScreen.SCREEN_ID
                     ) { CompressorBlockEntity(tier) }
                 },
                 { tier -> { CompressorBlockEntity(tier) } }
@@ -169,7 +172,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, InfuserScreen.SCREEN_ID, { it is InfuserBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, InfuserScreen.SCREEN_ID
                     ) { InfuserBlockEntity(tier) }
                 },
                 { tier -> { InfuserBlockEntity(tier) } }
@@ -187,7 +190,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID, { it is BatteryBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID
                     ) { BatteryBlockEntity(tier) }
                 },
                 { tier -> { BatteryBlockEntity(tier) } }
@@ -205,7 +208,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, MinerScreen.SCREEN_ID, { it is MinerBlockEntity }
+                        MACHINE_BLOCK_SETTINGS(), tier, MinerScreen.SCREEN_ID
                     ) { MinerBlockEntity(tier) }
                 },
                 { tier -> { MinerBlockEntity(tier) } }

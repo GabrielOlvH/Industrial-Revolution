@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
@@ -12,6 +14,23 @@ import net.minecraft.inventory.BasicInventory
 
 class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
+
+    init {
+        this.inventoryController = InventoryController({ this }) {
+            DefaultSidedInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
+                val item = stack?.item
+                when {
+                    item is UpgradeItem -> getUpgradeSlots().contains(slot)
+                    item is RechargeableItem && item.canOutput -> slot == 0
+                    item is CoolerItem -> slot == 1
+                    slot == 2 -> true
+                    else -> false
+                }
+            }
+        }
+        this.temperatureController = TemperatureController({ this }, 0.06, 700..1100, 1400.0)
+    }
+
     private var currentRecipe: PulverizerRecipe? = null
     override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
         val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
@@ -29,20 +48,8 @@ class PulverizerBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
-            val item = stack?.item
-            when {
-                item is UpgradeItem -> getUpgradeSlots().contains(slot)
-                item is RechargeableItem && item.canOutput -> slot == 0
-                item is CoolerItem -> slot == 1
-                slot == 2 -> true
-                else -> false
-            }
-        }
-
     override fun onCraft() {
-        val inventory = getInventory()
+        val inventory = inventoryController!!.getInventory()
         if (inventory.invSize < 3) return
         val chance = this.currentRecipe?.extraOutput?.right ?: return
         if (chance < this.world?.random?.nextDouble() ?: 0.0) {

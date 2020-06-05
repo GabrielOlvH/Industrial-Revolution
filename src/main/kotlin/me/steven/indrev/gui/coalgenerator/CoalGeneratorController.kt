@@ -3,7 +3,7 @@ package me.steven.indrev.gui.coalgenerator
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.blockentities.HeatMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.widgets.*
 import me.steven.indrev.utils.add
 import net.minecraft.client.resource.language.I18n
@@ -28,9 +28,10 @@ class CoalGeneratorController(syncId: Int, playerInventory: PlayerInventory, blo
 
         blockContext.run { world, blockPos ->
             val blockEntity = world.getBlockEntity(blockPos)
-            if (blockEntity is HeatMachineBlockEntity) {
-                root.add(TemperatureWidget(propertyDelegate, blockEntity), 1, 0, 16, 64)
-                root.add(TemperatureInfoWidget(propertyDelegate, blockEntity), 2.0, 0.5, 8.0, 8.0)
+            if (blockEntity is MachineBlockEntity && blockEntity.temperatureController != null) {
+                val controller = blockEntity.temperatureController!!
+                root.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
+                root.add(TemperatureInfoWidget(propertyDelegate, controller), 2.0, 0.5, 8.0, 8.0)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
                 root.add(coolerSlot, 1.0, 3.7)
             }

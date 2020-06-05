@@ -5,7 +5,6 @@ import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.util.ActionResult
@@ -20,7 +19,6 @@ open class InterfacedMachineBlock(
     settings: Settings,
     tier: Tier,
     private val screenId: Identifier,
-    private val openInterface: (BlockEntity?) -> Boolean,
     blockEntityProvider: () -> MachineBlockEntity
 ) : MachineBlock(settings, tier, blockEntityProvider), InventoryProvider {
     override fun onUse(
@@ -33,7 +31,7 @@ open class InterfacedMachineBlock(
     ): ActionResult? {
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
-        if (openInterface(blockEntity)) {
+        if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
             ContainerProviderRegistry.INSTANCE.openContainer(
                 screenId,
                 player

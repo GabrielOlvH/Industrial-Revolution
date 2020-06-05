@@ -1,7 +1,8 @@
 package me.steven.indrev.blockentities.battery
 
-import me.steven.indrev.blockentities.InterfacedMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.components.InventoryController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
@@ -11,21 +12,24 @@ import net.minecraft.container.PropertyDelegate
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
-    InterfacedMachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
+    MachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
+
+    init {
+        this.inventoryController = InventoryController({ this }) {
+            DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
+        }
+    }
 
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = getInventory()
+        val inventory = inventoryController?.getInventory() ?: return
         val stack = inventory.getInvStack(0)
         if (stack.item is Rechargeable && stack.isDamaged) {
             inventory.setInvStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
         }
     }
-
-    override fun createInventory(): DefaultSidedInventory =
-        DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 

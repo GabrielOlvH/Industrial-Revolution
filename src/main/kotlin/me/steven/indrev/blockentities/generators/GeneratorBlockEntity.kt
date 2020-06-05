@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.blockentities.HeatMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
@@ -8,12 +8,12 @@ import net.minecraft.container.PropertyDelegate
 import team.reborn.energy.EnergySide
 
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
-    HeatMachineBlockEntity(tier, registry) {
+    MachineBlockEntity(tier, registry) {
 
     override fun tick() {
         super.tick()
         if (world?.isClient == false) {
-            tickTemperature(shouldGenerate() && addEnergy(getGenerationRatio()) > 0)
+            this.temperatureController?.tick(shouldGenerate() && addEnergy(getGenerationRatio()) > 0)
             sync()
             markDirty()
         }

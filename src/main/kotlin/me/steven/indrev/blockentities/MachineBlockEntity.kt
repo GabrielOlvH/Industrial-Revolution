@@ -2,20 +2,27 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.EnergyMovement
+import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.minecraft.block.BlockState
+import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.container.PropertyDelegate
+import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.IWorld
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
 abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
-    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder,
+    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider,
     Tickable {
     var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
@@ -26,6 +33,9 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         }
     private var delegate: PropertyDelegate? = null
         get() = field ?: createDelegate().apply { field = this }
+
+    var inventoryController: InventoryController? = null
+    var temperatureController: TemperatureController? = null
 
     override fun tick() {
         if (world?.isClient == false)
@@ -70,22 +80,37 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
 
     override fun getStored(side: EnergySide?): Double = energy
 
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+        return inventoryController?.getInventory()
+            ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
+    }
+
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)
+        inventoryController?.fromTag(tag)
+        temperatureController?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Energy", energy)
+        if (tag != null) {
+            inventoryController?.toTag(tag)
+            temperatureController?.toTag(tag)
+        }
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
+        inventoryController?.fromTag(tag)
+        temperatureController?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         if (tag == null) return CompoundTag()
+        inventoryController?.toTag(tag)
+        temperatureController?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }

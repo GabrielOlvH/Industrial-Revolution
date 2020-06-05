@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.blockentities.HeatMachineBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -10,14 +10,12 @@ import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
-import net.minecraft.recipe.RecipeFinder
-import net.minecraft.recipe.RecipeInputProvider
 import net.minecraft.util.Tickable
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
-    HeatMachineBlockEntity(tier, registry), Tickable, RecipeInputProvider, UpgradeProvider {
+    MachineBlockEntity(tier, registry), Tickable, UpgradeProvider {
     var processTime: Int = 0
         set(value) {
             field = value.apply { propertyDelegate[3] = this }
@@ -30,7 +28,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = getInventory()
+        val inventory = inventoryController?.getInventory() ?: return
         val inputInventory = inventory.getInputInventory()
         if (inputInventory.isInvEmpty) reset()
         else if (isProcessing()) {
@@ -61,7 +59,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             reset()
             tryStartRecipe(inventory)
         }
-        tickTemperature(isProcessing())
+        temperatureController?.tick(isProcessing())
         sync()
         markDirty()
 
@@ -76,7 +74,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, getInventory())
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryController!!.getInventory())
 
     override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
@@ -84,15 +82,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     fun isProcessing() = processTime > 0 && energy > 0
 
-    override fun getOptimalRange(): IntRange = 700..1100
-
-    override fun getBaseHeatingEfficiency(): Double = 0.06
-
-    override fun getLimitTemperature(): Double = 1400.0
-
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, getInventory())
-        Upgrade.SPEED -> if (temperature.toInt() in this.getOptimalRange()) 2.0 else 1.0
+        Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+        Upgrade.SPEED -> if (temperatureController!!.temperature.toInt() in temperatureController!!.optimalRange) 2.0 else 1.0
         Upgrade.BUFFER -> baseBuffer
     }
 
@@ -118,11 +110,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         tag?.putInt("ProcessTime", processTime)
         tag?.putInt("MaxProcessTime", totalProcessTime)
         return super.toClientTag(tag)
-    }
-
-    override fun provideRecipeInputs(recipeFinder: RecipeFinder?) {
-        for (i in 0 until getInventory().invSize)
-            recipeFinder?.addItem(getInventory().getInvStack(i))
     }
 
     open fun onCraft() {}
