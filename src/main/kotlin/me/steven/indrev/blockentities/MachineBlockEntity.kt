@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
@@ -23,17 +24,17 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
+open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider,
     Tickable {
     var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
+    var explode = false
+    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
+
     var energy: Double by Property(0, 0.0) { i -> i.coerceAtMost(maxStoredPower) }
     var inventoryController: InventoryController? = null
     var temperatureController: TemperatureController? = null
-    var explode = false
-    private var delegate: PropertyDelegate? = null
-        get() = field ?: createDelegate().apply { field = this }
 
     override fun tick() {
         if (world?.isClient == false) {
@@ -63,12 +64,14 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         return added
     }
 
-    protected abstract fun createDelegate(): PropertyDelegate
-
     override fun getPropertyDelegate(): PropertyDelegate {
-        val delegate = this.delegate!!
+        val delegate = this.propertyDelegate
         delegate[1] = maxStoredPower.toInt()
         return delegate
+    }
+
+    fun setPropertyDelegate(propertyDelegate: PropertyDelegate) {
+        this.propertyDelegate = propertyDelegate
     }
 
     override fun setStored(amount: Double) {

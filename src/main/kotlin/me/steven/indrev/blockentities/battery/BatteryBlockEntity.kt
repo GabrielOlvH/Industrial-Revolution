@@ -8,13 +8,13 @@ import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
     MachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
 
     init {
+        this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
         }
@@ -30,8 +30,6 @@ class BatteryBlockEntity(tier: Tier) :
             takeEnergy(1.0)
         }
     }
-
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
 
     override fun getMaxOutput(side: EnergySide?): Double {
         val state = this.cachedState

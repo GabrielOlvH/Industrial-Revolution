@@ -7,7 +7,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
@@ -17,6 +16,10 @@ import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity(tier, registry), Tickable, UpgradeProvider {
+
+    init {
+        this.propertyDelegate = ArrayPropertyDelegate(5)
+    }
 
     protected var processTime: Int by Property(3, 0)
     protected var totalProcessTime: Int by Property(4, 0)
@@ -71,8 +74,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     }
 
     override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryController!!.getInventory())
-
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 

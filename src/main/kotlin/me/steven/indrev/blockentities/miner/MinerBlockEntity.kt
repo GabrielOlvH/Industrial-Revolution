@@ -14,7 +14,6 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.world.chunkveins.ChunkVeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
@@ -23,6 +22,7 @@ import team.reborn.energy.EnergySide
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
+        this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(15, intArrayOf(), (3..10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
@@ -85,8 +85,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(11, 12, 13, 14)
 

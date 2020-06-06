@@ -10,7 +10,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 
@@ -18,6 +17,7 @@ class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
 
     init {
+        this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
                 val item = stack?.item
@@ -53,8 +53,6 @@ class CoalGeneratorBlockEntity :
     }
 
     override fun getGenerationRatio(): Double = 0.15
-
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(5)
 
     override fun fromTag(tag: CompoundTag?) {
         super.fromTag(tag)

@@ -4,7 +4,6 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Identifier
 
@@ -12,7 +11,9 @@ class CableBlockEntity(tier: Tier) :
     MachineBlockEntity(tier, MachineRegistry.CABLE_REGISTRY) {
     var cover: Identifier? = null
 
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(2)
+    init {
+        this.propertyDelegate = ArrayPropertyDelegate(2)
+    }
 
     override fun fromTag(tag: CompoundTag?) {
         if (tag?.contains("cover") == true)

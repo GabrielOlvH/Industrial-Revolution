@@ -3,8 +3,6 @@ package me.steven.indrev.blockentities.generators
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import team.reborn.energy.EnergySide
 
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
@@ -18,8 +16,6 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
             markDirty()
         }
     }
-
-    override fun createDelegate(): PropertyDelegate = ArrayPropertyDelegate(3)
 
     override fun getMaxInput(side: EnergySide?): Double = 0.0
 
