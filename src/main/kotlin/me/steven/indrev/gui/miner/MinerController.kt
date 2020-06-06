@@ -7,7 +7,6 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.StringWidget
-import me.steven.indrev.gui.widgets.TemperatureInfoWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
@@ -62,7 +61,6 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, blockContex
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureController != null) {
                 val controller = blockEntity.temperatureController!!
                 root.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
-                root.add(TemperatureInfoWidget(propertyDelegate, controller), 2.0, 0.5, 8.0, 8.0)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
                 root.add(coolerSlot, 1.0, 3.7)
             }
