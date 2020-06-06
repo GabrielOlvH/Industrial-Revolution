@@ -52,12 +52,5 @@ class TemperatureController(
         machine.explode = temperature > explosionTemperature + 10 && machine.world!!.random.nextInt((temperature - explosionTemperature).toInt()) > 100
     }
 
-
-    fun getCurrentTemperature(): Double = temperature
-
-    fun setCurrentTemperature(temperature: Double) {
-        this.temperature = temperature
-    }
-
     override fun getPropertyDelegate(): PropertyDelegate = machineProvider().propertyDelegate
 }
