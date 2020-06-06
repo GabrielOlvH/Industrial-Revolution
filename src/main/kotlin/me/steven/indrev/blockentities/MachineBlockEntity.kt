@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
@@ -27,16 +28,12 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     Tickable {
     var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
-    var energy = 0.0
-        set(value) {
-            if (world?.isClient == false) sync()
-            field = value.coerceAtMost(maxStoredPower).apply { propertyDelegate[0] = this.toInt() }
-        }
-    private var delegate: PropertyDelegate? = null
-        get() = field ?: createDelegate().apply { field = this }
+    var energy: Double by Property(0, 0.0) { i -> i.coerceAtMost(maxStoredPower) }
     var inventoryController: InventoryController? = null
     var temperatureController: TemperatureController? = null
     var explode = false
+    private var delegate: PropertyDelegate? = null
+        get() = field ?: createDelegate().apply { field = this }
 
     override fun tick() {
         if (world?.isClient == false) {

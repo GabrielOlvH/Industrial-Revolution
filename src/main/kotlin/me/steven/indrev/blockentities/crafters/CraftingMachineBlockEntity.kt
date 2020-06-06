@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.components.Property
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -16,14 +17,9 @@ import kotlin.math.ceil
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity(tier, registry), Tickable, UpgradeProvider {
-    var processTime: Int = 0
-        set(value) {
-            field = value.apply { propertyDelegate[3] = this }
-        }
-    var totalProcessTime: Int = 0
-        set(value) {
-            field = value.apply { propertyDelegate[4] = this }
-        }
+
+    protected var processTime: Int by Property(3, 0)
+    protected var totalProcessTime: Int by Property(4, 0)
 
     override fun tick() {
         super.tick()

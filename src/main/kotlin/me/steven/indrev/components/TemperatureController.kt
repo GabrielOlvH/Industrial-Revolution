@@ -1,14 +1,19 @@
 package me.steven.indrev.components
 
+import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.CoolerItem
+import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
 
-class TemperatureController(private val machineProvider: () -> MachineBlockEntity, private val heatingSpeed: Double, val optimalRange: IntRange, val limit: Double) {
-    var temperature = 300.0
-        set(value) {
-            field = value.coerceAtLeast(0.0).apply { machineProvider().propertyDelegate[2] = this.toInt() }
-        }
+class TemperatureController(
+    private val machineProvider: () -> MachineBlockEntity,
+    private val heatingSpeed: Double,
+    val optimalRange: IntRange,
+    val limit: Double
+) : PropertyDelegateHolder {
+
+    var temperature: Double by Property(2, 300.0)
     var cooling = 0
     var explosionPower = 1f
 
@@ -53,4 +58,6 @@ class TemperatureController(private val machineProvider: () -> MachineBlockEntit
     fun setCurrentTemperature(temperature: Double) {
         this.temperature = temperature
     }
+
+    override fun getPropertyDelegate(): PropertyDelegate = machineProvider().propertyDelegate
 }

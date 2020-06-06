@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.CoolerItem
@@ -31,14 +32,8 @@ class CoalGeneratorBlockEntity :
         this.temperatureController = TemperatureController({ this }, 0.08, 900..2000, 2500.0)
     }
 
-    var burnTime: Int = 0
-        set(value) {
-            field = value.apply { propertyDelegate[3] = this }
-        }
-    var maxBurnTime: Int = 0
-        set(value) {
-            field = value.apply { propertyDelegate[4] = this }
-        }
+    private var burnTime: Int by Property(3, 0)
+    private var maxBurnTime: Int by Property(4, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
