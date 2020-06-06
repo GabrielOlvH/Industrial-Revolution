@@ -4,12 +4,13 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.CoolerItem
 import net.minecraft.nbt.CompoundTag
 
-class TemperatureController(private val machineProvider: () -> MachineBlockEntity, val heatingSpeed: Double, val optimalRange: IntRange, val limit: Double) {
+class TemperatureController(private val machineProvider: () -> MachineBlockEntity, private val heatingSpeed: Double, val optimalRange: IntRange, val limit: Double) {
     var temperature = 300.0
         set(value) {
             field = value.coerceAtLeast(0.0).apply { machineProvider().propertyDelegate[2] = this.toInt() }
         }
     var cooling = 0
+    var explosionPower = 1f
 
     fun fromTag(tag: CompoundTag?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -42,6 +43,8 @@ class TemperatureController(private val machineProvider: () -> MachineBlockEntit
             temperature += heatingSpeed + modifier
         } else if (isHeatingUp) temperature += heatingSpeed
         else if (temperature > 310) temperature -= 0.1
+        val explosionTemperature = limit - 500
+        machine.explode = temperature > explosionTemperature + 10 && machine.world!!.random.nextInt((temperature - explosionTemperature).toInt()) > 100
     }
 
 

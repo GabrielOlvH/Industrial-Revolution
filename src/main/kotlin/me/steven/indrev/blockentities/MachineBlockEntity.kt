@@ -17,6 +17,7 @@ import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.IWorld
+import net.minecraft.world.explosion.Explosion
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
@@ -35,10 +36,21 @@ abstract class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
         get() = field ?: createDelegate().apply { field = this }
     var inventoryController: InventoryController? = null
     var temperatureController: TemperatureController? = null
+    var explode = false
 
     override fun tick() {
-        if (world?.isClient == false)
+        if (world?.isClient == false) {
             EnergyMovement(this, pos).spread(*Direction.values())
+            if (explode) {
+                val power = temperatureController!!.explosionPower
+                world?.createExplosion(
+                    null,
+                    pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
+                    power,
+                    false,
+                    Explosion.DestructionType.DESTROY)
+            }
+        }
     }
 
     fun takeEnergy(amount: Double): Boolean {
