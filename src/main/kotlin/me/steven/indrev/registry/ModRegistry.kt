@@ -52,7 +52,7 @@ class ModRegistry {
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
 
-        identifier("biomass").item(DEFAULT_ITEM())
+        identifier("biomass").item(BIOMASS)
     }
 
     companion object {
@@ -75,6 +75,8 @@ class ModRegistry {
 
         val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
         val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
+
+        val BIOMASS = DEFAULT_ITEM()
 
         val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
         val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)

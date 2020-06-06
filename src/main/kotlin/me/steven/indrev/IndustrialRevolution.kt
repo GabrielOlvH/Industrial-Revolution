@@ -5,6 +5,7 @@ import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
 import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
+import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -105,6 +106,11 @@ class IndustrialRevolution : EnergyModInitializer() {
         ContainerProviderRegistry.INSTANCE.registerFactory(RecyclerScreen.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             RecyclerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+        }
+
+        ContainerProviderRegistry.INSTANCE.registerFactory(BiomassGeneratorController.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            BiomassGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)

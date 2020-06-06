@@ -4,10 +4,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
-import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.NuclearReactorBlockEntity
-import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
-import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.InterfacedMachineBlock
@@ -15,6 +12,7 @@ import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
 import me.steven.indrev.gui.battery.BatteryScreen
+import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
@@ -95,6 +93,17 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
             ).buffer { 32.0 }
+        }
+
+        val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), Tier.MK3).also { registry ->
+            registry.register(
+                { tier ->
+                    InterfacedMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, BiomassGeneratorController.SCREEN_ID
+                    ) { BiomassGeneratorBlockEntity(tier) }
+                },
+                { tier -> { BiomassGeneratorBlockEntity(tier) } }
+            ).buffer { 20000.0 }
         }
 
         val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
