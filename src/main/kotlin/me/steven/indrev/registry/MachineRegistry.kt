@@ -3,10 +3,7 @@ package me.steven.indrev.registry
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blockentities.crafters.CompressorBlockEntity
-import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
-import me.steven.indrev.blockentities.crafters.InfuserBlockEntity
-import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
+import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.NuclearReactorBlockEntity
 import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
@@ -25,6 +22,7 @@ import me.steven.indrev.gui.infuser.InfuserScreen
 import me.steven.indrev.gui.miner.MinerScreen
 import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.recycler.RecyclerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -213,6 +211,17 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 },
                 { tier -> { MinerBlockEntity(tier) } }
             ).buffer { 500000.0 }
+        }
+
+        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK4).also { registry ->
+            registry.register(
+                { tier ->
+                    InterfacedMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, RecyclerScreen.SCREEN_ID
+                    ) { RecyclerBlockEntity(tier) }
+                },
+                { tier -> { RecyclerBlockEntity(tier) } }
+            ).buffer { 50000.0 }
         }
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable")).also { registry ->

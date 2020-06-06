@@ -18,6 +18,8 @@ import me.steven.indrev.gui.nuclearreactor.NuclearReactorController
 import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.recycler.RecyclerController
+import me.steven.indrev.gui.recycler.RecyclerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorController
 import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.registry.MachineRegistry
@@ -101,6 +103,15 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
             NuclearReactorScreen(
                 NuclearReactorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
+            )
+        }
+
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            RecyclerScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            RecyclerScreen(
+                RecyclerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
                 player
             )
         }

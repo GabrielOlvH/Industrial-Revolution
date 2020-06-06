@@ -19,12 +19,11 @@ import me.steven.indrev.gui.nuclearreactor.NuclearReactorController
 import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
 import me.steven.indrev.gui.pulverizer.PulverizerController
 import me.steven.indrev.gui.pulverizer.PulverizerScreen
+import me.steven.indrev.gui.recycler.RecyclerController
+import me.steven.indrev.gui.recycler.RecyclerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorController
 import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
-import me.steven.indrev.recipes.CompressorRecipe
-import me.steven.indrev.recipes.InfuserRecipe
-import me.steven.indrev.recipes.PulverizerRecipe
-import me.steven.indrev.recipes.RechargeableRecipe
+import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.EMPTY_ENERGY_STORAGE
 import me.steven.indrev.utils.identifier
@@ -103,6 +102,11 @@ class IndustrialRevolution : EnergyModInitializer() {
             MinerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
         }
 
+        ContainerProviderRegistry.INSTANCE.registerFactory(RecyclerScreen.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            RecyclerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+        }
+
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)
@@ -110,6 +114,8 @@ class IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, InfuserRecipe.IDENTIFIER, InfuserRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
     }
 
     companion object {

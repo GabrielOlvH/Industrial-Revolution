@@ -51,6 +51,8 @@ class ModRegistry {
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
+
+        identifier("biomass").item(DEFAULT_ITEM())
     }
 
     companion object {

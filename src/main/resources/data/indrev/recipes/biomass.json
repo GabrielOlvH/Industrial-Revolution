@@ -1,0 +1,11 @@
+{
+  "type": "indrev:recycle",
+  "ingredient": {
+    "tag": "minecraft:saplings"
+  },
+  "output": {
+    "item": "indrev:biomass",
+    "count": 2
+  },
+  "processTime": 300
+}
