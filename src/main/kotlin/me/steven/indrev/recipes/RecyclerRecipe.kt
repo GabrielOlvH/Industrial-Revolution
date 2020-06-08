@@ -8,6 +8,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
+import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
 import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.registry.Registry
@@ -31,6 +32,8 @@ class RecyclerRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     override fun getOutput(): ItemStack = output
+
+    override fun getPreviewInputs(): DefaultedList<Ingredient> = DefaultedList.of<Ingredient>().also { it.add(input) }
 
     override fun matches(inv: Inventory?, world: World?): Boolean = input.test(inv?.getInvStack(0))
 

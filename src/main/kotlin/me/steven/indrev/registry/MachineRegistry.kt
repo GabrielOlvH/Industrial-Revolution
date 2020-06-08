@@ -25,6 +25,7 @@ import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
@@ -34,6 +35,7 @@ import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, private vararg val tiers: Tier = Tier.values()) {
 
+    private val blocks: MutableMap<Tier, Block> = mutableMapOf()
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
     private val baseInternalBuffers: MutableMap<Tier, Double> = mutableMapOf()
 
@@ -48,6 +50,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 blockEntityType(blockEntityType)
             }
             blockEntities[tier] = blockEntityType
+            blocks[tier] = block
         }
         return this
     }
@@ -62,9 +65,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
     fun forEach(action: (Tier, BlockEntityType<*>) -> Unit) = blockEntities.forEach(action)
 
-    fun blockEntityType(tier: Tier) = blockEntities[tier] ?: throw IllegalStateException("invalid tier for machine $identifier")
+    fun blockEntityType(tier: Tier) = blockEntities[tier]
+        ?: throw IllegalStateException("invalid tier for machine $identifier")
 
-    fun buffer(tier: Tier) = baseInternalBuffers[tier] ?: throw IllegalStateException("invalid tier for machine $identifier")
+    fun block(tier: Tier) = blocks[tier]
+        ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
+
+    fun buffer(tier: Tier) = baseInternalBuffers[tier]
+        ?: throw IllegalStateException("invalid tier for machine $identifier")
 
     companion object {
 
