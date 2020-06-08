@@ -1,0 +1,77 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "minecraft:block/iron_block"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            5.333,
+            5.333,
+            10.666,
+            10.666
+          ],
+          "texture": "#texture"
+        },
+        "east": {
+          "uv": [
+            0,
+            5.333,
+            5.332,
+            10.666
+          ],
+          "texture": "#texture"
+        },
+        "south": {
+          "uv": [
+            10.667,
+            10.667,
+            16,
+            15.999
+          ],
+          "texture": "#texture"
+        },
+        "west": {
+          "uv": [
+            10.667,
+            5.333,
+            16,
+            10.665
+          ],
+          "texture": "#texture"
+        },
+        "up": {
+          "uv": [
+            5.333,
+            0,
+            10.666,
+            5.333
+          ],
+          "texture": "#texture"
+        },
+        "down": {
+          "uv": [
+            5.333,
+            10.667,
+            10.666,
+            15.998
+          ],
+          "texture": "#texture"
+        }
+      }
+    }
+  ]
+}
