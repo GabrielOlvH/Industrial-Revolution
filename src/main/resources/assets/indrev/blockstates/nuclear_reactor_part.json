@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "indrev:block/nuclear_reactor_part"
+    }
+  }
+}

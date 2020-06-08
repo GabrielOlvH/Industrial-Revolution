@@ -6,7 +6,6 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterials
-import net.minecraft.text.BaseText
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -36,16 +35,13 @@ class RechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIA
     companion object {
         private val SUPPORTED_MATERIALS = arrayOf(
             Material.METAL,
-            Material.ANVIL,
             Material.STONE,
-            Material.EARTH,
-            Material.ORGANIC,
             Material.WOOD,
             Material.BAMBOO,
-            Material.CLAY,
             Material.COBWEB,
-            Material.PUMPKIN,
-            Material.PISTON
+            Material.PISTON,
+            Material.GOURD,
+            Material.SOIL
         )
     }
 }

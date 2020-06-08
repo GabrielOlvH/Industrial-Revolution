@@ -222,7 +222,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             ).buffer { 500000.0 }
         }
 
-        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK4).also { registry ->
+        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK2).also { registry ->
             registry.register(
                 { tier ->
                     InterfacedMachineBlock(
