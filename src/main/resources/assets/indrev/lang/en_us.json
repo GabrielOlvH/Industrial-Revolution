@@ -61,5 +61,9 @@
   "gui.widget.temperature": "Temperature",
   "gui.widget.temperature_info.high": "%sToo hot",
   "gui.widget.temperature_info.medium": "%sFull potential",
-  "gui.widget.temperature_info.low": "%sNot heated up"
+  "gui.widget.temperature_info.low": "%sNot heated up",
+  "indrev.category.rei.pulverizing": "Pulverizing",
+  "indrev.category.rei.infusing": "Infusing",
+  "indrev.category.rei.compressing": "Compressing",
+  "indrev.category.rei.recycling": "Recycling"
 }
