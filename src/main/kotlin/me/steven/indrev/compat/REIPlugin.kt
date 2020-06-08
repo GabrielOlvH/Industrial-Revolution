@@ -3,8 +3,8 @@ package me.steven.indrev.compat
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
-import me.steven.indrev.compat.plugins.PulverizerCategory
-import me.steven.indrev.compat.plugins.PulverizerPlugin
+import me.steven.indrev.compat.plugins.MachinePlugin
+import me.steven.indrev.compat.plugins.MachineRecipeCategory
 import me.steven.indrev.recipes.CompressorRecipe
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.recipes.PulverizerRecipe
@@ -20,28 +20,28 @@ class REIPlugin : REIPluginV0 {
 
     override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerCategory(
-            PulverizerCategory(
+            MachineRecipeCategory(
                 PULVERIZING,
                 EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.pulverizing")
         )
 
         recipeHelper?.registerCategory(
-            PulverizerCategory(
+            MachineRecipeCategory(
                 INFUSING,
                 EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.infusing")
         )
 
         recipeHelper?.registerCategory(
-            PulverizerCategory(
+            MachineRecipeCategory(
                 COMPRESSING,
                 EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.compressing")
         )
 
         recipeHelper?.registerCategory(
-            PulverizerCategory(
+            MachineRecipeCategory(
                 RECYCLING,
                 EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)),
                 "indrev.category.rei.recycling")
@@ -49,10 +49,10 @@ class REIPlugin : REIPluginV0 {
     }
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) { PulverizerPlugin(it) }
-        recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) { PulverizerPlugin(it) }
-        recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) { PulverizerPlugin(it) }
-        recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) { PulverizerPlugin(it) }
+        recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) { MachinePlugin(it) }
+        recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) { MachinePlugin(it) }
+        recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) { MachinePlugin(it) }
+        recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) { MachinePlugin(it) }
     }
 
     override fun registerOthers(recipeHelper: RecipeHelper?) {

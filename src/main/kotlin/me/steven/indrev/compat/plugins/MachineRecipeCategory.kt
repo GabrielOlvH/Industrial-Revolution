@@ -18,13 +18,13 @@ import net.minecraft.util.Identifier
 import java.util.function.Supplier
 
 
-class PulverizerCategory(
+class MachineRecipeCategory(
     private val identifier: Identifier?,
     private val logo: EntryStack?,
     private val categoryName: String?
-) : TransferRecipeCategory<PulverizerPlugin> {
+) : TransferRecipeCategory<MachinePlugin> {
 
-    override fun renderRedSlots(widgets: MutableList<Widget>?, bounds: Rectangle, p2: PulverizerPlugin?, redSlots: IntList) {
+    override fun renderRedSlots(widgets: MutableList<Widget>?, bounds: Rectangle, p2: MachinePlugin?, redSlots: IntList) {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
         RenderSystem.translatef(0f, 0f, 400f)
         if (redSlots.contains(0)) {
@@ -33,7 +33,7 @@ class PulverizerCategory(
         RenderSystem.translatef(0f, 0f, -400f)
     }
 
-    override fun setupDisplay(recipeDisplaySupplier: Supplier<PulverizerPlugin>, bounds: Rectangle): MutableList<Widget> {
+    override fun setupDisplay(recipeDisplaySupplier: Supplier<MachinePlugin>, bounds: Rectangle): MutableList<Widget> {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
         val widgets: MutableList<Widget> = mutableListOf(RecipeBaseWidget(bounds))
         widgets.add(RecipeArrowWidget(startPoint.x + 24, startPoint.y + 18, true))
@@ -44,7 +44,7 @@ class PulverizerCategory(
         return widgets
     }
 
-    override fun getSimpleRenderer(recipe: PulverizerPlugin): RecipeEntry {
+    override fun getSimpleRenderer(recipe: MachinePlugin): RecipeEntry {
         return SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
     }
 

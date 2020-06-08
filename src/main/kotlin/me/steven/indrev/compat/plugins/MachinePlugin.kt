@@ -9,7 +9,7 @@ import net.minecraft.recipe.Recipe
 import net.minecraft.util.Identifier
 import java.util.*
 
-class PulverizerPlugin(private val recipe: Recipe<*>) : TransferRecipeDisplay {
+class MachinePlugin(private val recipe: Recipe<*>) : TransferRecipeDisplay {
 
     private val output: MutableList<EntryStack> =
         mutableListOf(EntryStack.create(recipe.output))
