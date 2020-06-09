@@ -2,9 +2,12 @@ package me.steven.indrev
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.ChopperBlockEntity
+import me.steven.indrev.blockentities.farms.ChopperBlockEntityRenderer
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
+import me.steven.indrev.gui.chopper.ChopperController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorController
@@ -126,9 +129,24 @@ class IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            ChopperController.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            ChopperController.Screen(
+                ChopperController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos())),
+                player
+            )
+        }
+
         MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>) {
                 CableBlockEntityRenderer(it)
+            }
+        }
+
+        MachineRegistry.CHOPPER_REGISTRY.forEach { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChopperBlockEntity>) {
+                ChopperBlockEntityRenderer(it)
             }
         }
     }

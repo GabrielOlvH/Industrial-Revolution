@@ -4,6 +4,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
+import me.steven.indrev.blockentities.farms.ChopperBlockEntity
 import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
@@ -13,6 +14,7 @@ import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
+import me.steven.indrev.gui.chopper.ChopperController
 import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
 import me.steven.indrev.gui.compressor.CompressorScreen
 import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
@@ -245,6 +247,25 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             ).buffer { tier -> tier.io * 2 }
+        }
+
+
+        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper")).also { registry ->
+            registry.register(
+                { tier ->
+                    FacingMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, ChopperController.SCREEN_ID
+                    ) { ChopperBlockEntity(tier) }
+                },
+                { tier -> { ChopperBlockEntity(tier) } }
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 50000.0
+                }
+            }
         }
     }
 }
