@@ -1,19 +1,7 @@
 {
   "variants": {
-    "facing=north": {
+    "": {
       "model": "indrev:block/solar_generator"
-    },
-    "facing=south": {
-      "model": "indrev:block/solar_generator",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "indrev:block/solar_generator",
-      "y": 270
-    },
-    "facing=east": {
-      "model": "indrev:block/solar_generator",
-      "y": 90
     }
   }
 }
