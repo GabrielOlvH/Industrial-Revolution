@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.nuclear
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.InterfacedMachineBlock
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -24,7 +24,7 @@ class NuclearReactorCore(
     screenId: Identifier,
     blockEntityProvider: () -> MachineBlockEntity
 ) :
-    InterfacedMachineBlock(settings, Tier.MK4, screenId, blockEntityProvider) {
+    MachineBlock(settings, Tier.MK4, screenId, blockEntityProvider) {
 
     init {
         this.defaultState = stateManager.defaultState

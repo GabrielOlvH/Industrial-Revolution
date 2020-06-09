@@ -7,7 +7,7 @@ import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
-import me.steven.indrev.blocks.InterfacedMachineBlock
+import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
@@ -80,11 +80,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
         }
 
-
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.MK1).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorScreen.SCREEN_ID
                     ) { CoalGeneratorBlockEntity() }
                 },
@@ -95,7 +94,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    MachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorScreen.SCREEN_ID
                     ) { SolarGeneratorBlockEntity(tier) }
                 },
@@ -106,7 +105,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), Tier.MK3).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, BiomassGeneratorController.SCREEN_ID
                     ) { BiomassGeneratorBlockEntity(tier) }
                 },
@@ -132,7 +131,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceScreen.SCREEN_ID
                     ) { ElectricFurnaceBlockEntity(tier) }
                 },
@@ -150,7 +149,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, PulverizerScreen.SCREEN_ID
                     ) { PulverizerBlockEntity(tier) }
                 },
@@ -168,7 +167,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, CompressorScreen.SCREEN_ID
                     ) { CompressorBlockEntity(tier) }
                 },
@@ -186,7 +185,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, InfuserScreen.SCREEN_ID
                     ) { InfuserBlockEntity(tier) }
                 },
@@ -204,8 +203,8 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container")).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID
+                    FacingMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID, true
                     ) { BatteryBlockEntity(tier) }
                 },
                 { tier -> { BatteryBlockEntity(tier) } }
@@ -222,7 +221,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val MINER_REGISTRY = MachineRegistry(identifier("miner"), Tier.MK4).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, MinerScreen.SCREEN_ID
                     ) { MinerBlockEntity(tier) }
                 },
@@ -233,7 +232,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK2).also { registry ->
             registry.register(
                 { tier ->
-                    InterfacedMachineBlock(
+                    FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, RecyclerScreen.SCREEN_ID
                     ) { RecyclerBlockEntity(tier) }
                 },

@@ -27,7 +27,7 @@ import net.minecraft.world.IWorld
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 
-class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, { CableBlockEntity(tier) }) {
+class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, null, { CableBlockEntity(tier) }) {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -69,10 +69,10 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
         }
     }
 
-    override fun onUse(state: BlockState?, world: World?, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
+    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
         if (state?.get(COVERED) == false && !handStack.isEmpty) {
-            val blockEntity = world?.getBlockEntity(pos)
+            val blockEntity = world.getBlockEntity(pos)
             if (blockEntity !is CableBlockEntity) return ActionResult.FAIL
             val id = Registry.ITEM.getId(handStack.item)
             if (!Registry.BLOCK.containsId(id)) return ActionResult.FAIL

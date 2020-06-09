@@ -2,27 +2,34 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.Tier
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
+import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.util.TextFormat
-import net.minecraft.item.ItemPlacementContext
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.DirectionProperty
-import net.minecraft.state.property.Properties
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.ActionResult
+import net.minecraft.util.Hand
+import net.minecraft.util.Identifier
+import net.minecraft.util.hit.BlockHitResult
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
+import net.minecraft.world.IWorld
+import net.minecraft.world.World
 
 open class MachineBlock(
     settings: Settings,
-    val tier: Tier,
-    val blockEntityProvider: () -> MachineBlockEntity
-) :
-    Block(settings), BlockEntityProvider {
+    private val tier: Tier,
+    private val screenId: Identifier?,
+    private val blockEntityProvider: () -> MachineBlockEntity
+) : Block(settings), BlockEntityProvider, InventoryProvider {
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
 
@@ -35,15 +42,28 @@ open class MachineBlock(
         tooltip?.add(TranslatableText("block.machines.tooltip.io", TextFormat.BLUE, TextFormat.WHITE, tier.io))
     }
 
-    override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return this.defaultState.with(FACING, ctx?.playerFacing?.opposite)
+    override fun onUse(
+        state: BlockState?,
+        world: World,
+        pos: BlockPos?,
+        player: PlayerEntity?,
+        hand: Hand?,
+        hit: BlockHitResult?
+    ): ActionResult? {
+        if (world.isClient) return ActionResult.SUCCESS
+        val blockEntity = world.getBlockEntity(pos)
+        if (screenId != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+            ContainerProviderRegistry.INSTANCE.openContainer(
+                screenId,
+                player
+            ) { packetByteBuf -> packetByteBuf.writeBlockPos(pos) }
+        }
+        return ActionResult.SUCCESS
     }
 
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        builder?.add(FACING)
-    }
-
-    companion object {
-        val FACING: DirectionProperty = Properties.HORIZONTAL_FACING
+    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+        val blockEntity = world?.getBlockEntity(pos)
+        if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
+        return blockEntity.getInventory(state, world, pos)
     }
 }
