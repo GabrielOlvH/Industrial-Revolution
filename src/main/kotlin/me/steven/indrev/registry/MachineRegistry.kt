@@ -246,7 +246,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
-            ).buffer { tier -> tier.io * 2 }
+            ).buffer { tier -> tier.io }
         }
 
 

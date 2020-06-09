@@ -16,7 +16,8 @@ class EnergyMovement(private val sourceBlockEntity: BlockEntity, private val pos
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targets = directions
             .map { direction ->
-                if (sourceBlockEntity.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
+                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) return@map null
+                else if (sourceBlockEntity.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
                     if (target != null && Energy.valid(target)) {
@@ -37,9 +38,9 @@ class EnergyMovement(private val sourceBlockEntity: BlockEntity, private val pos
             sourceHandler.side(direction)
             val targetMaxInput = targetHandler.maxInput
             val amount = (targetMaxInput / sum) * sourceHandler.maxOutput
-            if (amount > 0 && (sourceBlockEntity !is MachineBlockEntity || sourceBlockEntity.lastInputFrom != direction)) {
+            if (amount > 0) {
                 if (target is MachineBlockEntity)
-                    target.lastInputFrom = Direction.byName(direction.toString())?.opposite
+                    target.lastInputFrom = Direction.byName(direction.toString())
                 sourceHandler.into(targetHandler).move(amount)
             }
         }
