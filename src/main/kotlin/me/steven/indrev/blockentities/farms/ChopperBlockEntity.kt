@@ -33,7 +33,6 @@ import team.reborn.energy.EnergySide
 
 class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
-        this.temperatureController = TemperatureController({ this }, 0.02, 300..500, 1000.0)
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
@@ -47,6 +46,7 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
                 }
             }
         }
+        this.temperatureController = TemperatureController({ this }, 0.02, 350..430, 600.0)
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
@@ -76,16 +76,22 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
             }
             scheduledBlocks = list.iterator()
         } else {
+            var performedAction = false
             outer@ while (scheduledBlocks.hasNext()) {
                 val pos = scheduledBlocks.next()
                 val blockState = world?.getBlockState(pos) ?: continue
-                if (axeStack != null && !axeStack.isEmpty && tryChop(axeStack, pos, blockState, inventory)) break
+                if (axeStack != null && !axeStack.isEmpty && tryChop(axeStack, pos, blockState, inventory)) {
+                    performedAction = true
+                    break
+                }
                 for (slot in inventory.inputSlots) {
                     val stack = inventory.getInvStack(slot)
                     if ((axeStack != null && stack.isItemEqual(axeStack)) || stack.isEmpty || !tryUse(stack, world!!, pos)) continue
+                    performedAction = true
                     break@outer
                 }
             }
+            temperatureController?.tick(performedAction)
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
     }
