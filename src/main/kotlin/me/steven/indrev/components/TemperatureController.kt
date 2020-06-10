@@ -48,7 +48,7 @@ class TemperatureController(
             temperature += heatingSpeed + modifier
         } else if (isHeatingUp) temperature += heatingSpeed
         else if (temperature > 310) temperature -= 0.1
-        val explosionTemperature = limit - 500
+        val explosionTemperature = limit - 50
         machine.explode = temperature > explosionTemperature + 10 && machine.world!!.random.nextInt((temperature - explosionTemperature).toInt()) > 100
     }
 

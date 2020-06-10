@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
@@ -31,7 +30,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import team.reborn.energy.EnergySide
 
-class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
+class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
@@ -50,7 +49,6 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
-    var renderWorkingArea = false
     var cooldown = 0
 
     override fun tick() {
@@ -135,6 +133,15 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
+    override fun getWorkingArea(): Box {
+        val box = Box(pos)
+        if (this.hasWorld()) {
+            val range = getRange()
+            return box.expand(range.x, 0.0, range.z).stretch(0.0, range.y, 0.0)
+        }
+        return box
+    }
+
     private fun getRange() =
         when (tier) {
             Tier.MK1 -> Vec3d(3.0, 6.0, 3.0)
@@ -143,12 +150,4 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
             Tier.MK4 -> Vec3d(6.0, 9.0, 6.0)
         }
 
-    fun getWorkingArea(): Box {
-        val box = Box(pos)
-        if (this.hasWorld()) {
-            val range = getRange()
-            return box.expand(range.x, 0.0, range.z).stretch(0.0, range.y, 0.0)
-        }
-        return box
-    }
 }

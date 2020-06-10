@@ -8,9 +8,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
-class ChopperBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<ChopperBlockEntity>(dispatcher) {
+class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<AOEMachineBlockEntity>(dispatcher) {
     override fun render(
-        blockEntity: ChopperBlockEntity,
+        blockEntity: AOEMachineBlockEntity,
         tickDelta: Float,
         matrices: MatrixStack?,
         vertexConsumers: VertexConsumerProvider?,

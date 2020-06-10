@@ -2,8 +2,8 @@ package me.steven.indrev
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.ChopperBlockEntity
-import me.steven.indrev.blockentities.farms.ChopperBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.gui.battery.BatteryController
 import me.steven.indrev.gui.battery.BatteryScreen
 import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
@@ -148,8 +148,8 @@ class IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChopperBlockEntity>) {
-                ChopperBlockEntityRenderer(it)
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>) {
+                AOEMachineBlockEntityRenderer(it)
             }
         }
 
