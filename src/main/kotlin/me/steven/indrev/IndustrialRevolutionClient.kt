@@ -27,10 +27,13 @@ import me.steven.indrev.gui.recycler.RecyclerScreen
 import me.steven.indrev.gui.solargenerator.SolarGeneratorController
 import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.ModRegistry
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Identifier
@@ -149,5 +152,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
                 ChopperBlockEntityRenderer(it)
             }
         }
+
+        BlockRenderLayerMap.INSTANCE.putBlock(ModRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
     }
 }

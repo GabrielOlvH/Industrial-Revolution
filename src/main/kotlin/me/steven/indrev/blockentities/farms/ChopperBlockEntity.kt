@@ -21,7 +21,6 @@ import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -51,7 +50,7 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
-    var renderWorkingArea = true
+    var renderWorkingArea = false
     var cooldown = 0
 
     override fun tick() {
@@ -88,7 +87,7 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
                 }
             }
         }
-        cooldown += Upgrade.SPEED.apply(this, inventory).toInt()
+        cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
     }
 
     private fun tryChop(axeStack: ItemStack, blockPos: BlockPos, blockState: BlockState, inventory: DefaultSidedInventory): Boolean {
@@ -114,7 +113,7 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
     private fun tryUse(itemStack: ItemStack, world: World, pos: BlockPos): Boolean {
         val fakePlayer = FakePlayerEntity(world, pos)
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
-        return itemStack.useOnBlock(ItemUsageContext(fakePlayer, Hand.MAIN_HAND, BlockHitResult(Vec3d(pos), Direction.UP, pos, false))) != ActionResult.FAIL
+        return itemStack.useOnBlock(ItemUsageContext(fakePlayer, Hand.MAIN_HAND, BlockHitResult(Vec3d(pos), Direction.UP, pos, false))).isAccepted
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
@@ -132,10 +131,10 @@ class ChopperBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.
 
     private fun getRange() =
         when (tier) {
-            Tier.MK1 -> Vec3d(2.0, 5.0, 2.0)
-            Tier.MK2 -> Vec3d(3.0, 6.0, 3.0)
-            Tier.MK3 -> Vec3d(4.0, 7.0, 4.0)
-            Tier.MK4 -> Vec3d(5.0, 8.0, 5.0)
+            Tier.MK1 -> Vec3d(3.0, 6.0, 3.0)
+            Tier.MK2 -> Vec3d(4.0, 7.0, 4.0)
+            Tier.MK3 -> Vec3d(5.0, 8.0, 5.0)
+            Tier.MK4 -> Vec3d(6.0, 9.0, 6.0)
         }
 
     fun getWorkingArea(): Box {

@@ -2,10 +2,12 @@ package me.steven.indrev.gui.chopper
 
 import io.github.cottonmc.cotton.gui.CottonCraftingController
 import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
+import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.farms.ChopperBlockEntity
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
@@ -16,6 +18,7 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.text.TranslatableText
 
 class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext)
     : CottonCraftingController(null, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
@@ -25,7 +28,21 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockCont
         root.setSize(150, 120)
 
         root.add(StringWidget(I18n.translate("block.indrev.chopper"), titleColor), 4, 0)
-        root.add(createPlayerInventoryPanel(), 0, 5)
+        root.add(createPlayerInventoryPanel(), 0.0, 5.4)
+
+        blockContext.run { world, blockPos ->
+            val blockEntity = world.getBlockEntity(blockPos)
+            if (blockEntity !is ChopperBlockEntity) return@run
+            val button = object : WButton(TranslatableText("block.indrev.chopper.toggle.btn")) {
+                override fun addInformation(information: MutableList<String>?) {
+                    information?.add(I18n.translate("block.indrev.chopper.toggle.${blockEntity.renderWorkingArea}"))
+                }
+            }
+            button.setOnClick {
+                blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
+            }
+            root.add(button, 7.95, 4.0)
+        }
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
 
@@ -67,7 +84,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockCont
                 y++
             }
             x++
-            root.add(WItemSlot.of(blockInventory, slot), x + .4, y.toDouble())
+            root.add(WItemSlot.of(blockInventory, slot), x + .4, y + .5)
         }
 
         root.validate(this)

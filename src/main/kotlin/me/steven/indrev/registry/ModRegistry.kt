@@ -12,6 +12,7 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.item.Item
 import net.minecraft.sound.BlockSoundGroup
@@ -52,6 +53,8 @@ class ModRegistry {
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
 
+        identifier("area_indicator").block(AREA_INDICATOR)
+
         identifier("biomass").item(BIOMASS)
     }
 
@@ -84,6 +87,8 @@ class ModRegistry {
         val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings().maxDamage(1024))
 
         val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
+
+        val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
         val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
         val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)

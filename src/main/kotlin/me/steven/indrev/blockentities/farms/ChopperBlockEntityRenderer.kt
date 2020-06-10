@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
-import net.minecraft.block.Blocks
+import me.steven.indrev.registry.ModRegistry
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
@@ -19,7 +19,7 @@ class ChopperBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
     ) {
         if (blockEntity.renderWorkingArea) {
             val area = blockEntity.getWorkingArea()
-            val state = Blocks.GLASS.defaultState
+            val state = ModRegistry.AREA_INDICATOR.defaultState
             matrices?.push()
             val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
             val pos = blockEntity.pos
