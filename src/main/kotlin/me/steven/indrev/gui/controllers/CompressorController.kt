@@ -1,6 +1,6 @@
-package me.steven.indrev.gui.infuser
+package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -9,20 +9,26 @@ import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
-import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.utils.add
+import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.BlockContext
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.ScreenHandlerContext
 
-class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext)
-    : CottonCraftingController(InfuserRecipe.TYPE, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+class CompressorController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+    SyncedGuiDescription(
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(150, 120)
 
-        root.add(StringWidget(I18n.translate("block.indrev.infuser"), titleColor), 4, 0)
+        root.add(StringWidget(I18n.translate("block.indrev.compressor"), titleColor), 4, 0)
         root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
@@ -30,20 +36,17 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
         val batterySlot = WItemSlot.of(blockInventory, 0)
         root.add(batterySlot, 0.0, 3.7)
 
-        val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 2.0, 1.5)
-
-        val secondInput = WItemSlot.of(blockInventory, 3)
-        root.add(secondInput, 3.0, 1.5)
+        val inputSlot = WItemSlot.of(blockInventory, 2)
+        root.add(inputSlot, 2.3, 1.5)
 
         val processWidget = ProcessWidget(propertyDelegate)
-        root.add(processWidget, 4.2, 1.5)
+        root.add(processWidget, 3.5, 1.5)
 
-        val outputSlot = WItemSlot.outputOf(blockInventory, 4)
+        val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.0, 1.5)
+        root.add(outputSlot, 5.5, 1.5)
 
-        blockContext.run { world, pos ->
+        screenHandlerContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
@@ -60,5 +63,11 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, blockCont
         }
 
         root.validate(this)
+    }
+
+    override fun canUse(player: PlayerEntity?): Boolean = true
+
+    companion object {
+        val SCREEN_ID = identifier("compressor_screen")
     }
 }

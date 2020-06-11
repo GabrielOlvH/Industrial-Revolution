@@ -4,8 +4,8 @@ import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.TransferRecipeDisplay
 import me.shedaniel.rei.server.ContainerInfo
 import me.steven.indrev.compat.REIPlugin
-import net.minecraft.container.Container
 import net.minecraft.recipe.Recipe
+import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import java.util.*
 
@@ -22,7 +22,10 @@ class MachinePlugin(private val recipe: Recipe<*>) : TransferRecipeDisplay {
 
     override fun getRequiredEntries(): MutableList<MutableList<EntryStack>> = input
 
-    override fun getOrganisedInputEntries(p0: ContainerInfo<Container>?, p1: Container?): MutableList<MutableList<EntryStack>> = input
+    override fun getOrganisedInputEntries(
+        p0: ContainerInfo<ScreenHandler>?,
+        p1: ScreenHandler?
+    ): MutableList<MutableList<EntryStack>> = input
 
     override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input
 

@@ -1,7 +1,6 @@
-package me.steven.indrev.gui.biomassgen
+package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController
-import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -12,12 +11,21 @@ import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.ScreenHandlerContext
 
-class BiomassGeneratorController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext)
-    : CottonCraftingController(null, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+class BiomassGeneratorController(
+    syncId: Int,
+    playerInventory: PlayerInventory,
+    screenHandlerContext: ScreenHandlerContext
+) :
+    SyncedGuiDescription(
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -31,7 +39,7 @@ class BiomassGeneratorController(syncId: Int, playerInventory: PlayerInventory, 
         val batterySlot = WItemSlot.of(blockInventory, 0)
         root.add(batterySlot, 0.0, 3.7)
 
-        blockContext.run { world, blockPos ->
+        screenHandlerContext.run { world, blockPos ->
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureController != null) {
                 val controller = blockEntity.temperatureController!!
@@ -49,10 +57,9 @@ class BiomassGeneratorController(syncId: Int, playerInventory: PlayerInventory, 
         root.validate(this)
     }
 
-    class Screen(controller: BiomassGeneratorController, playerEntity: PlayerEntity)
-        : CottonInventoryScreen<BiomassGeneratorController>(controller, playerEntity)
-
     companion object {
         val SCREEN_ID = identifier("biomass_generator")
     }
+
+    override fun canUse(player: PlayerEntity?): Boolean = true
 }

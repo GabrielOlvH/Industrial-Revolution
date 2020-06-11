@@ -3,28 +3,7 @@ package me.steven.indrev
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
 import me.steven.indrev.blocks.ProxyBlock
-import me.steven.indrev.gui.battery.BatteryController
-import me.steven.indrev.gui.battery.BatteryScreen
-import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
-import me.steven.indrev.gui.chopper.ChopperController
-import me.steven.indrev.gui.coalgenerator.CoalGeneratorController
-import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
-import me.steven.indrev.gui.compressor.CompressorController
-import me.steven.indrev.gui.compressor.CompressorScreen
-import me.steven.indrev.gui.furnace.ElectricFurnaceController
-import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
-import me.steven.indrev.gui.infuser.InfuserController
-import me.steven.indrev.gui.infuser.InfuserScreen
-import me.steven.indrev.gui.miner.MinerController
-import me.steven.indrev.gui.miner.MinerScreen
-import me.steven.indrev.gui.nuclearreactor.NuclearReactorController
-import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
-import me.steven.indrev.gui.pulverizer.PulverizerController
-import me.steven.indrev.gui.pulverizer.PulverizerScreen
-import me.steven.indrev.gui.recycler.RecyclerController
-import me.steven.indrev.gui.recycler.RecyclerScreen
-import me.steven.indrev.gui.solargenerator.SolarGeneratorController
-import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
+import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.EMPTY_ENERGY_STORAGE
@@ -32,12 +11,12 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
-import net.minecraft.util.PacketByteBuf
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyStorage
@@ -59,64 +38,64 @@ class IndustrialRevolution : EnergyModInitializer() {
         ModRegistry().registerAll()
 
         ContainerProviderRegistry.INSTANCE.registerFactory(
-            CoalGeneratorScreen.SCREEN_ID
+            CoalGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CoalGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            CoalGeneratorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(SolarGeneratorScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(SolarGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            SolarGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            SolarGeneratorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(NuclearReactorScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(NuclearReactorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            NuclearReactorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            NuclearReactorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(ElectricFurnaceController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            ElectricFurnaceController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            ElectricFurnaceController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(PulverizerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            PulverizerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            PulverizerController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(CompressorScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(CompressorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CompressorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            CompressorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(BatteryScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(BatteryController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            BatteryController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            BatteryController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(InfuserScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(InfuserController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            InfuserController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            InfuserController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(MinerScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(MinerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            MinerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            MinerController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(RecyclerScreen.SCREEN_ID
+        ContainerProviderRegistry.INSTANCE.registerFactory(RecyclerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            RecyclerController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            RecyclerController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(BiomassGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            BiomassGeneratorController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            BiomassGeneratorController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
         ContainerProviderRegistry.INSTANCE.registerFactory(ChopperController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            ChopperController(syncId, player.inventory, BlockContext.create(player.world, buf.readBlockPos()))
+            ChopperController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)

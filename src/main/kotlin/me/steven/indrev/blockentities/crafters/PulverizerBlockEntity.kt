@@ -10,7 +10,6 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.BasicInventory
 
 class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
@@ -34,11 +33,11 @@ class PulverizerBlockEntity(tier: Tier) :
     private var currentRecipe: PulverizerRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
-        val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
+        val inputStacks = inventory.getInputInventory()
         val optional =
             world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(3).copy()
+        val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.processTime
@@ -51,16 +50,16 @@ class PulverizerBlockEntity(tier: Tier) :
 
     override fun onCraft() {
         val inventory = inventoryController!!.getInventory()
-        if (inventory.invSize < 3) return
+        if (inventory.size() < 3) return
         val chance = this.currentRecipe?.extraOutput?.right ?: return
         if (chance < this.world?.random?.nextDouble() ?: 0.0) {
             val extra = this.currentRecipe?.extraOutput?.left ?: return
-            val invStack = inventory.getInvStack(2).copy()
+            val invStack = inventory.getStack(2).copy()
             if (invStack.item == extra.item && invStack.count < invStack.maxCount + extra.count) {
                 invStack.count += extra.count
-                inventory.setInvStack(4, invStack)
+                inventory.setStack(4, invStack)
             } else if (invStack.isEmpty) {
-                inventory.setInvStack(4, extra.copy())
+                inventory.setStack(4, extra.copy())
             }
         }
     }

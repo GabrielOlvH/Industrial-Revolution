@@ -9,20 +9,20 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
-import net.minecraft.client.util.TextFormat
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 
 open class MachineBlock(
     settings: Settings,
@@ -39,7 +39,7 @@ open class MachineBlock(
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        tooltip?.add(TranslatableText("block.machines.tooltip.io", TextFormat.BLUE, TextFormat.WHITE, tier.io))
+        tooltip?.add(TranslatableText("block.machines.tooltip.io", Formatting.BLUE, Formatting.WHITE, tier.io))
     }
 
     override fun onUse(
@@ -61,7 +61,7 @@ open class MachineBlock(
         return ActionResult.SUCCESS
     }
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)

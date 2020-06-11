@@ -1,7 +1,7 @@
 package me.steven.indrev.inventories
 
-import net.minecraft.inventory.BasicInventory
 import net.minecraft.inventory.SidedInventory
+import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
@@ -10,21 +10,21 @@ class DefaultSidedInventory(
     val inputSlots: IntArray,
     val outputSlots: IntArray,
     val slotPredicate: (Int, ItemStack?) -> Boolean = { _, _ -> true }
-) : BasicInventory(size), SidedInventory {
+) : SimpleInventory(size), SidedInventory {
 
-    override fun getInvAvailableSlots(var1: Direction?): IntArray? = IntArray(invSize) { i -> i }
+    override fun getAvailableSlots(var1: Direction?): IntArray? = IntArray(size()) { i -> i }
 
-    override fun canExtractInvStack(slot: Int, stack: ItemStack?, direction: Direction?): Boolean = outputSlots.contains(slot)
+    override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean = outputSlots.contains(slot)
 
-    override fun canInsertInvStack(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot)
+    override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot)
 
-    override fun isValidInvStack(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack)
+    override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack)
 
-    fun getInputInventory() = BasicInventory(*inputSlots.map { getInvStack(it) }.toTypedArray())
+    fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
 
-    fun getOutputInventory() = BasicInventory(*outputSlots.map { getInvStack(it) }.toTypedArray())
+    fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
 
-    override fun add(itemStack: ItemStack?): ItemStack {
+    override fun addStack(itemStack: ItemStack?): ItemStack {
         val itemStack2 = itemStack!!.copy()
         addToExistingSlot(itemStack2)
         return if (itemStack2.isEmpty) {
@@ -36,10 +36,10 @@ class DefaultSidedInventory(
     }
 
     private fun addToNewSlot(stack: ItemStack) {
-        for (i in 0 until invSize) {
-            val itemStack = getInvStack(i)
-            if (itemStack.isEmpty && isValidInvStack(i, itemStack)) {
-                setInvStack(i, stack.copy())
+        for (i in 0 until size()) {
+            val itemStack = getStack(i)
+            if (itemStack.isEmpty && isValid(i, itemStack)) {
+                setStack(i, stack.copy())
                 stack.count = 0
                 return
             }
@@ -47,8 +47,8 @@ class DefaultSidedInventory(
     }
 
     private fun addToExistingSlot(stack: ItemStack) {
-        for (i in 0 until invSize) {
-            val itemStack = getInvStack(i)
+        for (i in 0 until size()) {
+            val itemStack = getStack(i)
             if (ItemStack.areItemsEqualIgnoreDamage(itemStack, stack)) {
                 transfer(stack, itemStack)
                 if (stack.isEmpty) {
@@ -59,7 +59,7 @@ class DefaultSidedInventory(
     }
 
     private fun transfer(source: ItemStack, target: ItemStack) {
-        val i = this.invMaxStackAmount.coerceAtMost(target.maxCount)
+        val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
         val j = source.count.coerceAtMost(i - target.count)
         if (j > 0) {
             target.increment(j)

@@ -10,7 +10,6 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.RecyclerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.BasicInventory
 
 class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY), UpgradeProvider {
 
@@ -33,10 +32,10 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
     }
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): RecyclerRecipe? {
-        val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
+        val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(RecyclerRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(3).copy()
+        val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.processTime

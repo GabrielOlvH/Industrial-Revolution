@@ -1,7 +1,6 @@
-package me.steven.indrev.gui.chopper
+package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController
-import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
@@ -15,13 +14,19 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.BlockContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 
-class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext)
-    : CottonCraftingController(null, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+class ChopperController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+    SyncedGuiDescription(
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -30,12 +35,12 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockCont
         root.add(StringWidget(I18n.translate("block.indrev.chopper"), titleColor), 4, 0)
         root.add(createPlayerInventoryPanel(), 0.0, 5.4)
 
-        blockContext.run { world, blockPos ->
+        screenHandlerContext.run { world, blockPos ->
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity !is ChopperBlockEntity) return@run
             val button = object : WButton(TranslatableText("block.indrev.chopper.toggle.btn")) {
-                override fun addInformation(information: MutableList<String>?) {
-                    information?.add(I18n.translate("block.indrev.chopper.toggle.${blockEntity.renderWorkingArea}"))
+                override fun addTooltip(information: MutableList<Text>?) {
+                    information?.add(TranslatableText("block.indrev.chopper.toggle.${blockEntity.renderWorkingArea}"))
                 }
             }
             button.setOnClick {
@@ -49,7 +54,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockCont
         val batterySlot = WItemSlot.of(blockInventory, 0)
         root.add(batterySlot, 0.0, 3.7)
 
-        blockContext.run { world, blockPos ->
+        screenHandlerContext.run { world, blockPos ->
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
@@ -90,8 +95,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, blockCont
         root.validate(this)
     }
 
-    class Screen(controller: ChopperController, playerEntity: PlayerEntity)
-        : CottonInventoryScreen<ChopperController>(controller, playerEntity)
+    override fun canUse(player: PlayerEntity?): Boolean = true
 
     companion object {
         val SCREEN_ID = identifier("chopper_controller")

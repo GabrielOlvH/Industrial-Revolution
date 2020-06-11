@@ -4,9 +4,12 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.resource.language.I18n
-import net.minecraft.client.util.TextFormat
-import net.minecraft.container.PropertyDelegate
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.screen.PropertyDelegate
+import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import kotlin.math.round
 
 class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
@@ -14,7 +17,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         this.setSize(16, 64)
     }
 
-    override fun paintBackground(x: Int, y: Int) {
+    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, EMPTY_HEAT, -1)
         val temperature = delegate[2]
         val maxTemperature = temperatureController.limit.toFloat()
@@ -25,21 +28,20 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         }
     }
 
-    override fun addInformation(information: MutableList<String>?) {
+    override fun addTooltip(information: MutableList<Text>?) {
         val temperature = delegate[2]
         val maxTemperature = temperatureController.limit.toInt()
         val info = when {
             temperature > temperatureController.optimalRange.last ->
-                I18n.translate("gui.widget.temperature_info.high", "${TextFormat.DARK_RED}${TextFormat.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.high", "${Formatting.DARK_RED}${Formatting.ITALIC}")
             temperature in temperatureController.optimalRange ->
-                I18n.translate("gui.widget.temperature_info.medium", "${TextFormat.YELLOW}${TextFormat.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.medium", "${Formatting.YELLOW}${Formatting.ITALIC}")
             else ->
-                I18n.translate("gui.widget.temperature_info.low", "${TextFormat.GREEN}${TextFormat.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.low", "${Formatting.GREEN}${Formatting.ITALIC}")
         }
-        information?.add(I18n.translate("gui.widget.temperature"))
-        information?.add("$temperature / $maxTemperature K")
+        information?.add(TranslatableText("gui.widget.temperature"))
+        information?.add(LiteralText("$temperature / $maxTemperature K"))
         information?.add(info)
-        super.addInformation(information)
     }
 
     companion object {

@@ -3,7 +3,8 @@ package me.steven.indrev.gui.widgets
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.utils.identifier
-import net.minecraft.container.PropertyDelegate
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.screen.PropertyDelegate
 import kotlin.math.round
 
 class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
@@ -11,7 +12,7 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
         this.setSize(24, 17)
     }
 
-    override fun paintBackground(x: Int, y: Int) {
+    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
         val burnTime = delegate[3]
         val maxBurnTime = delegate[4]

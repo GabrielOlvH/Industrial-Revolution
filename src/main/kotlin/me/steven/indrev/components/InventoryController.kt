@@ -30,17 +30,17 @@ class InventoryController(val machineProvider: () -> MachineBlockEntity, val sup
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
             val slot = stackTag.getInt("Slot")
-            getInventory().setInvStack(slot, ItemStack.fromTag(stackTag))
+            getInventory().setStack(slot, ItemStack.fromTag(stackTag))
         }
     }
 
     fun toTag(tag: CompoundTag): CompoundTag {
         val tagList = ListTag()
         val inventory = getInventory()
-        for (i in 0 until inventory.invSize) {
+        for (i in 0 until inventory.size()) {
             val stackTag = CompoundTag()
             stackTag.putInt("Slot", i)
-            tagList.add(inventory.getInvStack(i).toTag(stackTag))
+            tagList.add(inventory.getStack(i).toTag(stackTag))
         }
         tag.put("Inventory", tagList)
         return tag

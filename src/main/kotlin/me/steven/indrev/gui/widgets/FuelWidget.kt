@@ -3,7 +3,8 @@ package me.steven.indrev.gui.widgets
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.utils.identifier
-import net.minecraft.container.PropertyDelegate
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.screen.PropertyDelegate
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -14,7 +15,7 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate) : WWidget() {
 
     private var lastHeightUpdate = 14
     private var lastVUpdate = 0f
-    override fun paintBackground(x: Int, y: Int) {
+    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, UNLIT_TEXTURE_ID, -1)
         val burnTime = propertyDelegate[3]
         val maxBurnTime = propertyDelegate[4]

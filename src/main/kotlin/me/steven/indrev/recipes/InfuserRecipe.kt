@@ -4,13 +4,13 @@ import com.google.gson.JsonObject
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
-import net.minecraft.util.DefaultedList
 import net.minecraft.util.Identifier
-import net.minecraft.util.PacketByteBuf
+import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
@@ -30,7 +30,7 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
     override fun getPreviewInputs(): DefaultedList<Ingredient> = ingredients
 
     override fun matches(inv: Inventory?, world: World?): Boolean = ingredients.all { ingredient ->
-        (0 until (inv?.invSize ?: 0)).any { ingredient.test(inv?.getInvStack(it)) }
+        (0 until (inv?.size() ?: 0)).any { ingredient.test(inv?.getStack(it)) }
     }
 
     companion object {

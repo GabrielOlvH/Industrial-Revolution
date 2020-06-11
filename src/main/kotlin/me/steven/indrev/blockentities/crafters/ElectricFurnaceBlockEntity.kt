@@ -9,7 +9,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.BasicInventory
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 
@@ -35,10 +34,10 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     private var currentRecipe: SmeltingRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
-        val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
+        val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(3).copy()
+        val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.cookTime

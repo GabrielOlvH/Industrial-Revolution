@@ -1,6 +1,6 @@
-package me.steven.indrev.gui.recycler
+package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -9,20 +9,30 @@ import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
-import me.steven.indrev.recipes.RecyclerRecipe
 import me.steven.indrev.utils.add
+import me.steven.indrev.utils.identifier
 import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.BlockContext
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.ScreenHandlerContext
 
-class RecyclerController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext)
-    : CottonCraftingController(RecyclerRecipe.TYPE, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+class ElectricFurnaceController(
+    syncId: Int,
+    playerInventory: PlayerInventory,
+    screenHandlerContext: ScreenHandlerContext
+) :
+    SyncedGuiDescription(
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(150, 120)
 
-        root.add(StringWidget(I18n.translate("block.indrev.recycler"), titleColor), 4, 0)
+        root.add(StringWidget(I18n.translate("block.indrev.electric_furnace"), titleColor), 4, 0)
         root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
@@ -40,7 +50,7 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, blockCon
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.5, 1.5)
 
-        blockContext.run { world, pos ->
+        screenHandlerContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
@@ -57,5 +67,11 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, blockCon
         }
 
         root.validate(this)
+    }
+
+    override fun canUse(player: PlayerEntity?): Boolean = true
+
+    companion object {
+        val SCREEN_ID = identifier("electric_furnace_screen")
     }
 }

@@ -3,8 +3,11 @@ package me.steven.indrev.gui.widgets
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.PropertyDelegate
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.screen.PropertyDelegate
+import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import kotlin.math.round
 
 class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
@@ -12,7 +15,7 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
         this.setSize(16, 64)
     }
 
-    override fun paintBackground(x: Int, y: Int) {
+    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
         val energy = delegate[0]
         val maxEnergy = delegate[1]
@@ -23,12 +26,12 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
         }
     }
 
-    override fun addInformation(information: MutableList<String>?) {
+    override fun addTooltip(information: MutableList<Text>?) {
         val energy = delegate[0]
         val maxEnergy = delegate[1]
-        information?.add(I18n.translate("gui.widget.energy"))
-        information?.add("$energy / $maxEnergy LF")
-        super.addInformation(information)
+        information?.add(TranslatableText("gui.widget.energy"))
+        information?.add(LiteralText("$energy / $maxEnergy LF"))
+        super.addTooltip(information)
     }
 
     companion object {

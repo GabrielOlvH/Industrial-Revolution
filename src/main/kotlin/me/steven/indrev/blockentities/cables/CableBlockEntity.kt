@@ -3,8 +3,9 @@ package me.steven.indrev.blockentities.cables
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
 
 class CableBlockEntity(tier: Tier) :
@@ -15,10 +16,10 @@ class CableBlockEntity(tier: Tier) :
         this.propertyDelegate = ArrayPropertyDelegate(2)
     }
 
-    override fun fromTag(tag: CompoundTag?) {
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         if (tag?.contains("cover") == true)
             cover = Identifier(tag.getString("cover"))
-        super.fromTag(tag)
+        super.fromTag(state, tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {

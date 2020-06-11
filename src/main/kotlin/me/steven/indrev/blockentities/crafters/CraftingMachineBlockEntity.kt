@@ -6,10 +6,11 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.block.BlockState
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
+import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Tickable
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
@@ -29,7 +30,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         if (world?.isClient == true) return
         val inventory = inventoryController?.getInventory() ?: return
         val inputInventory = inventory.getInputInventory()
-        if (inputInventory.isInvEmpty) reset()
+        if (inputInventory.isEmpty) reset()
         else if (isProcessing()) {
             val recipe = getCurrentRecipe()
             if (recipe?.matches(inputInventory, this.world) == false)
@@ -38,15 +39,15 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
                     inventory.inputSlots.forEachIndexed { index, slot ->
-                        inventory.setInvStack(slot, inputInventory.getInvStack(index).apply { decrement(1) })
+                        inventory.setStack(slot, inputInventory.getStack(index).apply { decrement(1) })
                     }
                     val output = recipe?.output ?: return
                     for (outputSlot in inventory.outputSlots) {
-                        val outputStack = inventory.getInvStack(outputSlot)
+                        val outputStack = inventory.getStack(outputSlot)
                         if (outputStack.item == output.item)
-                            inventory.setInvStack(outputSlot, outputStack.apply { increment(output.count) })
+                            inventory.setStack(outputSlot, outputStack.apply { increment(output.count) })
                         else if (outputStack.isEmpty)
-                            inventory.setInvStack(outputSlot, output.copy())
+                            inventory.setStack(outputSlot, output.copy())
                         else continue
                         break
                     }
@@ -54,7 +55,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                     reset()
                 }
             } else reset()
-        } else if (energy > 0 && !inputInventory.isInvEmpty && processTime <= 0) {
+        } else if (energy > 0 && !inputInventory.isEmpty && processTime <= 0) {
             reset()
             tryStartRecipe(inventory)
         }
@@ -85,10 +86,10 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         Upgrade.BUFFER -> baseBuffer
     }
 
-    override fun fromTag(tag: CompoundTag?) {
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
-        super.fromTag(tag)
+        super.fromTag(state, tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {

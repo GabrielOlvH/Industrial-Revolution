@@ -9,8 +9,8 @@ import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.ArrayPropertyDelegate
 
 class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.BIOMASS_GENERATOR_REGISTRY) {
 
@@ -37,13 +37,13 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
             val inventory = inventoryController?.getInventory() ?: return false
-            val invStack = inventory.getInvStack(2)
+            val invStack = inventory.getStack(2)
             if (!invStack.isEmpty && invStack.item == ModRegistry.BIOMASS) {
                 burnTime = 300
                 maxBurnTime = burnTime
                 invStack.count--
-                if (invStack.isEmpty) inventory.setInvStack(2, ItemStack.EMPTY)
-                else inventory.setInvStack(2, invStack)
+                if (invStack.isEmpty) inventory.setStack(2, ItemStack.EMPTY)
+                else inventory.setStack(2, invStack)
             }
         }
         markDirty()

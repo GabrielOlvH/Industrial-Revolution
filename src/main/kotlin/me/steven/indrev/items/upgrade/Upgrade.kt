@@ -11,7 +11,7 @@ enum class Upgrade(val apply: (Double, Int) -> Double) {
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
         var count = 0
         for (i in provider.getUpgradeSlots()) {
-            val invStack = inventory.getInvStack(i)
+            val invStack = inventory.getStack(i)
             val item = invStack.item
             if (item is UpgradeItem && item.upgrade == this) count++
         }

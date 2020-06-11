@@ -3,7 +3,7 @@ package me.steven.indrev.world.chunkveins
 import me.steven.indrev.registry.ModRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
-import net.minecraft.util.WeightedList
+import net.minecraft.util.collection.WeightedList
 
 enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>) {
     PEAT(

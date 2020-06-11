@@ -12,18 +12,7 @@ import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
-import me.steven.indrev.gui.battery.BatteryScreen
-import me.steven.indrev.gui.biomassgen.BiomassGeneratorController
-import me.steven.indrev.gui.chopper.ChopperController
-import me.steven.indrev.gui.coalgenerator.CoalGeneratorScreen
-import me.steven.indrev.gui.compressor.CompressorScreen
-import me.steven.indrev.gui.furnace.ElectricFurnaceScreen
-import me.steven.indrev.gui.infuser.InfuserScreen
-import me.steven.indrev.gui.miner.MinerScreen
-import me.steven.indrev.gui.nuclearreactor.NuclearReactorScreen
-import me.steven.indrev.gui.pulverizer.PulverizerScreen
-import me.steven.indrev.gui.recycler.RecyclerScreen
-import me.steven.indrev.gui.solargenerator.SolarGeneratorScreen
+import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -86,7 +75,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorController.SCREEN_ID
                     ) { CoalGeneratorBlockEntity() }
                 },
                 { { CoalGeneratorBlockEntity() } }
@@ -97,7 +86,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     MachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorController.SCREEN_ID
                     ) { SolarGeneratorBlockEntity(tier) }
                 },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -118,7 +107,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
             registry.register(
                 {
-                    NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorScreen.SCREEN_ID)
+                    NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorController.SCREEN_ID)
                     { NuclearReactorBlockEntity() }
                 },
                 { { NuclearReactorBlockEntity() } }
@@ -134,7 +123,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceController.SCREEN_ID
                     ) { ElectricFurnaceBlockEntity(tier) }
                 },
                 { tier -> { ElectricFurnaceBlockEntity(tier) } }
@@ -152,7 +141,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, PulverizerScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, PulverizerController.SCREEN_ID
                     ) { PulverizerBlockEntity(tier) }
                 },
                 { tier -> { PulverizerBlockEntity(tier) } }
@@ -170,7 +159,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CompressorScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, CompressorController.SCREEN_ID
                     ) { CompressorBlockEntity(tier) }
                 },
                 { tier -> { CompressorBlockEntity(tier) } }
@@ -188,7 +177,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, InfuserScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, InfuserController.SCREEN_ID
                     ) { InfuserBlockEntity(tier) }
                 },
                 { tier -> { InfuserBlockEntity(tier) } }
@@ -206,7 +195,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, BatteryScreen.SCREEN_ID, true
+                        MACHINE_BLOCK_SETTINGS(), tier, BatteryController.SCREEN_ID, true
                     ) { BatteryBlockEntity(tier) }
                 },
                 { tier -> { BatteryBlockEntity(tier) } }
@@ -224,7 +213,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, MinerScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, MinerController.SCREEN_ID
                     ) { MinerBlockEntity(tier) }
                 },
                 { tier -> { MinerBlockEntity(tier) } }
@@ -235,7 +224,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, RecyclerScreen.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, RecyclerController.SCREEN_ID
                     ) { RecyclerBlockEntity(tier) }
                 },
                 { tier -> { RecyclerBlockEntity(tier) } }

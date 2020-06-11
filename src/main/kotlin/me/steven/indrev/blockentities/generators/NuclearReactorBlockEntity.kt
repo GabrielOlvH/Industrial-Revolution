@@ -38,11 +38,11 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
         else if (loadedFuel <= 0) {
             modifier = 0
             for (slot in inventory.inputSlots) {
-                val itemStack = inventory.getInvStack(slot)
+                val itemStack = inventory.getStack(slot)
                 val item = itemStack.item
                 if (item is UraniumRodItem) {
                     itemStack.damage++
-                    if (itemStack.damage <= 0) inventory.setInvStack(slot, ItemStack.EMPTY)
+                    if (itemStack.damage <= 0) inventory.setStack(slot, ItemStack.EMPTY)
                     modifier++
                     loadedFuel += 10
                 }

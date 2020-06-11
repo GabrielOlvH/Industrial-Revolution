@@ -17,8 +17,8 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 
 class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, InventoryProvider, ProxyBlock {
 
@@ -44,7 +44,7 @@ class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvi
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = NuclearReactorProxyBlockEntity()
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         val blockEntity = world?.getBlockEntity(getBlockEntityPos(state!!, pos!!))
         if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)

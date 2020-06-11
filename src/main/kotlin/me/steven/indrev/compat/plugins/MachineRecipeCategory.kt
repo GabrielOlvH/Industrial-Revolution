@@ -1,21 +1,18 @@
 package me.steven.indrev.compat.plugins
 
-import com.mojang.blaze3d.systems.RenderSystem
 import it.unimi.dsi.fastutil.ints.IntList
-import me.shedaniel.math.api.Point
-import me.shedaniel.math.api.Rectangle
+import me.shedaniel.math.Point
+import me.shedaniel.math.Rectangle
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.TransferRecipeCategory
+import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.entries.RecipeEntry
 import me.shedaniel.rei.gui.entries.SimpleRecipeEntry
-import me.shedaniel.rei.gui.widget.EntryWidget
-import me.shedaniel.rei.gui.widget.RecipeArrowWidget
-import me.shedaniel.rei.gui.widget.RecipeBaseWidget
 import me.shedaniel.rei.gui.widget.Widget
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.resource.language.I18n
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
-import java.util.function.Supplier
 
 
 class MachineRecipeCategory(
@@ -24,23 +21,41 @@ class MachineRecipeCategory(
     private val categoryName: String?
 ) : TransferRecipeCategory<MachinePlugin> {
 
-    override fun renderRedSlots(widgets: MutableList<Widget>?, bounds: Rectangle, p2: MachinePlugin?, redSlots: IntList) {
+    override fun renderRedSlots(
+        matrices: MatrixStack,
+        widgets: List<Widget?>?,
+        bounds: Rectangle,
+        display: MachinePlugin?,
+        redSlots: IntList
+    ) {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
-        RenderSystem.translatef(0f, 0f, 400f)
+        matrices.push()
+        matrices.translate(0.0, 0.0, 400.0)
         if (redSlots.contains(0)) {
-            DrawableHelper.fill(startPoint.x + 1, startPoint.y + 1, startPoint.x + 1 + 16, startPoint.y + 1 + 16, 1090453504)
+            DrawableHelper.fill(
+                matrices,
+                startPoint.x + 1,
+                startPoint.y + 1,
+                startPoint.x + 1 + 16,
+                startPoint.y + 1 + 16,
+                1090453504
+            )
         }
-        RenderSystem.translatef(0f, 0f, -400f)
+        matrices.pop()
     }
 
-    override fun setupDisplay(recipeDisplaySupplier: Supplier<MachinePlugin>, bounds: Rectangle): MutableList<Widget> {
+    override fun setupDisplay(recipeDisplay: MachinePlugin, bounds: Rectangle): MutableList<Widget> {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
-        val widgets: MutableList<Widget> = mutableListOf(RecipeBaseWidget(bounds))
-        widgets.add(RecipeArrowWidget(startPoint.x + 24, startPoint.y + 18, true))
-        val input: List<List<EntryStack>> = recipeDisplaySupplier.get().inputEntries
-        widgets.add(EntryWidget.create(startPoint.x + 1, startPoint.y + 19).entries(input[0]))
-        if (input.size > 1) widgets.add(EntryWidget.create(startPoint.x - 17, startPoint.y + 19).entries(input[1]))
-        widgets.add(EntryWidget.create(startPoint.x + 61, startPoint.y + 19).entries(recipeDisplaySupplier.get().outputEntries))
+        val widgets: MutableList<Widget> = mutableListOf(Widgets.createRecipeBase(bounds))
+        widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
+        val input: List<List<EntryStack>> = recipeDisplay.inputEntries
+        widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
+        if (input.size > 1) widgets.add(
+            Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
+        )
+        widgets.add(
+            Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
+        )
         return widgets
     }
 

@@ -7,7 +7,7 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.screen.ArrayPropertyDelegate
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
@@ -24,9 +24,9 @@ class BatteryBlockEntity(tier: Tier) :
         super.tick()
         if (world?.isClient == true) return
         val inventory = inventoryController?.getInventory() ?: return
-        val stack = inventory.getInvStack(0)
+        val stack = inventory.getStack(0)
         if (stack.item is Rechargeable && stack.isDamaged) {
-            inventory.setInvStack(0, stack.copy().apply { damage-- })
+            inventory.setStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
         }
     }

@@ -35,8 +35,10 @@ class ChunkScannerItem(settings: Settings) : Item(settings){
                 state.veins[chunkPos] = data
                 state.markDirty()
 
-                user?.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned1"))
-                user?.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned2", data.chunkVeinType))
+                if (user is PlayerEntity) {
+                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned1"), true)
+                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned2", data.chunkVeinType), true)
+                }
                 return stack.also { it.decrement(1) }
             }
         }
@@ -54,12 +56,15 @@ class ChunkScannerItem(settings: Settings) : Item(settings){
                     )
                 val data = state.veins[chunkPos]
                 if (data?.chunkVeinType != null) {
-                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.already_scanned", data.chunkVeinType))
+                    user.sendMessage(
+                        TranslatableText("item.indrev.chunk_scanner.already_scanned", data.chunkVeinType),
+                        true
+                    )
                     return TypedActionResult.fail(user.getStackInHand(hand))
                 }
             }
         } else
-            user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanning"))
+            user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanning"), true)
         user.setCurrentHand(hand)
         return TypedActionResult.consume(user.getStackInHand(hand))
     }

@@ -5,6 +5,8 @@ import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.Item
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 
 
@@ -35,3 +37,5 @@ fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.values(), itemSupplier: (
 fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.MOD_GROUP)
 
 fun IntRange.toIntArray(): IntArray = this.map { it }.toIntArray()
+
+fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())

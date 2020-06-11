@@ -13,9 +13,10 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.world.chunkveins.ChunkVeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
-import net.minecraft.container.ArrayPropertyDelegate
+import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import team.reborn.energy.EnergySide
 
@@ -76,7 +77,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 propertyDelegate[4] = data.explored * 100 / data.size
                 state.markDirty()
                 mining = 0.0
-                inventory.add(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
+                inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
                 markDirty()
             }
             temperatureController?.tick(true)
@@ -103,11 +104,11 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
         return super.toTag(tag)
     }
 
-    override fun fromTag(tag: CompoundTag?) {
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
             chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
-        super.fromTag(tag)
+        super.fromTag(state, tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {

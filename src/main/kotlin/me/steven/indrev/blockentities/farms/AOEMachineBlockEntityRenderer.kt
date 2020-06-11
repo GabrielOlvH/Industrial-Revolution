@@ -23,9 +23,9 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
             matrices?.push()
             val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
             val pos = blockEntity.pos
-            for (x in area.x1.toInt() until area.x2.toInt())
-                for (y in area.y1.toInt() until area.y2.toInt())
-                    for (z in area.z1.toInt() until area.z2.toInt()) {
+            for (x in area.minX.toInt() until area.maxX.toInt())
+                for (y in area.minY.toInt() until area.maxY.toInt())
+                    for (z in area.minZ.toInt() until area.maxZ.toInt()) {
                         val offsetX = pos.x - x.toDouble()
                         val offsetY = y.toDouble() - pos.y
                         val offsetZ = pos.z - z.toDouble()

@@ -11,14 +11,14 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.container.ArrayPropertyDelegate
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.IWorld
+import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
@@ -91,13 +91,13 @@ open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
 
     override fun getStored(side: EnergySide?): Double = energy
 
-    override fun getInventory(state: BlockState?, world: IWorld?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         return inventoryController?.getInventory()
             ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
     }
 
-    override fun fromTag(tag: CompoundTag?) {
-        super.fromTag(tag)
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+        super.fromTag(state, tag)
         inventoryController?.fromTag(tag)
         temperatureController?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0

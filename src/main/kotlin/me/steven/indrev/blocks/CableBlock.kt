@@ -5,17 +5,17 @@ import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
-import net.minecraft.entity.EntityContext
+import net.minecraft.block.ShapeContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateManager
-import net.minecraft.state.property.AbstractProperty
 import net.minecraft.state.property.BooleanProperty
+import net.minecraft.state.property.Property
 import net.minecraft.util.ActionResult
-import net.minecraft.util.DefaultedList
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
+import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -23,8 +23,8 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 import team.reborn.energy.Energy
 
 class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, null, { CableBlockEntity(tier) }) {
@@ -40,7 +40,12 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
             .with(COVERED, false)
     }
 
-    override fun getOutlineShape(state: BlockState?, view: BlockView?, pos: BlockPos?, context: EntityContext?): VoxelShape {
+    override fun getOutlineShape(
+        state: BlockState?,
+        view: BlockView?,
+        pos: BlockPos?,
+        context: ShapeContext?
+    ): VoxelShape {
         return if (state != null && state[COVERED]) VoxelShapes.fullCube() else CENTER_SHAPE
     }
 
@@ -101,7 +106,14 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
         return state
     }
 
-    override fun getStateForNeighborUpdate(state: BlockState, facing: Direction, neighborState: BlockState?, world: IWorld?, pos: BlockPos?, neighborPos: BlockPos?): BlockState {
+    override fun getStateForNeighborUpdate(
+        state: BlockState,
+        facing: Direction,
+        neighborState: BlockState?,
+        world: WorldAccess?,
+        pos: BlockPos?,
+        neighborPos: BlockPos?
+    ): BlockState {
         val neighborBlockEntity = world?.getBlockEntity(neighborPos)
         return if (neighborBlockEntity == null || !Energy.valid(neighborBlockEntity)) state.with(
             getProperty(
@@ -124,7 +136,7 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
 
         val COVERED: BooleanProperty = BooleanProperty.of("covered")
 
-        fun getProperty(facing: Direction): AbstractProperty<Boolean> {
+        fun getProperty(facing: Direction): Property<Boolean> {
             return when (facing) {
                 Direction.EAST -> EAST
                 Direction.WEST -> WEST

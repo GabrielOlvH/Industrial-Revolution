@@ -12,9 +12,10 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
+import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
-import net.minecraft.block.LogBlock
+import net.minecraft.block.PillarBlock
 import net.minecraft.block.SaplingBlock
 import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
@@ -60,14 +61,14 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             return
         } else if (!takeEnergy(Upgrade.ENERGY.apply(this, inventory)))
             return
-        val axeStack = inventory.inputSlots.map { slot -> inventory.getInvStack(slot) }
+        val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }
             .firstOrNull { stack -> stack.item is AxeItem }
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
             val area = getWorkingArea()
-            for (y in area.y1.toInt() until area.y2.toInt()) {
-                for (x in area.x1.toInt() until area.x2.toInt()) {
-                    for (z in area.z1.toInt() until area.z2.toInt()) {
+            for (y in area.minY.toInt() until area.maxY.toInt()) {
+                for (x in area.minX.toInt() until area.maxX.toInt()) {
+                    for (z in area.minZ.toInt() until area.maxZ.toInt()) {
                         list.add(BlockPos(x, y, z))
                     }
                 }
@@ -83,7 +84,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                     break
                 }
                 for (slot in inventory.inputSlots) {
-                    val stack = inventory.getInvStack(slot)
+                    val stack = inventory.getStack(slot)
                     if ((axeStack != null && stack.isItemEqual(axeStack)) || stack.isEmpty || !tryUse(stack, world!!, pos)) continue
                     performedAction = true
                     break@outer
@@ -96,7 +97,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     private fun tryChop(axeStack: ItemStack, blockPos: BlockPos, blockState: BlockState, inventory: DefaultSidedInventory): Boolean {
         when (blockState.block) {
-            is LogBlock -> {
+            is PillarBlock -> {
                 world?.breakBlock(blockPos, false)
                 axeStack.damage(1, world?.random, null)
             }
@@ -104,11 +105,11 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             else -> return false
         }
         val droppedStacks = blockState.getDroppedStacks(
-            LootContext.Builder(world as ServerWorld).setRandom(world?.random)
-                .put(LootContextParameters.POSITION, blockPos)
-                .put(LootContextParameters.TOOL, axeStack)
+            LootContext.Builder(world as ServerWorld).random(world?.random)
+                .parameter(LootContextParameters.POSITION, blockPos)
+                .parameter(LootContextParameters.TOOL, axeStack)
         )
-        droppedStacks.map { inventory.add(it) }.filterNot(ItemStack::isEmpty).forEach {
+        droppedStacks.map { inventory.addStack(it) }.filterNot(ItemStack::isEmpty).forEach {
             ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
@@ -117,7 +118,13 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     private fun tryUse(itemStack: ItemStack, world: World, pos: BlockPos): Boolean {
         val fakePlayer = FakePlayerEntity(world, pos)
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
-        return itemStack.useOnBlock(ItemUsageContext(fakePlayer, Hand.MAIN_HAND, BlockHitResult(Vec3d(pos), Direction.UP, pos, false))).isAccepted
+        return itemStack.useOnBlock(
+            ItemUsageContext(
+                fakePlayer,
+                Hand.MAIN_HAND,
+                BlockHitResult(pos.toVec3d(), Direction.UP, pos, false)
+            )
+        ).isAccepted
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)

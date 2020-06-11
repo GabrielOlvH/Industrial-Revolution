@@ -13,9 +13,9 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
 class RechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIAMOND, 0, 0F, settings), Rechargeable {
-    override fun getMiningSpeed(stack: ItemStack?, state: BlockState?): Float {
+    override fun getMiningSpeedMultiplier(stack: ItemStack?, state: BlockState?): Float {
         val material = state?.material
-        return if (SUPPORTED_MATERIALS.contains(material)) 16F else this.material.miningSpeed
+        return if (SUPPORTED_MATERIALS.contains(material)) 16F else this.material.miningSpeedMultiplier
     }
 
     override fun appendTooltip(

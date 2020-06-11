@@ -8,7 +8,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.util.*
 
-class FakePlayerEntity(world: World, pos: BlockPos) : PlayerEntity(world, GameProfile(FAKE_PLAYER_UUID, "indrev_chopper_fake_player")) {
+class FakePlayerEntity(world: World, pos: BlockPos) :
+    PlayerEntity(world, pos, GameProfile(FAKE_PLAYER_UUID, "indrev_chopper_fake_player")) {
 
     init {
         setPos(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())

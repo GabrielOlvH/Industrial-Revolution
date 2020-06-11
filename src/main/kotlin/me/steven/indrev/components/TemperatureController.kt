@@ -3,8 +3,8 @@ package me.steven.indrev.components
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.CoolerItem
-import net.minecraft.container.PropertyDelegate
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.screen.PropertyDelegate
 
 class TemperatureController(
     private val machineProvider: () -> MachineBlockEntity,
@@ -30,7 +30,7 @@ class TemperatureController(
 
     fun tick(isHeatingUp: Boolean) {
         val machine = machineProvider()
-        val coolerStack = machine.inventoryController?.getInventory()?.getInvStack(1)
+        val coolerStack = machine.inventoryController?.getInventory()?.getStack(1)
         val coolerItem = coolerStack?.item
 
         if (isHeatingUp && coolerItem is CoolerItem

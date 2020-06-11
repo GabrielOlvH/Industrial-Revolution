@@ -10,7 +10,6 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.BasicInventory
 
 class InfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
@@ -34,10 +33,10 @@ class InfuserBlockEntity(tier: Tier) :
     private var currentRecipe: InfuserRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): InfuserRecipe? {
-        val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
+        val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(InfuserRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(4).copy()
+        val outputStack = inventory.getStack(4).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.processTime

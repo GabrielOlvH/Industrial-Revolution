@@ -8,10 +8,11 @@ import me.steven.indrev.items.CoolerItem
 import me.steven.indrev.items.rechargeable.RechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
-import net.minecraft.container.ArrayPropertyDelegate
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.screen.ArrayPropertyDelegate
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
@@ -39,13 +40,13 @@ class CoalGeneratorBlockEntity :
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
             val inventory = inventoryController?.getInventory() ?: return false
-            val invStack = inventory.getInvStack(2)
+            val invStack = inventory.getStack(2)
             if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                 burnTime = BURN_TIME_MAP[invStack.item] ?: return false
                 maxBurnTime = burnTime
                 invStack.count--
-                if (invStack.isEmpty) inventory.setInvStack(2, ItemStack.EMPTY)
-                else inventory.setInvStack(2, invStack)
+                if (invStack.isEmpty) inventory.setStack(2, ItemStack.EMPTY)
+                else inventory.setStack(2, invStack)
             }
         }
         markDirty()
@@ -54,8 +55,8 @@ class CoalGeneratorBlockEntity :
 
     override fun getGenerationRatio(): Double = 0.15
 
-    override fun fromTag(tag: CompoundTag?) {
-        super.fromTag(tag)
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+        super.fromTag(state, tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
     }

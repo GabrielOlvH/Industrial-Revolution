@@ -1,6 +1,6 @@
-package me.steven.indrev.gui.miner
+package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.CottonCraftingController
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -10,13 +10,20 @@ import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
+import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.ChunkVeinType
 import net.minecraft.client.resource.language.I18n
-import net.minecraft.container.BlockContext
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.screen.ScreenHandlerContext
 
-class MinerController(syncId: Int, playerInventory: PlayerInventory, blockContext: BlockContext) :
-    CottonCraftingController(null, syncId, playerInventory, getBlockInventory(blockContext), getBlockPropertyDelegate(blockContext)) {
+class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+    SyncedGuiDescription(
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -47,10 +54,10 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, blockContex
             I18n.translate("block.indrev.miner.gui1", type)
         }, titleColor), 4.0, 3.5)
         root.add(StringWidget({
-            I18n.translate("block.indrev.miner.gui2","${propertyDelegate[4]}%")
+            I18n.translate("block.indrev.miner.gui2", "${propertyDelegate[4]}%")
         }, titleColor), 4, 4)
 
-        blockContext.run { world, pos ->
+        screenHandlerContext.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
@@ -67,5 +74,11 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, blockContex
         }
 
         root.validate(this)
+    }
+
+    override fun canUse(player: PlayerEntity?): Boolean = true
+
+    companion object {
+        val SCREEN_ID = identifier("miner")
     }
 }

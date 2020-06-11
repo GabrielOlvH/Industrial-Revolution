@@ -8,16 +8,16 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
-import net.minecraft.state.property.AbstractProperty
 import net.minecraft.state.property.BooleanProperty
+import net.minecraft.state.property.Property
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.IWorld
 import net.minecraft.world.World
+import net.minecraft.world.WorldAccess
 
 class NuclearReactorCore(
     settings: Settings,
@@ -71,7 +71,7 @@ class NuclearReactorCore(
         state: BlockState,
         facing: Direction,
         neighborState: BlockState?,
-        world: IWorld?,
+        world: WorldAccess?,
         pos: BlockPos?,
         neighborPos: BlockPos?
     ): BlockState {
@@ -98,7 +98,7 @@ class NuclearReactorCore(
         val UP: BooleanProperty = BooleanProperty.of("up")
         val DOWN: BooleanProperty = BooleanProperty.of("down")
 
-        fun getProperty(facing: Direction): AbstractProperty<Boolean> {
+        fun getProperty(facing: Direction): Property<Boolean> {
             return when (facing) {
                 Direction.EAST -> EAST
                 Direction.WEST -> WEST

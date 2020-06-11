@@ -10,7 +10,6 @@ import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.recipes.CompressorRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.BasicInventory
 
 class CompressorBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
@@ -34,10 +33,10 @@ class CompressorBlockEntity(tier: Tier) :
     private var currentRecipe: CompressorRecipe? = null
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): CompressorRecipe? {
-        val inputStacks = BasicInventory(*(inventory.inputSlots).map { inventory.getInvStack(it) }.toTypedArray())
+        val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(CompressorRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getInvStack(3).copy()
+        val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.processTime
