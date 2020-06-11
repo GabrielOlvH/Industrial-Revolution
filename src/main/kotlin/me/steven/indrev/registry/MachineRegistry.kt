@@ -5,6 +5,7 @@ import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.ChopperBlockEntity
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
@@ -247,6 +248,24 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     ) { ChopperBlockEntity(tier) }
                 },
                 { tier -> { ChopperBlockEntity(tier) } }
+            ).buffer { tier ->
+                when (tier) {
+                    Tier.MK1 -> 1000.0
+                    Tier.MK2 -> 5000.0
+                    Tier.MK3 -> 10000.0
+                    Tier.MK4 -> 50000.0
+                }
+            }
+        }
+
+        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher")).also { registry ->
+            registry.register(
+                { tier ->
+                    FacingMachineBlock(
+                        MACHINE_BLOCK_SETTINGS(), tier, RancherController.SCREEN_ID
+                    ) { RancherBlockEntity(tier) }
+                },
+                { tier -> { RancherBlockEntity(tier) } }
             ).buffer { tier ->
                 when (tier) {
                     Tier.MK1 -> 1000.0

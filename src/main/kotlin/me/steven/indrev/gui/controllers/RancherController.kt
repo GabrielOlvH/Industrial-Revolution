@@ -20,19 +20,18 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 
-class ChopperController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
-    SyncedGuiDescription(
-        syncId,
-        playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
-    ) {
+class RancherController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) : SyncedGuiDescription(
+    syncId,
+    playerInventory,
+    getBlockInventory(screenHandlerContext),
+    getBlockPropertyDelegate(screenHandlerContext)
+) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(150, 120)
 
-        root.add(StringWidget(I18n.translate("block.indrev.chopper"), titleColor), 4, 0)
+        root.add(StringWidget(I18n.translate("block.indrev.rancher"), titleColor), 4, 0)
         root.add(createPlayerInventoryPanel(), 0.0, 5.4)
 
         screenHandlerContext.run { world, blockPos ->
@@ -98,6 +97,6 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, screenHan
     override fun canUse(player: PlayerEntity?): Boolean = true
 
     companion object {
-        val SCREEN_ID = identifier("chopper_controller")
+        val SCREEN_ID = identifier("rancher_screen")
     }
 }

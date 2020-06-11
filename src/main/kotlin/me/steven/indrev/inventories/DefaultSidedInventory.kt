@@ -38,7 +38,7 @@ class DefaultSidedInventory(
     private fun addToNewSlot(stack: ItemStack) {
         for (i in 0 until size()) {
             val itemStack = getStack(i)
-            if (itemStack.isEmpty && isValid(i, itemStack)) {
+            if (itemStack.isEmpty && isValid(i, itemStack) && outputSlots.contains(i)) {
                 setStack(i, stack.copy())
                 stack.count = 0
                 return

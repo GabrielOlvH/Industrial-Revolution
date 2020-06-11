@@ -98,6 +98,11 @@ class IndustrialRevolution : EnergyModInitializer() {
             ChopperController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
         }
 
+        ContainerProviderRegistry.INSTANCE.registerFactory(RancherController.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            RancherController(syncId, player.inventory, ScreenHandlerContext.create(player.world, buf.readBlockPos()))
+        }
+
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)

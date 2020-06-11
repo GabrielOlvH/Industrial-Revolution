@@ -173,6 +173,20 @@ class IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
+        ScreenProviderRegistry.INSTANCE.registerFactory(
+            RancherController.SCREEN_ID
+        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
+            CottonInventoryScreen(
+                RancherController(
+                    syncId,
+                    player.inventory,
+                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
+                ),
+                player
+            )
+        }
+
+
         MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>) {
                 CableBlockEntityRenderer(it)
@@ -180,6 +194,12 @@ class IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEach { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>) {
+                AOEMachineBlockEntityRenderer(it)
+            }
+        }
+
+        MachineRegistry.RANCHER_REGISTRY.forEach { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>) {
                 AOEMachineBlockEntityRenderer(it)
             }

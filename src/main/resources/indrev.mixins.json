@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_14",
   "mixins": [
     "MixinCraftingResultSlot",
-    "MixinEnergyHandler"
+    "MixinEnergyHandler",
+    "MixinLivingEntity"
   ],
   "client": [
   ],
