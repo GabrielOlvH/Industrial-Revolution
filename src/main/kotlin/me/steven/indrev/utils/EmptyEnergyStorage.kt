@@ -4,9 +4,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-val EMPTY_ENERGY_STORAGE = EmptyEnergyStorage()
-
-class EmptyEnergyStorage : EnergyStorage {
+object EmptyEnergyStorage : EnergyStorage {
     override fun setStored(p0: Double) {}
 
     override fun getMaxStoredPower(): Double = 0.0

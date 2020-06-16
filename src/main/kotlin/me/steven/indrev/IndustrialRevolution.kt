@@ -6,7 +6,7 @@ import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.ModRegistry
-import me.steven.indrev.utils.EMPTY_ENERGY_STORAGE
+import me.steven.indrev.utils.EmptyEnergyStorage
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry
@@ -22,7 +22,7 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.minecraft.EnergyModInitializer
 
-class IndustrialRevolution : EnergyModInitializer() {
+object IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
         Energy.registerHolder(NuclearReactorProxyBlockEntity::class.java) { obj ->
@@ -30,12 +30,17 @@ class IndustrialRevolution : EnergyModInitializer() {
             if (obj.hasWorld()) {
                 val block = obj.cachedState.block
                 if (block is ProxyBlock && block is EnergyStorage)
-                    return@registerHolder obj.world?.getBlockEntity(block.getBlockEntityPos(obj.cachedState, obj.pos)) as EnergyStorage
+                    return@registerHolder obj.world?.getBlockEntity(
+                        block.getBlockEntityPos(
+                            obj.cachedState,
+                            obj.pos
+                        )
+                    ) as EnergyStorage
             }
-            return@registerHolder EMPTY_ENERGY_STORAGE
+            return@registerHolder EmptyEnergyStorage
         }
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
-        ModRegistry().registerAll()
+        ModRegistry.registerAll()
 
         ContainerProviderRegistry.INSTANCE.registerFactory(
             CoalGeneratorController.SCREEN_ID
@@ -114,10 +119,8 @@ class IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
     }
 
-    companion object {
-        const val MOD_ID = "indrev"
+    const val MOD_ID = "indrev"
 
-        val MOD_GROUP: ItemGroup =
-            FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
-    }
+    val MOD_GROUP: ItemGroup =
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
 }

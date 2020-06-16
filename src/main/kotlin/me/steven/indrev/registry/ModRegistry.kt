@@ -19,7 +19,7 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
-class ModRegistry {
+object ModRegistry {
 
     fun registerAll() {
         identifier("hammer").item(HAMMER)
@@ -58,40 +58,38 @@ class ModRegistry {
         identifier("biomass").item(BIOMASS)
     }
 
-    companion object {
-        private val ORE_BLOCK_SETTINGS = {
-            FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
-                .strength(3.0F, 3.0F)
-        }
-
-        private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
-
-        val HAMMER = CraftingTool(itemSettings().maxDamage(32))
-        val CUTTER = CraftingTool(itemSettings().maxDamage(32))
-
-        val NIKOLITE = GenericResourceType.Builder("nikolite")
-            .allOres()
-            .withDustAffix()
-            .noBlock()
-            .build()
-            .withItemAffixes("ingot")
-
-        val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
-        val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
-
-        val BIOMASS = DEFAULT_ITEM()
-
-        val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
-        val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
-
-        val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings().maxDamage(1024))
-
-        val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
-
-        val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
-
-        val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
-        val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
-        val ENERGY_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+    private val ORE_BLOCK_SETTINGS = {
+        FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.STONE).breakByTool(FabricToolTags.PICKAXES)
+            .strength(3.0F, 3.0F)
     }
+
+    private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
+
+    val HAMMER = CraftingTool(itemSettings().maxDamage(32))
+    val CUTTER = CraftingTool(itemSettings().maxDamage(32))
+
+    val NIKOLITE = GenericResourceType.Builder("nikolite")
+        .allOres()
+        .withDustAffix()
+        .noBlock()
+        .build()
+        .withItemAffixes("ingot")
+
+    val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
+    val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
+
+    val BIOMASS = DEFAULT_ITEM()
+
+    val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
+    val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
+
+    val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings().maxDamage(1024))
+
+    val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
+
+    val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
+
+    val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
+    val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
+    val ENERGY_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
 }

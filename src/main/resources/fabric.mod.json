@@ -16,13 +16,19 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.steven.indrev.IndustrialRevolution"
+      {
+        "adapter": "kotlin",
+        "value": "me.steven.indrev.IndustrialRevolution"
+      }
     ],
     "client": [
       "me.steven.indrev.IndustrialRevolutionClient"
     ],
     "rei_plugins_v0": [
-      "me.steven.indrev.compat.REIPlugin"
+      {
+        "adapter": "kotlin",
+        "value": "me.steven.indrev.compat.REIPlugin"
+      }
     ]
   },
   "mixins": [

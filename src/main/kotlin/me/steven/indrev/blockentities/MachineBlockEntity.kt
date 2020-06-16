@@ -38,7 +38,7 @@ open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
 
     override fun tick() {
         if (world?.isClient == false) {
-            EnergyMovement(this, pos).spread(*Direction.values())
+            EnergyMovement.spreadNeighbors(this, pos, *Direction.values())
             if (explode) {
                 val power = temperatureController!!.explosionPower
                 world?.createExplosion(

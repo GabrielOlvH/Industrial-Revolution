@@ -7,7 +7,7 @@ import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
 
 @Mixin(EnergyHandler.class)
-public interface MixinEnergyHandler {
+public interface AccessorEnergyHandler {
     @Accessor
     EnergyStorage getHolder();
 

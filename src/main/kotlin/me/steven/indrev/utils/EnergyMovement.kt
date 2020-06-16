@@ -1,7 +1,7 @@
 package me.steven.indrev.utils
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.mixin.MixinEnergyHandler
+import me.steven.indrev.mixin.AccessorEnergyHandler
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -9,8 +9,9 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergySide
 
-class EnergyMovement(private val sourceBlockEntity: BlockEntity, private val pos: BlockPos) {
-    fun spread(vararg directions: Direction) {
+@Suppress("CAST_NEVER_SUCCEEDS")
+object EnergyMovement {
+    fun spreadNeighbors(sourceBlockEntity: BlockEntity, pos: BlockPos, vararg directions: Direction) {
         val world = sourceBlockEntity.world
         if (sourceBlockEntity !is EnergyHolder) return
         val sourceHandler = Energy.of(sourceBlockEntity)
@@ -33,8 +34,9 @@ class EnergyMovement(private val sourceBlockEntity: BlockEntity, private val pos
             (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
         }
         targets.forEach { targetHandler ->
-            val direction = (targetHandler as MixinEnergyHandler).side
-            val target = (targetHandler as MixinEnergyHandler).holder
+            val accessor = targetHandler as AccessorEnergyHandler
+            val direction = accessor.side
+            val target = accessor.holder
             sourceHandler.side(direction)
             val targetMaxInput = targetHandler.maxInput
             val amount = (targetMaxInput / sum) * sourceHandler.maxOutput

@@ -14,8 +14,7 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
 import net.minecraft.util.Identifier
 
-
-class REIPlugin : REIPluginV0 {
+object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
 
     override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
@@ -23,7 +22,8 @@ class REIPlugin : REIPluginV0 {
             MachineRecipeCategory(
                 PULVERIZING,
                 EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)),
-                "indrev.category.rei.pulverizing")
+                "indrev.category.rei.pulverizing"
+            )
         )
 
         recipeHelper?.registerCategory(
@@ -56,17 +56,27 @@ class REIPlugin : REIPluginV0 {
     }
 
     override fun registerOthers(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerWorkingStations(PULVERIZING, EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)))
-        recipeHelper?.registerWorkingStations(INFUSING, EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1)))
-        recipeHelper?.registerWorkingStations(COMPRESSING, EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1)))
-        recipeHelper?.registerWorkingStations(RECYCLING, EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)))
+        recipeHelper?.registerWorkingStations(
+            PULVERIZING,
+            EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1))
+        )
+        recipeHelper?.registerWorkingStations(
+            INFUSING,
+            EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1))
+        )
+        recipeHelper?.registerWorkingStations(
+            COMPRESSING,
+            EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1))
+        )
+        recipeHelper?.registerWorkingStations(
+            RECYCLING,
+            EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2))
+        )
     }
 
-    companion object {
-        val ID = identifier("rei_plugin")
-        val PULVERIZING = identifier("plugins/pulverizing")
-        val INFUSING = identifier("plugins/infusing")
-        val COMPRESSING = identifier("plugins/compressing")
-        val RECYCLING = identifier("plugins/recycling")
-    }
+    val ID = identifier("rei_plugin")
+    val PULVERIZING = identifier("plugins/pulverizing")
+    val INFUSING = identifier("plugins/infusing")
+    val COMPRESSING = identifier("plugins/compressing")
+    val RECYCLING = identifier("plugins/recycling")
 }

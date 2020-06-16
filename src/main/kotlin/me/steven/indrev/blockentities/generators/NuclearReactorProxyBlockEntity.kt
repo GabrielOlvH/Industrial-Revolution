@@ -16,6 +16,6 @@ class NuclearReactorProxyBlockEntity : BlockEntity(MachineRegistry.NUCLEAR_PART_
         if (block !is ProxyBlock) return
         val parent = world?.getBlockEntity(block.getBlockEntityPos(this.cachedState, this.pos))
         if (parent is MachineBlockEntity)
-            EnergyMovement(parent, pos).spread(*Direction.values())
+            EnergyMovement.spreadNeighbors(parent, pos, *Direction.values())
     }
 }
