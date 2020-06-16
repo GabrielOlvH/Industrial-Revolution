@@ -1,7 +1,7 @@
 {
   "type": "indrev:compress",
   "ingredient": {
-    "tag": "c:steel_ingot"
+    "tag": "c:steel_ingots"
   },
   "output": {
     "item": "c:steel_plate",

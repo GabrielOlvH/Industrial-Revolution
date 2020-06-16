@@ -10,7 +10,7 @@
       "item": "c:nikolite_dust"
     },
     "I": {
-      "item": "c:iron_plate"
+      "tag": "c:iron_plates"
     },
     "W": {
       "item": "indrev:wire"

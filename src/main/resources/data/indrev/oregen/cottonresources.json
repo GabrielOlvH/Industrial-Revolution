@@ -20,7 +20,7 @@
   },
   "replacements": {
     "nikolite": {
-      "#c:natural_stones": "c:ruby_ore",
+      "#c:natural_stones": "c:nikolite_ore",
       "#c:netherracks": "c:nikolite_nether_ore",
       "#c:end_stones": "c:nikolite_end_ore"
     }
