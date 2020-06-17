@@ -18,9 +18,8 @@ import kotlin.random.asKotlinRandom
 class ChunkScannerItem(settings: Settings) : Item(settings){
 
     override fun finishUsing(stack: ItemStack, world: World?, user: LivingEntity?): ItemStack {
-        if (world == null) return stack
-        val rnd = world.random.asKotlinRandom()
-        if (!world.isClient) {
+        if (world?.isClient == false) {
+            val rnd = world.random.asKotlinRandom()
             val chunkPos = world.getChunk(user?.blockPos)?.pos
             if (chunkPos != null) {
                 val state =
