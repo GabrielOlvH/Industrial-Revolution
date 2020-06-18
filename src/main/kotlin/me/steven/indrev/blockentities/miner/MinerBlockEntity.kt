@@ -23,7 +23,7 @@ import team.reborn.energy.EnergySide
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryController = InventoryController({ this }) {
             DefaultSidedInventory(15, intArrayOf(), (3..10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
@@ -40,9 +40,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     }
 
     private var chunkVeinType: ChunkVeinType? = null
-        set(value) {
-            field = value.apply { propertyDelegate[3] = this?.ordinal ?: -1 }
-        }
     private var mining = 0.0
 
     override fun tick() {
@@ -74,7 +71,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     return
                 } else if (data.explored >= data.size) return
                 data.explored++
-                propertyDelegate[4] = data.explored * 100 / data.size
+                propertyDelegate[3] = data.explored * 100 / data.size
                 state.markDirty()
                 mining = 0.0
                 inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))

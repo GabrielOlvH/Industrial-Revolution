@@ -10,7 +10,6 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.world.chunkveins.ChunkVeinType
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -36,14 +35,8 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandl
         )
 
         root.add(StringWidget({
-            val typeId = propertyDelegate[3]
-            val type = if (typeId >= 0) ChunkVeinType.values()[typeId] else null
-            I18n.translate("block.indrev.miner.gui1", type)
-        }, titleColor, HorizontalAlignment.LEFT), 3.0, 4.2)
-
-        root.add(StringWidget({
-            I18n.translate("block.indrev.miner.gui2", "${propertyDelegate[4]}%")
-        }, titleColor, HorizontalAlignment.LEFT), 3.0, 4.7)
+            I18n.translate("block.indrev.miner.mined", "${propertyDelegate[3]}%")
+        }, titleColor, HorizontalAlignment.CENTER), 4.0, 4.2)
 
         root.validate(this)
     }
