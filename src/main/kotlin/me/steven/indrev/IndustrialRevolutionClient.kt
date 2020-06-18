@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
 
+@Suppress("UNCHECKED_CAST")
 class IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         ScreenRegistry.register(IndustrialRevolution.COAL_GENERATOR_HANDLER) { controller, inventory, _ ->

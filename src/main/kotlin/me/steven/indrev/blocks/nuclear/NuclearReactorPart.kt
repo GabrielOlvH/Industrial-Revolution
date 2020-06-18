@@ -20,6 +20,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
+@Suppress("DEPRECATION")
 class NuclearReactorPart(settings: Settings) : Block(settings), BlockEntityProvider, InventoryProvider, ProxyBlock {
 
     init {
