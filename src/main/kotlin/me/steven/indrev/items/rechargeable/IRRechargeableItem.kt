@@ -9,7 +9,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
-class RechargeableItem(settings: Settings, val canOutput: Boolean = false) : Item(settings), Rechargeable {
+class IRRechargeableItem(settings: Settings, val canOutput: Boolean = false) : Item(settings), Rechargeable {
 
     override fun appendTooltip(
         stack: ItemStack?,

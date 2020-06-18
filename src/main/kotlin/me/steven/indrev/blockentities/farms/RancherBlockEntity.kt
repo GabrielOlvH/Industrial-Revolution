@@ -4,10 +4,10 @@ import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.CoolerItem
-import me.steven.indrev.items.rechargeable.RechargeableItem
+import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.Tier
@@ -31,9 +31,9 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             DefaultSidedInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is UpgradeItem -> getUpgradeSlots().contains(slot)
-                    item is RechargeableItem && item.canOutput -> slot == 0
-                    item is CoolerItem -> slot == 1
+                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
+                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    item is IRCoolerItem -> slot == 1
                     slot in 2 until 15 -> true
                     else -> false
                 }

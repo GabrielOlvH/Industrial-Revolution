@@ -2,7 +2,7 @@ package me.steven.indrev.components
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.items.CoolerItem
+import me.steven.indrev.items.IRCoolerItem
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 
@@ -33,7 +33,7 @@ class TemperatureController(
         val coolerStack = machine.inventoryController?.getInventory()?.getStack(1)
         val coolerItem = coolerStack?.item
 
-        if (isHeatingUp && coolerItem is CoolerItem
+        if (isHeatingUp && coolerItem is IRCoolerItem
             && coolerStack.damage < coolerStack.maxDamage
             && (cooling > 0
                 || temperature + 250 >= optimalRange.last)

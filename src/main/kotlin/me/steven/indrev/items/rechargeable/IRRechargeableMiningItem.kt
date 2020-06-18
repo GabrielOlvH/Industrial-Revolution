@@ -12,7 +12,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
-class RechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIAMOND, 0, 0F, settings), Rechargeable {
+class IRRechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIAMOND, 0, 0F, settings), Rechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack?, state: BlockState?): Float {
         val material = state?.material
         return if (SUPPORTED_MATERIALS.contains(material)) 16F else this.material.miningSpeedMultiplier

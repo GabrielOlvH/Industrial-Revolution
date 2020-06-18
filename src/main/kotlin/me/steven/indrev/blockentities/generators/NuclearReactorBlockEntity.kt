@@ -4,10 +4,10 @@ import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.CoolerItem
-import me.steven.indrev.items.UraniumRodItem
-import me.steven.indrev.items.rechargeable.RechargeableItem
+import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 
@@ -18,9 +18,9 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
             DefaultSidedInventory(11, intArrayOf(2, 3, 4, 5, 6, 7, 8, 9, 10), intArrayOf()) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is RechargeableItem && item.canOutput -> slot == 0
-                    item is CoolerItem -> slot == 1
-                    item is UraniumRodItem -> slot != 1 && slot != 0
+                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    item is IRCoolerItem -> slot == 1
+                    item == ModRegistry.URANIUM_ROD_ITEM -> slot != 1 && slot != 0
                     else -> false
                 }
             }
@@ -40,7 +40,7 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
             for (slot in inventory.inputSlots) {
                 val itemStack = inventory.getStack(slot)
                 val item = itemStack.item
-                if (item is UraniumRodItem) {
+                if (item == ModRegistry.URANIUM_ROD_ITEM) {
                     itemStack.damage++
                     if (itemStack.damage <= 0) inventory.setStack(slot, ItemStack.EMPTY)
                     modifier++

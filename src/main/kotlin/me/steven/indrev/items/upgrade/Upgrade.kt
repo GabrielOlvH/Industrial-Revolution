@@ -4,16 +4,16 @@ import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import net.minecraft.inventory.Inventory
 
 enum class Upgrade(val apply: (Double, Int) -> Double) {
-    SPEED({ base, count -> (base * 1.2 * count).coerceAtLeast(base) }),
-    ENERGY({ base, count -> base / if (count > 0) 1.2 * count else 1.0 }),
-    BUFFER({ base, count -> (base * 2.0 * count).coerceAtLeast(base) });
+    SPEED({ base, count -> base + 1.2 * count }),
+    ENERGY({ base, count -> base - 0.1 * count }),
+    BUFFER({ base, count -> base + count * 20000 });
 
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
         var count = 0
         for (i in provider.getUpgradeSlots()) {
             val invStack = inventory.getStack(i)
             val item = invStack.item
-            if (item is UpgradeItem && item.upgrade == this) count++
+            if (item is IRUpgradeItem && item.upgrade == this) count++
         }
         return apply(provider.getBaseValue(this), count)
     }

@@ -1,14 +1,13 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
-import me.steven.indrev.items.ChunkScannerItem
-import me.steven.indrev.items.CoolerItem
-import me.steven.indrev.items.CraftingTool
-import me.steven.indrev.items.UraniumRodItem
-import me.steven.indrev.items.rechargeable.RechargeableItem
-import me.steven.indrev.items.rechargeable.RechargeableMiningItem
+import me.steven.indrev.items.IRChunkScannerItem
+import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.IRCraftingToolItem
+import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.rechargeable.IRRechargeableMiningItem
+import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.items.upgrade.UpgradeItem
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -38,7 +37,7 @@ object ModRegistry {
                 Tier.MK3 -> 4096
                 Tier.MK4 -> 8192
             }
-            RechargeableItem(itemSettings().maxDamage(dmg), true)
+            IRRechargeableItem(itemSettings().maxDamage(dmg), true)
         }
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
@@ -47,7 +46,7 @@ object ModRegistry {
 
         identifier("uranium_rod").item(URANIUM_ROD_ITEM)
 
-        identifier("chunk_scanner").item(ChunkScannerItem(itemSettings()))
+        identifier("chunk_scanner").item(IRChunkScannerItem(itemSettings()))
 
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
@@ -65,8 +64,8 @@ object ModRegistry {
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
 
-    val HAMMER = CraftingTool(itemSettings().maxDamage(32))
-    val CUTTER = CraftingTool(itemSettings().maxDamage(32))
+    val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
+    val CUTTER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
     val NIKOLITE = GenericResourceType.Builder("nikolite")
         .allOres()
@@ -80,16 +79,16 @@ object ModRegistry {
 
     val BIOMASS = DEFAULT_ITEM()
 
-    val FAN = CoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
-    val COOLER_CELL = CoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
+    val FAN = IRCoolerItem(itemSettings().maxDamage(512), -0.07, -0.01)
+    val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), -0.1, -0.05)
 
-    val URANIUM_ROD_ITEM = UraniumRodItem(itemSettings().maxDamage(1024))
+    val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 
-    val MINING_DRILL = RechargeableMiningItem(itemSettings().maxDamage(32000))
+    val MINING_DRILL = IRRechargeableMiningItem(itemSettings().maxDamage(32000))
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
-    val BUFFER_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
-    val SPEED_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
-    val ENERGY_UPGRADE = UpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+    val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
+    val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
+    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
 }

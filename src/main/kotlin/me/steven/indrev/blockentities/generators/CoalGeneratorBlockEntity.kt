@@ -4,8 +4,8 @@ import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
-import me.steven.indrev.items.CoolerItem
-import me.steven.indrev.items.rechargeable.RechargeableItem
+import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
@@ -23,8 +23,8 @@ class CoalGeneratorBlockEntity :
             DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is RechargeableItem && item.canOutput -> slot == 0
-                    item is CoolerItem -> slot == 1
+                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    item is IRCoolerItem -> slot == 1
                     slot == 2 -> BURN_TIME_MAP.containsKey(stack?.item)
                     else -> false
                 }

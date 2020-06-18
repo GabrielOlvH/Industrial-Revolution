@@ -6,7 +6,7 @@ import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 
-class CraftingTool(settings: Settings) : Item(settings), FabricRecipeRemainder {
+class IRCraftingToolItem(settings: Settings) : Item(settings), FabricRecipeRemainder {
     override fun getRemainder(stack: ItemStack?, craftingInventory: CraftingInventory?, playerEntity: PlayerEntity?): ItemStack? {
         return if (stack != null && stack.isDamageable) {
             val stackCopy = stack.copy().apply { damage++ }
