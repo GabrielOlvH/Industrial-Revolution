@@ -3,6 +3,7 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.FuelWidget
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -17,6 +18,7 @@ class CoalGeneratorController(
     screenHandlerContext: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
+        IndustrialRevolution.COAL_GENERATOR_HANDLER,
         syncId,
         playerInventory,
         getBlockInventory(screenHandlerContext),

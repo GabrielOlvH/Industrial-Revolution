@@ -6,7 +6,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.LiteralText
-import net.minecraft.text.Text
+import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import kotlin.math.round
 
@@ -26,7 +26,7 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
         }
     }
 
-    override fun addTooltip(information: MutableList<Text>?) {
+    override fun addTooltip(information: MutableList<StringRenderable>?) {
         val energy = delegate[0]
         val maxEnergy = delegate[1]
         information?.add(TranslatableText("gui.widget.energy"))

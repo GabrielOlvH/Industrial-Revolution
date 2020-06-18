@@ -5,185 +5,67 @@ import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.gui.IRInventoryScreen
-import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
-import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketByteBuf
-import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.util.Identifier
 
 class IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            CoalGeneratorController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                CoalGeneratorController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ), player
-            )
+        ScreenRegistry.register(IndustrialRevolution.COAL_GENERATOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            SolarGeneratorController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                SolarGeneratorController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ), player
-            )
+        ScreenRegistry.register(IndustrialRevolution.SOLAR_GENERATOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            ElectricFurnaceController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                ElectricFurnaceController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ), player
-            )
+        ScreenRegistry.register(IndustrialRevolution.ELECTRIC_FURNACE_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            PulverizerController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                PulverizerController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ), player
-            )
+        ScreenRegistry.register(IndustrialRevolution.PULVERIZER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            CompressorController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                CompressorController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.COMPRESSOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            BatteryController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                BatteryController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.BATTERY_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            InfuserController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                InfuserController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.INFUSER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            MinerController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                MinerController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.MINER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            NuclearReactorController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                NuclearReactorController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.NUCLEAR_REACTOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            RecyclerController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                RecyclerController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.RECYCLER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            BiomassGeneratorController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                BiomassGeneratorController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.BIOMASS_GENERATOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            ChopperController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                ChopperController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.CHOPPER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(
-            RancherController.SCREEN_ID
-        ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            IRInventoryScreen(
-                RancherController(
-                    syncId,
-                    player.inventory,
-                    ScreenHandlerContext.create(player.world, buf.readBlockPos())
-                ),
-                player
-            )
+        ScreenRegistry.register(IndustrialRevolution.RANCHER_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
         }
 
 

@@ -3,6 +3,7 @@ package me.steven.indrev.blocks.nuclear
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.utils.Tier
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
@@ -12,7 +13,6 @@ import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -21,10 +21,10 @@ import net.minecraft.world.WorldAccess
 
 class NuclearReactorCore(
     settings: Settings,
-    screenId: Identifier,
+    screenHandlerType: ExtendedScreenHandlerType<*>?,
     blockEntityProvider: () -> MachineBlockEntity
 ) :
-    MachineBlock(settings, Tier.MK4, screenId, blockEntityProvider) {
+    MachineBlock(settings, Tier.MK4, screenHandlerType, blockEntityProvider) {
 
     init {
         this.defaultState = stateManager.defaultState

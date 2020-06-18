@@ -3,6 +3,7 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -11,12 +12,14 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 
-class RancherController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) : SyncedGuiDescription(
-    syncId,
-    playerInventory,
-    getBlockInventory(screenHandlerContext),
-    getBlockPropertyDelegate(screenHandlerContext)
-) {
+class RancherController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+    SyncedGuiDescription(
+        IndustrialRevolution.RANCHER_HANDLER,
+        syncId,
+        playerInventory,
+        getBlockInventory(screenHandlerContext),
+        getBlockPropertyDelegate(screenHandlerContext)
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)

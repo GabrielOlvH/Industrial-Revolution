@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
@@ -13,7 +14,6 @@ import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
-import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -76,7 +76,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CoalGeneratorController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COAL_GENERATOR_HANDLER
                     ) { CoalGeneratorBlockEntity() }
                 },
                 { { CoalGeneratorBlockEntity() } }
@@ -87,7 +87,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     MachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, SolarGeneratorController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.SOLAR_GENERATOR_HANDLER
                     ) { SolarGeneratorBlockEntity(tier) }
                 },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -98,7 +98,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, BiomassGeneratorController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BIOMASS_GENERATOR_HANDLER
                     ) { BiomassGeneratorBlockEntity(tier) }
                 },
                 { tier -> { BiomassGeneratorBlockEntity(tier) } }
@@ -108,7 +108,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
             registry.register(
                 {
-                    NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), NuclearReactorController.SCREEN_ID)
+                    NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), IndustrialRevolution.NUCLEAR_REACTOR_HANDLER)
                     { NuclearReactorBlockEntity() }
                 },
                 { { NuclearReactorBlockEntity() } }
@@ -124,7 +124,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, ElectricFurnaceController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.ELECTRIC_FURNACE_HANDLER
                     ) { ElectricFurnaceBlockEntity(tier) }
                 },
                 { tier -> { ElectricFurnaceBlockEntity(tier) } }
@@ -142,7 +142,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, PulverizerController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.PULVERIZER_HANDLER
                     ) { PulverizerBlockEntity(tier) }
                 },
                 { tier -> { PulverizerBlockEntity(tier) } }
@@ -160,7 +160,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, CompressorController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COMPRESSOR_HANDLER
                     ) { CompressorBlockEntity(tier) }
                 },
                 { tier -> { CompressorBlockEntity(tier) } }
@@ -178,7 +178,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, InfuserController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.INFUSER_HANDLER
                     ) { InfuserBlockEntity(tier) }
                 },
                 { tier -> { InfuserBlockEntity(tier) } }
@@ -196,7 +196,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, BatteryController.SCREEN_ID, true
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER, true
                     ) { BatteryBlockEntity(tier) }
                 },
                 { tier -> { BatteryBlockEntity(tier) } }
@@ -214,7 +214,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, MinerController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER
                     ) { MinerBlockEntity(tier) }
                 },
                 { tier -> { MinerBlockEntity(tier) } }
@@ -225,7 +225,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, RecyclerController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RECYCLER_HANDLER
                     ) { RecyclerBlockEntity(tier) }
                 },
                 { tier -> { RecyclerBlockEntity(tier) } }
@@ -244,7 +244,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, ChopperController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.CHOPPER_HANDLER
                     ) { ChopperBlockEntity(tier) }
                 },
                 { tier -> { ChopperBlockEntity(tier) } }
@@ -262,7 +262,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             registry.register(
                 { tier ->
                     FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, RancherController.SCREEN_ID
+                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RANCHER_HANDLER
                     ) { RancherBlockEntity(tier) }
                 },
                 { tier -> { RancherBlockEntity(tier) } }

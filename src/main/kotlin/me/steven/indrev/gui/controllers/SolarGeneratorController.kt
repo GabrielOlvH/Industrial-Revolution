@@ -2,6 +2,7 @@ package me.steven.indrev.gui.controllers
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
@@ -14,6 +15,7 @@ class SolarGeneratorController(
     screenHandlerContext: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
+        IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
         syncId,
         playerInventory,
         getBlockInventory(screenHandlerContext),

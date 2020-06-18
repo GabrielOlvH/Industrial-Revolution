@@ -2,21 +2,21 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.Tier
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
-import net.minecraft.util.Identifier
 
 class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
-    screenId: Identifier? = null,
+    screenHandlerType: ExtendedScreenHandlerType<*>?,
     val canFaceVertical: Boolean = false,
     blockEntityProvider: () -> MachineBlockEntity
-) : MachineBlock(settings, tier, screenId, blockEntityProvider) {
+) : MachineBlock(settings, tier, screenHandlerType, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         return this.defaultState.with(FACING, if (canFaceVertical) ctx?.playerLookDirection?.opposite else ctx?.playerFacing?.opposite)

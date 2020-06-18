@@ -1,8 +1,9 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.utils.Tier
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -17,7 +18,6 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
-import net.minecraft.util.Identifier
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
@@ -27,7 +27,7 @@ import net.minecraft.world.WorldAccess
 open class MachineBlock(
     settings: Settings,
     private val tier: Tier,
-    private val screenId: Identifier?,
+    private val screenHandlerType: ExtendedScreenHandlerType<*>?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 
@@ -52,11 +52,8 @@ open class MachineBlock(
     ): ActionResult? {
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
-        if (screenId != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
-            ContainerProviderRegistry.INSTANCE.openContainer(
-                screenId,
-                player
-            ) { packetByteBuf -> packetByteBuf.writeBlockPos(pos) }
+        if (screenHandlerType != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+            player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))
         }
         return ActionResult.SUCCESS
     }

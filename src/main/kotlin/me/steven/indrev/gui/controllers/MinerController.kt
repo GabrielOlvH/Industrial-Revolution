@@ -3,7 +3,8 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import io.github.cottonmc.cotton.gui.widget.data.Alignment
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
@@ -17,6 +18,7 @@ import net.minecraft.screen.ScreenHandlerContext
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
     SyncedGuiDescription(
+        IndustrialRevolution.MINER_HANDLER,
         syncId,
         playerInventory,
         getBlockInventory(screenHandlerContext),
@@ -37,10 +39,11 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandl
             val typeId = propertyDelegate[3]
             val type = if (typeId >= 0) ChunkVeinType.values()[typeId] else null
             I18n.translate("block.indrev.miner.gui1", type)
-        }, titleColor, Alignment.LEFT), 3.0, 4.2)
+        }, titleColor, HorizontalAlignment.LEFT), 3.0, 4.2)
+
         root.add(StringWidget({
             I18n.translate("block.indrev.miner.gui2", "${propertyDelegate[4]}%")
-        }, titleColor, Alignment.LEFT), 3.0, 4.7)
+        }, titleColor, HorizontalAlignment.LEFT), 3.0, 4.7)
 
         root.validate(this)
     }

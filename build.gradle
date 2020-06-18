@@ -34,10 +34,10 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi 'teamreborn:energy:0.1.0'
-    include 'teamreborn:energy:0.1.0'
+    modApi "teamreborn:energy:${project.energy_api_version}"
+    include "teamreborn:energy:${project.energy_api_version}"
 
-    modImplementation ("io.github.cottonmc:LibGui:2.0.0-beta.1+1.16-pre2")
+    modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
 
     modImplementation ("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}") {
         exclude(group: "me.shedaniel", module: "RoughlyEnoughItems")
@@ -46,8 +46,8 @@ dependencies {
 
     include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
 
-    modCompileOnly "io.github.prospector:modmenu:1.10.2+build.32"
-    modCompile "me.shedaniel:RoughlyEnoughItems:4.4.2"
+    modCompileOnly "io.github.prospector:modmenu:${project.modmenu_version}"
+    modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.

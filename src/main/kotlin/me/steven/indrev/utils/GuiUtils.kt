@@ -15,7 +15,7 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.inventory.Inventory
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.Text
+import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 
 fun WGridPanel.add(w: WWidget, x: Double, y: Double, width: Double, height: Double) {
@@ -60,7 +60,7 @@ fun SyncedGuiDescription.configure(
             }
             if (blockEntity is AOEMachineBlockEntity) {
                 val button = object : WButton(TranslatableText("block.indrev.aoe.toggle.btn")) {
-                    override fun addTooltip(information: MutableList<Text>?) {
+                    override fun addTooltip(information: MutableList<StringRenderable>?) {
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
                     }
                 }

@@ -7,7 +7,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.LiteralText
-import net.minecraft.text.Text
+import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import kotlin.math.round
@@ -28,7 +28,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         }
     }
 
-    override fun addTooltip(information: MutableList<Text>?) {
+    override fun addTooltip(information: MutableList<StringRenderable>?) {
         val temperature = delegate[2]
         val maxTemperature = temperatureController.limit.toInt()
         val info = when {

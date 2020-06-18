@@ -3,6 +3,7 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -16,6 +17,7 @@ class NuclearReactorController(
     screenHandlerContext: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
+        IndustrialRevolution.NUCLEAR_REACTOR_HANDLER,
         syncId,
         playerInventory,
         getBlockInventory(screenHandlerContext),
