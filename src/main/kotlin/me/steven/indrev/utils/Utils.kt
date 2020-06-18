@@ -6,6 +6,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 
@@ -33,6 +34,8 @@ fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.values(), itemSupplier: (
         identifier("${this.path}_${tier.toString().toLowerCase()}").item(item)
     }
 }
+
+fun Box.isSide(vec3d: Vec3d) = vec3d.x == minX || vec3d.x == maxX - 1 || vec3d.y == minY || vec3d.y == maxY - 1 || vec3d.z == minZ || vec3d.z == maxZ - 1
 
 fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.MOD_GROUP)
 
