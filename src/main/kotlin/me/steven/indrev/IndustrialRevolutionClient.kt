@@ -1,10 +1,10 @@
 package me.steven.indrev
 
-import io.github.cottonmc.cotton.gui.client.CottonInventoryScreen
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
@@ -24,7 +24,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             CoalGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 CoalGeneratorController(
                     syncId,
                     player.inventory,
@@ -36,7 +36,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             SolarGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 SolarGeneratorController(
                     syncId,
                     player.inventory,
@@ -48,7 +48,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             ElectricFurnaceController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 ElectricFurnaceController(
                     syncId,
                     player.inventory,
@@ -60,7 +60,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             PulverizerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 PulverizerController(
                     syncId,
                     player.inventory,
@@ -72,7 +72,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             CompressorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 CompressorController(
                     syncId,
                     player.inventory,
@@ -85,7 +85,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             BatteryController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 BatteryController(
                     syncId,
                     player.inventory,
@@ -98,7 +98,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             InfuserController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 InfuserController(
                     syncId,
                     player.inventory,
@@ -111,7 +111,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             MinerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 MinerController(
                     syncId,
                     player.inventory,
@@ -124,7 +124,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             NuclearReactorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 NuclearReactorController(
                     syncId,
                     player.inventory,
@@ -137,7 +137,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             RecyclerController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 RecyclerController(
                     syncId,
                     player.inventory,
@@ -150,7 +150,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             BiomassGeneratorController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 BiomassGeneratorController(
                     syncId,
                     player.inventory,
@@ -163,7 +163,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             ChopperController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 ChopperController(
                     syncId,
                     player.inventory,
@@ -176,7 +176,7 @@ class IndustrialRevolutionClient : ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(
             RancherController.SCREEN_ID
         ) { syncId: Int, _: Identifier?, player: PlayerEntity, buf: PacketByteBuf ->
-            CottonInventoryScreen(
+            IRInventoryScreen(
                 RancherController(
                     syncId,
                     player.inventory,

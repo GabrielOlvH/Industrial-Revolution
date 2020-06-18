@@ -27,9 +27,6 @@ class ElectricFurnaceController(
         setRootPanel(root)
         configure("block.indrev.electric_furnace", screenHandlerContext, blockInventory, propertyDelegate)
 
-        val batterySlot = WItemSlot.of(blockInventory, 0)
-        root.add(batterySlot, 0.0, 3.7)
-
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 2.3, 1.5)
 

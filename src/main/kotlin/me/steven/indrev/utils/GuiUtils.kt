@@ -70,6 +70,5 @@ fun SyncedGuiDescription.configure(
                 it.add(button, 8.0, 4.0)
             }
         }
-
     }
 }
