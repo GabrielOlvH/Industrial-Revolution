@@ -107,10 +107,10 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     private fun getRange() =
         when (tier) {
-            Tier.MK1 -> Vec3d(3.0, 6.0, 3.0)
-            Tier.MK2 -> Vec3d(4.0, 7.0, 4.0)
-            Tier.MK3 -> Vec3d(5.0, 8.0, 5.0)
-            Tier.MK4 -> Vec3d(6.0, 9.0, 6.0)
+            Tier.MK1 -> Vec3d(3.0, 4.0, 3.0)
+            Tier.MK2 -> Vec3d(4.0, 4.0, 4.0)
+            Tier.MK3 -> Vec3d(5.0, 4.0, 5.0)
+            Tier.MK4 -> Vec3d(6.0, 4.0, 6.0)
         }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
