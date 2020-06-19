@@ -28,7 +28,7 @@ fun Identifier.blockEntityType(entityType: BlockEntityType<*>): Identifier {
     return this
 }
 
-fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.values(), itemSupplier: (Tier) -> Item) {
+fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.VALUES, itemSupplier: (Tier) -> Item) {
     tiers.forEach { tier ->
         val item = itemSupplier(tier)
         identifier("${this.path}_${tier.toString().toLowerCase()}").item(item)

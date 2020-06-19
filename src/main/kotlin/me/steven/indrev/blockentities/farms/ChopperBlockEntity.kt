@@ -154,7 +154,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             Tier.MK1 -> Vec3d(5.0, 8.0, 5.0)
             Tier.MK2 -> Vec3d(6.0, 9.0, 6.0)
             Tier.MK3 -> Vec3d(7.0, 9.0, 7.0)
-            Tier.MK4 -> Vec3d(8.0, 10.0, 8.0)
+            Tier.MK4, Tier.CREATIVE -> Vec3d(8.0, 10.0, 8.0)
         }
 
 }

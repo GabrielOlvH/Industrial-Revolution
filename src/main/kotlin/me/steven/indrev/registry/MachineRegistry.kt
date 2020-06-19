@@ -134,6 +134,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 100000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -152,6 +153,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 100000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -170,6 +172,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 100000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -188,6 +191,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 100000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -206,6 +210,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 10000.0
                     Tier.MK3 -> 50000.0
                     Tier.MK4 -> 200000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -254,6 +259,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 50000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }
@@ -272,6 +278,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.MK2 -> 5000.0
                     Tier.MK3 -> 10000.0
                     Tier.MK4 -> 50000.0
+                    Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
         }

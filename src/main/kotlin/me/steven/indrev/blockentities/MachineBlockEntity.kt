@@ -89,7 +89,7 @@ open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
 
     fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
 
-    override fun getStored(side: EnergySide?): Double = energy
+    override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         return inventoryController?.getInventory()

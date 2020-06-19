@@ -37,6 +37,7 @@ object ModRegistry {
                 Tier.MK2 -> 1024
                 Tier.MK3 -> 4096
                 Tier.MK4 -> 8192
+                else -> throw IllegalArgumentException("no creative battery!")
             }
             IRRechargeableItem(itemSettings().maxDamage(dmg), true)
         }
