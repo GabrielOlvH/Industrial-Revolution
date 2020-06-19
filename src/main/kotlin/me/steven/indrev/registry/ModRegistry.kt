@@ -4,6 +4,7 @@ import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.items.IRChunkScannerItem
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.IRCraftingToolItem
+import me.steven.indrev.items.IREnergyReader
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.rechargeable.IRRechargeableMiningItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -52,6 +53,8 @@ object ModRegistry {
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
 
+        identifier("energy_reader").item(ENERGY_READER)
+
         identifier("area_indicator").block(AREA_INDICATOR)
 
         identifier("biomass").item(BIOMASS)
@@ -85,6 +88,8 @@ object ModRegistry {
     val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 
     val MINING_DRILL = IRRechargeableMiningItem(itemSettings().maxDamage(32000))
+
+    val ENERGY_READER = IREnergyReader(itemSettings())
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 

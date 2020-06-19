@@ -55,6 +55,8 @@
   "item.indrev.fan": "Fan",
   "item.indrev.cooler": "Cooler",
   "item.indrev.mining_drill": "Mining Drill",
+  "item.indrev.energy_reader": "Energy Reader",
+  "item.indrev.energy_reader.use": "Energy stored: %d",
   "item.c.nikolite_dust": "Nikolite Dust",
   "item.c.nikolite_ingot": "Nikolite Ingot",
   "item.c.nikolite_ore": "Nikolite Ore",
