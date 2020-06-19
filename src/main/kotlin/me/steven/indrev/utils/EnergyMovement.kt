@@ -16,33 +16,32 @@ object EnergyMovement {
         if (sourceBlockEntity !is EnergyHolder) return
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targets = directions
-            .map { direction ->
-                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) return@map null
+            .mapNotNull { direction ->
+                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) null
                 else if (sourceBlockEntity.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
                     if (target != null && Energy.valid(target)) {
                         val targetHandler = Energy.of(target).side(direction.opposite)
                         if (targetHandler.energy < targetHandler.maxStored)
-                            return@map targetHandler
-                    }
-                }
-                null
+                            targetHandler
+                        else null
+                    } else null
+                } else null
             }
-            .filterNotNull()
         val sum = targets.sumByDouble { targetHandler ->
             (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
         }
-        targets.forEach { targetHandler ->
+        targets.sortedByDescending { it.energy }.forEach { targetHandler ->
             val accessor = targetHandler as AccessorEnergyHandler
-            val direction = accessor.side
+            val direction = Direction.byName(accessor.side.toString())
             val target = accessor.holder
-            sourceHandler.side(direction)
+            sourceHandler.side(direction?.opposite)
             val targetMaxInput = targetHandler.maxInput
             val amount = (targetMaxInput / sum) * sourceHandler.maxOutput
             if (amount > 0) {
                 if (target is MachineBlockEntity)
-                    target.lastInputFrom = Direction.byName(direction.toString())
+                    target.lastInputFrom = direction
                 sourceHandler.into(targetHandler).move(amount)
             }
         }
