@@ -13,7 +13,7 @@ class TemperatureController(
     val limit: Double
 ) : PropertyDelegateHolder {
 
-    var temperature: Double by Property(2, 300.0)
+    var temperature: Double by Property(2, 25.0)
     var cooling = 0
     var explosionPower = 1f
 
@@ -28,28 +28,30 @@ class TemperatureController(
         return tag
     }
 
+    fun isFullEfficiency() = cooling <= 0 && temperature.toInt() in optimalRange
+
     fun tick(isHeatingUp: Boolean) {
         val machine = machineProvider()
         val coolerStack = machine.inventoryController?.getInventory()?.getStack(1)
         val coolerItem = coolerStack?.item
 
-        if (isHeatingUp && coolerItem is IRCoolerItem
-            && coolerStack.damage < coolerStack.maxDamage
-            && (cooling > 0
-                || temperature + 250 >= optimalRange.last)
-        ) {
-            if (cooling > 0) cooling--
-            else if (temperature + 75 > optimalRange.last) {
-                cooling = 200
+        if (!isHeatingUp)
+            temperature -= 0.01
+        else if (temperature > optimalRange.last && coolerStack != null && coolerItem is IRCoolerItem) {
+            if (cooling < 0) {
                 coolerStack.damage++
+                cooling = 30
             }
-            val modifier =
-                if (cooling > 0) coolerItem.activeCoolingModifier else coolerItem.passiveCoolingModifier
-            temperature += heatingSpeed + modifier
-        } else if (isHeatingUp) temperature += heatingSpeed
-        else if (temperature > 310) temperature -= 0.1
-        val explosionTemperature = limit - 50
-        machine.explode = temperature > explosionTemperature + 10 && machine.world!!.random.nextInt((temperature - explosionTemperature).toInt()) > 100
+            temperature -= coolerItem.coolingModifier
+        } else if (temperature < optimalRange.last - 10)
+            temperature += heatingSpeed
+        else if (cooling < 0)
+            cooling = 100 * machine.world!!.random.nextInt(2)
+        else if (cooling > 0 && temperature < 25) {
+            cooling--
+            temperature -= 0.01
+        } else
+            temperature += heatingSpeed
     }
 
     override fun getPropertyDelegate(): PropertyDelegate = machineProvider().propertyDelegate
