@@ -60,9 +60,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             tryStartRecipe(inventory)
         }
         temperatureController?.tick(isProcessing())
-        sync()
-        markDirty()
-
+        update()
     }
 
     abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?

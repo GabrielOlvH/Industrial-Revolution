@@ -54,8 +54,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     WorldChunkVeinData.STATE_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
-            sync()
-            markDirty()
         } else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
             mining += Upgrade.SPEED.apply(this, inventory)
             if (mining > 10) {
@@ -75,11 +73,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 state.markDirty()
                 mining = 0.0
                 inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
-                markDirty()
             }
             temperatureController?.tick(true)
         } else temperatureController?.tick(false)
-
+        update()
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

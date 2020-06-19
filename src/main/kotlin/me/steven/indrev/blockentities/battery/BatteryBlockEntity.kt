@@ -28,6 +28,7 @@ class BatteryBlockEntity(tier: Tier) :
         if (stack.item is Rechargeable && stack.isDamaged) {
             inventory.setStack(0, stack.copy().apply { damage-- })
             takeEnergy(1.0)
+            update()
         }
     }
 

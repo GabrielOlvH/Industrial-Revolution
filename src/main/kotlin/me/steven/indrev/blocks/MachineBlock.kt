@@ -27,7 +27,7 @@ import net.minecraft.world.WorldAccess
 open class MachineBlock(
     settings: Settings,
     private val tier: Tier,
-    private val screenHandlerType: ExtendedScreenHandlerType<*>?,
+    val screenHandlerType: ExtendedScreenHandlerType<*>?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 
@@ -53,7 +53,9 @@ open class MachineBlock(
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
         if (screenHandlerType != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
-            player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))
+            player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))?.ifPresent { syncId ->
+                blockEntity.viewers[player.uuid] = syncId
+            }
         }
         return ActionResult.SUCCESS
     }

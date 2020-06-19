@@ -93,6 +93,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             temperatureController?.tick(performedAction)
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
+        update()
     }
 
     private fun tryChop(axeStack: ItemStack, blockPos: BlockPos, blockState: BlockState, inventory: DefaultSidedInventory): Boolean {

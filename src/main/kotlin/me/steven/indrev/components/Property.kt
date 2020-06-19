@@ -1,7 +1,6 @@
 package me.steven.indrev.components
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.blockentities.MachineBlockEntity
 import kotlin.reflect.KProperty
 
 class Property<T : Number>(private val id: Int, var value: T, val test: (T) -> T = { it }) {
@@ -9,6 +8,5 @@ class Property<T : Number>(private val id: Int, var value: T, val test: (T) -> T
     operator fun setValue(ref: PropertyDelegateHolder, property: KProperty<*>, value: T) {
         this.value = test(value)
         ref.propertyDelegate[id] = this.value.toInt()
-        if (ref is MachineBlockEntity && ref.world?.isClient == false) ref.sync()
     }
 }

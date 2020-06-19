@@ -8,25 +8,32 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
+import java.util.*
 
-open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
+open class MachineBlockEntity(val tier: Tier, private val registry: MachineRegistry) :
     BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider,
     Tickable {
+    private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
+    var viewers = mutableMapOf<UUID, Int>()
+
     var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
     var explode = false
@@ -47,6 +54,22 @@ open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
                     power,
                     false,
                     Explosion.DestructionType.DESTROY)
+            }
+            update()
+            markDirty()
+        }
+    }
+
+    protected fun update() {
+        if (viewers.isNotEmpty()) {
+            val uuids = viewers.iterator()
+            while (uuids.hasNext()) {
+                val entry = uuids.next()
+                val player = world?.getPlayerByUuid(entry.key)
+                if (player == null || player.currentScreenHandler.syncId != entry.value)
+                    uuids.remove()
+                else
+                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, toUpdatePacket())
             }
         }
     }
@@ -94,6 +117,12 @@ open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry) :
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         return inventoryController?.getInventory()
             ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
+    }
+
+    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket? {
+        val tag = CompoundTag()
+        toTag(tag)
+        return BlockEntityUpdateS2CPacket(pos, typeId, tag)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {

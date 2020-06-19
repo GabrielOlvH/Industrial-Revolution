@@ -72,8 +72,8 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
         }
 
-        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.MK1).also { registry ->
-            registry.register(
+        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.MK1)
+            .register(
                 { tier ->
                     FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COAL_GENERATOR_HANDLER
@@ -81,10 +81,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 },
                 { { CoalGeneratorBlockEntity() } }
             ).buffer { 1000.0 }
-        }
 
-        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3).also { registry ->
-            registry.register(
+
+        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3)
+            .register(
                 { tier ->
                     MachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.SOLAR_GENERATOR_HANDLER
@@ -92,10 +92,10 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 },
                 { tier -> { SolarGeneratorBlockEntity(tier) } }
             ).buffer { 32.0 }
-        }
 
-        val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), Tier.MK3).also { registry ->
-            registry.register(
+
+        val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), Tier.MK3)
+            .register(
                 { tier ->
                     FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BIOMASS_GENERATOR_HANDLER
@@ -103,25 +103,23 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 },
                 { tier -> { BiomassGeneratorBlockEntity(tier) } }
             ).buffer { 20000.0 }
-        }
 
-        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).also { registry ->
-            registry.register(
+        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4)
+            .register(
                 {
                     NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), IndustrialRevolution.NUCLEAR_REACTOR_HANDLER)
                     { NuclearReactorBlockEntity() }
                 },
                 { { NuclearReactorBlockEntity() } }
             ).buffer { 100000.0 }
-        }
 
         val NUCLEAR_PART_BLOCK = NuclearReactorPart(MACHINE_BLOCK_SETTINGS()).also { identifier("nuclear_reactor_part").block(it) }
         val NUCLEAR_PART_BLOCK_ITEM = BlockItem(NUCLEAR_PART_BLOCK, itemSettings()).also { identifier("nuclear_reactor_part").item(it) }
         val NUCLEAR_PART_BLOCK_ENTITY =
             BlockEntityType.Builder.create(Supplier { NuclearReactorProxyBlockEntity() }, NUCLEAR_PART_BLOCK).build(null).also { identifier("nuclear_reactor_part").blockEntityType(it) }
 
-        val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).also { registry ->
-            registry.register(
+        val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace"))
+            .register(
                 { tier ->
                     FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.ELECTRIC_FURNACE_HANDLER
@@ -137,7 +135,6 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
-        }
 
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).also { registry ->
             registry.register(

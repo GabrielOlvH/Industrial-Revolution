@@ -87,6 +87,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             }
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
+        update()
     }
 
     private fun filterAnimalsToKill(entities: List<AnimalEntity>): List<AnimalEntity> {

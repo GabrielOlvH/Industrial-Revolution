@@ -12,8 +12,7 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
         super.tick()
         if (world?.isClient == false) {
             this.temperatureController?.tick(shouldGenerate() && addEnergy(getGenerationRatio()) > 0)
-            sync()
-            markDirty()
+            update()
         }
     }
 
