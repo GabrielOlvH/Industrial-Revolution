@@ -33,13 +33,13 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         val maxTemperature = temperatureController.limit.toInt()
         val info = when {
             temperature > temperatureController.optimalRange.last ->
-                TranslatableText("gui.widget.temperature_info.high", "${Formatting.DARK_RED}${Formatting.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.high").formatted(Formatting.DARK_RED, Formatting.ITALIC)
             temperature in temperatureController.optimalRange ->
-                TranslatableText("gui.widget.temperature_info.medium", "${Formatting.YELLOW}${Formatting.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.medium").formatted(Formatting.YELLOW, Formatting.ITALIC)
             else ->
-                TranslatableText("gui.widget.temperature_info.low", "${Formatting.GREEN}${Formatting.ITALIC}")
+                TranslatableText("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)
         }
-        information?.add(TranslatableText("gui.widget.temperature"))
+        information?.add(TranslatableText("gui.widget.temperature").formatted(Formatting.BLUE))
         information?.add(LiteralText("$temperature / $maxTemperature K"))
         information?.add(info)
     }

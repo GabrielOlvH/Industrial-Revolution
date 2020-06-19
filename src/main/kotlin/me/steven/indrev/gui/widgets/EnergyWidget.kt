@@ -8,6 +8,7 @@ import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.LiteralText
 import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import kotlin.math.round
 
 class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
@@ -29,7 +30,7 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
     override fun addTooltip(information: MutableList<StringRenderable>?) {
         val energy = delegate[0]
         val maxEnergy = delegate[1]
-        information?.add(TranslatableText("gui.widget.energy"))
+        information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
         information?.add(LiteralText("$energy / $maxEnergy LF"))
         super.addTooltip(information)
     }
