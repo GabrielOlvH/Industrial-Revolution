@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/cable_side",
+  "textures": {
+    "texture": "indrev:block/cable_side_mk4"
+  }
+}

@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "indrev:block/recycler"
+      "model": "indrev:block/recycler_mk2"
     },
     "facing=south": {
-      "model": "indrev:block/recycler",
+      "model": "indrev:block/recycler_mk2",
       "y": 180
     },
     "facing=west": {
-      "model": "indrev:block/recycler",
+      "model": "indrev:block/recycler_mk2",
       "y": 270
     },
     "facing=east": {
-      "model": "indrev:block/recycler",
+      "model": "indrev:block/recycler_mk2",
       "y": 90
     }
   }

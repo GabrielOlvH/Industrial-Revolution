@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "indrev:block/nuclear_generator"
+      "model": "indrev:block/nuclear_generator_mk4"
     }
   }
 }

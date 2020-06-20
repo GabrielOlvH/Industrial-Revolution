@@ -10,23 +10,22 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
 
-class FacingMachineBlock(
+open class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
     screenHandlerType: ExtendedScreenHandlerType<*>?,
-    private val canFaceVertical: Boolean = false,
     blockEntityProvider: () -> MachineBlockEntity
 ) : MachineBlock(settings, tier, screenHandlerType, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return this.defaultState.with(FACING, if (canFaceVertical) ctx?.playerLookDirection?.opposite else ctx?.playerFacing?.opposite)
+        return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        builder?.add(FACING)
+        builder?.add(HORIZONTAL_FACING)
     }
 
     companion object {
-        val FACING: DirectionProperty = Properties.FACING
+        val HORIZONTAL_FACING: DirectionProperty = Properties.HORIZONTAL_FACING
     }
 }

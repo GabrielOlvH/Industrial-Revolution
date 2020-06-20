@@ -12,6 +12,7 @@ import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.blocks.VerticalFacingMachineBlock
 import me.steven.indrev.blocks.nuclear.NuclearReactorCore
 import me.steven.indrev.blocks.nuclear.NuclearReactorPart
 import me.steven.indrev.utils.*
@@ -186,8 +187,8 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
 
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container")).register(
             { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER, true
+                VerticalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER
                 ) { BatteryBlockEntity(tier) }
             },
             { tier -> { BatteryBlockEntity(tier) } }
@@ -220,14 +221,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         ).buffer { 50000.0 }
 
 
-        val CABLE_REGISTRY = MachineRegistry(identifier("cable"))
+        val CABLE_REGISTRY = MachineRegistry(identifier("cable"), Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             ).buffer { tier -> tier.io }
 
 
-        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper")).register(
+        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.CHOPPER_HANDLER
@@ -245,7 +246,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         }
 
 
-        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher")).register(
+        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RANCHER_HANDLER

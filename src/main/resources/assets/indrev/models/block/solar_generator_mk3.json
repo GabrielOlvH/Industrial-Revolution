@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine",
+  "textures": {
+    "texture": "indrev:block/solar_generator"
+  }
+}

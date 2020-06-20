@@ -39,7 +39,7 @@ object ModRegistry {
         }
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
-        identifier("machine_block").tierBasedItem { DEFAULT_ITEM() }
+        identifier("machine_block").item(DEFAULT_ITEM())
 
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)

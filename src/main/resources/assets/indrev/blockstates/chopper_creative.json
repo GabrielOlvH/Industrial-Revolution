@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/chopper_mk4"
+    },
+    "facing=south": {
+      "model": "indrev:block/chopper_mk",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/chopper_mk",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/chopper_mk",
+      "y": 90
+    }
+  }
+}

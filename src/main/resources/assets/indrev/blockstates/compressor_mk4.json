@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "indrev:block/compressor"
+      "model": "indrev:block/compressor_mk4"
     },
     "facing=south": {
-      "model": "indrev:block/compressor",
+      "model": "indrev:block/compressor_mk4",
       "y": 180
     },
     "facing=west": {
-      "model": "indrev:block/compressor",
+      "model": "indrev:block/compressor_mk4",
       "y": 270
     },
     "facing=east": {
-      "model": "indrev:block/compressor",
+      "model": "indrev:block/compressor_mk4",
       "y": 90
     }
   }

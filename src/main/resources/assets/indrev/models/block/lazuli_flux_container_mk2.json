@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine",
+  "textures": {
+    "texture": "indrev:block/lazuli_flux_container"
+  }
+}

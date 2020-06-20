@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "indrev:block/coal_generator"
+      "model": "indrev:block/coal_generator_mk1"
     },
     "facing=south": {
-      "model": "indrev:block/coal_generator",
+      "model": "indrev:block/coal_generator_mk1",
       "y": 180
     },
     "facing=west": {
-      "model": "indrev:block/coal_generator",
+      "model": "indrev:block/coal_generator_mk1",
       "y": 270
     },
     "facing=east": {
-      "model": "indrev:block/coal_generator",
+      "model": "indrev:block/coal_generator_mk1",
       "y": 90
     }
   }

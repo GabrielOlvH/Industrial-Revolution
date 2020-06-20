@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "indrev:block/solar_generator"
+      "model": "indrev:block/solar_generator_mk1"
     }
   }
 }

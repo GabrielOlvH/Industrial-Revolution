@@ -1,0 +1,27 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/lazuli_flux_container_mk2"
+    },
+    "facing=south": {
+      "model": "indrev:block/lazuli_flux_container_mk2",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/lazuli_flux_container_mk2",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/lazuli_flux_container_mk2",
+      "y": 90
+    },
+    "facing=up": {
+      "model": "indrev:block/lazuli_flux_container_mk2",
+      "x": 90
+    },
+    "facing=down": {
+      "model": "indrev:block/lazuli_flux_container_mk2",
+      "x": 270
+    }
+  }
+}
