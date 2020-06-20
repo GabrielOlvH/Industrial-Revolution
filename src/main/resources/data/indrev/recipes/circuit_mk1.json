@@ -1,17 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "INI"
+    "NNN",
+    " I ",
+    "NNN"
   ],
   "key": {
     "N": {
       "item": "c:nikolite_dust"
     },
     "I": {
-      "tag": "c:iron_plate"
+      "tag": "c:iron_plates"
     }
   },
   "result": {
-    "item": "indrev:cable_mk1"
+    "item": "indrev:circuit_mk1"
   }
 }

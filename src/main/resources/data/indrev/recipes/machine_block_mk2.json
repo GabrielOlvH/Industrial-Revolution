@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " N ",
+    "NMN",
+    " N "
+  ],
+  "key": {
+    "N": {
+      "item": "c:nikolite_ingot"
+    },
+    "M": {
+      "item": "indrev:machine_block_mk1"
+    }
+  },
+  "result": {
+    "item": "indrev:machine_block_mk2"
+  }
+}

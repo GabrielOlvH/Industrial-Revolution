@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " N ",
+    "NBN",
+    " N "
+  ],
+  "key": {
+    "N": {
+      "item": "c:nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery_mk1"
+    }
+  },
+  "result": {
+    "item": "indrev:battery_mk2"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "ECE",
+    " E "
+  ],
+  "key": {
+    "E": {
+      "item": "indrev:nikolite_ingot"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    }
+  },
+  "result": {
+    "item": "indrev:circuit_mk2"
+  }
+}

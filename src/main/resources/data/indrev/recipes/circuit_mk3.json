@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " EN",
+    "ECE",
+    "NE "
+  ],
+  "key": {
+    "N": {
+      "item": "c:nikolite_dust"
+    },
+    "E": {
+      "item": "indrev:enriched_nikolite"
+    },
+    "C": {
+      "item": "indrev:circuit_mk2"
+    }
+  },
+  "result": {
+    "item": "indrev:circuit_mk3"
+  }
+}

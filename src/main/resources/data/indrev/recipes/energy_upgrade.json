@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "NCN",
+    " N "
+  ],
+  "key": {
+    "O": {
+      "item": "indrev:cooler_cell"
+    },
+    "C": {
+      "item": "indrev:circuit_mk3"
+    },
+    "E": {
+      "item": "indrev:empty_upgrade"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite"
+    }
+  },
+  "result": {
+    "item": "indrev:energy_upgrade"
+  }
+}

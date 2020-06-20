@@ -16,20 +16,19 @@ object EnergyMovement {
         if (sourceBlockEntity !is EnergyStorage) return
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targets = Direction.values()
-            .map { direction ->
-                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) return@map null
+            .mapNotNull { direction ->
+                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) return@mapNotNull null
                 else if (sourceBlockEntity.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
                     if (target != null && Energy.valid(target)) {
                         val targetHandler = Energy.of(target).side(direction.opposite)
                         if (targetHandler.energy < targetHandler.maxStored)
-                            return@map targetHandler
+                            return@mapNotNull targetHandler
                     }
                 }
                 null
             }
-            .filterNotNull()
         val sum = targets.sumByDouble { targetHandler ->
             (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
         }
