@@ -14,7 +14,7 @@ class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
     screenHandlerType: ExtendedScreenHandlerType<*>?,
-    val canFaceVertical: Boolean = false,
+    private val canFaceVertical: Boolean = false,
     blockEntityProvider: () -> MachineBlockEntity
 ) : MachineBlock(settings, tier, screenHandlerType, blockEntityProvider) {
 

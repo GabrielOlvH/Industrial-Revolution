@@ -27,7 +27,7 @@ import net.minecraft.world.WorldAccess
 open class MachineBlock(
     settings: Settings,
     private val tier: Tier,
-    val screenHandlerType: ExtendedScreenHandlerType<*>?,
+    private val screenHandlerType: ExtendedScreenHandlerType<*>?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 

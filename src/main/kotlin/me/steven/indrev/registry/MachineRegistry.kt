@@ -136,8 +136,8 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                 }
             }
 
-        val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).also { registry ->
-            registry.register(
+        val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer"))
+            .register(
                 { tier ->
                     FacingMachineBlock(
                         MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.PULVERIZER_HANDLER
@@ -153,131 +153,126 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
                     Tier.CREATIVE -> Double.MAX_VALUE
                 }
             }
-        }
-
-        val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COMPRESSOR_HANDLER
-                    ) { CompressorBlockEntity(tier) }
-                },
-                { tier -> { CompressorBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 1000.0
-                    Tier.MK2 -> 5000.0
-                    Tier.MK3 -> 10000.0
-                    Tier.MK4 -> 100000.0
-                    Tier.CREATIVE -> Double.MAX_VALUE
-                }
-            }
-        }
-
-        val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.INFUSER_HANDLER
-                    ) { InfuserBlockEntity(tier) }
-                },
-                { tier -> { InfuserBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 1000.0
-                    Tier.MK2 -> 5000.0
-                    Tier.MK3 -> 10000.0
-                    Tier.MK4 -> 100000.0
-                    Tier.CREATIVE -> Double.MAX_VALUE
-                }
-            }
-        }
-
-        val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container")).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER, true
-                    ) { BatteryBlockEntity(tier) }
-                },
-                { tier -> { BatteryBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 5000.0
-                    Tier.MK2 -> 10000.0
-                    Tier.MK3 -> 50000.0
-                    Tier.MK4 -> 200000.0
-                    Tier.CREATIVE -> Double.MAX_VALUE
-                }
-            }
-        }
-
-        val MINER_REGISTRY = MachineRegistry(identifier("miner"), Tier.MK4).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER
-                    ) { MinerBlockEntity(tier) }
-                },
-                { tier -> { MinerBlockEntity(tier) } }
-            ).buffer { 500000.0 }
-        }
-
-        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK2).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RECYCLER_HANDLER
-                    ) { RecyclerBlockEntity(tier) }
-                },
-                { tier -> { RecyclerBlockEntity(tier) } }
-            ).buffer { 50000.0 }
-        }
-
-        val CABLE_REGISTRY = MachineRegistry(identifier("cable")).also { registry ->
-            registry.register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
-                { tier -> { CableBlockEntity(tier) } }
-            ).buffer { tier -> tier.io }
-        }
-
-
-        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper")).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.CHOPPER_HANDLER
-                    ) { ChopperBlockEntity(tier) }
-                },
-                { tier -> { ChopperBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 1000.0
-                    Tier.MK2 -> 5000.0
-                    Tier.MK3 -> 10000.0
-                    Tier.MK4 -> 50000.0
-                    Tier.CREATIVE -> Double.MAX_VALUE
-                }
-            }
-        }
-
-        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher")).also { registry ->
-            registry.register(
-                { tier ->
-                    FacingMachineBlock(
-                        MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RANCHER_HANDLER
-                    ) { RancherBlockEntity(tier) }
-                },
-                { tier -> { RancherBlockEntity(tier) } }
-            ).buffer { tier ->
-                when (tier) {
-                    Tier.MK1 -> 1000.0
-                    Tier.MK2 -> 5000.0
-                    Tier.MK3 -> 10000.0
-                    Tier.MK4 -> 50000.0
-                    Tier.CREATIVE -> Double.MAX_VALUE
-                }
-            }
-        }
     }
+
+    val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor"))
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COMPRESSOR_HANDLER
+                ) { CompressorBlockEntity(tier) }
+            },
+            { tier -> { CompressorBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 100000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
+    val INFUSER_REGISTRY = MachineRegistry(identifier("infuser"))
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.INFUSER_HANDLER
+                ) { InfuserBlockEntity(tier) }
+            },
+            { tier -> { InfuserBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 100000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
+
+    val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"))
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER, true
+                ) { BatteryBlockEntity(tier) }
+            },
+            { tier -> { BatteryBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 5000.0
+                Tier.MK2 -> 10000.0
+                Tier.MK3 -> 50000.0
+                Tier.MK4 -> 200000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
+    val MINER_REGISTRY = MachineRegistry(identifier("miner"), Tier.MK4)
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER
+                ) { MinerBlockEntity(tier) }
+            },
+            { tier -> { MinerBlockEntity(tier) } }
+        ).buffer { 500000.0 }
+
+    val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK2)
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RECYCLER_HANDLER
+                ) { RecyclerBlockEntity(tier) }
+            },
+            { tier -> { RecyclerBlockEntity(tier) } }
+        ).buffer { 50000.0 }
+
+
+    val CABLE_REGISTRY = MachineRegistry(identifier("cable"))
+        .register(
+            { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
+            { tier -> { CableBlockEntity(tier) } }
+        ).buffer { tier -> tier.io }
+
+
+    val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"))
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.CHOPPER_HANDLER
+                ) { ChopperBlockEntity(tier) }
+            },
+            { tier -> { ChopperBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 50000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
+
+    val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"))
+        .register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RANCHER_HANDLER
+                ) { RancherBlockEntity(tier) }
+            },
+            { tier -> { RancherBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 50000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
 }
