@@ -23,6 +23,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
+import team.reborn.energy.Energy
 
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
@@ -57,7 +58,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val stacks = (0 until input.size()).map { input.getStack(it) }
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !takeEnergy(Upgrade.ENERGY.apply(this, inventory)))
+        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
             return
         val swordStack = stacks.firstOrNull { it.item is SwordItem }
         val fakePlayer = FakePlayerEntity(world!!, pos)

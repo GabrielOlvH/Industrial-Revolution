@@ -29,6 +29,7 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
@@ -59,7 +60,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         if (cooldown > 0) {
             cooldown--
             return
-        } else if (!takeEnergy(Upgrade.ENERGY.apply(this, inventory)))
+        } else if (!Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
             return
         val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }
             .firstOrNull { stack -> stack.item is AxeItem }

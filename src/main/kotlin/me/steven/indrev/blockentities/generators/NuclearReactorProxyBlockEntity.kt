@@ -6,7 +6,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.Tickable
-import net.minecraft.util.math.Direction
 
 class NuclearReactorProxyBlockEntity : BlockEntity(MachineRegistry.NUCLEAR_PART_BLOCK_ENTITY), Tickable {
     override fun tick() {
@@ -16,6 +15,6 @@ class NuclearReactorProxyBlockEntity : BlockEntity(MachineRegistry.NUCLEAR_PART_
         if (block !is ProxyBlock) return
         val parent = world?.getBlockEntity(block.getBlockEntityPos(this.cachedState, this.pos))
         if (parent is MachineBlockEntity)
-            EnergyMovement.spreadNeighbors(parent, pos, *Direction.values())
+            EnergyMovement.spreadNeighbors(parent, pos)
     }
 }

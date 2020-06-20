@@ -18,6 +18,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
@@ -54,7 +55,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     WorldChunkVeinData.STATE_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
-        } else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
+        } else if (Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
             mining += Upgrade.SPEED.apply(this, inventory)
             if (mining > 10) {
                 val chunkPos = world?.getChunk(pos)?.pos ?: return

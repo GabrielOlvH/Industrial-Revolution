@@ -28,13 +28,11 @@ import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 import java.util.*
 
-open class MachineBlockEntity(val tier: Tier, private val registry: MachineRegistry) :
-    BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider,
-    Tickable {
+open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry)
+    : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
     var viewers = mutableMapOf<UUID, Int>()
 
-    var lastInputFrom: Direction? = null
     val baseBuffer = registry.buffer(tier)
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
@@ -45,7 +43,7 @@ open class MachineBlockEntity(val tier: Tier, private val registry: MachineRegis
 
     override fun tick() {
         if (world?.isClient == false) {
-            EnergyMovement.spreadNeighbors(this, pos, *Direction.values())
+            EnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureController!!.explosionPower
                 world?.createExplosion(
@@ -74,19 +72,6 @@ open class MachineBlockEntity(val tier: Tier, private val registry: MachineRegis
         }
     }
 
-    fun takeEnergy(amount: Double): Boolean {
-        return if (amount <= energy) {
-            energy -= amount
-            true
-        } else false
-    }
-
-    fun addEnergy(amount: Double): Double {
-        val added = (maxStoredPower - energy).coerceAtMost(amount)
-        energy += added
-        return added
-    }
-
     override fun getPropertyDelegate(): PropertyDelegate {
         val delegate = this.propertyDelegate
         delegate[1] = maxStoredPower.toInt()
@@ -103,7 +88,7 @@ open class MachineBlockEntity(val tier: Tier, private val registry: MachineRegis
 
     override fun getMaxStoredPower(): Double = baseBuffer
 
-    @Deprecated("unsupported", level = DeprecationLevel.ERROR)
+    @Deprecated("unsupported", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("this.tier"))
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
 
     override fun getMaxOutput(side: EnergySide?): Double = tier.io

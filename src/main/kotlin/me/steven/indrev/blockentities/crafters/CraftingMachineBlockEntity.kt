@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Tickable
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
 
@@ -35,7 +36,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             val recipe = getCurrentRecipe()
             if (recipe?.matches(inputInventory, this.world) == false)
                 tryStartRecipe(inventory) ?: reset()
-            else if (takeEnergy(Upgrade.ENERGY.apply(this, inventory))) {
+            else if (Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
                     inventory.inputSlots.forEachIndexed { index, slot ->
