@@ -34,6 +34,7 @@ object ModRegistry {
 
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
+        identifier("heatsink").item(HEATSINK)
 
         identifier("uranium_rod").item(URANIUM_ROD_ITEM)
 
@@ -78,6 +79,7 @@ object ModRegistry {
 
     val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
+    val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
     val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 

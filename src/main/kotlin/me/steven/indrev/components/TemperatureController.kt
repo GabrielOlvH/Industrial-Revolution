@@ -40,7 +40,7 @@ class TemperatureController(
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= 0.01 + tempModifier - overflowModifier
         else if (cooling <= 0 && temperature > optimalRange.last - 10) {
-            cooling = 100 * machine.world!!.random.nextInt(2)
+            cooling = 70
             if (coolerStack != null && coolerItem is IRCoolerItem) coolerStack.damage++
         } else if (cooling > 0 && temperature > 25) {
             cooling--
