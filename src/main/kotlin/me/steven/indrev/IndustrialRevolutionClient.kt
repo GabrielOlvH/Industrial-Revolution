@@ -107,8 +107,8 @@ class IndustrialRevolutionClient : ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModRegistry.COOLANT_FLUID_STILL, ModRegistry.COOLANT_FLUID_FLOWING)
 
-        val flowingCoolantSprite = identifier("block/coolant_flow")
-        val stillCoolantSprite = identifier("block/coolant_still")
+        val flowingCoolantSprite = Identifier("block/water_still")
+        val stillCoolantSprite = Identifier("block/water_flow")
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(ClientSpriteRegistryCallback { _, registry ->
             registry.register(flowingCoolantSprite)
@@ -123,14 +123,14 @@ class IndustrialRevolutionClient : ClientModInitializer {
                 sprites[1] = atlas.apply(flowingCoolantSprite)
             }
 
-            override fun getFabricId(): Identifier = identifier("coolant_reload_listener")
+            override fun getFabricId(): Identifier = identifier("water_reload_listener")
 
         })
 
         val renderHandler: FluidRenderHandler = object : FluidRenderHandler {
             override fun getFluidSprites(view: BlockRenderView, pos: BlockPos, state: FluidState): Array<Sprite?> = sprites
 
-            override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x4CC248
+            override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x0C2340
         }
 
         FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_STILL, renderHandler)
