@@ -2,6 +2,7 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.IRScreenHandlerFactory
+import me.steven.indrev.items.IRMachineUpgradeItem
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
@@ -13,6 +14,7 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
@@ -26,7 +28,7 @@ import net.minecraft.world.WorldAccess
 
 open class MachineBlock(
     settings: Settings,
-    private val tier: Tier,
+    val tier: Tier,
     private val screenHandlerType: ExtendedScreenHandlerType<*>?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
@@ -52,7 +54,28 @@ open class MachineBlock(
     ): ActionResult? {
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
-        if (screenHandlerType != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+        val stack = player?.getStackInHand(hand)
+        val upgrade = stack?.item
+        if (upgrade is IRMachineUpgradeItem) {
+            val block = state?.block
+            if (block is MachineBlock && block.tier == upgrade.from) {
+                if (blockEntity !is MachineBlockEntity || !blockEntity.registry.upgradeable) return ActionResult.PASS
+                var upgradedBlock = blockEntity.registry.block(upgrade.to).defaultState
+                if (state.contains(VerticalFacingMachineBlock.FACING))
+                    upgradedBlock = upgradedBlock.with(VerticalFacingMachineBlock.FACING, state[VerticalFacingMachineBlock.FACING])
+                else if (state.contains(FacingMachineBlock.HORIZONTAL_FACING))
+                    upgradedBlock = upgradedBlock.with(FacingMachineBlock.HORIZONTAL_FACING, state[FacingMachineBlock.HORIZONTAL_FACING])
+                world.setBlockState(pos, upgradedBlock)
+                val upgradedBlockEntity = world.getBlockEntity(pos)
+                if (upgradedBlockEntity is MachineBlockEntity) {
+                    upgradedBlockEntity.energy = blockEntity.energy
+                    upgradedBlockEntity.inventoryController?.fromTag(blockEntity.inventoryController?.toTag(CompoundTag()))
+                    upgradedBlockEntity.temperatureController?.fromTag(blockEntity.temperatureController?.toTag(CompoundTag()))
+                }
+                stack.decrement(1)
+                return ActionResult.CONSUME
+            }
+        } else if (screenHandlerType != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))?.ifPresent { syncId ->
                 blockEntity.viewers[player.uuid] = syncId
             }

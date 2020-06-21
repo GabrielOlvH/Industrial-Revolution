@@ -1,10 +1,7 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
-import me.steven.indrev.items.IRChunkScannerItem
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.IRCraftingToolItem
-import me.steven.indrev.items.IREnergyReader
+import me.steven.indrev.items.*
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.rechargeable.IRRechargeableMiningItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -49,6 +46,10 @@ object ModRegistry {
         identifier("area_indicator").block(AREA_INDICATOR)
 
         identifier("coolant_bucket").item(DEFAULT_ITEM())
+
+        identifier("tier_upgrade_mk2").item(IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2))
+        identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
+        identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
 
         identifier("biomass").item(BIOMASS)
     }

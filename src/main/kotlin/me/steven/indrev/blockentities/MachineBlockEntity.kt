@@ -28,7 +28,7 @@ import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 import java.util.*
 
-open class MachineBlockEntity(val tier: Tier, registry: MachineRegistry)
+open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
     var viewers = mutableMapOf<UUID, Int>()

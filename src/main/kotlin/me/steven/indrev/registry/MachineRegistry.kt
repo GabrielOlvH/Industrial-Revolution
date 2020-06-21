@@ -26,7 +26,7 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import java.util.function.Supplier
 
-class MachineRegistry(private val identifier: Identifier, private vararg val tiers: Tier = Tier.values()) {
+class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
 
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
@@ -73,7 +73,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
         }
 
-        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), Tier.MK1).register(
+        val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.COAL_GENERATOR_HANDLER
@@ -83,7 +83,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         ).buffer { 1000.0 }
 
 
-        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), Tier.MK1, Tier.MK3).register(
+        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), false, Tier.MK1, Tier.MK3).register(
             { tier ->
                 MachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.SOLAR_GENERATOR_HANDLER
@@ -93,7 +93,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         ).buffer { 32.0 }
 
 
-        val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), Tier.MK3).register(
+        val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BIOMASS_GENERATOR_HANDLER
@@ -102,7 +102,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             { tier -> { BiomassGeneratorBlockEntity(tier) } }
         ).buffer { 20000.0 }
 
-        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), Tier.MK4).register(
+        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), false, Tier.MK4).register(
             {
                 NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), IndustrialRevolution.NUCLEAR_REACTOR_HANDLER)
                 { NuclearReactorBlockEntity() }
@@ -185,7 +185,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         }
 
 
-        val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container")).register(
+        val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
             { tier ->
                 VerticalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.BATTERY_HANDLER
@@ -202,7 +202,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             }
         }
 
-        val MINER_REGISTRY = MachineRegistry(identifier("miner"), Tier.MK4).register(
+        val MINER_REGISTRY = MachineRegistry(identifier("miner"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER
@@ -211,7 +211,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
             { tier -> { MinerBlockEntity(tier) } }
         ).buffer { 500000.0 }
 
-        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), Tier.MK2).register(
+        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RECYCLER_HANDLER
@@ -221,14 +221,14 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         ).buffer { 50000.0 }
 
 
-        val CABLE_REGISTRY = MachineRegistry(identifier("cable"), Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
+        val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             ).buffer { tier -> tier.io }
 
 
-        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), Tier.MK4).register(
+        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.CHOPPER_HANDLER
@@ -246,7 +246,7 @@ class MachineRegistry(private val identifier: Identifier, private vararg val tie
         }
 
 
-        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), Tier.MK4).register(
+        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.RANCHER_HANDLER
