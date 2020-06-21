@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -28,7 +27,6 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 30..90, 120.0)
     }
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): RecyclerRecipe? {

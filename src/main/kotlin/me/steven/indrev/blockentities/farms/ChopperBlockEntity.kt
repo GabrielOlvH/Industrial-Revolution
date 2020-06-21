@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -47,7 +46,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 30..120, 150.0)
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()

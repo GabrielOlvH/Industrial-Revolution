@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -27,7 +26,6 @@ class InfuserBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 700..1100, 1400.0)
     }
 
     private var currentRecipe: InfuserRecipe? = null

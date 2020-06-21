@@ -3,7 +3,6 @@ package me.steven.indrev.blockentities.miner
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
 import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -37,7 +36,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 30..120, 150.0)
     }
 
     private var chunkVeinType: ChunkVeinType? = null
