@@ -28,7 +28,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 1600..2000, 2200.0)
+        this.temperatureController = TemperatureController({ this }, 0.06, 30..90, 120.0)
     }
 
     override fun tryStartRecipe(inventory: DefaultSidedInventory): RecyclerRecipe? {

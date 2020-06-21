@@ -40,7 +40,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
                 TranslatableText("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)
         }
         information?.add(TranslatableText("gui.widget.temperature").formatted(Formatting.BLUE))
-        information?.add(LiteralText("$temperature / $maxTemperature K"))
+        information?.add(LiteralText("$temperature / $maxTemperature ºC"))
         information?.add(info)
     }
 

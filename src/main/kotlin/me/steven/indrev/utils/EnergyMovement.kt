@@ -40,9 +40,11 @@ object EnergyMovement {
             val targetMaxInput = targetHandler.maxInput
             val amount = (targetMaxInput / sum) * sourceHandler.energy
             if (amount > 0) {
-                if (target is MachineBlockEntity)
-                    target.lastInputFrom = Direction.byName(direction.toString())
                 sourceHandler.into(targetHandler).move(amount)
+                if (target is MachineBlockEntity) {
+                    target.lastInputFrom = Direction.byName(direction.toString())
+                    target.temperatureController?.inputOverflow = amount > target.getMaxInput(direction)
+                }
             }
         }
     }

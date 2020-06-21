@@ -40,7 +40,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.02, 350..430, 600.0)
+        this.temperatureController = TemperatureController({ this }, 0.06, 30..120, 150.0)
     }
 
     var cooldown = 10

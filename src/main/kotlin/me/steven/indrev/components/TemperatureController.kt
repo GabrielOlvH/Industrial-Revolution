@@ -13,9 +13,10 @@ class TemperatureController(
     val limit: Double
 ) : PropertyDelegateHolder {
 
-    var temperature: Double by Property(2, 25.0)
+    var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
     var explosionPower = 1f
+    var inputOverflow = false
 
     fun fromTag(tag: CompoundTag?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -34,24 +35,25 @@ class TemperatureController(
         val machine = machineProvider()
         val coolerStack = machine.inventoryController?.getInventory()?.getStack(1)
         val coolerItem = coolerStack?.item
-
-        if (!isHeatingUp)
-            temperature -= 0.01
-        else if (temperature > optimalRange.last && coolerStack != null && coolerItem is IRCoolerItem) {
-            if (cooling < 0) {
-                coolerStack.damage++
-                cooling = 30
-            }
-            temperature -= coolerItem.coolingModifier
-        } else if (temperature < optimalRange.last - 10)
-            temperature += heatingSpeed
-        else if (cooling < 0)
+        val tempModifier = getTemperatureModifier() / 10
+        val overflowModifier = if (inputOverflow) 20 else 0
+        if (!isHeatingUp && !inputOverflow && temperature > 30.5)
+            temperature -= 0.01 + tempModifier - overflowModifier
+        else if (cooling <= 0 && temperature > optimalRange.last - 10) {
             cooling = 100 * machine.world!!.random.nextInt(2)
-        else if (cooling > 0 && temperature < 25) {
+            if (coolerStack != null && coolerItem is IRCoolerItem) coolerStack.damage++
+        } else if (cooling > 0 && temperature > 25) {
             cooling--
-            temperature -= 0.01
+            var coolingModifier = 0.01
+            if (coolerStack != null && coolerItem is IRCoolerItem) coolingModifier = coolerItem.coolingModifier
+            temperature -= coolingModifier + tempModifier - overflowModifier
         } else
-            temperature += heatingSpeed
+            temperature += heatingSpeed + tempModifier + overflowModifier
+    }
+
+    private fun getTemperatureModifier(): Float {
+        val machine = machineProvider()
+        return machine.world?.getBiome(machine.pos)?.getTemperature(machine.pos) ?: 0f
     }
 
     override fun getPropertyDelegate(): PropertyDelegate = machineProvider().propertyDelegate

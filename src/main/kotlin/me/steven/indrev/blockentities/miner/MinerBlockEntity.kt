@@ -37,7 +37,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 200..800, 1000.0)
+        this.temperatureController = TemperatureController({ this }, 0.06, 30..120, 150.0)
     }
 
     private var chunkVeinType: ChunkVeinType? = null

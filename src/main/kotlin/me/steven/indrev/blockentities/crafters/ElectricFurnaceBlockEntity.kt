@@ -28,7 +28,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 1600..2000, 2200.0)
+        this.temperatureController = TemperatureController({ this }, 0.1, 1300..1700, 2000.0)
     }
 
     private var currentRecipe: SmeltingRecipe? = null

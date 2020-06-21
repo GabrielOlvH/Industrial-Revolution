@@ -76,8 +76,8 @@ object ModRegistry {
 
     val BIOMASS = DEFAULT_ITEM()
 
-    val FAN = IRCoolerItem(itemSettings().maxDamage(512), -0.07)
-    val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), -0.1)
+    val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
+    val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
 
     val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 
