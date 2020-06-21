@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "LIL",
+    "I I",
+    "LIL"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:iron_plates"
+    },
+    "L": {
+      "tag": "c:lead_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:nuclear_reactor_part"
+  }
+}

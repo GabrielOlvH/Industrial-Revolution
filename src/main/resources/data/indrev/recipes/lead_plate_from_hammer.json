@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:lead_ingots"
+    },
+    {
+      "item": "indrev:hammer"
+    }
+  ],
+  "result": {
+    "item": "c:lead_plate"
+  }
+}

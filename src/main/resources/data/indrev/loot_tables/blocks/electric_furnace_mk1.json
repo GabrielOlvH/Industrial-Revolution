@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:electric_furnace_mk1"
+          "name": "indrev:electric_furnace_mk1"
         }
       ],
       "conditions": [

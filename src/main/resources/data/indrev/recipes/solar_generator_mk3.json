@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " N ",
+    "NSN",
+    " B "
+  ],
+  "key": {
+    "S": {
+      "item": "indrev:solar_generator_mk1"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:solar_generator_mk3"
+  }
+}

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:chopper_mk2"
+          "name": "indrev:nuclear_generator_mk4"
         }
       ],
       "conditions": [

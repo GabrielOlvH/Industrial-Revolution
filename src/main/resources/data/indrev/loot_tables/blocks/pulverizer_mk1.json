@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:pulverizer_mk1"
+          "name": "indrev:pulverizer_mk1"
         }
       ],
       "conditions": [

@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredient": {
+    "tag": "c:tin_ingots"
+  },
+  "output": {
+    "item": "c:tin_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

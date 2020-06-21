@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:biomass_generator_mk3"
+          "name": "indrev:biomass_generator_mk3"
         }
       ],
       "conditions": [

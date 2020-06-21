@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "BMB",
+    "NBN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:nikolite_dust"
+    },
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:lazuli_flux_container_mk1"
+  }
+}

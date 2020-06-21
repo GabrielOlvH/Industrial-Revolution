@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:nuclear_reactor_part"
+          "name": "indrev:nuclear_reactor_part"
         }
       ],
       "conditions": [

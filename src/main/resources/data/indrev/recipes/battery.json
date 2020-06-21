@@ -10,10 +10,10 @@
       "item": "c:nikolite_dust"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:tin_plates"
     }
   },
   "result": {
-    "item": "indrev:battery_mk1"
+    "item": "indrev:battery"
   }
 }

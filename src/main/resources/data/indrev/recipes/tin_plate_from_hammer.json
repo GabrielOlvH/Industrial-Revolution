@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:tin_ingots"
+    },
+    {
+      "item": "indrev:hammer"
+    }
+  ],
+  "result": {
+    "item": "c:tin_plate"
+  }
+}

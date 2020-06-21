@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredient": {
+    "tag": "c:copper_ingots"
+  },
+  "output": {
+    "item": "c:copper_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

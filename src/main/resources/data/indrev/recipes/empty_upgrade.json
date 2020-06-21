@@ -5,14 +5,11 @@
     "II"
   ],
   "key": {
-    "N": {
-      "item": "c:nikolite_dust"
-    },
     "I": {
-      "item": "c:iron_plates"
+      "tag": "c:iron_plates"
     }
   },
   "result": {
-    "item": "indrev:battery_mk1"
+    "item": "indrev:empty_upgrade"
   }
 }

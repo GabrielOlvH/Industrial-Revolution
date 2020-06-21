@@ -6,14 +6,11 @@
     "NB "
   ],
   "key": {
-    "O": {
-      "item": "indrev:cooler_cell"
-    },
     "C": {
       "item": "indrev:circuit_mk1"
     },
     "B": {
-      "item": "indrev:battery_mk1"
+      "item": "indrev:battery"
     },
     "E": {
       "item": "indrev:empty_upgrade"

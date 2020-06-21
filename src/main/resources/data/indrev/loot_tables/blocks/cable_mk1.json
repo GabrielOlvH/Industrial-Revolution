@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:cable_mk1"
+          "name": "indrev:cable_mk1"
         }
       ],
       "conditions": [

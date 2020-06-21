@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:solar_generator_mk3"
+          "name": "indrev:solar_generator_mk3"
         }
       ],
       "conditions": [

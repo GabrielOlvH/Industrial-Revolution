@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:lazuli_flux_container_mk4"
+          "name": "indrev:lazuli_flux_container_mk4"
         }
       ],
       "conditions": [

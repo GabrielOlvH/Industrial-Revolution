@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:compressor_mk3"
+          "name": "indrev:compressor_mk3"
         }
       ],
       "conditions": [

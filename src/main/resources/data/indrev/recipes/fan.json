@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " T ",
+    "T T",
+    " T "
+  ],
+  "key": {
+    "T": {
+      "tag": "c:tin_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:fan"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "BLB",
+    " B "
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "N": {
+      "tag": "c:nikolite_dust"
+    },
+    "L": {
+      "item": "indrev:lazuli_flux_container_mk3"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:lazuli_flux_container_mk4"
+  }
+}

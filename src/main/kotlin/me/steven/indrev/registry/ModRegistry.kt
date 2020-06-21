@@ -27,16 +27,7 @@ object ModRegistry {
         identifier("enriched_nikolite_ingot").item(DEFAULT_ITEM())
 
         identifier("mining_drill").item(MINING_DRILL)
-        identifier("battery").tierBasedItem { tier ->
-            val dmg = when (tier) {
-                Tier.MK1 -> 256
-                Tier.MK2 -> 1024
-                Tier.MK3 -> 4096
-                Tier.MK4 -> 8192
-                Tier.CREATIVE -> throw IllegalArgumentException("no creative battery!")
-            }
-            IRRechargeableItem(itemSettings().maxDamage(dmg), true)
-        }
+        identifier("battery").item(IRRechargeableItem(itemSettings().maxDamage(4096), true))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
         identifier("machine_block").item(DEFAULT_ITEM())
@@ -56,6 +47,8 @@ object ModRegistry {
         identifier("energy_reader").item(ENERGY_READER)
 
         identifier("area_indicator").block(AREA_INDICATOR)
+
+        identifier("coolant_bucket").item(DEFAULT_ITEM())
 
         identifier("biomass").item(BIOMASS)
     }

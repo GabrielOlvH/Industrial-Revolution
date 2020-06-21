@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:infuser_mk3"
+          "name": "indrev:infuser_mk3"
         }
       ],
       "conditions": [

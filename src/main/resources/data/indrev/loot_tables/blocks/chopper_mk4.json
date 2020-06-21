@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:chopper_mk4"
+          "name": "indrev:chopper_mk4"
         }
       ],
       "conditions": [

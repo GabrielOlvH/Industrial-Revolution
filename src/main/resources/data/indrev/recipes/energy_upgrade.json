@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " E ",
+    "PEP",
     "NCN",
     " N "
   ],
   "key": {
-    "O": {
-      "item": "indrev:cooler_cell"
+    "P": {
+      "tag": "c:copper_plates"
     },
     "C": {
       "item": "indrev:circuit_mk3"
