@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
@@ -41,7 +42,7 @@ open class MachineBlock(
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        tooltip?.add(TranslatableText("block.machines.tooltip.io", Formatting.BLUE, Formatting.WHITE, tier.io))
+        tooltip?.add(TranslatableText("block.machines.tooltip.io", LiteralText("${tier.io} LF/tick").formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
     }
 
     override fun onUse(

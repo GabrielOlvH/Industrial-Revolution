@@ -81,7 +81,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 1.0 * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
-        Upgrade.SPEED -> if (temperatureController!!.isFullEfficiency()) 2.0 else 1.0
+        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 2.0 else 1.0
         Upgrade.BUFFER -> baseBuffer
     }
 

@@ -86,7 +86,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 128.0 + Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
-        Upgrade.SPEED -> if (temperatureController!!.isFullEfficiency()) 0.03 else 0.01
+        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.03 else 0.01
         Upgrade.BUFFER -> baseBuffer
     }
 

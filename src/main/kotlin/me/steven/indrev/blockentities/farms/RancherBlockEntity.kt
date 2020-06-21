@@ -120,7 +120,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
             Upgrade.ENERGY -> 2.0 * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
-            Upgrade.SPEED -> if (temperatureController!!.isFullEfficiency()) 4.0 else 3.0
+            Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
             Upgrade.BUFFER -> baseBuffer
         }
 }
