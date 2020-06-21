@@ -1,6 +1,7 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
+import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.items.*
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.rechargeable.IRRechargeableMiningItem
@@ -9,7 +10,9 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
+import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
+import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -45,13 +48,16 @@ object ModRegistry {
 
         identifier("area_indicator").block(AREA_INDICATOR)
 
-        identifier("coolant_bucket").item(DEFAULT_ITEM())
-
         identifier("tier_upgrade_mk2").item(IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2))
         identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
         identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
 
         identifier("biomass").item(BIOMASS)
+
+        identifier("coolant").block(COOLANT)
+        identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
+        identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
+        identifier("coolant_bucket").item(COOLANT_BUCKET)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -80,6 +86,11 @@ object ModRegistry {
     val ENERGY_READER = IREnergyReader(itemSettings())
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
+
+    val COOLANT_FLUID_FLOWING = CoolantFluid.Flowing()
+    val COOLANT_FLUID_STILL = CoolantFluid.Still()
+    val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings())
+    val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)

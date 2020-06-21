@@ -6,6 +6,9 @@
     "NBN"
   ],
   "key": {
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
     "N": {
       "item": "c:nikolite_dust"
     },

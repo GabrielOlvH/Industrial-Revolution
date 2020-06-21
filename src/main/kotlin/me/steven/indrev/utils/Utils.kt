@@ -3,6 +3,7 @@ package me.steven.indrev.utils
 import me.steven.indrev.IndustrialRevolution
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -15,6 +16,11 @@ fun identifier(id: String) = Identifier(IndustrialRevolution.MOD_ID, id)
 
 fun Identifier.block(block: Block): Identifier {
     Registry.register(Registry.BLOCK, this, block)
+    return this
+}
+
+fun Identifier.fluid(fluid: Fluid): Identifier {
+    Registry.register(Registry.FLUID, this, fluid)
     return this
 }
 
