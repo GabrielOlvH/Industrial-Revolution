@@ -15,7 +15,7 @@ class TemperatureController(
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
-    var explosionPower = 1f
+    var explosionPower = 2f
     var inputOverflow = false
 
     fun fromTag(tag: CompoundTag?) {
@@ -49,6 +49,9 @@ class TemperatureController(
             temperature -= coolingModifier + tempModifier - overflowModifier
         } else
             temperature += heatingSpeed + tempModifier + overflowModifier
+        if (temperature > limit - 5) {
+            machine.explode = true
+        }
     }
 
     private fun getTemperatureModifier(): Float {

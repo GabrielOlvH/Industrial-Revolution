@@ -52,5 +52,5 @@ class NuclearReactorBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry
         return loadedFuel > 0
     }
 
-    override fun getGenerationRatio(): Double = if (temperatureController!!.isFullEfficiency()) 300.0 else 10.0
+    override fun getGenerationRatio(): Double = if (temperatureController!!.isFullEfficiency()) 300.0 else 30.0
 }

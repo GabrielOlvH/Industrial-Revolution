@@ -19,8 +19,11 @@ class SolarGeneratorBlockEntity(tier: Tier) :
 
     override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true
 
-
     override fun getMaxOutput(side: EnergySide?): Double = 32.0
 
-    override fun getGenerationRatio(): Double = 0.1
+    override fun getGenerationRatio(): Double = when (tier) {
+        Tier.MK1 -> 0.5
+        Tier.MK3 -> 1.0
+        else -> throw IllegalArgumentException("unsupported tier for solar generator")
+    }
 }
