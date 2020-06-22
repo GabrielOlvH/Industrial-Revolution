@@ -97,11 +97,8 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
         val blockPos = ctx?.blockPos ?: return state
         for (direction in Direction.values()) {
             val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            if (Energy.valid(neighbor)) state = state.with(
-                getProperty(
-                    direction
-                ), true
-            )
+            if (Energy.valid(neighbor))
+                state = state.with(getProperty(direction), true)
         }
         return state
     }
@@ -125,7 +122,7 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
 
     companion object {
 
-        val CENTER_SHAPE: VoxelShape = VoxelShapes.cuboid(0.25, 0.25, 0.25, 0.75, 0.75, 0.75)
+        val CENTER_SHAPE: VoxelShape = VoxelShapes.cuboid(0.33, 0.33, 0.33, 0.67, 0.67, 0.67)
 
         val NORTH: BooleanProperty = BooleanProperty.of("north")
         val SOUTH: BooleanProperty = BooleanProperty.of("south")
