@@ -18,7 +18,7 @@ class DefaultSidedInventory(
 
     override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot)
 
-    override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack)
+    override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 
     fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
 

@@ -5,17 +5,17 @@ import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
-import net.minecraft.item.ToolMaterials
+import net.minecraft.item.ToolMaterial
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
-class IRRechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.DIAMOND, 0, 0F, settings), Rechargeable {
+class IRMiningDrill(toolMaterial: ToolMaterial, settings: Settings) : PickaxeItem(toolMaterial, 0, 0F, settings), Rechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack?, state: BlockState?): Float {
         val material = state?.material
-        return if (SUPPORTED_MATERIALS.contains(material)) 16F else this.material.miningSpeedMultiplier
+        return if (SUPPORTED_MATERIALS.contains(material) && stack?.damage ?: 0 > 0) this.material.miningSpeedMultiplier * 2 else 0F
     }
 
     override fun appendTooltip(
@@ -25,7 +25,7 @@ class IRRechargeableMiningItem(settings: Settings) : PickaxeItem(ToolMaterials.D
         context: TooltipContext?
     ) {
         super.appendTooltip(stack, world, tooltip, context)
-        tooltip?.add(TranslatableText("gui.widget.energy"))
+        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
         tooltip?.add(LiteralText("${stack?.damage} / ${stack?.maxDamage} LF"))
         tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
     }

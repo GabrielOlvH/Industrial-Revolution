@@ -60,8 +60,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             return
         } else if (!Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
             return
-        val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }
-            .firstOrNull { stack -> stack.item is AxeItem }
+        val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
             val area = getWorkingArea()
@@ -100,6 +99,8 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             is PillarBlock -> {
                 world?.breakBlock(blockPos, false)
                 axeStack.damage(1, world?.random, null)
+                if (axeStack.damage >= axeStack.maxDamage)
+                    axeStack.decrement(1)
             }
             is LeavesBlock -> world?.breakBlock(blockPos, false)
             else -> return false
@@ -133,7 +134,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> 2.0 * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+            Upgrade.ENERGY -> 16.0 * tier.ordinal * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
             Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
             Upgrade.BUFFER -> baseBuffer
         }

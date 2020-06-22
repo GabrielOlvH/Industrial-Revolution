@@ -1,6 +1,7 @@
 {
   "parent": "indrev:block/cable_side",
   "textures": {
-    "texture": "indrev:block/cable_side_mk2"
+    "texture": "indrev:block/cable_side_mk2",
+    "particle": "indrev:block/cable_side_mk2"
   }
 }

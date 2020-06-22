@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/chunk_scanner"
+    "layer0": "indrev:item/mining_drill_mk3"
   }
 }

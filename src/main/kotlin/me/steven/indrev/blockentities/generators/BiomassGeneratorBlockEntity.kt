@@ -50,5 +50,5 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 2.5
+    override fun getGenerationRatio(): Double = 128.0
 }

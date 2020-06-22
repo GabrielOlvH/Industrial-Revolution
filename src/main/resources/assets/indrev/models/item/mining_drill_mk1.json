@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/cutter"
+    "layer0": "indrev:item/mining_drill_mk1"
   }
 }

@@ -3,8 +3,8 @@ package me.steven.indrev.registry
 import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.items.*
+import me.steven.indrev.items.rechargeable.IRMiningDrill
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
-import me.steven.indrev.items.rechargeable.IRRechargeableMiningItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.*
@@ -14,6 +14,7 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
+import net.minecraft.item.ToolMaterials
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -26,7 +27,14 @@ object ModRegistry {
         identifier("enriched_nikolite").item(DEFAULT_ITEM())
         identifier("enriched_nikolite_ingot").item(DEFAULT_ITEM())
 
-        identifier("mining_drill").item(MINING_DRILL)
+        identifier("mining_drill").tierBasedItem { tier ->
+            when (tier) {
+                Tier.MK1 -> MINING_DRILL_MK1
+                Tier.MK2 -> MINING_DRILL_MK2
+                Tier.MK3 -> MINING_DRILL_MK3
+                Tier.MK4, Tier.CREATIVE -> MINING_DRILL_MK4
+            }
+        }
         identifier("battery").item(IRRechargeableItem(itemSettings().maxDamage(4096), true))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
@@ -84,7 +92,10 @@ object ModRegistry {
 
     val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 
-    val MINING_DRILL = IRRechargeableMiningItem(itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK1 = IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK2 = IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK3 = IRMiningDrill(ToolMaterials.DIAMOND, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK4 = IRMiningDrill(ToolMaterials.NETHERITE, itemSettings().maxDamage(32000))
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 

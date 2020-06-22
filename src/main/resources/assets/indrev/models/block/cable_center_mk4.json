@@ -1,6 +1,7 @@
 {
   "parent": "indrev:block/cable_center",
   "textures": {
-    "texture": "indrev:block/cable_center_mk4"
+    "texture": "indrev:block/cable_center_mk4",
+    "particle": "indrev:block/cable_center_mk4"
   }
 }

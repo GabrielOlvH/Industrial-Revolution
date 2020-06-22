@@ -25,13 +25,13 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryController = InventoryController({ this }) {
-            DefaultSidedInventory(15, intArrayOf(), (3..10).toList().toIntArray()) { slot, stack ->
+            DefaultSidedInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
                     item is IRRechargeableItem && item.canOutput -> slot == 0
                     item is IRCoolerItem -> slot == 1
-                    slot in 3..10 -> true
+                    slot in 1 until 10 -> true
                     else -> false
                 }
             }
@@ -80,13 +80,13 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getUpgradeSlots(): IntArray = intArrayOf(11, 12, 13, 14)
+    override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 128.0 + Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
-        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.03 else 0.01
+        Upgrade.ENERGY -> 2048.0 + Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.5 else 0.3
         Upgrade.BUFFER -> baseBuffer
     }
 
