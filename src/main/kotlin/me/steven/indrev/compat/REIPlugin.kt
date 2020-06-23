@@ -74,9 +74,9 @@ object REIPlugin : REIPluginV0 {
         )
     }
 
-    val ID = identifier("rei_plugin")
-    val PULVERIZING = identifier("plugins/pulverizing")
-    val INFUSING = identifier("plugins/infusing")
-    val COMPRESSING = identifier("plugins/compressing")
-    val RECYCLING = identifier("plugins/recycling")
+    private val ID = identifier("rei_plugin")
+    private val PULVERIZING = identifier("plugins/pulverizing")
+    private val INFUSING = identifier("plugins/infusing")
+    private val COMPRESSING = identifier("plugins/compressing")
+    private val RECYCLING = identifier("plugins/recycling")
 }

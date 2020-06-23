@@ -48,34 +48,26 @@ class MachineRecipeCategory(
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
         val widgets: MutableList<Widget> = mutableListOf(Widgets.createRecipeBase(bounds))
         widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
-        val input: List<List<EntryStack>> = recipeDisplay.inputEntries
+        val input = recipeDisplay.inputEntries
         widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
-        if (input.size > 1) widgets.add(
-            Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
-        )
+        if (input.size > 1)
+            widgets.add(
+                Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
+            )
         widgets.add(
             Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
         )
         return widgets
     }
 
-    override fun getSimpleRenderer(recipe: MachinePlugin): RecipeEntry {
-        return SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
-    }
+    override fun getSimpleRenderer(recipe: MachinePlugin): RecipeEntry =
+        SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
 
-    override fun getDisplayHeight(): Int {
-        return 49
-    }
+    override fun getDisplayHeight(): Int = 49
 
-    override fun getIdentifier(): Identifier? {
-        return identifier
-    }
+    override fun getIdentifier(): Identifier? = identifier
 
-    override fun getLogo(): EntryStack? {
-        return logo
-    }
+    override fun getLogo(): EntryStack? = logo
 
-    override fun getCategoryName(): String? {
-        return I18n.translate(categoryName)
-    }
+    override fun getCategoryName(): String? = I18n.translate(categoryName)
 }
