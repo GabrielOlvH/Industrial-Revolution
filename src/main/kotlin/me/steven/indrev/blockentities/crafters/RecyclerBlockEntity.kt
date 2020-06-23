@@ -15,7 +15,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
     private var currentRecipe: RecyclerRecipe? = null
 
     init {
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

@@ -16,7 +16,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

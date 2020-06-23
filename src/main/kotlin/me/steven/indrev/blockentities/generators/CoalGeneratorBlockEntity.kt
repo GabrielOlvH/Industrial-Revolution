@@ -19,7 +19,7 @@ class CoalGeneratorBlockEntity :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
                 val item = stack?.item
                 when {

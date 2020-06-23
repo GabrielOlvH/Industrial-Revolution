@@ -16,7 +16,7 @@ class BatteryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
         }
     }

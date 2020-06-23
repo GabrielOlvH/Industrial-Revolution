@@ -2,7 +2,6 @@
   "ores": [
     "copper",
     "tin",
-    "uranium",
     "nikolite"
   ],
   "generators": {

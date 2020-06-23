@@ -14,7 +14,7 @@ class InfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
                 val item = stack?.item
                 when {

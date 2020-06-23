@@ -9,12 +9,14 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
 import net.minecraft.item.ToolMaterials
+import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -44,8 +46,6 @@ object ModRegistry {
         identifier("cooler_cell").item(COOLER_CELL)
         identifier("heatsink").item(HEATSINK)
 
-        identifier("uranium_rod").item(URANIUM_ROD_ITEM)
-
         identifier("chunk_scanner").item(IRChunkScannerItem(itemSettings()))
 
         identifier("empty_upgrade").item(DEFAULT_ITEM())
@@ -69,6 +69,10 @@ object ModRegistry {
         identifier("coolant_bucket").item(COOLANT_BUCKET)
     }
 
+    private val MACHINE_BLOCK_SETTINGS = {
+        FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
+    }
+
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
@@ -89,8 +93,6 @@ object ModRegistry {
     val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
-
-    val URANIUM_ROD_ITEM = Item(itemSettings().maxDamage(1024))
 
     val MINING_DRILL_MK1 = IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK2 = IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))

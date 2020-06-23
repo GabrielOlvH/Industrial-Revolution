@@ -35,6 +35,8 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
         super.addTooltip(information)
     }
 
+    override fun canResize(): Boolean = false
+
     companion object {
         private val ENERGY_EMPTY =
             identifier("textures/gui/widget_energy_empty.png")

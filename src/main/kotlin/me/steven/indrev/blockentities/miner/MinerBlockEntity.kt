@@ -24,7 +24,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {

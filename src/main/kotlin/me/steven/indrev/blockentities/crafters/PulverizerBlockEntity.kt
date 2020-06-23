@@ -15,7 +15,7 @@ class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
                 val item = stack?.item
                 when {

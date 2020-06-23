@@ -44,6 +44,8 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         information?.add(info)
     }
 
+    override fun canResize(): Boolean = false
+
     companion object {
         private val EMPTY_HEAT =
             identifier("textures/gui/widget_energy_empty.png")

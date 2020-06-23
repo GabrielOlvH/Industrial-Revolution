@@ -76,7 +76,9 @@ open class MachineBlock(
                 stack.decrement(1)
                 return ActionResult.CONSUME
             }
-        } else if (screenHandlerType != null && blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+        } else if (screenHandlerType != null
+            && blockEntity is MachineBlockEntity
+            && blockEntity.inventoryController != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))?.ifPresent { syncId ->
                 blockEntity.viewers[player.uuid] = syncId
             }

@@ -1,42 +1,23 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.generators.NuclearReactorProxyBlockEntity
-import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.ModRegistry
-import me.steven.indrev.utils.EmptyEnergyStorage
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
-import team.reborn.energy.EnergyStorage
 import team.reborn.energy.minecraft.EnergyModInitializer
 
 object IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
-        Energy.registerHolder(NuclearReactorProxyBlockEntity::class.java) { obj ->
-            obj as BlockEntity
-            if (obj.hasWorld()) {
-                val block = obj.cachedState.block
-                if (block is ProxyBlock && block is EnergyStorage)
-                    return@registerHolder obj.world?.getBlockEntity(
-                        block.getBlockEntityPos(
-                            obj.cachedState,
-                            obj.pos
-                        )
-                    ) as EnergyStorage
-            }
-            return@registerHolder EmptyEnergyStorage
-        }
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry.registerAll()
 
@@ -65,11 +46,6 @@ object IndustrialRevolution : EnergyModInitializer() {
         ScreenHandlerRegistry.registerExtended(SolarGeneratorController.SCREEN_ID) { syncId, playerInventory, buf ->
             SolarGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
         } as ExtendedScreenHandlerType<SolarGeneratorController>
-
-    val NUCLEAR_REACTOR_HANDLER: ExtendedScreenHandlerType<NuclearReactorController> =
-        ScreenHandlerRegistry.registerExtended(NuclearReactorController.SCREEN_ID) { syncId, playerInventory, buf ->
-            NuclearReactorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<NuclearReactorController>
 
     val ELECTRIC_FURNACE_HANDLER: ExtendedScreenHandlerType<ElectricFurnaceController> =
         ScreenHandlerRegistry.registerExtended(ElectricFurnaceController.SCREEN_ID) { syncId, playerInventory, buf ->

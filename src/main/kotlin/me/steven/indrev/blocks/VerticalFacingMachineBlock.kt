@@ -17,7 +17,7 @@ class VerticalFacingMachineBlock(
     blockEntityProvider: () -> MachineBlockEntity) : FacingMachineBlock(settings, tier, screenHandlerType, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return this.defaultState.with(FACING, ctx?.playerFacing?.opposite)
+        return this.defaultState.with(FACING, ctx?.playerLookDirection?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {

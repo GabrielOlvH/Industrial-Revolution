@@ -16,7 +16,7 @@ class DefaultSidedInventory(
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean = outputSlots.contains(slot)
 
-    override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot)
+    override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = inputSlots.contains(slot) || isValid(slot, stack)
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 

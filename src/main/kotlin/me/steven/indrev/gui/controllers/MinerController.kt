@@ -10,10 +10,10 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.resource.language.I18n
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -35,8 +35,8 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandl
         )
 
         root.add(StringWidget({
-            I18n.translate("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        }, titleColor, HorizontalAlignment.CENTER), 4.0, 4.2)
+            TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
+        }, HorizontalAlignment.CENTER), 4.0, 4.2)
 
         root.validate(this)
     }

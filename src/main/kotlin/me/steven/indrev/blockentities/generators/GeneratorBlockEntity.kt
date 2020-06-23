@@ -3,7 +3,6 @@ package me.steven.indrev.blockentities.generators
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
@@ -12,7 +11,10 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
     override fun tick() {
         super.tick()
         if (world?.isClient == false) {
-            this.temperatureController?.tick(shouldGenerate() && Energy.of(this).insert(getGenerationRatio()) > 0)
+            if (shouldGenerate() && maxStoredPower > energy) {
+                this.energy += getGenerationRatio()
+                this.temperatureController?.tick(true)
+            } else this.temperatureController?.tick(false)
             update()
         }
     }

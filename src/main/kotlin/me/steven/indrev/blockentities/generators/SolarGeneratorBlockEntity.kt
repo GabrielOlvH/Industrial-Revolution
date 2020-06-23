@@ -11,7 +11,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     GeneratorBlockEntity(tier, MachineRegistry.SOLAR_GENERATOR_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController({ this }) {
+        this.inventoryController = InventoryController {
             DefaultSidedInventory(2, intArrayOf(), intArrayOf()) { _, _ -> true }
         }
         this.temperatureController = TemperatureController({ this }, 0.1, 500..700, 1000.0)

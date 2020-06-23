@@ -15,6 +15,7 @@ class TemperatureController(
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
+    var coolingModifier = 0.01
     var explosionPower = 2f
     var inputOverflow = false
 
@@ -38,14 +39,16 @@ class TemperatureController(
         val tempModifier = getTemperatureModifier() / 10
         val overflowModifier = if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
-            temperature -= 0.01 + tempModifier - overflowModifier
+            temperature -= coolingModifier + tempModifier - overflowModifier
         else if (cooling <= 0 && temperature > optimalRange.last - 10) {
             cooling = 70
-            if (coolerStack != null && coolerItem is IRCoolerItem) coolerStack.damage++
+            coolingModifier = 0.01
+            if (coolerStack != null && coolerItem is IRCoolerItem) {
+                coolingModifier = coolerItem.coolingModifier
+                coolerStack.damage++
+            }
         } else if (cooling > 0 && temperature > 25) {
             cooling--
-            var coolingModifier = 0.01
-            if (coolerStack != null && coolerItem is IRCoolerItem) coolingModifier = coolerItem.coolingModifier
             temperature -= coolingModifier + tempModifier - overflowModifier
         } else
             temperature += heatingSpeed + tempModifier + overflowModifier

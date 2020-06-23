@@ -1,29 +1,15 @@
 package me.steven.indrev.components
 
-import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.ProxyBlock
 import me.steven.indrev.inventories.DefaultSidedInventory
-import net.minecraft.block.InventoryProvider
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
-class InventoryController(val machineProvider: () -> MachineBlockEntity, val supplier: () -> DefaultSidedInventory) {
+class InventoryController(val supplier: () -> DefaultSidedInventory) {
     private var inv: DefaultSidedInventory? = null
         get() = field ?: supplier().apply { field = this }
 
-    fun getInventory(): DefaultSidedInventory {
-        val machine = machineProvider()
-        if (machine.world != null) {
-            val block = machine.cachedState.block
-            if (block is ProxyBlock) {
-                val center = block.getBlockEntityPos(machine.cachedState, machine.pos)
-                val blockEntity = machine.world?.getBlockEntity(center)
-                if (blockEntity is InventoryProvider) return blockEntity.getInventory(machine.cachedState, machine.world, machine.pos) as DefaultSidedInventory
-            }
-        }
-        return inv!!
-    }
+    fun getInventory(): DefaultSidedInventory = inv!!
 
     fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()

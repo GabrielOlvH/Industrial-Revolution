@@ -65,10 +65,6 @@ class IndustrialRevolutionClient : ClientModInitializer {
             IRInventoryScreen(controller, inventory.player)
         }
 
-        ScreenRegistry.register(IndustrialRevolution.NUCLEAR_REACTOR_HANDLER) { controller, inventory, _ ->
-            IRInventoryScreen(controller, inventory.player)
-        }
-
         ScreenRegistry.register(IndustrialRevolution.RECYCLER_HANDLER) { controller, inventory, _ ->
             IRInventoryScreen(controller, inventory.player)
         }

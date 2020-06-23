@@ -7,14 +7,14 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.ChopperBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
-import me.steven.indrev.blockentities.generators.*
+import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.blocks.VerticalFacingMachineBlock
-import me.steven.indrev.blocks.nuclear.NuclearReactorCore
-import me.steven.indrev.blocks.nuclear.NuclearReactorPart
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -102,19 +102,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { BiomassGeneratorBlockEntity(tier) } }
         ).buffer { 20000.0 }
 
-        val NUCLEAR_GENERATOR_REGISTRY = MachineRegistry(identifier("nuclear_generator"), false, Tier.MK4).register(
-            {
-                NuclearReactorCore(MACHINE_BLOCK_SETTINGS(), IndustrialRevolution.NUCLEAR_REACTOR_HANDLER)
-                { NuclearReactorBlockEntity() }
-            },
-            { { NuclearReactorBlockEntity() } }
-        ).buffer { 100000.0 }
-
-        val NUCLEAR_PART_BLOCK = NuclearReactorPart(MACHINE_BLOCK_SETTINGS()).also { identifier("nuclear_reactor_part").block(it) }
-        val NUCLEAR_PART_BLOCK_ITEM = BlockItem(NUCLEAR_PART_BLOCK, itemSettings()).also { identifier("nuclear_reactor_part").item(it) }
-        val NUCLEAR_PART_BLOCK_ENTITY =
-            BlockEntityType.Builder.create(Supplier { NuclearReactorProxyBlockEntity() }, NUCLEAR_PART_BLOCK).build(null).also { identifier("nuclear_reactor_part").blockEntityType(it) }
-
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
             { tier ->
                 FacingMachineBlock(
@@ -194,10 +181,10 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { BatteryBlockEntity(tier) } }
         ).buffer { tier ->
             when (tier) {
-                Tier.MK1 -> 5000.0
-                Tier.MK2 -> 10000.0
-                Tier.MK3 -> 50000.0
-                Tier.MK4 -> 200000.0
+                Tier.MK1 -> 10000.0
+                Tier.MK2 -> 100000.0
+                Tier.MK3 -> 1000000.0
+                Tier.MK4 -> 10000000.0
                 Tier.CREATIVE -> Double.MAX_VALUE
             }
         }

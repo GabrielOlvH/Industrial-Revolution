@@ -11,7 +11,6 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.widgets.EnergyWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.TemperatureWidget
-import net.minecraft.client.resource.language.I18n
 import net.minecraft.inventory.Inventory
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
@@ -37,9 +36,10 @@ fun SyncedGuiDescription.configure(
     (rootPanel as WGridPanel).also {
         it.setSize(150, 120)
         it.add(createPlayerInventoryPanel(), 0, 5)
-        it.add(StringWidget(I18n.translate(titleId), titleColor), 4, 0)
+        it.add(StringWidget(TranslatableText(titleId)), 4, 0)
 
-        it.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
+        val energyWidget = EnergyWidget(propertyDelegate)
+        it.add(energyWidget, 0, 0, 16, 64)
 
         val batterySlot = WItemSlot.of(blockInventory, 0)
         it.add(batterySlot, 0.0, 3.7)

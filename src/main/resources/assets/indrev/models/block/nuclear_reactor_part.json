@@ -1,6 +1,0 @@
-{
-  "parent": "indrev:block/machine",
-  "textures": {
-    "texture": "indrev:block/nuclear_reactor_part"
-  }
-}
