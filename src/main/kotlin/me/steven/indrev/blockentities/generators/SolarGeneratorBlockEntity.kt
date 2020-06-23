@@ -22,7 +22,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     override fun getMaxOutput(side: EnergySide?): Double = 32.0
 
     override fun getGenerationRatio(): Double = when (tier) {
-        Tier.MK1 -> 32.0
+        Tier.MK1 -> 16.0
         Tier.MK3 -> 64.0
         else -> throw IllegalArgumentException("unsupported tier for solar generator")
     }
