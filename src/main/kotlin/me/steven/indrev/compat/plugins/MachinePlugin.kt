@@ -3,20 +3,19 @@ package me.steven.indrev.compat.plugins
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.TransferRecipeDisplay
 import me.shedaniel.rei.server.ContainerInfo
-import me.steven.indrev.compat.REIPlugin
 import net.minecraft.recipe.Recipe
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import java.util.*
 
-class MachinePlugin(private val recipe: Recipe<*>) : TransferRecipeDisplay {
+class MachinePlugin(private val recipe: Recipe<*>, private val category: Identifier) : TransferRecipeDisplay {
 
     private val output: MutableList<EntryStack> =
         mutableListOf(EntryStack.create(recipe.output))
     private val input: MutableList<MutableList<EntryStack>> =
         recipe.previewInputs.map { preview -> preview.matchingStacksClient.map { stack -> EntryStack.create(stack) }.toMutableList() }.toMutableList()
 
-    override fun getRecipeCategory(): Identifier = REIPlugin.PULVERIZING
+    override fun getRecipeCategory(): Identifier = category
 
     override fun getRecipeLocation(): Optional<Identifier> = Optional.ofNullable(recipe).map { it.id }
 

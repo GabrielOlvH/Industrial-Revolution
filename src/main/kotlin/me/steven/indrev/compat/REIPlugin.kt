@@ -49,10 +49,10 @@ object REIPlugin : REIPluginV0 {
     }
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) { MachinePlugin(it) }
-        recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) { MachinePlugin(it) }
-        recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) { MachinePlugin(it) }
-        recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) { MachinePlugin(it) }
+        recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) { MachinePlugin(it, PULVERIZING) }
+        recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) { MachinePlugin(it, INFUSING) }
+        recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) { MachinePlugin(it, COMPRESSING) }
+        recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) { MachinePlugin(it, RECYCLING) }
     }
 
     override fun registerOthers(recipeHelper: RecipeHelper?) {
