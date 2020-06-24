@@ -17,7 +17,9 @@ object EnergyMovement {
         val sourceHandler = Energy.of(sourceBlockEntity)
         val targets = Direction.values()
             .mapNotNull { direction ->
-                if (sourceBlockEntity is MachineBlockEntity && sourceBlockEntity.lastInputFrom == direction) return@mapNotNull null
+                if (sourceBlockEntity is MachineBlockEntity
+                    && sourceBlockEntity.lastInputFrom == direction
+                    && sourceBlockEntity.energy < sourceBlockEntity.maxStoredPower) return@mapNotNull null
                 else if (sourceBlockEntity.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
