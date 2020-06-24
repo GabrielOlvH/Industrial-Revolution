@@ -3,15 +3,15 @@
   "id": "indrev",
   "version": "${version}",
   "name": "Industrial Revolution",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "description": "Every other industrial mod ever but with bad textures.",
   "authors": [
     "Me!"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/StupPlayer/Industrial-Revolution",
+    "sources": "https://github.com/StupPlayer/Industrial-Revolution"
   },
-  "license": "CC0-1.0",
+  "license": "Apache-2.0",
   "icon": "assets/indrev/icon.png",
   "environment": "*",
   "entrypoints": {

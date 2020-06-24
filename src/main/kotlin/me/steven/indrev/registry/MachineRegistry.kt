@@ -87,14 +87,19 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         ).buffer { 1000.0 }
 
 
-        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(identifier("solar_generator"), false, Tier.MK1, Tier.MK3).register(
+        val SOLAR_GENERATOR_REGISTRY = MachineRegistry(
+            identifier("solar_generator"),
+            false,
+            Tier.MK1,
+            Tier.MK3
+        ).register(
             { tier ->
                 MachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.SOLAR_GENERATOR_HANDLER
                 ) { SolarGeneratorBlockEntity(tier) }
             },
             { tier -> { SolarGeneratorBlockEntity(tier) } }
-        ).buffer { 32.0 }
+        ).buffer { tier -> tier.io * 2 }
 
 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
