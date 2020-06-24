@@ -9,14 +9,13 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
+import net.minecraft.item.BlockItem
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
 import net.minecraft.item.ToolMaterials
-import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -40,7 +39,7 @@ object ModRegistry {
         identifier("battery").item(IRRechargeableItem(itemSettings().maxDamage(4096), true))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
-        identifier("machine_block").item(DEFAULT_ITEM())
+        identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
 
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
@@ -67,10 +66,6 @@ object ModRegistry {
         identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
         identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
         identifier("coolant_bucket").item(COOLANT_BUCKET)
-    }
-
-    private val MACHINE_BLOCK_SETTINGS = {
-        FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -107,6 +102,8 @@ object ModRegistry {
     val COOLANT_FLUID_STILL = CoolantFluid.Still()
     val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings())
     val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
+
+    val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)

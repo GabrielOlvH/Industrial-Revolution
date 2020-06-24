@@ -70,7 +70,11 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     companion object {
 
         private val MACHINE_BLOCK_SETTINGS = {
-            FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).breakByTool(FabricToolTags.PICKAXES).strength(5.0f, 6.0f)
+            FabricBlockSettings.of(Material.METAL)
+                .sounds(BlockSoundGroup.METAL)
+                .requiresTool()
+                .breakByTool(FabricToolTags.PICKAXES, 2)
+                .strength(5.0f, 6.0f)
         }
 
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(

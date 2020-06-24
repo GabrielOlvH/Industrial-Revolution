@@ -17,11 +17,11 @@
     },
     "facing=up": {
       "model": "indrev:block/lazuli_flux_container_mk4",
-      "x": 90
+      "x": 270
     },
     "facing=down": {
       "model": "indrev:block/lazuli_flux_container_mk4",
-      "x": 270
+      "x": 90
     }
   }
 }
