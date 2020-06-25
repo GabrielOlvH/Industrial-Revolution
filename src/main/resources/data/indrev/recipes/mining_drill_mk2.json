@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NPN",
+    "ACS",
+    "OBO"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk2"
+    },
+    "N": {
+      "item": "c:nikolite_dust"
+    },
+    "P": {
+      "item": "minecraft:iron_pickaxe"
+    },
+    "A": {
+      "item": "minecraft:iron_axe"
+    },
+    "S": {
+      "item": "minecraft:iron_shovel"
+    },
+    "B": {
+      "item": "indrev:battery"
+    },
+    "O": {
+      "tag": "c:copper_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:mining_drill_mk2"
+  }
+}
