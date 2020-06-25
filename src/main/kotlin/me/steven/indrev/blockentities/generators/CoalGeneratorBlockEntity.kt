@@ -53,7 +53,7 @@ class CoalGeneratorBlockEntity :
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 32.0
+    override fun getGenerationRatio(): Double = 16.0
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
