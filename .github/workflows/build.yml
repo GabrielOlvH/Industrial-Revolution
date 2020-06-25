@@ -1,3 +1,9 @@
+  on:
+    push:
+      paths:
+      - '.github/workflows/**'
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
