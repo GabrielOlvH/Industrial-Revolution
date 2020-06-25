@@ -53,8 +53,11 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     WorldChunkVeinData.STATE_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
-        } else if (Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
-            mining += Upgrade.SPEED.apply(this, inventory)
+        } else {
+            if (mining > 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+                mining += Upgrade.SPEED.apply(this, inventory)
+                temperatureController?.tick(true)
+            } else temperatureController?.tick(false)
             if (mining > 10) {
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
@@ -66,15 +69,19 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 if (data == null) {
                     chunkVeinType = null
                     return
-                } else if (data.explored >= data.size) return
-                data.explored++
+                }
                 propertyDelegate[3] = data.explored * 100 / data.size
+                if (data.explored >= data.size) {
+                    mining = -1.0
+                    return
+                }
+                data.explored++
                 state.markDirty()
                 mining = 0.0
                 inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
             }
-            temperatureController?.tick(true)
-        } else temperatureController?.tick(false)
+
+        }
         update()
     }
 
