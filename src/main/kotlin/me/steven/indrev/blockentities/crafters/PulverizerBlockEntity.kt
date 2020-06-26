@@ -38,7 +38,7 @@ class PulverizerBlockEntity(tier: Tier) :
             world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
         val outputStack = inventory.getStack(3).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count < outputStack.maxCount && outputStack.item == recipe.output.item)) {
+        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
                 processTime = recipe.processTime
                 totalProcessTime = recipe.processTime
