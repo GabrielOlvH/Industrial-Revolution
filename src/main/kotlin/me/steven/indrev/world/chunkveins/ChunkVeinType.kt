@@ -18,13 +18,13 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
     ),
     BITUMINOUS(
         900..1900,
-        WeightedList<Block>().add(Blocks.COAL_ORE, 10).add(Blocks.DIAMOND_ORE, 1)
-            .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
+        WeightedList<Block>().add(Blocks.COAL_ORE, 20).add(Blocks.DIAMOND_ORE, 1)
+            .add(Blocks.STONE, 20).add(Blocks.DIRT, 10).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     ANTHRACITE(
         2000..6000,
-        WeightedList<Block>().add(Blocks.COAL_ORE, 12).add(Blocks.DIAMOND_ORE, 2)
-            .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
+        WeightedList<Block>().add(Blocks.COAL_ORE, 24).add(Blocks.DIAMOND_ORE, 1)
+            .add(Blocks.STONE, 20).add(Blocks.DIRT, 10).add(Blocks.CLAY, 2).add(Blocks.GRAVEL, 2)
     ),
     SIDERITE(
         500..1000,
@@ -42,7 +42,7 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     MAGNETITE(
-        1000..2500,
+        1600..3500,
         WeightedList<Block>().add(Blocks.IRON_ORE, 12)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
@@ -52,17 +52,17 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     CUPRITE(
-        800..1900,
+        1200..2100,
         WeightedList<Block>().add(ModRegistry.COPPER_ORE, 6)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     CASSITERITE(
-        800..1900,
+        1200..2100,
         WeightedList<Block>().add(ModRegistry.TIN_ORE, 6)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     STANNITE(
-        800..1900,
+        1600..2700,
         WeightedList<Block>().add(ModRegistry.TIN_ORE, 6).add(ModRegistry.COPPER_ORE, 4).add(Blocks.IRON_ORE, 4)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
@@ -70,15 +70,5 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
         400..600,
         WeightedList<Block>().add(Blocks.GOLD_ORE, 8)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
-    ),
-    URANINITE(
-        200..300,
-        WeightedList<Block>().add(ModRegistry.URANIUM_ORE, 3)
-            .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
-    ),
-    CARNOTITE(
-        200..300,
-        WeightedList<Block>().add(ModRegistry.URANIUM_ORE, 3).add(Blocks.IRON_BLOCK, 3)
-            .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
-    );
+    )
 }

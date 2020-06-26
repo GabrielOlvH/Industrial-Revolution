@@ -81,7 +81,6 @@ object ModRegistry {
 
     val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
     val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
-    val URANIUM_ORE = Registry.BLOCK.get(Identifier("c:uranium_ore"))
 
     val BIOMASS = DEFAULT_ITEM()
 
