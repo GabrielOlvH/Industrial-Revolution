@@ -8,6 +8,7 @@ import net.minecraft.item.Item
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 
@@ -48,3 +49,10 @@ fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.M
 fun IntRange.toIntArray(): IntArray = this.map { it }.toIntArray()
 
 fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
+
+fun ChunkPos.asString() = "$x,$z"
+
+fun getChunkPos(s: String): ChunkPos {
+    val split = s.split(",")
+    return ChunkPos(split[0].toInt(), split[1].toInt())
+}
