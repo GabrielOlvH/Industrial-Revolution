@@ -45,7 +45,7 @@ object ModRegistry {
         identifier("cooler_cell").item(COOLER_CELL)
         identifier("heatsink").item(HEATSINK)
 
-        identifier("chunk_scanner").item(IRChunkScannerItem(itemSettings()))
+        identifier("chunk_scanner").item(IRChunkScannerItem(itemSettings().maxCount(1)))
 
         identifier("empty_upgrade").item(DEFAULT_ITEM())
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
