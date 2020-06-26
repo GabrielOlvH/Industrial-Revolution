@@ -38,7 +38,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
 
-    var energy: Double by Property(0, 0.0) { i -> i.coerceAtMost(maxStoredPower) }
+    var energy: Double by Property(0, 0.0) { i -> i.coerceAtMost(maxStoredPower).coerceAtLeast(0.0) }
     var inventoryController: InventoryController? = null
     var temperatureController: TemperatureController? = null
 

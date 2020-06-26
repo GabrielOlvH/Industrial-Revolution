@@ -54,7 +54,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
         } else {
-            if (mining > 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+            if (mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 mining += Upgrade.SPEED.apply(this, inventory)
                 temperatureController?.tick(true)
             } else temperatureController?.tick(false)
