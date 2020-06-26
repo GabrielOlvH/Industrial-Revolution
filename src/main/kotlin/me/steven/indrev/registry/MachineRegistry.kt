@@ -21,9 +21,15 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.BlockItem
+import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.world.BlockView
 import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
@@ -200,9 +206,14 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val MINER_REGISTRY = MachineRegistry(identifier("miner"), false, Tier.MK4).register(
             { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER
-                ) { MinerBlockEntity(tier) }
+                object : FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, IndustrialRevolution.MINER_HANDLER, { MinerBlockEntity(tier) }
+                ) {
+                    override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
+                        super.buildTooltip(stack, view, tooltip, options)
+                        tooltip?.add(TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
+                    }
+                }
             },
             { tier -> { MinerBlockEntity(tier) } }
         ).buffer { 500000.0 }

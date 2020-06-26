@@ -99,5 +99,6 @@
   "item.c.nikolite_ingot": "Barra de Nikolite",
   "item.c.nikolite_ore": "Minério de Nikolite",
   "item.c.nikolite_nether_ore": "Minéro do Nether de Nikolite",
-  "item.c.nikolite_end_ore": "Minério do Fim de Nikolite"
+  "item.c.nikolite_end_ore": "Minério do Fim de Nikolite",
+  "block.indrev.miner.tooltip": "Você precisa escanear esse chunk usando um Escaneador de Chunk antes de usar a mineradora."
 }
