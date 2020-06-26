@@ -13,6 +13,7 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
+import net.minecraft.item.ItemStack
 import net.minecraft.item.SwordItem
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
@@ -53,13 +54,13 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         }
 
         val input = inventory.getInputInventory()
-        val stacks = (0 until input.size()).map { input.getStack(it) }
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
         if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
             return
-        val swordStack = stacks.firstOrNull { it.item is SwordItem }
+        val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
         val fakePlayer = FakePlayerEntity(world!!, pos)
+        fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
@@ -80,9 +81,14 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             }
         }
         for (animal in animals) {
-            stacks.forEach { stack ->
+            (0 until input.size()).forEach { slot ->
+                val stack = inventory.getStack(slot).copy()
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                 animal.interactMob(fakePlayer, Hand.MAIN_HAND)
+                val res = inventory.addStack(fakePlayer.inventory.getStack(1))
+                if (res.isEmpty)
+                    inventory.setStack(slot, stack)
+                fakePlayer.inventory.setStack(1, ItemStack.EMPTY)
             }
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
