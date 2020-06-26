@@ -15,7 +15,7 @@ import net.minecraft.world.World
 class IRMiningDrill(toolMaterial: ToolMaterial, settings: Settings) : PickaxeItem(toolMaterial, 0, 0F, settings), Rechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack?, state: BlockState?): Float {
         val material = state?.material
-        return if (SUPPORTED_MATERIALS.contains(material) && stack?.damage ?: 0 > 0) this.material.miningSpeedMultiplier * 2 else 0F
+        return if (SUPPORTED_MATERIALS.contains(material) && stack?.damage ?: 0 >= 0) this.material.miningSpeedMultiplier * 2 else 0F
     }
 
     override fun appendTooltip(

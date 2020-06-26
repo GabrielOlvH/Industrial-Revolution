@@ -26,7 +26,7 @@ class BatteryBlockEntity(tier: Tier) :
         if (world?.isClient == true) return
         val inventory = inventoryController?.getInventory() ?: return
         val stack = inventory.getStack(0)
-        if (stack.item is Rechargeable && stack.isDamaged && Energy.of(this).use(1.0)) {
+        if (stack.item is Rechargeable && stack.isDamaged && stack.damage > 0 && Energy.of(this).use(1.0)) {
             inventory.setStack(0, stack.copy().apply { damage-- })
             update()
         }
