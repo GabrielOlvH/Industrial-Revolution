@@ -26,7 +26,7 @@ class IRMiningDrill(toolMaterial: ToolMaterial, settings: Settings) : PickaxeIte
     ) {
         super.appendTooltip(stack, world, tooltip, context)
         tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${stack?.damage} / ${stack?.maxDamage} LF"))
+        tooltip?.add(LiteralText("${if (stack?.isDamaged == true) stack.damage else stack?.maxDamage} / ${stack?.maxDamage} LF"))
         tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
     }
 
