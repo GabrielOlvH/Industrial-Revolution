@@ -6,7 +6,6 @@ import me.steven.indrev.items.IRMachineUpgradeItem
 import me.steven.indrev.utils.Tier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -14,11 +13,14 @@ import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.particle.ParticleTypes
+import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.text.LiteralText
@@ -38,7 +40,7 @@ import java.util.*
 open class MachineBlock(
     settings: Settings,
     val tier: Tier,
-    private val screenHandlerType: ExtendedScreenHandlerType<*>?,
+    private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 
@@ -75,11 +77,11 @@ open class MachineBlock(
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult? {
-        if (world.isClient) return ActionResult.SUCCESS
+        //if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos)
         val stack = player?.getStackInHand(hand)
         val upgrade = stack?.item
-        if (upgrade is IRMachineUpgradeItem) {
+        if (upgrade is IRMachineUpgradeItem && !world.isClient) {
             val block = state?.block
             if (block is MachineBlock && block.tier == upgrade.from) {
                 if (blockEntity !is MachineBlockEntity || !blockEntity.registry.upgradeable) return ActionResult.PASS
@@ -98,10 +100,10 @@ open class MachineBlock(
                 stack.decrement(1)
                 return ActionResult.CONSUME
             }
-        } else if (screenHandlerType != null
+        } else if (screenHandler != null
             && blockEntity is MachineBlockEntity
             && blockEntity.inventoryController != null) {
-            player?.openHandledScreen(IRScreenHandlerFactory(screenHandlerType, pos!!))?.ifPresent { syncId ->
+            player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))?.ifPresent { syncId ->
                 blockEntity.viewers[player.uuid] = syncId
             }
         }

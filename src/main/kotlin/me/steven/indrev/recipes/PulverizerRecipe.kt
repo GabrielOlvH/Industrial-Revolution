@@ -43,9 +43,10 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 buf.writeInt(recipe.processTime)
                 buf.writeItemStack(recipe.output)
                 if (recipe.extraOutput != null) {
+                    buf.writeBoolean(true)
                     buf.writeItemStack(recipe.extraOutput.left)
                     buf.writeDouble(recipe.extraOutput.right)
-                }
+                } else buf.writeBoolean(false)
             }
 
             override fun read(id: Identifier, json: JsonObject): PulverizerRecipe {
@@ -73,9 +74,12 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 val input = Ingredient.fromPacket(buf)
                 val processTime = buf.readInt()
                 val output = buf.readItemStack()
-                val extraOutputStack = buf.readItemStack()
-                val chance = buf.readDouble()
-                return PulverizerRecipe(id, processTime, output, Pair(extraOutputStack, chance), input)
+                if (buf.readBoolean()) {
+                    val extraOutputStack = buf.readItemStack()
+                    val chance = buf.readDouble()
+                    return PulverizerRecipe(id, processTime, output, Pair(extraOutputStack, chance), input)
+                }
+                return PulverizerRecipe(id, processTime, output, null, input)
             }
         }
     }
