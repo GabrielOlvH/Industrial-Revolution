@@ -18,10 +18,12 @@ open class FacingMachineBlock(
 ) : MachineBlock(settings, tier, screenHandlerType, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
+        super.getPlacementState(ctx)
         return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
+        super.appendProperties(builder)
         builder?.add(HORIZONTAL_FACING)
     }
 

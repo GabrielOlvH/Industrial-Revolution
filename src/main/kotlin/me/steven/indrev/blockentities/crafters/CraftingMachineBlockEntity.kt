@@ -31,12 +31,15 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         if (world?.isClient == true) return
         val inventory = inventoryController?.getInventory() ?: return
         val inputInventory = inventory.getInputInventory()
-        if (inputInventory.isEmpty) reset()
-        else if (isProcessing()) {
+        if (inputInventory.isEmpty) {
+            reset()
+            setWorkingState(false)
+        } else if (isProcessing()) {
             val recipe = getCurrentRecipe()
             if (recipe?.matches(inputInventory, this.world) == false)
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+                setWorkingState(true)
                 processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
                     inventory.inputSlots.forEachIndexed { index, slot ->
@@ -58,7 +61,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             } else reset()
         } else if (energy > 0 && !inputInventory.isEmpty && processTime <= 0) {
             reset()
-            tryStartRecipe(inventory)
+            if (tryStartRecipe(inventory) == null) setWorkingState(false)
         }
         temperatureController?.tick(isProcessing())
         update()

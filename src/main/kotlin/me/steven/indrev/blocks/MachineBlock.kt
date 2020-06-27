@@ -4,6 +4,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.IRMachineUpgradeItem
 import me.steven.indrev.utils.Tier
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -13,8 +15,12 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.SidedInventory
+import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.particle.ParticleTypes
+import net.minecraft.state.StateManager
+import net.minecraft.state.property.BooleanProperty
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -27,6 +33,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import java.util.*
 
 open class MachineBlock(
     settings: Settings,
@@ -34,6 +41,20 @@ open class MachineBlock(
     private val screenHandlerType: ExtendedScreenHandlerType<*>?,
     private val blockEntityProvider: () -> MachineBlockEntity
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
+
+    init {
+        if (this !is CableBlock)
+            this.defaultState = stateManager.defaultState.with(WORKING_PROPERTY, false)
+    }
+
+    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
+        super.appendProperties(builder)
+        builder?.add(WORKING_PROPERTY)
+    }
+
+    override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
+        return defaultState.with(WORKING_PROPERTY, false)
+    }
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
 
@@ -102,5 +123,19 @@ open class MachineBlock(
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)
+    }
+
+    @Environment(EnvType.CLIENT)
+    override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random?) {
+        if (state?.contains(WORKING_PROPERTY) == true && state[WORKING_PROPERTY]) {
+            val d = pos.x.toDouble() + 0.5
+            val e = pos.y.toDouble() + 1.0
+            val f = pos.z.toDouble() + 0.5
+            world.addParticle(ParticleTypes.SMOKE, d, e, f, 0.0, 0.0, 0.0)
+        }
+    }
+
+    companion object {
+        val WORKING_PROPERTY: BooleanProperty = BooleanProperty.of("working")
     }
 }

@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
@@ -70,6 +71,13 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 else
                     ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, toUpdatePacket())
             }
+        }
+    }
+
+    protected fun setWorkingState(value: Boolean) {
+        if (world?.isClient == false && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
+            val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
+            world!!.setBlockState(pos, state)
         }
     }
 

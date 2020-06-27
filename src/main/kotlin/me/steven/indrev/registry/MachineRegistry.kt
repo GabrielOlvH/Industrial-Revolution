@@ -81,6 +81,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .requiresTool()
                 .breakByTool(FabricToolTags.PICKAXES, 2)
                 .strength(5.0f, 6.0f)
+                .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
 
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
@@ -230,7 +231,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS(), tier) },
+                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             ).buffer { tier -> tier.io }
 

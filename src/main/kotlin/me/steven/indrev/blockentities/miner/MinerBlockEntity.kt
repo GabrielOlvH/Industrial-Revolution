@@ -57,7 +57,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             if (mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 mining += Upgrade.SPEED.apply(this, inventory)
                 temperatureController?.tick(true)
-            } else temperatureController?.tick(false)
+            } else {
+                setWorkingState(false)
+                temperatureController?.tick(false)
+            }
             if (mining > 10) {
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
@@ -79,6 +82,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 state.markDirty()
                 mining = 0.0
                 inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
+                setWorkingState(true)
             }
 
         }
