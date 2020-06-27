@@ -49,6 +49,11 @@ object IndustrialRevolution : EnergyModInitializer() {
             SolarGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
         } as ExtendedScreenHandlerType<SolarGeneratorController>
 
+    val HEAT_GENERATOR_HANDLER: ExtendedScreenHandlerType<HeatGeneratorController> =
+        ScreenHandlerRegistry.registerExtended(HeatGeneratorController.SCREEN_ID) { syncId, playerInventory, buf ->
+            HeatGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
+        } as ExtendedScreenHandlerType<HeatGeneratorController>
+
     val ELECTRIC_FURNACE_HANDLER: ExtendedScreenHandlerType<ElectricFurnaceController> =
         ScreenHandlerRegistry.registerExtended(ElectricFurnaceController.SCREEN_ID) { syncId, playerInventory, buf ->
             ElectricFurnaceController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))

@@ -20,7 +20,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, EMPTY_HEAT, -1)
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.limit.toFloat()
+        val maxTemperature = temperatureController.explosionLimit.toFloat()
         if (temperature > 0) {
             val v = ((temperature.toFloat() * 63 / maxTemperature) + 1) / 64
             val h = round(v * height).toInt()
@@ -30,7 +30,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
 
     override fun addTooltip(information: MutableList<StringRenderable>?) {
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.limit.toInt()
+        val maxTemperature = temperatureController.explosionLimit.toInt()
         val info = when {
             temperature > temperatureController.optimalRange.last ->
                 TranslatableText("gui.widget.temperature_info.high").formatted(Formatting.DARK_RED, Formatting.ITALIC)

@@ -9,9 +9,17 @@ import net.minecraft.screen.PropertyDelegate
 class TemperatureController(
     private val machineProvider: () -> MachineBlockEntity,
     private val heatingSpeed: Double,
+    private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
-    val limit: Double
+    val explosionLimit: Double
 ) : PropertyDelegateHolder {
+
+    constructor(
+        machineProvider: () -> MachineBlockEntity,
+        heatingSpeed: Double,
+        optimalRange: IntRange,
+        explosionLimit: Double
+    ) : this(machineProvider, heatingSpeed, { explosionLimit }, optimalRange, explosionLimit)
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
@@ -40,7 +48,7 @@ class TemperatureController(
         val overflowModifier = if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier + tempModifier - overflowModifier
-        else if (cooling <= 0 && temperature > optimalRange.last - 10) {
+        else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {
             cooling = 70
             coolingModifier = 0.01
             if (coolerStack != null && coolerItem is IRCoolerItem) {
@@ -52,7 +60,7 @@ class TemperatureController(
             temperature -= coolingModifier + tempModifier - overflowModifier
         } else
             temperature += heatingSpeed + tempModifier + overflowModifier
-        if (temperature > limit - 5) {
+        if (temperature > explosionLimit - 5) {
             machine.explode = true
         }
     }

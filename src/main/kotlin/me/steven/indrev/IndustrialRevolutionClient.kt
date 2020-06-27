@@ -41,6 +41,10 @@ class IndustrialRevolutionClient : ClientModInitializer {
             IRInventoryScreen(controller, inventory.player)
         }
 
+        ScreenRegistry.register(IndustrialRevolution.HEAT_GENERATOR_HANDLER) { controller, inventory, _ ->
+            IRInventoryScreen(controller, inventory.player)
+        }
+
         ScreenRegistry.register(IndustrialRevolution.ELECTRIC_FURNACE_HANDLER) { controller, inventory, _ ->
             IRInventoryScreen(controller, inventory.player)
         }

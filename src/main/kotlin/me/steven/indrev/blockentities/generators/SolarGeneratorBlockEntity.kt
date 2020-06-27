@@ -25,5 +25,5 @@ class SolarGeneratorBlockEntity(tier: Tier) :
         Tier.MK1 -> 16.0
         Tier.MK3 -> 64.0
         else -> throw IllegalArgumentException("unsupported tier for solar generator")
-    }
+    } * if (temperatureController?.isFullEfficiency() == true) 1.5 else 1.0
 }

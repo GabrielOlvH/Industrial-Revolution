@@ -8,6 +8,7 @@ import me.steven.indrev.blockentities.farms.ChopperBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.miner.MinerBlockEntity
 import me.steven.indrev.blocks.CableBlock
@@ -116,6 +117,15 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { BiomassGeneratorBlockEntity(tier) }
             },
             { tier -> { BiomassGeneratorBlockEntity(tier) } }
+        ).buffer { 20000.0 }
+
+        val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> HeatGeneratorController(syncId, inv, ctx) }
+                ) { HeatGeneratorBlockEntity(tier) }
+            },
+            { tier -> { HeatGeneratorBlockEntity(tier) } }
         ).buffer { 20000.0 }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
