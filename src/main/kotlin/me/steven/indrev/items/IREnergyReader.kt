@@ -14,7 +14,7 @@ class IREnergyReader(settings: Settings) : Item(settings) {
         val blockPos = context?.blockPos
         val blockEntity = context?.world?.getBlockEntity(blockPos)
         if (blockEntity != null && Energy.valid(blockEntity)) {
-            val energy = Energy.of(blockEntity).energy
+            val energy = Energy.of(blockEntity).energy.toInt()
             context.player?.sendMessage(TranslatableText("item.indrev.energy_reader.use").formatted(Formatting.BLUE).append(LiteralText(" $energy").formatted(Formatting.WHITE)), true)
         }
         return ActionResult.FAIL

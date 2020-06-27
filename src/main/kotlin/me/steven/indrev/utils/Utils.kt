@@ -11,6 +11,7 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import team.reborn.energy.EnergySide
 
 
 fun identifier(id: String) = Identifier(IndustrialRevolution.MOD_ID, id)
@@ -56,3 +57,14 @@ fun getChunkPos(s: String): ChunkPos {
     val split = s.split(",")
     return ChunkPos(split[0].toInt(), split[1].toInt())
 }
+
+fun EnergySide.opposite(): EnergySide =
+    when (this) {
+        EnergySide.DOWN -> EnergySide.UP
+        EnergySide.UP -> EnergySide.DOWN
+        EnergySide.NORTH -> EnergySide.SOUTH
+        EnergySide.SOUTH -> EnergySide.NORTH
+        EnergySide.WEST -> EnergySide.EAST
+        EnergySide.EAST -> EnergySide.WEST
+        EnergySide.UNKNOWN -> EnergySide.UNKNOWN
+    }
