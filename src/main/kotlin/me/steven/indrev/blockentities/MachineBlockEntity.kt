@@ -75,7 +75,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     }
 
     protected fun setWorkingState(value: Boolean) {
-        if (world?.isClient == false && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
+        if (world?.isClient == false && this.cachedState.contains(MachineBlock.WORKING_PROPERTY) && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
             val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
             world!!.setBlockState(pos, state)
         }

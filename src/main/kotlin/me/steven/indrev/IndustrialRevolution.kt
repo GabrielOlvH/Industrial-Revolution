@@ -3,6 +3,7 @@ package me.steven.indrev
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.recipes.*
+import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -20,6 +21,7 @@ object IndustrialRevolution : EnergyModInitializer() {
         super.onInitialize()
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry.registerAll()
+        MachineRegistry.COAL_GENERATOR_REGISTRY
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
