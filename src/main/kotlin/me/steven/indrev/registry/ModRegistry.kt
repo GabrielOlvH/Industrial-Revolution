@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.fluids.CoolantFluid
+import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
 import me.steven.indrev.items.rechargeable.IRMiningDrill
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -66,6 +67,11 @@ object ModRegistry {
         identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
         identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
         identifier("coolant_bucket").item(COOLANT_BUCKET)
+
+        identifier("molten_netherite").block(MOLTEN_NETHERITE)
+        identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
+        identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
+        identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -101,6 +107,11 @@ object ModRegistry {
     val COOLANT_FLUID_STILL = CoolantFluid.Still()
     val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings())
     val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
+
+    val MOLTEN_NETHERITE_FLOWING = MoltenNetheriteFluid.Flowing()
+    val MOLTEN_NETHERITE_STILL = MoltenNetheriteFluid.Still()
+    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings())
+    val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
 

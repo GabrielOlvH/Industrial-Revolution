@@ -107,33 +107,56 @@ class IndustrialRevolutionClient : ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(ModRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putFluids(RenderLayer.getTranslucent(), ModRegistry.COOLANT_FLUID_STILL, ModRegistry.COOLANT_FLUID_FLOWING)
 
-        val flowingCoolantSprite = Identifier("block/water_still")
-        val stillCoolantSprite = Identifier("block/water_flow")
+        val stillCoolantSprite = Identifier("block/water_still")
+        val flowingCoolantSprite = Identifier("block/water_flow")
+        val stillMoltenNetheriteSprite = identifier("block/molten_netherite_still")
+        val flowingMoltenNetheriteSprite = identifier("block/molten_netherite_flow")
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(ClientSpriteRegistryCallback { _, registry ->
-            registry.register(flowingCoolantSprite)
             registry.register(stillCoolantSprite)
+            registry.register(flowingCoolantSprite)
+            registry.register(stillMoltenNetheriteSprite)
+            registry.register(flowingMoltenNetheriteSprite)
         })
 
-        val sprites = arrayOfNulls<Sprite>(2)
+        val coolantSprites = arrayOfNulls<Sprite>(2)
+        val moltenFluidSprites = arrayOfNulls<Sprite>(2)
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(object : SimpleSynchronousResourceReloadListener {
             override fun apply(manager: ResourceManager?) {
                 val atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
-                sprites[0] = atlas.apply(stillCoolantSprite)
-                sprites[1] = atlas.apply(flowingCoolantSprite)
+                coolantSprites[0] = atlas.apply(stillCoolantSprite)
+                coolantSprites[1] = atlas.apply(flowingCoolantSprite)
             }
 
             override fun getFabricId(): Identifier = identifier("water_reload_listener")
-
         })
 
-        val renderHandler: FluidRenderHandler = object : FluidRenderHandler {
-            override fun getFluidSprites(view: BlockRenderView, pos: BlockPos, state: FluidState): Array<Sprite?> = sprites
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(object : SimpleSynchronousResourceReloadListener {
+            override fun apply(manager: ResourceManager?) {
+                val atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
+                moltenFluidSprites[0] = atlas.apply(stillMoltenNetheriteSprite)
+                moltenFluidSprites[1] = atlas.apply(flowingMoltenNetheriteSprite)
+            }
+
+            override fun getFabricId(): Identifier = identifier("lava_reload_listener")
+        })
+
+        val coolantFluidRender = object : FluidRenderHandler {
+            override fun getFluidSprites(view: BlockRenderView, pos: BlockPos, state: FluidState): Array<Sprite?> = coolantSprites
 
             override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x0C2340
         }
 
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_STILL, renderHandler)
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_FLOWING, renderHandler)
+        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_STILL, coolantFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_FLOWING, coolantFluidRender)
+
+        val moltenNetheriteFluidRender = object : FluidRenderHandler {
+            override fun getFluidSprites(view: BlockRenderView, pos: BlockPos, state: FluidState): Array<Sprite?> = moltenFluidSprites
+
+            override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x654740
+        }
+
+        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.MOLTEN_NETHERITE_STILL, moltenNetheriteFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.MOLTEN_NETHERITE_FLOWING, moltenNetheriteFluidRender)
     }
 }

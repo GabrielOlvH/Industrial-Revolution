@@ -29,9 +29,9 @@ class HeatGeneratorController(
         setRootPanel(root)
         configure("block.indrev.heat_generator", screenHandlerContext, blockInventory, propertyDelegate)
 
-        root.add(StringWidget(TranslatableText("Heating up...")), 3.5, 1.0)
+        root.add(StringWidget(TranslatableText("Heating up...")), 4.0, 2.0)
         val processWidget = ProcessWidget(propertyDelegate)
-        root.add(processWidget, 3.5, 1.5)
+        root.add(processWidget, 4.0, 2.5)
 
         root.validate(this)
     }

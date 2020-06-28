@@ -106,5 +106,9 @@
   "item.c.nikolite_ore": "Minério de Nikolite",
   "item.c.nikolite_nether_ore": "Minéro do Nether de Nikolite",
   "item.c.nikolite_end_ore": "Minério do Fim de Nikolite",
-  "block.indrev.miner.tooltip": "Você precisa escanear esse chunk usando um Escaneador de Chunk antes de usar a mineradora."
+  "block.indrev.miner.tooltip": "Você precisa escanear esse chunk usando um Escaneador de Chunk antes de usar a mineradora.",
+  "block.indrev.heat_generator": "Gerador à calor",
+  "block.indrev.heat_generator_mk4": "Gerador à calor",
+  "block.indrev.molten_netherite": "Netherite Derretida",
+  "item.indrev.molten_netherite_bucket": "Balde de Netherite Derretida"
 }

@@ -106,5 +106,9 @@
   "item.c.nikolite_ingot": "蓝石锭",
   "item.c.nikolite_ore": "蓝石矿",
   "item.c.nikolite_nether_ore": "下界蓝石矿",
-  "item.c.nikolite_end_ore": "末地蓝石矿"
+  "item.c.nikolite_end_ore": "末地蓝石矿",
+  "block.indrev.heat_generator": "Heat Generator",
+  "block.indrev.heat_generator_mk4": "Heat Generator",
+  "block.indrev.molten_netherite": "Molten Netherite",
+  "item.indrev.molten_netherite_bucket": "Molten Netherite Bucket"
 }

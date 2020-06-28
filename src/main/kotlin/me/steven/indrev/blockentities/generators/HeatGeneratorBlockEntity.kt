@@ -7,10 +7,12 @@ import me.steven.indrev.inventories.DefaultSidedInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.fluid.Fluid
+import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
@@ -46,9 +48,9 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         else if (maxStoredPower > energy) {
             for (direction in Direction.values()) {
                 val sidePos = pos.offset(direction)
-                val blockState = world?.getBlockState(sidePos)
-                if (TEMPERATURE_MAP.containsKey(blockState?.block)) {
-                    stableTemperature = TEMPERATURE_MAP[blockState!!.block] ?: return false
+                val fluidState = world?.getFluidState(sidePos)
+                if (TEMPERATURE_MAP.containsKey(fluidState?.fluid)) {
+                    stableTemperature = TEMPERATURE_MAP[fluidState!!.fluid] ?: return false
                     burnTime = 1600
                     maxBurnTime = burnTime
                     world?.setBlockState(sidePos, Blocks.AIR.defaultState, 3)
@@ -91,8 +93,11 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
     }
 
     companion object {
-        private val TEMPERATURE_MAP = mutableMapOf<Block, Int>().also {
-            it[Blocks.LAVA] = 5500
+        private val TEMPERATURE_MAP = mutableMapOf<Fluid, Int>().also {
+            it[Fluids.LAVA] = 5500
+            it[Fluids.FLOWING_LAVA] = 2255
+            it[ModRegistry.MOLTEN_NETHERITE_STILL] = 8000
+            it[ModRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
         }
     }
 }
