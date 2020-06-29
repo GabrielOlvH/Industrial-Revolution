@@ -22,7 +22,10 @@
       }
     ],
     "client": [
-      "me.steven.indrev.IndustrialRevolutionClient"
+      {
+        "adapter": "kotlin",
+        "value": "me.steven.indrev.IndustrialRevolutionClient"
+      }
     ],
     "rei_plugins_v0": [
       {

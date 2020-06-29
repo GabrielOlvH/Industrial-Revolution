@@ -16,7 +16,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
 
 @Suppress("UNCHECKED_CAST")
-class IndustrialRevolutionClient : ClientModInitializer {
+object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         FluidRenderRegistry.registerAll()
 
