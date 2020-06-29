@@ -4,8 +4,10 @@ import me.steven.indrev.registry.ModRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.registry.RegistryKey
+import net.minecraft.world.World
 
-enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>) {
+enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>, val dimension: RegistryKey<World> = World.OVERWORLD) {
     PEAT(
         300..1000,
         WeightedList<Block>().add(Blocks.COAL_ORE, 6)
@@ -70,5 +72,17 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
         400..600,
         WeightedList<Block>().add(Blocks.GOLD_ORE, 8)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
+    ),
+    QUARTZ(
+        200..3000,
+        WeightedList<Block>().add(Blocks.NETHER_QUARTZ_ORE, 8)
+            .add(Blocks.NETHERRACK, 10).add(Blocks.SOUL_SAND, 3).add(Blocks.GRAVEL, 1),
+        World.NETHER
+    ),
+    CALAVERITE_NETHER(
+        1200..3000,
+        WeightedList<Block>().add(Blocks.GOLD_ORE, 64)
+            .add(Blocks.NETHERRACK, 80).add(Blocks.SOUL_SAND, 24).add(Blocks.GRAVEL, 8).add(Blocks.ANCIENT_DEBRIS, 1),
+        World.NETHER
     )
 }

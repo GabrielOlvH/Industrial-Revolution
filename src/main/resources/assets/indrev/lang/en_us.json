@@ -71,6 +71,7 @@
   "item.indrev.chunk_scanner.tooltip1": "Hold right click to start scanning this chunk",
   "item.indrev.chunk_scanner.tooltip2": "Vein type: %s",
   "item.indrev.chunk_scanner.tooltip3": "From %s to %s",
+  "item.indrev.chunk_scanner.tooltip4": "Dimension: %s",
   "item.indrev.fan": "Fan",
   "item.indrev.cooler_cell": "Cooler Cell",
   "item.indrev.heatsink": "Heatsink",

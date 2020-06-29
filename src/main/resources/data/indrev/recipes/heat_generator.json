@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "BMB",
+    "NUN"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "U": {
+      "item": "minecraft:bucket"
+    },
+    "B": {
+      "item": "indrev:battery"
+    },
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  },
+  "result": {
+    "item": "indrev:heat_generator_mk4"
+  }
+}

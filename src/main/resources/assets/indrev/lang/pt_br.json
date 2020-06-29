@@ -67,6 +67,7 @@
   "item.indrev.chunk_scanner.tooltip1": "Segure o botão direito para escanear o chunk",
   "item.indrev.chunk_scanner.tooltip2": "Tipo de veia: %s",
   "item.indrev.chunk_scanner.tooltip3": "De %s até %s",
+  "item.indrev.chunk_scanner.tooltip4": "Dimensão: %s",
   "item.indrev.fan": "Ventilador",
   "item.indrev.cooler_cell": "Célula Refrigerante",
   "item.indrev.heatsink": "Dissipador de Calor",

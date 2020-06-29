@@ -49,8 +49,8 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             val chunkPos = world?.getChunk(pos)?.pos ?: return
             val state =
                 (world as ServerWorld).persistentStateManager.getOrCreate(
-                    { WorldChunkVeinData() },
-                    WorldChunkVeinData.STATE_KEY
+                    { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                    WorldChunkVeinData.STATE_OVERWORLD_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
         } else {
@@ -65,8 +65,8 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData() },
-                        WorldChunkVeinData.STATE_KEY
+                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                        WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
                 val data = state.veins[chunkPos]
                 if (data == null) {

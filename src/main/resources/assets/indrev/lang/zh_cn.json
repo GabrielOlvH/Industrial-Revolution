@@ -110,5 +110,6 @@
   "block.indrev.heat_generator": "Heat Generator",
   "block.indrev.heat_generator_mk4": "Heat Generator",
   "block.indrev.molten_netherite": "Molten Netherite",
-  "item.indrev.molten_netherite_bucket": "Molten Netherite Bucket"
+  "item.indrev.molten_netherite_bucket": "Molten Netherite Bucket",
+  "item.indrev.chunk_scanner.tooltip4": "Dimension: %s"
 }

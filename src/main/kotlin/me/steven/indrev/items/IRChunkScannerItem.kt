@@ -39,6 +39,11 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip3",
             LiteralText("X: ${pos.startX} Z: ${pos.startZ}").formatted(Formatting.WHITE),
             LiteralText("X: ${pos.endX} Z: ${pos.endZ}").formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
+        // COMPATIBILITY WITH PREVIOUSLY SCANNED CHUNKS
+        if (tag.contains("Dimension")) {
+            val dim = tag.getString("Dimension")
+            tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip4", TranslatableText(dim).formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
+        }
     }
 
     override fun finishUsing(stack: ItemStack, world: World?, user: LivingEntity?): ItemStack {
@@ -48,11 +53,12 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
             if (chunkPos != null) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData() },
-                        WorldChunkVeinData.STATE_KEY
+                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                        WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
                 val type = ChunkVeinType
                     .values()
+                    .filter { it.dimension == world.registryKey }
                     .random(rnd)
                 val data = ChunkVeinData(type, type.sizeRange.random(rnd))
                 state.veins[chunkPos] = data
@@ -60,6 +66,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val tag = CompoundTag()
                 tag.putString("ChunkVeinType", type.toString())
                 tag.putString("ChunkPos", chunkPos.asString())
+                tag.putString("Dimension", world.registryKey.value.path)
                 stack.tag = tag
 
                 if (user is PlayerEntity) {
@@ -80,14 +87,15 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
             if (chunkPos != null) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData() },
-                        WorldChunkVeinData.STATE_KEY
+                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                        WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
                 val data = state.veins[chunkPos]
                 if (data?.chunkVeinType != null) {
                     val tag = CompoundTag()
                     tag.putString("ChunkVeinType", data.chunkVeinType.toString())
                     tag.putString("ChunkPos", chunkPos.asString())
+                    tag.putString("Dimension", world.registryKey.value.path)
                     stack.tag = tag
                     user.sendMessage(
                         TranslatableText("item.indrev.chunk_scanner.already_scanned", data.chunkVeinType),
