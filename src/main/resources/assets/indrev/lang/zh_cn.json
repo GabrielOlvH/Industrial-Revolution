@@ -107,9 +107,9 @@
   "item.c.nikolite_ore": "蓝石矿",
   "item.c.nikolite_nether_ore": "下界蓝石矿",
   "item.c.nikolite_end_ore": "末地蓝石矿",
-  "block.indrev.heat_generator": "Heat Generator",
-  "block.indrev.heat_generator_mk4": "Heat Generator",
-  "block.indrev.molten_netherite": "Molten Netherite",
-  "item.indrev.molten_netherite_bucket": "Molten Netherite Bucket",
-  "item.indrev.chunk_scanner.tooltip4": "Dimension: %s"
+  "block.indrev.heat_generator": "热力发电机",
+  "block.indrev.heat_generator_mk4": "热力发电机",
+  "block.indrev.molten_netherite": "融化的下界合金",
+  "item.indrev.molten_netherite_bucket": "融化的下界合金桶",
+  "item.indrev.chunk_scanner.tooltip4": "维度: %s"
 }
