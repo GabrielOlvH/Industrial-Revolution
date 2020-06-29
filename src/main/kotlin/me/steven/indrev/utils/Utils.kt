@@ -1,10 +1,19 @@
 package me.steven.indrev.utils
 
+import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.IRInventoryScreen
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
+import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
@@ -43,7 +52,19 @@ fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.VALUES, itemSupplier: (Ti
     }
 }
 
-fun Box.isSide(vec3d: Vec3d) = vec3d.x == minX || vec3d.x == maxX - 1 || vec3d.y == minY || vec3d.y == maxY - 1 || vec3d.z == minZ || vec3d.z == maxZ - 1
+fun <T : ScreenHandler> Identifier.screenHandler(
+    f: (Int, PlayerInventory, ScreenHandlerContext) -> T
+): ExtendedScreenHandlerType<T> =
+    ScreenHandlerRegistry.registerExtended(this) { syncId, inv, buf ->
+        f(syncId, inv, ScreenHandlerContext.create(inv.player.world, buf.readBlockPos()))
+    } as ExtendedScreenHandlerType<T>
+
+fun <H : SyncedGuiDescription, S : IRInventoryScreen<out H>> ScreenHandlerType<H>.registerScreen() {
+    ScreenRegistry.register(this) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
+}
+
+fun Box.isSide(vec3d: Vec3d) =
+    vec3d.x == minX || vec3d.x == maxX - 1 || vec3d.y == minY || vec3d.y == maxY - 1 || vec3d.z == minZ || vec3d.z == maxZ - 1
 
 fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.MOD_GROUP)
 

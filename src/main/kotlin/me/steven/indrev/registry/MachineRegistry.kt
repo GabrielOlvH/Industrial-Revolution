@@ -88,7 +88,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> CoalGeneratorController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::CoalGeneratorController
                 ) { CoalGeneratorBlockEntity() }
             },
             { { CoalGeneratorBlockEntity() } }
@@ -103,7 +103,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         ).register(
             { tier ->
                 MachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> SolarGeneratorController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::SolarGeneratorController
                 ) { SolarGeneratorBlockEntity(tier) }
             },
             { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -113,7 +113,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> BiomassGeneratorController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::BiomassGeneratorController
                 ) { BiomassGeneratorBlockEntity(tier) }
             },
             { tier -> { BiomassGeneratorBlockEntity(tier) } }
@@ -122,7 +122,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> HeatGeneratorController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::HeatGeneratorController
                 ) { HeatGeneratorBlockEntity(tier) }
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
@@ -131,7 +131,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> ElectricFurnaceController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::ElectricFurnaceController
                 ) { ElectricFurnaceBlockEntity(tier) }
             },
             { tier -> { ElectricFurnaceBlockEntity(tier) } }
@@ -148,7 +148,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> PulverizerController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::PulverizerController
                 ) { PulverizerBlockEntity(tier) }
             },
             { tier -> { PulverizerBlockEntity(tier) } }
@@ -166,7 +166,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> CompressorController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::CompressorController
                 ) { CompressorBlockEntity(tier) }
             },
             { tier -> { CompressorBlockEntity(tier) } }
@@ -183,7 +183,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> InfuserController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::InfuserController
                 ) { InfuserBlockEntity(tier) }
             },
             { tier -> { InfuserBlockEntity(tier) } }
@@ -201,7 +201,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
             { tier ->
                 VerticalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> BatteryController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::BatteryController
                 ) { BatteryBlockEntity(tier) }
             },
             { tier -> { BatteryBlockEntity(tier) } }
@@ -220,7 +220,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 object : FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    { syncId, inv, ctx -> MinerController(syncId, inv, ctx) },
+                    ::MinerController,
                     { MinerBlockEntity(tier) }
                 ) {
                     override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
@@ -235,7 +235,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> RecyclerController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::RecyclerController
                 ) { RecyclerBlockEntity(tier) }
             },
             { tier -> { RecyclerBlockEntity(tier) } }
@@ -252,7 +252,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> ChopperController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::ChopperController
                 ) { ChopperBlockEntity(tier) }
             },
             { tier -> { ChopperBlockEntity(tier) } }
@@ -270,7 +270,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
             { tier ->
                 FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, { syncId, inv, ctx -> RancherController(syncId, inv, ctx) }
+                    MACHINE_BLOCK_SETTINGS(), tier, ::RancherController
                 ) { RancherBlockEntity(tier) }
             },
             { tier -> { RancherBlockEntity(tier) } }
