@@ -24,6 +24,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import team.reborn.energy.Energy
+import team.reborn.energy.EnergySide
 
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
@@ -110,6 +111,8 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         }
         return box
     }
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     private fun getRange() =
         when (tier) {
