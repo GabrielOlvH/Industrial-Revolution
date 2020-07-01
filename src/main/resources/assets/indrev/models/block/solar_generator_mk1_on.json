@@ -1,6 +1,6 @@
 {
   "parent": "indrev:block/machine",
   "textures": {
-    "texture": "indrev:block/chopper"
+    "texture": "indrev:block/solar_generator_on"
   }
 }

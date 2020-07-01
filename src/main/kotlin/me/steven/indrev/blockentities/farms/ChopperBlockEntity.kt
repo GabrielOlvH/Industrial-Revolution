@@ -89,6 +89,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
             }
             temperatureController?.tick(performedAction)
+            setWorkingState(performedAction)
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
         update()

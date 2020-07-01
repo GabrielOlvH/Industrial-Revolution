@@ -1,6 +1,6 @@
 {
   "parent": "indrev:block/machine",
   "textures": {
-    "texture": "indrev:block/coal_generator"
+    "texture": "indrev:block/biomass_generator_on"
   }
 }

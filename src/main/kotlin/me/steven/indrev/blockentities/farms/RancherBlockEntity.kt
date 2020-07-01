@@ -57,8 +57,10 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val input = inventory.getInputInventory()
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
+        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+            setWorkingState(false)
             return
+        } else setWorkingState(true)
         val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
         val fakePlayer = FakePlayerEntity(world!!, pos)
         fakePlayer.inventory.selectedSlot = 0

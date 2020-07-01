@@ -1,6 +1,6 @@
 {
   "parent": "indrev:block/machine",
   "textures": {
-    "texture": "indrev:block/rancher"
+    "texture": "indrev:block/pulverizer_on"
   }
 }

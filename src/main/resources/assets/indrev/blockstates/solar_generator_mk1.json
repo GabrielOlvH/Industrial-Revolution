@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "working=false": {
       "model": "indrev:block/solar_generator_mk1"
+    },
+    "working=true": {
+      "model": "indrev:block/solar_generator_mk1_on"
     }
   }
 }
