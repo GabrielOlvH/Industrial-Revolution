@@ -6,7 +6,7 @@ import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.screenHandler
+import me.steven.indrev.utils.registerScreenHandler
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -37,17 +37,17 @@ object IndustrialRevolution : EnergyModInitializer() {
     val MOD_GROUP: ItemGroup =
         FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
 
-    val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.screenHandler(::CoalGeneratorController)
-    val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.screenHandler(::SolarGeneratorController)
-    val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorController.SCREEN_ID.screenHandler(::BiomassGeneratorController)
-    val HEAT_GENERATOR_HANDLER = HeatGeneratorController.SCREEN_ID.screenHandler(::HeatGeneratorController)
-    val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceController.SCREEN_ID.screenHandler(::ElectricFurnaceController)
-    val PULVERIZER_HANDLER = PulverizerController.SCREEN_ID.screenHandler(::PulverizerController)
-    val COMPRESSOR_HANDLER = CompressorController.SCREEN_ID.screenHandler(::CompressorController)
-    val BATTERY_HANDLER = BatteryController.SCREEN_ID.screenHandler(::BatteryController)
-    val INFUSER_HANDLER = InfuserController.SCREEN_ID.screenHandler(::InfuserController)
-    val RECYCLER_HANDLER = RecyclerController.SCREEN_ID.screenHandler(::RecyclerController)
-    val CHOPPER_HANDLER = ChopperController.SCREEN_ID.screenHandler(::ChopperController)
-    val RANCHER_HANDLER = RancherController.SCREEN_ID.screenHandler(::RancherController)
-    val MINER_HANDLER = MinerController.SCREEN_ID.screenHandler(::MinerController)
+    val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
+    val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)
+    val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorController.SCREEN_ID.registerScreenHandler(::BiomassGeneratorController)
+    val HEAT_GENERATOR_HANDLER = HeatGeneratorController.SCREEN_ID.registerScreenHandler(::HeatGeneratorController)
+    val BATTERY_HANDLER = BatteryController.SCREEN_ID.registerScreenHandler(::BatteryController)
+    val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceController)
+    val PULVERIZER_HANDLER = PulverizerController.SCREEN_ID.registerScreenHandler(::PulverizerController)
+    val COMPRESSOR_HANDLER = CompressorController.SCREEN_ID.registerScreenHandler(::CompressorController)
+    val INFUSER_HANDLER = InfuserController.SCREEN_ID.registerScreenHandler(::InfuserController)
+    val RECYCLER_HANDLER = RecyclerController.SCREEN_ID.registerScreenHandler(::RecyclerController)
+    val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
+    val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
+    val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
 }

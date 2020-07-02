@@ -52,7 +52,7 @@ fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.VALUES, itemSupplier: (Ti
     }
 }
 
-fun <T : ScreenHandler> Identifier.screenHandler(
+fun <T : ScreenHandler> Identifier.registerScreenHandler(
     f: (Int, PlayerInventory, ScreenHandlerContext) -> T
 ): ExtendedScreenHandlerType<T> =
     ScreenHandlerRegistry.registerExtended(this) { syncId, inv, buf ->

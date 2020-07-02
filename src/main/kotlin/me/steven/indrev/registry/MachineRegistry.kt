@@ -84,7 +84,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .strength(5.0f, 6.0f)
                 .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
-
+        
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
                 FacingMachineBlock(
@@ -93,7 +93,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { { CoalGeneratorBlockEntity() } }
         ).buffer { 1000.0 }
-
 
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(
             identifier("solar_generator"),
@@ -108,7 +107,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { SolarGeneratorBlockEntity(tier) } }
         ).buffer { tier -> tier.io * 2 }
-
 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
             { tier ->
@@ -127,6 +125,23 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
         ).buffer { 20000.0 }
+
+        val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
+            { tier ->
+                VerticalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, ::BatteryController
+                ) { BatteryBlockEntity(tier) }
+            },
+            { tier -> { BatteryBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 10000.0
+                Tier.MK2 -> 100000.0
+                Tier.MK3 -> 1000000.0
+                Tier.MK4 -> 10000000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
             { tier ->
@@ -162,7 +177,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             }
         }
 
-
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).register(
             { tier ->
                 FacingMachineBlock(
@@ -197,20 +211,51 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             }
         }
 
-
-        val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
+        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
-                VerticalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, ::BatteryController
-                ) { BatteryBlockEntity(tier) }
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, ::RecyclerController
+                ) { RecyclerBlockEntity(tier) }
             },
-            { tier -> { BatteryBlockEntity(tier) } }
+            { tier -> { RecyclerBlockEntity(tier) } }
+        ).buffer { 50000.0 }
+
+        val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
+            .register(
+                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
+                { tier -> { CableBlockEntity(tier) } }
+            ).buffer { tier -> tier.io * 2 }
+
+        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, ::ChopperController
+                ) { ChopperBlockEntity(tier) }
+            },
+            { tier -> { ChopperBlockEntity(tier) } }
         ).buffer { tier ->
             when (tier) {
-                Tier.MK1 -> 10000.0
-                Tier.MK2 -> 100000.0
-                Tier.MK3 -> 1000000.0
-                Tier.MK4 -> 10000000.0
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 50000.0
+                Tier.CREATIVE -> Double.MAX_VALUE
+            }
+        }
+
+        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
+            { tier ->
+                FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, ::RancherController
+                ) { RancherBlockEntity(tier) }
+            },
+            { tier -> { RancherBlockEntity(tier) } }
+        ).buffer { tier ->
+            when (tier) {
+                Tier.MK1 -> 1000.0
+                Tier.MK2 -> 5000.0
+                Tier.MK3 -> 10000.0
+                Tier.MK4 -> 50000.0
                 Tier.CREATIVE -> Double.MAX_VALUE
             }
         }
@@ -232,56 +277,5 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { MinerBlockEntity(tier) } }
         ).buffer { 500000.0 }
 
-        val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
-            { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, ::RecyclerController
-                ) { RecyclerBlockEntity(tier) }
-            },
-            { tier -> { RecyclerBlockEntity(tier) } }
-        ).buffer { 50000.0 }
-
-
-        val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
-            .register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
-                { tier -> { CableBlockEntity(tier) } }
-            ).buffer { tier -> tier.io * 2 }
-
-
-        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
-            { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, ::ChopperController
-                ) { ChopperBlockEntity(tier) }
-            },
-            { tier -> { ChopperBlockEntity(tier) } }
-        ).buffer { tier ->
-            when (tier) {
-                Tier.MK1 -> 1000.0
-                Tier.MK2 -> 5000.0
-                Tier.MK3 -> 10000.0
-                Tier.MK4 -> 50000.0
-                Tier.CREATIVE -> Double.MAX_VALUE
-            }
-        }
-
-
-        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
-            { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, ::RancherController
-                ) { RancherBlockEntity(tier) }
-            },
-            { tier -> { RancherBlockEntity(tier) } }
-        ).buffer { tier ->
-            when (tier) {
-                Tier.MK1 -> 1000.0
-                Tier.MK2 -> 5000.0
-                Tier.MK3 -> 10000.0
-                Tier.MK4 -> 50000.0
-                Tier.CREATIVE -> Double.MAX_VALUE
-            }
-        }
     }
 }
