@@ -17,7 +17,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
         this.temperatureController = TemperatureController({ this }, 0.1, 500..700, 1000.0)
     }
 
-    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true
+    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < maxStoredPower
 
     override fun getMaxOutput(side: EnergySide?): Double = 32.0
 
