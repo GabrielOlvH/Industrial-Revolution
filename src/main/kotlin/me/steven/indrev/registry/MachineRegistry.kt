@@ -39,7 +39,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
     private val baseInternalBuffers: MutableMap<Tier, Double> = mutableMapOf()
 
-    fun register(blockProvider: (Tier) -> MachineBlock, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
+    fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
             val blockItem = BlockItem(block, itemSettings())

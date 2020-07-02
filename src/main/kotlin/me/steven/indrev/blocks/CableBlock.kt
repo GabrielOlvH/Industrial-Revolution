@@ -6,6 +6,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
@@ -27,7 +28,7 @@ import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import team.reborn.energy.Energy
 
-class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, null, { CableBlockEntity(tier) }) {
+class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -146,4 +147,6 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
             }
         }
     }
+
+    override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
 }
