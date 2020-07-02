@@ -73,8 +73,9 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     chunkVeinType = null
                     return
                 }
-                propertyDelegate[3] = data.explored * 100 / data.size
-                if (data.explored >= data.size) {
+                val (_, size, explored) = data
+                propertyDelegate[3] = explored * 100 / size
+                if (explored >= size) {
                     mining = -1.0
                     return
                 }

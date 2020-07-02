@@ -45,7 +45,7 @@ open class MachineBlock(
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 
     init {
-        if (this !is CableBlock)
+        if (this.defaultState.contains(WORKING_PROPERTY))
             this.defaultState = stateManager.defaultState.with(WORKING_PROPERTY, false)
     }
 
