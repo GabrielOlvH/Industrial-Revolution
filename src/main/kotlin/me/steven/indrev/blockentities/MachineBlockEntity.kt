@@ -34,7 +34,6 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
     var viewers = mutableMapOf<UUID, Int>()
 
-    var lastInput: EnergySide? = null
     val baseBuffer = registry.buffer(tier)
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)

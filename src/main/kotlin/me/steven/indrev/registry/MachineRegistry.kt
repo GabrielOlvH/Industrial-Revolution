@@ -246,7 +246,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             .register(
                 { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
                 { tier -> { CableBlockEntity(tier) } }
-            ).buffer { tier -> tier.io }
+            ).buffer { tier -> tier.io * 2 }
 
 
         val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
