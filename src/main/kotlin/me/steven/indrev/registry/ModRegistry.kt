@@ -72,6 +72,8 @@ object ModRegistry {
         identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
         identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
         identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
+
+        identifier("wrench").item(WRENCH)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -118,4 +120,6 @@ object ModRegistry {
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
     val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+
+    val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
 }
