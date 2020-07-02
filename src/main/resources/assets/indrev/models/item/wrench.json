@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/uranium_rod"
+    "layer0": "indrev:item/wrench"
   }
 }

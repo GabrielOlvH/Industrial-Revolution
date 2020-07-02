@@ -111,5 +111,6 @@
   "block.indrev.heat_generator": "Gerador à calor",
   "block.indrev.heat_generator_mk4": "Gerador à calor",
   "block.indrev.molten_netherite": "Netherite Derretida",
-  "item.indrev.molten_netherite_bucket": "Balde de Netherite Derretida"
+  "item.indrev.molten_netherite_bucket": "Balde de Netherite Derretida",
+  "item.indrev.wrench": "Chave Inglesa"
 }
