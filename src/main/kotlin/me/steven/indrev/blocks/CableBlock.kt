@@ -75,6 +75,7 @@ class CableBlock(settings: Settings, tier: Tier) : MachineBlock(settings, tier, 
     }
 
     override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
+        if (player?.isSneaking == true) return super.onUse(state, world, pos, player, hand, hit)!!
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
         if (state?.get(COVERED) == false && !handStack.isEmpty) {
             val blockEntity = world.getBlockEntity(pos)
