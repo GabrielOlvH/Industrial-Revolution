@@ -46,7 +46,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            for (direction in Direction.values()) {
+            for (direction in DIRECTIONS.shuffled(world!!.random)) {
                 val sidePos = pos.offset(direction)
                 val fluidState = world?.getFluidState(sidePos)
                 if (TEMPERATURE_MAP.containsKey(fluidState?.fluid)) {
@@ -99,5 +99,6 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             it[ModRegistry.MOLTEN_NETHERITE_STILL] = 8000
             it[ModRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
         }
+        private val DIRECTIONS = Direction.values().toSet()
     }
 }
