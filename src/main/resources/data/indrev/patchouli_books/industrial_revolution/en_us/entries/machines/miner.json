@@ -1,0 +1,126 @@
+{
+  "name": "Miner",
+  "category": "machines",
+  "sortnum": 4,
+  "icon": "indrev:miner_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Who doesn't like automated mining?"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:miner_mk4",
+      "text": "The $(l)$(o)Miner$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy."
+    },
+    {
+      "anchor": "chunk_scanner",
+      "type": "crafting",
+      "recipe": "indrev:chunk_scanner",
+      "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, a Miner placed on the same chunk will automagically start mining ores."
+    },
+    {
+      "anchor": "vein_types",
+      "type": "text",
+      "text": "$(br)$(l:machines/miner#peat)$(t:Go to Peat)Peat$()$(br)$(l:machines/miner#lignite)$(t:Go to Lignite)Lignite$()$(br)$(l:machines/miner#bituminous)$(t:Go to Bituminous)Bituminous$()$(br)$(l:machines/miner#anthracite)$(t:Go to Anthracite)Anthracite$()$(br)$(l:machines/miner#siderite)$(t:Go to Siderite)Siderite$()$(br)$(l:machines/miner#limonite)$(t:Go to Limonite)Limonite$()$(br)$(l:machines/miner#hematite)$(t:Go to Hematite)Hematite$()$(br)$(l:machines/miner#magnetite)$(t:Go to Magnetite)Magnetite$()$(br)$(l:machines/miner#chalcopryte)$(t:Go to Chalcopryte)Chalcopryte$()$(br)$(l:machines/miner#cuprite)$(t:Go to Cuprite)Cuprite$()$(br)$(l:machines/miner#cassiterite)$(t:Go to Cassiterite)Cassiterite$()$(br)$(l:machines/miner#stannite)$(t:Go to Stannite)Stannite$()$(br)$(l:machines/miner#cavalerite)$(t:Go to Cavalerite)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:Go to Quartz)Quartz$()$(br)"
+    },
+    {
+      "anchor": "peat",
+      "type": "spotlight",
+      "title": "Peat",
+      "item": "minecraft:coal_ore",
+      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's the smallest and poorest coal vein, which means you'll be getting a lot of stone, dirt and some gravel."
+    },
+    {
+      "anchor": "lignite",
+      "type": "spotlight",
+      "title": "Lignite",
+      "item": "minecraft:coal_ore",
+      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's the second smallest and poorest coal vein, which means there's still a lot of stone, dirt and gravel here."
+    },
+    {
+      "anchor": "bituminous",
+      "type": "spotlight",
+      "title": "Bituminous",
+      "item": "minecraft:coal_ore",
+      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's a quite big and rich coal vien, which means you'll find more coal alongside stone, dirt and gravel, but if you're lucky, you might just find some $(#00ffff)$(l)Diamonds$() too."
+    },
+    {
+      "anchor": "anthracite",
+      "type": "spotlight",
+      "title": "Anthracite",
+      "item": "minecraft:coal_ore",
+      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's a the biggest and richest coal vein, which means there's a lot of coal, alongside stone, dirt, gravel and some $(#00ffff)$(l)Diamonds$() too."
+    },
+    {
+      "anchor": "siderite",
+      "type": "spotlight",
+      "title": "Siderite",
+      "item": "minecraft:iron_ore",
+      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the smallest and poorest iron vein, with lots of stone, dirt, and some gravel."
+    },
+    {
+      "anchor": "limonite",
+      "type": "spotlight",
+      "title": "Limonite",
+      "item": "minecraft:iron_ore",
+      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the second smallest and poorest iron vein, with lots of of stone, dirt and gravel here."
+    },
+    {
+      "anchor": "hematite",
+      "type": "spotlight",
+      "title": "Hematite",
+      "item": "minecraft:iron_ore",
+      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's a quite big and rich iron vein, with lots of iron alongside stone, dirt and some gravel."
+    },
+    {
+      "anchor": "magnetite",
+      "type": "spotlight",
+      "title": "Magnetite",
+      "item": "minecraft:iron_ore",
+      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the biggest and richest iron vein, with lots of iron, alongside stone, dirt and some gravel."
+    },
+    {
+      "anchor": "chalcopryte",
+      "type": "spotlight",
+      "title": "Chalcopryte",
+      "item": "c:copper_ore",
+      "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), it's the quite rich and very variable vein, with lots of $(#FFA500)$(l)copper$() and $(#666666)$(l)iron$() ores alongside stone, dirt and gravel."
+    },
+    {
+      "anchor": "cuprite",
+      "type": "spotlight",
+      "title": "Cuprite",
+      "item": "c:copper_ore",
+      "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size."
+    },
+    {
+      "anchor": "cassiterite",
+      "type": "spotlight",
+      "title": "Cassiterite",
+      "item": "c:tin_ore",
+      "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size."
+    },
+    {
+      "anchor": "stannite",
+      "type": "spotlight",
+      "title": "Stannite",
+      "item": "c:tin_ore",
+      "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), with lots of tin, alongside $(#666666)$(l)iron$(), $(#FFA500)$(l)copper$(), stone, dirt and gravel."
+    },
+    {
+      "anchor": "cavalerite",
+      "type": "spotlight",
+      "title": "Cavalerite",
+      "item": "minecraft:gold_ore",
+      "text": "$(l)Overworld$()$(br)Mainly composed by $(#FFD700)$(l)Gold Ore$(), it's a small and quite rich gold vein$(br2)$(#ff0000)$(l)Nether$()$(br)It's a quite large and rich $(#FFD700)$(l)Nether Gold Ore$() vein, with lots of netherrack, soulsand, gravel, and if you're very lucky some $(l)$(#000000)Ancient Debris$() too!"
+    },
+    {
+      "anchor": "quartz",
+      "type": "spotlight",
+      "title": "Quartz",
+      "item": "minecraft:nether_quartz_ore",
+      "text": "$(#ff0000)$(l)Nether$()$(br)It's a quite large and rich $(#dddddd)$(l)Quartz$() vein, with lots of netherrack, soulsand and gravel."
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "name": "Tier Upgrades",
+  "category": "upgrades",
+  "sortnum": 1,
+  "icon": "indrev:tier_upgrade_mk2",
+  "pages": [
+    {
+      "type": "text",
+      "text": "These upgrades will improve the machine's input and output capability as well as other aspects.$(br2)Right clicking on a machine below the upgrade's tier will upgrade it."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:tier_upgrade_mk2",
+      "text": "Upgrades MK1 machines to MK2."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:tier_upgrade_mk3",
+      "text": "Upgrades MK2 machines to MK3."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:tier_upgrade_mk4",
+      "text": "Upgrades MK3 machines to MK4."
+    }
+  ]
+}

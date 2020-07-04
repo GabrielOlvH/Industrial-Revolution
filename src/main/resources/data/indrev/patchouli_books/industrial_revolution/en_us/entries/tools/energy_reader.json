@@ -1,0 +1,13 @@
+{
+  "name": "Energy Reader",
+  "category": "tools",
+  "sortnum": 3,
+  "icon": "indrev:energy_reader",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:energy_reader",
+      "text": "Tells you the current stored energy in machines. Also works on cables."
+    }
+  ]
+}

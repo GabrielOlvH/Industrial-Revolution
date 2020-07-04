@@ -1,4 +1,6 @@
 {
+  "item.patchouli.industrial_revolution_book.name": "Revolução Industrial",
+  "item.patchouli.industrial_revolution_book.landing": "Este livro vai te ajudar em certos aspectos do mod.$(br2)Se você tiver algum problema, pergunta ou sugestão, abra um issue no $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() ou entre no nosso $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Obrigado por jogar!",
   "itemGroup.indrev.indrev_group": "Revolução Industrial",
   "block.machines.tooltip.io": "I/O: %s",
   "block.indrev.coal_generator": "Gerador a Carvão",

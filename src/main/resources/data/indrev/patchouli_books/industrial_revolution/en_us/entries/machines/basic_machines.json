@@ -1,0 +1,37 @@
+{
+  "name": "Basic Machines",
+  "category": "machines",
+  "sortnum": 1,
+  "icon": "indrev:electric_furnace_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "These machines are used to transform resources into other more complex resources."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:electric_furnace_mk1",
+      "text": "The $(l)$(o)Electric Furnace $()does everything a normal furnace does but using Lazuli Flux instead of coal."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:pulverizer_mk1",
+      "text": "The $(l)$(o)Pulverizer $()is mainly used for processing ores into dusts for increasing."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:compressor_mk1",
+      "text": "The $(l)$(o)Compressor $()is mainly used for compressing ingots into plates."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:infuser_mk1",
+      "text": "The $(l)$(o)Infuser $()has the capability of mixin two ingredients into a more powerful one."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:recycler_mk2",
+      "text": "The $(l)$(o)Recycler $()can process organic resources into biomass which can be used for energy generation."
+    }
+  ]
+}

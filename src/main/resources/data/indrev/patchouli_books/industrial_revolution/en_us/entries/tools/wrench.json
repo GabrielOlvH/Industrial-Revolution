@@ -1,0 +1,13 @@
+{
+  "name": "Wrench",
+  "category": "tools",
+  "sortnum": 1,
+  "icon": "indrev:wrench",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:wrench",
+      "text": "Used to rotate machines or disconnect cables!"
+    }
+  ]
+}

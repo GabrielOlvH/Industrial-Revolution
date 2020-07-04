@@ -1,0 +1,16 @@
+{
+  "name": "How does it work?",
+  "category": "temperature",
+  "sortnum": 0,
+  "icon": "indrev:fan",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Relax! You shouldn't have to worry about temperatures. Machines should only heat up to explosion if you're inputting more energy than it's input limit.$(br)However, machines do have a temperature where they are more efficient and thus, processing is faster. After reaching this temperature, it should stagnate for as long as it's functioning."
+    },
+    {
+      "type": "text",
+      "text": "Note that once the machine hits it's most efficient temperature, it will start cooling down for a while and during this the process speed boosting won't be active. To avoid this, check out $(l:temperature/coolers_and_fans)$(t:Go to Keeping it Cool!)Keeping it cool!$()$(br2)If the machine stops processing, the temperature will slowly start to decrease to the ambient temperature."
+    }
+  ]
+}

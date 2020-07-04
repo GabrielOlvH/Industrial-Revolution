@@ -1,0 +1,17 @@
+{
+  "name": "Chopper",
+  "category": "machines",
+  "sortnum": 5,
+  "icon": "indrev:chopper_mk4",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:chopper_mk4",
+      "text": "The $(l)Chopper$() is a machine focused in automating wood farming, and it also supports enhancement upgrades.$(br)Note that it requires certain items for it to function:"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Axe:$() if present in the inventory, will retrieve any wood and leaves in range (leaves will not consume durability)$(br2)$(l)Sapling:$() if present in the inventory, will be planted in every block possible inside it's range.$(br2)$(l)Bone meal:$() will be applied to any saplings inside it's range."
+    }
+  ]
+}

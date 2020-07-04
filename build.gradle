@@ -21,6 +21,7 @@ repositories {
         name = "CottonMC"
         url = "https://server.bbkr.space/artifactory/libs-release"
     }
+    maven { url 'https://maven.blamejared.com' }
 }
 
 dependencies {
@@ -49,6 +50,8 @@ dependencies {
 
     modCompileOnly "io.github.prospector:modmenu:${project.modmenu_version}"
     modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
+
+    modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
