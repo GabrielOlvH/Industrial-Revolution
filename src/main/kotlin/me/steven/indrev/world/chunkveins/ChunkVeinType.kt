@@ -81,7 +81,7 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>,
     ),
     CALAVERITE_NETHER(
         1200..3000,
-        WeightedList<Block>().add(Blocks.GOLD_ORE, 64)
+        WeightedList<Block>().add(Blocks.NETHER_GOLD_ORE, 64)
             .add(Blocks.NETHERRACK, 80).add(Blocks.SOUL_SAND, 24).add(Blocks.GRAVEL, 8).add(Blocks.ANCIENT_DEBRIS, 1),
         World.NETHER
     )
