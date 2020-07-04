@@ -1,0 +1,15 @@
+{
+  "type": "indrev:patchouli_recipe",
+  "group": "books",
+  "ingredients": [
+    {
+      "item": "minecraft:book"
+    },
+    {
+      "item": "indrev:circuit_mk1"
+    }
+  ],
+  "result": {
+    "item": "patchouli:guide_book"
+  }
+}
