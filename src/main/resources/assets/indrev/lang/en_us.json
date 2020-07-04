@@ -56,7 +56,7 @@
   "block.indrev.aoe.toggle.true": "Hide range",
   "block.indrev.coolant": "Coolant",
   "block.indrev.molten_netherite": "Molten Netherite",
-  "item.indrev.machine_block": "Machine Block",
+  "block.indrev.machine_block": "Machine Block",
   "item.indrev.empty_upgrade": "Empty Upgrade",
   "item.indrev.buffer_upgrade": "Buffer Upgrade",
   "item.indrev.buffer_upgrade.tooltip": "Increases the machine's internal buffer",

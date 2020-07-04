@@ -52,7 +52,7 @@
   "block.indrev.aoe.toggle.false": "Mostrar alcance",
   "block.indrev.aoe.toggle.true": "Ocultar alcance",
   "block.indrev.coolant": "Refrigerante",
-  "item.indrev.machine_block": "Bloco de máquina",
+  "block.indrev.machine_block": "Bloco de máquina",
   "item.indrev.empty_upgrade": "Melhoria Vazia",
   "item.indrev.buffer_upgrade": "Melhoria de Recipiente",
   "item.indrev.buffer_upgrade.tooltip": "Aumenta a capacidade do recipiente da máquina.",

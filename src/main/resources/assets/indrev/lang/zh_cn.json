@@ -53,7 +53,7 @@
   "block.indrev.aoe.toggle.false": "显示范围",
   "block.indrev.aoe.toggle.true": "隐藏范围",
   "block.indrev.coolant": "冷却液",
-  "item.indrev.machine_block": "机器方块",
+  "block.indrev.machine_block": "机器方块",
   "item.indrev.empty_upgrade": "空白升级模块",
   "item.indrev.buffer_upgrade": "缓冲升级",
   "item.indrev.buffer_upgrade.tooltip": "增加机器的内置缓冲",
