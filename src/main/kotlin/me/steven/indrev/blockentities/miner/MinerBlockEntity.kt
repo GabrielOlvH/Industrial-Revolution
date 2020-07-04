@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.miner
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -25,7 +25,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
+            IRInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)

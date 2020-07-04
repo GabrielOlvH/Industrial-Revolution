@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.Property
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -67,7 +67,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         update()
     }
 
-    abstract fun tryStartRecipe(inventory: DefaultSidedInventory): T?
+    abstract fun tryStartRecipe(inventory: IRInventory): T?
 
     abstract fun getCurrentRecipe(): T?
 

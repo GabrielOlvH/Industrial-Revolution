@@ -1,15 +1,15 @@
 package me.steven.indrev.components
 
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 
-class InventoryController(val supplier: () -> DefaultSidedInventory) {
-    private var inv: DefaultSidedInventory? = null
+class InventoryController(val supplier: () -> IRInventory) {
+    private var inv: IRInventory? = null
         get() = field ?: supplier().apply { field = this }
 
-    fun getInventory(): DefaultSidedInventory = inv!!
+    fun getInventory(): IRInventory = inv!!
 
     fun fromTag(tag: CompoundTag?) {
         val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()

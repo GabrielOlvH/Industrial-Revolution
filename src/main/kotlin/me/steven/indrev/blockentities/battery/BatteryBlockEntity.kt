@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.battery
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.VerticalFacingMachineBlock
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -17,7 +17,7 @@ class BatteryBlockEntity(tier: Tier) :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
+            IRInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
         }
     }
 

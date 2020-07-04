@@ -5,7 +5,7 @@ import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
-class DefaultSidedInventory(
+class IRInventory(
     size: Int,
     val inputSlots: IntArray,
     val outputSlots: IntArray,

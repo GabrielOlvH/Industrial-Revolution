@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -15,7 +15,7 @@ class InfuserBlockEntity(tier: Tier) :
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
+            IRInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -30,7 +30,7 @@ class InfuserBlockEntity(tier: Tier) :
 
     private var currentRecipe: InfuserRecipe? = null
 
-    override fun tryStartRecipe(inventory: DefaultSidedInventory): InfuserRecipe? {
+    override fun tryStartRecipe(inventory: IRInventory): InfuserRecipe? {
         val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(InfuserRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null

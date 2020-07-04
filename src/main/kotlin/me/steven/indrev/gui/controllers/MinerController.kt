@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.StringWidget
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -29,7 +29,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandl
         configure("block.indrev.miner", screenHandlerContext, blockInventory, propertyDelegate)
 
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as DefaultSidedInventory).outputSlots.first(), 3, 3),
+            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
             3,
             1
         )

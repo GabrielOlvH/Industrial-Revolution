@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -26,12 +26,12 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, screenHan
         configure("block.indrev.rancher", screenHandlerContext, blockInventory, propertyDelegate)
 
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as DefaultSidedInventory).outputSlots.first(), 3, 3),
+            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
             4.8,
             1.0
         )
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as DefaultSidedInventory).inputSlots.first(), 2, 2),
+            WItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2),
             2.4,
             1.5
         )

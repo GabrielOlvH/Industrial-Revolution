@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import team.reborn.energy.EnergySide
@@ -12,7 +12,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(2, intArrayOf(), intArrayOf()) { _, _ -> true }
+            IRInventory(2, intArrayOf(), intArrayOf()) { _, _ -> true }
         }
         this.temperatureController = TemperatureController({ this }, 0.1, 500..700, 1000.0)
     }
