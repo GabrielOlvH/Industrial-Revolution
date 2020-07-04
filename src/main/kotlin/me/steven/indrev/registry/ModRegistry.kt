@@ -13,10 +13,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
-import net.minecraft.item.BlockItem
-import net.minecraft.item.BucketItem
-import net.minecraft.item.Item
-import net.minecraft.item.ToolMaterials
+import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -74,6 +71,8 @@ object ModRegistry {
         identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
 
         identifier("wrench").item(WRENCH)
+
+        identifier("tech_soup").item(TECH_SOUP)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -122,4 +121,6 @@ object ModRegistry {
     val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
 
     val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
+
+    val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 }

@@ -114,5 +114,6 @@
   "block.indrev.molten_netherite": "融化的下界合金",
   "item.indrev.molten_netherite_bucket": "融化的下界合金桶",
   "item.indrev.chunk_scanner.tooltip4": "维度: %s",
-  "item.indrev.wrench": "扳手"
+  "item.indrev.wrench": "扳手",
+  "item.indrev.tech_soup": "Tech Soup"
 }
