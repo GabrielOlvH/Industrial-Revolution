@@ -3,6 +3,7 @@ package me.steven.indrev.components
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.IRCoolerItem
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 
@@ -38,11 +39,11 @@ class TemperatureController(
         return tag
     }
 
-    fun isFullEfficiency() = cooling <= 0 && temperature.toInt() in optimalRange
+    fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
     fun tick(isHeatingUp: Boolean) {
         val machine = machineProvider()
-        val coolerStack = machine.inventoryController?.getInventory()?.getStack(1)
+        val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
         val tempModifier = getTemperatureModifier() / 10
         val overflowModifier = if (inputOverflow) 20 else 0
@@ -64,6 +65,8 @@ class TemperatureController(
             machine.explode = true
         }
     }
+
+    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryController?.getInventory()?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()
