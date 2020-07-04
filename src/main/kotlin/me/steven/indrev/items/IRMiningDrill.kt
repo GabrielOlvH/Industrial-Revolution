@@ -1,5 +1,6 @@
-package me.steven.indrev.items.rechargeable
+package me.steven.indrev.items
 
+import me.steven.indrev.items.rechargeable.Rechargeable
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
@@ -15,13 +16,20 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class IRMiningDrill(toolMaterial: ToolMaterial, settings: Settings) : PickaxeItem(toolMaterial, 0, 0F, settings), Rechargeable {
+class IRMiningDrill(toolMaterial: ToolMaterial, settings: Settings) : PickaxeItem(toolMaterial, 0, 0F, settings),
+    Rechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         return if (SUPPORTED_MATERIALS.contains(material) && stack.maxDamage - stack.damage > 1) this.material.miningSpeedMultiplier * 2 else 0F
     }
 
-    override fun postMine(stack: ItemStack, world: World?, state: BlockState?, pos: BlockPos?, miner: LivingEntity?): Boolean {
+    override fun postMine(
+        stack: ItemStack,
+        world: World?,
+        state: BlockState?,
+        pos: BlockPos?,
+        miner: LivingEntity?
+    ): Boolean {
         if (stack.damage + 1 > stack.maxDamage) return false
         return super.postMine(stack, world, state, pos, miner)
     }

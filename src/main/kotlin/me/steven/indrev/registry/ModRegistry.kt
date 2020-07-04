@@ -4,7 +4,6 @@ import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
-import me.steven.indrev.items.rechargeable.IRMiningDrill
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -95,10 +94,16 @@ object ModRegistry {
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
-    val MINING_DRILL_MK1 = IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK2 = IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK3 = IRMiningDrill(ToolMaterials.DIAMOND, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK4 = IRMiningDrill(ToolMaterials.NETHERITE, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK1 =
+        IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK2 =
+        IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK3 =
+        IRMiningDrill(ToolMaterials.DIAMOND, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK4 = IRMiningDrill(
+        ToolMaterials.NETHERITE,
+        itemSettings().maxDamage(32000)
+    )
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
