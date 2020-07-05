@@ -2,8 +2,8 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.fluids.CoolantFluid
+import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
-import me.steven.indrev.items.rechargeable.IRMiningDrill
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -12,10 +12,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
-import net.minecraft.item.BlockItem
-import net.minecraft.item.BucketItem
-import net.minecraft.item.Item
-import net.minecraft.item.ToolMaterials
+import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -66,6 +63,15 @@ object ModRegistry {
         identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
         identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
         identifier("coolant_bucket").item(COOLANT_BUCKET)
+
+        identifier("molten_netherite").block(MOLTEN_NETHERITE)
+        identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
+        identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
+        identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
+
+        identifier("wrench").item(WRENCH)
+
+        identifier("tech_soup").item(TECH_SOUP)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -88,10 +94,16 @@ object ModRegistry {
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
-    val MINING_DRILL_MK1 = IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK2 = IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK3 = IRMiningDrill(ToolMaterials.DIAMOND, itemSettings().maxDamage(32000))
-    val MINING_DRILL_MK4 = IRMiningDrill(ToolMaterials.NETHERITE, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK1 =
+        IRMiningDrill(ToolMaterials.STONE, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK2 =
+        IRMiningDrill(ToolMaterials.IRON, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK3 =
+        IRMiningDrill(ToolMaterials.DIAMOND, itemSettings().maxDamage(32000))
+    val MINING_DRILL_MK4 = IRMiningDrill(
+        ToolMaterials.NETHERITE,
+        itemSettings().maxDamage(32000)
+    )
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
@@ -102,9 +114,18 @@ object ModRegistry {
     val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings())
     val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
 
+    val MOLTEN_NETHERITE_FLOWING = MoltenNetheriteFluid.Flowing()
+    val MOLTEN_NETHERITE_STILL = MoltenNetheriteFluid.Still()
+    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings())
+    val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
     val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
     val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+
+    val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
+
+    val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 }

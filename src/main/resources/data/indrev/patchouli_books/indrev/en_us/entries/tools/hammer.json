@@ -1,0 +1,13 @@
+{
+  "name": "Hammer",
+  "category": "tools",
+  "sortnum": 0,
+  "icon": "indrev:hammer",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:hammer",
+      "text": "Used to make plates out of ingots when you still don't have a compressor!"
+    }
+  ]
+}

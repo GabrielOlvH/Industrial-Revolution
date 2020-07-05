@@ -1,0 +1,11 @@
+{
+  "type": "indrev:recycle",
+  "ingredient": {
+    "item": "minecraft:grass_block"
+  },
+  "output": {
+    "item": "indrev:biomass",
+    "count": 2
+  },
+  "processTime": 300
+}

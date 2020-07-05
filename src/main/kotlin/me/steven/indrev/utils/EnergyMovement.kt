@@ -1,6 +1,8 @@
 package me.steven.indrev.utils
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.mixin.AccessorEnergyHandler
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
@@ -17,13 +19,12 @@ object EnergyMovement {
         val sourceHandler = Energy.of(source)
         val targets = Direction.values()
             .mapNotNull { direction ->
-                if (source.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0) {
+                if (source.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0 && (source !is CableBlockEntity || isCableConnected(source, direction))) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
-                    if (target != null && Energy.valid(target)) {
+                    if (target != null && Energy.valid(target) && (target !is CableBlockEntity || isCableConnected(target, direction.opposite))) {
                         val targetHandler = Energy.of(target).side(direction.opposite)
-                        if (targetHandler.energy < targetHandler.maxStored)
-                            targetHandler
+                        if (targetHandler.energy < targetHandler.maxStored) targetHandler
                         else null
                     } else null
                 } else null
@@ -35,20 +36,22 @@ object EnergyMovement {
             val accessor = targetHandler as AccessorEnergyHandler
             val direction = accessor.side
             val target = accessor.holder
-            sourceHandler.side(direction)
+            sourceHandler.side(direction.opposite())
             val targetMaxInput = targetHandler.maxInput
-            val amount = (targetMaxInput / sum) * sourceHandler.energy
+            var energy = sourceHandler.energy.coerceAtMost(sourceHandler.maxOutput)
+            if (source is CableBlockEntity && target is CableBlockEntity) {
+                if (sourceHandler.energy < targetHandler.energy) return@forEach
+                energy -= (energy - targetHandler.energy) / 2
+            }
+            val amount = (targetMaxInput / sum) * energy
             if (amount > 0) {
                 if (source is MachineBlockEntity && target is MachineBlockEntity) {
-                    if (source.lastInput == direction.opposite()) {
-                        source.lastInput = null
-                        return@forEach
-                    }
-                    target.lastInput = direction
                     target.temperatureController?.inputOverflow = amount > target.getMaxInput(direction)
                 }
                 sourceHandler.into(targetHandler).move(amount)
             }
         }
     }
+
+    private fun isCableConnected(blockEntity: CableBlockEntity, direction: Direction) = blockEntity.cachedState[CableBlock.getProperty(direction)]
 }

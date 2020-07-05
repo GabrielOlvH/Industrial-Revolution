@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -24,12 +24,13 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import team.reborn.energy.Energy
+import team.reborn.energy.EnergySide
 
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
+            IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -56,8 +57,10 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val input = inventory.getInputInventory()
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
+        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+            setWorkingState(false)
             return
+        } else setWorkingState(true)
         val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
         val fakePlayer = FakePlayerEntity(world!!, pos)
         fakePlayer.inventory.selectedSlot = 0
@@ -110,6 +113,8 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         }
         return box
     }
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     private fun getRange() =
         when (tier) {

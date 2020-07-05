@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:gold_dusts"
+  },
+  "result": "minecraft:gold_ingot",
+  "cookingTime": 200
+}

@@ -1,0 +1,36 @@
+{
+  "name": "Generators",
+  "category": "machines",
+  "sortnum": 0,
+  "icon": "indrev:coal_generator_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "$(l)$(o)Generators $()use other resources to create energy known as Lazuli Flux for your machines"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:coal_generator_mk1",
+      "text": "The $(l)$(o)Coal Generator $()can use, not only coal, but anything a furnace can to generate energy."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:solar_generator_mk1",
+      "recipe2": "indrev:solar_generator_mk3"
+    },
+    {
+      "type": "text",
+      "text": "The $(l)$(o)Solar Generator $()will generate energy as long as the sunlight can reach it."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:biomass_generator_mk3",
+      "text": "The $(l)$(o)Biomass Generator $()will burn $(#00ff00)biomass $()to generate energy."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:heat_generator",
+      "text": "The $(l)$(o)Heat Generator $()will absorb $(#ff0000)lava $()or $(#ff0000)molten netherite $()touching it to generate energy."
+    }
+  ]
+}

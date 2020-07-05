@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -16,7 +16,7 @@ class PulverizerBlockEntity(tier: Tier) :
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
+            IRInventory(9, intArrayOf(2), intArrayOf(3, 4)) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -32,7 +32,7 @@ class PulverizerBlockEntity(tier: Tier) :
 
     private var currentRecipe: PulverizerRecipe? = null
 
-    override fun tryStartRecipe(inventory: DefaultSidedInventory): PulverizerRecipe? {
+    override fun tryStartRecipe(inventory: IRInventory): PulverizerRecipe? {
         val inputStacks = inventory.getInputInventory()
         val optional =
             world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)

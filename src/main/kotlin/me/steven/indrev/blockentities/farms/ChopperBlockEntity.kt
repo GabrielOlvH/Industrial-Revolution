@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -34,7 +34,7 @@ import team.reborn.energy.EnergySide
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
+            IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -89,12 +89,18 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
             }
             temperatureController?.tick(performedAction)
+            setWorkingState(performedAction)
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
         update()
     }
 
-    private fun tryChop(axeStack: ItemStack, blockPos: BlockPos, blockState: BlockState, inventory: DefaultSidedInventory): Boolean {
+    private fun tryChop(
+        axeStack: ItemStack,
+        blockPos: BlockPos,
+        blockState: BlockState,
+        inventory: IRInventory
+    ): Boolean {
         when (blockState.block) {
             is PillarBlock -> {
                 world?.breakBlock(blockPos, false)

@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.miner
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -25,7 +25,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
+            IRInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -49,8 +49,8 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             val chunkPos = world?.getChunk(pos)?.pos ?: return
             val state =
                 (world as ServerWorld).persistentStateManager.getOrCreate(
-                    { WorldChunkVeinData() },
-                    WorldChunkVeinData.STATE_KEY
+                    { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                    WorldChunkVeinData.STATE_OVERWORLD_KEY
                 )
             this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
         } else {
@@ -65,16 +65,17 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData() },
-                        WorldChunkVeinData.STATE_KEY
+                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
+                        WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
                 val data = state.veins[chunkPos]
                 if (data == null) {
                     chunkVeinType = null
                     return
                 }
-                propertyDelegate[3] = data.explored * 100 / data.size
-                if (data.explored >= data.size) {
+                val (_, size, explored) = data
+                propertyDelegate[3] = explored * 100 / size
+                if (explored >= size) {
                     mining = -1.0
                     return
                 }

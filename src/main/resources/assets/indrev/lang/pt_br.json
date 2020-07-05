@@ -1,4 +1,6 @@
 {
+  "item.patchouli.industrial_revolution_book.name": "Revolução Industrial",
+  "item.patchouli.industrial_revolution_book.landing": "Este livro vai te ajudar em certos aspectos do mod.$(br2)Se você tiver algum problema, pergunta ou sugestão, abra um issue no $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() ou entre no nosso $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Obrigado por jogar!",
   "itemGroup.indrev.indrev_group": "Revolução Industrial",
   "block.machines.tooltip.io": "I/O: %s",
   "block.indrev.coal_generator": "Gerador a Carvão",
@@ -50,7 +52,7 @@
   "block.indrev.aoe.toggle.false": "Mostrar alcance",
   "block.indrev.aoe.toggle.true": "Ocultar alcance",
   "block.indrev.coolant": "Refrigerante",
-  "item.indrev.machine_block": "Bloco de máquina",
+  "block.indrev.machine_block": "Bloco de máquina",
   "item.indrev.empty_upgrade": "Melhoria Vazia",
   "item.indrev.buffer_upgrade": "Melhoria de Recipiente",
   "item.indrev.buffer_upgrade.tooltip": "Aumenta a capacidade do recipiente da máquina.",
@@ -67,6 +69,7 @@
   "item.indrev.chunk_scanner.tooltip1": "Segure o botão direito para escanear o chunk",
   "item.indrev.chunk_scanner.tooltip2": "Tipo de veia: %s",
   "item.indrev.chunk_scanner.tooltip3": "De %s até %s",
+  "item.indrev.chunk_scanner.tooltip4": "Dimensão: %s",
   "item.indrev.fan": "Ventilador",
   "item.indrev.cooler_cell": "Célula Refrigerante",
   "item.indrev.heatsink": "Dissipador de Calor",
@@ -106,5 +109,11 @@
   "item.c.nikolite_ore": "Minério de Nikolite",
   "item.c.nikolite_nether_ore": "Minéro do Nether de Nikolite",
   "item.c.nikolite_end_ore": "Minério do Fim de Nikolite",
-  "block.indrev.miner.tooltip": "Você precisa escanear esse chunk usando um Escaneador de Chunk antes de usar a mineradora."
+  "block.indrev.miner.tooltip": "Você precisa escanear esse chunk usando um Escaneador de Chunk antes de usar a mineradora.",
+  "block.indrev.heat_generator": "Gerador à calor",
+  "block.indrev.heat_generator_mk4": "Gerador à calor",
+  "block.indrev.molten_netherite": "Netherite Derretida",
+  "item.indrev.molten_netherite_bucket": "Balde de Netherite Derretida",
+  "item.indrev.wrench": "Chave Inglesa",
+  "item.indrev.tech_soup": "Tech Soup"
 }

@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.PersistentState
 
-class WorldChunkVeinData : PersistentState(STATE_KEY) {
+class WorldChunkVeinData(key: String) : PersistentState(key) {
 
     val veins: MutableMap<ChunkPos, ChunkVeinData> = mutableMapOf()
 
@@ -29,6 +29,6 @@ class WorldChunkVeinData : PersistentState(STATE_KEY) {
     }
 
     companion object {
-        const val STATE_KEY = "indrev_world_veins"
+        const val STATE_OVERWORLD_KEY = "indrev_world_veins"
     }
 }

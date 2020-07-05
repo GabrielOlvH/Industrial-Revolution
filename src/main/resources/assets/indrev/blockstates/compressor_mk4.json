@@ -1,18 +1,33 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,working=false": {
       "model": "indrev:block/compressor_mk4"
     },
-    "facing=south": {
+    "facing=south,working=false": {
       "model": "indrev:block/compressor_mk4",
       "y": 180
     },
-    "facing=west": {
+    "facing=west,working=false": {
       "model": "indrev:block/compressor_mk4",
       "y": 270
     },
-    "facing=east": {
+    "facing=east,working=false": {
       "model": "indrev:block/compressor_mk4",
+      "y": 90
+    },
+    "facing=north,working=true": {
+      "model": "indrev:block/compressor_mk4_on"
+    },
+    "facing=south,working=true": {
+      "model": "indrev:block/compressor_mk4_on",
+      "y": 180
+    },
+    "facing=west,working=true": {
+      "model": "indrev:block/compressor_mk4_on",
+      "y": 270
+    },
+    "facing=east,working=true": {
+      "model": "indrev:block/compressor_mk4_on",
       "y": 90
     }
   }

@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -16,7 +16,7 @@ class CompressorBlockEntity(tier: Tier) :
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+            IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -32,7 +32,7 @@ class CompressorBlockEntity(tier: Tier) :
 
     private var currentRecipe: CompressorRecipe? = null
 
-    override fun tryStartRecipe(inventory: DefaultSidedInventory): CompressorRecipe? {
+    override fun tryStartRecipe(inventory: IRInventory): CompressorRecipe? {
         val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(CompressorRecipe.TYPE, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null

@@ -1,0 +1,22 @@
+{
+  "name": "Cables",
+  "category": "machines",
+  "sortnum": 2,
+  "icon": "indrev:cable_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "These machines are used to transfer Lazuli Flux to great distances."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:cable_mk1",
+      "recipe2": "indrev:cable_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:cable_mk3",
+      "recipe2": "indrev:cable_mk4"
+    }
+  ]
+}

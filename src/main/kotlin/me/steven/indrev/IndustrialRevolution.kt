@@ -6,12 +6,10 @@ import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.registerScreenHandler
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
@@ -27,11 +25,13 @@ object IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CompressorRecipe.IDENTIFIER, CompressorRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CompressorRecipe.IDENTIFIER, CompressorRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, InfuserRecipe.IDENTIFIER, InfuserRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
     }
 
     const val MOD_ID = "indrev"
@@ -39,63 +39,17 @@ object IndustrialRevolution : EnergyModInitializer() {
     val MOD_GROUP: ItemGroup =
         FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
 
-    val COAL_GENERATOR_HANDLER: ExtendedScreenHandlerType<CoalGeneratorController> =
-        ScreenHandlerRegistry.registerExtended(CoalGeneratorController.SCREEN_ID) { syncId, playerInventory, buf ->
-            CoalGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<CoalGeneratorController>
-
-    val SOLAR_GENERATOR_HANDLER: ExtendedScreenHandlerType<SolarGeneratorController> =
-        ScreenHandlerRegistry.registerExtended(SolarGeneratorController.SCREEN_ID) { syncId, playerInventory, buf ->
-            SolarGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<SolarGeneratorController>
-
-    val ELECTRIC_FURNACE_HANDLER: ExtendedScreenHandlerType<ElectricFurnaceController> =
-        ScreenHandlerRegistry.registerExtended(ElectricFurnaceController.SCREEN_ID) { syncId, playerInventory, buf ->
-            ElectricFurnaceController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<ElectricFurnaceController>
-
-    val PULVERIZER_HANDLER: ExtendedScreenHandlerType<PulverizerController> =
-        ScreenHandlerRegistry.registerExtended(PulverizerController.SCREEN_ID) { syncId, playerInventory, buf ->
-            PulverizerController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<PulverizerController>
-
-    val COMPRESSOR_HANDLER: ExtendedScreenHandlerType<CompressorController> =
-        ScreenHandlerRegistry.registerExtended(CompressorController.SCREEN_ID) { syncId, playerInventory, buf ->
-            CompressorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<CompressorController>
-
-    val BATTERY_HANDLER: ExtendedScreenHandlerType<BatteryController> =
-        ScreenHandlerRegistry.registerExtended(BatteryController.SCREEN_ID) { syncId, playerInventory, buf ->
-            BatteryController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<BatteryController>
-
-    val INFUSER_HANDLER: ExtendedScreenHandlerType<InfuserController> =
-        ScreenHandlerRegistry.registerExtended(InfuserController.SCREEN_ID) { syncId, playerInventory, buf ->
-            InfuserController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<InfuserController>
-
-    val MINER_HANDLER: ExtendedScreenHandlerType<MinerController> =
-        ScreenHandlerRegistry.registerExtended(MinerController.SCREEN_ID) { syncId, playerInventory, buf ->
-            MinerController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<MinerController>
-
-    val RECYCLER_HANDLER: ExtendedScreenHandlerType<RecyclerController> =
-        ScreenHandlerRegistry.registerExtended(RecyclerController.SCREEN_ID) { syncId, playerInventory, buf ->
-            RecyclerController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<RecyclerController>
-
-    val BIOMASS_GENERATOR_HANDLER: ExtendedScreenHandlerType<BiomassGeneratorController> =
-        ScreenHandlerRegistry.registerExtended(BiomassGeneratorController.SCREEN_ID) { syncId, playerInventory, buf ->
-            BiomassGeneratorController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<BiomassGeneratorController>
-
-    val CHOPPER_HANDLER: ExtendedScreenHandlerType<ChopperController> =
-        ScreenHandlerRegistry.registerExtended(ChopperController.SCREEN_ID) { syncId, playerInventory, buf ->
-            ChopperController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<ChopperController>
-
-    val RANCHER_HANDLER: ExtendedScreenHandlerType<RancherController> =
-        ScreenHandlerRegistry.registerExtended(RancherController.SCREEN_ID) { syncId, playerInventory, buf ->
-            RancherController(syncId, playerInventory, ScreenHandlerContext.create(playerInventory.player.world, buf.readBlockPos()))
-        } as ExtendedScreenHandlerType<RancherController>
+    val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
+    val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)
+    val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorController.SCREEN_ID.registerScreenHandler(::BiomassGeneratorController)
+    val HEAT_GENERATOR_HANDLER = HeatGeneratorController.SCREEN_ID.registerScreenHandler(::HeatGeneratorController)
+    val BATTERY_HANDLER = BatteryController.SCREEN_ID.registerScreenHandler(::BatteryController)
+    val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceController)
+    val PULVERIZER_HANDLER = PulverizerController.SCREEN_ID.registerScreenHandler(::PulverizerController)
+    val COMPRESSOR_HANDLER = CompressorController.SCREEN_ID.registerScreenHandler(::CompressorController)
+    val INFUSER_HANDLER = InfuserController.SCREEN_ID.registerScreenHandler(::InfuserController)
+    val RECYCLER_HANDLER = RecyclerController.SCREEN_ID.registerScreenHandler(::RecyclerController)
+    val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
+    val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
+    val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
 }

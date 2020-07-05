@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.TemperatureController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -17,7 +17,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
 
     init {
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
+            IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -33,7 +33,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
 
     private var currentRecipe: SmeltingRecipe? = null
 
-    override fun tryStartRecipe(inventory: DefaultSidedInventory): SmeltingRecipe? {
+    override fun tryStartRecipe(inventory: IRInventory): SmeltingRecipe? {
         val inputStacks = inventory.getInputInventory()
         val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null

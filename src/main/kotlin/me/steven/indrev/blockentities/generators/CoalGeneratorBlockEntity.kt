@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.generators
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
-import me.steven.indrev.inventories.DefaultSidedInventory
+import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
@@ -22,7 +22,7 @@ class CoalGeneratorBlockEntity :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController {
-            DefaultSidedInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
+            IRInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0

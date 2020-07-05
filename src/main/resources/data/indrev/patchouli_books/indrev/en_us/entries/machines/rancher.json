@@ -1,0 +1,17 @@
+{
+  "name": "Rancher",
+  "category": "machines",
+  "sortnum": 6,
+  "icon": "indrev:rancher_mk4",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:rancher_mk4",
+      "text": "The $(l)Rancher$() is a machine focused in automating animal farming, and it also supports enhancement upgrades.$(br)Note that it requires some items for it to function:"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Sword:$() if present in the inventory, will kill animals if there are more than 7 in its range.$(br2)$(l)Wheat/Seed/Carrot:$() if present in the inventory, will be fed to the respective animals in it's range.$(br2)$(l)Bucket:$() if present in the inventory, will collect milk from cows."
+    }
+  ]
+}
