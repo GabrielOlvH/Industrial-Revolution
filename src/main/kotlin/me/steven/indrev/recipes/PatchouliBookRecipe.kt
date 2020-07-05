@@ -10,7 +10,7 @@ import net.minecraft.recipe.ShapelessRecipe
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.DefaultedList
 
-class PatchouliBookRecipe(id: Identifier, group: String, output: ItemStack, input: DefaultedList<Ingredient>) :
+class PatchouliBookRecipe(id: Identifier, group: String?, output: ItemStack, input: DefaultedList<Ingredient>) :
     ShapelessRecipe(id, group, output, input) {
 
     companion object {
@@ -23,7 +23,7 @@ class PatchouliBookRecipe(id: Identifier, group: String, output: ItemStack, inpu
                 val shapeless = super.read(identifier, jsonObject)
                 val output = shapeless.output
                 output.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
-                return PatchouliBookRecipe(identifier, shapeless.group, output, shapeless.previewInputs)
+                return PatchouliBookRecipe(identifier, "", output, shapeless.previewInputs)
             }
         }
     }
