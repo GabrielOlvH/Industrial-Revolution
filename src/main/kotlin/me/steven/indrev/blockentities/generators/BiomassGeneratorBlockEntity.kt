@@ -8,6 +8,7 @@ import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ArrayPropertyDelegate
@@ -17,7 +18,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController {
-            IRInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
+            IRInventory(3, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0

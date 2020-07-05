@@ -9,6 +9,7 @@ import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.world.chunkveins.ChunkVeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
@@ -25,7 +26,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryController = InventoryController {
-            IRInventory(14, intArrayOf(), (1 until 10).toList().toIntArray()) { slot, stack ->
+            IRInventory(14, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)

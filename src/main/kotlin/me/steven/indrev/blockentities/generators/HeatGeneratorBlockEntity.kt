@@ -8,6 +8,7 @@ import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -21,7 +22,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController {
-            IRInventory(2, intArrayOf(2), intArrayOf()) { slot, stack ->
+            IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0

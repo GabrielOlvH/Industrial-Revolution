@@ -10,7 +10,10 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 
-class IRScreenHandlerFactory(private val handlerFactory: (Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler, val pos: BlockPos) : ExtendedScreenHandlerFactory {
+class IRScreenHandlerFactory(
+    private val handlerFactory: (Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler,
+    private val pos: BlockPos
+) : ExtendedScreenHandlerFactory {
     override fun createMenu(syncId: Int, inv: PlayerInventory?, player: PlayerEntity?): ScreenHandler? {
         return handlerFactory(syncId, inv!!, ScreenHandlerContext.create(inv.player.world, pos))
     }

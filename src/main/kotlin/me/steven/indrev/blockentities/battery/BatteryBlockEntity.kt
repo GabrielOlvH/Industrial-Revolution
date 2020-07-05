@@ -6,6 +6,7 @@ import me.steven.indrev.components.InventoryController
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.rechargeable.Rechargeable
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.screen.ArrayPropertyDelegate
 import team.reborn.energy.Energy
@@ -17,7 +18,7 @@ class BatteryBlockEntity(tier: Tier) :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryController = InventoryController {
-            IRInventory(1, intArrayOf(0), intArrayOf()) { _, stack -> stack?.item is Rechargeable }
+            IRInventory(1, intArrayOf(0), EMPTY_INT_ARRAY) { _, stack -> stack?.item is Rechargeable }
         }
     }
 

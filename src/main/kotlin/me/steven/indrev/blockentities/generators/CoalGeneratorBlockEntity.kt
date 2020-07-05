@@ -7,6 +7,7 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
@@ -22,7 +23,7 @@ class CoalGeneratorBlockEntity :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryController = InventoryController {
-            IRInventory(3, intArrayOf(2), intArrayOf()) { slot, stack ->
+            IRInventory(3, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0
