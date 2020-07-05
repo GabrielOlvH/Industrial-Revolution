@@ -1,4 +1,4 @@
-package me.steven.indrev.blockentities.miner
+package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
