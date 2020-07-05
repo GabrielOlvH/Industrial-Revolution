@@ -1,0 +1,32 @@
+{
+  "name": "强化升级",
+  "category": "upgrades",
+  "sortnum": 0,
+  "icon": "indrev:speed_upgrade",
+  "pages": [
+    {
+      "type": "text",
+      "text": "这些升级可提升机器的特定方面，比如速度和能效。$(br2)机器会使用其界面右侧4个格子内的升级部件。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:empty_upgrade",
+      "text": "没有任何用处，只用于合成其他升级。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:speed_upgrade",
+      "text": "这个升级会以能耗为代价增加机器的运行速度。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:energy_upgrade",
+      "text": "这个升级会降低机器的能耗。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:buffer_upgrade",
+      "text": "这个升级会增加机器的内部能量容量。"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "扳手",
+  "category": "tools",
+  "sortnum": 1,
+  "icon": "indrev:wrench",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:wrench",
+      "text": "用于旋转机器或断开电缆！"
+    }
+  ]
+}

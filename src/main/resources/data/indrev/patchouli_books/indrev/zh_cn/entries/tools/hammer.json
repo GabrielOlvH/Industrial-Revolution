@@ -1,0 +1,13 @@
+{
+  "name": "锤子",
+  "category": "tools",
+  "sortnum": 0,
+  "icon": "indrev:hammer",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:hammer",
+      "text": "用于在你没有压缩机时将锭敲成板！"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "name": "基础机器",
+  "category": "machines",
+  "sortnum": 1,
+  "icon": "indrev:electric_furnace_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "这些机器用于将资源转化为更复杂的资源。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:electric_furnace_mk1",
+      "text": "$(l)$(o)电炉 $()的作用和普通熔炉一样但它使用青金石通量作为燃料。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:pulverizer_mk1",
+      "text": "The $(l)$(o)粉碎机 $()主要用于将矿物磨成粉。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:compressor_mk1",
+      "text": "The $(l)$(o)压缩机 $()主要用于将锭压缩成板。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:infuser_mk1",
+      "text": "The $(l)$(o)注入器 $()可将两种原料糅合为一种更强大的材料。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:recycler_mk2",
+      "text": "The $(l)$(o)回收机 $()可以将有机资源转化为用于发电的生物质。"
+    }
+  ]
+}

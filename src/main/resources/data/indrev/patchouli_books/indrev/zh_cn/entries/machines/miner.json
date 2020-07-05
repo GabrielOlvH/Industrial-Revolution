@@ -1,0 +1,126 @@
+{
+  "name": "挖矿机",
+  "category": "machines",
+  "sortnum": 4,
+  "icon": "indrev:miner_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "谁不喜欢自动挖矿呢？"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:miner_mk4",
+      "text": "$(l)$(o)挖矿机$()放在$(l:machines/miner#chunk_scanner)$(t:区块扫描仪)$(l)$(o)$(#0000ff)扫描过的$()区块内会消耗能量自动挖矿。"
+    },
+    {
+      "anchor": "chunk_scanner",
+      "type": "crafting",
+      "recipe": "indrev:chunk_scanner",
+      "text": "$(l)$(o)区块扫描仪$()用于收集区块内的矿脉类型的地理数据。扫描后放置挖矿机可自动挖矿。"
+    },
+    {
+      "anchor": "vein_types",
+      "type": "text",
+      "text": "$(br)$(l:machines/miner#peat)$(t:前往泥炭页面)泥炭$()$(br)$(l:machines/miner#lignite)$(t:前往褐煤页面)褐煤$()$(br)$(l:machines/miner#bituminous)$(t:前往沥青页面)沥青$()$(br)$(l:machines/miner#anthracite)$(t:前往无烟煤页面)无烟煤$()$(br)$(l:machines/miner#siderite)$(t:前往菱铁矿页面)菱铁矿$()$(br)$(l:machines/miner#limonite)$(t:前往褐铁矿页面)褐铁矿$()$(br)$(l:machines/miner#hematite)$(t:前往赤铁矿页面)赤铁矿$()$(br)$(l:machines/miner#magnetite)$(t:前往磁铁矿)磁铁矿页面$()$(br)$(l:machines/miner#chalcopryte)$(t:前往黄铜矿页面)黄铜矿$()$(br)$(l:machines/miner#cuprite)$(t:前往赤铜矿页面)赤铜矿$()$(br)$(l:machines/miner#cassiterite)$(t:前往锡石页面)锡石$()$(br)$(l:machines/miner#stannite)$(t:前往黄锡矿页面)黄锡矿$()$(br)$(l:machines/miner#cavalerite)$(t:前往Cavalerite页面)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:前往石英页面)石英$()$(br)"
+    },
+    {
+      "anchor": "peat",
+      "type": "spotlight",
+      "title": "泥炭",
+      "item": "minecraft:coal_ore",
+      "text": "主要由$(#000000)$(l)煤矿石$()构成，这是最小也是最贫瘠的煤矿矿脉，你会得到很多石头、泥土和一些沙砾。"
+    },
+    {
+      "anchor": "lignite",
+      "type": "spotlight",
+      "title": "褐煤",
+      "item": "minecraft:coal_ore",
+      "text": "主要由$(#000000)$(l)煤矿石$()构成，这是第二小和贫瘠的煤矿矿脉，你仍然会得到很多石头、泥土和沙砾。"
+    },
+    {
+      "anchor": "bituminous",
+      "type": "spotlight",
+      "title": "Bituminous",
+      "item": "minecraft:coal_ore",
+      "text": "主要由$(#000000)$(l)煤矿石$()构成，这是较大和富足的煤矿矿脉，你可以得到更多煤炭，如果你幸运的话你可能还会找到一些$(#00ffff)$(l)钻石$()。"
+    },
+    {
+      "anchor": "anthracite",
+      "type": "spotlight",
+      "title": "Anthracite",
+      "item": "minecraft:coal_ore",
+      "text": "主要由$(#000000)$(l)煤矿石$()构成，这是最大和富足的煤矿矿脉，你可以得到大量的煤矿、石头、沙砾和一些$(#00ffff)$(l)钻石$()。"
+    },
+    {
+      "anchor": "siderite",
+      "type": "spotlight",
+      "title": "Siderite",
+      "item": "minecraft:iron_ore",
+      "text": "主要由$(#666666)$(l)铁矿石$()构成，这是最小也是最贫瘠的铁矿矿脉，你会得到很多石头、泥土和一些沙砾。"
+    },
+    {
+      "anchor": "limonite",
+      "type": "spotlight",
+      "title": "Limonite",
+      "item": "minecraft:iron_ore",
+      "text": "主要由$(#666666)$(l)铁矿石$()构成，这是第二小和贫瘠的铁矿矿脉，你仍然会得到很多石头、泥土和沙砾。"
+    },
+    {
+      "anchor": "hematite",
+      "type": "spotlight",
+      "title": "Hematite",
+      "item": "minecraft:iron_ore",
+      "text": "主要由$(#666666)$(l)铁矿石$()构成，这是较大和富足的煤矿矿脉，你可以得到更多铁。"
+    },
+    {
+      "anchor": "magnetite",
+      "type": "spotlight",
+      "title": "Magnetite",
+      "item": "minecraft:iron_ore",
+      "text": "主要由$(#666666)$(l)铁矿石$()构成，这是最大和富足的铁矿矿脉，你可以得到大量的铁矿、石头、沙砾。."
+    },
+    {
+      "anchor": "chalcopryte",
+      "type": "spotlight",
+      "title": "Chalcopryte",
+      "item": "c:copper_ore",
+      "text": "主要由$(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()构成，这是较为富足且多变的矿脉，有很多的$(#FFA500)$(l)铜$()和$(#666666)$(l)铁$()矿石，以及石头、泥土和沙砾。"
+    },
+    {
+      "anchor": "cuprite",
+      "type": "spotlight",
+      "title": "Cuprite",
+      "item": "c:copper_ore",
+      "text": "主要由$(#FFA500)$(l)铜矿石$()构成，这个矿脉只有铜矿石，并不富足且大小不一。"
+    },
+    {
+      "anchor": "cassiterite",
+      "type": "spotlight",
+      "title": "锡石",
+      "item": "c:tin_ore",
+      "text": "主要由$(#999999)$(l)锡矿石$()构成，这个矿脉只有铜矿石，并不富足且大小不一。"
+    },
+    {
+      "anchor": "stannite",
+      "type": "spotlight",
+      "title": "Stannite",
+      "item": "c:tin_ore",
+      "text": "主要由$(#999999)$(l)锡矿石$()构成， $(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()构成，有很多锡、$(#666666)$(l)铁$()、$(#FFA500)$(l)铜$()矿石以及石头、泥土和沙砾。"
+    },
+    {
+      "anchor": "cavalerite",
+      "type": "spotlight",
+      "title": "Cavalerite",
+      "item": "minecraft:gold_ore",
+      "text": "$(l)主世界$()$(br)主要由$(#FFD700)$(l)金矿石$()构成，这是最小但富足的金矿矿脉$(br2)$(#ff0000)$(l)下界$()$(br)这是个很大且富含$(#FFD700)$(l)下界金矿石$()的矿脉，以及大量下界岩、灵魂沙、沙砾，如果你足够幸运的话你还可以找到一些$(l)$(#000000)远古残骸$()！"
+    },
+    {
+      "anchor": "quartz",
+      "type": "spotlight",
+      "title": "石英",
+      "item": "minecraft:nether_quartz_ore",
+      "text": "$(#ff0000)$(l)下界$()$(br)这是个很大且富含$(#dddddd)$(l)石英$()以及下界岩、灵魂沙和沙砾的矿脉。"
+    }
+  ]
+}

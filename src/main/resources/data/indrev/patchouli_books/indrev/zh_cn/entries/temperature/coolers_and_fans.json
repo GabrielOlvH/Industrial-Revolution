@@ -1,0 +1,27 @@
+{
+  "name": "保持低温！",
+  "category": "temperature",
+  "sortnum": 1,
+  "icon": "indrev:cooler_cell",
+  "pages": [
+    {
+      "type": "text",
+      "text": "冷却液和风扇降低机器的温度来时机器在特定的温度范围内高效运行。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:fan",
+      "text": "$(o)先生，我可以要你的签名吗？签个名吧baaaaaaa$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:cooler_cell",
+      "text": "$(o)哎... 我太酷了，用不了这个$()"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:heatsink",
+      "text": "$(o)什么？你以为这是个双关？抱歉，这里禁止使用双关语。$()"
+    }
+  ]
+}

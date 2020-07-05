@@ -1,0 +1,6 @@
+{
+  "name": "机器",
+  "sortnum": 0,
+  "description": "机器是这个模组的核心。以下页面会显示机器的合成配方及相关信息。",
+  "icon": "indrev:electric_furnace_mk1"
+}
