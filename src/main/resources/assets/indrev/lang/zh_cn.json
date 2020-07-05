@@ -1,6 +1,6 @@
 {
-  "item.patchouli.industrial_revolution_book.name": "Industrial Revolution",
-  "item.patchouli.industrial_revolution_book.landing": "This book will help you go through some of the important aspects of the mod.$(br2)If you find any issues, questions or suggestions, open an issue on $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() or join our $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Thank you for playing!",
+  "item.patchouli.industrial_revolution_book.name": "工业革命手册",
+  "item.patchouli.industrial_revolution_book.landing": "这本书将引导你了解模组的一些重要内容$(br2)如果你发现漏洞，有问题或建议请在$(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$()上提出问题或加入我们的$(l:https://discord.com/invite/G4PjhEf)Discord！$()$(br2)感谢游玩！",
   "itemGroup.indrev.indrev_group": "工业革命",
   "block.machines.tooltip.io": "I/O: %s",
   "block.indrev.coal_generator": "煤炭发电机",
@@ -115,5 +115,5 @@
   "item.indrev.molten_netherite_bucket": "融化的下界合金桶",
   "item.indrev.chunk_scanner.tooltip4": "维度: %s",
   "item.indrev.wrench": "扳手",
-  "item.indrev.tech_soup": "Tech Soup"
+  "item.indrev.tech_soup": "科技汤"
 }

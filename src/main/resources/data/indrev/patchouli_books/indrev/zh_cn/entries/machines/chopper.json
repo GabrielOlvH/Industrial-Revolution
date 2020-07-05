@@ -1,0 +1,17 @@
+{
+  "name": "伐木机",
+  "category": "machines",
+  "sortnum": 5,
+  "icon": "indrev:chopper_mk4",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:chopper_mk4",
+      "text": "$(l)伐木机$()可自动伐木，且可以强化升级。$(br)请注意它需要一些物品才能运作："
+    },
+    {
+      "type": "text",
+      "text": "$(l)斧：$()放在机器内时会自动砍伐范围内的木头和树叶(树叶不消耗耐久)$(br2)$(l)树苗：$()放在机器内时会在范围内自动种树。$(br2)$(l)骨粉：$()自动催熟范围内的树苗。"
+    }
+  ]
+}
