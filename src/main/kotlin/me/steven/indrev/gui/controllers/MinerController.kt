@@ -15,18 +15,18 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 
-class MinerController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
         IndustrialRevolution.MINER_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.miner", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.miner", ctx, blockInventory, propertyDelegate)
 
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),

@@ -12,19 +12,19 @@ import net.minecraft.screen.ScreenHandlerContext
 class SolarGeneratorController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    screenHandlerContext: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
         IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.solar_generator", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.solar_generator", ctx, blockInventory, propertyDelegate)
 
         root.validate(this)
     }

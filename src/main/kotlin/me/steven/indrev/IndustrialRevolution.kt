@@ -1,15 +1,19 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.components.InventoryController
 import me.steven.indrev.gui.controllers.*
+import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
@@ -32,6 +36,19 @@ object IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
+
+        ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val dir = Direction.byId(buf.readInt())
+            val mode = InventoryController.Mode.values()[buf.readInt()]
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                val blockEntity = world.getBlockEntity(pos)
+                if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+                    blockEntity.inventoryController!!.itemConfig[dir] = mode
+                }
+            }
+        }
     }
 
     const val MOD_ID = "indrev"
@@ -52,4 +69,6 @@ object IndustrialRevolution : EnergyModInitializer() {
     val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
+
+    val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 }

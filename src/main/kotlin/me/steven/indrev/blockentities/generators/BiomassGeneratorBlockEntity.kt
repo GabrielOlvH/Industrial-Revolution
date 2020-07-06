@@ -37,7 +37,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            val inventory = inventoryController?.getInventory() ?: return false
+            val inventory = inventoryController?.inventory ?: return false
             val invStack = inventory.getStack(2)
             if (!invStack.isEmpty && invStack.item == ModRegistry.BIOMASS) {
                 burnTime = 300

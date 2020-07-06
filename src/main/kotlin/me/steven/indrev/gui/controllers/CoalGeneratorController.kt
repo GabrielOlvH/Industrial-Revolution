@@ -15,19 +15,19 @@ import net.minecraft.util.Identifier
 class CoalGeneratorController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    screenHandlerContext: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
         IndustrialRevolution.COAL_GENERATOR_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.coal_generator", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.coal_generator", ctx, blockInventory, propertyDelegate)
 
         val itemSlot = WItemSlot.of(blockInventory, 2)
         root.add(itemSlot, 4, 2)

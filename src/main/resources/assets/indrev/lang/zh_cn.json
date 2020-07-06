@@ -115,5 +115,10 @@
   "item.indrev.molten_netherite_bucket": "融化的下界合金桶",
   "item.indrev.chunk_scanner.tooltip4": "维度: %s",
   "item.indrev.wrench": "扳手",
-  "item.indrev.tech_soup": "科技汤"
+  "item.indrev.tech_soup": "科技汤",
+  "item.indrev.wrench.switch_mode": "Wrench Mode: %s",
+  "item.indrev.wrench.title": " Configure Machine",
+  "item.indrev.wrench.output": "OUTPUT",
+  "item.indrev.wrench.input": "INPUT",
+  "item.indrev.wrench.tooltip": "Shift + Right Click to change mode"
 }

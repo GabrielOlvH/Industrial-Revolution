@@ -15,19 +15,19 @@ import net.minecraft.text.TranslatableText
 class HeatGeneratorController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    screenHandlerContext: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
         IndustrialRevolution.HEAT_GENERATOR_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.heat_generator", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.heat_generator", ctx, blockInventory, propertyDelegate)
 
         root.add(StringWidget(TranslatableText("Heating up...")), 4.0, 2.0)
         val processWidget = ProcessWidget(propertyDelegate)

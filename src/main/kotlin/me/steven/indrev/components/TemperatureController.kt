@@ -66,7 +66,7 @@ class TemperatureController(
         }
     }
 
-    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryController?.getInventory()?.getStack(1)
+    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryController?.inventory?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()

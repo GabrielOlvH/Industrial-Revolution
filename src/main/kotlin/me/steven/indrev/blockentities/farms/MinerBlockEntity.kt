@@ -45,7 +45,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = inventoryController?.getInventory() ?: return
+        val inventory = inventoryController?.inventory ?: return
         if (chunkVeinType == null) {
             val chunkPos = world?.getChunk(pos)?.pos ?: return
             val state =
@@ -98,7 +98,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 256.0 + Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+        Upgrade.ENERGY -> 256.0 + Upgrade.SPEED.apply(this, inventoryController!!.inventory)
         Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.5 else 0.3
         Upgrade.BUFFER -> baseBuffer
     }

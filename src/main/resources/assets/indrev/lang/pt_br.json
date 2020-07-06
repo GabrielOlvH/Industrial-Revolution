@@ -115,5 +115,10 @@
   "block.indrev.molten_netherite": "Netherite Derretida",
   "item.indrev.molten_netherite_bucket": "Balde de Netherite Derretida",
   "item.indrev.wrench": "Chave Inglesa",
-  "item.indrev.tech_soup": "Tech Soup"
+  "item.indrev.tech_soup": "Tech Soup",
+  "item.indrev.wrench.switch_mode": "Modo da Chave: %s",
+  "item.indrev.wrench.title": " Configurar Máquina",
+  "item.indrev.wrench.output": "SAÍDA",
+  "item.indrev.wrench.input": "ENTRADA",
+  "item.indrev.wrench.tooltip": "Shift + Botão Direito para mudar o modo"
 }

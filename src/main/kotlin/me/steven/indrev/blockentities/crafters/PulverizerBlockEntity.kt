@@ -49,7 +49,7 @@ class PulverizerBlockEntity(tier: Tier) :
     }
 
     override fun onCraft() {
-        val inventory = inventoryController!!.getInventory()
+        val inventory = inventoryController!!.inventory
         if (inventory.size() < 3) return
         val chance = this.currentRecipe?.extraOutput?.right ?: return
         if (chance < this.world?.random?.nextDouble() ?: 0.0) {

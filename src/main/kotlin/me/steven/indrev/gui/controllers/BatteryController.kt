@@ -10,13 +10,13 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 
-class BatteryController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
         IndustrialRevolution.BATTERY_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()

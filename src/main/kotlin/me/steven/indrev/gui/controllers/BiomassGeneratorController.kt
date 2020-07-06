@@ -14,19 +14,19 @@ import net.minecraft.screen.ScreenHandlerContext
 class BiomassGeneratorController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    screenHandlerContext: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
         IndustrialRevolution.BIOMASS_GENERATOR_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.biomass_generator", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.biomass_generator", ctx, blockInventory, propertyDelegate)
 
         // Fuel input
         root.add(WItemSlot.of(blockInventory, 2), 4, 2)

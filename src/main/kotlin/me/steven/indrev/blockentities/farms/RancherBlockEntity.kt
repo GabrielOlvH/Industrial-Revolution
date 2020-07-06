@@ -48,7 +48,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = inventoryController?.getInventory() ?: return
+        val inventory = inventoryController?.inventory ?: return
         if (cooldown > 0) {
             cooldown--
             return
@@ -130,7 +130,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> 64.0 * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+            Upgrade.ENERGY -> 64.0 * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
             Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
             Upgrade.BUFFER -> baseBuffer
         }

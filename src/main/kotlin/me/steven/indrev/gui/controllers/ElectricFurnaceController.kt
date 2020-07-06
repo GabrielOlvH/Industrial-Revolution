@@ -15,19 +15,19 @@ import net.minecraft.screen.ScreenHandlerContext
 class ElectricFurnaceController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    screenHandlerContext: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
     SyncedGuiDescription(
         IndustrialRevolution.ELECTRIC_FURNACE_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.electric_furnace", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.electric_furnace", ctx, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 2.3, 1.5)

@@ -12,18 +12,18 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 
-class InfuserController(syncId: Int, playerInventory: PlayerInventory, screenHandlerContext: ScreenHandlerContext) :
+class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
         IndustrialRevolution.INFUSER_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(screenHandlerContext),
-        getBlockPropertyDelegate(screenHandlerContext)
+        getBlockInventory(ctx),
+        getBlockPropertyDelegate(ctx)
     ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser", screenHandlerContext, blockInventory, propertyDelegate)
+        configure("block.indrev.infuser", ctx, blockInventory, propertyDelegate)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 2.0, 1.5)

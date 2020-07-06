@@ -29,7 +29,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = inventoryController?.getInventory() ?: return
+        val inventory = inventoryController?.inventory ?: return
         val inputInventory = inventory.getInputInventory()
         if (inputInventory.isEmpty) {
             reset()
@@ -76,14 +76,14 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryController!!.getInventory())
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryController!!.inventory)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 4.0 * tier.ordinal * Upgrade.SPEED.apply(this, inventoryController!!.getInventory())
+        Upgrade.ENERGY -> 4.0 * tier.ordinal * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
         Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 2.0 else 1.0
         Upgrade.BUFFER -> baseBuffer
     }

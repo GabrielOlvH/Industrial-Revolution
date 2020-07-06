@@ -42,7 +42,7 @@ class CoalGeneratorBlockEntity :
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            val inventory = inventoryController?.getInventory() ?: return false
+            val inventory = inventoryController?.inventory ?: return false
             val invStack = inventory.getStack(2)
             if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                 burnTime = BURN_TIME_MAP[invStack.item] ?: return false

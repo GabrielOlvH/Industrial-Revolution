@@ -25,7 +25,7 @@ class BatteryBlockEntity(tier: Tier) :
     override fun tick() {
         super.tick()
         if (world?.isClient == true) return
-        val inventory = inventoryController?.getInventory() ?: return
+        val inventory = inventoryController?.inventory ?: return
         val stack = inventory.getStack(0)
         if (stack.item is Rechargeable && stack.isDamaged && stack.damage > 0 && Energy.of(this).use(1.0)) {
             inventory.setStack(0, stack.copy().apply { damage-- })

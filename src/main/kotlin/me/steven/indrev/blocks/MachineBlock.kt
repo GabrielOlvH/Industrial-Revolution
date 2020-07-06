@@ -95,7 +95,7 @@ open class MachineBlock(
         if (!state.isOf(newState.block)) {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
-                ItemScatterer.spawn(world, pos, blockEntity.inventoryController!!.getInventory())
+                ItemScatterer.spawn(world, pos, blockEntity.inventoryController!!.inventory)
                 world.updateComparators(pos, this)
             }
             super.onStateReplaced(state, world, pos, newState, moved)
