@@ -48,10 +48,10 @@ class InventoryController(supplier: () -> IRInventory) {
         return tag
     }
 
-    enum class Mode(val rgb: Int, val input: Boolean, val output: Boolean) {
-        INPUT(0x7e75ff, true, false),
-        OUTPUT(0xffb175, false, true),
-        INPUT_OUTPUT(0xd875ff, true, true),
+    enum class Mode(val rgb: Long, val input: Boolean, val output: Boolean) {
+        INPUT(0x997e75ff, true, false),
+        OUTPUT(0x99ffb175, false, true),
+        INPUT_OUTPUT(0x99d875ff, true, true),
         NONE(-1, false, false);
 
         fun next(): Mode = when (this) {

@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WButton
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.utils.draw2Colors
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.StringRenderable
@@ -21,11 +22,14 @@ class MachineSideDisplayWidget(private val identifier: Identifier, private val s
         this.height = y
     }
 
-    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(x, y, width, height, identifier, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, mode.rgb)
-        if (isWithinBounds(mouseX, mouseY)) {
+    override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        ScreenDrawing.texturedRect(x, y, width, height, identifier, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
+        if (mode != InventoryController.Mode.INPUT_OUTPUT && mode != InventoryController.Mode.NONE)
+            DrawableHelper.fill(matrices, x, y, x + width, y + height, mode.rgb.toInt())
+        else if (mode != InventoryController.Mode.NONE)
+            draw2Colors(matrices, x, y, x + width, y + height, InventoryController.Mode.INPUT.rgb, InventoryController.Mode.OUTPUT.rgb)
+        if (isWithinBounds(mouseX, mouseY))
             DrawableHelper.fill(matrices, x, y, x + width, y + height, -2130706433)
-        }
     }
 
     override fun addTooltip(tooltip: MutableList<StringRenderable>?) {

@@ -1,10 +1,15 @@
 package me.steven.indrev.utils
 
+import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.IndustrialRevolution
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.render.BufferRenderer
+import net.minecraft.client.render.Tessellator
+import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
@@ -89,3 +94,56 @@ fun getShortEnergyDisplay(energy: Double): String =
         energy > 1000 -> "${"%.1f".format(energy / 1000)}k"
         else -> energy.toString()
     }
+
+fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {
+    val matrix = matrices.peek().model
+
+    var j: Int
+    var xx1 = x1.toFloat()
+    var xx2 = x2.toFloat()
+    var yy1 = x1.toFloat()
+    var yy2 = x2.toFloat()
+
+    if (x1 < x2) {
+        j = x1
+        xx1 = x2.toFloat()
+        xx2 = j.toFloat()
+    }
+
+    if (y1 < y2) {
+        j = y1
+        yy1 = y2.toFloat()
+        yy2 = j.toFloat()
+    }
+
+    val f1 = (color1 shr 24 and 255) / 255.0f
+    val g1 = (color1 shr 16 and 255) / 255.0f
+    val h1 = (color1 shr 8 and 255) / 255.0f
+    val k1 = (color1 and 255) / 255.0f
+
+    val f2 = (color2 shr 24 and 255) / 255.0f
+    val g2 = (color2 shr 16 and 255) / 255.0f
+    val h2 = (color2 shr 8 and 255) / 255.0f
+    val k2 = (color2 and 255) / 255.0f
+
+    val bufferBuilder = Tessellator.getInstance().buffer
+    RenderSystem.enableBlend()
+    RenderSystem.disableTexture()
+    RenderSystem.defaultBlendFunc()
+    bufferBuilder.begin(7, VertexFormats.POSITION_COLOR)
+    bufferBuilder.vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
+    bufferBuilder.vertex(matrix, xx1, yy2, 0.0f).color(g1, h1, k1, f1).next()
+    bufferBuilder.vertex(matrix, xx2, yy2, 0.0f).color(g1, h1, k1, f1).next()
+    bufferBuilder.vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
+    bufferBuilder.end()
+    BufferRenderer.draw(bufferBuilder)
+    bufferBuilder.begin(7, VertexFormats.POSITION_COLOR)
+    bufferBuilder.vertex(matrix, xx1, yy1, 0.0f).color(g2, h2, k2, f2).next()
+    bufferBuilder.vertex(matrix, xx2, yy2, 0.0f).color(g2, h2, k2, f2).next()
+    bufferBuilder.vertex(matrix, xx2, yy1, 0.0f).color(g2, h2, k2, f2).next()
+    bufferBuilder.vertex(matrix, xx1, yy1, 0.0f).color(g2, h2, k2, f2).next()
+    bufferBuilder.end()
+    BufferRenderer.draw(bufferBuilder)
+    RenderSystem.enableTexture()
+    RenderSystem.disableBlend()
+}
