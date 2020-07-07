@@ -24,10 +24,10 @@ class MachineSideDisplayWidget(private val identifier: Identifier, private val s
 
     override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, identifier, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
-        if (mode != InventoryController.Mode.INPUT_OUTPUT && mode != InventoryController.Mode.NONE)
-            DrawableHelper.fill(matrices, x, y, x + width, y + height, mode.rgb.toInt())
-        else if (mode != InventoryController.Mode.NONE)
+        if (mode == InventoryController.Mode.INPUT_OUTPUT)
             draw2Colors(matrices, x, y, x + width, y + height, InventoryController.Mode.INPUT.rgb, InventoryController.Mode.OUTPUT.rgb)
+        else if (mode != InventoryController.Mode.NONE)
+            DrawableHelper.fill(matrices, x, y, x + width, y + height, mode.rgb.toInt())
         if (isWithinBounds(mouseX, mouseY))
             DrawableHelper.fill(matrices, x, y, x + width, y + height, -2130706433)
     }
