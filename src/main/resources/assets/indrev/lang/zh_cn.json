@@ -116,9 +116,9 @@
   "item.indrev.chunk_scanner.tooltip4": "维度: %s",
   "item.indrev.wrench": "扳手",
   "item.indrev.tech_soup": "科技汤",
-  "item.indrev.wrench.switch_mode": "Wrench Mode: %s",
-  "item.indrev.wrench.title": " Configure Machine",
-  "item.indrev.wrench.output": "OUTPUT",
-  "item.indrev.wrench.input": "INPUT",
-  "item.indrev.wrench.tooltip": "Shift + Right Click to change mode"
+  "item.indrev.wrench.switch_mode": "扳手模式：%s",
+  "item.indrev.wrench.title": " 配置机器",
+  "item.indrev.wrench.output": "输出",
+  "item.indrev.wrench.input": "输入",
+  "item.indrev.wrench.tooltip": "Shift+右击 更改模式"
 }
