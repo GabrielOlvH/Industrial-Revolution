@@ -82,3 +82,10 @@ fun EnergySide.opposite(): EnergySide =
         EnergySide.EAST -> EnergySide.WEST
         EnergySide.UNKNOWN -> EnergySide.UNKNOWN
     }
+
+fun getShortEnergyDisplay(energy: Double): String =
+    when {
+        energy > 1000000 -> "${"%.1f".format(energy / 1000000)}M"
+        energy > 1000 -> "${"%.1f".format(energy / 1000)}k"
+        else -> energy.toString()
+    }

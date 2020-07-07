@@ -2,6 +2,7 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import me.steven.indrev.utils.getShortEnergyDisplay
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
@@ -28,8 +29,8 @@ class EnergyWidget(private val delegate: PropertyDelegate) : WWidget() {
     }
 
     override fun addTooltip(information: MutableList<StringRenderable>?) {
-        val energy = delegate[0]
-        val maxEnergy = delegate[1]
+        val energy = getShortEnergyDisplay(delegate[0].toDouble())
+        val maxEnergy = getShortEnergyDisplay(delegate[1].toDouble())
         information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
         information?.add(LiteralText("$energy / $maxEnergy LF"))
         super.addTooltip(information)
