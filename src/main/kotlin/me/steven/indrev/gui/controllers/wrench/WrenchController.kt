@@ -10,6 +10,7 @@ import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
 import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerInventory
@@ -32,7 +33,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(96, 96)
-        root.add(StringWidget(TranslatableText("item.indrev.wrench.title")), 2, 0)
+        val titleWidget = StringWidget(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
+        root.add(titleWidget, 0.2, 0.0)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             val blockState = world.getBlockState(pos)
@@ -58,11 +60,6 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
 
             }
         }
-        val inputText = StringWidget(TranslatableText("item.indrev.wrench.input"), HorizontalAlignment.CENTER, InventoryController.Mode.INPUT.rgb)
-        root.add(inputText, 1, 5)
-        val outputText = StringWidget(TranslatableText("item.indrev.wrench.output"), HorizontalAlignment.CENTER, InventoryController.Mode.OUTPUT.rgb)
-        root.add(outputText, 3, 5)
-
         root.validate(this)
     }
 

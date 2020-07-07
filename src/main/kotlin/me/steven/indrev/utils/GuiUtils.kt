@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -36,7 +37,7 @@ fun SyncedGuiDescription.configure(
     (rootPanel as WGridPanel).also {
         it.setSize(150, 120)
         it.add(createPlayerInventoryPanel(), 0, 5)
-        it.add(StringWidget(TranslatableText(titleId)), 4, 0)
+        it.add(StringWidget(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
 
         val energyWidget = EnergyWidget(propertyDelegate)
         it.add(energyWidget, 0, 0, 16, 64)
