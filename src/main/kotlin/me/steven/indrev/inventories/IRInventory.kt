@@ -18,10 +18,10 @@ class IRInventory(
     override fun getAvailableSlots(var1: Direction?): IntArray? = IntArray(size()) { i -> i }
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        outputSlots.contains(slot) && controller?.itemConfig?.get(direction) == InventoryController.Mode.OUTPUT
+        outputSlots.contains(slot) && controller?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && controller?.itemConfig?.get(direction) == InventoryController.Mode.INPUT
+        inputSlots.contains(slot) && controller?.itemConfig?.get(direction)?.input == true
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 

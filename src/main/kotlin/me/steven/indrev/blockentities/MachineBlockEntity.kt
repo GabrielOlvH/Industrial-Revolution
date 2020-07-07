@@ -65,7 +65,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             inventoryController?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
                 val neighborInv = getInventory(pos)
-                if (mode == InventoryController.Mode.OUTPUT) {
+                if (mode.output) {
                     if (neighborInv != null) {
                         inventoryController?.inventory?.outputSlots?.forEach { slot ->
                             insertAndExtract(inventoryController!!.inventory, neighborInv, direction) {
@@ -73,7 +73,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                             }
                         }
                     }
-                } else if (mode == InventoryController.Mode.INPUT) {
+                } else if (mode.input) {
                     if (neighborInv != null) {
                         getAvailableSlots(neighborInv, direction).forEach { slot ->
                             insertAndExtract(neighborInv, inventoryController!!.inventory, direction.opposite) {

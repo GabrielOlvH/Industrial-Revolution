@@ -105,6 +105,7 @@
   "item.indrev.wrench.title": "Configure Machine",
   "item.indrev.wrench.output": "Output",
   "item.indrev.wrench.input": "Input",
+  "item.indrev.wrench.input_output": "Input and Output",
   "item.indrev.wrench.none": "None",
   "item.indrev.wrench.tooltip": "Shift + Right Click to change mode",
   "item.indrev.wrench.mode": "Mode: %s",

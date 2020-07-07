@@ -55,7 +55,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                         buf.writeInt(widget.mode.ordinal)
                         ClientSidePacketRegistry.INSTANCE.sendToServer(SAVE_PACKET_ID, buf)
                     }
-                    root.add(widget, side.x, side.y)
+                    root.add(widget, side.x + 0.1, side.y + 0.2)
                 }
 
             }
