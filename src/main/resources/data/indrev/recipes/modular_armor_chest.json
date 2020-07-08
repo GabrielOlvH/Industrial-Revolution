@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "NSN",
+    "BNB"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "S": {
+      "item": "indrev:steel_chestplate"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:modular_armor_chest"
+  }
+}

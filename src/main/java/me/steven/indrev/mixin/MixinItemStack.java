@@ -3,7 +3,7 @@ package me.steven.indrev.mixin;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import me.steven.indrev.armor.Module;
-import me.steven.indrev.items.armor.IRModularArmor;
+import me.steven.indrev.items.armor.IRArmor;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -25,7 +25,7 @@ public abstract class MixinItemStack {
     @Inject(method = "getAttributeModifiers", at = @At("TAIL"), cancellable = true)
     private void calcAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (stack.getItem() instanceof IRModularArmor) {
+        if (stack.getItem() instanceof IRArmor) {
             ArmorItem item = (ArmorItem) stack.getItem();
             if (stack.getDamage() >= stack.getMaxDamage() - 1) {
                 cir.setReturnValue(ImmutableMultimap.of());
@@ -47,7 +47,7 @@ public abstract class MixinItemStack {
     @Inject(method = "setDamage", at = @At("HEAD"), cancellable = true)
     private void cancelBreak(int damage, CallbackInfo ci) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (damage == stack.getMaxDamage() && stack.getItem() instanceof IRModularArmor)
+        if (damage == stack.getMaxDamage() && stack.getItem() instanceof IRArmor)
             ci.cancel();
     }
 }

@@ -1,11 +1,12 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
+import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -76,6 +77,11 @@ object ModRegistry {
 
         identifier("tech_soup").item(TECH_SOUP)
 
+        identifier("steel_helmet").item(STEEL_ARMOR_HELMET)
+        identifier("steel_chestplate").item(STEEL_ARMOR_CHESTPLATE)
+        identifier("steel_leggings").item(STEEL_ARMOR_LEGGINGS)
+        identifier("steel_boots").item(STEEL_ARMOR_BOOTS)
+
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
@@ -99,8 +105,9 @@ object ModRegistry {
         .build()
         .withItemAffixes("ingot")
 
-    val COPPER_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
-    val TIN_ORE = Registry.BLOCK.get(Identifier("c:copper_ore"))
+    val COPPER_ORE = Registry.BLOCK.get(Identifier("c", "copper_ore"))
+    val TIN_ORE = Registry.BLOCK.get(Identifier("c", "tin_ore"))
+    val STEEL_INGOT = Registry.ITEM.get(Identifier("c", "steel_ingot"))
 
     val BIOMASS = DEFAULT_ITEM()
 
@@ -143,10 +150,15 @@ object ModRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, itemSettings().maxDamage(20))
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings().maxDamage(20))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings().maxDamage(20))
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings().maxDamage(20))
+    val STEEL_ARMOR_HELMET = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.HEAD, itemSettings())
+    val STEEL_ARMOR_CHESTPLATE = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.CHEST, itemSettings())
+    val STEEL_ARMOR_LEGGINGS = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
+    val STEEL_ARMOR_BOOTS = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
+
+    val MODULAR_ARMOR_HELMET = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.HEAD, itemSettings())
+    val MODULAR_ARMOR_CHEST = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.CHEST, itemSettings())
+    val MODULAR_ARMOR_LEGGINGS = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.LEGS, itemSettings())
+    val MODULAR_ARMOR_BOOTS = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.FEET, itemSettings())
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))

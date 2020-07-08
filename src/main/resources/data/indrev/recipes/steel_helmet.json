@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:steel_ingots"
+    }
+  },
+  "result": {
+    "item": "indrev:steel_helmet"
+  }
+}

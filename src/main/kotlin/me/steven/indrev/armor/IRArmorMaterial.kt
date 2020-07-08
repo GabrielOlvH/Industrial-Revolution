@@ -1,13 +1,13 @@
 package me.steven.indrev.armor
 
+import me.steven.indrev.registry.ModRegistry
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ArmorMaterial
 import net.minecraft.recipe.Ingredient
 import net.minecraft.sound.SoundEvent
 import net.minecraft.sound.SoundEvents
-import net.minecraft.util.Lazy
 
-enum class ModularArmorMaterial(
+enum class IRArmorMaterial(
     private val armorName: String,
     private val durabilityMultiplier: Int,
     private val armorValues: IntArray,
@@ -15,15 +15,20 @@ enum class ModularArmorMaterial(
     private val equipSound: SoundEvent,
     private val toughness: Float,
     private val knockbackResistance: Float,
-    private val repairIngredient: Lazy<Ingredient>) : ArmorMaterial {
+    private val repairIngredient: Ingredient?) : ArmorMaterial {
 
-    MODULAR("modular", 5, intArrayOf(1, 3, 2, 1), 15, SoundEvents.BLOCK_WOOL_PLACE, 0.0F, 1.0F, Lazy<Ingredient> {
-        Ingredient.ofItems(net.minecraft.item.Items.WHITE_WOOL)
-    });
+    MODULAR(
+        "modular", 5, intArrayOf(1, 3, 2, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 1.0F, null
+    ),
+    STEEL(
+        "steel", 30, intArrayOf(3, 6, 8, 3), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0F, 0F, Ingredient.ofItems(ModRegistry.STEEL_INGOT)
+    );
 
     override fun getName(): String = armorName
     override fun getEquipSound(): SoundEvent = equipSound
-    override fun getRepairIngredient(): Ingredient = repairIngredient.get()
+    override fun getRepairIngredient(): Ingredient? = repairIngredient
     override fun getEnchantability(): Int = enchantability
     override fun getProtectionAmount(slot: EquipmentSlot): Int = this.armorValues[slot.entitySlotId]
     override fun getDurability(slot: EquipmentSlot): Int = BASE_DURABILITY[slot.entitySlotId] * durabilityMultiplier

@@ -1,7 +1,7 @@
 package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
-import me.steven.indrev.armor.ModularArmorMaterial;
+import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.armor.Module;
 import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -36,7 +36,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                     return;
                 }
                 ArmorItem item = (ArmorItem) itemStack.getItem();
-                if (item.getMaterial() == ModularArmorMaterial.MODULAR) {
+                if (item.getMaterial() == IRArmorMaterial.MODULAR) {
                     Module[] upgrades = Module.Companion.getUpgrades(itemStack);
                     for (Module module : upgrades) {
                         int level = Module.Companion.getLevel(itemStack, module);

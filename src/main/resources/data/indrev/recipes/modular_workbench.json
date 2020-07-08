@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ICI",
+    "NMN",
+    "BNB"
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "I": {
+      "tag": "c:steel_plates"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:modular_workbench_mk4"
+  }
+}

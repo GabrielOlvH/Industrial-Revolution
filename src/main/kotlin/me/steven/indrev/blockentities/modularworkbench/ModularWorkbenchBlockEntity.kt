@@ -4,7 +4,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
@@ -25,7 +25,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0
-                    slot == 1 || slot == 2 -> item is IRModularArmor || item is IRModuleItem
+                    slot == 1 || slot == 2 -> item is IRArmor || item is IRModuleItem
                     else -> false
                 }
             }
@@ -39,11 +39,11 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         val inventory = inventoryController?.inventory ?: return
         val armorStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
-        if (armorStack.item !is IRModularArmor || moduleStack.item !is IRModuleItem) {
+        if (armorStack.item !is IRArmor || moduleStack.item !is IRModuleItem) {
             processTime = 0
             return
         }
-        val armorItem = armorStack.item as IRModularArmor
+        val armorItem = armorStack.item as IRArmor
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
         if (inventory.isEmpty) {
