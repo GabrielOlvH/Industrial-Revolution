@@ -11,6 +11,7 @@ import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
@@ -276,5 +277,12 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { MinerBlockEntity(tier) } }
         ).buffer { 50000.0 }
+
+        val MODULAR_WORKBENCH_REGISTRY = MachineRegistry(identifier("modular_workbench"), false, Tier.MK4).register(
+            { tier ->
+                FacingMachineBlock(MACHINE_BLOCK_SETTINGS(), tier, ::ModularWorkbenchController) { ModularWorkbenchBlockEntity(tier) }
+            },
+            { tier -> { ModularWorkbenchBlockEntity(tier) } }
+        ).buffer { 500000.0 }
     }
 }

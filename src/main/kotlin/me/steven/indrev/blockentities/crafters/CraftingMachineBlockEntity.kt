@@ -44,13 +44,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                     inventory.inputSlots.forEachIndexed { index, slot ->
                         inventory.setStack(slot, inputInventory.getStack(index).apply { decrement(1) })
                     }
-                    val output = recipe?.output ?: return
+                    val output = recipe?.craft(inventory) ?: return
                     for (outputSlot in inventory.outputSlots) {
                         val outputStack = inventory.getStack(outputSlot)
                         if (outputStack.item == output.item)
                             inventory.setStack(outputSlot, outputStack.apply { increment(output.count) })
                         else if (outputStack.isEmpty)
-                            inventory.setStack(outputSlot, output.copy())
+                            inventory.setStack(outputSlot, output)
                         else continue
                         break
                     }

@@ -129,5 +129,16 @@
   "item.indrev.modular_armor.upgrade.speed": "Speed %s",
   "item.indrev.modular_armor.upgrade.jump_boost": "Jump Boost %s",
   "item.indrev.modular_armor.upgrade.breathing": "Breathing %s",
-  "item.indrev.modular_armor.upgrade.protection": "Protection %s"
+  "item.indrev.modular_armor.upgrade.protection": "Protection %s",
+  "block.indrev.modular_workbench": "Modular Workbench",
+  "block.indrev.modular_workbench_mk4": "Modular Workbench",
+  "item.indrev.modular_armor_helmet": "Modular Helmet",
+  "item.indrev.modular_armor_chest": "Modular Chestplate",
+  "item.indrev.modular_armor_legs": "Modular Leggings",
+  "item.indrev.modular_armor_boots": "Modular Boots",
+  "item.indrev.module_protection": "Protection Module",
+  "item.indrev.module_speed": "Speed Module",
+  "item.indrev.module_jump_boost": "Jump Boost Module",
+  "item.indrev.module_night_vision": "Night Vision Module",
+  "item.indrev.module_breathing": "Breathing Module"
 }

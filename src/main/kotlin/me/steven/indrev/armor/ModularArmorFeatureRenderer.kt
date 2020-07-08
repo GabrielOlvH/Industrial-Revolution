@@ -37,7 +37,7 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
             val bl2 = itemStack.hasGlint()
             // base will be done by the default armor renderer
             // renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, null)
-            ModularUpgrade.getUpgrades(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { upgrade ->
+            Module.getUpgrades(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { upgrade ->
                 renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, upgrade.key)
             }
         }

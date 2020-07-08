@@ -3,6 +3,7 @@ package me.steven.indrev.gui.widgets
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.utils.getShortEnergyDisplay
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandlerContext
@@ -38,8 +39,8 @@ class EnergyWidget(private val ctx: ScreenHandlerContext) : WWidget() {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
-                val energy = blockEntity.energy
-                val maxEnergy = blockEntity.maxStoredPower
+                val energy = getShortEnergyDisplay(blockEntity.energy)
+                val maxEnergy = getShortEnergyDisplay(blockEntity.maxStoredPower)
                 information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
                 information?.add(LiteralText("$energy / $maxEnergy LF"))
                 super.addTooltip(information)

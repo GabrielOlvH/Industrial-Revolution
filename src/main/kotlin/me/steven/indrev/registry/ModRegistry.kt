@@ -1,10 +1,12 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.resources.type.GenericResourceType
+import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -78,6 +80,12 @@ object ModRegistry {
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
         identifier("modular_armor_boots").item(MODULAR_ARMOR_BOOTS)
+
+        identifier("module_protection").item(PROTECTION_MODULE_ITEM)
+        identifier("module_speed").item(SPEED_MODULE_ITEM)
+        identifier("module_jump_boost").item(JUMP_BOOST_MODULE_ITEM)
+        identifier("module_night_vision").item(NIGHT_VISION_MODULE_ITEM)
+        identifier("module_breathing").item(BREATHING_MODULE_ITEM)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -139,4 +147,10 @@ object ModRegistry {
     val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings().maxDamage(20))
     val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings().maxDamage(20))
     val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings().maxDamage(20))
+
+    val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
+    val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
+    val JUMP_BOOST_MODULE_ITEM = IRModuleItem(Module.JUMP_BOOST, itemSettings().maxCount(1))
+    val BREATHING_MODULE_ITEM = IRModuleItem(Module.BREATHING, itemSettings().maxCount(1))
+    val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
 }

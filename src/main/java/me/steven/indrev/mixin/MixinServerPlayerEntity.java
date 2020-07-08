@@ -2,7 +2,7 @@ package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
 import me.steven.indrev.armor.ModularArmorMaterial;
-import me.steven.indrev.armor.ModularUpgrade;
+import me.steven.indrev.armor.Module;
 import net.minecraft.entity.DamageUtil;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -37,10 +37,10 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
                 ArmorItem item = (ArmorItem) itemStack.getItem();
                 if (item.getMaterial() == ModularArmorMaterial.MODULAR) {
-                    ModularUpgrade[] upgrades = ModularUpgrade.Companion.getUpgrades(itemStack);
-                    for (ModularUpgrade upgrade : upgrades) {
-                        int level = ModularUpgrade.Companion.getLevel(itemStack, upgrade);
-                        if (upgrade.getApply().invoke(player, itemStack, level))
+                    Module[] upgrades = Module.Companion.getUpgrades(itemStack);
+                    for (Module module : upgrades) {
+                        int level = Module.Companion.getLevel(itemStack, module);
+                        if (module.getApply().invoke(player, itemStack, level))
                             itemStack.damage(1, player, (p) -> p.sendEquipmentBreakStatus(item.getSlotType()));
                     }
                 }
