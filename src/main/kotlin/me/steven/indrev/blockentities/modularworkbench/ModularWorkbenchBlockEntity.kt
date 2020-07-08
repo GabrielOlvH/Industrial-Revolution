@@ -51,7 +51,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             setWorkingState(false)
         } else if (isProcessing()
             && module.slots.contains(armorItem.slotType)
-            && Energy.of(this).use(128.0)) {
+            && Energy.of(this).use(16.0)) {
             setWorkingState(true)
             processTime = (processTime - 1.0).coerceAtLeast(0.0).toInt()
             if (processTime <= 0) {
