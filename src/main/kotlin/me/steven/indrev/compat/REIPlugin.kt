@@ -1,5 +1,6 @@
 package me.steven.indrev.compat
 
+import me.shedaniel.rei.api.EntryRegistry
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
@@ -13,9 +14,14 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
 import net.minecraft.util.Identifier
+import vazkii.patchouli.api.PatchouliAPI
 
 object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
+
+    override fun registerEntries(entryRegistry: EntryRegistry) {
+        entryRegistry.registerEntry(EntryStack.create(PatchouliAPI.instance.getBookStack(identifier("indrev"))))
+    }
 
     override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerCategory(
