@@ -45,8 +45,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     var cooldown = 10
 
-    override fun tick() {
-        super.tick()
+    override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryController?.inventory ?: return
         if (cooldown > 0) {
@@ -95,7 +94,6 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             }
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
-        update()
     }
 
     private fun filterAnimalsToKill(entities: List<AnimalEntity>): List<AnimalEntity> {
@@ -132,6 +130,6 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         when (upgrade) {
             Upgrade.ENERGY -> 64.0 * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
             Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
-            Upgrade.BUFFER -> baseBuffer
+            Upgrade.BUFFER -> getBaseBuffer()
         }
 }

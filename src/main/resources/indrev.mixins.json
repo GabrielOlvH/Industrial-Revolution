@@ -5,9 +5,12 @@
   "mixins": [
     "AccessorEnergyHandler",
     "MixinCraftingResultSlot",
-    "MixinLivingEntity"
+    "MixinItemStack",
+    "MixinLivingEntity",
+    "MixinServerPlayerEntity"
   ],
   "client": [
+    "MixinPlayerEntityRenderer"
   ],
   "injectors": {
     "defaultRequire": 1

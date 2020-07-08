@@ -51,8 +51,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
     var cooldown = 0
 
-    override fun tick() {
-        super.tick()
+    override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryController?.inventory ?: return
         if (cooldown > 0) {
@@ -92,7 +91,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             setWorkingState(performedAction)
         }
         cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
-        update()
     }
 
     private fun tryChop(
@@ -142,7 +140,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         when (upgrade) {
             Upgrade.ENERGY -> 64.0 * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
             Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
-            Upgrade.BUFFER -> baseBuffer
+            Upgrade.BUFFER -> getBaseBuffer()
         }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

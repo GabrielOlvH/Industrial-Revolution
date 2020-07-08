@@ -26,8 +26,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     protected var processTime: Int by Property(3, 0)
     protected var totalProcessTime: Int by Property(4, 0)
 
-    override fun tick() {
-        super.tick()
+    override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryController?.inventory ?: return
         val inputInventory = inventory.getInputInventory()
@@ -64,7 +63,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
         }
         temperatureController?.tick(isProcessing())
-        update()
     }
 
     abstract fun tryStartRecipe(inventory: IRInventory): T?
@@ -85,7 +83,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 4.0 * tier.ordinal * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
         Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 2.0 else 1.0
-        Upgrade.BUFFER -> baseBuffer
+        Upgrade.BUFFER -> getBaseBuffer()
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {

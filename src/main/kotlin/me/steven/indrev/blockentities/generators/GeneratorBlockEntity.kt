@@ -8,8 +8,7 @@ import team.reborn.energy.EnergySide
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity(tier, registry) {
 
-    override fun tick() {
-        super.tick()
+    override fun machineTick() {
         if (world?.isClient == false) {
             if (shouldGenerate() && maxStoredPower > energy) {
                 this.energy += getGenerationRatio()
@@ -19,7 +18,6 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
                 setWorkingState(false)
                 this.temperatureController?.tick(false)
             }
-            update()
         }
     }
 

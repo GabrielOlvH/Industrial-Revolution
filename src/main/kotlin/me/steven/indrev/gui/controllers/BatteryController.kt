@@ -23,7 +23,7 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         root.setSize(150, 120)
 
-        root.add(EnergyWidget(propertyDelegate), 0, 0, 16, 64)
+        root.add(EnergyWidget(ctx), 0, 0, 16, 64)
 
         root.add(WItemSlot.of(blockInventory, 0), 4, 2)
 

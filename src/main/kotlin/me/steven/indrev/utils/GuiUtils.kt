@@ -39,7 +39,7 @@ fun SyncedGuiDescription.configure(
         it.add(createPlayerInventoryPanel(), 0, 5)
         it.add(StringWidget(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
 
-        val energyWidget = EnergyWidget(propertyDelegate)
+        val energyWidget = EnergyWidget(screenHandlerContext)
         it.add(energyWidget, 0, 0, 16, 64)
 
         val batterySlot = WItemSlot.of(blockInventory, 0)

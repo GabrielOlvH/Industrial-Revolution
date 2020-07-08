@@ -275,7 +275,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 }
             },
             { tier -> { MinerBlockEntity(tier) } }
-        ).buffer { 500000.0 }
-
+        ).buffer { 50000.0 }
     }
 }

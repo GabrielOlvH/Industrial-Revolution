@@ -9,7 +9,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
@@ -19,7 +18,6 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.Tickable
@@ -39,7 +37,6 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
     var viewers = mutableMapOf<UUID, Int>()
 
-    val baseBuffer = registry.buffer(tier)
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
 
@@ -48,6 +45,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     var temperatureController: TemperatureController? = null
 
     var itemTransferCooldown = 0
+
+    protected open fun machineTick() {}
 
     override fun tick() {
         if (world?.isClient == false) {
@@ -83,22 +82,9 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     }
                 }
             }
-            update()
+            machineTick()
             markDirty()
-        }
-    }
-
-    protected fun update() {
-        if (viewers.isNotEmpty()) {
-            val uuids = viewers.iterator()
-            while (uuids.hasNext()) {
-                val entry = uuids.next()
-                val player = world?.getPlayerByUuid(entry.key)
-                if (player == null || player.currentScreenHandler.syncId != entry.value)
-                    uuids.remove()
-                else
-                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, toUpdatePacket())
-            }
+            sync()
         }
     }
 
@@ -123,7 +109,9 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         this.energy = amount
     }
 
-    override fun getMaxStoredPower(): Double = baseBuffer
+    protected fun getBaseBuffer() = registry.buffer(tier)
+
+    override fun getMaxStoredPower(): Double = getBaseBuffer()
 
     @Deprecated("unsupported", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("this.tier"))
     override fun getTier(): EnergyTier = throw UnsupportedOperationException()
@@ -139,12 +127,6 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
         return inventoryController?.inventory
             ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
-    }
-
-    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket? {
-        val tag = CompoundTag()
-        toTag(tag)
-        return BlockEntityUpdateS2CPacket(pos, typeId, tag)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {

@@ -4,6 +4,7 @@ import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
+import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -12,6 +13,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
+import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
@@ -68,10 +70,14 @@ object ModRegistry {
         identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
         identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
         identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
-
         identifier("wrench").item(WRENCH)
 
         identifier("tech_soup").item(TECH_SOUP)
+
+        identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
+        identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
+        identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
+        identifier("modular_armor_boots").item(MODULAR_ARMOR_BOOTS)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -128,4 +134,9 @@ object ModRegistry {
     val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
+
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, itemSettings().maxDamage(20))
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings().maxDamage(20))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings().maxDamage(20))
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings().maxDamage(20))
 }

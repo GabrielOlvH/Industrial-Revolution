@@ -42,8 +42,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     private var chunkVeinType: ChunkVeinType? = null
     private var mining = 0.0
 
-    override fun tick() {
-        super.tick()
+    override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryController?.inventory ?: return
         if (chunkVeinType == null) {
@@ -86,9 +85,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
                 setWorkingState(true)
             }
-
         }
-        update()
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
@@ -100,7 +97,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> 256.0 + Upgrade.SPEED.apply(this, inventoryController!!.inventory)
         Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.5 else 0.3
-        Upgrade.BUFFER -> baseBuffer
+        Upgrade.BUFFER -> getBaseBuffer()
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
