@@ -226,8 +226,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         return false
     }
 
-    open fun transfer(to: Inventory, stack: ItemStack, side: Direction?): ItemStack {
-        var stack = stack
+    open fun transfer(to: Inventory, originalStack: ItemStack, side: Direction?): ItemStack {
+        var stack = originalStack
         if (to is SidedInventory && side != null) {
             val availableSlots = to.getAvailableSlots(side)
             var slot = 0
@@ -254,8 +254,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         return inv !is SidedInventory || inv.canExtract(slot, stack, facing)
     }
 
-    private fun transfer(to: Inventory, stack: ItemStack, slot: Int, direction: Direction?): ItemStack {
-        var stack = stack
+    private fun transfer(to: Inventory, originalStack: ItemStack, slot: Int, direction: Direction?): ItemStack {
+        var stack = originalStack
         val itemStack = to.getStack(slot)
         if (canInsert(to, stack, slot, direction)) {
             if (itemStack.isEmpty) {
