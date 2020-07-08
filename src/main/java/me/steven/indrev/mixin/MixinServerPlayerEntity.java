@@ -40,8 +40,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                     ModularUpgrade[] upgrades = ModularUpgrade.Companion.getUpgrades(itemStack);
                     for (ModularUpgrade upgrade : upgrades) {
                         int level = ModularUpgrade.Companion.getLevel(itemStack, upgrade);
-                        upgrade.getApply().invoke(player, itemStack, level);
-                        itemStack.damage(1, player, (p) -> p.sendEquipmentBreakStatus(item.getSlotType()));
+                        if (upgrade.getApply().invoke(player, itemStack, level))
+                            itemStack.damage(1, player, (p) -> p.sendEquipmentBreakStatus(item.getSlotType()));
                     }
                 }
             });
@@ -56,7 +56,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 this.damageArmor(source, amount);
             amount = remaining;
         }
-
         return amount;
     }
 }

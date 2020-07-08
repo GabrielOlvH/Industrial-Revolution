@@ -123,5 +123,11 @@
   "item.c.nikolite_ingot": "Nikolite Ingot",
   "item.c.nikolite_ore": "Nikolite Ore",
   "item.c.nikolite_nether_ore": "Nikolite Nether Ore",
-  "item.c.nikolite_end_ore": "Nikolite End Ore"
+  "item.c.nikolite_end_ore": "Nikolite End Ore",
+  "item.indrev.modular_armor.upgrade": "Upgrades installed:",
+  "item.indrev.modular_armor.upgrade_night_vision": "Night Vision %s",
+  "item.indrev.modular_armor.upgrade.speed": "Speed %s",
+  "item.indrev.modular_armor.upgrade.jump_boost": "Jump Boost %s",
+  "item.indrev.modular_armor.upgrade.breathing": "Breathing %s",
+  "item.indrev.modular_armor.upgrade.protection": "Protection %s"
 }
