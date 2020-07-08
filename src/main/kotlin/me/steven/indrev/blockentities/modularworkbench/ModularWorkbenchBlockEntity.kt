@@ -49,11 +49,9 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         if (inventory.isEmpty) {
             processTime = 0
             setWorkingState(false)
-        } else if (
-            isProcessing()
+        } else if (isProcessing()
             && module.slots.contains(armorItem.slotType)
-            && Energy.of(this).use(128.0)
-        ) {
+            && Energy.of(this).use(128.0)) {
             setWorkingState(true)
             processTime = (processTime - 1.0).coerceAtLeast(0.0).toInt()
             if (processTime <= 0) {

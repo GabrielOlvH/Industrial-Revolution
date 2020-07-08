@@ -20,8 +20,8 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
     private val bodyModel: A
 ) : ArmorFeatureRenderer<T, M, A>(context, leggingsModel, bodyModel) {
 
-    override fun render(matrixStack: MatrixStack?, vertexConsumerProvider: VertexConsumerProvider, i: Int, livingEntity: T, f: Float, g: Float, h: Float, j: Float, k: Float, l: Float) {
-        renderArmor(matrixStack!!, vertexConsumerProvider, livingEntity, EquipmentSlot.CHEST, i, getArmor(EquipmentSlot.CHEST))
+    override fun render(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, livingEntity: T, f: Float, g: Float, h: Float, j: Float, k: Float, l: Float) {
+        renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.CHEST, i, getArmor(EquipmentSlot.CHEST))
         renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.LEGS, i, getArmor(EquipmentSlot.LEGS))
         renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.FEET, i, getArmor(EquipmentSlot.FEET))
         renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.HEAD, i, getArmor(EquipmentSlot.HEAD))

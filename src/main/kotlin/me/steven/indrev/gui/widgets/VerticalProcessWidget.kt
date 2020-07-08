@@ -14,10 +14,11 @@ class VerticalProcessWidget(private val delegate: PropertyDelegate) : WWidget() 
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
-        val burnTime = delegate[2]
-        val maxBurnTime = 1200
-        if (burnTime > 0) {
-            val v = 1f - (((burnTime.toFloat() * 23 / maxBurnTime) + 1) / 24)
+        val processTime = delegate[2]
+        // only used by one machine so yea this is hardcoded
+        val maxProcessTime = 1200
+        if (processTime > 0) {
+            val v = 1f - (((processTime.toFloat() * 23 / maxProcessTime) + 1) / 24)
             val h = round(v * height).toInt()
             ScreenDrawing.texturedRect(x, y, width, h, PROCESS_FULL, 0f, 0f, 1f, v, -1)
         }

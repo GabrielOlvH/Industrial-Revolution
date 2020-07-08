@@ -23,4 +23,6 @@ class IRModularArmor(slot: EquipmentSlot, settings: Settings) : ArmorItem(Modula
         }
         super.appendTooltip(stack, world, tooltip, context)
     }
+
+    override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 }

@@ -23,7 +23,6 @@ class EnergyWidget(private val ctx: ScreenHandlerContext) : WWidget() {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
-
                 val energy = blockEntity.energy
                 val maxEnergy = blockEntity.maxStoredPower
                 if (energy > 0) {
