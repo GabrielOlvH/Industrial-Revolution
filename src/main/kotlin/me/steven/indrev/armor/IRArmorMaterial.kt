@@ -18,12 +18,12 @@ enum class IRArmorMaterial(
     private val repairIngredient: Ingredient?) : ArmorMaterial {
 
     MODULAR(
-        "modular", 5, intArrayOf(1, 3, 2, 1), 15,
+        "modular", 40, intArrayOf(1, 3, 2, 1), 15,
         SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 1.0F, null
     ),
     STEEL(
-        "steel", 30, intArrayOf(3, 6, 8, 3), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 2.0F, 0F, Ingredient.ofItems(ModRegistry.STEEL_INGOT)
+        "steel", 30, intArrayOf(2, 6, 7, 2), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(ModRegistry.STEEL_INGOT)
     );
 
     override fun getName(): String = armorName
