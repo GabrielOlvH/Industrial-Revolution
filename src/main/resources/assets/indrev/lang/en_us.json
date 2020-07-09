@@ -141,8 +141,13 @@
   "item.indrev.modular_armor_legs": "Modular Leggings",
   "item.indrev.modular_armor_boots": "Modular Boots",
   "item.indrev.module_protection": "Protection Module",
+  "item.indrev.module_protection.tooltip": "Increases the Protection provided by the armor",
   "item.indrev.module_speed": "Speed Module",
+  "item.indrev.module_speed.tooltip": "Gives you Speed effect at cost of energy.",
   "item.indrev.module_jump_boost": "Jump Boost Module",
+  "item.indrev.module_jump_boost.tooltip": "Gives you Jump Boost effect at cost of energy.",
   "item.indrev.module_night_vision": "Night Vision Module",
-  "item.indrev.module_breathing": "Breathing Module"
+  "item.indrev.module_night_vision.tooltip": "Gives you Night Vision effect at cost of energy.",
+  "item.indrev.module_breathing": "Breathing Module",
+  "item.indrev.module_breathing.tooltip": "Gives you Breathing effect when underwater at cost of energy."
 }
