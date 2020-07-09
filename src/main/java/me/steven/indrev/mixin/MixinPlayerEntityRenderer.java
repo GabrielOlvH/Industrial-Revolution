@@ -18,8 +18,8 @@ public abstract class MixinPlayerEntityRenderer extends LivingEntityRenderer<Abs
         super(dispatcher, model, shadowRadius);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/render/entity/EntityRenderDispatcher;)V", at = @At("TAIL"))
-    private void addModularArmorRenderer(EntityRenderDispatcher entityRenderDispatcher, CallbackInfo ci) {
+    @Inject(method = "<init>(Lnet/minecraft/client/render/entity/EntityRenderDispatcher;Z)V", at = @At("TAIL"))
+    private void addModularArmorRenderer(EntityRenderDispatcher entityRenderDispatcher, boolean b, CallbackInfo ci) {
         this.addFeature(
                 new ModularArmorFeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>, BipedEntityModel<AbstractClientPlayerEntity>>(
                         this, new BipedEntityModel<>(0.5F), new BipedEntityModel<>(1.0F)

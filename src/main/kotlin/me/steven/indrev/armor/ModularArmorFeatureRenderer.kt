@@ -1,5 +1,6 @@
 package me.steven.indrev.armor
 
+import me.steven.indrev.items.armor.IRArmor
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
@@ -30,7 +31,7 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
     private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, i: Int, bipedEntityModel: A) {
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
         val item = itemStack.item
-        if (item is ArmorItem && item.slotType == equipmentSlot) {
+        if (item is IRArmor && item.material == IRArmorMaterial.MODULAR && item.slotType == equipmentSlot) {
             (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
             setVisible(bipedEntityModel, equipmentSlot)
             val bl = usesSecondLayer(equipmentSlot)
@@ -44,9 +45,9 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
     }
 
 
-    private fun renderArmorParts(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, armorItem: ArmorItem, bl: Boolean, bipedEntityModel: A, bl2: Boolean, f: Float, g: Float, h: Float, string: String?) {
+    private fun renderArmorParts(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, armorItem: ArmorItem, bl: Boolean, bipedEntityModel: A, bl2: Boolean, r: Float, g: Float, b: Float, string: String?) {
         val vertexConsumer = ItemRenderer.method_27952(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, bl2, string)), false, bl)
-        bipedEntityModel.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, f, g, h, 1.0f)
+        bipedEntityModel.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 
     private fun getArmor(slot: EquipmentSlot): A {
