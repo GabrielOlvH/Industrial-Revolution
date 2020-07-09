@@ -1,0 +1,41 @@
+{
+  "name": "Modular Armor",
+  "category": "tools",
+  "sortnum": 4,
+  "icon": "indrev:modular_armor_helmet",
+  "pages": [
+    {
+      "type": "text",
+      "text": "The Modular Armor is, on it's own, not much, but when you install modules, it can become very powerful!"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_armor_helmet",
+      "recipe2": "indrev:modular_armor_chest"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_armor_legs",
+      "recipe2": "indrev:modular_armor_boots"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_workbench",
+      "text": "The modular workbench is used to install modules onto Modular Armor parts. Notice that installing modules cost time and some energy!"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_protection",
+      "recipe2": "indrev:module_speed"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_night_vision",
+      "recipe2": "indrev:module_jump_boost"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_breathing"
+    }
+  ]
+}

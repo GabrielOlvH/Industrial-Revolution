@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ICI",
+    "NIN"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "I": {
+      "tag": "c:steel_plates"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  },
+  "result": {
+    "item": "indrev:module_protection"
+  }
+}
