@@ -25,7 +25,8 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
                 val item = stack?.item
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0
-                    slot == 1 || slot == 2 -> item is IRArmor || item is IRModuleItem
+                    slot == 1 -> item is IRModuleItem
+                    slot == 2 -> item is IRArmor
                     else -> false
                 }
             }
