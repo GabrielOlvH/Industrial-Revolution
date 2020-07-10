@@ -54,6 +54,12 @@ dependencies {
     modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"
     include "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"
 
+    modApi "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
+    include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
+
+    modApi "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
+    include "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
+
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
 }
