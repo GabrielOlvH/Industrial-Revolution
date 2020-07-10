@@ -30,13 +30,18 @@ enum class Module(
             true
         } else false
     }),
-    PROTECTION("protection", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 3);
+    PROTECTION(
+        "protection",
+        arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET),
+        3
+    ),
+    COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1);
 
     companion object {
-        fun getUpgrades(stack: ItemStack): Array<Module> {
+        fun getInstalled(stack: ItemStack): Array<Module> {
             val tag = stack.tag ?: return emptyArray()
-            return values().mapNotNull { upgrade ->
-                if (tag.contains(upgrade.key)) upgrade
+            return values().filter { module -> module != COLOR }.mapNotNull { module ->
+                if (tag.contains(module.key)) module
                 else null
             }.toTypedArray()
         }

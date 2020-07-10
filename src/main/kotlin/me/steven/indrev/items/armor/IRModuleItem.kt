@@ -9,8 +9,18 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
-class IRModuleItem(val module: Module, settings: Settings) : Item(settings) {
-    override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        tooltip?.add(TranslatableText("item.indrev.module_${module.key}.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
+open class IRModuleItem(val module: Module, settings: Settings) : Item(settings) {
+    override fun appendTooltip(
+        stack: ItemStack?,
+        world: World?,
+        tooltip: MutableList<Text>?,
+        context: TooltipContext?
+    ) {
+        tooltip?.add(
+            TranslatableText("item.indrev.module_${module.key}.tooltip").formatted(
+                Formatting.BLUE,
+                Formatting.ITALIC
+            )
+        )
     }
 }

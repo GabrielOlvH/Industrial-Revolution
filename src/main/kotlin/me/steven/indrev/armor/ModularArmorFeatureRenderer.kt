@@ -1,6 +1,6 @@
 package me.steven.indrev.armor
 
-import me.steven.indrev.items.armor.IRArmor
+import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
@@ -31,15 +31,23 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
     private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, i: Int, bipedEntityModel: A) {
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
         val item = itemStack.item
-        if (item is IRArmor && item.material == IRArmorMaterial.MODULAR && item.slotType == equipmentSlot) {
+        if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR && item.slotType == equipmentSlot) {
             (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
             setVisible(bipedEntityModel, equipmentSlot)
             val bl = usesSecondLayer(equipmentSlot)
             val bl2 = itemStack.hasGlint()
             // base will be done by the default armor renderer
             // renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, null)
-            Module.getUpgrades(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { upgrade ->
-                renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, upgrade.key)
+            val rgb = item.getColor(itemStack)
+            val r = (rgb and 0xFF0000 shr 16) / 255f
+            val g = (rgb and 0xFF00 shr 8) / 255f
+            val b = (rgb and 0xFF) / 255f
+            Module.getInstalled(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { module ->
+                if (module != Module.COLOR) {
+                    renderArmorParts(
+                        matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, r, g, b, module.key
+                    )
+                }
             }
         }
     }

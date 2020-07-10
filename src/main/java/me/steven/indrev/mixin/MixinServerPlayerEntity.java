@@ -37,7 +37,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
                 ArmorItem item = (ArmorItem) itemStack.getItem();
                 if (item.getMaterial() == IRArmorMaterial.MODULAR) {
-                    Module[] upgrades = Module.Companion.getUpgrades(itemStack);
+                    Module[] upgrades = Module.Companion.getInstalled(itemStack);
                     for (Module module : upgrades) {
                         int level = Module.Companion.getLevel(itemStack, module);
                         if (module.getApply().invoke(player, itemStack, level))

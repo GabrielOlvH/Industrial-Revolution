@@ -6,7 +6,8 @@ import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.*
-import me.steven.indrev.items.armor.IRArmor
+import me.steven.indrev.items.armor.IRColorModuleItem
+import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -92,6 +93,17 @@ object ModRegistry {
         identifier("module_jump_boost").item(JUMP_BOOST_MODULE_ITEM)
         identifier("module_night_vision").item(NIGHT_VISION_MODULE_ITEM)
         identifier("module_breathing").item(BREATHING_MODULE_ITEM)
+
+        identifier("module_color_pink").item(PINK_MODULE_ITEM)
+        identifier("module_color_red").item(RED_MODULE_ITEM)
+        identifier("module_color_purple").item(PURPLE_MODULE_ITEM)
+        identifier("module_color_blue").item(BLUE_MODULE_ITEM)
+        identifier("module_color_cyan").item(CYAN_MODULE_ITEM)
+        identifier("module_color_green").item(GREEN_MODULE_ITEM)
+        identifier("module_color_yellow").item(YELLOW_MODULE_ITEM)
+        identifier("module_color_orange").item(ORANGE_MODULE_ITEM)
+        identifier("module_color_black").item(BLACK_MODULE_ITEM)
+        identifier("modular_color_brown").item(BROWN_MODULE_ITEM)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -150,19 +162,31 @@ object ModRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val STEEL_ARMOR_HELMET = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.HEAD, itemSettings())
-    val STEEL_ARMOR_CHESTPLATE = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.CHEST, itemSettings())
-    val STEEL_ARMOR_LEGGINGS = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
-    val STEEL_ARMOR_BOOTS = IRArmor(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
+    val STEEL_ARMOR_HELMET = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.HEAD, itemSettings())
+    val STEEL_ARMOR_CHESTPLATE = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.CHEST, itemSettings())
+    val STEEL_ARMOR_LEGGINGS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
+    val STEEL_ARMOR_BOOTS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
 
-    val MODULAR_ARMOR_HELMET = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.HEAD, itemSettings())
-    val MODULAR_ARMOR_CHEST = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.CHEST, itemSettings())
-    val MODULAR_ARMOR_LEGGINGS = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.LEGS, itemSettings())
-    val MODULAR_ARMOR_BOOTS = IRArmor(IRArmorMaterial.MODULAR, EquipmentSlot.FEET, itemSettings())
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, itemSettings())
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings())
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings())
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings())
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
     val JUMP_BOOST_MODULE_ITEM = IRModuleItem(Module.JUMP_BOOST, itemSettings().maxCount(1))
     val BREATHING_MODULE_ITEM = IRModuleItem(Module.BREATHING, itemSettings().maxCount(1))
     val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
+
+    val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings())
+    val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings())
+    val PURPLE_MODULE_ITEM = IRColorModuleItem(0xD174FF, itemSettings())
+    val BLUE_MODULE_ITEM = IRColorModuleItem(0x7974FF, itemSettings())
+    val CYAN_MODULE_ITEM = IRColorModuleItem(0x74FFFC, itemSettings())
+    val GREEN_MODULE_ITEM = IRColorModuleItem(0x7BFF74, itemSettings())
+    val YELLOW_MODULE_ITEM = IRColorModuleItem(0xF7FF74, itemSettings())
+    val ORANGE_MODULE_ITEM = IRColorModuleItem(0xFFA674, itemSettings())
+    val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings())
+    val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings())
+
 }

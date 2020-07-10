@@ -1,10 +1,12 @@
 package me.steven.indrev.blockentities.modularworkbench
 
+import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.armor.IRArmor
+import me.steven.indrev.items.armor.IRColorModuleItem
+import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
@@ -26,7 +28,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0
                     slot == 1 -> item is IRModuleItem
-                    slot == 2 -> item is IRArmor
+                    slot == 2 -> item is IRModularArmor
                     else -> false
                 }
             }
@@ -40,11 +42,11 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         val inventory = inventoryController?.inventory ?: return
         val armorStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
-        if (armorStack.item !is IRArmor || moduleStack.item !is IRModuleItem) {
+        if (armorStack.item !is IRModularArmor || moduleStack.item !is IRModuleItem) {
             processTime = 0
             return
         }
-        val armorItem = armorStack.item as IRArmor
+        val armorItem = armorStack.item as IRModularArmor
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
         if (inventory.isEmpty) {
@@ -58,17 +60,24 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             if (processTime <= 0) {
                 inventory.setStack(1, ItemStack.EMPTY)
                 val tag = armorStack.orCreateTag
-                if (tag.contains(module.key)) {
-                    val level = tag.getInt(module.key) + 1
-                    tag.putInt(module.key, level.coerceAtMost(module.maxLevel))
-                } else tag.putInt(module.key, 1)
+                when {
+                    module == Module.COLOR -> {
+                        val colorModuleItem = moduleItem as IRColorModuleItem
+                        armorItem.setColor(armorStack, colorModuleItem.color)
+                    }
+                    tag.contains(module.key) -> {
+                        val level = tag.getInt(module.key) + 1
+                        tag.putInt(module.key, level.coerceAtMost(module.maxLevel))
+                    }
+                    else -> tag.putInt(module.key, 1)
+                }
                 processTime = 0
             }
         } else if (energy > 0 && !armorStack.isEmpty && !moduleStack.isEmpty && processTime <= 0) {
             val tag = armorStack.orCreateTag
             if (tag.contains(module.key)) {
                 val level = tag.getInt(module.key)
-                if (level >= module.maxLevel) return
+                if (module != Module.COLOR && level >= module.maxLevel) return
             }
             processTime = 1200
             setWorkingState(true)
