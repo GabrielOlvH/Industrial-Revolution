@@ -1,6 +1,6 @@
 package me.steven.indrev.mixin;
 
-import me.steven.indrev.armor.ModularArmorFeatureRenderer;
+import me.steven.indrev.armor.ModuleFeatureRenderer;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
@@ -19,9 +19,9 @@ public abstract class MixinPlayerEntityRenderer extends LivingEntityRenderer<Abs
     }
 
     @Inject(method = "<init>(Lnet/minecraft/client/render/entity/EntityRenderDispatcher;Z)V", at = @At("TAIL"))
-    private void addModularArmorRenderer(EntityRenderDispatcher entityRenderDispatcher, boolean b, CallbackInfo ci) {
+    private void addModuleRenderer(EntityRenderDispatcher entityRenderDispatcher, boolean b, CallbackInfo ci) {
         this.addFeature(
-                new ModularArmorFeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>, BipedEntityModel<AbstractClientPlayerEntity>>(
+                new ModuleFeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>, BipedEntityModel<AbstractClientPlayerEntity>>(
                         this, new BipedEntityModel<>(0.5F), new BipedEntityModel<>(1.0F)
                 )
         );

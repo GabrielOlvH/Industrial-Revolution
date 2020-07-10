@@ -15,7 +15,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ArmorItem
 import net.minecraft.util.Identifier
 
-class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : BipedEntityModel<T>>(
+class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : BipedEntityModel<T>>(
     context: FeatureRendererContext<T, M>,
     private val leggingsModel: A,
     private val bodyModel: A
@@ -28,16 +28,12 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
         renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.HEAD, i, getArmor(EquipmentSlot.HEAD))
     }
 
-    private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, i: Int, bipedEntityModel: A) {
+    private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, light: Int, bipedEntityModel: A) {
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
         val item = itemStack.item
         if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR && item.slotType == equipmentSlot) {
             (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
             setVisible(bipedEntityModel, equipmentSlot)
-            val bl = usesSecondLayer(equipmentSlot)
-            val bl2 = itemStack.hasGlint()
-            // base will be done by the default armor renderer
-            // renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, null)
             val rgb = item.getColor(itemStack)
             val r = (rgb and 0xFF0000 shr 16) / 255f
             val g = (rgb and 0xFF00 shr 8) / 255f
@@ -45,16 +41,25 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
             Module.getInstalled(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { module ->
                 if (module != Module.COLOR) {
                     renderArmorParts(
-                        matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, r, g, b, module.key
+                        matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, module.key
                     )
                 }
             }
         }
     }
 
-    private fun renderArmorParts(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, armorItem: ArmorItem, bl: Boolean, bipedEntityModel: A, bl2: Boolean, r: Float, g: Float, b: Float, string: String?) {
-        val vertexConsumer = ItemRenderer.method_27952(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, bl2, string)), false, bl)
-        bipedEntityModel.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
+    private fun renderArmorParts(
+        matrixStack: MatrixStack,
+        vertexConsumerProvider: VertexConsumerProvider,
+        light: Int,
+        armorItem: ArmorItem,
+        hasGlint: Boolean,
+        bipedEntityModel: A,
+        secondLayer: Boolean,
+        r: Float, g: Float, b: Float,
+        overlay: String?) {
+        val vertexConsumer = ItemRenderer.method_27952(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)), false, hasGlint)
+        bipedEntityModel.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 
     private fun getArmor(slot: EquipmentSlot): A {
@@ -65,9 +70,9 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
         return slot == EquipmentSlot.LEGS
     }
 
-    private fun getArmorTexture(armorItem: ArmorItem, bl: Boolean, string: String?): Identifier? {
-        val string2 = "textures/models/armor/" + armorItem.material.name + "_layer_" + (if (bl) 2 else 1) + (if (string == null) "" else "_$string") + ".png"
-        return MODULAR_ARMOR_TEXTURE_CACHE.computeIfAbsent(string2) { id -> identifier(id) }
+    private fun getArmorTexture(armorItem: ArmorItem, secondLayer: Boolean, overlay: String?): Identifier? {
+        val path = "textures/models/armor/" + armorItem.material.name + "_layer_" + (if (secondLayer) 2 else 1) + (if (overlay == null) "" else "_$overlay") + ".png"
+        return MODULAR_ARMOR_TEXTURE_CACHE.computeIfAbsent(path) { id -> identifier(id) }
     }
 
     companion object {

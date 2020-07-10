@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.armor.ModularArmorFeatureRenderer
 import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.network.AbstractClientPlayerEntity
@@ -22,8 +22,9 @@ import net.minecraft.util.Identifier
 
 class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
     BlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
-    val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(0.5f)
-    val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(1.0f)
+
+    private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(0.5f)
+    private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(1.0f)
 
     init {
         bodyModel.setVisible(false)
@@ -55,7 +56,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                 )
             )
             matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
-            renderArmor(matrices, vertexConsumers, armor, entity.world!!.getLightLevel(entity.pos.up(2)))
+            renderArmor(matrices, vertexConsumers, armor)
             matrices.pop()
         }
     }
@@ -63,29 +64,24 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     private fun renderArmor(
         matrices: MatrixStack,
         vertexConsumers: VertexConsumerProvider,
-        itemStack: ItemStack,
-        i: Int
+        itemStack: ItemStack
     ) {
         val item = itemStack.item
         if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR) {
             val slotType = item.slotType
             val bipedEntityModel = getArmor(slotType)
             setVisible(slotType)
-            val bl = usesSecondLayer(slotType)
-            val bl2 = itemStack.hasGlint()
-            // base will be done by the default armor renderer
-            // renderArmorParts(matrices, vertexConsumers, i, item, bl2, bipedEntityModel, bl, 1.0f, 1.0f, 1.0f, null)
             val rgb = item.getColor(itemStack)
             val r = (rgb and 0xFF0000 shr 16) / 255f
             val g = (rgb and 0xFF00 shr 8) / 255f
             val b = (rgb and 0xFF) / 255f
             renderArmorParts(
-                matrices, vertexConsumers, 15728640, item, bl2, bipedEntityModel, bl, r, g, b, null
+                matrices, vertexConsumers, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
             )
             Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
                 if (module != Module.COLOR) {
                     renderArmorParts(
-                        matrices, vertexConsumers, 15728640, item, bl2, bipedEntityModel, bl, r, g, b, module.key
+                        matrices, vertexConsumers, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
                     )
                 }
             }
@@ -95,23 +91,20 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     private fun renderArmorParts(
         matrixStack: MatrixStack,
         vertexConsumerProvider: VertexConsumerProvider,
-        i: Int,
         armorItem: ArmorItem,
-        bl: Boolean,
+        hasGlint: Boolean,
         bipedEntityModel: BipedEntityModel<AbstractClientPlayerEntity>,
-        bl2: Boolean,
-        r: Float,
-        g: Float,
-        b: Float,
-        string: String?
+        secondLayer: Boolean,
+        r: Float, g: Float, b: Float,
+        overlay: String?
     ) {
         val vertexConsumer = ItemRenderer.method_27952(
             vertexConsumerProvider,
-            RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, bl2, string)),
+            RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)),
             false,
-            bl
+            hasGlint
         )
-        bipedEntityModel.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
+        bipedEntityModel.render(matrixStack, vertexConsumer, 15728640, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 
     private fun getArmor(slot: EquipmentSlot): BipedEntityModel<AbstractClientPlayerEntity> {
@@ -122,7 +115,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         return slot == EquipmentSlot.LEGS
     }
 
-    fun setVisible(slot: EquipmentSlot?) {
+    private fun setVisible(slot: EquipmentSlot) {
         bodyModel.head.visible = slot == EquipmentSlot.HEAD
         bodyModel.helmet.visible = slot == EquipmentSlot.HEAD
 
@@ -141,9 +134,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     }
 
     private fun getArmorTexture(armorItem: ArmorItem, bl: Boolean, string: String?): Identifier? {
-        val string2 =
-            "textures/models/armor/" + armorItem.material.name + "_layer_" + (if (bl) 2 else 1) + (if (string == null) "" else "_$string") + ".png"
-        return ModularArmorFeatureRenderer.MODULAR_ARMOR_TEXTURE_CACHE.computeIfAbsent(string2) { id ->
+        val path = "textures/models/armor/" + armorItem.material.name + "_layer_" + (if (bl) 2 else 1) + (if (string == null) "" else "_$string") + ".png"
+        return ModuleFeatureRenderer.MODULAR_ARMOR_TEXTURE_CACHE.computeIfAbsent(path) { id ->
             if (string == null) Identifier(id) else identifier(id)
         }
     }

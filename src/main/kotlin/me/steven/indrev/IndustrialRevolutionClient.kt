@@ -68,9 +68,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
 
         BlockRenderLayerMap.INSTANCE.putBlock(ModRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(
-            MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4),
-            RenderLayer.getTranslucent()
-        )
+        BlockRenderLayerMap.INSTANCE.putBlock(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4), RenderLayer.getTranslucent())
     }
 }
