@@ -129,8 +129,6 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
 
         bodyModel.rightLeg.visible = slot == EquipmentSlot.FEET
         bodyModel.leftLeg.visible = slot == EquipmentSlot.FEET
-
-
     }
 
     private fun getArmorTexture(armorItem: ArmorItem, bl: Boolean, string: String?): Identifier? {
