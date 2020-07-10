@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "ICI",
-    "NMN",
+    "GMG",
     "BNB"
   ],
   "key": {
@@ -20,6 +20,9 @@
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "G": {
+      "item": "minecraft:glass"
     }
   },
   "result": {

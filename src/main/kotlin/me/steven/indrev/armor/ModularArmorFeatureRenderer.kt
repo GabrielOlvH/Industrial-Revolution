@@ -52,7 +52,6 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
         }
     }
 
-
     private fun renderArmorParts(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, armorItem: ArmorItem, bl: Boolean, bipedEntityModel: A, bl2: Boolean, r: Float, g: Float, b: Float, string: String?) {
         val vertexConsumer = ItemRenderer.method_27952(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, bl2, string)), false, bl)
         bipedEntityModel.render(matrixStack, vertexConsumer, i, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
@@ -72,6 +71,6 @@ class ModularArmorFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A :
     }
 
     companion object {
-        private val MODULAR_ARMOR_TEXTURE_CACHE = mutableMapOf<String, Identifier>()
+        val MODULAR_ARMOR_TEXTURE_CACHE = mutableMapOf<String, Identifier>()
     }
 }

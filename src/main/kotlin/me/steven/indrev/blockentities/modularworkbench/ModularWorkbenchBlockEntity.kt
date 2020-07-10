@@ -36,9 +36,12 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         this.propertyDelegate = ArrayPropertyDelegate(3)
     }
 
+    var animationProgress: Float = 0.0f
     private var processTime: Int by Property(2, 0)
 
     override fun machineTick() {
+        animationProgress += 0.02f
+        if (animationProgress >= 2.66) animationProgress = 0f
         val inventory = inventoryController?.inventory ?: return
         val armorStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
@@ -100,11 +103,13 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
 
     override fun fromClientTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
+        animationProgress = tag?.getFloat("AnimationProgress") ?: animationProgress
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
+        tag?.putFloat("AnimationProgress", animationProgress)
         return super.toClientTag(tag)
     }
 }

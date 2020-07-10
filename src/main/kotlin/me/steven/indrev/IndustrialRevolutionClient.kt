@@ -4,10 +4,13 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.registry.FluidRenderRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.utils.Tier
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
@@ -58,6 +61,16 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEach { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>) {
+                ModularWorkbenchBlockEntityRenderer(it)
+            }
+        }
+
         BlockRenderLayerMap.INSTANCE.putBlock(ModRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(
+            MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4),
+            RenderLayer.getTranslucent()
+        )
     }
 }
