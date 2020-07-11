@@ -103,7 +103,7 @@ object ModRegistry {
         identifier("module_color_yellow").item(YELLOW_MODULE_ITEM)
         identifier("module_color_orange").item(ORANGE_MODULE_ITEM)
         identifier("module_color_black").item(BLACK_MODULE_ITEM)
-        identifier("modular_color_brown").item(BROWN_MODULE_ITEM)
+        identifier("module_color_brown").item(BROWN_MODULE_ITEM)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
