@@ -92,7 +92,7 @@ fun getShortEnergyDisplay(energy: Double): String =
     when {
         energy > 1000000 -> "${"%.1f".format(energy / 1000000)}M"
         energy > 1000 -> "${"%.1f".format(energy / 1000)}k"
-        else -> energy.toString()
+        else -> "%.1f".format(energy)
     }
 
 fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {

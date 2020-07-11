@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.inventories.IRInventory
@@ -138,10 +139,14 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> 64.0 * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
-            Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 4.0 else 3.0
+            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
+            Upgrade.SPEED -> getConfig().processSpeed
             Upgrade.BUFFER -> getBaseBuffer()
         }
+
+    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
+
+    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
@@ -162,4 +167,5 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             Tier.MK4, Tier.CREATIVE -> Vec3d(8.0, 10.0, 8.0)
         }
 
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.chopper
 }

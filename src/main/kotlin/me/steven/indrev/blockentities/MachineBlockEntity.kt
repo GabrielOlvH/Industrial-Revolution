@@ -109,7 +109,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         this.energy = amount
     }
 
-    protected fun getBaseBuffer() = registry.buffer(tier)
+    open fun getBaseBuffer() = registry.buffer(tier)
 
     override fun getMaxStoredPower(): Double = getBaseBuffer()
 

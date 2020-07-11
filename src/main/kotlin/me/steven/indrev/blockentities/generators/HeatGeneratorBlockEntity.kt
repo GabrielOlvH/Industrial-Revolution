@@ -1,8 +1,10 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryController
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -92,6 +94,8 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         tag?.putInt("StableTemperature", stableTemperature)
         return super.toClientTag(tag)
     }
+
+    override fun getConfig(): GeneratorConfig = IndustrialRevolution.CONFIG.generators.heatGenerator
 
     companion object {
         private val TEMPERATURE_MAP = mutableMapOf<Fluid, Int>().also {

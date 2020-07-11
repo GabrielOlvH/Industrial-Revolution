@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryController
@@ -95,10 +96,14 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 256.0 + Upgrade.SPEED.apply(this, inventoryController!!.inventory)
-        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 0.5 else 0.3
+        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED.apply(this, inventoryController!!.inventory)
+        Upgrade.SPEED -> getConfig().processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
     }
+
+    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
+
+    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)
@@ -127,4 +132,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
         super.fromClientTag(tag)
     }
+
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.miner
 }

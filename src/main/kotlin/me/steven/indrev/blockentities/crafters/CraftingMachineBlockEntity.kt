@@ -2,6 +2,8 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.Property
+import me.steven.indrev.config.HeatMachineConfig
+import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -81,10 +83,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> 4.0 * tier.ordinal * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
-        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) 2.0 else 1.0
+        Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
+        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) getHeatConfig()?.processTemperatureBoost
+            ?: 1.0 else 1.0
         Upgrade.BUFFER -> getBaseBuffer()
     }
+
+    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
@@ -109,6 +114,10 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         tag?.putInt("MaxProcessTime", totalProcessTime)
         return super.toClientTag(tag)
     }
+
+    abstract fun getConfig(): MachineConfig
+
+    private fun getHeatConfig(): HeatMachineConfig? = getConfig() as? HeatMachineConfig
 
     open fun onCraft() {}
 }
