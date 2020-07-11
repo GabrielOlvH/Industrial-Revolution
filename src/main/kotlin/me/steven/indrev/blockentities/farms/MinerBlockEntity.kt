@@ -53,7 +53,13 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                     { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
                     WorldChunkVeinData.STATE_OVERWORLD_KEY
                 )
-            this.chunkVeinType = state.veins[chunkPos]?.chunkVeinType
+            val data = state.veins[chunkPos] ?: return
+            this.chunkVeinType = data.chunkVeinType
+            propertyDelegate[3] = data.explored * 100 / data.size
+            if (data.explored >= data.size) {
+                mining = -1.0
+                return
+            }
         } else {
             if (mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 mining += Upgrade.SPEED.apply(this, inventory)
