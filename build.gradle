@@ -48,7 +48,7 @@ dependencies {
 
     include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
 
-    modCompileOnly "io.github.prospector:modmenu:${project.modmenu_version}"
+    modCompile "io.github.prospector:modmenu:${project.modmenu_version}"
     modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 
     modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"

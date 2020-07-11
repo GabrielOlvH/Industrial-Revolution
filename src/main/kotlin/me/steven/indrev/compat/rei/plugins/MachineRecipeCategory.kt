@@ -1,4 +1,4 @@
-package me.steven.indrev.compat.plugins
+package me.steven.indrev.compat.rei.plugins
 
 import it.unimi.dsi.fastutil.ints.IntList
 import me.shedaniel.math.Point

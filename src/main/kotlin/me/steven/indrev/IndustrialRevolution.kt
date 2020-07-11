@@ -1,7 +1,12 @@
 package me.steven.indrev
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryController
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.*
@@ -21,6 +26,10 @@ import team.reborn.energy.minecraft.EnergyModInitializer
 object IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
         super.onInitialize()
+        AutoConfig.register(
+            IRConfig::class.java,
+            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
+        )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         ModRegistry.registerAll()
         MachineRegistry.COAL_GENERATOR_REGISTRY
@@ -69,7 +78,10 @@ object IndustrialRevolution : EnergyModInitializer() {
     val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
-    val MODULAR_WORKBENCH_HANDLER = ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val MODULAR_WORKBENCH_HANDLER =
+        ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
+
+    val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 }

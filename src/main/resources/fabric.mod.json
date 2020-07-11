@@ -30,7 +30,13 @@
     "rei_plugins_v0": [
       {
         "adapter": "kotlin",
-        "value": "me.steven.indrev.compat.REIPlugin"
+        "value": "me.steven.indrev.compat.rei.REIPlugin"
+      }
+    ],
+    "modmenu": [
+      {
+        "adapter": "kotlin",
+        "value": "me.steven.indrev.compat.modmenu.ModMenuCompat"
       }
     ]
   },

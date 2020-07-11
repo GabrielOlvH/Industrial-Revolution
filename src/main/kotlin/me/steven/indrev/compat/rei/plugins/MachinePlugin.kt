@@ -1,4 +1,4 @@
-package me.steven.indrev.compat.plugins
+package me.steven.indrev.compat.rei.plugins
 
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.TransferRecipeDisplay
