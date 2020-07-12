@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.isSide
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.RenderLayers
@@ -21,7 +21,7 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
     ) {
         if (blockEntity.renderWorkingArea) {
             val area = blockEntity.getWorkingArea()
-            val state = ModRegistry.AREA_INDICATOR.defaultState
+            val state = IRRegistry.AREA_INDICATOR.defaultState
             matrices?.push()
             val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
             val pos = blockEntity.pos

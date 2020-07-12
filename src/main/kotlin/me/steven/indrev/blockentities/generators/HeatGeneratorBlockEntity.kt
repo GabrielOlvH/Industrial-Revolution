@@ -8,8 +8,8 @@ import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
@@ -101,8 +101,8 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         private val TEMPERATURE_MAP = mutableMapOf<Fluid, Int>().also {
             it[Fluids.LAVA] = 5500
             it[Fluids.FLOWING_LAVA] = 2255
-            it[ModRegistry.MOLTEN_NETHERITE_STILL] = 8000
-            it[ModRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
+            it[IRRegistry.MOLTEN_NETHERITE_STILL] = 8000
+            it[IRRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
         }
         private val DIRECTIONS = Direction.values().toSet()
     }

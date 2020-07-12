@@ -1,6 +1,6 @@
 package me.steven.indrev.armor
 
-import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.registry.IRRegistry
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ArmorMaterial
 import net.minecraft.recipe.Ingredient
@@ -23,7 +23,7 @@ enum class IRArmorMaterial(
     ),
     STEEL(
         "steel", 30, intArrayOf(2, 6, 7, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(ModRegistry.STEEL_INGOT)
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(IRRegistry.STEEL_INGOT)
     );
 
     override fun getName(): String = armorName

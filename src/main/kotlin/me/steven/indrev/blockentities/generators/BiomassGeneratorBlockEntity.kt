@@ -8,8 +8,8 @@ import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
@@ -25,7 +25,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
                 when {
                     item is IRRechargeableItem && item.canOutput -> slot == 0
                     item is IRCoolerItem -> slot == 1
-                    slot == 2 -> stack?.item == ModRegistry.BIOMASS
+                    slot == 2 -> stack?.item == IRRegistry.BIOMASS
                     else -> false
                 }
             }
@@ -41,7 +41,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
         else if (maxStoredPower > energy) {
             val inventory = inventoryController?.inventory ?: return false
             val invStack = inventory.getStack(2)
-            if (!invStack.isEmpty && invStack.item == ModRegistry.BIOMASS) {
+            if (!invStack.isEmpty && invStack.item == IRRegistry.BIOMASS) {
                 burnTime = 300
                 maxBurnTime = burnTime
                 invStack.count--

@@ -10,8 +10,8 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.*
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.registry.ModRegistry
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -31,7 +31,7 @@ object IndustrialRevolution : EnergyModInitializer() {
             PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
         )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
-        ModRegistry.registerAll()
+        IRRegistry.registerAll()
         MachineRegistry.COAL_GENERATOR_REGISTRY
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
@@ -63,7 +63,7 @@ object IndustrialRevolution : EnergyModInitializer() {
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(ModRegistry.NIKOLITE.dust.get()) }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(IRRegistry.NIKOLITE.dust.get()) }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)

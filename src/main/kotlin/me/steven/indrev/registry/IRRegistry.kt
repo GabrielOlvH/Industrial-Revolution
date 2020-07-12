@@ -22,7 +22,7 @@ import net.minecraft.item.*
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
-object ModRegistry {
+object IRRegistry {
 
     fun registerAll() {
         identifier("hammer").item(HAMMER)

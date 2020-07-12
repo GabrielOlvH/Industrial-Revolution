@@ -53,12 +53,12 @@ object FluidRenderRegistry {
 
             override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x0C2340
         }
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_STILL, coolantFluidRender)
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.COOLANT_FLUID_FLOWING, coolantFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(IRRegistry.COOLANT_FLUID_STILL, coolantFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(IRRegistry.COOLANT_FLUID_FLOWING, coolantFluidRender)
         BlockRenderLayerMap.INSTANCE.putFluids(
             RenderLayer.getTranslucent(),
-            ModRegistry.COOLANT_FLUID_STILL,
-            ModRegistry.COOLANT_FLUID_FLOWING
+            IRRegistry.COOLANT_FLUID_STILL,
+            IRRegistry.COOLANT_FLUID_FLOWING
         )
     }
 
@@ -87,12 +87,12 @@ object FluidRenderRegistry {
 
             override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = 0x654740
         }
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.MOLTEN_NETHERITE_STILL, moltenNetheriteFluidRender)
-        FluidRenderHandlerRegistry.INSTANCE.register(ModRegistry.MOLTEN_NETHERITE_FLOWING, moltenNetheriteFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(IRRegistry.MOLTEN_NETHERITE_STILL, moltenNetheriteFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(IRRegistry.MOLTEN_NETHERITE_FLOWING, moltenNetheriteFluidRender)
         BlockRenderLayerMap.INSTANCE.putFluids(
             RenderLayer.getTranslucent(),
-            ModRegistry.MOLTEN_NETHERITE_STILL,
-            ModRegistry.MOLTEN_NETHERITE_FLOWING
+            IRRegistry.MOLTEN_NETHERITE_STILL,
+            IRRegistry.MOLTEN_NETHERITE_FLOWING
         )
     }
 }

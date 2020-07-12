@@ -1,6 +1,6 @@
 package me.steven.indrev.fluids
 
-import me.steven.indrev.registry.ModRegistry
+import me.steven.indrev.registry.IRRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -16,17 +16,17 @@ import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
 
 abstract class MoltenNetheriteFluid : FlowableFluid() {
-    override fun toBlockState(state: FluidState?): BlockState? = ModRegistry.MOLTEN_NETHERITE.defaultState.with(FluidBlock.LEVEL, method_15741(state))
+    override fun toBlockState(state: FluidState?): BlockState? = IRRegistry.MOLTEN_NETHERITE.defaultState.with(FluidBlock.LEVEL, method_15741(state))
 
-    override fun getBucketItem(): Item = ModRegistry.MOLTEN_NETHERITE_BUCKET
+    override fun getBucketItem(): Item = IRRegistry.MOLTEN_NETHERITE_BUCKET
 
     override fun getLevelDecreasePerBlock(world: WorldView?): Int = 3
 
     override fun getTickRate(world: WorldView?): Int = 5
 
-    override fun getFlowing(): Fluid = ModRegistry.MOLTEN_NETHERITE_FLOWING
+    override fun getFlowing(): Fluid = IRRegistry.MOLTEN_NETHERITE_FLOWING
 
-    override fun getStill(): Fluid = ModRegistry.MOLTEN_NETHERITE_STILL
+    override fun getStill(): Fluid = IRRegistry.MOLTEN_NETHERITE_STILL
 
     override fun isInfinite(): Boolean = false
 
