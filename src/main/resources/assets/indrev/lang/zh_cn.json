@@ -310,5 +310,18 @@
   "text.autoconfig.indrev.option.cables.cableMk3.maxOutput": "Maximum output",
   "text.autoconfig.indrev.option.cables.cableMk4": "Cable MK4",
   "text.autoconfig.indrev.option.cables.cableMk4.maxInput": "Maximum input",
-  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output"
+  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output",
+  "item.indrev.module_feather_falling": "Feather Falling Module",
+  "item.indrev.module_feather_falling.tooltip": "Fall damage is negated at cost of energy.",
+  "item.indrev.module_color.tooltip": "§cC§eo§al§9o§6§dr§1s",
+  "item.indrev.module_color_pink": "Pink Color Module",
+  "item.indrev.module_color_red": "Red Color Module",
+  "item.indrev.module_color_purple": "Purple Color Module",
+  "item.indrev.module_color_blue": "Blue Color Module",
+  "item.indrev.module_color_cyan": "Cyan Color Module",
+  "item.indrev.module_color_green": "Green Color Module",
+  "item.indrev.module_color_yellow": "Yellow Color Module",
+  "item.indrev.module_color_orange": "Orange Color Module",
+  "item.indrev.module_color_black": "Black Color Module",
+  "item.indrev.module_color_brown": "Brown Color Module"
 }

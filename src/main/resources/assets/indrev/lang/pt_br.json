@@ -310,5 +310,18 @@
   "text.autoconfig.indrev.option.cables.cableMk3.maxOutput": "Maximum output",
   "text.autoconfig.indrev.option.cables.cableMk4": "Cable MK4",
   "text.autoconfig.indrev.option.cables.cableMk4.maxInput": "Maximum input",
-  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output"
+  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output",
+  "item.indrev.module_feather_falling": "Módulo de Peso Pena",
+  "item.indrev.module_feather_falling.tooltip": "Dano de queda é negado em troca de energia.",
+  "item.indrev.module_color.tooltip": "§cC§eo§al§9o§6§dr§1s",
+  "item.indrev.module_color_pink": "Módulo de Cor Rosa",
+  "item.indrev.module_color_red": "Módulo de Cor Vermelha",
+  "item.indrev.module_color_purple": "Módulo de Cor Roxa",
+  "item.indrev.module_color_blue": "Módulo de Cor Azul",
+  "item.indrev.module_color_cyan": "Módulo de Cor Ciano",
+  "item.indrev.module_color_green": "Módulo de Cor Verde",
+  "item.indrev.module_color_yellow": "Módulo de Cor Amarelo",
+  "item.indrev.module_color_orange": "Módulo de Cor Laranja",
+  "item.indrev.module_color_black": "Módulo de Cor Preto",
+  "item.indrev.module_color_brown": "Módulo de Cor Marrom"
 }
