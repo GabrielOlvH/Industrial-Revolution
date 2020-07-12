@@ -93,6 +93,7 @@ object ModRegistry {
         identifier("module_jump_boost").item(JUMP_BOOST_MODULE_ITEM)
         identifier("module_night_vision").item(NIGHT_VISION_MODULE_ITEM)
         identifier("module_breathing").item(BREATHING_MODULE_ITEM)
+        identifier("module_feather_falling").item(FEATHER_FALLING_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -177,6 +178,7 @@ object ModRegistry {
     val JUMP_BOOST_MODULE_ITEM = IRModuleItem(Module.JUMP_BOOST, itemSettings().maxCount(1))
     val BREATHING_MODULE_ITEM = IRModuleItem(Module.BREATHING, itemSettings().maxCount(1))
     val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
+    val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(Module.FEATHER_FALLING, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings())
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings())
