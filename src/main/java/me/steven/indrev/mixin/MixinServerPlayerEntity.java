@@ -3,9 +3,6 @@ package me.steven.indrev.mixin;
 import com.mojang.authlib.GameProfile;
 import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.armor.Module;
-import net.minecraft.entity.DamageUtil;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
@@ -46,16 +43,5 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
             });
         }
-    }
-
-    @Override
-    public float applyArmorToDamage(DamageSource source, float amount) {
-        if (!source.bypassesArmor()) {
-            float remaining = DamageUtil.getDamageLeft(amount, this.getArmor(), (float) this.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));
-            if (remaining != amount)
-                this.damageArmor(source, amount);
-            amount = remaining;
-        }
-        return amount;
     }
 }
