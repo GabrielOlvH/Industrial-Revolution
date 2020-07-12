@@ -10,6 +10,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.*
+import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.identifier
@@ -32,6 +33,7 @@ object IndustrialRevolution : EnergyModInitializer() {
         )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         IRRegistry.registerAll()
+        IRLootTables.register()
         MachineRegistry.COAL_GENERATOR_REGISTRY
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
