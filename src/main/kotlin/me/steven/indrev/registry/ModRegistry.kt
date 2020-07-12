@@ -168,10 +168,10 @@ object ModRegistry {
     val STEEL_ARMOR_LEGGINGS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
     val STEEL_ARMOR_BOOTS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, itemSettings())
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings())
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings())
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings())
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, itemSettings().maxDamage(500000))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
