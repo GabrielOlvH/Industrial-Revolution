@@ -49,7 +49,7 @@ public abstract class MixinLivingEntity {
             if (boots.getItem() instanceof IRModularArmor) {
                 int level = Module.Companion.getLevel(boots, Module.FEATHER_FALLING);
                 if (level > 0) {
-                    int mitigated = Math.min(damage, boots.getMaxDamage() - boots.getDamage() + 1);
+                    int mitigated = Math.min(damage, boots.getMaxDamage() - boots.getDamage() - 1);
                     boots.damage(mitigated, entity.getRandom(), (ServerPlayerEntity) entity);
                     return damage - mitigated;
                 }
