@@ -1,12 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NFN",
-    "FCF"
+    "FCF",
+    "NLN"
   ],
   "key": {
     "F": {
       "item": "minecraft:feather"
+    },
+    "L": {
+      "item": "minecraft:leather_boots"
     },
     "C": {
       "item": "indrev:circuit_mk4"
