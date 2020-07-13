@@ -1,21 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NFN",
-    "FCF"
+    "FCF",
+    "NFN"
   ],
   "key": {
-    "F": {
-      "item": "minecraft:feather"
-    },
     "C": {
       "item": "indrev:circuit_mk4"
+    },
+    "F": {
+      "item": "minecraft:feather"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"
     }
   },
   "result": {
-    "item": "indrev:module_speed"
+    "item": "indrev:module_feather_falling"
   }
 }

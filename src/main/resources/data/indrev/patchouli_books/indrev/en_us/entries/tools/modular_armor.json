@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "The Modular Armor is, on it's own, not much, but when you install modules, it can become very powerful!"
+      "text": "The Modular Armor is, on it's own, not much, but when you install modules, it can become very powerful!$(br2)Color modules do not have recipes, you must find them in dungeons."
     },
     {
       "type": "crafting",
@@ -35,7 +35,8 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:module_breathing"
+      "recipe": "indrev:module_breathing",
+      "recipe2": "indrev:module_feather_falling"
     }
   ]
 }
