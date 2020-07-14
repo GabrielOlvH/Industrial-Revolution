@@ -45,7 +45,7 @@ public abstract class MixinLivingEntity {
     private int mitigateFallDamage(int damage) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity) {
-            ItemStack boots = ((ServerPlayerEntity) entity).inventory.getArmorStack(EquipmentSlot.FEET.getEntitySlotId());
+            ItemStack boots = ((ServerPlayerEntity) entity).inventory.armor.get(EquipmentSlot.FEET.getEntitySlotId());
             if (boots.getItem() instanceof IRModularArmor) {
                 int level = Module.Companion.getLevel(boots, Module.FEATHER_FALLING);
                 if (level > 0) {
