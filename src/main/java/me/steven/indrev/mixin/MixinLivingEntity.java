@@ -1,6 +1,7 @@
 package me.steven.indrev.mixin;
 
 import me.steven.indrev.armor.Module;
+import me.steven.indrev.blocks.ChargePadBlock;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.utils.FakePlayerEntity;
 import net.minecraft.entity.DamageUtil;
@@ -44,7 +45,7 @@ public abstract class MixinLivingEntity {
     private int mitigateFallDamage(int damage) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity) {
-            ItemStack boots = ((ServerPlayerEntity) entity).inventory.getStack(ARMOR_SLOTS[3]);
+            ItemStack boots = ((ServerPlayerEntity) entity).inventory.getStack(ChargePadBlock.Companion.getARMOR_SLOTS()[3]);
             if (boots.getItem() instanceof IRModularArmor) {
                 int level = Module.Companion.getLevel(boots, Module.FEATHER_FALLING);
                 if (level > 0) {
@@ -56,6 +57,4 @@ public abstract class MixinLivingEntity {
         }
         return damage;
     }
-
-    private static final int[] ARMOR_SLOTS = new int[]{39, 38, 37, 36};
 }

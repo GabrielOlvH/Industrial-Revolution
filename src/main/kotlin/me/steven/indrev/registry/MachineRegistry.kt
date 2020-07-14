@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
+import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.ChopperBlockEntity
@@ -12,10 +13,7 @@ import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
-import me.steven.indrev.blocks.CableBlock
-import me.steven.indrev.blocks.FacingMachineBlock
-import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.blocks.VerticalFacingMachineBlock
+import me.steven.indrev.blocks.*
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -284,5 +282,10 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { ModularWorkbenchBlockEntity(tier) } }
         ).buffer { 500000.0 }
+
+        val CHARGE_PAD_REGISTRY = MachineRegistry(identifier("charge_pad"), false, Tier.MK4).register(
+            { tier -> ChargePadBlock(MACHINE_BLOCK_SETTINGS(), tier) },
+            { tier -> { ChargePadBlockEntity(tier) } }
+        ).buffer { 4096.0 }
     }
 }

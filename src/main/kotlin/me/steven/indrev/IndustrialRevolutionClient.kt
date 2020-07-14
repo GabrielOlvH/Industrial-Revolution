@@ -1,5 +1,7 @@
 package me.steven.indrev
 
+import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
+import me.steven.indrev.blockentities.battery.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -64,6 +66,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEach { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>) {
                 ModularWorkbenchBlockEntityRenderer(it)
+            }
+        }
+
+        MachineRegistry.CHARGE_PAD_REGISTRY.forEach { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>) {
+                ChargePadBlockEntityRenderer(it)
             }
         }
 
