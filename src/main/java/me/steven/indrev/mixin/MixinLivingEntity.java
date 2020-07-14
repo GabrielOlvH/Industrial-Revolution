@@ -17,6 +17,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import team.reborn.energy.Energy;
+import team.reborn.energy.EnergyHandler;
 
 @Mixin(LivingEntity.class)
 public abstract class MixinLivingEntity {
@@ -30,6 +32,24 @@ public abstract class MixinLivingEntity {
         }
     }
 
+    @ModifyVariable(method = "handleFallDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/LivingEntity;computeFallDamage(FF)I"))
+    private int mitigateFallDamage(int damage) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        if (entity instanceof ServerPlayerEntity) {
+            ItemStack boots = ((ServerPlayerEntity) entity).inventory.getStack(ChargePadBlock.Companion.getARMOR_SLOTS()[3]);
+            if (boots.getItem() instanceof IRModularArmor) {
+                int level = Module.Companion.getLevel(boots, Module.FEATHER_FALLING);
+                if (level > 0) {
+                    EnergyHandler handler = Energy.of(boots);
+                    int mitigated = Math.min(damage, (int) handler.getEnergy());
+                    handler.extract(mitigated);
+                    return damage - mitigated;
+                }
+            }
+        }
+        return damage;
+    }
+
     @Inject(method = "applyArmorToDamage", at = @At("HEAD"), cancellable = true)
     public void applyArmorToDamage(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
@@ -41,20 +61,4 @@ public abstract class MixinLivingEntity {
         }
     }
 
-    @ModifyVariable(method = "handleFallDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/LivingEntity;computeFallDamage(FF)I"))
-    private int mitigateFallDamage(int damage) {
-        LivingEntity entity = (LivingEntity) (Object) this;
-        if (entity instanceof ServerPlayerEntity) {
-            ItemStack boots = ((ServerPlayerEntity) entity).inventory.getStack(ChargePadBlock.Companion.getARMOR_SLOTS()[3]);
-            if (boots.getItem() instanceof IRModularArmor) {
-                int level = Module.Companion.getLevel(boots, Module.FEATHER_FALLING);
-                if (level > 0) {
-                    int mitigated = Math.min(damage, boots.getMaxDamage() - boots.getDamage() - 1);
-                    boots.damage(mitigated, entity.getRandom(), (ServerPlayerEntity) entity);
-                    return damage - mitigated;
-                }
-            }
-        }
-        return damage;
-    }
 }

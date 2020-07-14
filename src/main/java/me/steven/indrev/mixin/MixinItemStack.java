@@ -5,18 +5,23 @@ import com.google.common.collect.Multimap;
 import me.steven.indrev.armor.Module;
 import me.steven.indrev.items.armor.IRModularArmor;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import team.reborn.energy.Energy;
 
+import java.util.Random;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack {
@@ -27,7 +32,7 @@ public abstract class MixinItemStack {
         ItemStack stack = (ItemStack) (Object) this;
         if (stack.getItem() instanceof IRModularArmor) {
             ArmorItem item = (ArmorItem) stack.getItem();
-            if (stack.getDamage() >= stack.getMaxDamage() - 1) {
+            if (Energy.of(stack).getEnergy() <= 0) {
                 cir.setReturnValue(ImmutableMultimap.of());
             } else if (equipmentSlot == item.getSlotType()) {
                 int level = Module.Companion.getLevel(stack, Module.PROTECTION);
@@ -44,10 +49,21 @@ public abstract class MixinItemStack {
         }
     }
 
-    @Inject(method = "setDamage", at = @At("HEAD"), cancellable = true)
-    private void cancelBreak(int damage, CallbackInfo ci) {
+    @Inject(method = "damage(ILjava/util/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z", at = @At("HEAD"))
+    private void useArmorEnergy1(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = (ItemStack) (Object) this;
-        if (damage == stack.getMaxDamage() && stack.getItem() instanceof IRModularArmor)
-            ci.cancel();
+        extractEnergy(stack, amount);
+    }
+
+    @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"))
+    private void useArmorEnergy2(int amount, LivingEntity entity, Consumer<LivingEntity> breakCallback, CallbackInfo ci) {
+        ItemStack stack = (ItemStack) (Object) this;
+        extractEnergy(stack, amount);
+    }
+
+    private static void extractEnergy(ItemStack stack, int amount) {
+        if (stack.getItem() instanceof IRModularArmor) {
+            Energy.of(stack).extract(amount);
+        }
     }
 }

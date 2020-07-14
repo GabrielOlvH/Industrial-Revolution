@@ -8,8 +8,10 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
+import team.reborn.energy.EnergyHolder
+import team.reborn.energy.EnergyTier
 
-open class IRRechargeableItem(settings: Settings, val canOutput: Boolean = false) : Item(settings), Rechargeable {
+open class IRRechargeableItem(settings: Settings, private val maxStored: Double, val canOutput: Boolean = false) : Item(settings), EnergyHolder {
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -24,4 +26,8 @@ open class IRRechargeableItem(settings: Settings, val canOutput: Boolean = false
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
+
+    override fun getMaxStoredPower(): Double = maxStored
+
+    override fun getTier(): EnergyTier = EnergyTier.LOW
 }
