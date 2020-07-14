@@ -129,13 +129,14 @@ object IRRegistry {
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, 32000.0, itemSettings().maxDamage(-1))
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(-1)
+    )
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
