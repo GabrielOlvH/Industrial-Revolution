@@ -2,6 +2,7 @@ package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
+import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
@@ -17,7 +18,7 @@ import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergyTier
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRRechargeable {
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         val upgrades = Module.getInstalled(stack)
         if (upgrades.isNotEmpty()) {

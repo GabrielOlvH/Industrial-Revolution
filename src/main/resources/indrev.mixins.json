@@ -10,6 +10,7 @@
     "MixinServerPlayerEntity"
   ],
   "client": [
+    "MixinItemRenderer",
     "MixinPlayerEntityRenderer"
   ],
   "injectors": {

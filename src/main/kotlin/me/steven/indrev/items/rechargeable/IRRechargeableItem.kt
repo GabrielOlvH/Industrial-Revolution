@@ -13,7 +13,8 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergyTier
 
-open class IRRechargeableItem(settings: Settings, private val maxStored: Double, val canOutput: Boolean = false) : Item(settings), EnergyHolder {
+open class IRRechargeableItem(settings: Settings, private val maxStored: Double, val canOutput: Boolean = false) :
+    Item(settings), EnergyHolder, IRRechargeable {
 
     override fun appendTooltip(
         stack: ItemStack?,

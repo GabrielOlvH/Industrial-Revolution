@@ -1,5 +1,6 @@
 package me.steven.indrev.items
 
+import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
@@ -19,8 +20,9 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergyTier
 
-class IRMiningDrill(toolMaterial: ToolMaterial, private val maxStored: Double, settings: Settings) : PickaxeItem(toolMaterial, 0, 0F, settings),
-    EnergyHolder {
+class IRMiningDrill(toolMaterial: ToolMaterial, private val maxStored: Double, settings: Settings) :
+    PickaxeItem(toolMaterial, 0, 0F, settings),
+    EnergyHolder, IRRechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         return if (SUPPORTED_MATERIALS.contains(material) && Energy.of(stack).energy > 0) this.material.miningSpeedMultiplier * 2 else 0F
