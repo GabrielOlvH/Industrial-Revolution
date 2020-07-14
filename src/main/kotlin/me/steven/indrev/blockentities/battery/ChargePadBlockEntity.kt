@@ -20,7 +20,7 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistr
         val stack = inventory.getStack(0)
         if (Energy.valid(stack)) {
             setWorkingState(true)
-            Energy.of(this).into(Energy.of(stack)).move(1.0)
+            Energy.of(this).into(Energy.of(stack)).move()
         } else setWorkingState(false)
     }
 }

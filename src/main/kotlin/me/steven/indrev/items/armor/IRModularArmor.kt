@@ -3,6 +3,7 @@ package me.steven.indrev.items.armor
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.items.rechargeable.IRRechargeable
+import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
@@ -15,6 +16,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
+import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
@@ -47,5 +49,9 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
 
     override fun getMaxStoredPower(): Double = maxStored
 
-    override fun getTier(): EnergyTier = EnergyTier.MEDIUM
+    override fun getMaxInput(side: EnergySide?): Double = Tier.MK4.io
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
 }

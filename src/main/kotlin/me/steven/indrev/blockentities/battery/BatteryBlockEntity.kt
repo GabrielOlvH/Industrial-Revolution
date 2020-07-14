@@ -26,7 +26,7 @@ class BatteryBlockEntity(tier: Tier) :
         val inventory = inventoryController?.inventory ?: return
         val stack = inventory.getStack(0)
         if (Energy.valid(stack)) {
-            Energy.of(this).into(Energy.of(stack)).move(1.0)
+            Energy.of(this).into(Energy.of(stack)).move()
         }
     }
 

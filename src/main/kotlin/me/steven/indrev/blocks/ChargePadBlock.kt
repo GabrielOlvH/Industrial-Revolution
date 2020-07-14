@@ -67,11 +67,11 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
             ARMOR_SLOTS.forEach { slot ->
                 val stack = entity.inventory.getStack(slot)
                 if (Energy.valid(stack))
-                    Energy.of(blockEntity).into(Energy.of(stack)).move(blockEntity.tier.io)
+                    Energy.of(blockEntity).into(Energy.of(stack)).move()
             }
             arrayOf(entity.mainHandStack, entity.offHandStack).forEach { stack ->
                 if (Energy.valid(stack))
-                    Energy.of(blockEntity).into(Energy.of(stack)).move(blockEntity.tier.io)
+                    Energy.of(blockEntity).into(Energy.of(stack)).move()
             }
         }
     }

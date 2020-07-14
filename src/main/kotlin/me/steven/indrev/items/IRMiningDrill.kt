@@ -1,6 +1,7 @@
 package me.steven.indrev.items
 
 import me.steven.indrev.items.rechargeable.IRRechargeable
+import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
@@ -18,9 +19,15 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
+import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
-class IRMiningDrill(toolMaterial: ToolMaterial, private val maxStored: Double, settings: Settings) :
+class IRMiningDrill(
+    toolMaterial: ToolMaterial,
+    private val tier: Tier,
+    private val maxStored: Double,
+    settings: Settings
+) :
     PickaxeItem(toolMaterial, 0, 0F, settings),
     EnergyHolder, IRRechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
@@ -59,10 +66,13 @@ class IRMiningDrill(toolMaterial: ToolMaterial, private val maxStored: Double, s
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
-
     override fun getMaxStoredPower(): Double = maxStored
 
-    override fun getTier(): EnergyTier = EnergyTier.LOW
+    override fun getMaxInput(side: EnergySide?): Double = tier.io
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
 
     companion object {
         private val SUPPORTED_MATERIALS = arrayOf(

@@ -1,5 +1,6 @@
 package me.steven.indrev.items.rechargeable
 
+import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
@@ -11,6 +12,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
+import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
 open class IRRechargeableItem(settings: Settings, private val maxStored: Double, val canOutput: Boolean = false) :
@@ -33,5 +35,9 @@ open class IRRechargeableItem(settings: Settings, private val maxStored: Double,
 
     override fun getMaxStoredPower(): Double = maxStored
 
-    override fun getTier(): EnergyTier = EnergyTier.LOW
+    override fun getMaxInput(side: EnergySide?): Double = Tier.MK1.io
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
 }
