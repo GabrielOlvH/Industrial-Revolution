@@ -135,7 +135,7 @@ object IRRegistry {
     val MINING_DRILL_MK3 =
         IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(-1)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxCount(1).maxDamage(-1)
     )
 
     val ENERGY_READER = IREnergyReader(itemSettings())
