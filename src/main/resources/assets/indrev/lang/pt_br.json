@@ -323,5 +323,8 @@
   "item.indrev.module_color_yellow": "Módulo de Cor Amarelo",
   "item.indrev.module_color_orange": "Módulo de Cor Laranja",
   "item.indrev.module_color_black": "Módulo de Cor Preto",
-  "item.indrev.module_color_brown": "Módulo de Cor Marrom"
+  "item.indrev.module_color_brown": "Módulo de Cor Marrom",
+  "block.indrev.charge_pad_mk4": "Pedestal de Energia",
+  "block.indrev.charge_pad_mk4.tooltip": "Recarrega itens equipados ou o que você colocar nele!",
+  "item.indrev.modular_armor.upgrade.feather_falling": "Peso Pena %s"
 }

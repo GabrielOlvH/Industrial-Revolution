@@ -1,6 +1,6 @@
 {
-  "credit": "Made with Blockbench",
   "parent": "minecraft:block/block",
+  "credit": "Made with Blockbench",
   "textures": {
     "0": "indrev:block/machine_block",
     "1": "indrev:block/charger_top",
@@ -153,15 +153,333 @@
             16
           ],
           "texture": "#3"
+        }
+      }
+    },
+    {
+      "name": "arm",
+      "from": [
+        7,
+        0,
+        2
+      ],
+      "to": [
+        9,
+        15,
+        4
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          15,
+          8,
+          10
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            4,
+            15
+          ],
+          "texture": "#2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            4,
+            15
+          ],
+          "texture": "#2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            4,
+            15
+          ],
+          "texture": "#2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            4,
+            15
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "arm2",
+      "from": [
+        8,
+        15,
+        2
+      ],
+      "to": [
+        9,
+        15.5,
+        3
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          16,
+          23,
+          10
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
         },
         "down": {
           "uv": [
             0,
             0,
-            13.5,
-            13.5
+            1,
+            1
           ],
-          "texture": "#missing"
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "arm2",
+      "from": [
+        7,
+        15,
+        2
+      ],
+      "to": [
+        8,
+        15.5,
+        3
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          15,
+          23,
+          10
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "arm2",
+      "from": [
+        7,
+        15,
+        3
+      ],
+      "to": [
+        8,
+        15.2,
+        4
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          15,
+          23,
+          11
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "up": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "texture": "#2"
+        }
+      }
+    },
+    {
+      "name": "arm2",
+      "from": [
+        8,
+        15,
+        3
+      ],
+      "to": [
+        9,
+        15.2,
+        4
+      ],
+      "rotation": {
+        "angle": 0,
+        "axis": "y",
+        "origin": [
+          16,
+          23,
+          11
+        ]
+      },
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            0,
+            1,
+            0.2
+          ],
+          "texture": "#2"
         }
       }
     },
@@ -242,437 +560,6 @@
           "texture": "#1"
         }
       }
-    },
-    {
-      "name": "arm",
-      "from": [
-        7,
-        0,
-        2
-      ],
-      "to": [
-        9,
-        15,
-        4
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          15,
-          8,
-          10
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#2"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#2"
-        },
-        "south": {
-          "uv": [
-            0,
-            4,
-            16,
-            16
-          ],
-          "texture": "#2"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            16,
-            16
-          ],
-          "texture": "#2"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            2,
-            2
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            2,
-            2
-          ],
-          "texture": "#missing"
-        }
-      }
-    },
-    {
-      "name": "arm2",
-      "from": [
-        8,
-        15,
-        2
-      ],
-      "to": [
-        9,
-        15.5,
-        3
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          16,
-          23,
-          10
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        }
-      }
-    },
-    {
-      "name": "arm2",
-      "from": [
-        7,
-        15,
-        2
-      ],
-      "to": [
-        8,
-        15.5,
-        3
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          15,
-          23,
-          10
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            4,
-            0
-          ],
-          "texture": "#2"
-        }
-      }
-    },
-    {
-      "name": "arm2",
-      "from": [
-        7,
-        15,
-        3
-      ],
-      "to": [
-        8,
-        15.2,
-        4
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          15,
-          23,
-          11
-        ]
-      },
-      "color": 2,
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            1,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            1,
-            1
-          ],
-          "texture": "#missing"
-        }
-      }
-    },
-    {
-      "name": "arm2",
-      "from": [
-        8,
-        15,
-        3
-      ],
-      "to": [
-        9,
-        15.2,
-        4
-      ],
-      "rotation": {
-        "angle": 0,
-        "axis": "y",
-        "origin": [
-          16,
-          23,
-          11
-        ]
-      },
-      "faces": {
-        "north": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "east": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#2"
-        },
-        "south": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "west": {
-          "uv": [
-            0,
-            0,
-            1,
-            0.2
-          ],
-          "texture": "#missing"
-        },
-        "up": {
-          "uv": [
-            0,
-            0,
-            1,
-            1
-          ],
-          "texture": "#missing"
-        },
-        "down": {
-          "uv": [
-            0,
-            0,
-            1,
-            1
-          ],
-          "texture": "#missing"
-        }
-      }
-    }
-  ],
-  "groups": [
-    {
-      "name": "base",
-      "origin": [
-        13,
-        17,
-        8
-      ],
-      "children": [
-        0,
-        1
-      ]
-    },
-    {
-      "name": "holder",
-      "origin": [
-        8,
-        8,
-        8
-      ],
-      "children": [
-        2
-      ]
-    },
-    {
-      "name": "arm",
-      "origin": [
-        8,
-        8,
-        8
-      ],
-      "children": [
-        3,
-        4,
-        5,
-        6,
-        7
-      ]
     }
   ]
 }

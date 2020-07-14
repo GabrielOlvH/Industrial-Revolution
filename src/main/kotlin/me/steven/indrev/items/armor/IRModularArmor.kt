@@ -2,6 +2,7 @@ package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
+import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.DyeableArmorItem
@@ -32,7 +33,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         }
         val handler = Energy.of(stack)
         tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${handler.energy} / ${handler.maxStored} LF"))
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
         tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
     }
 

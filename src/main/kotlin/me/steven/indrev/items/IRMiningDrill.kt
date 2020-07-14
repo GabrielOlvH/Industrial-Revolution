@@ -1,5 +1,6 @@
 package me.steven.indrev.items
 
+import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
@@ -50,7 +51,7 @@ class IRMiningDrill(toolMaterial: ToolMaterial, private val maxStored: Double, s
         super.appendTooltip(stack, world, tooltip, context)
         val handler = Energy.of(stack)
         tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${handler.energy} / ${handler.maxStored} LF"))
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
         tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
     }
 

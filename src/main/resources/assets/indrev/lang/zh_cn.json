@@ -323,5 +323,8 @@
   "item.indrev.module_color_yellow": "Yellow Color Module",
   "item.indrev.module_color_orange": "Orange Color Module",
   "item.indrev.module_color_black": "Black Color Module",
-  "item.indrev.module_color_brown": "Brown Color Module"
+  "item.indrev.module_color_brown": "Brown Color Module",
+  "block.indrev.charge_pad_mk4": "Charge Pad",
+  "block.indrev.charge_pad_mk4.tooltip": "Charges equipped items or anything you put in it!",
+  "item.indrev.modular_armor.upgrade.feather_falling": "Feather Falling %s"
 }

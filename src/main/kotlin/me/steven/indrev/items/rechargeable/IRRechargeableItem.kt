@@ -1,5 +1,6 @@
 package me.steven.indrev.items.rechargeable
 
+import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -8,6 +9,7 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergyTier
 
@@ -21,7 +23,8 @@ open class IRRechargeableItem(settings: Settings, private val maxStored: Double,
     ) {
         super.appendTooltip(stack, world, tooltip, context)
         tooltip?.add(TranslatableText("gui.widget.energy"))
-        tooltip?.add(LiteralText("${stack?.damage} / ${stack?.maxDamage} LF"))
+        val handler = Energy.of(stack)
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
         tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
     }
 

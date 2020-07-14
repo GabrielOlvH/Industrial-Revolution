@@ -6,10 +6,15 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
+import net.minecraft.item.ItemStack
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.function.BooleanBiFunction
 import net.minecraft.util.hit.BlockHitResult
@@ -69,6 +74,11 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
                     Energy.of(blockEntity).into(Energy.of(stack)).move(blockEntity.tier.io)
             }
         }
+    }
+
+    override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
+        super.buildTooltip(stack, view, tooltip, options)
+        tooltip?.add(TranslatableText("block.indrev.charge_pad_mk4.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
     }
 
     @Environment(EnvType.CLIENT)
