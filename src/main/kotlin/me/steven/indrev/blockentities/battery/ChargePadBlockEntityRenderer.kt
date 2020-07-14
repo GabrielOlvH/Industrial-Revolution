@@ -25,18 +25,21 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
         val inventory = entity?.inventoryController?.inventory
         val stack = inventory?.getStack(0)
         if (stack?.isEmpty == false) {
-            val facing = entity.cachedState[FacingMachineBlock.HORIZONTAL_FACING]
+            val facing = entity.cachedState[FacingMachineBlock.HORIZONTAL_FACING].rotateYClockwise()
             var x = abs(facing.offsetX.toFloat()) * 0.5
             var z = abs(facing.offsetZ.toFloat()) * 0.5
-            when (facing.rotateYClockwise().axis) {
-                Direction.Axis.X -> x += 0.2
-                Direction.Axis.Z -> z += 0.2
+            if (facing.offsetX == -1)
+                z = x
+            else if (facing.offsetZ == 1) x = z
+            when (facing.axis) {
+                Direction.Axis.X -> z += 0.2
+                Direction.Axis.Z -> x += 0.2
                 else -> return
             }
             matrices?.push()
             val time = entity.world?.time ?: 1
-            val offset = sin((time + tickDelta) / 16.0) / 8.0
-            matrices?.translate(x, 1.2 + offset, z)
+            val offset = sin((time + tickDelta) / 16.0) / 32.0
+            matrices?.translate(x, 1.1 + offset, z)
             matrices?.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
             matrices?.scale(0.5f, 0.5f, 0.5f)
             val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())

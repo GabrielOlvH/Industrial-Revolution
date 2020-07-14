@@ -1,5 +1,6 @@
 {
   "credit": "Made with Blockbench",
+  "parent": "minecraft:block/block",
   "textures": {
     "0": "indrev:block/machine_block",
     "1": "indrev:block/charger_top",
