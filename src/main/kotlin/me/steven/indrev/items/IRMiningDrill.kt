@@ -6,6 +6,7 @@ import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
@@ -41,10 +42,9 @@ class IRMiningDrill(
         state: BlockState?,
         pos: BlockPos?,
         miner: LivingEntity?
-    ): Boolean {
-        Energy.of(stack).use(1.0)
-        return super.postMine(stack, world, state, pos, miner)
-    }
+    ): Boolean = Energy.of(stack).use(1.0)
+
+    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
 
     override fun canMine(state: BlockState?, world: World?, pos: BlockPos?, miner: PlayerEntity?): Boolean {
         val stack = miner?.mainHandStack ?: return super.canMine(state, world, pos, miner)
@@ -72,7 +72,12 @@ class IRMiningDrill(
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
+    override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
+        val handler = Energy.of(stack)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+    }
 
     companion object {
         private val SUPPORTED_MATERIALS = arrayOf(

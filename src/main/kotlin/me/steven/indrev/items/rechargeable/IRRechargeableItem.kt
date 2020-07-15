@@ -3,6 +3,7 @@ package me.steven.indrev.items.rechargeable
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.Entity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText
@@ -39,5 +40,11 @@ open class IRRechargeableItem(settings: Settings, private val maxStored: Double,
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
+    override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
+        val handler = Energy.of(stack)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+    }
+
 }

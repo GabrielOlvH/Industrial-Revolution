@@ -39,7 +39,7 @@ object IRRegistry {
                 Tier.MK4, Tier.CREATIVE -> MINING_DRILL_MK4
             }
         }
-        identifier("battery").item(IRRechargeableItem(itemSettings(), 4096.0, true))
+        identifier("battery").item(IRRechargeableItem(itemSettings().maxDamage(4096), 4096.0, true))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
@@ -129,13 +129,13 @@ object IRRegistry {
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 32000.0, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 32000.0, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, itemSettings().maxCount(1).maxDamage(-1))
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxCount(1).maxDamage(-1)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(32000)
     )
 
     val ENERGY_READER = IREnergyReader(itemSettings())
@@ -167,10 +167,10 @@ object IRRegistry {
     val STEEL_ARMOR_LEGGINGS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
     val STEEL_ARMOR_BOOTS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxCount(1).maxDamage(-1))
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxCount(1).maxDamage(-1))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxCount(1).maxDamage(-1))
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxCount(1).maxDamage(-1))
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))

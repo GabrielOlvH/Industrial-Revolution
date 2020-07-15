@@ -60,5 +60,4 @@ public abstract class MixinLivingEntity {
             ci.setReturnValue(remaining);
         }
     }
-
 }

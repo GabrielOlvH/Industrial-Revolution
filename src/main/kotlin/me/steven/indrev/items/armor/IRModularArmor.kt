@@ -6,6 +6,7 @@ import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getShortEnergyDisplay
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
@@ -53,5 +54,10 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getTier(): EnergyTier = throw IllegalStateException("don't use this")
+    override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
+        val handler = Energy.of(stack)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+    }
 }
