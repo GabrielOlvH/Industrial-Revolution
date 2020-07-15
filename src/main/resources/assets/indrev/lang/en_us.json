@@ -326,5 +326,9 @@
   "text.autoconfig.indrev.option.cables.cableMk3.maxOutput": "Maximum output",
   "text.autoconfig.indrev.option.cables.cableMk4": "Cable MK4",
   "text.autoconfig.indrev.option.cables.cableMk4.maxInput": "Maximum input",
-  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output"
+  "text.autoconfig.indrev.option.cables.cableMk4.maxOutput": "Maximum output",
+  "text.autoconfig.indrev.category.upgrades": "Upgrades",
+  "text.autoconfig.indrev.option.upgrades.speedUpgradeModifier": "Speed Upgrade Modifier",
+  "text.autoconfig.indrev.option.upgrades.energyUpgradeModifier": "Energy Upgrade Modifier",
+  "text.autoconfig.indrev.option.upgrades.bufferUpgradeModifier": "Buffer Upgrade Modifier"
 }

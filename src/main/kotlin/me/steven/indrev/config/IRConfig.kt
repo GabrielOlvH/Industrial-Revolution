@@ -21,6 +21,10 @@ class IRConfig : PartitioningSerializer.GlobalData() {
     @ConfigEntry.Gui.TransitiveObject
     val cables: Cables = Cables()
 
+    @ConfigEntry.Category(value = "upgrades")
+    @ConfigEntry.Gui.TransitiveObject
+    val upgrades: Upgrades = Upgrades()
+
 }
 
 @Config(name = "generators")
@@ -142,3 +146,10 @@ class Cables : ConfigData {
 }
 
 class CableConfig(val maxOutput: Double, val maxInput: Double)
+
+@Config(name = "upgrades")
+class Upgrades : ConfigData {
+    val speedUpgradeModifier = 1.2
+    val energyUpgradeModifier = 0.1
+    val bufferUpgradeModifier = 20000.0
+}

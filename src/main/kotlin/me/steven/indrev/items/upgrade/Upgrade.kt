@@ -1,12 +1,13 @@
 package me.steven.indrev.items.upgrade
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import net.minecraft.inventory.Inventory
 
 enum class Upgrade(val apply: (Double, Int) -> Double) {
-    SPEED({ base, count -> base + 1.2 * count }),
-    ENERGY({ base, count -> base - 0.1 * count }),
-    BUFFER({ base, count -> base + count * 20000 });
+    SPEED({ base, count -> base + (IndustrialRevolution.CONFIG.upgrades.speedUpgradeModifier * count) }),
+    ENERGY({ base, count -> base - (IndustrialRevolution.CONFIG.upgrades.energyUpgradeModifier * count) }),
+    BUFFER({ base, count -> base + (count * IndustrialRevolution.CONFIG.upgrades.bufferUpgradeModifier) });
 
     fun apply(provider: UpgradeProvider, inventory: Inventory): Double {
         var count = 0
