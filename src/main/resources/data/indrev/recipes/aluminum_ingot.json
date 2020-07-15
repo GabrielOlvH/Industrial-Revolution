@@ -1,8 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "tag": "c:aluminum_dusts"
-  },
-  "result": "c:aluminum_ingot",
-  "cookingTime": 200
-}

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "indrev:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:iron_ingot"
@@ -9,6 +9,6 @@
     }
   ],
   "result": {
-    "item": "c:iron_plate"
+    "item": "iron_plate"
   }
 }

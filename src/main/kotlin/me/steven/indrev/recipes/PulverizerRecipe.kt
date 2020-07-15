@@ -1,6 +1,7 @@
 package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
+import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -52,19 +53,20 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
             override fun read(id: Identifier, json: JsonObject): PulverizerRecipe {
                 val input = Ingredient.fromJson(json.getAsJsonObject("ingredient"))
                 val result = json.get("output").asJsonObject
-                val output = ItemStack {
-                    Registry.ITEM.getOrEmpty(Identifier(result.get("item").asString)).orElse(null)
-                        ?: throw IllegalArgumentException("no such item $result")
-                }
+                val itemPath = result.get("item").asString
+                val item =
+                    getFirstMatch(arrayOf(Identifier("techreborn", itemPath), identifier(itemPath)), Registry.ITEM)
+                val output = ItemStack { item }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
                 return if (json.has("extra")) {
                     val extra = json.getAsJsonObject("extra")
-                    val extraOutputStack = ItemStack {
-                        Registry.ITEM.getOrEmpty(Identifier(extra.get("item").asString))
-                            .orElse(null)
-                            ?: throw IllegalArgumentException("no such item $result")
-                    }
+                    val extraItemPath = extra.get("item").asString
+                    val extraItem = getFirstMatch(
+                        arrayOf(Identifier("techreborn", extraItemPath), identifier(extraItemPath)),
+                        Registry.ITEM
+                    )
+                    val extraOutputStack = ItemStack { extraItem }
                     val chance = extra.get("chance").asDouble
                     PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)
                 } else PulverizerRecipe(id, ticks, output, null, input)

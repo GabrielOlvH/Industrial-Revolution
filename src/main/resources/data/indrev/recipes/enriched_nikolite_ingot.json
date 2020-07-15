@@ -2,10 +2,10 @@
   "type": "indrev:infuse",
   "ingredients": [
     {
-      "item": "indrev:enriched_nikolite"
+      "item": "indrev:enriched_nikolite_dust"
     },
     {
-      "item": "c:nikolite_ingot"
+      "item": "indrev:nikolite_ingot"
     }
   ],
   "output": {

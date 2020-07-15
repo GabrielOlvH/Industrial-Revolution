@@ -4,7 +4,7 @@
     "item": "minecraft:coal"
   },
   "output": {
-    "item": "c:coal_dust",
+    "item": "coal_dust",
     "count": 2
   },
   "processTime": 300

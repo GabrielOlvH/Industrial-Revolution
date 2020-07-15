@@ -2,14 +2,14 @@
   "type": "indrev:infuse",
   "ingredients": [
     {
-      "item": "c:nikolite_dust"
+      "item": "indrev:nikolite_dust"
     },
     {
-      "item": "c:diamond_dust"
+      "tag": "c:diamond_dusts"
     }
   ],
   "output": {
-    "item": "indrev:enriched_nikolite",
+    "item": "indrev:enriched_nikolite_dust",
     "count": 2
   },
   "processTime": 600

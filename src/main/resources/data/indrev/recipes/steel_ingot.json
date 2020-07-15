@@ -1,8 +1,8 @@
 {
-  "type": "minecraft:smelting",
+  "type": "indrev:smelting",
   "ingredient": {
     "tag": "c:steel_dusts"
   },
-  "result": "c:steel_ingot",
+  "result": "steel_ingot",
   "cookingTime": 200
 }

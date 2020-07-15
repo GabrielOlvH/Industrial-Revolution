@@ -47,6 +47,10 @@ object IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val pos = buf.readBlockPos()
@@ -65,7 +69,7 @@ object IndustrialRevolution : EnergyModInitializer() {
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(IRRegistry.NIKOLITE.dust.get()) }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(IRRegistry.NIKOLITE_ORE) }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)

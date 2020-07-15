@@ -4,12 +4,12 @@
     "item": "minecraft:iron_ore"
   },
   "output": {
-    "item": "c:iron_dust",
+    "item": "iron_dust",
     "count": 2
   },
   "processTime": 200,
   "extra": {
-    "item": "c:iron_dust",
+    "item": "iron_dust",
     "count": 1,
     "chance": 0.9
   }

@@ -84,28 +84,28 @@
       "anchor": "chalcopryte",
       "type": "spotlight",
       "title": "Chalcopryte",
-      "item": "c:copper_ore",
+      "item": "indrev:copper_ore",
       "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), it's the quite rich and very variable vein, with lots of $(#FFA500)$(l)copper$() and $(#666666)$(l)iron$() ores alongside stone, dirt and gravel."
     },
     {
       "anchor": "cuprite",
       "type": "spotlight",
       "title": "Cuprite",
-      "item": "c:copper_ore",
+      "item": "indrev:copper_ore",
       "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size."
     },
     {
       "anchor": "cassiterite",
       "type": "spotlight",
       "title": "Cassiterite",
-      "item": "c:tin_ore",
+      "item": "indrev:tin_ore",
       "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size."
     },
     {
       "anchor": "stannite",
       "type": "spotlight",
       "title": "Stannite",
-      "item": "c:tin_ore",
+      "item": "indrev:tin_ore",
       "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), with lots of tin, alongside $(#666666)$(l)iron$(), $(#FFA500)$(l)copper$(), stone, dirt and gravel."
     },
     {

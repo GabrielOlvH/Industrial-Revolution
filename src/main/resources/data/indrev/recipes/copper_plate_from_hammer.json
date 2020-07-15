@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "indrev:crafting_shapeless",
   "ingredients": [
     {
       "tag": "c:copper_ingots"
@@ -9,6 +9,6 @@
     }
   ],
   "result": {
-    "item": "c:copper_plate"
+    "item": "copper_plate"
   }
 }

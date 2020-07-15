@@ -1,0 +1,8 @@
+{
+  "parent": "indrev:block/ore",
+  "textures": {
+    "particle": "minecraft:block/stone",
+    "stone": "minecraft:block/stone",
+    "ore": "indrev:block/nikolite_ore"
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "indrev:crafting_shapeless",
   "ingredients": [
     {
       "tag": "c:tin_ingots"
@@ -9,6 +9,6 @@
     }
   ],
   "result": {
-    "item": "c:tin_plate"
+    "item": "tin_plate"
   }
 }

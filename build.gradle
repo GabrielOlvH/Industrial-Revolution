@@ -41,13 +41,6 @@ dependencies {
     modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
     include "io.github.cottonmc:LibGui:${project.libgui_version}"
 
-    modImplementation ("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}") {
-        exclude(group: "me.shedaniel", module: "RoughlyEnoughItems")
-        exclude(group: "io.github.prospector", module: "modmenu")
-    }
-
-    include "io.github.cottonmc:cotton-resources:${project.cotton_resources_version}"
-
     modCompile "io.github.prospector:modmenu:${project.modmenu_version}"
     modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 

@@ -7,10 +7,10 @@
   ],
   "key": {
     "N": {
-      "item": "c:nikolite_dust"
+      "item": "indrev:nikolite_dust"
     },
     "E": {
-      "item": "indrev:enriched_nikolite"
+      "item": "indrev:enriched_nikolite_dust"
     },
     "C": {
       "item": "indrev:circuit_mk2"

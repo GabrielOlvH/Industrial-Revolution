@@ -4,7 +4,7 @@
     "item": "minecraft:diamond_ore"
   },
   "output": {
-    "item": "c:diamond_dust",
+    "item": "diamond_dust",
     "count": 1
   },
   "processTime": 200

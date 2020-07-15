@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import io.github.cottonmc.resources.type.GenericResourceType
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
@@ -14,22 +13,49 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
-import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
 object IRRegistry {
-
     fun registerAll() {
-        identifier("hammer").item(HAMMER)
+        ResourceHelper("copper", "tin") {
+            withItems("dust", "ingot", "plate")
+            withBlock()
+            withOre { id ->
+                when (id) {
+                    "tin" -> ResourceHelper.TIN_FEATURE
+                    "copper" -> ResourceHelper.COPPER_FEATURE
+                    else -> error("no feature configured for $id")
+                }
+            }
+        }.register()
 
-        NIKOLITE.registerAll()
-        identifier("enriched_nikolite").item(DEFAULT_ITEM())
-        identifier("enriched_nikolite_ingot").item(DEFAULT_ITEM())
+        ResourceHelper("steel") {
+            withItems("dust", "ingot", "plate")
+            withBlock()
+        }.register()
+
+        ResourceHelper("iron") { withItems("dust", "plate") }.register()
+
+        ResourceHelper("diamond", "gold", "coal") { withItems("dust") }.register()
+
+        ResourceHelper("nikolite") {
+            withItems("dust", "ingot")
+            withOre { ResourceHelper.NIKOLITE_FEATURE }
+        }.register()
+
+        ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
+
+        Registry.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }
+        RegistryEntryAddedCallback.event(Registry.BIOME)
+            .register(RegistryEntryAddedCallback { _, _, biome -> ResourceHelper.registerFeatures(biome) })
+
+        identifier("hammer").item(HAMMER)
 
         identifier("mining_drill").tierBasedItem { tier ->
             when (tier) {
@@ -111,16 +137,13 @@ object IRRegistry {
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
-    val NIKOLITE = GenericResourceType.Builder("nikolite")
-        .allOres()
-        .withDustAffix()
-        .noBlock()
-        .build()
-        .withItemAffixes("ingot")
-
-    val COPPER_ORE = Registry.BLOCK.get(Identifier("c", "copper_ore"))
-    val TIN_ORE = Registry.BLOCK.get(Identifier("c", "tin_ore"))
-    val STEEL_INGOT = Registry.ITEM.get(Identifier("c", "steel_ingot"))
+    val NIKOLITE_ORE = Registry.BLOCK.get(identifier("nikolite_ore"))
+    val NIKOLITE_NETHER_ORE = Registry.BLOCK.get(identifier("nikolite_nether_ore"))
+    val COPPER_ORE = Registry.BLOCK.get(identifier("copper_ore"))
+    val COPPER_NETHER_ORE = Registry.BLOCK.get(identifier("copper_nether_ore"))
+    val TIN_ORE = Registry.BLOCK.get(identifier("tin_ore"))
+    val TIN_NETHER_ORE = Registry.BLOCK.get(identifier("tin_nether_ore"))
+    val STEEL_INGOT = Registry.ITEM.get(identifier("steel_ingot"))
 
     val BIOMASS = DEFAULT_ITEM()
 

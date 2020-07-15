@@ -4,12 +4,12 @@
     "tag": "c:copper_ores"
   },
   "output": {
-    "item": "c:copper_dust",
+    "item": "copper_dust",
     "count": 2
   },
   "processTime": 200,
   "extra": {
-    "item": "c:copper_dust",
+    "item": "copper_dust",
     "count": 1,
     "chance": 0.9
   }

@@ -84,28 +84,28 @@
       "anchor": "chalcopryte",
       "type": "spotlight",
       "title": "Chalcopryte",
-      "item": "c:copper_ore",
+      "item": "indrev:copper_ore",
       "text": "主要由$(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()构成，这是较为富足且多变的矿脉，有很多的$(#FFA500)$(l)铜$()和$(#666666)$(l)铁$()矿石，以及石头、泥土和沙砾。"
     },
     {
       "anchor": "cuprite",
       "type": "spotlight",
       "title": "Cuprite",
-      "item": "c:copper_ore",
+      "item": "indrev:copper_ore",
       "text": "主要由$(#FFA500)$(l)铜矿石$()构成，这个矿脉只有铜矿石，并不富足且大小不一。"
     },
     {
       "anchor": "cassiterite",
       "type": "spotlight",
       "title": "锡石",
-      "item": "c:tin_ore",
+      "item": "indrev:tin_ore",
       "text": "主要由$(#999999)$(l)锡矿石$()构成，这个矿脉只有铜矿石，并不富足且大小不一。"
     },
     {
       "anchor": "stannite",
       "type": "spotlight",
       "title": "Stannite",
-      "item": "c:tin_ore",
+      "item": "indrev:tin_ore",
       "text": "主要由$(#999999)$(l)锡矿石$()构成， $(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()构成，有很多锡、$(#666666)$(l)铁$()、$(#FFA500)$(l)铜$()矿石以及石头、泥土和沙砾。"
     },
     {
