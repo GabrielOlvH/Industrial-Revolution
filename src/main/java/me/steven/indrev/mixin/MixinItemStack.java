@@ -52,19 +52,25 @@ public abstract class MixinItemStack {
     @Inject(method = "damage(ILjava/util/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z", at = @At("HEAD"), cancellable = true)
     private void useArmorEnergy1(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = (ItemStack) (Object) this;
-        extractEnergy(stack, amount);
-        cir.cancel();
+        //TODO: change check to IRRechargeable or EnergyHolder or make my own Tag to distinguish groups of items that damage energy instead
+        if (stack.getItem() instanceof IRModularArmor) { // only cancel if this is an IRModularArmor, all other items can be damaged.
+            extractEnergy(stack, amount);
+            cir.cancel();
+        }
     }
 
     @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
     private void useArmorEnergy2(int amount, LivingEntity entity, Consumer<LivingEntity> breakCallback, CallbackInfo ci) {
         ItemStack stack = (ItemStack) (Object) this;
-        extractEnergy(stack, amount);
-        ci.cancel();
+        //TODO: change check to IRRechargeable or EnergyHolder or make my own Tag to distinguish groups of items that damage energy instead
+        if (stack.getItem() instanceof IRModularArmor) { // only cancel if this is an IRModularArmor, all other items can be damaged.
+            extractEnergy(stack, amount);
+            ci.cancel();
+        }
     }
 
     private static void extractEnergy(ItemStack stack, int amount) {
-        if (stack.getItem() instanceof IRModularArmor) {
+        if (stack.getItem() instanceof EnergyHolder) {
             Energy.of(stack).extract(amount);
         }
     }
