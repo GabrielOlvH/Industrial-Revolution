@@ -22,32 +22,35 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
         if (blockEntity.renderWorkingArea) {
             val area = blockEntity.getWorkingArea()
             val state = IRRegistry.AREA_INDICATOR.defaultState
-            matrices?.push()
-            val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
-            val pos = blockEntity.pos
-            for (x in area.minX.toInt() until area.maxX.toInt())
-                for (y in area.minY.toInt() until area.maxY.toInt())
-                    for (z in area.minZ.toInt() until area.maxZ.toInt()) {
-                        val vec3d = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
-                        if (area.isSide(vec3d)) {
-                            val offsetX = pos.x - x.toDouble()
-                            val offsetY = y.toDouble() - pos.y
-                            val offsetZ = pos.z - z.toDouble()
-                            matrices?.translate(offsetX, offsetY, offsetZ)
-                            MinecraftClient.getInstance().blockRenderManager.renderBlock(
-                                state,
-                                pos,
-                                blockEntity.world,
-                                matrices,
-                                vertexConsumer,
-                                true,
-                                blockEntity.world?.random
-                            )
-                            matrices?.translate(-offsetX, -offsetY, -offsetZ)
+            matrices?.apply {
+                val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
+                val pos = blockEntity.pos
+                for (x in area.minX.toInt() until area.maxX.toInt())
+                    for (y in area.minY.toInt() until area.maxY.toInt())
+                        for (z in area.minZ.toInt() until area.maxZ.toInt()) {
+                            val vec3d = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
+                            if (area.isSide(vec3d)) {
+                                val offsetX = pos.x - x.toDouble()
+                                val offsetY = y.toDouble() - pos.y
+                                val offsetZ = pos.z - z.toDouble()
+                                push()
+                                translate(offsetX, offsetY, offsetZ)
+                                MinecraftClient.getInstance().blockRenderManager.renderBlock(
+                                    state,
+                                    pos,
+                                    blockEntity.world,
+                                    this,
+                                    vertexConsumer,
+                                    true,
+                                    blockEntity.world?.random
+                                )
+                                pop()
+                            }
                         }
-                    }
-            matrices?.pop()
+            }
         }
     }
+
+    override fun rendersOutsideBoundingBox(blockEntity: AOEMachineBlockEntity?): Boolean = true
 
 }

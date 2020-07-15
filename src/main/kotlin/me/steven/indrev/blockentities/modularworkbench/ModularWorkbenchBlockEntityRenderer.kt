@@ -41,23 +41,25 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     ) {
         val armor = entity?.inventoryController?.inventory?.getStack(2)
         if (armor?.isEmpty == false) {
-            matrices.push()
-            val yOffset = when ((armor.item as IRModularArmor).slotType) {
-                EquipmentSlot.HEAD -> 1.0
-                EquipmentSlot.CHEST -> 1.5
-                EquipmentSlot.LEGS -> 1.7
-                EquipmentSlot.FEET -> 2.0
-                else -> -1.0
-            }
-            matrices.translate(0.5, yOffset, 0.5)
-            matrices.multiply(
-                Vector3f.POSITIVE_Y.getDegreesQuaternion(
-                    270.0f * entity.animationProgress
+            matrices.apply {
+                push()
+                val yOffset = when ((armor.item as IRModularArmor).slotType) {
+                    EquipmentSlot.HEAD -> 1.0
+                    EquipmentSlot.CHEST -> 1.5
+                    EquipmentSlot.LEGS -> 1.7
+                    EquipmentSlot.FEET -> 2.0
+                    else -> -1.0
+                }
+                translate(0.5, yOffset, 0.5)
+                multiply(
+                    Vector3f.POSITIVE_Y.getDegreesQuaternion(
+                        270.0f * entity.animationProgress
+                    )
                 )
-            )
-            matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
-            renderArmor(matrices, vertexConsumers, armor)
-            matrices.pop()
+                multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
+                renderArmor(this, vertexConsumers, armor)
+                pop()
+            }
         }
     }
 

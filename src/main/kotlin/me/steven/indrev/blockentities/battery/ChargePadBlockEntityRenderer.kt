@@ -36,15 +36,17 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
                 Direction.Axis.Z -> x += 0.2
                 else -> return
             }
-            matrices?.push()
-            val time = entity.world?.time ?: 1
-            val offset = sin((time + tickDelta) / 16.0) / 32.0
-            matrices?.translate(x, 1.1 + offset, z)
-            matrices?.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
-            matrices?.scale(0.5f, 0.5f, 0.5f)
-            val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
-            MinecraftClient.getInstance().itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, lightAbove, overlay, matrices, vertexConsumers)
-            matrices?.pop()
+            matrices?.apply {
+                push()
+                val time = entity.world?.time ?: 1
+                val offset = sin((time + tickDelta) / 16.0) / 32.0
+                translate(x, 1.1 + offset, z)
+                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
+                scale(0.5f, 0.5f, 0.5f)
+                val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
+                MinecraftClient.getInstance().itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, lightAbove, overlay, this, vertexConsumers)
+                pop()
+            }
         }
     }
 }

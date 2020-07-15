@@ -22,18 +22,20 @@ class CableBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
         if (blockEntity?.cover != null) {
             val state = Registry.BLOCK.get(blockEntity.cover).defaultState
             if (state == Blocks.AIR.defaultState) return
-            matrices?.push()
-            val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
-            MinecraftClient.getInstance().blockRenderManager.renderBlock(
-                state,
-                blockEntity.pos,
-                blockEntity.world,
-                matrices,
-                vertexConsumer,
-                true,
-                blockEntity.world?.random
-            )
-            matrices?.pop()
+            matrices?.apply {
+                push()
+                val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
+                MinecraftClient.getInstance().blockRenderManager.renderBlock(
+                    state,
+                    blockEntity.pos,
+                    blockEntity.world,
+                    this,
+                    vertexConsumer,
+                    true,
+                    blockEntity.world?.random
+                )
+                pop()
+            }
         }
     }
 }
