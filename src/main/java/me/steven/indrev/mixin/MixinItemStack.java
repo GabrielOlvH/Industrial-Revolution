@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
 
 import java.util.Random;
 import java.util.UUID;
@@ -71,7 +70,7 @@ public abstract class MixinItemStack {
     }
 
     private static void extractEnergy(ItemStack stack, int amount) {
-        if (stack.getItem() instanceof EnergyHolder) {
+        if (Energy.valid(stack)) {
             Energy.of(stack).extract(amount);
         }
     }
