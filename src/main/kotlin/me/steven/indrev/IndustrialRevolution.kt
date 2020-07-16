@@ -58,8 +58,8 @@ object IndustrialRevolution : EnergyModInitializer() {
             val mode = InventoryController.Mode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
-                val blockEntity = world.getBlockEntity(pos)
-                if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
+                if (blockEntity.inventoryController != null) {
                     blockEntity.inventoryController!!.itemConfig[dir] = mode
                 }
             }

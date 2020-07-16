@@ -77,12 +77,11 @@ open class MachineBlock(
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult? {
-        val blockEntity = world.getBlockEntity(pos)
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.FAIL
         val stack = player?.mainHandStack
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
         else if (screenHandler != null
-            && blockEntity is MachineBlockEntity
             && blockEntity.inventoryController != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))?.ifPresent { syncId ->
                 blockEntity.viewers[player.uuid] = syncId
@@ -93,8 +92,8 @@ open class MachineBlock(
 
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos?, newState: BlockState, moved: Boolean) {
         if (!state.isOf(newState.block)) {
-            val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
+            val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return
+            if (blockEntity.inventoryController != null) {
                 ItemScatterer.spawn(world, pos, blockEntity.inventoryController!!.inventory)
                 world.updateComparators(pos, this)
             }
@@ -103,8 +102,8 @@ open class MachineBlock(
     }
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
-        val blockEntity = world?.getBlockEntity(pos)
-        if (blockEntity !is InventoryProvider) throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
+        val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider
+            ?: throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)
     }
 

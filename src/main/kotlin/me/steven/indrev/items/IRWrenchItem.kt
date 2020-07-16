@@ -78,8 +78,8 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             }
             Mode.CONFIGURE -> {
                 if (state?.block?.hasBlockEntity() == true) {
-                    val blockEntity = world?.getBlockEntity(pos)
-                    if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null && state.block is FacingMachineBlock) {
+                    val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.PASS
+                    if (blockEntity.inventoryController != null && state.block is FacingMachineBlock) {
                         player?.openHandledScreen(IRScreenHandlerFactory(::WrenchController, pos!!))
                     }
                 }

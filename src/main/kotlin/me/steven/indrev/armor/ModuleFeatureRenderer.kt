@@ -30,8 +30,8 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
 
     private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, light: Int, bipedEntityModel: A) {
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
-        val item = itemStack.item
-        if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR && item.slotType == equipmentSlot) {
+        val item = itemStack.item as? IRModularArmor ?: return
+        if (item.slotType == equipmentSlot) {
             (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
             setVisible(bipedEntityModel, equipmentSlot)
             val rgb = item.getColor(itemStack)

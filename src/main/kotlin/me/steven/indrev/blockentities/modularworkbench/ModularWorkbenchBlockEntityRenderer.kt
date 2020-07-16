@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.items.armor.IRModularArmor
@@ -71,24 +70,22 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         itemStack: ItemStack,
         light: Int
     ) {
-        val item = itemStack.item
-        if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR) {
-            val slotType = item.slotType
-            val bipedEntityModel = getArmor(slotType)
-            setVisible(slotType)
-            val rgb = item.getColor(itemStack)
-            val r = (rgb and 0xFF0000 shr 16) / 255f
-            val g = (rgb and 0xFF00 shr 8) / 255f
-            val b = (rgb and 0xFF) / 255f
-            renderArmorParts(
-                matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
-            )
-            Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
-                if (module != Module.COLOR) {
-                    renderArmorParts(
-                        matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
-                    )
-                }
+        val item = itemStack.item as? IRModularArmor ?: return
+        val slotType = item.slotType
+        val bipedEntityModel = getArmor(slotType)
+        setVisible(slotType)
+        val rgb = item.getColor(itemStack)
+        val r = (rgb and 0xFF0000 shr 16) / 255f
+        val g = (rgb and 0xFF00 shr 8) / 255f
+        val b = (rgb and 0xFF) / 255f
+        renderArmorParts(
+            matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
+        )
+        Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
+            if (module != Module.COLOR) {
+                renderArmorParts(
+                    matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
+                )
             }
         }
     }

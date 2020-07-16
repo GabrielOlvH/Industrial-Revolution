@@ -13,8 +13,8 @@ enum class Upgrade(val apply: (Double, Int) -> Double) {
         var count = 0
         for (i in provider.getUpgradeSlots()) {
             val invStack = inventory.getStack(i)
-            val item = invStack.item
-            if (item is IRUpgradeItem && item.upgrade == this) count++
+            val item = invStack.item as? IRUpgradeItem ?: continue
+            if (item.upgrade == this) count++
         }
         return apply(provider.getBaseValue(this), count)
     }

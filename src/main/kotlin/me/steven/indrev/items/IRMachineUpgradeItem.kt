@@ -27,22 +27,21 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
         if (world?.isClient == true) return ActionResult.PASS
         val blockPos = context?.blockPos
         var state = world?.getBlockState(blockPos)
-        val block = state?.block
-        val blockEntity = world?.getBlockEntity(blockPos)
-        if (block is MachineBlock && block.tier == from) {
-            if (blockEntity !is MachineBlockEntity || !blockEntity.registry.upgradeable) return ActionResult.PASS
+        val block = state?.block as? MachineBlock ?: return ActionResult.PASS
+        val blockEntity = world?.getBlockEntity(blockPos) as? MachineBlockEntity ?: return ActionResult.PASS
+        if (block.tier == from) {
+            if (!blockEntity.registry.upgradeable) return ActionResult.PASS
             state = blockEntity.registry.block(to).defaultState
             if (state.contains(VerticalFacingMachineBlock.FACING))
                 state = state.with(VerticalFacingMachineBlock.FACING, state[VerticalFacingMachineBlock.FACING])
             else if (state.contains(FacingMachineBlock.HORIZONTAL_FACING))
                 state = state.with(FacingMachineBlock.HORIZONTAL_FACING, state[FacingMachineBlock.HORIZONTAL_FACING])
             world.setBlockState(blockPos, state)
-            val upgradedBlockEntity = world.getBlockEntity(blockPos)
-            if (upgradedBlockEntity is MachineBlockEntity) {
-                upgradedBlockEntity.energy = blockEntity.energy
-                upgradedBlockEntity.inventoryController?.fromTag(blockEntity.inventoryController?.toTag(CompoundTag()))
-                upgradedBlockEntity.temperatureController?.fromTag(blockEntity.temperatureController?.toTag(CompoundTag()))
-            } else throw RuntimeException("This should never happen, what the fuck")
+            val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
+                ?: throw RuntimeException("This should never happen, what the fuck")
+            upgradedBlockEntity.energy = blockEntity.energy
+            upgradedBlockEntity.inventoryController?.fromTag(blockEntity.inventoryController?.toTag(CompoundTag()))
+            upgradedBlockEntity.temperatureController?.fromTag(blockEntity.temperatureController?.toTag(CompoundTag()))
             context.player?.getStackInHand(context.hand)?.decrement(1)
         }
         return super.useOnBlock(context)

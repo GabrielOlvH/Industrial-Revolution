@@ -278,12 +278,10 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (block is InventoryProvider) {
             return block.getInventory(blockState, world, pos)
         } else if (block?.hasBlockEntity() == true) {
-            val blockEntity = world?.getBlockEntity(pos)
-            if (blockEntity is Inventory) {
-                if (blockEntity is ChestBlockEntity && block is ChestBlock)
-                    return ChestBlock.getInventory(block, blockState, world, pos, true)
-                return blockEntity
-            }
+            val blockEntity = world?.getBlockEntity(pos) as? Inventory ?: return null
+            if (blockEntity is ChestBlockEntity && block is ChestBlock)
+                return ChestBlock.getInventory(block, blockState, world, pos, true)
+            return blockEntity
         }
         return null
     }
