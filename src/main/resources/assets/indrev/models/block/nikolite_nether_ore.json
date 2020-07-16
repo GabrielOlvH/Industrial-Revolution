@@ -1,8 +1,0 @@
-{
-  "parent": "indrev:block/ore",
-  "textures": {
-    "particle": "minecraft:block/netherrack",
-    "stone": "minecraft:block/netherrack",
-    "ore": "indrev:block/nikolite_ore"
-  }
-}

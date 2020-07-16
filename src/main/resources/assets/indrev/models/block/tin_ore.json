@@ -1,8 +1,6 @@
 {
-  "parent": "indrev:block/ore",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "particle": "minecraft:block/stone",
-    "stone": "minecraft:block/stone",
-    "ore": "indrev:block/tin_ore"
+    "all": "indrev:block/tin_ore"
   }
 }

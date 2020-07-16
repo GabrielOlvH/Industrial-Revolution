@@ -28,19 +28,13 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
         return this
     }
 
-    fun withOre(config: (String) -> IROreFeature): ResourceHelper {
+    fun withOre(config: (String) -> ConfiguredFeature<*, *>): ResourceHelper {
         ids.forEach {
             val ore =
                 Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
             val id = identifier("${it}_ore")
             Registry.register(Registry.BLOCK, id, ore)
             Registry.register(Registry.ITEM, id, BlockItem(ore, itemSettings()))
-
-            val netherOre =
-                Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
-            val netherId = identifier("${it}_nether_ore")
-            Registry.register(Registry.BLOCK, netherId, netherOre)
-            Registry.register(Registry.ITEM, netherId, BlockItem(netherOre, itemSettings()))
             oreFeatures.add(config(it))
         }
         return this
@@ -59,65 +53,43 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
 
     fun register() = block()
 
-    class IROreFeature(feature: (OreFeatureConfig.Target) -> ConfiguredFeature<*, *>) {
-        val overworldFeature = feature(OreFeatureConfig.Target.NATURAL_STONE)
-        val netherFeature: ConfiguredFeature<*, *>? = feature(OreFeatureConfig.Target.NETHER_ORE_REPLACEABLES)
-    }
-
     companion object {
-        private val oreFeatures = mutableListOf<IROreFeature>()
+        private val oreFeatures = mutableListOf<ConfiguredFeature<*, *>>()
         fun registerFeatures(biome: Biome) {
-
-            if (biome.category == Biome.Category.NETHER)
+            if (biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND)
                 oreFeatures.forEach {
-                    val netherFeature = it.netherFeature
-                    if (netherFeature != null)
-                        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, netherFeature)
+                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, it)
                 }
-            else
-                oreFeatures.forEach { biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, it.overworldFeature) }
         }
 
-        val COPPER_FEATURE: IROreFeature = IROreFeature { target ->
+        val COPPER_FEATURE: ConfiguredFeature<*, *> by lazy {
             Feature.ORE.configure(
                 OreFeatureConfig(
-                    target,
-                    if (target == OreFeatureConfig.Target.NETHER_ORE_REPLACEABLES)
-                        IRRegistry.COPPER_NETHER_ORE.defaultState
-                    else
-                        IRRegistry.COPPER_ORE.defaultState,
-                    10
-                )
-            )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 128)))
-        }
-
-        val TIN_FEATURE: IROreFeature = IROreFeature { target ->
-            Feature.ORE.configure(
-                OreFeatureConfig(
-                    target,
-                    if (target == OreFeatureConfig.Target.NETHER_ORE_REPLACEABLES)
-                        IRRegistry.TIN_NETHER_ORE.defaultState
-                    else
-                        IRRegistry.TIN_ORE.defaultState,
+                    OreFeatureConfig.Target.NATURAL_STONE,
+                    IRRegistry.COPPER_ORE.defaultState,
                     10
                 )
             )
                 .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 64)))
         }
 
-        val NIKOLITE_FEATURE: IROreFeature = IROreFeature { target ->
+
+        val TIN_FEATURE: ConfiguredFeature<*, *> by lazy {
             Feature.ORE.configure(
-                OreFeatureConfig(
-                    target,
-                    if (target == OreFeatureConfig.Target.NETHER_ORE_REPLACEABLES)
-                        IRRegistry.NIKOLITE_NETHER_ORE.defaultState
-                    else
-                        IRRegistry.NIKOLITE_ORE.defaultState,
+                OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, IRRegistry.TIN_ORE.defaultState, 10)
+            )
+                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 48)))
+        }
+
+        val NIKOLITE_FEATURE: ConfiguredFeature<*, *> by lazy {
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE,
+                    IRRegistry.NIKOLITE_ORE.defaultState,
                     10
                 )
             )
                 .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 64)))
         }
+
     }
 }

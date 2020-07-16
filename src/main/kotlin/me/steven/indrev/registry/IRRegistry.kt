@@ -24,7 +24,7 @@ import net.minecraft.util.registry.Registry
 object IRRegistry {
     fun registerAll() {
         ResourceHelper("copper", "tin") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "gear")
             withBlock()
             withOre { id ->
                 when (id) {
@@ -36,11 +36,11 @@ object IRRegistry {
         }.register()
 
         ResourceHelper("steel") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "gear")
             withBlock()
         }.register()
 
-        ResourceHelper("iron") { withItems("dust", "plate") }.register()
+        ResourceHelper("iron") { withItems("dust", "plate", "gear") }.register()
 
         ResourceHelper("diamond", "gold", "coal") { withItems("dust") }.register()
 
@@ -137,13 +137,10 @@ object IRRegistry {
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
-    val NIKOLITE_ORE = Registry.BLOCK.get(identifier("nikolite_ore"))
-    val NIKOLITE_NETHER_ORE = Registry.BLOCK.get(identifier("nikolite_nether_ore"))
-    val COPPER_ORE = Registry.BLOCK.get(identifier("copper_ore"))
-    val COPPER_NETHER_ORE = Registry.BLOCK.get(identifier("copper_nether_ore"))
-    val TIN_ORE = Registry.BLOCK.get(identifier("tin_ore"))
-    val TIN_NETHER_ORE = Registry.BLOCK.get(identifier("tin_nether_ore"))
-    val STEEL_INGOT = Registry.ITEM.get(identifier("steel_ingot"))
+    val NIKOLITE_ORE by lazy { Registry.BLOCK.get(identifier("nikolite_ore")) }
+    val COPPER_ORE by lazy { Registry.BLOCK.get(identifier("copper_ore")) }
+    val TIN_ORE by lazy { Registry.BLOCK.get(identifier("tin_ore")) }
+    val STEEL_INGOT by lazy { Registry.ITEM.get(identifier("steel_ingot")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
