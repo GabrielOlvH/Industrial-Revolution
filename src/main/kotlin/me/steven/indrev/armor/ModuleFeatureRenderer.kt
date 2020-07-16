@@ -43,6 +43,12 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
                     renderArmorParts(
                         matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, module.key
                     )
+                    if (module.hasOverlay) {
+                        // E M I S S I V E L I G H T S :yeefuckinghaw:
+                        renderArmorParts(
+                            matrices, vertexConsumers, 15728880, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, "${module.key}_overlay"
+                        )
+                    }
                 }
             }
         }

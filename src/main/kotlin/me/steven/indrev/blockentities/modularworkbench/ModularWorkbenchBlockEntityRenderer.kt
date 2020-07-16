@@ -9,6 +9,7 @@ import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.entity.model.BipedEntityModel
@@ -57,7 +58,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                     )
                 )
                 multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
-                renderArmor(this, vertexConsumers, armor)
+                val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
+                renderArmor(this, vertexConsumers, armor, lightMapCoords)
                 pop()
             }
         }
@@ -66,7 +68,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     private fun renderArmor(
         matrices: MatrixStack,
         vertexConsumers: VertexConsumerProvider,
-        itemStack: ItemStack
+        itemStack: ItemStack,
+        light: Int
     ) {
         val item = itemStack.item
         if (item is IRModularArmor && item.material == IRArmorMaterial.MODULAR) {
@@ -78,12 +81,12 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
             val g = (rgb and 0xFF00 shr 8) / 255f
             val b = (rgb and 0xFF) / 255f
             renderArmorParts(
-                matrices, vertexConsumers, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
+                matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
             )
             Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
                 if (module != Module.COLOR) {
                     renderArmorParts(
-                        matrices, vertexConsumers, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
+                        matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
                     )
                 }
             }
@@ -93,6 +96,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     private fun renderArmorParts(
         matrixStack: MatrixStack,
         vertexConsumerProvider: VertexConsumerProvider,
+        light: Int,
         armorItem: ArmorItem,
         hasGlint: Boolean,
         bipedEntityModel: BipedEntityModel<AbstractClientPlayerEntity>,
@@ -106,7 +110,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
             false,
             hasGlint
         )
-        bipedEntityModel.render(matrixStack, vertexConsumer, 15728640, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
+        bipedEntityModel.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 
     private fun getArmor(slot: EquipmentSlot): BipedEntityModel<AbstractClientPlayerEntity> {
