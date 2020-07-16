@@ -73,8 +73,9 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
         }.filter { stack -> Energy.valid(stack) }.map { stack -> Energy.of(stack) }
         val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
         val amount = sum / items.size.toDouble()
+        val chargePadHandler = Energy.of(blockEntity)
         items.forEach { handler ->
-            Energy.of(blockEntity).into(handler).move(amount)
+            chargePadHandler.into(handler).move(amount)
         }
     }
 
