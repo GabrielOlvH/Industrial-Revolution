@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks
 
+import com.google.common.collect.Iterables
 import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.utils.Tier
 import net.fabricmc.api.EnvType
@@ -8,6 +9,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
+import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
@@ -62,17 +64,17 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
     }
 
     override fun onEntityCollision(state: BlockState?, world: World?, pos: BlockPos?, entity: Entity?) {
-        if (entity is PlayerEntity) {
-            val blockEntity = world?.getBlockEntity(pos) as? ChargePadBlockEntity ?: return
-            ARMOR_SLOTS.forEach { slot ->
-                val stack = entity.inventory.getStack(slot)
-                if (Energy.valid(stack))
-                    Energy.of(blockEntity).into(Energy.of(stack)).move()
-            }
-            arrayOf(entity.mainHandStack, entity.offHandStack).forEach { stack ->
-                if (Energy.valid(stack))
-                    Energy.of(blockEntity).into(Energy.of(stack)).move()
-            }
+        val blockEntity = world?.getBlockEntity(pos) as? ChargePadBlockEntity ?: return
+        val items = when (entity) {
+            is PlayerEntity ->
+                Iterables.concat(ARMOR_SLOTS.map { slot -> entity.inventory.getStack(slot) }, mutableListOf(entity.mainHandStack, entity.offHandStack))
+            is ArmorStandEntity -> entity.itemsEquipped
+            else -> return
+        }.filter { stack -> Energy.valid(stack) }.map { stack -> Energy.of(stack) }
+        val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
+        val amount = sum / items.size.toDouble()
+        items.forEach { handler ->
+            Energy.of(blockEntity).into(handler).move(amount)
         }
     }
 
