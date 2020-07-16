@@ -351,5 +351,8 @@
   "text.autoconfig.indrev.category.upgrades": "Upgrades",
   "text.autoconfig.indrev.option.upgrades.speedUpgradeModifier": "Speed Upgrade Modifier",
   "text.autoconfig.indrev.option.upgrades.energyUpgradeModifier": "Energy Upgrade Modifier",
-  "text.autoconfig.indrev.option.upgrades.bufferUpgradeModifier": "Buffer Upgrade Modifier"
+  "text.autoconfig.indrev.option.upgrades.bufferUpgradeModifier": "Buffer Upgrade Modifier",
+  "text.autoconfig.indrev.category.compatibility": "Compatibility",
+  "text.autoconfig.indrev.option.compatibility.targetModId": "Target Mod Id",
+  "text.autoconfig.indrev.option.compatibility.@Tooltip": "This mod id will make the recipes attempt to output items such as dusts and plates of the target mod."
 }

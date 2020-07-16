@@ -2,6 +2,7 @@ package me.steven.indrev.recipes
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.ItemStack
@@ -36,7 +37,12 @@ class IRSmeltingRecipe(
                 val ingredient = Ingredient.fromJson(jsonElement as JsonElement)
                 val itemPath = jsonObject.get("result").asString
                 val item =
-                    getFirstMatch(arrayOf(Identifier("techreborn", itemPath), identifier(itemPath)), Registry.ITEM)
+                    getFirstMatch(
+                        arrayOf(
+                            Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                            identifier(itemPath)
+                        ), Registry.ITEM
+                    )
                 val itemStack = ItemStack { item }
                 val f = JsonHelper.getFloat(jsonObject, "experience", 0.0f)
                 val i = JsonHelper.getInt(jsonObject, "cookingtime", 200)

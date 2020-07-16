@@ -3,6 +3,7 @@ package me.steven.indrev.recipes
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.Item
@@ -53,8 +54,12 @@ class IRShapelessRecipe(
                     else -> {
                         val itemPath = jsonObject.get("result").asJsonObject.get("item").asString
                         val item = getFirstMatch(
-                            arrayOf(Identifier("techreborn", itemPath), identifier(itemPath)),
-                            Registry.ITEM
+                            arrayOf(
+                                Identifier(
+                                    IndustrialRevolution.CONFIG.compatibility.targetModId,
+                                    itemPath
+                                ), identifier(itemPath)
+                            ), Registry.ITEM
                         )
                         val itemStack = getItemStack(JsonHelper.getObject(jsonObject, "result"), item)
                         ShapelessRecipe(identifier, string, itemStack, defaultedList)

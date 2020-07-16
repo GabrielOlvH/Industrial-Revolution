@@ -1,6 +1,7 @@
 package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
@@ -55,7 +56,12 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 val result = json.get("output").asJsonObject
                 val itemPath = result.get("item").asString
                 val item =
-                    getFirstMatch(arrayOf(Identifier("techreborn", itemPath), identifier(itemPath)), Registry.ITEM)
+                    getFirstMatch(
+                        arrayOf(
+                            Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                            identifier(itemPath)
+                        ), Registry.ITEM
+                    )
                 val output = ItemStack { item }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
@@ -63,8 +69,12 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                     val extra = json.getAsJsonObject("extra")
                     val extraItemPath = extra.get("item").asString
                     val extraItem = getFirstMatch(
-                        arrayOf(Identifier("techreborn", extraItemPath), identifier(extraItemPath)),
-                        Registry.ITEM
+                        arrayOf(
+                            Identifier(
+                                IndustrialRevolution.CONFIG.compatibility.targetModId,
+                                extraItemPath
+                            ), identifier(extraItemPath)
+                        ), Registry.ITEM
                     )
                     val extraOutputStack = ItemStack { extraItem }
                     val chance = extra.get("chance").asDouble
