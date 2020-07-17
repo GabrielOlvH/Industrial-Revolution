@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
@@ -23,13 +24,14 @@ import net.minecraft.util.registry.Registry
 
 object IRRegistry {
     fun registerAll() {
+        val oregen = IndustrialRevolution.CONFIG.oregen
         ResourceHelper("copper", "tin") {
             withItems("dust", "ingot", "plate", "gear")
             withBlock()
             withOre { id ->
                 when (id) {
-                    "tin" -> ResourceHelper.TIN_FEATURE
-                    "copper" -> ResourceHelper.COPPER_FEATURE
+                    "tin" -> if (oregen.tin) ResourceHelper.TIN_FEATURE else null
+                    "copper" -> if (oregen.copper) ResourceHelper.COPPER_FEATURE else null
                     else -> error("no feature configured for $id")
                 }
             }
@@ -46,7 +48,7 @@ object IRRegistry {
 
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre { ResourceHelper.NIKOLITE_FEATURE }
+            withOre { if (oregen.nikolite) ResourceHelper.NIKOLITE_FEATURE else null }
         }.register()
 
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()

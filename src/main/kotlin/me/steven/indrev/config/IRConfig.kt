@@ -30,6 +30,10 @@ class IRConfig : PartitioningSerializer.GlobalData() {
     @ConfigEntry.Gui.TransitiveObject
     val compatibility: Compatibility = Compatibility()
 
+    @ConfigEntry.Category(value = "oregen")
+    @ConfigEntry.Gui.TransitiveObject
+    val oregen: OreGen = OreGen()
+
 }
 
 @Config(name = "generators")
@@ -120,13 +124,14 @@ class Machines : ConfigData {
     val miner: MachineConfig = MachineConfig(64.0, 0.3, 50000.0, Tier.MK4.io)
 }
 
+// this is so auto config actually generates the config properly
 class HeatMachineConfig(
-    energyCost: Double,
-    processSpeed: Double,
+    private val energyCost1: Double,
+    private val processSpeed1: Double,
     val processTemperatureBoost: Double,
-    maxEnergyStored: Double,
-    maxInput: Double
-) : MachineConfig(energyCost, processSpeed, maxEnergyStored, maxInput)
+    private val maxEnergyStored1: Double,
+    private val maxInput1: Double
+) : MachineConfig(energyCost1, processSpeed1, maxEnergyStored1, maxInput1)
 
 open class MachineConfig(
     val energyCost: Double,
@@ -162,4 +167,11 @@ class Upgrades : ConfigData {
 @Config(name = "compat")
 class Compatibility : ConfigData {
     val targetModId: String = ""
+}
+
+@Config(name = "oregen")
+class OreGen : ConfigData {
+    val copper = true
+    val tin = true
+    val nikolite = true
 }

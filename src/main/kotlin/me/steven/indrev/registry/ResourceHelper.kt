@@ -28,14 +28,16 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
         return this
     }
 
-    fun withOre(config: (String) -> ConfiguredFeature<*, *>): ResourceHelper {
+    fun withOre(config: (String) -> ConfiguredFeature<*, *>?): ResourceHelper {
         ids.forEach {
             val ore =
                 Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
             val id = identifier("${it}_ore")
             Registry.register(Registry.BLOCK, id, ore)
             Registry.register(Registry.ITEM, id, BlockItem(ore, itemSettings()))
-            oreFeatures.add(config(it))
+            val feature = config(it)
+            if (feature != null)
+                oreFeatures.add(feature)
         }
         return this
     }
