@@ -50,12 +50,9 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                     EquipmentSlot.FEET -> 2.0
                     else -> -1.0
                 }
+                val time = entity.world?.time ?: 1
                 translate(0.5, yOffset, 0.5)
-                multiply(
-                    Vector3f.POSITIVE_Y.getDegreesQuaternion(
-                        270.0f * entity.animationProgress
-                    )
-                )
+                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
                 multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
                 val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
                 renderArmor(this, vertexConsumers, armor, lightMapCoords)
