@@ -42,6 +42,7 @@ object IRLootTables {
         IRRegistry.YELLOW_MODULE_ITEM,
         IRRegistry.ORANGE_MODULE_ITEM,
         IRRegistry.BLUE_MODULE_ITEM,
+        IRRegistry.BLACK_MODULE_ITEM,
         IRRegistry.BROWN_MODULE_ITEM
     )
 }
