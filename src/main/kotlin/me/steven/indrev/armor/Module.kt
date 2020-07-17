@@ -13,7 +13,7 @@ enum class Module(
     val hasOverlay: Boolean,
     val apply: (ServerPlayerEntity, ItemStack, Int) -> Boolean = { _, _, _ -> false }
 ) {
-    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, false, { player, _, _ ->
+    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, { player, _, _ ->
         player.addStatusEffect(StatusEffectInstance(StatusEffects.NIGHT_VISION, 200, 0))
         true
     }),
@@ -36,7 +36,7 @@ enum class Module(
         "protection",
         arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET),
         3,
-        false
+        true
     ),
     COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1, false);
 
