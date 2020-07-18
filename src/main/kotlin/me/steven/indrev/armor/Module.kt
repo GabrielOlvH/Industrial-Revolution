@@ -13,13 +13,13 @@ enum class Module(
     val hasOverlay: Boolean,
     val apply: (ServerPlayerEntity, Int) -> StatusEffectInstance? = { _, _ -> null }
 ) {
-    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, { player, _ ->
+    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, { _, _ ->
         StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000000, 0, false, false)
     }),
-    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, false, { player, level ->
+    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, false, { _, level ->
         StatusEffectInstance(StatusEffects.SPEED, 200, level - 1, false, false)
     }),
-    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, false, { player, level ->
+    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, false, { _, level ->
         StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, level - 1, false, false)
     }),
     BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, false, { player, level ->
