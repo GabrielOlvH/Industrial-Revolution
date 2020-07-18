@@ -11,25 +11,22 @@ enum class Module(
     val slots: Array<EquipmentSlot>,
     val maxLevel: Int,
     val hasOverlay: Boolean,
-    val apply: (ServerPlayerEntity, ItemStack, Int) -> Boolean = { _, _, _ -> false }
+    val apply: (ServerPlayerEntity, Int) -> StatusEffectInstance? = { _, _ -> null }
 ) {
-    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, { player, _, _ ->
-        player.addStatusEffect(StatusEffectInstance(StatusEffects.NIGHT_VISION, 200, 0))
-        true
+    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, { player, _ ->
+        StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000000, 0, false, false)
     }),
-    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, false, { player, _, level ->
-        player.addStatusEffect(StatusEffectInstance(StatusEffects.SPEED, 200, level - 1))
-        true
+    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, false, { player, level ->
+        StatusEffectInstance(StatusEffects.SPEED, 200, level - 1, false, false)
     }),
-    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, false, { player, _, level ->
-        player.addStatusEffect(StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, level - 1))
-        true
+    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, false, { player, level ->
+        StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, level - 1, false, false)
     }),
-    BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, false, { player, _, level ->
-        if (player.isSubmergedInWater) {
-            player.addStatusEffect(StatusEffectInstance(StatusEffects.WATER_BREATHING, 200, level - 1))
-            true
-        } else false
+    BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, false, { player, level ->
+        if (player.isSubmergedInWater)
+            StatusEffectInstance(StatusEffects.WATER_BREATHING, 200, level - 1, false, false)
+        else
+            null
     }),
     FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 3, false),
     PROTECTION(
