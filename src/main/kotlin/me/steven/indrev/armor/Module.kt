@@ -17,14 +17,14 @@ enum class Module(
         StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000000, 0, false, false)
     }),
     SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, false, { _, level ->
-        StatusEffectInstance(StatusEffects.SPEED, 200, level - 1, false, false)
+        StatusEffectInstance(StatusEffects.SPEED, 1000000, level - 1, false, false)
     }),
     JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, false, { _, level ->
-        StatusEffectInstance(StatusEffects.JUMP_BOOST, 200, level - 1, false, false)
+        StatusEffectInstance(StatusEffects.JUMP_BOOST, 1000000, level - 1, false, false)
     }),
     BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, false, { player, level ->
         if (player.isSubmergedInWater)
-            StatusEffectInstance(StatusEffects.WATER_BREATHING, 200, level - 1, false, false)
+            StatusEffectInstance(StatusEffects.WATER_BREATHING, 1000000, level - 1, false, false)
         else
             null
     }),
