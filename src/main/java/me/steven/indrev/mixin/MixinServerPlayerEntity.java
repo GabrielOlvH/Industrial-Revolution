@@ -44,8 +44,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                     for (Module module : upgrades) {
                         int level = Module.Companion.getLevel(itemStack, module);
                         StatusEffectInstance effect = module.getApply().invoke(player, level);
-                        if (effect != null && !player.hasStatusEffect(effect.getEffectType()) && Energy.of(itemStack).use(1.5)) {
-                            player.addStatusEffect(effect);
+                        if (effect != null && Energy.of(itemStack).use(1.5)) {
+                            if (!player.hasStatusEffect(effect.getEffectType()))
+                                player.addStatusEffect(effect);
                             appliedEffects.add(module);
                             effectsToRemove.remove(module);
                         }
