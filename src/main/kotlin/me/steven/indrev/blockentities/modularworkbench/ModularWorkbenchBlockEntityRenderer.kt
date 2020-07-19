@@ -41,7 +41,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     ) {
         val armor = entity?.inventoryController?.inventory?.getStack(2)
         if (armor?.isEmpty == false) {
-            matrices.apply {
+            matrices.run {
                 push()
                 val yOffset = when ((armor.item as IRModularArmor).slotType) {
                     EquipmentSlot.HEAD -> 1.0

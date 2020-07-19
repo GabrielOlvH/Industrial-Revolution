@@ -22,7 +22,7 @@ class CableBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
         if (blockEntity?.cover != null) {
             val state = Registry.BLOCK.get(blockEntity.cover).defaultState
             if (state == Blocks.AIR.defaultState) return
-            matrices?.apply {
+            matrices?.run {
                 push()
                 val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
                 MinecraftClient.getInstance().blockRenderManager.renderBlock(

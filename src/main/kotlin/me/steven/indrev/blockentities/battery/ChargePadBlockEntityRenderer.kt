@@ -36,7 +36,7 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
                 Direction.Axis.Z -> x += 0.2
                 else -> return
             }
-            matrices?.apply {
+            matrices?.run {
                 push()
                 val time = entity.world?.time ?: 1
                 val offset = sin((time + tickDelta) / 16.0) / 32.0

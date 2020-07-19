@@ -22,7 +22,7 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
         if (blockEntity.renderWorkingArea) {
             val area = blockEntity.getWorkingArea()
             val state = IRRegistry.AREA_INDICATOR.defaultState
-            matrices?.apply {
+            matrices?.run {
                 val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
                 val pos = blockEntity.pos
                 for (x in area.minX.toInt() until area.maxX.toInt())

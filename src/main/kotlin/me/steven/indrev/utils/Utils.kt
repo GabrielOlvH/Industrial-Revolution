@@ -130,7 +130,7 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     RenderSystem.enableBlend()
     RenderSystem.disableTexture()
     RenderSystem.defaultBlendFunc()
-    Tessellator.getInstance().buffer.apply {
+    Tessellator.getInstance().buffer.run {
         begin(7, VertexFormats.POSITION_COLOR)
         vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
         vertex(matrix, xx1, yy2, 0.0f).color(g1, h1, k1, f1).next()
