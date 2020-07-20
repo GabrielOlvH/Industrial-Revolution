@@ -72,7 +72,7 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
                     10
                 )
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 64)))
+                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 64)))
         }
 
 
@@ -80,17 +80,18 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, IRRegistry.TIN_ORE.defaultState, 10)
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 48)))
+                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 48)))
         }
 
         val NIKOLITE_FEATURE: ConfiguredFeature<*, *> by lazy {
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE,
+                OreFeatureConfig(
+                    OreFeatureConfig.Target.NATURAL_STONE,
                     IRRegistry.NIKOLITE_ORE.defaultState,
-                    10
+                    7
                 )
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(20, 0, 0, 64)))
+                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 16)))
         }
 
     }
