@@ -6,8 +6,8 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.Material
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
+import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.*
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
@@ -17,39 +17,46 @@ import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 
-class ResourceHelper(private vararg val ids: String, private val block: ResourceHelper.() -> Unit) {
+class ResourceHelper(private val id: String, private val block: ResourceHelper.() -> Unit) {
 
     fun withItems(vararg variants: String): ResourceHelper {
         variants.forEach { variant ->
-            ids.forEach { id ->
-                Registry.register(Registry.ITEM, identifier("${id}_$variant"), Item(itemSettings()))
-            }
+            Registry.register(Registry.ITEM, identifier("${id}_$variant"), Item(itemSettings()))
         }
         return this
     }
 
-    fun withOre(config: (String) -> ConfiguredFeature<*, *>?): ResourceHelper {
-        ids.forEach {
-            val ore =
-                Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
-            val id = identifier("${it}_ore")
-            Registry.register(Registry.BLOCK, id, ore)
-            Registry.register(Registry.ITEM, id, BlockItem(ore, itemSettings()))
-            val feature = config(it)
-            if (feature != null)
-                oreFeatures.add(feature)
-        }
+    fun withOre(feature: ConfiguredFeature<*, *>?): ResourceHelper {
+        val ore =
+            Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
+        val identifier = identifier("${id}_ore")
+        Registry.register(Registry.BLOCK, identifier, ore)
+        Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
+        if (feature != null)
+            oreFeatures.add(feature)
         return this
+    }
+
+    fun withTools(pickaxe: PickaxeItem, axe: AxeItem, shovel: ShovelItem, swordItem: SwordItem) {
+        Registry.register(Registry.ITEM, identifier("${id}_pickaxe"), pickaxe)
+        Registry.register(Registry.ITEM, identifier("${id}_axe"), axe)
+        Registry.register(Registry.ITEM, identifier("${id}_shovel"), shovel)
+        Registry.register(Registry.ITEM, identifier("${id}_sword"), swordItem)
+    }
+
+    fun withArmor(material: ArmorMaterial) {
+        Registry.register(Registry.ITEM, identifier("${id}_helmet"), ArmorItem(material, EquipmentSlot.HEAD, itemSettings()))
+        Registry.register(Registry.ITEM, identifier("${id}_chestplate"), ArmorItem(material, EquipmentSlot.CHEST, itemSettings()))
+        Registry.register(Registry.ITEM, identifier("${id}_leggings"), ArmorItem(material, EquipmentSlot.LEGS, itemSettings()))
+        Registry.register(Registry.ITEM, identifier("${id}_boots"), ArmorItem(material, EquipmentSlot.FEET, itemSettings()))
     }
 
     fun withBlock(): ResourceHelper {
-        ids.forEach {
-            val block =
-                Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(5f, 6f))
-            val id = identifier("${it}_block")
-            Registry.register(Registry.BLOCK, id, block)
-            Registry.register(Registry.ITEM, id, BlockItem(block, itemSettings()))
-        }
+        val block =
+            Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(5f, 6f))
+        val id = identifier("${id}_block")
+        Registry.register(Registry.BLOCK, id, block)
+        Registry.register(Registry.ITEM, id, BlockItem(block, itemSettings()))
         return this
     }
 

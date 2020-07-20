@@ -10,8 +10,13 @@ import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.tools.IRBasicAxe
+import me.steven.indrev.items.tools.IRBasicPickaxe
+import me.steven.indrev.items.tools.IRBasicShovel
+import me.steven.indrev.items.tools.IRBasicSword
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
@@ -25,33 +30,50 @@ import net.minecraft.util.registry.Registry
 object IRRegistry {
     fun registerAll() {
         val oregen = IndustrialRevolution.CONFIG.oregen
-        ResourceHelper("copper", "tin") {
+        ResourceHelper("tin") {
             withItems("dust", "ingot", "plate", "gear")
             withBlock()
-            withOre { id ->
-                when (id) {
-                    "tin" -> if (oregen.tin) ResourceHelper.TIN_FEATURE else null
-                    "copper" -> if (oregen.copper) ResourceHelper.COPPER_FEATURE else null
-                    else -> error("no feature configured for $id")
-                }
-            }
+            withOre(if (oregen.tin) ResourceHelper.TIN_FEATURE else null)
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.TIN, 1, -2.8f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.TIN, 6f, -3.1f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.TIN, 1.5f, -3f, itemSettings()),
+                IRBasicSword(IRToolMaterial.TIN, 3, -3.4f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.TIN)
         }.register()
-
+        ResourceHelper("copper") {
+            withItems("dust", "ingot", "plate", "gear")
+            withBlock()
+            withOre(if (oregen.copper) ResourceHelper.COPPER_FEATURE else null)
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.COPPER, 1, -2.8f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.COPPER, 6f, -3.1f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.COPPER, 1.5f, -3f, itemSettings()),
+                IRBasicSword(IRToolMaterial.COPPER, 3, -3.4f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.COPPER)
+        }.register()
         ResourceHelper("steel") {
             withItems("dust", "ingot", "plate", "gear")
             withBlock()
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.STEEL, 6f, -3.1f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.STEEL, 1.5f, -3f, itemSettings()),
+                IRBasicSword(IRToolMaterial.STEEL, 3, -3.4f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.STEEL)
         }.register()
-
         ResourceHelper("iron") { withItems("dust", "plate", "gear") }.register()
-
-        ResourceHelper("diamond", "gold", "coal") { withItems("dust") }.register()
-
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre { if (oregen.nikolite) ResourceHelper.NIKOLITE_FEATURE else null }
+            withOre(if (oregen.nikolite) ResourceHelper.NIKOLITE_FEATURE else null)
         }.register()
-
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
+        ResourceHelper("diamond") { withItems("dust") }.register()
+        ResourceHelper("gold") { withItems("dust") }.register()
+        ResourceHelper("coal") { withItems("dust") }.register()
 
         Registry.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }
         RegistryEntryAddedCallback.event(Registry.BIOME)
@@ -106,11 +128,6 @@ object IRRegistry {
 
         identifier("tech_soup").item(TECH_SOUP)
 
-        identifier("steel_helmet").item(STEEL_ARMOR_HELMET)
-        identifier("steel_chestplate").item(STEEL_ARMOR_CHESTPLATE)
-        identifier("steel_leggings").item(STEEL_ARMOR_LEGGINGS)
-        identifier("steel_boots").item(STEEL_ARMOR_BOOTS)
-
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
@@ -143,6 +160,8 @@ object IRRegistry {
     val COPPER_ORE by lazy { Registry.BLOCK.get(identifier("copper_ore")) }
     val TIN_ORE by lazy { Registry.BLOCK.get(identifier("tin_ore")) }
     val STEEL_INGOT by lazy { Registry.ITEM.get(identifier("steel_ingot")) }
+    val COPPER_INGOT by lazy { Registry.ITEM.get(identifier("copper_ingot")) }
+    val TIN_INGOT by lazy { Registry.ITEM.get(identifier("tin_ingot")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
@@ -183,11 +202,6 @@ object IRRegistry {
     val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
-
-    val STEEL_ARMOR_HELMET = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.HEAD, itemSettings())
-    val STEEL_ARMOR_CHESTPLATE = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.CHEST, itemSettings())
-    val STEEL_ARMOR_LEGGINGS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.LEGS, itemSettings())
-    val STEEL_ARMOR_BOOTS = ArmorItem(IRArmorMaterial.STEEL, EquipmentSlot.FEET, itemSettings())
 
     val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000))
     val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000))
