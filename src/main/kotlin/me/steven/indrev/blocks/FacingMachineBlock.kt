@@ -34,10 +34,10 @@ open class FacingMachineBlock(
         builder?.add(HORIZONTAL_FACING)
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity) {
-            val direction = state[HORIZONTAL_FACING]
+            val direction = state?.get(HORIZONTAL_FACING) ?: return
             val inventoryController = blockEntity.inventoryController ?: return
             val itemConfig = inventoryController.itemConfig
             itemConfig[direction.rotateYClockwise()] = InventoryController.Mode.INPUT

@@ -5,6 +5,7 @@ import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.IRMachineUpgradeItem
 import me.steven.indrev.items.IRWrenchItem
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.getShortEnergyDisplay
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -13,14 +14,18 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SidedInventory
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.text.LiteralText
@@ -67,6 +72,9 @@ open class MachineBlock(
         options: TooltipContext?
     ) {
         tooltip?.add(TranslatableText("block.machines.tooltip.io", LiteralText("${tier.io} LF/tick").formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
+        val infoTag = stack?.getSubTag("MachineInfo") ?: return
+        val energy = infoTag.getDouble("Energy")
+        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE).append(LiteralText(": ${getShortEnergyDisplay(energy)} LF").formatted(Formatting.WHITE)))
     }
 
     override fun onUse(
@@ -98,6 +106,38 @@ open class MachineBlock(
                 world.updateComparators(pos, this)
             }
             super.onStateReplaced(state, world, pos, newState, moved)
+        }
+    }
+
+    override fun afterBreak(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
+        player?.incrementStat(Stats.MINED.getOrCreateStat(this))
+        player?.addExhaustion(0.005f)
+        if (world is ServerWorld) {
+            getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
+                val item = stack.item
+                if (blockEntity is MachineBlockEntity && item is BlockItem && item.block is MachineBlock) {
+                    val tag = stack.getOrCreateSubTag("MachineInfo")
+                    tag.putDouble("Energy", blockEntity.energy)
+                    val temperatureController = blockEntity.temperatureController
+                    if (temperatureController != null)
+                        tag.putDouble("Temperature", temperatureController.temperature)
+                }
+                dropStack(world, pos, stack)
+            }
+        }
+        state!!.onStacksDropped(world, pos, toolStack)
+    }
+
+    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+        super.onPlaced(world, pos, state, placer, itemStack)
+        val tag = itemStack?.getSubTag("MachineInfo") ?: return
+        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return
+        val temperatureController = blockEntity.temperatureController
+        val energy = tag.getDouble("Energy")
+        blockEntity.energy = energy
+        if (temperatureController != null) {
+            val temperature = tag.getDouble("Temperature")
+            temperatureController.temperature = temperature
         }
     }
 
