@@ -67,7 +67,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
         val blockEntity = world?.getBlockEntity(pos) as? ChargePadBlockEntity ?: return
         val items = when (entity) {
             is PlayerEntity ->
-                Iterables.concat(ARMOR_SLOTS.map { slot -> entity.inventory.getStack(slot) }, mutableListOf(entity.mainHandStack, entity.offHandStack))
+                Iterables.concat(entity.inventory.armor, mutableListOf(entity.mainHandStack, entity.offHandStack))
             is ArmorStandEntity -> entity.itemsEquipped
             else -> return
         }.filter { stack -> Energy.valid(stack) }.map { stack -> Energy.of(stack) }
@@ -89,7 +89,6 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
     }
 
     companion object {
-        val ARMOR_SLOTS = intArrayOf(39, 38, 37, 36)
         private val FACING_NORTH = Stream.of(
             createCuboidShape(1.0, 0.0, 1.0, 15.0, 0.1, 15.0),
             createCuboidShape(1.25, 0.0, 1.25, 14.75, 0.3, 14.75),
