@@ -4,6 +4,7 @@ import me.steven.indrev.utils.asString
 import me.steven.indrev.utils.getChunkPos
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinType
+import me.steven.indrev.world.chunkveins.VeinPicker
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
@@ -56,10 +57,8 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                         { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
                         WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
-                val type = ChunkVeinType
-                    .values()
-                    .filter { it.dimension == world.registryKey }
-                    .random(rnd)
+                val biome = world.getBiome(user?.blockPos)
+                val type = VeinPicker.getList(biome).pickRandom(world.random)
                 val data = ChunkVeinData(type, type.sizeRange.random(rnd))
                 state.veins[chunkPos] = data
                 state.markDirty()
