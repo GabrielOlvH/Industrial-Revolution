@@ -10,10 +10,7 @@ import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
-import me.steven.indrev.items.tools.IRBasicAxe
-import me.steven.indrev.items.tools.IRBasicPickaxe
-import me.steven.indrev.items.tools.IRBasicShovel
-import me.steven.indrev.items.tools.IRBasicSword
+import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
@@ -38,7 +35,8 @@ object IRRegistry {
                 IRBasicPickaxe(IRToolMaterial.TIN, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.TIN, 6f, -3.1f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.TIN, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.TIN, 3, -3.4f, itemSettings())
+                IRBasicSword(IRToolMaterial.TIN, 3, -3.4f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.TIN, -2, -1.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.TIN)
         }.register()
@@ -50,7 +48,8 @@ object IRRegistry {
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 6f, -3.1f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.COPPER, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.COPPER, 3, -3.4f, itemSettings())
+                IRBasicSword(IRToolMaterial.COPPER, 3, -3.4f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.COPPER, -2, -1.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.COPPER)
         }.register()
@@ -61,7 +60,8 @@ object IRRegistry {
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.STEEL, 6f, -3.1f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.STEEL, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.STEEL, 3, -3.4f, itemSettings())
+                IRBasicSword(IRToolMaterial.STEEL, 3, -3.4f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.STEEL, -2, -1.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()

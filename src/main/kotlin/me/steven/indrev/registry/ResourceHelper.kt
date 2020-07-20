@@ -37,11 +37,12 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
         return this
     }
 
-    fun withTools(pickaxe: PickaxeItem, axe: AxeItem, shovel: ShovelItem, swordItem: SwordItem) {
+    fun withTools(pickaxe: PickaxeItem, axe: AxeItem, shovel: ShovelItem, sword: SwordItem, hoe: HoeItem) {
         Registry.register(Registry.ITEM, identifier("${id}_pickaxe"), pickaxe)
         Registry.register(Registry.ITEM, identifier("${id}_axe"), axe)
         Registry.register(Registry.ITEM, identifier("${id}_shovel"), shovel)
-        Registry.register(Registry.ITEM, identifier("${id}_sword"), swordItem)
+        Registry.register(Registry.ITEM, identifier("${id}_sword"), sword)
+        Registry.register(Registry.ITEM, identifier("${id}_hoe"), hoe)
     }
 
     fun withArmor(material: ArmorMaterial) {
