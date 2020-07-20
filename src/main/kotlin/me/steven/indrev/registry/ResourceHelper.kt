@@ -91,7 +91,7 @@ class ResourceHelper(private vararg val ids: String, private val block: Resource
                     7
                 )
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 16)))
+                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(10, 0, 0, 16)))
         }
 
     }
