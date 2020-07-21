@@ -56,26 +56,31 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 val result = json.get("output").asJsonObject
                 val itemPath = result.get("item").asString
                 val item =
-                    getFirstMatch(
-                        arrayOf(
-                            Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
-                            identifier(itemPath)
-                        ), Registry.ITEM
-                    )
+                    if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
+                    else
+                        getFirstMatch(
+                            arrayOf(
+                                Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                                identifier(itemPath)
+                            ), Registry.ITEM
+                        )
                 val output = ItemStack { item }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
                 return if (json.has("extra")) {
                     val extra = json.getAsJsonObject("extra")
                     val extraItemPath = extra.get("item").asString
-                    val extraItem = getFirstMatch(
-                        arrayOf(
-                            Identifier(
-                                IndustrialRevolution.CONFIG.compatibility.targetModId,
-                                extraItemPath
-                            ), identifier(extraItemPath)
-                        ), Registry.ITEM
-                    )
+                    val extraItem =
+                        if (itemPath.contains(":")) Registry.ITEM.get(Identifier(extraItemPath))
+                        else
+                            getFirstMatch(
+                                arrayOf(
+                                    Identifier(
+                                        IndustrialRevolution.CONFIG.compatibility.targetModId,
+                                        extraItemPath
+                                    ), identifier(extraItemPath)
+                                ), Registry.ITEM
+                            )
                     val extraOutputStack = ItemStack { extraItem }
                     val chance = extra.get("chance").asDouble
                     PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)

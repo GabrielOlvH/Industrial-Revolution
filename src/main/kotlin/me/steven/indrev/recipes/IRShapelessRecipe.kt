@@ -53,14 +53,15 @@ class IRShapelessRecipe(
                     }
                     else -> {
                         val itemPath = jsonObject.get("result").asJsonObject.get("item").asString
-                        val item = getFirstMatch(
-                            arrayOf(
-                                Identifier(
-                                    IndustrialRevolution.CONFIG.compatibility.targetModId,
-                                    itemPath
-                                ), identifier(itemPath)
-                            ), Registry.ITEM
-                        )
+                        val item =
+                            if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
+                            else
+                                getFirstMatch(
+                                    arrayOf(
+                                        Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                                        identifier(itemPath)
+                                    ), Registry.ITEM
+                                )
                         val itemStack = getItemStack(JsonHelper.getObject(jsonObject, "result"), item)
                         ShapelessRecipe(identifier, string, itemStack, defaultedList)
                     }

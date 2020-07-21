@@ -50,12 +50,14 @@ class CompressorRecipe(private val id: Identifier, val processTime: Int, private
                 val result = json.get("output").asJsonObject
                 val itemPath = result.get("item").asString
                 val item =
-                    getFirstMatch(
-                        arrayOf(
-                            Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
-                            identifier(itemPath)
-                        ), Registry.ITEM
-                    )
+                    if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
+                    else
+                        getFirstMatch(
+                            arrayOf(
+                                Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                                identifier(itemPath)
+                            ), Registry.ITEM
+                        )
                 val output = ItemStack { item }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
