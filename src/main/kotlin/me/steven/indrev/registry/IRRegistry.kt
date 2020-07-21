@@ -58,7 +58,7 @@ object IRRegistry {
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.STEEL, 6f, -3.1f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.STEEL, 7f, -3.0f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.STEEL, 1.5f, -3f, itemSettings()),
                 IRBasicSword(IRToolMaterial.STEEL, 3, -3.4f, itemSettings()),
                 IRBasicHoe(IRToolMaterial.STEEL, -2, -1.0f, itemSettings())
