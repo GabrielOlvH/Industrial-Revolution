@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
-import kotlin.math.round
 
 class VerticalProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
     init {
@@ -18,9 +17,13 @@ class VerticalProcessWidget(private val delegate: PropertyDelegate) : WWidget() 
         // only used by one machine so yea this is hardcoded
         val maxProcessTime = 1200
         if (processTime > 0) {
-            val v = 1f - (((processTime.toFloat() * 23 / maxProcessTime) + 1) / 24)
-            val h = round(v * height).toInt()
-            ScreenDrawing.texturedRect(x, y, width, h, PROCESS_FULL, 0f, 0f, 1f, v, -1)
+            var percent = processTime.toFloat() / maxProcessTime.toFloat()
+            percent = (percent * height).toInt() / height.toFloat()
+            val barSize = (height * percent).toInt()
+            ScreenDrawing.texturedRect(
+                x, y + getHeight() - barSize, width, barSize,
+                PROCESS_FULL, 0f, 1 - percent, 1f, 1f, -1
+            )
         }
     }
 

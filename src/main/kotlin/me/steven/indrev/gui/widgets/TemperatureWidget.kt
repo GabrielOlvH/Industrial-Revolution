@@ -10,7 +10,6 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import kotlin.math.round
 
 class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
     init {
@@ -22,9 +21,13 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         val temperature = delegate[2]
         val maxTemperature = temperatureController.explosionLimit.toFloat()
         if (temperature > 0) {
-            val v = ((temperature.toFloat() * 63 / maxTemperature) + 1) / 64
-            val h = round(v * height).toInt()
-            ScreenDrawing.texturedRect(x, y + (height - h), width, h, FULL_HEAT, 0f, 1f - v, 1f, 1f, -1)
+            var percent = temperature.toFloat() / maxTemperature.toFloat()
+            percent = (percent * height).toInt() / height.toFloat()
+            val barSize = (height * percent).toInt()
+            ScreenDrawing.texturedRect(
+                x, y + getHeight() - barSize, width, barSize,
+                FULL_HEAT, 0f, 1 - percent, 1f, 1f, -1
+            )
         }
     }
 

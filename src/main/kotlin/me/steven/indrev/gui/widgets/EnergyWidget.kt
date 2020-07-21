@@ -11,7 +11,6 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import kotlin.math.round
 
 class EnergyWidget(private val ctx: ScreenHandlerContext) : WWidget() {
     init {
@@ -26,9 +25,13 @@ class EnergyWidget(private val ctx: ScreenHandlerContext) : WWidget() {
                 val energy = blockEntity.energy
                 val maxEnergy = blockEntity.maxStoredPower
                 if (energy > 0) {
-                    val v = ((energy.toFloat() * 63 / maxEnergy.toFloat()) + 1) / 64
-                    val h = round(v * height).toInt()
-                    ScreenDrawing.texturedRect(x, y + (height - h), width, h, ENERGY_FULL, 0f, 1f - v, 1f, 1f, -1)
+                    var percent = energy.toFloat() / maxEnergy.toFloat()
+                    percent = (percent * height).toInt() / height.toFloat()
+                    val barSize = (height * percent).toInt()
+                    ScreenDrawing.texturedRect(
+                        x, y + getHeight() - barSize, width, barSize,
+                        ENERGY_FULL, 0f, 1 - percent, 1f, 1f, -1
+                    )
                 }
             }
         }

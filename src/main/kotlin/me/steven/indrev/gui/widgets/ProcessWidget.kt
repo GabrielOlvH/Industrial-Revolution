@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
-import kotlin.math.round
 
 class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
     init {
@@ -14,19 +13,23 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
-        val processTime = delegate[3]
         val maxProcessTime = delegate[4]
+        val processTime = maxProcessTime - delegate[3]
         if (processTime > 0) {
-            val v = 1f - (((processTime.toFloat() * 23 / maxProcessTime) + 1) / 24)
-            val w = round(v * width).toInt()
-            ScreenDrawing.texturedRect(x, y, w, height, PROCESS_FULL, 0f, 0f, v, 1f, -1)
+            var percent = processTime.toFloat() / maxProcessTime.toFloat()
+            percent = (percent * width).toInt() / width.toFloat()
+            val barSize = (width * percent).toInt()
+            ScreenDrawing.texturedRect(
+                x, y, barSize, height,
+                PROCESS_FULL, 0f, 0f, percent, 1f, -1
+            )
         }
     }
 
     companion object {
-        private val PROCESS_EMPTY =
+        val PROCESS_EMPTY =
             identifier("textures/gui/widget_processing_empty.png")
-        private val PROCESS_FULL =
+        val PROCESS_FULL =
             identifier("textures/gui/widget_processing_full.png")
     }
 }
