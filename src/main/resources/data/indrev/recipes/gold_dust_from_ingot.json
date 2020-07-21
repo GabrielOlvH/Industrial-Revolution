@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredient": {
-    "item": "minecraft:gold_ore"
+    "item": "minecraft:gold_ingot"
   },
   "output": {
     "item": "gold_dust",
