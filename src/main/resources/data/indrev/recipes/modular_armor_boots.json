@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
+    "ICI",
     "NSN",
     "BNB"
   ],
@@ -17,6 +17,9 @@
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "I": {
+      "item": "minecraft:netherite_ingot"
     }
   },
   "result": {
