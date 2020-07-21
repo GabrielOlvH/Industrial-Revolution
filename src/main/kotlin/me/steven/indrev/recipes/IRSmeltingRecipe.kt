@@ -6,7 +6,11 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.ItemStack
-import net.minecraft.recipe.*
+import net.minecraft.network.PacketByteBuf
+import net.minecraft.recipe.Ingredient
+import net.minecraft.recipe.RecipeSerializer
+import net.minecraft.recipe.RecipeType
+import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.registry.Registry
@@ -27,7 +31,7 @@ class IRSmeltingRecipe(
         val TYPE = object : RecipeType<IRSmeltingRecipe> {}
         val SERIALIZER = Serializer()
 
-        class Serializer : CookingRecipeSerializer<IRSmeltingRecipe>(::IRSmeltingRecipe, 200) {
+        class Serializer : RecipeSerializer<IRSmeltingRecipe> {
             override fun read(identifier: Identifier, jsonObject: JsonObject): IRSmeltingRecipe {
                 val string = JsonHelper.getString(jsonObject, "group", "")
                 val jsonElement = if (JsonHelper.hasArray(jsonObject, "ingredient")) JsonHelper.getArray(
@@ -50,6 +54,24 @@ class IRSmeltingRecipe(
                 val i = JsonHelper.getInt(jsonObject, "cookingtime", 200)
                 return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
             }
+
+            override fun read(identifier: Identifier, packetByteBuf: PacketByteBuf): IRSmeltingRecipe {
+                val string = packetByteBuf.readString(32767)
+                val ingredient = Ingredient.fromPacket(packetByteBuf)
+                val itemStack = packetByteBuf.readItemStack()
+                val f = packetByteBuf.readFloat()
+                val i = packetByteBuf.readVarInt()
+                return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
+            }
+
+            override fun write(packetByteBuf: PacketByteBuf, abstractCookingRecipe: IRSmeltingRecipe) {
+                packetByteBuf.writeString(abstractCookingRecipe.group)
+                abstractCookingRecipe.input.write(packetByteBuf)
+                packetByteBuf.writeItemStack(abstractCookingRecipe.output)
+                packetByteBuf.writeFloat(abstractCookingRecipe.experience)
+                packetByteBuf.writeVarInt(abstractCookingRecipe.cookTime)
+            }
+
         }
     }
 }
