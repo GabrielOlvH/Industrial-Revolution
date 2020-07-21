@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SS",
+    " I",
+    " I"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:copper_ingots"
+    },
+    "I": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "indrev:copper_hoe"
+  }
+}

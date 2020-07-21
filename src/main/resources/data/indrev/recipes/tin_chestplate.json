@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:tin_ingots"
+    }
+  },
+  "result": {
+    "item": "indrev:tin_chestplate"
+  }
+}

@@ -1,10 +1,10 @@
 {
   "type": "indrev:pulverize",
   "ingredient": {
-    "item": "minecraft:diamond"
+    "item": "minecraft:gold_ore"
   },
   "output": {
-    "item": "diamond_dust",
+    "item": "gold_dust",
     "count": 1
   },
   "processTime": 200
