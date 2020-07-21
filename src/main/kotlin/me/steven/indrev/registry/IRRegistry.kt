@@ -24,6 +24,7 @@ import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.util.registry.Registry
 
+@Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
     fun registerAll() {
         val oregen = IndustrialRevolution.CONFIG.oregen
@@ -150,6 +151,8 @@ object IRRegistry {
         identifier("module_color_orange").item(ORANGE_MODULE_ITEM)
         identifier("module_color_black").item(BLACK_MODULE_ITEM)
         identifier("module_color_brown").item(BROWN_MODULE_ITEM)
+
+        identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -226,4 +229,5 @@ object IRRegistry {
     val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings())
     val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings())
 
+    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 }
