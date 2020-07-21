@@ -1,0 +1,16 @@
+{
+  "type": "indrev:pulverize",
+  "ingredient": {
+    "item": "minecraft:gravel"
+  },
+  "output": {
+    "item": "minecraft:flint",
+    "count": 2
+  },
+  "processTime": 200,
+  "extra": {
+    "item": "minecraft:flint",
+    "count": 1,
+    "chance": 0.8
+  }
+}
