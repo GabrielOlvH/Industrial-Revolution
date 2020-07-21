@@ -91,9 +91,7 @@ open class MachineBlock(
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
         else if (screenHandler != null
             && blockEntity.inventoryController != null) {
-            player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))?.ifPresent { syncId ->
-                blockEntity.viewers[player.uuid] = syncId
-            }
+            player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         }
         return ActionResult.SUCCESS
     }

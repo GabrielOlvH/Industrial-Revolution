@@ -23,20 +23,15 @@ import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
-import java.util.*
 import java.util.stream.IntStream
 
 open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
-    private val typeId = Registry.BLOCK_ENTITY_TYPE.getRawId(type)
-    var viewers = mutableMapOf<UUID, Int>()
-
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
 
