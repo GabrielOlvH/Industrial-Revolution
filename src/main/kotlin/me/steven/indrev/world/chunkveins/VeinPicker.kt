@@ -75,8 +75,8 @@ object VeinPicker {
     private val FOREST_VEINS = picker {
         when (it) {
             PEAT, LIGNITE, SIDERITE, CHALCOPRYTE, CASSITERITE -> 4
-            BITUMINOUS, LIMONITE, CUPRITE -> 4
-            ANTHRACITE, HEMATITE, MAGNETITE, STANNITE, CALAVERITE -> 3
+            BITUMINOUS, LIMONITE, CUPRITE -> 3
+            ANTHRACITE, HEMATITE, MAGNETITE, STANNITE, CALAVERITE -> 2
             else -> -1
         }
     }
@@ -90,7 +90,7 @@ object VeinPicker {
 
     private val DESERT_VEINS = picker {
         when (it) {
-            BITUMINOUS, ANTHRACITE -> 6
+            BITUMINOUS, ANTHRACITE -> 5
             HEMATITE, MAGNETITE, STANNITE, CALAVERITE, LIMONITE, CUPRITE -> 4
             PEAT, LIGNITE -> 1
             QUARTZ, CALAVERITE_NETHER -> -1
