@@ -1,0 +1,9 @@
+{
+  "type": "indrev:smelting",
+  "group": "copper_ingots",
+  "ingredient": {
+    "tag": "c:copper_ores"
+  },
+  "result": "copper_ingot",
+  "cookingTime": 200
+}
