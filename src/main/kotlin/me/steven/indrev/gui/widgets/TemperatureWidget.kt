@@ -21,13 +21,14 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
         val temperature = delegate[2]
         val maxTemperature = temperatureController.explosionLimit.toFloat()
         if (temperature > 0) {
-            var percent = temperature.toFloat() / maxTemperature.toFloat()
+            var percent = temperature.toFloat() / maxTemperature
             percent = (percent * height).toInt() / height.toFloat()
             val barSize = (height * percent).toInt()
-            ScreenDrawing.texturedRect(
-                x, y + getHeight() - barSize, width, barSize,
-                FULL_HEAT, 0f, 1 - percent, 1f, 1f, -1
-            )
+            if (barSize > 0)
+                ScreenDrawing.texturedRect(
+                    x, y + getHeight() - barSize, width, barSize,
+                    FULL_HEAT, 0f, 1 - percent, 1f, 1f, -1
+                )
         }
     }
 

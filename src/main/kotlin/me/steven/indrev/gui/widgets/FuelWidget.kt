@@ -19,18 +19,10 @@ class FuelWidget(private val propertyDelegate: PropertyDelegate) : WWidget() {
             var percent = burnTime.toFloat() / maxBurnTime.toFloat()
             percent = (percent * height).toInt() / height.toFloat()
             val barSize = (height * percent).toInt()
-            ScreenDrawing.texturedRect(
-                x,
-                y + getHeight() - barSize,
-                width,
-                barSize,
-                LIT_TEXTURE_ID,
-                0f,
-                1 - percent,
-                1f,
-                1f,
-                -1
-            )
+            if (barSize > 0)
+                ScreenDrawing.texturedRect(
+                    x, y + getHeight() - barSize, width, barSize,
+                    LIT_TEXTURE_ID, 0f, 1 - percent, 1f, 1f, -1)
         }
     }
 

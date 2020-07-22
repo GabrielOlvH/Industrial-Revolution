@@ -19,10 +19,11 @@ class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
             var percent = processTime.toFloat() / maxProcessTime.toFloat()
             percent = (percent * width).toInt() / width.toFloat()
             val barSize = (width * percent).toInt()
-            ScreenDrawing.texturedRect(
-                x, y, barSize, height,
-                PROCESS_FULL, 0f, 0f, percent, 1f, -1
-            )
+            if (barSize > 0)
+                ScreenDrawing.texturedRect(
+                    x, y, barSize, height,
+                    PROCESS_FULL, 0f, 0f, percent, 1f, -1
+                )
         }
     }
 
