@@ -278,7 +278,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry(identifier("modular_workbench"), false, Tier.MK4).register(
             { tier ->
-                FacingMachineBlock(MACHINE_BLOCK_SETTINGS(), tier, ::ModularWorkbenchController) { ModularWorkbenchBlockEntity(tier) }
+                ModularWorkbenchBlock(MACHINE_BLOCK_SETTINGS().nonOpaque(), tier, ::ModularWorkbenchController) { ModularWorkbenchBlockEntity(tier) }
             },
             { tier -> { ModularWorkbenchBlockEntity(tier) } }
         ).buffer { 500000.0 }
