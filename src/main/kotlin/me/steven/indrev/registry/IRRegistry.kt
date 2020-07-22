@@ -153,6 +153,8 @@ object IRRegistry {
         identifier("module_color_brown").item(BROWN_MODULE_ITEM)
 
         identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
+
+        identifier("gamer_axe").item(DEFAULT_ITEM())
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
