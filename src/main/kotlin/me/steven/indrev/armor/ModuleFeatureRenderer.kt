@@ -39,12 +39,11 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
             val g = (rgb and 0xFF00 shr 8) / 255f
             val b = (rgb and 0xFF) / 255f
             Module.getInstalled(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { module ->
-                if (module != Module.COLOR) {
+                if (module.hasTexture) {
                     renderArmorParts(
                         matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, module.key
                     )
                     if (module.hasOverlay) {
-                        // E M I S S I V E L I G H T S :yeefuckinghaw:
                         renderArmorParts(
                             matrices, vertexConsumers, 15728880, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, "${module.key}_overlay"
                         )
