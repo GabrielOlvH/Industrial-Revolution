@@ -59,15 +59,16 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
                 val neighborInv = getInventory(pos) ?: return@forEach
+                val inventory = inventoryComponent?.inventory ?: return@forEach
                 if (mode.output) {
-                    inventoryComponent?.inventory?.outputSlots?.forEach { slot ->
-                        insertAndExtract(inventoryComponent!!.inventory, neighborInv, direction) {
-                            extract(inventoryComponent!!.inventory, slot, direction)
+                    inventory.outputSlots.forEach { slot ->
+                        insertAndExtract(inventory, neighborInv, direction) {
+                            extract(inventory, slot, direction)
                         }
                     }
                 } else if (mode.input) {
                     getAvailableSlots(neighborInv, direction).forEach { slot ->
-                        insertAndExtract(neighborInv, inventoryComponent!!.inventory, direction.opposite) {
+                        insertAndExtract(neighborInv, inventory, direction.opposite) {
                             extract(neighborInv, slot, direction)
                         }
                     }
