@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -38,10 +38,10 @@ open class FacingMachineBlock(
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity) {
             val direction = state?.get(HORIZONTAL_FACING) ?: return
-            val inventoryController = blockEntity.inventoryController ?: return
+            val inventoryController = blockEntity.inventoryComponent ?: return
             val itemConfig = inventoryController.itemConfig
-            itemConfig[direction.rotateYClockwise()] = InventoryController.Mode.INPUT
-            itemConfig[direction.rotateYCounterclockwise()] = InventoryController.Mode.OUTPUT
+            itemConfig[direction.rotateYClockwise()] = InventoryComponent.Mode.INPUT
+            itemConfig[direction.rotateYCounterclockwise()] = InventoryComponent.Mode.OUTPUT
         }
         super.onPlaced(world, pos, state, placer, itemStack)
     }

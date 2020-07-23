@@ -7,7 +7,7 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.utils.add
@@ -38,8 +38,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             val blockState = world.getBlockState(pos)
-            if (blockEntity is MachineBlockEntity && blockEntity.inventoryController != null) {
-                val inventoryController = blockEntity.inventoryController!!
+            if (blockEntity is MachineBlockEntity && blockEntity.inventoryComponent != null) {
+                val inventoryController = blockEntity.inventoryComponent!!
                 val id = Registry.BLOCK.getId(blockState.block).path.replace(TIER_REGEX, "")
                 MachineSide.values().forEach { side ->
                     val facing = blockState[FacingMachineBlock.HORIZONTAL_FACING]
@@ -73,8 +73,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             else -> side
         }
 
-    private fun getMode(controller: InventoryController, side: Direction): InventoryController.Mode = controller.itemConfig[side]
-        ?: InventoryController.Mode.NONE
+    private fun getMode(controller: InventoryComponent, side: Direction): InventoryComponent.Mode = controller.itemConfig[side]
+        ?: InventoryComponent.Mode.NONE
 
     enum class MachineSide(val x: Int, val y: Int, val direction: Direction, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {
         NORTH(2, 2, Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),

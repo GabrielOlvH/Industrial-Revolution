@@ -39,7 +39,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         light: Int,
         overlay: Int
     ) {
-        val armor = entity?.inventoryController?.inventory?.getStack(2)
+        val armor = entity?.inventoryComponent?.inventory?.getStack(2)
         if (armor?.isEmpty == false) {
             matrices.run {
                 push()

@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -18,7 +18,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -30,7 +30,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.1, 1300..1700, 2000.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
     }
 
     private var currentRecipe: SmeltingRecipe? = null

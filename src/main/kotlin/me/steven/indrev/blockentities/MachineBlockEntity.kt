@@ -2,9 +2,9 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
@@ -36,8 +36,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
 
     var energy: Double by Property(0, 0.0) { i -> i.coerceAtMost(maxStoredPower).coerceAtLeast(0.0) }
-    var inventoryController: InventoryController? = null
-    var temperatureController: TemperatureController? = null
+    var inventoryComponent: InventoryComponent? = null
+    var temperatureComponent: TemperatureComponent? = null
 
     var itemTransferCooldown = 0
 
@@ -47,7 +47,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (world?.isClient == false) {
             EnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
-                val power = temperatureController!!.explosionPower
+                val power = temperatureComponent!!.explosionPower
                 world?.createExplosion(
                     null,
                     pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
@@ -56,21 +56,21 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     Explosion.DestructionType.DESTROY)
             }
             itemTransferCooldown--
-            inventoryController?.itemConfig?.forEach { (direction, mode) ->
+            inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
                 val neighborInv = getInventory(pos)
                 if (mode.output) {
                     if (neighborInv != null) {
-                        inventoryController?.inventory?.outputSlots?.forEach { slot ->
-                            insertAndExtract(inventoryController!!.inventory, neighborInv, direction) {
-                                extract(inventoryController!!.inventory, slot, direction)
+                        inventoryComponent?.inventory?.outputSlots?.forEach { slot ->
+                            insertAndExtract(inventoryComponent!!.inventory, neighborInv, direction) {
+                                extract(inventoryComponent!!.inventory, slot, direction)
                             }
                         }
                     }
                 } else if (mode.input) {
                     if (neighborInv != null) {
                         getAvailableSlots(neighborInv, direction).forEach { slot ->
-                            insertAndExtract(neighborInv, inventoryController!!.inventory, direction.opposite) {
+                            insertAndExtract(neighborInv, inventoryComponent!!.inventory, direction.opposite) {
                                 extract(neighborInv, slot, direction)
                             }
                         }
@@ -120,36 +120,36 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
-        return inventoryController?.inventory
+        return inventoryComponent?.inventory
             ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
-        inventoryController?.fromTag(tag)
-        temperatureController?.fromTag(tag)
+        inventoryComponent?.fromTag(tag)
+        temperatureComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Energy", energy)
         if (tag != null) {
-            inventoryController?.toTag(tag)
-            temperatureController?.toTag(tag)
+            inventoryComponent?.toTag(tag)
+            temperatureComponent?.toTag(tag)
         }
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
-        inventoryController?.fromTag(tag)
-        temperatureController?.fromTag(tag)
+        inventoryComponent?.fromTag(tag)
+        temperatureComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         if (tag == null) return CompoundTag()
-        inventoryController?.toTag(tag)
-        temperatureController?.toTag(tag)
+        inventoryComponent?.toTag(tag)
+        temperatureComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }

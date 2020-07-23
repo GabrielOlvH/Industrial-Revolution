@@ -90,7 +90,7 @@ open class MachineBlock(
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
         else if (screenHandler != null
-            && blockEntity.inventoryController != null) {
+            && blockEntity.inventoryComponent != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         }
         return ActionResult.SUCCESS
@@ -99,8 +99,8 @@ open class MachineBlock(
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos?, newState: BlockState, moved: Boolean) {
         if (!state.isOf(newState.block)) {
             val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return
-            if (blockEntity.inventoryController != null) {
-                ItemScatterer.spawn(world, pos, blockEntity.inventoryController!!.inventory)
+            if (blockEntity.inventoryComponent != null) {
+                ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
                 world.updateComparators(pos, this)
             }
             super.onStateReplaced(state, world, pos, newState, moved)
@@ -116,7 +116,7 @@ open class MachineBlock(
                 if (blockEntity is MachineBlockEntity && item is BlockItem && item.block is MachineBlock) {
                     val tag = stack.getOrCreateSubTag("MachineInfo")
                     tag.putDouble("Energy", blockEntity.energy)
-                    val temperatureController = blockEntity.temperatureController
+                    val temperatureController = blockEntity.temperatureComponent
                     if (temperatureController != null)
                         tag.putDouble("Temperature", temperatureController.temperature)
                 }
@@ -130,7 +130,7 @@ open class MachineBlock(
         super.onPlaced(world, pos, state, placer, itemStack)
         val tag = itemStack?.getSubTag("MachineInfo") ?: return
         val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return
-        val temperatureController = blockEntity.temperatureController
+        val temperatureController = blockEntity.temperatureComponent
         val energy = tag.getDouble("Energy")
         blockEntity.energy = energy
         if (temperatureController != null) {

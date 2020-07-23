@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -30,7 +30,7 @@ import team.reborn.energy.EnergySide
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -48,7 +48,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun machineTick() {
         if (world?.isClient == true) return
-        val inventory = inventoryController?.inventory ?: return
+        val inventory = inventoryComponent?.inventory ?: return
         if (cooldown > 0) {
             cooldown--
             return
@@ -131,7 +131,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
+            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
             Upgrade.SPEED -> getConfig().processSpeed
             Upgrade.BUFFER -> getBaseBuffer()
         }

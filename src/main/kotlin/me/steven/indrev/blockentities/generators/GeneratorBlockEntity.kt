@@ -13,11 +13,11 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
         if (world?.isClient == false) {
             if (shouldGenerate() && maxStoredPower > energy) {
                 this.energy += getGenerationRatio()
-                this.temperatureController?.tick(true)
+                this.temperatureComponent?.tick(true)
                 setWorkingState(true)
             } else {
                 setWorkingState(false)
-                this.temperatureController?.tick(false)
+                this.temperatureComponent?.tick(false)
             }
         }
     }
@@ -26,7 +26,7 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
 
     abstract fun shouldGenerate(): Boolean
 
-    open fun getGenerationRatio(): Double = getConfig().ratio * if (this.temperatureController?.isFullEfficiency() == true) getConfig().temperatureBoost else 1.0
+    open fun getGenerationRatio(): Double = getConfig().ratio * if (this.temperatureComponent?.isFullEfficiency() == true) getConfig().temperatureBoost else 1.0
 
     override fun getMaxOutput(side: EnergySide?): Double = getConfig().maxOutput
 

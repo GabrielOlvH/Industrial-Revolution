@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -19,7 +19,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(3, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -30,7 +30,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.08, 900..2000, 2500.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.08, 900..2000, 2500.0)
     }
 
     private var burnTime: Int by Property(3, 0)
@@ -39,7 +39,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            val inventory = inventoryController?.inventory ?: return false
+            val inventory = inventoryComponent?.inventory ?: return false
             val invStack = inventory.getStack(2)
             if (!invStack.isEmpty && invStack.item == IRRegistry.BIOMASS) {
                 burnTime = 300

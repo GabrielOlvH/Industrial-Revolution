@@ -43,7 +43,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settin
 
     override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
         val blockEntity = world.getBlockEntity(pos) as? ChargePadBlockEntity ?: return ActionResult.PASS
-        val inventory = blockEntity.inventoryController?.inventory ?: return ActionResult.PASS
+        val inventory = blockEntity.inventoryComponent?.inventory ?: return ActionResult.PASS
         val machineStack = inventory.getStack(0)
         if (!machineStack.isEmpty) {
             player?.inventory?.insertStack(machineStack)

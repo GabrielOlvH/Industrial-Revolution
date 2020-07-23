@@ -46,7 +46,7 @@ object EnergyMovement {
             val amount = (targetMaxInput / sum) * energy
             if (amount > 0) {
                 if (source is MachineBlockEntity && target is MachineBlockEntity) {
-                    target.temperatureController?.inputOverflow = amount > target.getMaxInput(direction)
+                    target.temperatureComponent?.inputOverflow = amount > target.getMaxInput(direction)
                 }
                 sourceHandler.into(targetHandler).move(amount)
             }

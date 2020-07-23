@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -17,7 +17,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
     private var currentRecipe: RecyclerRecipe? = null
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

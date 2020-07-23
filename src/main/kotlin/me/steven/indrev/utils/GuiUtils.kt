@@ -53,8 +53,8 @@ fun SyncedGuiDescription.configure(
                     it.add(s, 8, i)
                 }
             }
-            if (blockEntity is MachineBlockEntity && blockEntity.temperatureController != null) {
-                val controller = blockEntity.temperatureController!!
+            if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
+                val controller = blockEntity.temperatureComponent!!
                 it.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
                 val coolerSlot = WItemSlot.of(blockInventory, 1)
                 it.add(coolerSlot, 1.0, 3.7)

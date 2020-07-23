@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.farms
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
@@ -26,7 +26,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(14, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -45,7 +45,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     override fun machineTick() {
         if (world?.isClient == true) return
-        val inventory = inventoryController?.inventory ?: return
+        val inventory = inventoryComponent?.inventory ?: return
         if (chunkVeinType == null) {
             val chunkPos = world?.getChunk(pos)?.pos ?: return
             val state =
@@ -63,10 +63,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
         } else {
             if (mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 mining += Upgrade.SPEED.apply(this, inventory)
-                temperatureController?.tick(true)
+                temperatureComponent?.tick(true)
             } else {
                 setWorkingState(false)
-                temperatureController?.tick(false)
+                temperatureComponent?.tick(false)
             }
             if (mining > 10) {
                 val chunkPos = world?.getChunk(pos)?.pos ?: return
@@ -102,7 +102,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED.apply(this, inventoryController!!.inventory)
+        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
         Upgrade.SPEED -> getConfig().processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
     }

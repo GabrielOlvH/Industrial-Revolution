@@ -1,6 +1,6 @@
 package me.steven.indrev.inventories
 
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
@@ -13,15 +13,15 @@ class IRInventory(
     val slotPredicate: (Int, ItemStack?) -> Boolean = { _, _ -> true }
 ) : SimpleInventory(size), SidedInventory {
 
-    var controller: InventoryController? = null
+    var component: InventoryComponent? = null
 
     override fun getAvailableSlots(var1: Direction?): IntArray? = IntArray(size()) { i -> i }
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        outputSlots.contains(slot) && controller?.itemConfig?.get(direction)?.output == true
+        outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && controller?.itemConfig?.get(direction)?.input == true
+        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 

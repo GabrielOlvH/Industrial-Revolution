@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -17,7 +17,7 @@ class CompressorBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -29,7 +29,7 @@ class CompressorBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.temperatureController = TemperatureController({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
     }
 
     private var currentRecipe: CompressorRecipe? = null

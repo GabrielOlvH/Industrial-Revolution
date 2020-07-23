@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 
-class TemperatureController(
+class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity,
     private val heatingSpeed: Double,
     private val stableTemperature: () -> Double,
@@ -66,7 +66,7 @@ class TemperatureController(
         }
     }
 
-    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryController?.inventory?.getStack(1)
+    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()

@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.registry.MachineRegistry
@@ -13,10 +13,10 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     GeneratorBlockEntity(tier, MachineRegistry.SOLAR_GENERATOR_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(2, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { _, _ -> true }
         }
-        this.temperatureController = TemperatureController({ this }, 0.1, 500..700, 1000.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 500..700, 1000.0)
     }
 
     override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < maxStoredPower

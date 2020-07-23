@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -22,7 +22,7 @@ import team.reborn.energy.EnergySide
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -39,7 +39,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
     private var processTime: Int by Property(2, 0)
 
     override fun machineTick() {
-        val inventory = inventoryController?.inventory ?: return
+        val inventory = inventoryComponent?.inventory ?: return
         val armorStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
         if (armorStack.item !is IRModularArmor || moduleStack.item !is IRModuleItem) {

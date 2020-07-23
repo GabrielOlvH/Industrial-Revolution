@@ -6,8 +6,8 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.Direction
 
-class InventoryController(supplier: () -> IRInventory) {
-    val inventory: IRInventory = supplier().also { it.controller = this }
+class InventoryComponent(supplier: () -> IRInventory) {
+    val inventory: IRInventory = supplier().also { it.component = this }
 
     val itemConfig: MutableMap<Direction, Mode> = mutableMapOf<Direction, Mode>().also { map ->
         Direction.values().forEach { dir -> map[dir] = Mode.NONE }

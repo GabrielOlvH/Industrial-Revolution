@@ -22,7 +22,7 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
         light: Int,
         overlay: Int
     ) {
-        val inventory = entity?.inventoryController?.inventory
+        val inventory = entity?.inventoryComponent?.inventory
         val stack = inventory?.getStack(0)
         if (stack?.isEmpty == false) {
             val facing = entity.cachedState[FacingMachineBlock.HORIZONTAL_FACING].rotateYClockwise()

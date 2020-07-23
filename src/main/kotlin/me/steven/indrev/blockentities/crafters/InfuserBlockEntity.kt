@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -16,7 +16,7 @@ class InfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
 
     init {
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
                 val item = stack?.item
                 when {

@@ -30,7 +30,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     override fun machineTick() {
         if (world?.isClient == true) return
-        val inventory = inventoryController?.inventory ?: return
+        val inventory = inventoryComponent?.inventory ?: return
         val inputInventory = inventory.getInputInventory()
         if (inputInventory.isEmpty) {
             reset()
@@ -64,7 +64,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             reset()
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
         }
-        temperatureController?.tick(isProcessing())
+        temperatureComponent?.tick(isProcessing())
     }
 
     abstract fun tryStartRecipe(inventory: IRInventory): T?
@@ -76,15 +76,15 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryController!!.inventory)
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryComponent!!.inventory)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryController!!.inventory)
-        Upgrade.SPEED -> if (temperatureController?.isFullEfficiency() == true) getHeatConfig()?.processTemperatureBoost
+        Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
+        Upgrade.SPEED -> if (temperatureComponent?.isFullEfficiency() == true) getHeatConfig()?.processTemperatureBoost
             ?: 1.0 else 1.0
         Upgrade.BUFFER -> getBaseBuffer()
     }

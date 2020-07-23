@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.battery
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.VerticalFacingMachineBlock
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
@@ -16,14 +16,14 @@ class BatteryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(1, intArrayOf(0), EMPTY_INT_ARRAY) { _, stack -> Energy.valid(stack) }
         }
     }
 
     override fun machineTick() {
         if (world?.isClient == true) return
-        val inventory = inventoryController?.inventory ?: return
+        val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
         if (Energy.valid(stack)) {
             val handler = Energy.of(stack)

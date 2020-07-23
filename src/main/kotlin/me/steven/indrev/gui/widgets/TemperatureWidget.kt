@@ -2,7 +2,7 @@ package me.steven.indrev.gui.widgets
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
@@ -11,7 +11,7 @@ import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
-class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureController: TemperatureController) : WWidget() {
+class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureComponent: TemperatureComponent) : WWidget() {
     init {
         this.setSize(16, 64)
     }
@@ -19,7 +19,7 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, EMPTY_HEAT, -1)
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.explosionLimit.toFloat()
+        val maxTemperature = temperatureComponent.explosionLimit.toFloat()
         if (temperature > 0) {
             var percent = temperature.toFloat() / maxTemperature
             percent = (percent * height).toInt() / height.toFloat()
@@ -34,11 +34,11 @@ class TemperatureWidget(private val delegate: PropertyDelegate, private val temp
 
     override fun addTooltip(information: MutableList<StringRenderable>?) {
         val temperature = delegate[2]
-        val maxTemperature = temperatureController.explosionLimit.toInt()
+        val maxTemperature = temperatureComponent.explosionLimit.toInt()
         val info = when {
-            temperature > temperatureController.optimalRange.last ->
+            temperature > temperatureComponent.optimalRange.last ->
                 TranslatableText("gui.widget.temperature_info.high").formatted(Formatting.DARK_RED, Formatting.ITALIC)
-            temperature in temperatureController.optimalRange ->
+            temperature in temperatureComponent.optimalRange ->
                 TranslatableText("gui.widget.temperature_info.medium").formatted(Formatting.YELLOW, Formatting.ITALIC)
             else ->
                 TranslatableText("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)

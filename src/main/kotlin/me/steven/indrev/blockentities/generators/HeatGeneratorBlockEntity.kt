@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
-import me.steven.indrev.components.TemperatureController
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
@@ -23,7 +23,7 @@ import net.minecraft.util.math.Direction
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
-        this.inventoryController = InventoryController {
+        this.inventoryComponent = InventoryComponent {
             IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -33,10 +33,10 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
                 }
             }
         }
-        this.temperatureController = TemperatureController(
+        this.temperatureComponent = TemperatureComponent(
             { this },
             2.3,
-            { if (burnTime > 0 && stableTemperature > 0) stableTemperature.toDouble() else this.temperatureController!!.explosionLimit },
+            { if (burnTime > 0 && stableTemperature > 0) stableTemperature.toDouble() else this.temperatureComponent!!.explosionLimit },
             7000..9000,
             10000.0
         )
@@ -65,7 +65,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 64.0 * (if (temperatureController?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
+    override fun getGenerationRatio(): Double = 64.0 * (if (temperatureComponent?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)

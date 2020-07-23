@@ -5,7 +5,7 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryController
+import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
@@ -55,12 +55,12 @@ object IndustrialRevolution : EnergyModInitializer() {
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
-            val mode = InventoryController.Mode.values()[buf.readInt()]
+            val mode = InventoryComponent.Mode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
-                if (blockEntity.inventoryController != null) {
-                    blockEntity.inventoryController!!.itemConfig[dir] = mode
+                if (blockEntity.inventoryComponent != null) {
+                    blockEntity.inventoryComponent!!.itemConfig[dir] = mode
                 }
             }
         }

@@ -40,8 +40,8 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
             val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
                 ?: throw RuntimeException("This should never happen, what the fuck")
             upgradedBlockEntity.energy = blockEntity.energy
-            upgradedBlockEntity.inventoryController?.fromTag(blockEntity.inventoryController?.toTag(CompoundTag()))
-            upgradedBlockEntity.temperatureController?.fromTag(blockEntity.temperatureController?.toTag(CompoundTag()))
+            upgradedBlockEntity.inventoryComponent?.fromTag(blockEntity.inventoryComponent?.toTag(CompoundTag()))
+            upgradedBlockEntity.temperatureComponent?.fromTag(blockEntity.temperatureComponent?.toTag(CompoundTag()))
             context.player?.getStackInHand(context.hand)?.decrement(1)
         }
         return super.useOnBlock(context)
