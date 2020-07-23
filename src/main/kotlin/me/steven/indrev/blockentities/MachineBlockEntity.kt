@@ -58,21 +58,17 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             itemTransferCooldown--
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
-                val neighborInv = getInventory(pos)
+                val neighborInv = getInventory(pos) ?: return@forEach
                 if (mode.output) {
-                    if (neighborInv != null) {
-                        inventoryComponent?.inventory?.outputSlots?.forEach { slot ->
-                            insertAndExtract(inventoryComponent!!.inventory, neighborInv, direction) {
-                                extract(inventoryComponent!!.inventory, slot, direction)
-                            }
+                    inventoryComponent?.inventory?.outputSlots?.forEach { slot ->
+                        insertAndExtract(inventoryComponent!!.inventory, neighborInv, direction) {
+                            extract(inventoryComponent!!.inventory, slot, direction)
                         }
                     }
                 } else if (mode.input) {
-                    if (neighborInv != null) {
-                        getAvailableSlots(neighborInv, direction).forEach { slot ->
-                            insertAndExtract(neighborInv, inventoryComponent!!.inventory, direction.opposite) {
-                                extract(neighborInv, slot, direction)
-                            }
+                    getAvailableSlots(neighborInv, direction).forEach { slot ->
+                        insertAndExtract(neighborInv, inventoryComponent!!.inventory, direction.opposite) {
+                            extract(neighborInv, slot, direction)
                         }
                     }
                 }
