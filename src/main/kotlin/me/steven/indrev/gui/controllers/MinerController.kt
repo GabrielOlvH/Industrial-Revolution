@@ -30,13 +30,14 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
 
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
-            3,
-            1
+            3.0,
+            0.7
         )
 
         root.add(StringWidget({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        }, HorizontalAlignment.CENTER), 4.0, 4.2)
+        }, HorizontalAlignment.CENTER), 4.0, 3.9)
+        root.add(WItemSlot.of(blockInventory, 14), 4.0, 4.4)
 
         root.validate(this)
     }

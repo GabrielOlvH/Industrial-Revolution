@@ -99,7 +99,8 @@ object IRRegistry {
         identifier("cooler_cell").item(COOLER_CELL)
         identifier("heatsink").item(HEATSINK)
 
-        identifier("chunk_scanner").item(IRChunkScannerItem(itemSettings().maxCount(1)))
+        identifier("chunk_scanner").item(CHUNK_SCANNER_ITEM)
+        identifier("scan_output").item(SCAN_OUTPUT_ITEM)
 
         identifier("empty_upgrade").item(DEFAULT_ITEM())
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
@@ -184,6 +185,9 @@ object IRRegistry {
     val MINING_DRILL_MK4 = IRMiningDrill(
         ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(32000)
     )
+
+    val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
+    val SCAN_OUTPUT_ITEM = IRScanOutputItem(itemSettings().maxCount(1))
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 

@@ -6,12 +6,14 @@ import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.IRScanOutputItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.getChunkPos
 import me.steven.indrev.world.chunkveins.ChunkVeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.block.BlockState
@@ -27,12 +29,13 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryComponent = InventoryComponent {
-            IRInventory(14, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
+            IRInventory(15, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
                     item is IRRechargeableItem && item.canOutput -> slot == 0
                     item is IRCoolerItem -> slot == 1
+                    item is IRScanOutputItem -> slot == 14
                     slot in 1 until 10 -> true
                     else -> false
                 }
@@ -61,7 +64,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 return
             }
         } else {
-            if (mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+            val scanOutput = inventory.getStack(14).tag ?: return
+            val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
+            val chunkPos = world?.getChunk(pos)?.pos ?: return
+            if (chunkPos == scanChunkPos && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
                 mining += Upgrade.SPEED.apply(this, inventory)
                 temperatureComponent?.tick(true)
             } else {
@@ -69,7 +75,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 temperatureComponent?.tick(false)
             }
             if (mining > 10) {
-                val chunkPos = world?.getChunk(pos)?.pos ?: return
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
                         { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
