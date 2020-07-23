@@ -135,6 +135,8 @@
   "item.indrev.wrench.tooltip": "Shift + Right Click to change mode",
   "item.indrev.wrench.mode": "Mode: %s",
   "item.indrev.tech_soup": "Tech Soup",
+  "item.indrev.scan_output": "Scan Output",
+  "item.indrev.portable_charger": "Portable Charger",
   "gui.widget.energy": "Energy",
   "gui.widget.temperature": "Temperature",
   "gui.widget.temperature_info.high": "Too hot",
