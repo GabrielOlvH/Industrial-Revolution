@@ -13,6 +13,7 @@ import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
 import me.steven.indrev.utils.toVec3d
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
 import net.minecraft.block.PillarBlock
@@ -41,7 +42,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
                     item is IRRechargeableItem && item.canOutput -> slot == 0
                     item is IRCoolerItem -> slot == 1
-                    slot in 2..5 -> item is AxeItem || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock)
+                    slot in 2..5 -> item?.isIn(FabricToolTags.AXES) == true || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock)
                     slot in 6 until 15 -> true
                     else -> false
                 }
