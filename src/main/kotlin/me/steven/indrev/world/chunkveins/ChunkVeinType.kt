@@ -48,22 +48,22 @@ enum class ChunkVeinType(val sizeRange: IntRange, val ores: WeightedList<Block>)
     ),
     CHALCOPRYTE(
         600..1200,
-        WeightedList<Block>().add(IRRegistry.COPPER_ORE, 6).add(Blocks.IRON_ORE, 8)
+        WeightedList<Block>().add(IRRegistry.COPPER_ORE(), 6).add(Blocks.IRON_ORE, 8)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     CUPRITE(
         1200..2100,
-        WeightedList<Block>().add(IRRegistry.COPPER_ORE, 6)
+        WeightedList<Block>().add(IRRegistry.COPPER_ORE(), 6)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     CASSITERITE(
         1200..2100,
-        WeightedList<Block>().add(IRRegistry.TIN_ORE, 6)
+        WeightedList<Block>().add(IRRegistry.TIN_ORE(), 6)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     STANNITE(
         1600..2700,
-        WeightedList<Block>().add(IRRegistry.TIN_ORE, 6).add(IRRegistry.COPPER_ORE, 4).add(Blocks.IRON_ORE, 4)
+        WeightedList<Block>().add(IRRegistry.TIN_ORE(), 6).add(IRRegistry.COPPER_ORE(), 4).add(Blocks.IRON_ORE, 4)
             .add(Blocks.STONE, 10).add(Blocks.DIRT, 5).add(Blocks.CLAY, 1).add(Blocks.GRAVEL, 1)
     ),
     CALAVERITE(

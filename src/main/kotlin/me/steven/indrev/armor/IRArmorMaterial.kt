@@ -23,15 +23,15 @@ enum class IRArmorMaterial(
     ),
     STEEL(
         "steel", 30, intArrayOf(2, 6, 7, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(IRRegistry.STEEL_INGOT)
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(IRRegistry.STEEL_INGOT())
     ),
     COPPER(
         "copper", 17, intArrayOf(2, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT)
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT())
     ),
     TIN(
         "tin", 10, intArrayOf(1, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT)
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT())
     );
 
     override fun getName(): String = armorName

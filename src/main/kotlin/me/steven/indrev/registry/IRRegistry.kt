@@ -163,12 +163,12 @@ object IRRegistry {
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
-    val NIKOLITE_ORE by lazy { Registry.BLOCK.get(identifier("nikolite_ore")) }
-    val COPPER_ORE by lazy { Registry.BLOCK.get(identifier("copper_ore")) }
-    val TIN_ORE by lazy { Registry.BLOCK.get(identifier("tin_ore")) }
-    val STEEL_INGOT by lazy { Registry.ITEM.get(identifier("steel_ingot")) }
-    val COPPER_INGOT by lazy { Registry.ITEM.get(identifier("copper_ingot")) }
-    val TIN_INGOT by lazy { Registry.ITEM.get(identifier("tin_ingot")) }
+    val NIKOLITE_ORE = { Registry.BLOCK.get(identifier("nikolite_ore")) }
+    val COPPER_ORE = { Registry.BLOCK.get(identifier("copper_ore")) }
+    val TIN_ORE = { Registry.BLOCK.get(identifier("tin_ore")) }
+    val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
+    val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
+    val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
