@@ -49,9 +49,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         for (ItemStack itemStack : inventory.main) {
             if (itemStack.getItem() instanceof IRGamerAxeItem) {
                 CompoundTag tag = itemStack.getOrCreateTag();
-                if (tag.contains("Active") && tag.getBoolean("Active")) {
-                    if (!Energy.of(itemStack).use(1.5))
-                        tag.putBoolean("Active", false);
+                if (tag.contains("Active") && tag.getBoolean("Active") && !Energy.of(itemStack).use(1.5)) {
+                    tag.putBoolean("Active", false);
                 }
             }
         }
@@ -90,6 +89,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                     if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
+                                    else if (!stack.isEmpty()) slot--;
                                 }
                             }
                             break;
