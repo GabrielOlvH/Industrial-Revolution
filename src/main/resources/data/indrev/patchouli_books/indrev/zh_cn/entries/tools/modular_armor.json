@@ -1,0 +1,42 @@
+{
+  "name": "模块化盔甲",
+  "category": "tools",
+  "sortnum": 4,
+  "icon": "indrev:modular_armor_helmet",
+  "pages": [
+    {
+      "type": "text",
+      "text": "模块化盔甲可以安装模块来变强。$(br2)颜色模块没有合成配方，你只能在地牢里找到颜色模块。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_armor_helmet",
+      "recipe2": "indrev:modular_armor_chest"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_armor_legs",
+      "recipe2": "indrev:modular_armor_boots"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:modular_workbench",
+      "text": "模块化工作台用于给模块化盔甲安装模块。请注意安装模块会消耗时间和能量！"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_protection",
+      "recipe2": "indrev:module_speed"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_night_vision",
+      "recipe2": "indrev:module_jump_boost"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:module_breathing",
+      "recipe2": "indrev:module_feather_falling"
+    }
+  ]
+}
