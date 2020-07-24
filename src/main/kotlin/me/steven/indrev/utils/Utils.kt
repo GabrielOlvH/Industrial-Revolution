@@ -73,9 +73,11 @@ fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
 fun ChunkPos.asString() = "$x,$z"
 
-fun getChunkPos(s: String): ChunkPos {
+fun getChunkPos(s: String): ChunkPos? {
     val split = s.split(",")
-    return ChunkPos(split[0].toInt(), split[1].toInt())
+    val x = split[0].toIntOrNull() ?: return null
+    val z = split[1].toIntOrNull() ?: return null
+    return ChunkPos(x, z)
 }
 
 fun EnergySide.opposite(): EnergySide =

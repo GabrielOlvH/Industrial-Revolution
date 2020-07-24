@@ -15,7 +15,7 @@ class IRScanOutputItem(settings: Settings) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         val tag = stack?.tag ?: return
         val type = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
-        val pos = getChunkPos(tag.getString("ChunkPos"))
+        val pos = getChunkPos(tag.getString("ChunkPos")) ?: return
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip2",
             LiteralText(type.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip3",
