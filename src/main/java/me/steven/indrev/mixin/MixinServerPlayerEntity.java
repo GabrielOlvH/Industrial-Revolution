@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.armor.Module;
 import me.steven.indrev.items.IRGamerAxeItem;
+import me.steven.indrev.items.IRPortableChargerItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +37,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void applyEffects(CallbackInfo ci) {
         ticks++;
-        if (ticks % 100 == 0) {
+        if (ticks % 120 == 0) {
             applyArmorEffects();
             useActiveAxeEnergy();
         }
@@ -62,7 +63,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
-            if (!Energy.valid(itemStack)) continue;
             ArmorItem item = (ArmorItem) itemStack.getItem();
             if (item.getMaterial() == IRArmorMaterial.MODULAR) {
                 Module[] modules = Module.Companion.getInstalled(itemStack);
@@ -76,6 +76,17 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                 player.eatFood(world, stack);
                             if (!hungerManager.isNotFull()) break;
                         }
+                    } else if (module == Module.SOLAR_PANEL && world.isDay() && world.isSkyVisible(player.getBlockPos().up())) {
+                        int level = Module.Companion.getLevel(itemStack, Module.SOLAR_PANEL);
+                        for (ItemStack stackToCharge : inventory.armor) {
+                            if (Energy.valid(stackToCharge))
+                                Energy.of(stackToCharge).insert(75.0 * level);
+                        }
+                        ItemStack mainStack = player.getMainHandStack();
+                        if (Energy.valid(mainStack))
+                            Energy.of(mainStack).insert(75.0 * level);
+                    } else if (module == Module.CHARGER) {
+                        IRPortableChargerItem.Companion.chargeItemsInInv(Energy.of(itemStack), player.inventory.main);
                     } else {
                         int level = Module.Companion.getLevel(itemStack, module);
                         StatusEffectInstance effect = module.getApply().invoke(player, level);

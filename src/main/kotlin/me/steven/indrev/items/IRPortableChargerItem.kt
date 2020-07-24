@@ -12,11 +12,9 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
+import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHolder
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyTier
+import team.reborn.energy.*
 
 class IRPortableChargerItem(
     settings: Settings,
@@ -59,6 +57,20 @@ class IRPortableChargerItem(
         val amount = sum / items.size.toDouble()
         items.forEach { h ->
             handler.into(h).move(amount)
+        }
+    }
+
+    companion object {
+        fun chargeItemsInInv(handler: EnergyHandler, inventory: DefaultedList<ItemStack>) {
+            val items = (0 until inventory.size)
+                .map { s -> inventory[s] }
+                .filter { s -> s.item !is IRPortableChargerItem && Energy.valid(s) }
+                .map { s -> Energy.of(s) }
+            val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
+            val amount = sum / items.size.toDouble()
+            items.forEach { h ->
+                handler.into(h).move(amount)
+            }
         }
     }
 }
