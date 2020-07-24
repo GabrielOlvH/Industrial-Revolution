@@ -67,35 +67,45 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
             if (item.getMaterial() == IRArmorMaterial.MODULAR) {
                 Module[] modules = Module.Companion.getInstalled(itemStack);
                 for (Module module : modules) {
-                    HungerManager hunger = player.getHungerManager();
-                    if (module == Module.AUTO_FEEDER && hunger.isNotFull()) {
-                        for (int slot = 0; slot <= inventory.size(); slot++) {
-                            ItemStack stack = inventory.getStack(slot);
-                            FoodComponent food = stack.getItem().getFoodComponent();
-                            if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
-                                player.eatFood(world, stack);
-                            if (!hungerManager.isNotFull()) break;
-                        }
-                    } else if (module == Module.SOLAR_PANEL && world.isDay() && world.isSkyVisible(player.getBlockPos().up())) {
-                        int level = Module.Companion.getLevel(itemStack, Module.SOLAR_PANEL);
-                        for (ItemStack stackToCharge : inventory.armor) {
-                            if (Energy.valid(stackToCharge))
-                                Energy.of(stackToCharge).insert(75.0 * level);
-                        }
-                        ItemStack mainStack = player.getMainHandStack();
-                        if (Energy.valid(mainStack))
-                            Energy.of(mainStack).insert(75.0 * level);
-                    } else if (module == Module.CHARGER) {
-                        IRPortableChargerItem.Companion.chargeItemsInInv(Energy.of(itemStack), player.inventory.main);
-                    } else {
-                        int level = Module.Companion.getLevel(itemStack, module);
-                        StatusEffectInstance effect = module.getApply().invoke(player, level);
-                        if (effect != null && Energy.of(itemStack).use(2.5)) {
-                            if (!player.hasStatusEffect(effect.getEffectType()))
-                                player.addStatusEffect(effect);
-                            appliedEffects.add(module);
-                            effectsToRemove.remove(module);
-                        }
+                    int level = Module.Companion.getLevel(itemStack, module);
+                    switch (module) {
+                        case NIGHT_VISION:
+                        case SPEED:
+                        case JUMP_BOOST:
+                        case BREATHING:
+                            StatusEffectInstance effect = module.getApply().invoke(player, level);
+                            if (effect != null && Energy.of(itemStack).use(2.5)) {
+                                if (!player.hasStatusEffect(effect.getEffectType()))
+                                    player.addStatusEffect(effect);
+                                appliedEffects.add(module);
+                                effectsToRemove.remove(module);
+                            }
+                            break;
+                        case AUTO_FEEDER:
+                            HungerManager hunger = player.getHungerManager();
+                            if (hunger.isNotFull()) {
+                                for (int slot = 0; slot <= inventory.size(); slot++) {
+                                    ItemStack stack = inventory.getStack(slot);
+                                    FoodComponent food = stack.getItem().getFoodComponent();
+                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
+                                        player.eatFood(world, stack);
+                                    if (!hungerManager.isNotFull()) break;
+                                }
+                            }
+                            break;
+                        case CHARGER:
+                            IRPortableChargerItem.Companion.chargeItemsInInv(Energy.of(itemStack), player.inventory.main);
+                            break;
+                        case SOLAR_PANEL:
+                            if (world.isDay() && world.isSkyVisible(player.getBlockPos().up())) {
+                                for (ItemStack stackToCharge : inventory.armor) {
+                                    if (Energy.valid(stackToCharge))
+                                        Energy.of(stackToCharge).insert(75.0 * level);
+                                }
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             }
