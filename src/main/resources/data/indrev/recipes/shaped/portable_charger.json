@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "ECE",
+    "NCN",
     "SBS",
     "BEB"
   ],
@@ -17,6 +17,9 @@
     },
     "E": {
       "item": "indrev:enriched_nikolite_ingot"
+    },
+    "N": {
+      "item": "indrev:nikolite_dust"
     }
   },
   "result": {
