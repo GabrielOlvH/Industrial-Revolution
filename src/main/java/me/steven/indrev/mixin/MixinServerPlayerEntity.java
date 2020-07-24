@@ -3,6 +3,7 @@ package me.steven.indrev.mixin;
 import com.mojang.authlib.GameProfile;
 import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.armor.Module;
+import me.steven.indrev.items.IRGamerAxeItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,45 +34,64 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    private void applyArmorEffects(CallbackInfo ci) {
+    private void applyEffects(CallbackInfo ci) {
         ticks++;
         if (ticks % 100 == 0) {
-            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-            Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
-            appliedEffects.clear();
-            PlayerInventory inventory = player.inventory;
-            for (ItemStack itemStack : inventory.armor) {
-                if (!Energy.valid(itemStack)) continue;
-                ArmorItem item = (ArmorItem) itemStack.getItem();
-                if (item.getMaterial() == IRArmorMaterial.MODULAR) {
-                    Module[] modules = Module.Companion.getInstalled(itemStack);
-                    for (Module module : modules) {
-                        HungerManager hunger = player.getHungerManager();
-                        if (module == Module.AUTO_FEEDER && hunger.isNotFull()) {
-                            for (int slot = 0; slot <= inventory.size(); slot++) {
-                                ItemStack stack = inventory.getStack(slot);
-                                FoodComponent food = stack.getItem().getFoodComponent();
-                                if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
-                                    player.eatFood(world, stack);
-                                if (!hungerManager.isNotFull()) break;
-                            }
-                        } else {
-                            int level = Module.Companion.getLevel(itemStack, module);
-                            StatusEffectInstance effect = module.getApply().invoke(player, level);
-                            if (effect != null && Energy.of(itemStack).use(2.5)) {
-                                if (!player.hasStatusEffect(effect.getEffectType()))
-                                    player.addStatusEffect(effect);
-                                appliedEffects.add(module);
-                                effectsToRemove.remove(module);
-                            }
+            applyArmorEffects();
+            useActiveAxeEnergy();
+        }
+    }
+
+    private void useActiveAxeEnergy() {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        PlayerInventory inventory = player.inventory;
+        for (ItemStack itemStack : inventory.main) {
+            if (itemStack.getItem() instanceof IRGamerAxeItem) {
+                CompoundTag tag = itemStack.getOrCreateTag();
+                if (tag.contains("Active") && tag.getBoolean("Active")) {
+                    if (!Energy.of(itemStack).use(1.5))
+                        tag.putBoolean("Active", false);
+                }
+            }
+        }
+    }
+
+    private void applyArmorEffects() {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        PlayerInventory inventory = player.inventory;
+        Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
+        appliedEffects.clear();
+        for (ItemStack itemStack : inventory.armor) {
+            if (!Energy.valid(itemStack)) continue;
+            ArmorItem item = (ArmorItem) itemStack.getItem();
+            if (item.getMaterial() == IRArmorMaterial.MODULAR) {
+                Module[] modules = Module.Companion.getInstalled(itemStack);
+                for (Module module : modules) {
+                    HungerManager hunger = player.getHungerManager();
+                    if (module == Module.AUTO_FEEDER && hunger.isNotFull()) {
+                        for (int slot = 0; slot <= inventory.size(); slot++) {
+                            ItemStack stack = inventory.getStack(slot);
+                            FoodComponent food = stack.getItem().getFoodComponent();
+                            if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
+                                player.eatFood(world, stack);
+                            if (!hungerManager.isNotFull()) break;
+                        }
+                    } else {
+                        int level = Module.Companion.getLevel(itemStack, module);
+                        StatusEffectInstance effect = module.getApply().invoke(player, level);
+                        if (effect != null && Energy.of(itemStack).use(2.5)) {
+                            if (!player.hasStatusEffect(effect.getEffectType()))
+                                player.addStatusEffect(effect);
+                            appliedEffects.add(module);
+                            effectsToRemove.remove(module);
                         }
                     }
                 }
             }
-            for (Module module : effectsToRemove) {
-                StatusEffectInstance effect = module.getApply().invoke(player, 1);
-                player.removeStatusEffect(effect.getEffectType());
-            }
+        }
+        for (Module module : effectsToRemove) {
+            StatusEffectInstance effect = module.getApply().invoke(player, 1);
+            player.removeStatusEffect(effect.getEffectType());
         }
     }
 }

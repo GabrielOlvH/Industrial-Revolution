@@ -1,0 +1,113 @@
+package me.steven.indrev.items
+
+import me.steven.indrev.items.rechargeable.IRRechargeable
+import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.getShortEnergyDisplay
+import net.minecraft.block.BlockState
+import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.Entity
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.AxeItem
+import net.minecraft.item.ItemStack
+import net.minecraft.item.ToolMaterial
+import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
+import net.minecraft.util.Hand
+import net.minecraft.util.TypedActionResult
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
+import team.reborn.energy.Energy
+import team.reborn.energy.EnergyHolder
+import team.reborn.energy.EnergySide
+import team.reborn.energy.EnergyTier
+
+class IRGamerAxeItem(
+    material: ToolMaterial,
+    private val maxStored: Double,
+    private val tier: Tier,
+    attackDamage: Float,
+    attackSpeed: Float,
+    settings: Settings
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IRRechargeable {
+
+    override fun appendTooltip(
+        stack: ItemStack?,
+        world: World?,
+        tooltip: MutableList<Text>?,
+        context: TooltipContext?
+    ) {
+        super.appendTooltip(stack, world, tooltip, context)
+        val handler = Energy.of(stack)
+        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
+        tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+    }
+
+
+    override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
+        if (world?.isClient == false) {
+            val stack = user?.getStackInHand(hand)
+            val tag = stack?.orCreateTag
+            if (tag?.contains("Active") == false || tag?.contains("Progress") == false) {
+                tag.putBoolean("Active", true)
+                tag.putFloat("Progress", 0f)
+            } else if (tag?.contains("Active") == true) {
+                val active = !tag.getBoolean("Active")
+                if (active && !Energy.of(stack).use(5.0))
+                    return TypedActionResult.pass(stack)
+                tag.putBoolean("Active", active)
+            }
+            return TypedActionResult.pass(stack)
+        }
+        return super.use(world, user, hand)
+    }
+
+    override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
+        val tag = stack.orCreateTag
+        return if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(stack).energy <= 0) 0f
+        else super.getMiningSpeedMultiplier(stack, state)
+    }
+
+    override fun postMine(
+        stack: ItemStack,
+        world: World?,
+        state: BlockState?,
+        pos: BlockPos?,
+        miner: LivingEntity?
+    ): Boolean = Energy.of(stack).use(1.0)
+
+    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
+
+    override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
+
+    override fun getMaxStoredPower(): Double = maxStored
+
+    override fun getMaxInput(side: EnergySide?): Double = tier.io
+
+    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
+        val tag = stack?.orCreateTag ?: return
+        if (!tag.contains("Active") || !tag.contains("Progress")) return
+        val active = tag.getBoolean("Active")
+        var progress = tag.getFloat("Progress")
+        if (active && progress < 1) {
+            progress += 0.12f
+            if (progress >= 1)
+                tag.putBoolean("Active", true)
+        } else if (!active && progress > 0) {
+            progress -= 0.12f
+            if (progress <= 0)
+                tag.putBoolean("Active", false)
+        }
+        tag.putFloat("Progress", progress.coerceIn(0f, 1f))
+
+        val handler = Energy.of(stack)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+    }
+}

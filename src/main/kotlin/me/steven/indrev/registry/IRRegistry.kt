@@ -156,7 +156,7 @@ object IRRegistry {
 
         identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
 
-        identifier("gamer_axe").item(DEFAULT_ITEM())
+        identifier("gamer_axe").item(GAMER_AXE_ITEM)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -238,4 +238,6 @@ object IRRegistry {
     val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings())
 
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
+
+    val GAMER_AXE_ITEM = IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
 }
