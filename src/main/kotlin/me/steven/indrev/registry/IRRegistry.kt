@@ -184,7 +184,7 @@ object IRRegistry {
     val MINING_DRILL_MK2 =
         IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 8000.0, 14f, itemSettings().maxDamage(8000))
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000))
     val MINING_DRILL_MK4 = IRMiningDrill(
         ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 50f, itemSettings().maxDamage(32000)
     )
