@@ -67,8 +67,8 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             val scanOutput = inventory.getStack(14).tag ?: return
             val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val chunkPos = world?.getChunk(pos)?.pos ?: return
-            if (chunkPos == scanChunkPos && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
-                mining += Upgrade.SPEED.apply(this, inventory)
+            if (chunkPos == scanChunkPos && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY(this))) {
+                mining += Upgrade.SPEED(this)
                 temperatureComponent?.tick(true)
             } else {
                 setWorkingState(false)
@@ -107,7 +107,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
+        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED(this)
         Upgrade.SPEED -> getConfig().processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
     }

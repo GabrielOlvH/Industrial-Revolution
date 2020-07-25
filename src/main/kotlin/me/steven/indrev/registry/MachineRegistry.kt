@@ -6,6 +6,7 @@ import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.ChopperBlockEntity
+import me.steven.indrev.blockentities.farms.FishingFarmBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
@@ -275,6 +276,11 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { MinerBlockEntity(tier) } }
         ).buffer { 50000.0 }
+
+        val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
+            { tier -> MachineBlock(MACHINE_BLOCK_SETTINGS(), tier, ::FishingFarmController) { FishingFarmBlockEntity(tier) } },
+            { tier -> { FishingFarmBlockEntity(tier) } }
+        )
 
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry(identifier("modular_workbench"), false, Tier.MK4).register(
             { tier ->

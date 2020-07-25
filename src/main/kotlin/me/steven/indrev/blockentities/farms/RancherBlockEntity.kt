@@ -57,7 +57,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val input = inventory.getInputInventory()
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY(this))) {
             setWorkingState(false)
             return
         } else setWorkingState(true)
@@ -94,7 +94,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 fakePlayer.inventory.setStack(1, ItemStack.EMPTY)
             }
         }
-        cooldown += 12 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
+        cooldown += 12 - (Upgrade.SPEED(this).toInt() / 4)
     }
 
     private fun filterAnimalsToKill(entities: List<AnimalEntity>): List<AnimalEntity> {
@@ -131,7 +131,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
+            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
             Upgrade.SPEED -> getConfig().processSpeed
             Upgrade.BUFFER -> getBaseBuffer()
         }

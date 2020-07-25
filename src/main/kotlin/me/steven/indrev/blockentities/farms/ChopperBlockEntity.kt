@@ -59,7 +59,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         if (cooldown > 0) {
             cooldown--
             return
-        } else if (!Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory)))
+        } else if (!Energy.of(this).use(Upgrade.ENERGY(this)))
             return
         val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
         if (!scheduledBlocks.hasNext()) {
@@ -92,7 +92,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             temperatureComponent?.tick(performedAction)
             setWorkingState(performedAction)
         }
-        cooldown += 6 - (Upgrade.SPEED.apply(this, inventory).toInt() / 4)
+        cooldown += 6 - (Upgrade.SPEED(this).toInt() / 4)
     }
 
     private fun tryChop(
@@ -140,7 +140,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
+            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
             Upgrade.SPEED -> getConfig().processSpeed
             Upgrade.BUFFER -> getBaseBuffer()
         }

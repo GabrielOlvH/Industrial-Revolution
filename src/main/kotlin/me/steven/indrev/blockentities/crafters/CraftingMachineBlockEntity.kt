@@ -39,9 +39,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
             val recipe = getCurrentRecipe()
             if (recipe?.matches(inputInventory, this.world) == false)
                 tryStartRecipe(inventory) ?: reset()
-            else if (Energy.of(this).use(Upgrade.ENERGY.apply(this, inventory))) {
+            else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
                 setWorkingState(true)
-                processTime = (processTime - ceil(Upgrade.SPEED.apply(this, inventory))).coerceAtLeast(0.0).toInt()
+                processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
                     inventory.inputSlots.forEachIndexed { index, slot ->
                         inventory.setStack(slot, inputInventory.getStack(index).apply { decrement(1) })
@@ -76,14 +76,14 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER.apply(this, inventoryComponent!!.inventory)
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER(this)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED.apply(this, inventoryComponent!!.inventory)
+        Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
         Upgrade.SPEED -> if (temperatureComponent?.isFullEfficiency() == true) getHeatConfig()?.processTemperatureBoost
             ?: 1.0 else 1.0
         Upgrade.BUFFER -> getBaseBuffer()

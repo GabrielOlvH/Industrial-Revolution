@@ -122,6 +122,15 @@ class Machines : ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     val miner: MachineConfig = MachineConfig(64.0, 0.3, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fishing_mk2: MachineConfig = MachineConfig(8.0, 500.0, 50000.0, Tier.MK2.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fishing_mk3: MachineConfig = MachineConfig(16.0, 300.0, 50000.0, Tier.MK3.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fishing_mk4: MachineConfig = MachineConfig(64.0, 200.0, 50000.0, Tier.MK4.io)
 }
 
 // this is so auto config actually generates the config properly

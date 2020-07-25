@@ -84,6 +84,7 @@ object IndustrialRevolution : EnergyModInitializer() {
     val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
+    val FISHING_FARM_HANDLER = FishingFarmController.SCREEN_ID.registerScreenHandler(::FishingFarmController)
     val MODULAR_WORKBENCH_HANDLER =
         ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
 
