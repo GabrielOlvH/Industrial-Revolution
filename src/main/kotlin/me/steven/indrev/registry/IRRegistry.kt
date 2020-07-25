@@ -142,6 +142,8 @@ object IRRegistry {
         identifier("module_breathing").item(BREATHING_MODULE_ITEM)
         identifier("module_feather_falling").item(FEATHER_FALLING_MODULE_ITEM)
         identifier("module_auto_feeder").item(AUTO_FEEDER_MODULE_ITEM)
+        identifier("module_charger").item(CHARGER_MODULE_ITEM)
+        identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -225,6 +227,8 @@ object IRRegistry {
     val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
     val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(Module.FEATHER_FALLING, itemSettings().maxCount(1))
     val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(Module.AUTO_FEEDER, itemSettings().maxCount(1))
+    val CHARGER_MODULE_ITEM = IRModuleItem(Module.CHARGER, itemSettings().maxCount(1))
+    val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(Module.SOLAR_PANEL, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings())
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings())
