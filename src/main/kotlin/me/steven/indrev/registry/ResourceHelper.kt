@@ -28,7 +28,7 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
 
     fun withOre(feature: (() -> ConfiguredFeature<*, *>)?): ResourceHelper {
         val ore =
-            Block(FabricBlockSettings.of(Material.STONE).breakByTool(FabricToolTags.PICKAXES, 2).strength(3f, 3f))
+            Block(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
         val identifier = identifier("${id}_ore")
         Registry.register(Registry.BLOCK, identifier, ore)
         Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
@@ -54,7 +54,7 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
 
     fun withBlock(): ResourceHelper {
         val block =
-            Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(5f, 6f))
+            Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(5f, 6f))
         val id = identifier("${id}_block")
         Registry.register(Registry.BLOCK, id, block)
         Registry.register(Registry.ITEM, id, BlockItem(block, itemSettings()))
