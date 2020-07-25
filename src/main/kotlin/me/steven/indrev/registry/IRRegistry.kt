@@ -177,13 +177,13 @@ object IRRegistry {
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 32000.0, itemSettings().maxDamage(32000))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 32000.0, 6f, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 32000.0, itemSettings().maxDamage(32000))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 32000.0, 10f, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, itemSettings().maxDamage(32000))
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 32000.0, 14f, itemSettings().maxDamage(32000))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(32000)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 50f, itemSettings().maxDamage(32000)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
