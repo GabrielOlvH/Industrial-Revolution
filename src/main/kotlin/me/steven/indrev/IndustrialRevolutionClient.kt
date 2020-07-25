@@ -49,33 +49,23 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>) {
-                CableBlockEntityRenderer(it)
-            }
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>, ::CableBlockEntityRenderer)
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>) {
-                AOEMachineBlockEntityRenderer(it)
-            }
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
         }
 
         MachineRegistry.RANCHER_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>) {
-                AOEMachineBlockEntityRenderer(it)
-            }
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
         }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>) {
-                ModularWorkbenchBlockEntityRenderer(it)
-            }
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>, ::ModularWorkbenchBlockEntityRenderer)
         }
 
         MachineRegistry.CHARGE_PAD_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>) {
-                ChargePadBlockEntityRenderer(it)
-            }
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, :: ChargePadBlockEntityRenderer)
         }
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
