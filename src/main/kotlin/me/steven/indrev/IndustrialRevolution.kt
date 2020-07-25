@@ -85,8 +85,7 @@ object IndustrialRevolution : EnergyModInitializer() {
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
     val FISHING_FARM_HANDLER = FishingFarmController.SCREEN_ID.registerScreenHandler(::FishingFarmController)
-    val MODULAR_WORKBENCH_HANDLER =
-        ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val MODULAR_WORKBENCH_HANDLER = ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
