@@ -17,7 +17,7 @@ import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
-import net.fabricmc.fabric.api.tools.FabricToolTags
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
