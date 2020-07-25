@@ -62,8 +62,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
-            ArmorItem item = (ArmorItem) itemStack.getItem();
-            if (item.getMaterial() == IRArmorMaterial.MODULAR) {
+            if (itemStack.getItem() instanceof ArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
                 Module[] modules = Module.Companion.getInstalled(itemStack);
                 for (Module module : modules) {
                     int level = Module.Companion.getLevel(itemStack, module);
