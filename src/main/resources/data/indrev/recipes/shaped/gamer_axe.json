@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CSC",
+    "ENE",
+    "SBS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:steel_plates"
+    },
+    "E": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "N": {
+      "item": "minecraft:netherite_axe"
+    },
+    "B": {
+      "item": "indrev:battery"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    }
+  },
+  "result": {
+    "item": "indrev:gamer_axe"
+  }
+}
