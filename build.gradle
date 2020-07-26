@@ -22,6 +22,7 @@ repositories {
         url = "https://server.bbkr.space/artifactory/libs-release"
     }
     maven { url 'https://maven.blamejared.com' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -34,6 +35,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
+
+    modImplementation "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
 
     modApi "teamreborn:energy:${project.energy_api_version}"
     include "teamreborn:energy:${project.energy_api_version}"
