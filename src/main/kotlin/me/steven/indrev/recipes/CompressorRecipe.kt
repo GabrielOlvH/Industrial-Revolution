@@ -12,6 +12,7 @@ import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
+import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
@@ -59,7 +60,7 @@ class CompressorRecipe(private val id: Identifier, val processTime: Int, private
                             ), Registry.ITEM
                         )
                 val output = ItemStack { item }
-                output.count = result.get("count").asInt
+                output.count = JsonHelper.getInt(result, "count", 1)
                 val ticks = json.get("processTime").asInt
                 return CompressorRecipe(id, ticks, output, input)
             }

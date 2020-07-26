@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FCF",
+    "NMN",
+    " B "
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "N": {
+      "item": "indrev:nikolite_ingot"
+    },
+    "F": {
+      "item": "minecraft:fishing_rod"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:fishing_farm_mk2"
+  }
+}
