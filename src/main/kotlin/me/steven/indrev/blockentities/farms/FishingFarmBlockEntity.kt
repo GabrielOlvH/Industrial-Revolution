@@ -50,7 +50,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         Direction.values().forEach { direction ->
             blockPos.offset(direction)
             if (world?.isWater(blockPos) == true) {
-                val id = IDENTIFIERS[world!!.random!!.nextInt(3)]
+                val id = getIdentifiers(tier)[world!!.random!!.nextInt(3)]
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(id)
                 val ctx = LootContext.Builder(world as ServerWorld).random(world!!.random)
                     .parameter(LootContextParameters.POSITION, pos)
@@ -64,6 +64,12 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
                 }
             }
         }
+    }
+
+    private fun getIdentifiers(tier: Tier) = when (tier) {
+        Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
+        Tier.MK3 -> arrayOf(FISH_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
+        else -> arrayOf(FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
     override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
@@ -95,6 +101,5 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         private val FISH_IDENTIFIER = Identifier("gameplay/fishing/fish")
         private val JUNK_IDENTIFIER = Identifier("gameplay/fishing/junk")
         private val TREASURE_IDENTIFIER = Identifier("gameplay/fishing/treasure")
-        private val IDENTIFIERS = arrayOf(FISH_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 }
