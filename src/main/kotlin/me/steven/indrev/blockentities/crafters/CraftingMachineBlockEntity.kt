@@ -59,7 +59,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                     onCraft()
                     reset()
                 }
-            } else reset()
+            }
         } else if (energy > 0 && !inputInventory.isEmpty && processTime <= 0) {
             reset()
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
