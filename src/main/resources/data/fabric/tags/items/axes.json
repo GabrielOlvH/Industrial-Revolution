@@ -5,8 +5,9 @@
     "indrev:mining_drill_mk2",
     "indrev:mining_drill_mk3",
     "indrev:mining_drill_mk4",
-    "indrev:tin_shovel",
-    "indrev:copper_shovel",
-    "indrev:steel_shovel"
+    "indrev:tin_axe",
+    "indrev:copper_axe",
+    "indrev:steel_axe",
+    "indrev:gamer_axe"
   ]
 }
