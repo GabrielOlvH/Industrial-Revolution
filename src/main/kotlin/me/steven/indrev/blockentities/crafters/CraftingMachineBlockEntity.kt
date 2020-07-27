@@ -84,8 +84,11 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
-        Upgrade.SPEED -> if (temperatureComponent?.isFullEfficiency() == true) getHeatConfig()?.processTemperatureBoost
-            ?: 1.0 else 1.0
+        Upgrade.SPEED ->
+            if (temperatureComponent?.isFullEfficiency() == true)
+                getHeatConfig()?.processTemperatureBoost ?: getConfig().processSpeed
+            else
+                getConfig().processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
     }
 

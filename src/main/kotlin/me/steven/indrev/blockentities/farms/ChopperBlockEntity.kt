@@ -59,7 +59,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         if (cooldown > 0) {
             cooldown--
             return
-        } else if (!Energy.of(this).use(Upgrade.ENERGY(this)))
+        } else if (!Energy.of(this).simulate().use(Upgrade.ENERGY(this)))
             return
         val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
         if (!scheduledBlocks.hasNext()) {
@@ -89,6 +89,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                     break@outer
                 }
             }
+            if (performedAction) Energy.of(this).use(Upgrade.ENERGY(this))
             temperatureComponent?.tick(performedAction)
             setWorkingState(performedAction)
         }

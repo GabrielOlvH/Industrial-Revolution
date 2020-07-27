@@ -57,7 +57,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val input = inventory.getInputInventory()
         val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !Energy.of(this).use(Upgrade.ENERGY(this))) {
+        if (animals.isEmpty() || !Energy.of(this).simulate().use(Upgrade.ENERGY(this))) {
             setWorkingState(false)
             return
         } else setWorkingState(true)
@@ -67,6 +67,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
+            if (kill.isNotEmpty()) Energy.of(this).use(Upgrade.ENERGY(this))
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
@@ -87,7 +88,8 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             (0 until input.size()).forEach { slot ->
                 val stack = inventory.getStack(slot).copy()
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
-                animal.interactMob(fakePlayer, Hand.MAIN_HAND)
+                if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
+                    Energy.of(this).use(Upgrade.ENERGY(this))
                 val res = inventory.addStack(fakePlayer.inventory.getStack(1))
                 if (res.isEmpty)
                     inventory.setStack(slot, stack)
