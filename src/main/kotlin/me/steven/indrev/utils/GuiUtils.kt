@@ -83,7 +83,7 @@ fun SyncedGuiDescription.configure(
         }
         if (this is PatchouliEntryShortcut) {
             val containsBook =
-                playerInventory.contains(ItemStack(Registry.ITEM[identifier("patchouli:guide_book")]).also { stack ->
+                playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
                     stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
                 })
             val button = object : BookShortcutWidget() {
