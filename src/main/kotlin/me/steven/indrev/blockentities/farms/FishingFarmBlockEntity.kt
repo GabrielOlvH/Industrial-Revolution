@@ -10,7 +10,6 @@ import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.MutableBlockPos
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.FishingRodItem
 import net.minecraft.loot.context.LootContext
@@ -45,11 +44,10 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         cooldown--
         if (cooldown > 0) return
         cooldown = Upgrade.SPEED(this)
-        val blockPos = MutableBlockPos(pos)
         val rodStack = inventoryComponent?.inventory?.getStack(1)
         Direction.values().forEach { direction ->
-            blockPos.offset(direction)
-            if (world?.isWater(blockPos) == true) {
+            val pos = pos.offset(direction)
+            if (world?.isWater(pos) == true) {
                 val id = getIdentifiers(tier)[world!!.random!!.nextInt(3)]
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(id)
                 val ctx = LootContext.Builder(world as ServerWorld).random(world!!.random)
