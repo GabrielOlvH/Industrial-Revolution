@@ -7,7 +7,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/chopper_mk4",
-      "text": "The $(l)Chopper$() is a machine focused in automating wood farming, and it also supports enhancement upgrades.$(br)Note that it requires certain items for it to function:"
+      "text": "The $(l)Chopper$() is a machine focused in automating wood farming, and it also supports enhancement upgrades.$(br)Note that it requires certain items for it to function: (put them in the 2x2 square)"
     },
     {
       "type": "text",

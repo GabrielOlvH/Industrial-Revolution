@@ -37,6 +37,15 @@
       "type": "crafting",
       "recipe": "indrev:shaped/module_breathing",
       "recipe2": "indrev:shaped/module_feather_falling"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/module_charger",
+      "recipe2": "indrev:shaped/module_solar_panel"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/module_auto_feeder"
     }
   ]
 }

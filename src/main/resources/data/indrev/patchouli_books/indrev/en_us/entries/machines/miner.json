@@ -17,7 +17,7 @@
       "anchor": "chunk_scanner",
       "type": "crafting",
       "recipe": "indrev:shaped/chunk_scanner",
-      "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, a Miner placed on the same chunk will automagically start mining ores."
+      "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, the Scanner will give you a result which is required by the Miner to work."
     },
     {
       "anchor": "vein_types",
