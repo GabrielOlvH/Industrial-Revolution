@@ -32,7 +32,10 @@ class IRMiningDrill(
 ) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IRRechargeable {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
-        return if (SUPPORTED_MATERIALS.contains(material) && Energy.of(stack).energy > 0) miningSpeedMultiplier else 0F
+        val hasEnergy = Energy.of(stack).energy > 0
+        return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) miningSpeedMultiplier
+        else if (!hasEnergy) 0F
+        else super.getMiningSpeedMultiplier(stack, state)
     }
 
     override fun postMine(
@@ -88,7 +91,9 @@ class IRMiningDrill(
             Material.PISTON,
             Material.GOURD,
             Material.SOIL,
-            Material.SOLID_ORGANIC
+            Material.SOLID_ORGANIC,
+            Material.LEAVES,
+            Material.AGGREGATE
         )
     }
 }
