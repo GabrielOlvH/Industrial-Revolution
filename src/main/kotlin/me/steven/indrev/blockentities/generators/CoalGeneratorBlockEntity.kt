@@ -16,8 +16,6 @@ import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
 
 class CoalGeneratorBlockEntity :
     GeneratorBlockEntity(Tier.MK1, MachineRegistry.COAL_GENERATOR_REGISTRY) {
@@ -85,13 +83,6 @@ class CoalGeneratorBlockEntity :
     override fun getConfig(): GeneratorConfig = IndustrialRevolution.CONFIG.generators.coalGenerator
 
     companion object {
-        private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap().also {
-            if (Registry.ITEM.containsId(Identifier("c:coal_coke"))) {
-                it[Registry.ITEM[Identifier("c:coal_coke")]] = 2000
-            }
-            if (Registry.ITEM.containsId(Identifier("c:coal_coke_block"))) {
-                it[Registry.ITEM[Identifier("c:coal_coke_block")]] = 2000 * 9
-            }
-        }
+        private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()
     }
 }
