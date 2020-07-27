@@ -21,6 +21,7 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
+import org.apache.logging.log4j.LogManager
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
 
@@ -64,6 +65,7 @@ object IndustrialRevolution : EnergyModInitializer() {
                 }
             }
         }
+        LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
     }
 
     const val MOD_ID = "indrev"

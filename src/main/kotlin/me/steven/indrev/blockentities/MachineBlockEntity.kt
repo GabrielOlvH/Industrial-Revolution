@@ -1,8 +1,6 @@
 package me.steven.indrev.blockentities
 
-import com.sun.org.slf4j.internal.LoggerFactory
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
@@ -27,6 +25,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
+import org.apache.logging.log4j.LogManager
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
@@ -56,7 +55,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     power,
                     false,
                     Explosion.DestructionType.DESTROY)
-                LoggerFactory.getLogger(IndustrialRevolution::class.java)
+                LogManager.getLogger("Industrial Revolution")
                     .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
             }
             itemTransferCooldown--
