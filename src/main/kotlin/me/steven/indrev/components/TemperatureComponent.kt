@@ -24,7 +24,7 @@ class TemperatureComponent(
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
-    var coolingModifier = 0.01
+    var coolingModifier = heatingSpeed
     var explosionPower = 2f
     var inputOverflow = false
 
@@ -45,22 +45,21 @@ class TemperatureComponent(
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val tempModifier = getTemperatureModifier() / 10
         val overflowModifier = if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
-            temperature -= coolingModifier + tempModifier - overflowModifier
+            temperature -= coolingModifier
         else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {
             cooling = 70
-            coolingModifier = 0.01
+            coolingModifier = heatingSpeed
             if (coolerStack != null && coolerItem is IRCoolerItem) {
                 coolingModifier = coolerItem.coolingModifier
                 coolerStack.damage++
             }
         } else if (cooling > 0 && temperature > 25) {
             cooling--
-            temperature -= coolingModifier + tempModifier - overflowModifier
+            temperature -= coolingModifier + overflowModifier
         } else
-            temperature += heatingSpeed + tempModifier + overflowModifier
+            temperature += heatingSpeed + overflowModifier
         if (temperature > explosionLimit - 5) {
             machine.explode = true
         }
