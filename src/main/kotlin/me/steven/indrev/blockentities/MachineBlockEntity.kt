@@ -1,6 +1,8 @@
 package me.steven.indrev.blockentities
 
+import com.sun.org.slf4j.internal.LoggerFactory
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
@@ -54,6 +56,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     power,
                     false,
                     Explosion.DestructionType.DESTROY)
+                LoggerFactory.getLogger(IndustrialRevolution::class.java)
+                    .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
             }
             itemTransferCooldown--
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
