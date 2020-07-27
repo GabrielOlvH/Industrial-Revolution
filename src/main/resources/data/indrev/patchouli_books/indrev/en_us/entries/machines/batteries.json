@@ -10,13 +10,13 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:lazuli_flux_container_mk1",
-      "recipe2": "indrev:lazuli_flux_container_mk2"
+      "recipe": "indrev:shaped/lazuli_flux_container_mk1",
+      "recipe2": "indrev:shaped/lazuli_flux_container_mk2"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:lazuli_flux_container_mk3",
-      "recipe2": "indrev:lazuli_flux_container_mk4"
+      "recipe": "indrev:shaped/lazuli_flux_container_mk3",
+      "recipe2": "indrev:shaped/lazuli_flux_container_mk4"
     }
   ]
 }

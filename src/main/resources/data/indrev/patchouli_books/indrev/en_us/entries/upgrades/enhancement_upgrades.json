@@ -10,22 +10,22 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:empty_upgrade",
+      "recipe": "indrev:shaped/empty_upgrade",
       "text": "Doesn't do anything, it's only used for other upgrades."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:speed_upgrade",
+      "recipe": "indrev:shaped/speed_upgrade",
       "text": "This upgrade will increase the machine's processing speed at cost of energy."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:energy_upgrade",
+      "recipe": "indrev:shaped/energy_upgrade",
       "text": "This upgrade will decrease the machine's energy cost."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:buffer_upgrade",
+      "recipe": "indrev:shaped/buffer_upgrade",
       "text": "This upgrade will increase the machine's internal energy capacity."
     }
   ]

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:hammer",
+      "recipe": "indrev:shaped/hammer",
       "text": "Used to make plates out of ingots when you still don't have a compressor!"
     }
   ]

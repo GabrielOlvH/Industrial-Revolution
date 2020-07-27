@@ -10,17 +10,17 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk2",
+      "recipe": "indrev:shaped/tier_upgrade_mk2",
       "text": "Upgrades MK1 machines to MK2."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk3",
+      "recipe": "indrev:shaped/tier_upgrade_mk3",
       "text": "Upgrades MK2 machines to MK3."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk4",
+      "recipe": "indrev:shaped/tier_upgrade_mk4",
       "text": "Upgrades MK3 machines to MK4."
     }
   ]

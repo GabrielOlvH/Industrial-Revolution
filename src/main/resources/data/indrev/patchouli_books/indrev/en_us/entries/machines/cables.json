@@ -10,13 +10,13 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:cable_mk1",
-      "recipe2": "indrev:cable_mk2"
+      "recipe": "indrev:shaped/cable_mk1",
+      "recipe2": "indrev:shaped/cable_mk2"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:cable_mk3",
-      "recipe2": "indrev:cable_mk4"
+      "recipe": "indrev:shaped/cable_mk3",
+      "recipe2": "indrev:shaped/cable_mk4"
     }
   ]
 }

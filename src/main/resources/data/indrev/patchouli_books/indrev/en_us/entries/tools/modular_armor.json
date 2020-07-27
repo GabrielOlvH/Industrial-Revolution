@@ -10,33 +10,33 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:modular_armor_helmet",
-      "recipe2": "indrev:modular_armor_chest"
+      "recipe": "indrev:shaped/modular_armor_helmet",
+      "recipe2": "indrev:shaped/modular_armor_chest"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:modular_armor_legs",
-      "recipe2": "indrev:modular_armor_boots"
+      "recipe": "indrev:shaped/modular_armor_legs",
+      "recipe2": "indrev:shaped/modular_armor_boots"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:modular_workbench",
+      "recipe": "indrev:shaped/modular_workbench",
       "text": "The modular workbench is used to install modules onto Modular Armor parts. Notice that installing modules cost time and some energy!"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:module_protection",
-      "recipe2": "indrev:module_speed"
+      "recipe": "indrev:shaped/module_protection",
+      "recipe2": "indrev:shaped/module_speed"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:module_night_vision",
-      "recipe2": "indrev:module_jump_boost"
+      "recipe": "indrev:shaped/module_night_vision",
+      "recipe2": "indrev:shaped/module_jump_boost"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:module_breathing",
-      "recipe2": "indrev:module_feather_falling"
+      "recipe": "indrev:shaped/module_breathing",
+      "recipe2": "indrev:shaped/module_feather_falling"
     }
   ]
 }

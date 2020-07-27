@@ -10,13 +10,13 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:miner_mk4",
+      "recipe": "indrev:shaped/miner_mk4",
       "text": "The $(l)$(o)Miner$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy."
     },
     {
       "anchor": "chunk_scanner",
       "type": "crafting",
-      "recipe": "indrev:chunk_scanner",
+      "recipe": "indrev:shaped/chunk_scanner",
       "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, a Miner placed on the same chunk will automagically start mining ores."
     },
     {

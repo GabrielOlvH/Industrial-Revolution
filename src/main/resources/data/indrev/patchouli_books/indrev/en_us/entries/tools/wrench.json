@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:wrench",
+      "recipe": "indrev:shaped/wrench",
       "text": "The Wrench has two modes: Rotate and Configure. You can switch between the two modes by using Shift + Right Click"
     },
     {

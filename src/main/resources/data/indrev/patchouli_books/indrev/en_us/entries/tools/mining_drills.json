@@ -6,13 +6,13 @@
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:mining_drill_mk1",
-      "recipe2": "indrev:mining_drill_mk2"
+      "recipe": "indrev:shaped/mining_drill_mk1",
+      "recipe2": "indrev:shaped/mining_drill_mk2"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:mining_drill_mk3",
-      "recipe2": "indrev:mining_drill_mk4"
+      "recipe": "indrev:shaped/mining_drill_mk3",
+      "recipe2": "indrev:shaped/mining_drill_mk4"
     }
   ]
 }

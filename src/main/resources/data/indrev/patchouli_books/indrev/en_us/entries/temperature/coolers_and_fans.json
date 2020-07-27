@@ -10,17 +10,17 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:fan",
+      "recipe": "indrev:shaped/fan",
       "text": "$(o)Sir, can I have your autograph? Please please pleaseeeeeeee$()"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:cooler_cell",
+      "recipe": "indrev:shaped/cooler_cell",
       "text": "$(o)Lame... I'm too cool for this$()"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:heatsink",
+      "recipe": "indrev:shaped/heatsink",
       "text": "$(o)What? Were you expecting a pun? Sorry, no puns here Sir.$()"
     }
   ]
