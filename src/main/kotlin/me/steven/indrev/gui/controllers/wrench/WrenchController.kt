@@ -8,6 +8,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.utils.add
@@ -17,6 +18,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
@@ -27,7 +29,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         playerInventory,
         getBlockInventory(ctx),
         getBlockPropertyDelegate(ctx)
-    ) {
+    ), PatchouliEntryShortcut {
 
     init {
         val root = WGridPanel()
@@ -62,6 +64,10 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         }
         root.validate(this)
     }
+
+    override fun getEntry(): Identifier = identifier("tools/wrench")
+
+    override fun getPage(): Int = 0
 
     private fun offset(facing: Direction, side: Direction): Direction =
         when {

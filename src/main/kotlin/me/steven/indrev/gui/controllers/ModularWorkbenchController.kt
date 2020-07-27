@@ -23,7 +23,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.modular_workbench", ctx, blockInventory, propertyDelegate)
+        configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val armorSlot = WItemSlot.of(blockInventory, 2)
         root.add(armorSlot, 4.0, 3.5)

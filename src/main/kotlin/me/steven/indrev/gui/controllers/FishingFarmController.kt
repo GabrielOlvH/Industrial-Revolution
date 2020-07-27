@@ -22,7 +22,7 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.fishing_farm", ctx, blockInventory, propertyDelegate)
+        configure("block.indrev.fishing_farm", ctx, playerInventory, blockInventory, propertyDelegate)
 
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 2, 2),

@@ -147,6 +147,8 @@
   "gui.widget.temperature_info.high": "Too hot",
   "gui.widget.temperature_info.medium": "Full potential",
   "gui.widget.temperature_info.low": "Not heated up",
+  "gui.indrev.guide_book_shortcut.contains": "Opens about page on Guide Book",
+  "gui.indrev.guide_book_shortcut.missing": "Missing Industrial Revolution guide book!",
   "indrev.category.rei.pulverizing": "Pulverizing",
   "indrev.category.rei.infusing": "Infusing",
   "indrev.category.rei.compressing": "Compressing",
