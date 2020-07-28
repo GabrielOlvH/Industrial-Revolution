@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.EnergyWidget
+import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -30,6 +31,8 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.add(WItemSlot.of(blockInventory, 0), 4, 2)
 
         root.add(createPlayerInventoryPanel(), 0, 4)
+
+        addBookEntryShortcut(playerInventory, root, 7, 0)
 
         root.validate(this)
     }

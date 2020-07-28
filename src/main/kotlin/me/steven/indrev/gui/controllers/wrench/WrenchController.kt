@@ -12,6 +12,7 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.utils.add
+import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerInventory
@@ -59,8 +60,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     }
                     root.add(widget, side.x + 0.1, side.y + 0.2)
                 }
-
             }
+            addBookEntryShortcut(playerInventory, root, 5, 1)
         }
         root.validate(this)
     }

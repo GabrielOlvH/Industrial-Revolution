@@ -82,39 +82,43 @@ fun SyncedGuiDescription.configure(
             }
         }
         if (this is PatchouliEntryShortcut) {
-            val containsBook =
-                playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
-                    stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
-                })
-            val button = object : BookShortcutWidget() {
-                override fun addTooltip(tooltip: MutableList<StringRenderable>?) {
-                    if (containsBook)
-                        tooltip?.add(
-                            TranslatableText("gui.indrev.guide_book_shortcut.contains").formatted(
-                                Formatting.BLUE,
-                                Formatting.ITALIC
-                            )
-                        )
-                    else
-                        tooltip?.add(
-                            TranslatableText("gui.indrev.guide_book_shortcut.missing").formatted(
-                                Formatting.RED,
-                                Formatting.ITALIC
-                            )
-                        )
-                }
-            }
-            if (containsBook) {
-                button.setOnClick {
-                    ClientBookRegistry.INSTANCE.displayBookGui(
-                        Identifier("indrev:indrev"),
-                        this.getEntry(),
-                        this.getPage()
-                    )
-                }
-            }
-            it.add(button, 7, 0)
-            button.setSize(16, 16)
+            addBookEntryShortcut(playerInventory, it, 7, 0)
         }
     }
+}
+
+fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Int, y: Int) {
+    val containsBook =
+        playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
+            stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
+        })
+    val button = object : BookShortcutWidget() {
+        override fun addTooltip(tooltip: MutableList<StringRenderable>?) {
+            if (containsBook)
+                tooltip?.add(
+                    TranslatableText("gui.indrev.guide_book_shortcut.contains").formatted(
+                        Formatting.BLUE,
+                        Formatting.ITALIC
+                    )
+                )
+            else
+                tooltip?.add(
+                    TranslatableText("gui.indrev.guide_book_shortcut.missing").formatted(
+                        Formatting.RED,
+                        Formatting.ITALIC
+                    )
+                )
+        }
+    }
+    if (containsBook) {
+        button.setOnClick {
+            ClientBookRegistry.INSTANCE.displayBookGui(
+                Identifier("indrev:indrev"),
+                this.getEntry(),
+                this.getPage()
+            )
+        }
+    }
+    panel.add(button, x, y)
+    button.setSize(16, 16)
 }
