@@ -36,11 +36,15 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                         { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
                         WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
+                val isPresent = state.veins.containsKey(chunkPos)
+                val info = state.veins[chunkPos]
                 val biome = world.getBiome(user?.blockPos)
-                val type = VeinPicker.getList(biome).pickRandom(world.random)
-                val data = ChunkVeinData(type, type.sizeRange.random(rnd))
-                state.veins[chunkPos] = data
-                state.markDirty()
+                val type = if (isPresent) info!!.chunkVeinType else VeinPicker.getList(biome).pickRandom(world.random)
+                if (!isPresent) {
+                    val data = ChunkVeinData(type, type!!.sizeRange.random(rnd))
+                    state.veins[chunkPos] = data
+                    state.markDirty()
+                }
                 val tag = CompoundTag()
                 tag.putString("ChunkVeinType", type.toString())
                 tag.putString("ChunkPos", chunkPos.asString())
@@ -51,7 +55,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 if (user is PlayerEntity) {
                     if (!user.inventory.insertStack(infoStack)) ItemScatterer.spawn(user.world, user.x, user.y, user.z, infoStack)
                     user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned1"), true)
-                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned2", data.chunkVeinType), true)
+                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned2", type), true)
                     world.playSound(user.x, user.y, user.z, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f, false)
                 }
                 return stack
