@@ -38,11 +38,7 @@ object EnergyMovement {
             val target = accessor.holder
             sourceHandler.side(direction.opposite())
             val targetMaxInput = targetHandler.maxInput
-            var energy = sourceHandler.energy.coerceAtMost(sourceHandler.maxOutput)
-            if (source is CableBlockEntity && target is CableBlockEntity) {
-                if (sourceHandler.energy < targetHandler.energy) return@forEach
-                energy -= (energy - targetHandler.energy) / 2
-            }
+            val energy = sourceHandler.energy.coerceAtMost(sourceHandler.maxOutput)
             val amount = (targetMaxInput / sum) * energy
             if (amount > 0) {
                 if (source is MachineBlockEntity && target is MachineBlockEntity) {

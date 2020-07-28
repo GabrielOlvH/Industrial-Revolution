@@ -85,6 +85,7 @@ open class MachineBlock(
                     .append(LiteralText(": ${getShortEnergyDisplay(energy)} LF").formatted(Formatting.WHITE))
             )
         }
+        if (config == null) return
         if (Screen.hasShiftDown()) {
             when (config) {
                 is MachineConfig -> {
