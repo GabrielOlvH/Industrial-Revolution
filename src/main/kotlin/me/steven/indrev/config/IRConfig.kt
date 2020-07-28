@@ -42,10 +42,10 @@ class Generators : ConfigData {
     val coalGenerator: GeneratorConfig = GeneratorConfig(16.0, 1.5, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val solarGeneratorMk1: GeneratorConfig = GeneratorConfig(16.0, 1.5, 500.0, Tier.MK1.io)
+    val solarGeneratorMk1: GeneratorConfig = GeneratorConfig(4.0, 1.5, 500.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val solarGeneratorMk3: GeneratorConfig = GeneratorConfig(64.0, 1.5, 1500.0, Tier.MK3.io)
+    val solarGeneratorMk3: GeneratorConfig = GeneratorConfig(8.0, 1.5, 1500.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val heatGenerator: GeneratorConfig = GeneratorConfig(64.0, -1.0, 20000.0, Tier.MK4.io)
