@@ -57,6 +57,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     Explosion.DestructionType.DESTROY)
                 LogManager.getLogger("Industrial Revolution")
                     .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
+                return
             }
             itemTransferCooldown--
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
