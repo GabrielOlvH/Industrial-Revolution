@@ -57,7 +57,7 @@ class TemperatureComponent(
             }
         } else if (cooling > 0 && temperature > 25) {
             cooling--
-            temperature -= coolingModifier + overflowModifier
+            temperature -= coolingModifier - overflowModifier
         } else
             temperature += heatingSpeed + overflowModifier
         if (temperature > explosionLimit - 5) {
