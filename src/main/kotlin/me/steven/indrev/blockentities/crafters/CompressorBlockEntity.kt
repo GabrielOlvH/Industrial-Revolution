@@ -29,7 +29,7 @@ class CompressorBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1500.0)
     }
 
     private var currentRecipe: CompressorRecipe? = null
