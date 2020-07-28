@@ -19,10 +19,10 @@ object EnergyMovement {
         val sourceHandler = Energy.of(source)
         val targets = Direction.values()
             .mapNotNull { direction ->
-                if (source.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0 && (source !is CableBlockEntity || isCableConnected(source, direction))) {
+                if (source.getMaxOutput(EnergySide.fromMinecraft(direction)) > 0 && isSideConnected(source, direction)) {
                     val targetPos = pos.offset(direction)
                     val target = world?.getBlockEntity(targetPos)
-                    if (target != null && Energy.valid(target) && (target !is CableBlockEntity || isCableConnected(target, direction.opposite))) {
+                    if (target != null && Energy.valid(target) && isSideConnected(target, direction.opposite)) {
                         val targetHandler = Energy.of(target).side(direction.opposite)
                         if (targetHandler.energy < targetHandler.maxStored) targetHandler
                         else null
@@ -49,5 +49,6 @@ object EnergyMovement {
         }
     }
 
-    private fun isCableConnected(blockEntity: CableBlockEntity, direction: Direction) = blockEntity.cachedState[CableBlock.getProperty(direction)]
+    private fun isSideConnected(blockEntity: BlockEntity, direction: Direction) =
+        blockEntity !is CableBlockEntity || blockEntity.cachedState[CableBlock.getProperty(direction)]
 }
