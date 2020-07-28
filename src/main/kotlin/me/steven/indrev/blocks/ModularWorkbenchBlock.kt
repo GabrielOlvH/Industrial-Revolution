@@ -18,11 +18,17 @@ import java.util.stream.Stream
 class ModularWorkbenchBlock(
     settings: Settings,
     tier: Tier,
+    config: Any?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     blockEntityProvider: () -> MachineBlockEntity
-) : MachineBlock(settings, tier, screenHandler, blockEntityProvider) {
+) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
-    override fun getOutlineShape(state: BlockState?, world: BlockView?, pos: BlockPos?, context: ShapeContext?): VoxelShape = SHAPE
+    override fun getOutlineShape(
+        state: BlockState?,
+        world: BlockView?,
+        pos: BlockPos?,
+        context: ShapeContext?
+    ): VoxelShape = SHAPE
 
     companion object {
 

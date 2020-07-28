@@ -15,9 +15,10 @@ import net.minecraft.state.property.Properties
 class VerticalFacingMachineBlock(
     settings: Settings,
     tier: Tier,
-    private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
+    config: Any?,
+    screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     blockEntityProvider: () -> MachineBlockEntity
-) : MachineBlock(settings, tier, screenHandler, blockEntityProvider) {
+) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)

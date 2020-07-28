@@ -20,9 +20,10 @@ import net.minecraft.world.World
 open class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
+    config: Any?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     blockEntityProvider: () -> MachineBlockEntity
-) : MachineBlock(settings, tier, screenHandler, blockEntityProvider) {
+) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)

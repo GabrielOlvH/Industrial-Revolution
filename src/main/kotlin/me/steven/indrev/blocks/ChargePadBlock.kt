@@ -30,9 +30,15 @@ import team.reborn.energy.Energy
 import java.util.*
 import java.util.stream.Stream
 
-class ChargePadBlock(settings: Settings, tier: Tier) : FacingMachineBlock(settings, tier, null, { ChargePadBlockEntity(tier) }) {
+class ChargePadBlock(settings: Settings, tier: Tier) :
+    FacingMachineBlock(settings, tier, null, null, { ChargePadBlockEntity(tier) }) {
 
-    override fun getOutlineShape(state: BlockState, world: BlockView?, pos: BlockPos?, context: ShapeContext?): VoxelShape =
+    override fun getOutlineShape(
+        state: BlockState,
+        world: BlockView?,
+        pos: BlockPos?,
+        context: ShapeContext?
+    ): VoxelShape =
         when (state[HORIZONTAL_FACING]) {
             Direction.NORTH -> FACING_NORTH
             Direction.SOUTH -> FACING_SOUTH
