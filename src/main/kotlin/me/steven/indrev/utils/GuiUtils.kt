@@ -113,8 +113,8 @@ fun SyncedGuiDescription.configure(
                     )
                 }
             }
-            it.add(button, 7.5, 0.0)
-            button.setSize(8, 8)
+            it.add(button, 7, 0)
+            button.setSize(16, 16)
         }
     }
 }
