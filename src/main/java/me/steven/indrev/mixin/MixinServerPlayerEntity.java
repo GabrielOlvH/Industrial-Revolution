@@ -88,7 +88,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                     if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
-                                    else if (!stack.isEmpty()) slot--;
                                 }
                             }
                             break;
