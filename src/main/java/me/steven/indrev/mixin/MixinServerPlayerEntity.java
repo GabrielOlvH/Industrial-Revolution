@@ -110,7 +110,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         }
         for (Module module : effectsToRemove) {
             StatusEffectInstance effect = module.getApply().invoke(player, 1);
-            player.removeStatusEffect(effect.getEffectType());
+            if (effect != null)
+                player.removeStatusEffect(effect.getEffectType());
         }
     }
 }

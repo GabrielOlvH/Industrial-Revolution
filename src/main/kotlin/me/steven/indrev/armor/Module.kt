@@ -26,8 +26,10 @@ enum class Module(
     BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, false, false, { player, level ->
         if (player.isSubmergedInWater)
             StatusEffectInstance(StatusEffects.WATER_BREATHING, 1000000, level - 1, false, false)
-        else
+        else {
+            player.removeStatusEffect(StatusEffects.WATER_BREATHING)
             null
+        }
     }),
     FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 3, false, false),
     PROTECTION(
