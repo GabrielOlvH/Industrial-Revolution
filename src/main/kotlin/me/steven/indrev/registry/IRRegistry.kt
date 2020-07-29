@@ -38,7 +38,7 @@ object IRRegistry {
                 IRBasicAxe(IRToolMaterial.TIN, 6f, -3.1f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.TIN, 1.5f, -3f, itemSettings()),
                 IRBasicSword(IRToolMaterial.TIN, 3, -2.5f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.TIN, -2, -1.0f, itemSettings())
+                IRBasicHoe(IRToolMaterial.TIN, 2, -3.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.TIN)
         }.register()
@@ -50,8 +50,8 @@ object IRRegistry {
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 6f, -3.1f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.COPPER, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.COPPER, 3, -2.6f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.COPPER, -2, -1.0f, itemSettings())
+                IRBasicSword(IRToolMaterial.COPPER, 4, -2.6f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.COPPER, 2, -3.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.COPPER)
         }.register()
@@ -60,10 +60,10 @@ object IRRegistry {
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.STEEL, 7f, -3.4f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.STEEL, 7f, -5.0f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.STEEL, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.STEEL, 3, -2.8f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.STEEL, -2, -1.0f, itemSettings())
+                IRBasicSword(IRToolMaterial.STEEL, 5, -2.8f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.STEEL, 2, -3.0f, itemSettings())
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
