@@ -126,7 +126,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     private fun tryUse(itemStack: ItemStack, world: World, pos: BlockPos): Boolean {
         val fakePlayer = FakePlayerEntity(world, pos)
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
-        return itemStack.useOnBlock(
+        return world.getBlockState(pos).block is SaplingBlock && itemStack.useOnBlock(
             ItemUsageContext(
                 fakePlayer,
                 Hand.MAIN_HAND,
