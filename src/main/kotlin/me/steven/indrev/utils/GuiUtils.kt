@@ -3,17 +3,13 @@ package me.steven.indrev.utils
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.BookShortcutWidget
-import me.steven.indrev.gui.widgets.EnergyWidget
-import me.steven.indrev.gui.widgets.StringWidget
-import me.steven.indrev.gui.widgets.TemperatureWidget
+import me.steven.indrev.gui.widgets.*
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -52,21 +48,48 @@ fun SyncedGuiDescription.configure(
         val energyWidget = EnergyWidget(screenHandlerContext)
         it.add(energyWidget, 0, 0, 16, 64)
 
-        val batterySlot = WItemSlot.of(blockInventory, 0)
+        val batterySlot = IRItemSlot.of(
+            blockInventory,
+            0,
+            mutableListOf(
+                TranslatableText("gui.indrev.battery_slot_type").formatted(
+                    Formatting.BLUE,
+                    Formatting.ITALIC
+                )
+            )
+        )
         it.add(batterySlot, 0.0, 3.7)
 
         screenHandlerContext.run { world, blockPos ->
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
-                    val s = WItemSlot.of(blockInventory, slot)
+                    val s = IRItemSlot.of(
+                        blockInventory,
+                        slot,
+                        mutableListOf(
+                            TranslatableText("gui.indrev.upgrade_slot_type").formatted(
+                                Formatting.BLUE,
+                                Formatting.ITALIC
+                            )
+                        )
+                    )
                     it.add(s, 8, i)
                 }
             }
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
                 it.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
-                val coolerSlot = WItemSlot.of(blockInventory, 1)
+                val coolerSlot = IRItemSlot.of(
+                    blockInventory,
+                    1,
+                    mutableListOf(
+                        TranslatableText("gui.indrev.cooler_slot_type").formatted(
+                            Formatting.BLUE,
+                            Formatting.ITALIC
+                        )
+                    )
+                )
                 it.add(coolerSlot, 1.0, 3.7)
             }
             if (blockEntity is AOEMachineBlockEntity) {

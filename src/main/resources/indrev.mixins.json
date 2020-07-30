@@ -7,7 +7,8 @@
     "MixinCraftingResultSlot",
     "MixinItemStack",
     "MixinLivingEntity",
-    "MixinServerPlayerEntity"
+    "MixinServerPlayerEntity",
+    "AccessorWItemSlot"
   ],
   "client": [
     "MixinPlayerEntityRenderer"

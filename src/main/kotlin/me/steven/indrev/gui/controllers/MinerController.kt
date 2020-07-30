@@ -2,10 +2,10 @@ package me.steven.indrev.gui.controllers
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.widgets.IRItemSlot
 import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -31,7 +32,13 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         configure("block.indrev.miner", ctx, playerInventory, blockInventory, propertyDelegate)
 
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
+            IRItemSlot.of(
+                blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
+                    TranslatableText("gui.indrev.output_slot_type").formatted(
+                        Formatting.BLUE, Formatting.ITALIC
+                    )
+                )
+            ).also { it.isInsertingAllowed = false },
             3.0,
             0.7
         )
@@ -39,7 +46,18 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         root.add(StringWidget({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
         }, HorizontalAlignment.CENTER), 4.0, 3.9)
-        root.add(WItemSlot.of(blockInventory, 14), 4.0, 4.4)
+        root.add(
+            IRItemSlot.of(
+                blockInventory,
+                14,
+                mutableListOf(
+                    TranslatableText("gui.indrev.scan_output_slot_type").formatted(
+                        Formatting.BLUE,
+                        Formatting.ITALIC
+                    )
+                )
+            ), 4.0, 4.4
+        )
 
         root.validate(this)
     }

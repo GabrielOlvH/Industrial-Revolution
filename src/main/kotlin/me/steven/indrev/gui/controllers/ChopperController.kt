@@ -2,9 +2,9 @@ package me.steven.indrev.gui.controllers
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.widgets.IRItemSlot
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -12,6 +12,8 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
 class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -27,12 +29,22 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
+            IRItemSlot.of(
+                blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
+                    TranslatableText("gui.indrev.output_slot_type").formatted(
+                        Formatting.BLUE, Formatting.ITALIC
+                    )
+                )
+            ).also { it.isInsertingAllowed = false },
             4.8,
             1.0
         )
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2),
+            IRItemSlot.of(
+                blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, mutableListOf(
+                    TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC)
+                )
+            ),
             2.4,
             1.5
         )

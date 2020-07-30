@@ -13,7 +13,7 @@ class VerticalProcessWidget(private val delegate: PropertyDelegate) : WWidget() 
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
-        val processTime = delegate[2]
+        val processTime = 1200 - delegate[2]
         // only used by one machine so yea this is hardcoded
         val maxProcessTime = 1200
         if (processTime > 0) {

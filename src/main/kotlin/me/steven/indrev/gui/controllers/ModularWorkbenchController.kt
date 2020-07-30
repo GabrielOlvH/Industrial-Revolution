@@ -2,14 +2,16 @@ package me.steven.indrev.gui.controllers
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.widgets.IRItemSlot
 import me.steven.indrev.gui.widgets.VerticalProcessWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 
 class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -25,10 +27,23 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         setRootPanel(root)
         configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val armorSlot = WItemSlot.of(blockInventory, 2)
+        val armorSlot = IRItemSlot.of(
+            blockInventory,
+            2,
+            mutableListOf(
+                TranslatableText("gui.indrev.modular_armor_slot_type").formatted(
+                    Formatting.BLUE,
+                    Formatting.ITALIC
+                )
+            )
+        )
         root.add(armorSlot, 4.0, 3.5)
 
-        val moduleSlot = WItemSlot.of(blockInventory, 1)
+        val moduleSlot = IRItemSlot.of(
+            blockInventory,
+            1,
+            mutableListOf(TranslatableText("gui.indrev.module_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
+        )
         root.add(moduleSlot, 4, 1)
 
         val process = VerticalProcessWidget(propertyDelegate)
