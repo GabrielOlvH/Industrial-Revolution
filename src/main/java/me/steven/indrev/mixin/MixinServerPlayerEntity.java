@@ -5,6 +5,7 @@ import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.armor.Module;
 import me.steven.indrev.items.IRGamerAxeItem;
 import me.steven.indrev.items.IRPortableChargerItem;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,13 +44,37 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         }
     }
 
+    //it doesnt work so yea
+    //@ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "HEAD"), ordinal = 1, argsOnly = true)
+    private float absorbExplosionDamage(float amount, DamageSource source) {
+        if (source.isExplosive()) {
+            ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+            PlayerInventory inventory = player.inventory;
+            float damageAbsorbed = 0;
+            for (ItemStack itemStack : inventory.armor) {
+                int level = Module.Companion.getLevel(itemStack, Module.PROTECTION);
+                double absorb = amount * (0.25 * (level / 3f));
+                if (itemStack.getItem() instanceof ArmorItem
+                        && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR
+                        && level > 0
+                        && Energy.valid(itemStack)
+                        && Energy.of(itemStack).use(absorb * 4)
+                ) {
+                    damageAbsorbed += absorb;
+                }
+            }
+            return Math.min(amount - damageAbsorbed, 0);
+        }
+        return amount;
+    }
+
     private void useActiveAxeEnergy() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
         for (ItemStack itemStack : inventory.main) {
             if (itemStack.getItem() instanceof IRGamerAxeItem) {
                 CompoundTag tag = itemStack.getOrCreateTag();
-                if (tag.contains("Active") && tag.getBoolean("Active") && !Energy.of(itemStack).use(1.5)) {
+                if (tag.contains("Active") && tag.getBoolean("Active") && !Energy.of(itemStack).use(5.0)) {
                     tag.putBoolean("Active", false);
                 }
             }
@@ -72,7 +97,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                         case JUMP_BOOST:
                         case BREATHING:
                             StatusEffectInstance effect = module.getApply().invoke(player, level);
-                            if (effect != null && Energy.of(itemStack).use(2.5)) {
+                            if (effect != null && Energy.of(itemStack).use(10.0)) {
                                 if (!player.hasStatusEffect(effect.getEffectType()))
                                     player.addStatusEffect(effect);
                                 appliedEffects.add(module);
@@ -85,7 +110,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(5.0))
+                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(15.0))
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
                                 }
