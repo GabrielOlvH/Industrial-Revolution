@@ -1,14 +1,15 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.registry.IRRegistry
-import me.steven.indrev.utils.isSide
+import com.mojang.blaze3d.platform.GlStateManager
+import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.RenderLayers
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Vec3d
+
 
 class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<AOEMachineBlockEntity>(dispatcher) {
     override fun render(
@@ -21,33 +22,23 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
     ) {
         if (blockEntity.renderWorkingArea) {
             val area = blockEntity.getWorkingArea()
-            val state = IRRegistry.AREA_INDICATOR.defaultState
+
+            RenderSystem.enableBlend()
+            RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO)
+            RenderSystem.lineWidth((MinecraftClient.getInstance().window.framebufferHeight.toFloat() / 1920.0f * 2.5f).coerceAtLeast(2.5f))
+            RenderSystem.disableTexture()
+            val pos = blockEntity.pos
             matrices?.run {
-                val vertexConsumer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state)) ?: return
-                val pos = blockEntity.pos
-                for (x in area.minX.toInt() until area.maxX.toInt())
-                    for (y in area.minY.toInt() until area.maxY.toInt())
-                        for (z in area.minZ.toInt() until area.maxZ.toInt()) {
-                            val vec3d = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
-                            if (area.isSide(vec3d)) {
-                                val offsetX = pos.x - x.toDouble()
-                                val offsetY = y.toDouble() - pos.y
-                                val offsetZ = pos.z - z.toDouble()
-                                push()
-                                translate(offsetX, offsetY, offsetZ)
-                                MinecraftClient.getInstance().blockRenderManager.renderBlock(
-                                    state,
-                                    pos,
-                                    blockEntity.world,
-                                    this,
-                                    vertexConsumer,
-                                    true,
-                                    blockEntity.world?.random
-                                )
-                                pop()
-                            }
-                        }
+                push()
+                RenderSystem.enableDepthTest()
+                RenderSystem.depthFunc(515)
+                RenderSystem.depthMask(true)
+                val vertex = vertexConsumers?.getBuffer(RenderLayer.getLines())
+                WorldRenderer.drawBox(this, vertex, area.offset(-pos.x.toDouble(), -pos.y.toDouble(), -pos.z.toDouble()), 1f, 0f, 1f, 1f)
+                pop()
             }
+            RenderSystem.enableTexture()
+            RenderSystem.disableBlend()
         }
     }
 
