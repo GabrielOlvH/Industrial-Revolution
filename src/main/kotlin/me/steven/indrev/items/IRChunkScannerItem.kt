@@ -73,7 +73,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
         return TypedActionResult.consume(stack)
     }
 
-    override fun getMaxUseTime(stack: ItemStack?): Int = 200
+    override fun getMaxUseTime(stack: ItemStack?): Int = 100
 
     override fun getUseAction(stack: ItemStack?): UseAction = if (stack?.tag == null) UseAction.BOW else UseAction.NONE
 }
