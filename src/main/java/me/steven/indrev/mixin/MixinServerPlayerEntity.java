@@ -37,16 +37,16 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    private void applyEffects(CallbackInfo ci) {
+    private void indrev_applyEffects(CallbackInfo ci) {
         ticks++;
         if (ticks % 120 == 0) {
             applyArmorEffects();
             useActiveAxeEnergy();
         }
     }
-    
+
     @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
-    private float absorbExplosionDamage(float amount, DamageSource source) {
+    private float indrev_absorbExplosionDamage(float amount, DamageSource source) {
         if (source.isExplosive()) {
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
             PlayerInventory inventory = player.inventory;

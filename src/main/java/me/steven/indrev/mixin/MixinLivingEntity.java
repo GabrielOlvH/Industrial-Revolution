@@ -26,14 +26,14 @@ public abstract class MixinLivingEntity {
     protected abstract void damageArmor(DamageSource source, float amount);
 
     @Inject(method = "drop", at = @At("INVOKE"), cancellable = true)
-    public void cancelDrop(DamageSource source, CallbackInfo ci) {
+    public void indrev_cancelDrop(DamageSource source, CallbackInfo ci) {
         if (source.getAttacker() instanceof FakePlayerEntity) {
             ci.cancel();
         }
     }
 
     @ModifyVariable(method = "handleFallDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/LivingEntity;computeFallDamage(FF)I"))
-    private int mitigateFallDamage(int damage) {
+    private int indrev_mitigateFallDamage(int damage) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity) {
             ItemStack boots = ((ServerPlayerEntity) entity).inventory.armor.get(EquipmentSlot.FEET.getEntitySlotId());
@@ -51,7 +51,7 @@ public abstract class MixinLivingEntity {
     }
 
     @Inject(method = "applyArmorToDamage", at = @At("HEAD"), cancellable = true)
-    public void applyArmorToDamage(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
+    public void indrev_applyArmorToDamage(DamageSource source, float amount, CallbackInfoReturnable<Float> ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity && !source.bypassesArmor()) {
             float remaining = DamageUtil.getDamageLeft(amount, entity.getArmor(), (float) entity.getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS));

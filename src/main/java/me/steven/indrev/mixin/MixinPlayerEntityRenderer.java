@@ -19,7 +19,7 @@ public abstract class MixinPlayerEntityRenderer extends LivingEntityRenderer<Abs
     }
 
     @Inject(method = "<init>(Lnet/minecraft/client/render/entity/EntityRenderDispatcher;Z)V", at = @At("TAIL"))
-    private void addModuleRenderer(EntityRenderDispatcher entityRenderDispatcher, boolean b, CallbackInfo ci) {
+    private void indrev_addModuleRenderer(EntityRenderDispatcher entityRenderDispatcher, boolean b, CallbackInfo ci) {
         this.addFeature(
                 new ModuleFeatureRenderer<AbstractClientPlayerEntity, PlayerEntityModel<AbstractClientPlayerEntity>, BipedEntityModel<AbstractClientPlayerEntity>>(
                         this, new BipedEntityModel<>(0.5F), new BipedEntityModel<>(1.0F)

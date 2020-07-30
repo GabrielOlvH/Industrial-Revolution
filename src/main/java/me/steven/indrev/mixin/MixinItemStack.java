@@ -30,7 +30,7 @@ public abstract class MixinItemStack {
     private static final UUID[] MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
 
     @Inject(method = "getAttributeModifiers", at = @At("TAIL"), cancellable = true)
-    private void calcAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
+    private void indrev_calcAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
         ItemStack stack = (ItemStack) (Object) this;
         if (stack.getItem() instanceof IRModularArmor) {
             ArmorItem item = (ArmorItem) stack.getItem();
@@ -56,7 +56,7 @@ public abstract class MixinItemStack {
     }
 
     @Inject(method = "damage(ILjava/util/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z", at = @At("HEAD"), cancellable = true)
-    private void useArmorEnergy1(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
+    private void indrev_useArmorEnergy1(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = (ItemStack) (Object) this;
         if (stack.getItem() instanceof IRModularArmor) {
             extractEnergy(stack, amount);
@@ -65,7 +65,7 @@ public abstract class MixinItemStack {
     }
 
     @Inject(method = "damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V", at = @At("HEAD"), cancellable = true)
-    private void useArmorEnergy2(int amount, LivingEntity entity, Consumer<LivingEntity> breakCallback, CallbackInfo ci) {
+    private void indrev_useArmorEnergy2(int amount, LivingEntity entity, Consumer<LivingEntity> breakCallback, CallbackInfo ci) {
         ItemStack stack = (ItemStack) (Object) this;
         if (stack.getItem() instanceof IRModularArmor) {
             extractEnergy(stack, amount);
