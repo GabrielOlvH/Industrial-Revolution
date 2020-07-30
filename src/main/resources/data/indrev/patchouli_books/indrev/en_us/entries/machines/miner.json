@@ -11,7 +11,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/miner_mk4",
-      "text": "The $(l)$(o)Miner$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy."
+      "text": "The $(l)$(o)Miner$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks."
     },
     {
       "anchor": "chunk_scanner",
