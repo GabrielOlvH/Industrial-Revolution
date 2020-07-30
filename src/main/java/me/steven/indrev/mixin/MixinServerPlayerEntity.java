@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import team.reborn.energy.Energy;
 
@@ -43,9 +44,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
             useActiveAxeEnergy();
         }
     }
-
-    //it doesnt work so yea
-    //@ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "HEAD"), ordinal = 1, argsOnly = true)
+    
+    @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
     private float absorbExplosionDamage(float amount, DamageSource source) {
         if (source.isExplosive()) {
             ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
