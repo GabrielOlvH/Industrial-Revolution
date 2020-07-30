@@ -1,5 +1,5 @@
 if (mod.isLoaded('techreborn')) {
-    console.log('Tech Reborn is present, loading Compressor compatibility recipes.')
+    console.log('Tech Reborn is present, loading Compressor compatibility recipes with Industrial Revolution.')
     events.listen('recipes', function (event) {
 
         event.recipes.indrev.compress({
