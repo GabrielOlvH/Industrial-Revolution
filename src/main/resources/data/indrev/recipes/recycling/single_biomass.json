@@ -1,7 +1,7 @@
 {
   "type": "indrev:recycle",
   "ingredient": {
-    "item": "minecraft:grass"
+    "tag": "indrev:single_biomass"
   },
   "output": {
     "item": "indrev:biomass",

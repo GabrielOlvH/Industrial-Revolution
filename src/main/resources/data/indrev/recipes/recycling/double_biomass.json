@@ -1,11 +1,11 @@
 {
   "type": "indrev:recycle",
   "ingredient": {
-    "item": "minecraft:dirt"
+    "tag": "indrev:double_biomass"
   },
   "output": {
     "item": "indrev:biomass",
-    "count": 1
+    "count": 2
   },
   "processTime": 300
 }
