@@ -70,7 +70,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                             extract(inventory, slot, direction)
                         }
                     }
-                } else if (mode.input) {
+                }
+                if (mode.input) {
                     getAvailableSlots(neighborInv, direction).forEach { slot ->
                         insertAndExtract(neighborInv, inventory, direction.opposite) {
                             extract(neighborInv, slot, direction)
