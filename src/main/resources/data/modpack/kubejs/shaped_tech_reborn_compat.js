@@ -13,7 +13,7 @@ if (mod.isLoaded('techreborn')) {
                 }
             },
             result: {
-                "item": "techreborn:carbon_fiber"
+                item: "techreborn:carbon_fiber"
             }
         })
     })
