@@ -23,31 +23,11 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredient: {
-                item: 'minecraft:andesite'
+                tag: 'c:basalt'
             },
             output: {
-                item: 'techreborn:andesite_dust',
+                item: 'techreborn:basalt_dust',
                 count: 2
-            },
-            processTime: 250
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                tag: 'c:basalt'
-            },
-            output: {
-                item: 'techreborn:basalt_dust',
-                count: 1
-            },
-            processTime: 250
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                tag: 'c:basalt'
-            },
-            output: {
-                item: 'techreborn:basalt_dust',
-                count: 1
             },
             processTime: 250
         })
@@ -81,31 +61,12 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredient: {
-                tag: 'c:bronze_ingots'
-            },
-            output: {
-                item: 'techreborn:bronze_dust',
-                count: 2
-            },
-            processTime: 200
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
                 item: 'minecraft:charcoal'
             },
             output: {
                 item: 'techreborn:charcoal_dust'
             },
             processTime: 230
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                item: 'techreborn:chrome_ingot'
-            },
-            output: {
-                item: 'techreborn:chrome_dust'
-            },
-            processTime: 250
         })
         event.recipes.indrev.pulverize({
             ingredient: {
@@ -155,30 +116,12 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredient: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
                 item: 'minecraft:emerald'
             },
             output: {
                 item: 'techreborn:emerald_dust'
             },
             processTime: 270
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
-            },
-            processTime: 220
         })
         event.recipes.indrev.pulverize({
             ingredient: {
@@ -204,7 +147,7 @@ if (mod.isLoaded('techreborn')) {
                 item: 'minecraft:end_stone'
             },
             output: {
-                item: 'techreborn:end_stone_dust'
+                item: 'techreborn:endstone_dust'
             },
             processTime: 220
         })
@@ -248,15 +191,6 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredient: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
                 tag: 'c:lead_ingots'
             },
             output: {
@@ -271,15 +205,6 @@ if (mod.isLoaded('techreborn')) {
             output: {
                 item: 'techreborn:lead_dust',
                 count: 2
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
             },
             processTime: 220
         })
@@ -326,15 +251,6 @@ if (mod.isLoaded('techreborn')) {
             },
             output: {
                 item: 'techreborn:platinum_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredient: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
             },
             processTime: 220
         })
@@ -429,7 +345,7 @@ if (mod.isLoaded('techreborn')) {
             },
             output: {
                 item: 'techreborn:silver_dust',
-                count: 1
+                count: 2
             },
             processTime: 220
         })
