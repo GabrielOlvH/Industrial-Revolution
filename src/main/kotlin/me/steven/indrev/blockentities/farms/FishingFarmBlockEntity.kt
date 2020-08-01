@@ -41,9 +41,9 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
 
     override fun machineTick() {
         if (!Energy.of(this).use(Upgrade.ENERGY(this))) return
-        cooldown--
-        if (cooldown > 0) return
-        cooldown = Upgrade.SPEED(this)
+        cooldown += Upgrade.SPEED(this)
+        if (cooldown < getConfig().processSpeed) return
+        cooldown = 0.0
         val rodStack = inventoryComponent?.inventory?.getStack(1)
         Direction.values().forEach { direction ->
             val pos = pos.offset(direction)
@@ -82,16 +82,16 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED(this)
-        Upgrade.SPEED -> getConfig().processSpeed
+        Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
     }
 
     fun getConfig(): MachineConfig {
         val machines = IndustrialRevolution.CONFIG.machines
         return when (tier) {
-            Tier.MK2 -> machines.fishing_mk2
-            Tier.MK3 -> machines.fishing_mk3
-            else -> machines.fishing_mk4
+            Tier.MK2 -> machines.fishingMk2
+            Tier.MK3 -> machines.fishingMk3
+            else -> machines.fishingMk4
         }
     }
 

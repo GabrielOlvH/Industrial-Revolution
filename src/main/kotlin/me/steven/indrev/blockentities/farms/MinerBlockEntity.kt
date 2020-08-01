@@ -24,7 +24,7 @@ import net.minecraft.server.world.ServerWorld
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
+class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity(tier, if (matchScanOutput) MachineRegistry.MINER_REGISTRY else MachineRegistry.ENDER_MINER_REGISTRY), UpgradeProvider {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
@@ -45,12 +45,14 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     private var chunkVeinType: ChunkVeinType? = null
     private var mining = 0.0
+    private var finished = false
 
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         if (chunkVeinType == null) {
-            val chunkPos = world?.getChunk(pos)?.pos ?: return
+            val scanOutput = inventory.getStack(14).tag ?: return
+            val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val state =
                 (world as ServerWorld).persistentStateManager.getOrCreate(
                     { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
@@ -60,27 +62,27 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
             this.chunkVeinType = data.chunkVeinType
             propertyDelegate[3] = data.explored * 100 / data.size
             if (data.explored >= data.size) {
-                mining = -1.0
+                finished = true
                 return
             }
-        } else {
+        } else if (!finished) {
             val scanOutput = inventory.getStack(14).tag ?: return
             val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val chunkPos = world?.getChunk(pos)?.pos ?: return
-            if (chunkPos == scanChunkPos && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY(this))) {
+            if ((chunkPos == scanChunkPos || !matchScanOutput) && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY(this))) {
                 mining += Upgrade.SPEED(this)
                 temperatureComponent?.tick(true)
             } else {
                 setWorkingState(false)
                 temperatureComponent?.tick(false)
             }
-            if (mining > 10) {
+            if (mining >= getConfig().processSpeed) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
                         { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
                         WorldChunkVeinData.STATE_OVERWORLD_KEY
                     )
-                val data = state.veins[chunkPos]
+                val data = state.veins[scanChunkPos]
                 if (data == null) {
                     chunkVeinType = null
                     return
@@ -88,7 +90,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
                 val (_, size, explored) = data
                 propertyDelegate[3] = explored * 100 / size
                 if (explored >= size) {
-                    mining = -1.0
+                    finished = true
                     return
                 }
                 data.explored++
@@ -108,7 +110,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED(this)
-        Upgrade.SPEED -> getConfig().processSpeed
+        Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
     }
 
@@ -144,5 +146,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MI
         super.fromClientTag(tag)
     }
 
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.miner
+    fun getConfig() =
+        if (matchScanOutput) IndustrialRevolution.CONFIG.machines.enderMiner
+        else IndustrialRevolution.CONFIG.machines.miner
 }

@@ -295,7 +295,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     MACHINE_BLOCK_SETTINGS(),
                     tier, CONFIG.machines.miner,
                     ::MinerController,
-                    { MinerBlockEntity(tier) }
+                    { MinerBlockEntity(tier, true) }
                 ) {
                     override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
                         super.buildTooltip(stack, view, tooltip, options)
@@ -303,7 +303,24 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     }
                 }
             },
-            { tier -> { MinerBlockEntity(tier) } }
+            { tier -> { MinerBlockEntity(tier, true) } }
+        ).buffer { 50000.0 }
+
+        val ENDER_MINER_REGISTRY = MachineRegistry(identifier("ender_miner"), false, Tier.MK4).register(
+            { tier ->
+                object : FacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier, CONFIG.machines.enderMiner,
+                    ::MinerController,
+                    { MinerBlockEntity(tier, false) }
+                ) {
+                    override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
+                        super.buildTooltip(stack, view, tooltip, options)
+                        tooltip?.add(TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
+                    }
+                }
+            },
+            { tier -> { MinerBlockEntity(tier, false) } }
         ).buffer { 50000.0 }
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
@@ -311,9 +328,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 MachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
-                        Tier.MK2 -> CONFIG.machines.fishing_mk2
-                        Tier.MK3 -> CONFIG.machines.fishing_mk3
-                        else -> CONFIG.machines.fishing_mk4
+                        Tier.MK2 -> CONFIG.machines.fishingMk2
+                        Tier.MK3 -> CONFIG.machines.fishingMk3
+                        else -> CONFIG.machines.fishingMk4
                     }, ::FishingFarmController
                 ) { FishingFarmBlockEntity(tier) }
             },
