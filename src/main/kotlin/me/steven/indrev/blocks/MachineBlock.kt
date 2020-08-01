@@ -101,7 +101,10 @@ open class MachineBlock(
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
-                                TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
+                                TranslatableText(
+                                    "gui.indrev.tooltip.lf",
+                                    getShortEnergyDisplay(config.maxEnergyStored)
+                                ).formatted(
                                     Formatting.GOLD
                                 )
                             )
@@ -133,7 +136,10 @@ open class MachineBlock(
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
-                                TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
+                                TranslatableText(
+                                    "gui.indrev.tooltip.lf",
+                                    getShortEnergyDisplay(config.maxEnergyStored)
+                                ).formatted(
                                     Formatting.GOLD
                                 )
                             )
@@ -174,7 +180,10 @@ open class MachineBlock(
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
-                                TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
+                                TranslatableText(
+                                    "gui.indrev.tooltip.lf",
+                                    getShortEnergyDisplay(config.maxEnergyStored)
+                                ).formatted(
                                     Formatting.GOLD
                                 )
                             )
