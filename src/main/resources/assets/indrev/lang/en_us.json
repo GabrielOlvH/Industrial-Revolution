@@ -506,5 +506,7 @@
   "advancements.indrev.modular_workbench": "It does not look like a workbench",
   "advancements.indrev.modular_workbench.description": "Get a Modular Workbench",
   "advancements.indrev.modular_armor": "Modularity",
-  "advancements.indrev.modular_armor.description": "Get a Modular Armor full set"
+  "advancements.indrev.modular_armor.description": "Get a Modular Armor full set",
+  "advancements.indrev.gamer_axe": "Not enough RGB",
+  "advancements.indrev.gamer_axe.description": "Get a Gamer Axe"
 }
