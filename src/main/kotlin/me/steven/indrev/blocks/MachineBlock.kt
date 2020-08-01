@@ -82,7 +82,7 @@ open class MachineBlock(
             val energy = infoTag.getDouble("Energy")
             tooltip?.add(
                 TranslatableText("gui.widget.energy").formatted(Formatting.BLUE)
-                    .append(LiteralText(": ${getShortEnergyDisplay(energy)} LF").formatted(Formatting.WHITE))
+                    .append(LiteralText(": ${getShortEnergyDisplay(energy)} LF").formatted(Formatting.GOLD))
             )
         }
         if (config == null) return
@@ -95,14 +95,14 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.maxInput
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
                                 TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
-                                    Formatting.WHITE
+                                    Formatting.GOLD
                                 )
                             )
                     )
@@ -112,12 +112,12 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lf",
                                     config.energyCost
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                            .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.WHITE))
+                            .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
                     )
                 }
                 is HeatMachineConfig -> {
@@ -127,14 +127,14 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.maxInput
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
                                 TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
-                                    Formatting.WHITE
+                                    Formatting.GOLD
                                 )
                             )
                     )
@@ -144,12 +144,12 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lf",
                                     config.energyCost
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                            .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.WHITE))
+                            .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
@@ -157,7 +157,7 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.processTemperatureBoost
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                 }
@@ -168,14 +168,14 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.maxOutput
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
                             .append(
                                 TranslatableText("gui.indrev.tooltip.lf", config.maxEnergyStored).formatted(
-                                    Formatting.WHITE
+                                    Formatting.GOLD
                                 )
                             )
                     )
@@ -185,14 +185,14 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.ratio
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
                         TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
                             .append(
                                 TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(
-                                    Formatting.WHITE
+                                    Formatting.GOLD
                                 )
                             )
                     )
@@ -204,7 +204,7 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.maxInput
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                     tooltip?.add(
@@ -213,7 +213,7 @@ open class MachineBlock(
                                 TranslatableText(
                                     "gui.indrev.tooltip.lftick",
                                     config.maxOutput
-                                ).formatted(Formatting.WHITE)
+                                ).formatted(Formatting.GOLD)
                             )
                     )
                 }

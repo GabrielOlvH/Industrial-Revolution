@@ -1,9 +1,11 @@
 package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.Module
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -22,5 +24,32 @@ open class IRModuleItem(val module: Module, settings: Settings) : Item(settings)
                 Formatting.ITALIC
             )
         )
+        tooltip?.add(LiteralText(" "))
+        if (Screen.hasShiftDown()) {
+            if (module != Module.COLOR)
+                tooltip?.add(
+                    TranslatableText(
+                        "item.indrev.module_max_level",
+                        LiteralText(module.maxLevel.toString()).formatted(Formatting.GOLD)
+                    ).formatted(Formatting.BLUE)
+                )
+            tooltip?.add(
+                TranslatableText("item.indrev.module_parts").formatted(Formatting.BLUE)
+            )
+            module.slots.forEach {
+                tooltip?.add(
+                    TranslatableText(
+                        "item.indrev.module_parts_${it.toString().toLowerCase()}"
+                    ).formatted(Formatting.GOLD)
+                )
+            }
+        } else {
+            tooltip?.add(
+                TranslatableText("gui.indrev.tooltip.press_shift").formatted(
+                    Formatting.BLUE,
+                    Formatting.ITALIC
+                )
+            )
+        }
     }
 }
