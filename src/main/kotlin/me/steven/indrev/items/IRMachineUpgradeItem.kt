@@ -26,23 +26,24 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
         val world = context?.world
         if (world?.isClient == true) return ActionResult.PASS
         val blockPos = context?.blockPos
-        var state = world?.getBlockState(blockPos)
+        val state = world?.getBlockState(blockPos)
         val block = state?.block as? MachineBlock ?: return ActionResult.PASS
-        val blockEntity = world?.getBlockEntity(blockPos) as? MachineBlockEntity ?: return ActionResult.PASS
+        val blockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity ?: return ActionResult.PASS
         if (block.tier == from) {
             if (!blockEntity.registry.upgradeable) return ActionResult.PASS
-            state = blockEntity.registry.block(to).defaultState
+            var newState = blockEntity.registry.block(to).defaultState
             if (state.contains(VerticalFacingMachineBlock.FACING))
-                state = state.with(VerticalFacingMachineBlock.FACING, state[VerticalFacingMachineBlock.FACING])
+                newState = newState.with(VerticalFacingMachineBlock.FACING, state[VerticalFacingMachineBlock.FACING])
             else if (state.contains(FacingMachineBlock.HORIZONTAL_FACING))
-                state = state.with(FacingMachineBlock.HORIZONTAL_FACING, state[FacingMachineBlock.HORIZONTAL_FACING])
-            world.setBlockState(blockPos, state)
+                newState = newState.with(FacingMachineBlock.HORIZONTAL_FACING, state[FacingMachineBlock.HORIZONTAL_FACING])
+            world.setBlockState(blockPos, newState)
             val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
                 ?: throw RuntimeException("This should never happen, what the fuck")
             upgradedBlockEntity.energy = blockEntity.energy
             upgradedBlockEntity.inventoryComponent?.fromTag(blockEntity.inventoryComponent?.toTag(CompoundTag()))
             upgradedBlockEntity.temperatureComponent?.fromTag(blockEntity.temperatureComponent?.toTag(CompoundTag()))
             context.player?.getStackInHand(context.hand)?.decrement(1)
+            return ActionResult.CONSUME
         }
         return super.useOnBlock(context)
     }

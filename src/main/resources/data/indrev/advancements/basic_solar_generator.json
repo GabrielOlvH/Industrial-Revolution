@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:solar_generator_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.basic_solar_generator"
+    },
+    "description": {
+      "translate": "advancements.indrev.basic_solar_generator.description"
+    }
+  },
+  "parent": "indrev:coal_generator",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:solar_generator_mk1"
+          }
+        ]
+      }
+    }
+  }
+}

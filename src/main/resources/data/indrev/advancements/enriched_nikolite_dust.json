@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:enriched_nikolite_dust"
+    },
+    "title": {
+      "translate": "advancements.indrev.enriched_nikolite_dust"
+    },
+    "description": {
+      "translate": "advancements.indrev.enriched_nikolite_dust.description"
+    }
+  },
+  "parent": "indrev:nikolite_ingot",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:enriched_nikolite_dust"
+          }
+        ]
+      }
+    }
+  }
+}

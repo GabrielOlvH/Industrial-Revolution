@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:coal_generator_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.coal_generator"
+    },
+    "description": {
+      "translate": "advancements.indrev.coal_generator.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:coal_generator_mk1"
+          }
+        ]
+      }
+    }
+  }
+}

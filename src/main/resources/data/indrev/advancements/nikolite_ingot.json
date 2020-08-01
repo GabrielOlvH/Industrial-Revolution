@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:nikolite_ingot"
+    },
+    "title": {
+      "translate": "advancements.indrev.nikolite_ingot"
+    },
+    "description": {
+      "translate": "advancements.indrev.nikolite_ingot.description"
+    }
+  },
+  "parent": "indrev:infuser",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:nikolite_ingot"
+          }
+        ]
+      }
+    }
+  }
+}

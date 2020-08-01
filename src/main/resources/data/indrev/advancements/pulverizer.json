@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:pulverizer_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.pulverizer"
+    },
+    "description": {
+      "translate": "advancements.indrev.pulverizer.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:pulverizer_mk1"
+          }
+        ]
+      }
+    }
+  }
+}

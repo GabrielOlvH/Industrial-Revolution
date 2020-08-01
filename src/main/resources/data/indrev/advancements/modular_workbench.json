@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:modular_workbench_mk4"
+    },
+    "title": {
+      "translate": "advancements.indrev.modular_workbench"
+    },
+    "description": {
+      "translate": "advancements.indrev.modular_workbench.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:modular_workbench_mk4"
+          }
+        ]
+      }
+    }
+  }
+}

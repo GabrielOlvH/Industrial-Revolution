@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:biomass"
+    },
+    "title": {
+      "translate": "advancements.indrev.biomass"
+    },
+    "description": {
+      "translate": "advancements.indrev.biomass.description"
+    }
+  },
+  "parent": "indrev:recycler",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:biomass"
+          }
+        ]
+      }
+    }
+  }
+}

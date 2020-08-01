@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:tier_upgrade_mk4"
+    },
+    "title": {
+      "translate": "advancements.indrev.mk4_upgrade"
+    },
+    "description": {
+      "translate": "advancements.indrev.mk4_upgrade.description"
+    }
+  },
+  "parent": "indrev:mk3_upgrade",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:item_used_on_block",
+      "conditions": {
+        "item": {
+          "item": "indrev:tier_upgrade_mk4"
+        }
+      }
+    }
+  }
+}

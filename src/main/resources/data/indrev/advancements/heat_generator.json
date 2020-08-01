@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:heat_generator_mk4"
+    },
+    "title": {
+      "translate": "advancements.indrev.heat_generator"
+    },
+    "description": {
+      "translate": "advancements.indrev.heat_generator"
+    }
+  },
+  "parent": "indrev:coal_generator",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:heat_generator_mk4"
+          }
+        ]
+      }
+    }
+  }
+}

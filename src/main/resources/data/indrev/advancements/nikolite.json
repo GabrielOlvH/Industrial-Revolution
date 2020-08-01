@@ -1,0 +1,25 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:nikolite_dust"
+    },
+    "title": {
+      "translate": "advancements.indrev.nikolite"
+    },
+    "description": {
+      "translate": "advancements.indrev.nikolite.description"
+    }
+  },
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:nikolite_dust"
+          }
+        ]
+      }
+    }
+  }
+}

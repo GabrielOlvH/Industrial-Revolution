@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:cable_mk3"
+    },
+    "title": {
+      "translate": "advancements.indrev.cable_mk3"
+    },
+    "description": {
+      "translate": "advancements.indrev.cable_mk3.description"
+    }
+  },
+  "parent": "indrev:nikolite",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:cable_mk3"
+          }
+        ]
+      }
+    }
+  }
+}

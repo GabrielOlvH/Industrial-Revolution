@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:machine_block"
+    },
+    "title": {
+      "translate": "advancements.indrev.machine_block"
+    },
+    "description": {
+      "translate": "advancements.indrev.machine_block.description"
+    }
+  },
+  "parent": "indrev:nikolite",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:machine_block"
+          }
+        ]
+      }
+    }
+  }
+}

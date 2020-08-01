@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:speed_upgrade"
+    },
+    "title": {
+      "translate": "advancements.indrev.speed_upgrade"
+    },
+    "description": {
+      "translate": "advancements.indrev.speed_upgrade.description"
+    }
+  },
+  "parent": "indrev:empty_upgrade",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:speed_upgrade"
+          }
+        ]
+      }
+    }
+  }
+}
