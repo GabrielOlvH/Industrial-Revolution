@@ -99,8 +99,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         val blockPos = ctx?.blockPos ?: return state
         for (direction in Direction.values()) {
             val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            if (Energy.valid(neighbor))
-                state = state.with(getProperty(direction), true)
+            state = state.with(getProperty(direction), Energy.valid(neighbor))
         }
         return state
     }
@@ -114,13 +113,10 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         neighborPos: BlockPos?
     ): BlockState {
         val neighborBlockEntity = world?.getBlockEntity(neighborPos)
-        return if (neighborBlockEntity == null || !Energy.valid(neighborBlockEntity)) state.with(
-            getProperty(
-                facing
-            ), false
-        )
-        else state.with(getProperty(facing), true)
+        return state.with(getProperty(facing), neighborBlockEntity != null && Energy.valid(neighborBlockEntity))
     }
+
+    override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
 
     companion object {
 
@@ -147,6 +143,4 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
             }
         }
     }
-
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
 }
