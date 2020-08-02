@@ -102,10 +102,14 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     ): Boolean {
         when (blockState.block) {
             is PillarBlock -> {
+                if (Energy.valid(axeStack) && !Energy.of(axeStack).use(1.0))
+                    return false
+                else {
+                    axeStack.damage(1, world?.random, null)
+                    if (axeStack.damage >= axeStack.maxDamage)
+                        axeStack.decrement(1)
+                }
                 world?.breakBlock(blockPos, false)
-                axeStack.damage(1, world?.random, null)
-                if (axeStack.damage >= axeStack.maxDamage)
-                    axeStack.decrement(1)
             }
             is LeavesBlock -> world?.breakBlock(blockPos, false)
             else -> return false
