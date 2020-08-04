@@ -158,7 +158,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     }
 
     private fun insertAndExtract(from: Inventory, to: Inventory, direction: Direction, extractMethod: () -> Boolean): Boolean {
-        return if (world != null && world!!.isClient && itemTransferCooldown > 0) {
+        return if (world != null && !world!!.isClient && itemTransferCooldown < 0) {
             if (!from.isEmpty && !insert(from, to, direction)) return false
             if (!isFull(to) && !extractMethod()) return false
             itemTransferCooldown = 12
