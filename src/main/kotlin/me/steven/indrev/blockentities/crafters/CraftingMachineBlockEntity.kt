@@ -6,17 +6,24 @@ import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
+import net.minecraft.entity.ExperienceOrbEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.Identifier
 import net.minecraft.util.Tickable
+import net.minecraft.util.math.Vec3d
+import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import kotlin.math.ceil
+import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity(tier, registry), Tickable, UpgradeProvider {
@@ -27,6 +34,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     protected var processTime: Int by Property(3, 0)
     protected var totalProcessTime: Int by Property(4, 0)
+    private val usedRecipes = mutableMapOf<Identifier, Int>()
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -56,6 +64,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                         else continue
                         break
                     }
+                    //usedRecipes.addTo(recipe.id, 1)
                     onCraft()
                     reset()
                 }
@@ -121,6 +130,32 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     abstract fun getConfig(): MachineConfig
 
     private fun getHeatConfig(): HeatMachineConfig? = getConfig() as? HeatMachineConfig
+
+    fun dropExperience(player: PlayerEntity) {
+        val list = mutableListOf<T>()
+        usedRecipes.forEach { (id, amount) ->
+            world!!.recipeManager[id].ifPresent { recipe ->
+                list.add(recipe as? T ?: return@ifPresent)
+                spawnOrbs(world!!, player.pos, amount, (recipe as? ExperienceRewardRecipe ?: return@ifPresent).amount)
+            }
+        }
+        player.unlockRecipes(list.toList())
+        usedRecipes.clear()
+    }
+
+    private fun spawnOrbs(world: World, pos: Vec3d, amount: Int, experience: Float) {
+        val xp = amount.toFloat() * experience
+        var n = floor(xp).toInt()
+        val decimal = xp % 1
+        if (decimal != 0.0f && Math.random() < decimal.toDouble()) {
+            ++n
+        }
+        while (n > 0) {
+            val size = ExperienceOrbEntity.roundToOrbSize(n)
+            n -= size
+            world.spawnEntity(ExperienceOrbEntity(world, pos.x, pos.y, pos.z, size))
+        }
+    }
 
     open fun onCraft() {}
 }

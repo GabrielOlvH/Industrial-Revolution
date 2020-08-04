@@ -48,7 +48,7 @@ fun SyncedGuiDescription.configure(
         val energyWidget = EnergyWidget(screenHandlerContext)
         it.add(energyWidget, 0, 0, 16, 64)
 
-        val batterySlot = IRItemSlot.of(
+        val batterySlot = IRTooltipedItemSlot.of(
             blockInventory,
             0,
             mutableListOf(
@@ -64,7 +64,7 @@ fun SyncedGuiDescription.configure(
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
-                    val s = IRItemSlot.of(
+                    val s = IRTooltipedItemSlot.of(
                         blockInventory,
                         slot,
                         mutableListOf(
@@ -80,7 +80,7 @@ fun SyncedGuiDescription.configure(
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
                 it.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
-                val coolerSlot = IRItemSlot.of(
+                val coolerSlot = IRTooltipedItemSlot.of(
                     blockInventory,
                     1,
                     mutableListOf(

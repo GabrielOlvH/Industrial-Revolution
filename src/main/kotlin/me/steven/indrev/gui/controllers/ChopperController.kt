@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.IRItemSlot
+import me.steven.indrev.gui.widgets.IRTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -29,21 +29,21 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
         root.add(
-            IRItemSlot.of(
+            IRTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
-                    TranslatableText("gui.indrev.output_slot_type").formatted(
-                        Formatting.BLUE, Formatting.ITALIC
-                    )
+                TranslatableText("gui.indrev.output_slot_type").formatted(
+                    Formatting.BLUE, Formatting.ITALIC
                 )
+            )
             ).also { it.isInsertingAllowed = false },
             4.8,
             1.0
         )
         root.add(
-            IRItemSlot.of(
+            IRTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, mutableListOf(
-                    TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC)
-                )
+                TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC)
+            )
             ),
             2.4,
             1.5

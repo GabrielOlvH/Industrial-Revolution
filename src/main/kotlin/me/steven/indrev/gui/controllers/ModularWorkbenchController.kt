@@ -3,7 +3,7 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.gui.widgets.IRItemSlot
+import me.steven.indrev.gui.widgets.IRTooltipedItemSlot
 import me.steven.indrev.gui.widgets.VerticalProcessWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -27,7 +27,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         setRootPanel(root)
         configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val armorSlot = IRItemSlot.of(
+        val armorSlot = IRTooltipedItemSlot.of(
             blockInventory,
             2,
             mutableListOf(
@@ -39,7 +39,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         )
         root.add(armorSlot, 4.0, 3.5)
 
-        val moduleSlot = IRItemSlot.of(
+        val moduleSlot = IRTooltipedItemSlot.of(
             blockInventory,
             1,
             mutableListOf(TranslatableText("gui.indrev.module_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))

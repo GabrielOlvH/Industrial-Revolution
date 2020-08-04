@@ -7,7 +7,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.inventory.Inventory
 import net.minecraft.text.StringRenderable
 
-class IRItemSlot private constructor(
+class IRTooltipedItemSlot private constructor(
     private val emptyTooltip: MutableList<StringRenderable>,
     inventory: Inventory? = null,
     startIndex: Int = 0,
@@ -24,8 +24,8 @@ class IRItemSlot private constructor(
     }
 
     companion object {
-        fun of(inventory: Inventory?, index: Int, emptyTooltip: MutableList<StringRenderable>): IRItemSlot =
-            IRItemSlot(emptyTooltip, inventory, index)
+        fun of(inventory: Inventory?, index: Int, emptyTooltip: MutableList<StringRenderable>): IRTooltipedItemSlot =
+            IRTooltipedItemSlot(emptyTooltip, inventory, index)
 
         fun of(
             inventory: Inventory?,
@@ -33,9 +33,6 @@ class IRItemSlot private constructor(
             slotsWide: Int,
             slotsHigh: Int,
             emptyTooltip: MutableList<StringRenderable>
-        ): IRItemSlot = IRItemSlot(emptyTooltip, inventory, startIndex, slotsWide, slotsHigh)
-
-        fun outputOf(inventory: Inventory?, index: Int, emptyTooltip: MutableList<StringRenderable>): IRItemSlot =
-            IRItemSlot(emptyTooltip, inventory, index, 1, 1, false)
+        ): IRTooltipedItemSlot = IRTooltipedItemSlot(emptyTooltip, inventory, startIndex, slotsWide, slotsHigh)
     }
 }

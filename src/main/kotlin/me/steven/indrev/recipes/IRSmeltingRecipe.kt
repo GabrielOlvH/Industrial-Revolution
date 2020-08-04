@@ -20,9 +20,9 @@ class IRSmeltingRecipe(
     group: String,
     input: Ingredient,
     output: ItemStack,
-    experience: Float,
+    override val amount: Float,
     cookTime: Int
-) : SmeltingRecipe(id, group, input, output, experience, cookTime) {
+) : SmeltingRecipe(id, group, input, output, amount, cookTime), ExperienceRewardRecipe {
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 

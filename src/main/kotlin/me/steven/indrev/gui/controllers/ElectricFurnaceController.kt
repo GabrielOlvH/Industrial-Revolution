@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.widgets.IROutputItemSlot
 import me.steven.indrev.gui.widgets.ProcessWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -37,7 +38,7 @@ class ElectricFurnaceController(
         val processWidget = ProcessWidget(propertyDelegate)
         root.add(processWidget, 3.5, 1.5)
 
-        val outputSlot = WItemSlot.outputOf(blockInventory, 3)
+        val outputSlot = IROutputItemSlot.outputOf(ctx, playerInventory.player, blockInventory, 3)
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.5, 1.5)
 
