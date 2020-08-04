@@ -73,6 +73,8 @@ fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
 fun ChunkPos.asString() = "$x,$z"
 
+infix fun <T> Boolean.then(param: () -> T): T? = if (this) param() else null
+
 fun getChunkPos(s: String): ChunkPos? {
     val split = s.split(",")
     val x = split[0].toIntOrNull() ?: return null

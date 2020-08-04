@@ -8,6 +8,8 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.then
+import me.steven.indrev.utils.toIntArray
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
@@ -29,7 +31,6 @@ import org.apache.logging.log4j.LogManager
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
-import java.util.stream.IntStream
 
 open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
@@ -156,21 +157,19 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         return tag
     }
 
-    private fun needsCooldown() = itemTransferCooldown > 0
-
-
     private fun insertAndExtract(from: Inventory, to: Inventory, direction: Direction, extractMethod: () -> Boolean): Boolean {
-        return if (world != null && !world!!.isClient && !this.needsCooldown()) {
+        return if (world != null && world!!.isClient && itemTransferCooldown > 0) {
             if (!from.isEmpty && !insert(from, to, direction)) return false
             if (!isFull(to) && !extractMethod()) return false
-            this.itemTransferCooldown = 12
+            itemTransferCooldown = 12
             markDirty()
             return true
         } else false
     }
 
     private fun isFull(inv: Inventory): Boolean {
-        for (slot in 0 until inv.size()) if (!inv.getStack(slot).isEmpty) return false
+        for (slot in 0 until inv.size())
+            if (!inv.getStack(slot).isEmpty) return false
         return true
     }
 
@@ -193,20 +192,19 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         } else false
     }
 
-    private fun getAvailableSlots(inventory: Inventory, side: Direction): IntStream {
-        return if (inventory is SidedInventory) IntStream.of(*inventory.getAvailableSlots(side)) else IntStream.range(0, inventory.size())
-    }
+    private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
+        (inventory is SidedInventory) then { (inventory as SidedInventory).getAvailableSlots(side) }
+            ?: (0 until inventory.size()).toIntArray()
 
-    private fun isInventoryFull(inv: Inventory, direction: Direction): Boolean {
-        return getAvailableSlots(inv, direction).allMatch { slot ->
+
+    private fun isInventoryFull(inv: Inventory, direction: Direction): Boolean =
+        getAvailableSlots(inv, direction).all { slot ->
             val itemStack = inv.getStack(slot)
             itemStack.count >= itemStack.maxCount
         }
-    }
 
-    private fun isInventoryEmpty(inv: Inventory, facing: Direction): Boolean {
-        return getAvailableSlots(inv, facing).allMatch { slot -> inv.getStack(slot).isEmpty }
-    }
+    private fun isInventoryEmpty(inv: Inventory, facing: Direction): Boolean =
+        getAvailableSlots(inv, facing).all { slot -> inv.getStack(slot).isEmpty }
 
     private fun extract(inventory: Inventory, slot: Int, side: Direction): Boolean {
         val itemStack = inventory.getStack(slot)
@@ -246,9 +244,8 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             && (inventory !is SidedInventory
             || inventory.canInsert(slot, stack, side))
 
-    private fun canExtract(inv: Inventory, stack: ItemStack, slot: Int, facing: Direction): Boolean {
-        return inv !is SidedInventory || inv.canExtract(slot, stack, facing)
-    }
+    private fun canExtract(inv: Inventory, stack: ItemStack, slot: Int, facing: Direction): Boolean =
+        inv !is SidedInventory || inv.canExtract(slot, stack, facing)
 
     private fun transfer(to: Inventory, originalStack: ItemStack, slot: Int, direction: Direction?): ItemStack {
         var stack = originalStack
@@ -267,19 +264,24 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     }
 
 
-    private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean = first.item == second.item && first.damage == second.damage && first.count < first.maxCount && ItemStack.areTagsEqual(first, second)
+    private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
+        first.item == second.item
+            && first.damage == second.damage
+            && first.count < first.maxCount
+            && ItemStack.areTagsEqual(first, second)
 
     private fun getInventory(pos: BlockPos): Inventory? {
         val blockState = world?.getBlockState(pos)
         val block = blockState?.block
-        if (block is InventoryProvider) {
-            return block.getInventory(blockState, world, pos)
-        } else if (block?.hasBlockEntity() == true) {
-            val blockEntity = world?.getBlockEntity(pos) as? Inventory ?: return null
-            if (blockEntity is ChestBlockEntity && block is ChestBlock)
-                return ChestBlock.getInventory(block, blockState, world, pos, true)
-            return blockEntity
+        return when {
+            block is InventoryProvider -> block.getInventory(blockState, world, pos)
+            block?.hasBlockEntity() == true -> {
+                val blockEntity = world?.getBlockEntity(pos) as? Inventory ?: return null
+                if (blockEntity is ChestBlockEntity && block is ChestBlock)
+                    ChestBlock.getInventory(block, blockState, world, pos, true)
+                else blockEntity
+            }
+            else -> null
         }
-        return null
     }
 }
