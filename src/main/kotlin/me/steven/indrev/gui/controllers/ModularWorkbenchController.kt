@@ -3,8 +3,8 @@ package me.steven.indrev.gui.controllers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.gui.widgets.IRTooltipedItemSlot
-import me.steven.indrev.gui.widgets.VerticalProcessWidget
+import me.steven.indrev.gui.widgets.machines.VerticalProcessWidget
+import me.steven.indrev.gui.widgets.slots.IRTooltipedItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier

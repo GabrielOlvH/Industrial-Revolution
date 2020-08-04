@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.widgets
+package me.steven.indrev.gui.widgets.machines
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget

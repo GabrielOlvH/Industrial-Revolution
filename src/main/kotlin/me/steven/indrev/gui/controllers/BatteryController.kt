@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.EnergyWidget
+import me.steven.indrev.gui.widgets.machines.EnergyWidget
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity

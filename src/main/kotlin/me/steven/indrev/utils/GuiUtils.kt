@@ -9,7 +9,11 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.*
+import me.steven.indrev.gui.widgets.BookShortcutWidget
+import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.gui.widgets.machines.EnergyWidget
+import me.steven.indrev.gui.widgets.machines.TemperatureWidget
+import me.steven.indrev.gui.widgets.slots.IRTooltipedItemSlot
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack

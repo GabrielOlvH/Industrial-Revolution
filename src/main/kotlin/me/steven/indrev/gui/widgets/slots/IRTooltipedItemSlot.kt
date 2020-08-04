@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.widgets
+package me.steven.indrev.gui.widgets.slots
 
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.mixin.AccessorWItemSlot
