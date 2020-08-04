@@ -60,26 +60,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
                 return
             }
-            itemTransferCooldown--
-            inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
-                val pos = pos.offset(direction)
-                val neighborInv = getInventory(pos) ?: return@forEach
-                val inventory = inventoryComponent?.inventory ?: return@forEach
-                if (mode.output) {
-                    inventory.outputSlots.forEach { slot ->
-                        insertAndExtract(inventory, neighborInv, direction) {
-                            extract(inventory, slot, direction)
-                        }
-                    }
-                }
-                if (mode.input) {
-                    getAvailableSlots(neighborInv, direction).forEach { slot ->
-                        insertAndExtract(neighborInv, inventory, direction.opposite) {
-                            extract(neighborInv, slot, direction)
-                        }
-                    }
-                }
-            }
+            transfer()
             machineTick()
             markDirty()
             sync()
@@ -157,112 +138,53 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         return tag
     }
 
-    private fun insertAndExtract(from: Inventory, to: Inventory, direction: Direction, extractMethod: () -> Boolean): Boolean {
-        return if (world != null && !world!!.isClient && itemTransferCooldown < 0) {
-            if (!from.isEmpty && !insert(from, to, direction)) return false
-            if (!isFull(to) && !extractMethod()) return false
-            itemTransferCooldown = 12
-            markDirty()
-            return true
-        } else false
-    }
-
-    private fun isFull(inv: Inventory): Boolean {
-        for (slot in 0 until inv.size())
-            if (!inv.getStack(slot).isEmpty) return false
-        return true
-    }
-
-    private fun insert(from: Inventory, to: Inventory, direction: Direction): Boolean {
-        val opposite = direction.opposite
-        return if (!isInventoryFull(to, opposite)) {
-            for (slot in 0 until from.size()) {
-                val stack = from.getStack(slot)
-                if (!stack.isEmpty && (from !is SidedInventory || from.canExtract(slot, stack, direction))) {
-                    val itemStack = stack.copy()
-                    val remainder = transfer(to, from.removeStack(slot, 1), opposite)
-                    if (remainder.isEmpty) {
-                        to.markDirty()
-                        return true
-                    }
-                    from.setStack(slot, itemStack)
+    private fun transfer() {
+        itemTransferCooldown--
+        inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
+            val pos = pos.offset(direction)
+            val neighborInv = getInventory(pos) ?: return@forEach
+            val inventory = inventoryComponent?.inventory ?: return@forEach
+            if (mode.output) {
+                inventory.outputSlots.forEach { slot ->
+                    transfer(inventory, neighborInv, slot, direction)
                 }
             }
-            false
-        } else false
+            if (mode.input) {
+                getAvailableSlots(neighborInv, direction).forEach { slot ->
+                    transfer(neighborInv, inventory, slot, direction.opposite)
+                }
+            }
+        }
+    }
+
+    private fun getFirstSlot(inventory: Inventory, predicate: (Int, ItemStack) -> Boolean): Int? =
+        (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
+
+    private fun transfer(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
+        if (itemTransferCooldown > 0) return
+        val toTransfer = from.getStack(slot)
+        val item = toTransfer.item
+        while (!toTransfer.isEmpty) {
+            val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
+                (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
+                    && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
+            } ?: break
+            val targetStack = to.getStack(firstSlot)
+            if (from is SidedInventory && !from.canExtract(slot, toTransfer, direction))
+                break
+            val availableSize = (toTransfer.maxCount - targetStack.count).coerceAtMost(toTransfer.count)
+            toTransfer.count -= availableSize
+            if (!targetStack.isEmpty)
+                targetStack.count += availableSize
+            else
+                to.setStack(firstSlot, ItemStack(item, availableSize))
+            itemTransferCooldown = 12
+        }
     }
 
     private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
         (inventory is SidedInventory) then { (inventory as SidedInventory).getAvailableSlots(side) }
             ?: (0 until inventory.size()).toIntArray()
-
-
-    private fun isInventoryFull(inv: Inventory, direction: Direction): Boolean =
-        getAvailableSlots(inv, direction).all { slot ->
-            val itemStack = inv.getStack(slot)
-            itemStack.count >= itemStack.maxCount
-        }
-
-    private fun isInventoryEmpty(inv: Inventory, facing: Direction): Boolean =
-        getAvailableSlots(inv, facing).all { slot -> inv.getStack(slot).isEmpty }
-
-    private fun extract(inventory: Inventory, slot: Int, side: Direction): Boolean {
-        val itemStack = inventory.getStack(slot)
-        if (!itemStack.isEmpty && canExtract(inventory, itemStack, slot, side)) {
-            val copy = itemStack.copy()
-            val remainder = transfer(inventory, inventory.removeStack(slot, 1), null)
-            if (remainder.isEmpty) {
-                inventory.markDirty()
-                return true
-            }
-            inventory.setStack(slot, copy)
-        }
-        return false
-    }
-
-    open fun transfer(to: Inventory, originalStack: ItemStack, side: Direction?): ItemStack {
-        var stack = originalStack
-        if (to is SidedInventory && side != null) {
-            val availableSlots = to.getAvailableSlots(side)
-            var slot = 0
-            while (slot < availableSlots.size && !stack.isEmpty) {
-                stack = transfer(to, stack, availableSlots[slot], side)
-                ++slot
-            }
-        } else {
-            var slot = 0
-            while (slot < to.size() && !stack.isEmpty) {
-                stack = transfer(to, stack, slot, side)
-                ++slot
-            }
-        }
-        return stack
-    }
-
-    private fun canInsert(inventory: Inventory, stack: ItemStack, slot: Int, side: Direction?): Boolean =
-        inventory.isValid(slot, stack)
-            && (inventory !is SidedInventory
-            || inventory.canInsert(slot, stack, side))
-
-    private fun canExtract(inv: Inventory, stack: ItemStack, slot: Int, facing: Direction): Boolean =
-        inv !is SidedInventory || inv.canExtract(slot, stack, facing)
-
-    private fun transfer(to: Inventory, originalStack: ItemStack, slot: Int, direction: Direction?): ItemStack {
-        var stack = originalStack
-        val itemStack = to.getStack(slot)
-        if (canInsert(to, stack, slot, direction)) {
-            if (itemStack.isEmpty) {
-                to.setStack(slot, stack)
-                stack = ItemStack.EMPTY
-            } else if (canMergeItems(itemStack, stack)) {
-                val amount = stack.count.coerceAtMost(stack.maxCount - itemStack.count)
-                stack.decrement(amount)
-                itemStack.increment(amount)
-            }
-        }
-        return stack
-    }
-
 
     private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
         first.item == second.item
