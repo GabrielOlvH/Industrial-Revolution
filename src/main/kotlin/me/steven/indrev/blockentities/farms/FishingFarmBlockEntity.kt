@@ -48,7 +48,8 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         Direction.values().forEach { direction ->
             val pos = pos.offset(direction)
             if (world?.isWater(pos) == true) {
-                val id = getIdentifiers(tier)[world!!.random!!.nextInt(3)]
+                val identifiers = getIdentifiers(tier)
+                val id = identifiers[world!!.random!!.nextInt(identifiers.size)]
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(id)
                 val ctx = LootContext.Builder(world as ServerWorld).random(world!!.random)
                     .parameter(LootContextParameters.POSITION, pos)
