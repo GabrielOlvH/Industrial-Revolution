@@ -1,0 +1,51 @@
+{
+  "id": "indrev:cuprite",
+  "output": [
+    {
+      "id": "indrev:copper_ore",
+      "weight": 8
+    },
+    {
+      "id": "minecraft:stone",
+      "weight": 10
+    },
+    {
+      "id": "minecraft:dirt",
+      "weight": 5
+    },
+    {
+      "id": "minecraft:clay",
+      "weight": 1
+    },
+    {
+      "id": "minecraft:gravel",
+      "weight": 1
+    }
+  ],
+  "sizeRange": [
+    5000,
+    8000
+  ],
+  "biomes": [
+    {
+      "category": [
+        "SAVANNA"
+      ],
+      "weight": 6
+    },
+    {
+      "category": [
+        "DESERT"
+      ],
+      "weight": 4
+    },
+    {
+      "category": [
+        "EXTREME_HILLS",
+        "PLAINS",
+        "FOREST"
+      ],
+      "weight": 3
+    }
+  ]
+}

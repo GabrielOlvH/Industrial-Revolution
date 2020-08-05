@@ -23,15 +23,19 @@ import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
+import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.resource.ResourceType
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import team.reborn.energy.Energy
 import team.reborn.energy.minecraft.EnergyModInitializer
+
 
 object IndustrialRevolution : EnergyModInitializer() {
     override fun onInitialize() {
@@ -75,6 +79,7 @@ object IndustrialRevolution : EnergyModInitializer() {
                 }
             }
         }
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
         LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
     }
 

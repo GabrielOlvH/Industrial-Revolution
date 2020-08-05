@@ -14,13 +14,14 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getChunkPos
-import me.steven.indrev.world.chunkveins.ChunkVeinType
+import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.Identifier
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -43,7 +44,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
         }
     }
 
-    private var chunkVeinType: ChunkVeinType? = null
+    private var chunkVeinType: VeinType? = null
     private var mining = 0.0
     private var finished = false
 
@@ -59,7 +60,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                     WorldChunkVeinData.STATE_OVERWORLD_KEY
                 )
             val data = state.veins[chunkPos] ?: return
-            this.chunkVeinType = data.chunkVeinType
+            this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
             propertyDelegate[3] = data.explored * 100 / data.size
             if (data.explored >= data.size) {
                 finished = true
@@ -69,7 +70,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             val scanOutput = inventory.getStack(14).tag ?: return
             val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val chunkPos = world?.getChunk(pos)?.pos ?: return
-            if ((chunkPos == scanChunkPos || !matchScanOutput) && mining >= 0 && Energy.of(this).use(Upgrade.ENERGY(this))) {
+            if ((chunkPos == scanChunkPos || !matchScanOutput) && Energy.of(this).use(Upgrade.ENERGY(this))) {
                 mining += Upgrade.SPEED(this)
                 temperatureComponent?.tick(true)
             } else {
@@ -96,7 +97,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 data.explored++
                 state.markDirty()
                 mining = 0.0
-                inventory.addStack(ItemStack(chunkVeinType!!.ores.pickRandom(world?.random)))
+                inventory.addStack(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
                 setWorkingState(true)
             }
         }
@@ -121,28 +122,28 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
-            tag?.putString("ChunkVeinType", chunkVeinType.toString())
+            tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
         return super.toTag(tag)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         mining = tag?.getDouble("Mining") ?: 0.0
-        if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
-            chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
+        if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
+            chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         super.fromTag(state, tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
-            tag?.putString("ChunkVeinType", chunkVeinType.toString())
+            tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
         return super.toClientTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         mining = tag?.getDouble("Mining") ?: 0.0
-        if (tag?.contains("ChunkVeinType") == true && !tag.getString("ChunkVeinType").isNullOrEmpty())
-            chunkVeinType = ChunkVeinType.valueOf(tag.getString("ChunkVeinType"))
+        if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
+            chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         super.fromClientTag(tag)
     }
 

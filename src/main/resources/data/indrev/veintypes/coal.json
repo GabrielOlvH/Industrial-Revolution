@@ -1,0 +1,248 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:peat",
+      "output": [
+        {
+          "id": "minecraft:coal_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1500,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "TAIGA",
+            "JUNGLE",
+            "PLAINS",
+            "ICY"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "FOREST",
+            "SWAMP"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "EXTREME_HILLS"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "OCEAN",
+            "DESERT",
+            "RIVER"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:lignite",
+      "output": [
+        {
+          "id": "minecraft:coal_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        2000,
+        4000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "TAIGA",
+            "JUNGLE",
+            "PLAINS",
+            "ICY"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "FOREST",
+            "SWAMP",
+            "SAVANNA"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "EXTREME_HILLS"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "OCEAN",
+            "DESERT",
+            "RIVER"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:bituminous",
+      "output": [
+        {
+          "id": "minecraft:coal_ore",
+          "weight": 20
+        },
+        {
+          "id": "minecraft:diamond_ore",
+          "weight": 2
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 20
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        4000,
+        6000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "SAVANNA"
+          ],
+          "weight": 6
+        },
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "MESA"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "PLAINS",
+            "FOREST"
+          ],
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "indrev:anthracite",
+      "output": [
+        {
+          "id": "minecraft:coal_ore",
+          "weight": 24
+        },
+        {
+          "id": "minecraft:diamond_ore",
+          "weight": 3
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 2
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 2
+        }
+      ],
+      "sizeRange": [
+        6000,
+        10000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "MESA"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

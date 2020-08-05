@@ -1,0 +1,108 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:calaverite",
+      "output": [
+        {
+          "id": "minecraft:gold_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        7000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "MESA",
+            "TAIGA",
+            "EXTREME_HILLS",
+            "DESERT"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "JUNGLE"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "FOREST",
+            "SWAMP"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "PLAINS",
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:calaverite_nether",
+      "output": [
+        {
+          "id": "minecraft:nether_gold_ore",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:netherrack",
+          "weight": 80
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:soul_sand",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:ancient_debris",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        6000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "NETHER"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

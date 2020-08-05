@@ -1,0 +1,281 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:siderite",
+      "output": [
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1500,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "FOREST"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "SWAMP"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:limonite",
+      "output": [
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        2000,
+        4000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "SAVANNA"
+          ],
+          "weight": 6
+        },
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "PLAINS",
+            "FOREST"
+          ],
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "indrev:hematite",
+      "output": [
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        4000,
+        6000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "TAIGA",
+            "EXTREME_HILLS",
+            "MESA",
+            "DESERT"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "JUNGLE"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:magnetite",
+      "output": [
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 12
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 2
+        }
+      ],
+      "sizeRange": [
+        6000,
+        10000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA",
+            "DESERT"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:chalcopryte",
+      "output": [
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 8
+        },
+        {
+          "id": "indrev:copper_ore",
+          "weight": 7
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        5000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "FOREST"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "SWAMP"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

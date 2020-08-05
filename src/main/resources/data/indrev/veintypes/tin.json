@@ -1,0 +1,120 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:cassiterite",
+      "output": [
+        {
+          "id": "indrev:tin_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1500,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "FOREST"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "SWAMP"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    },
+    {
+      "id": "indrev:stannite",
+      "output": [
+        {
+          "id": "indrev:tin_ore",
+          "weight": 8
+        },
+        {
+          "id": "indrev:copper_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        2000,
+        4000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA",
+            "DESERT"
+          ],
+          "weight": 4
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 2
+        },
+        {
+          "category": [
+            "PLAINS"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

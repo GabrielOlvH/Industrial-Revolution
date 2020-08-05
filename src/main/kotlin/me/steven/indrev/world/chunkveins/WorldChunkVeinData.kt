@@ -10,7 +10,7 @@ class WorldChunkVeinData(key: String) : PersistentState(key) {
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         val t = tag ?: CompoundTag()
-        veins.forEach { (chunkPos, veinData) ->
+        veins.filter { (_, data) -> data.veinIdentifier != null }.forEach { (chunkPos, veinData) ->
             t.put("${chunkPos.x},${chunkPos.z}", veinData.toTag(CompoundTag()))
         }
         return t
@@ -29,6 +29,6 @@ class WorldChunkVeinData(key: String) : PersistentState(key) {
     }
 
     companion object {
-        const val STATE_OVERWORLD_KEY = "indrev_world_veins"
+        const val STATE_OVERWORLD_KEY = "indrev_veins"
     }
 }

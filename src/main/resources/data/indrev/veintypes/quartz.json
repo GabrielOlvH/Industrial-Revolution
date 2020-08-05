@@ -1,0 +1,42 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:quartz",
+      "output": [
+        {
+          "id": "minecraft:nether_quartz_ore",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:netherrack",
+          "weight": 80
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 20
+        },
+        {
+          "id": "minecraft:soul_sand",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:ancient_debris",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        6000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "NETHER"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

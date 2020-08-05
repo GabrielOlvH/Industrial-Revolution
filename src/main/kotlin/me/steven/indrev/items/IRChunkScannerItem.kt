@@ -3,7 +3,8 @@ package me.steven.indrev.items
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.asString
 import me.steven.indrev.world.chunkveins.ChunkVeinData
-import me.steven.indrev.world.chunkveins.VeinPicker
+import me.steven.indrev.world.chunkveins.Picker
+import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
@@ -17,6 +18,7 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import kotlin.random.asKotlinRandom
 
@@ -39,14 +41,17 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
                 val biome = world.getBiome(user?.blockPos)
-                val type = if (isPresent) info!!.chunkVeinType else VeinPicker.getList(biome).pickRandom(world.random)
+                val identifier = info?.veinIdentifier
+                    ?: Picker.PICKERS.getOrDefault(Registry.BIOME.getId(biome), Picker.PICKERS[Identifier("minecraft:ocean")])
+                        ?.veins?.pickRandom(world.random)
+                val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
-                    val data = ChunkVeinData(type, type!!.sizeRange.random(rnd))
+                    val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))
                     state.veins[chunkPos] = data
                     state.markDirty()
                 }
                 val tag = CompoundTag()
-                tag.putString("ChunkVeinType", type.toString())
+                tag.putString("VeinIdentifier", identifier.toString())
                 tag.putString("ChunkPos", chunkPos.asString())
                 tag.putString("Dimension", world.registryKey.value.path)
                 val infoStack = ItemStack(IRRegistry.SCAN_OUTPUT_ITEM)
