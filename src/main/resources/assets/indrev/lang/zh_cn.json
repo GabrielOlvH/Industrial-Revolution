@@ -438,7 +438,7 @@
   "text.autoconfig.indrev.category.oregen": "矿石生成",
   "text.autoconfig.indrev.option.oregen.copper": "生成铜",
   "text.autoconfig.indrev.option.oregen.tin": "生成锡",
-  "text.autoconfig.indrev.option.oregen.nikolite": "生成蓝石"
+  "text.autoconfig.indrev.option.oregen.nikolite": "生成蓝石",
   "advancements.indrev.nikolite": "工业革命的开端",
   "advancements.indrev.nikolite.description": "找到蓝石",
   "advancements.indrev.machine_block": "建立基础",
