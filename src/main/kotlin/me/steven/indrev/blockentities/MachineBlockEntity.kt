@@ -163,21 +163,23 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     private fun transfer(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
         if (itemTransferCooldown > 0) return
         val toTransfer = from.getStack(slot)
-        val item = toTransfer.item
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
-                    && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
+                        && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
             } ?: break
             val targetStack = to.getStack(firstSlot)
             if (from is SidedInventory && !from.canExtract(slot, toTransfer, direction))
                 break
             val availableSize = (toTransfer.maxCount - targetStack.count).coerceAtMost(toTransfer.count)
-            toTransfer.count -= availableSize
-            if (!targetStack.isEmpty)
+            if (!targetStack.isEmpty) {
+                toTransfer.count -= availableSize
                 targetStack.count += availableSize
-            else
-                to.setStack(firstSlot, ItemStack(item, availableSize))
+            } else {
+                from.setStack(slot, ItemStack.EMPTY)
+                to.setStack(firstSlot, toTransfer)
+                break
+            }
             itemTransferCooldown = 12
         }
     }
