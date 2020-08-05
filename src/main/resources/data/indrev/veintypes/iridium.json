@@ -1,0 +1,48 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:iridium",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:iridium_ore",
+          "weight": 2
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 15
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1000,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA",
+            "DESERT",
+            "PLAINS",
+            "TAIGA",
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:argentite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:silver_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:gold_ore",
+          "weight": 3
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "DESERT"
+          ],
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "indrev:chlorargyrite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:silver_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:gold_ore",
+          "weight": 3
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        2000,
+        4500
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "DESERT"
+          ],
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "indrev:galena",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:silver_ore",
+          "weight": 7
+        },
+        {
+          "id": "techreborn:galena_ore",
+          "weight": 6
+        },
+        {
+          "id": "techreborn:lead_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:gold_ore",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 14
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        6000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "DESERT"
+          ],
+          "weight": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:scheelite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:tungsten_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "SAVANNA"
+          ],
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "indrev:wolframite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:tungsten_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 6
+        },
+        {
+          "id": "techreborn:pyrite_ore",
+          "weight": 4
+        },
+        {
+          "id": "techreborn:galena_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "SWAMP"
+          ],
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "indrev:ferberite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:tungsten_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:iron_ore",
+          "weight": 6
+        },
+        {
+          "id": "techreborn:pyrite_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 5
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        8000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT"
+          ],
+          "weight": 5
+        },
+        {
+          "category": [
+            "FOREST"
+          ],
+          "weight": 3
+        },
+        {
+          "category": [
+            "SAVANNA",
+            "SWAMP"
+          ],
+          "weight": 2
+        }
+      ]
+    }
+  ]
+}

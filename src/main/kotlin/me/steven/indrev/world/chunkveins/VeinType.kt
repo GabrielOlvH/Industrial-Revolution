@@ -12,17 +12,22 @@ import net.minecraft.world.biome.Biome
 data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val sizeRange: IntRange) {
     companion object {
         val REGISTERED = mutableMapOf<Identifier, VeinType>()
-        fun fromJson(json: JsonObject): Array<VeinType> {
+        fun fromJson(json: JsonObject): Array<VeinType>? {
             if (json.getBoolean("containsMultiple", false))
-                return json.get(JsonArray::class.java, "veins")!!.flatMap { fromJson(it as JsonObject).toList() }.toTypedArray()
+                return json.get(JsonArray::class.java, "veins")!!.flatMap { fromJson(it as JsonObject)!!.toList() }.toTypedArray()
             val id = Identifier(json.get(String::class.java, "id"))
             val array = json.get(JsonArray::class.java, "output")
+            val optional = json.getBoolean("optional", false)
             val weightedList = WeightedList<Block>()
             array?.forEach { element ->
                 element as JsonObject
                 val blockId = Identifier(element.get(String::class.java, "id"))
                 val weight = element.getInt("weight", 1)
                 if (!Registry.BLOCK.containsId(blockId)) {
+                    if (optional) {
+                        VeinTypeResourceListener.LOGGER.debug("Not loading optional vein type $id because $blockId is missing")
+                        return emptyArray()
+                    }
                     VeinTypeResourceListener.LOGGER.error("Expected block but received unknown string $blockId when loading vein type $id")
                 }
                 weightedList.add(Registry.BLOCK.get(blockId), weight)
@@ -30,7 +35,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
             val range = json.get(JsonArray::class.java, "sizeRange")
             if (range == null) {
                 VeinTypeResourceListener.LOGGER.error("Missing range entry when loading vein type $id")
-                return emptyArray()
+                return null
             }
             val min = range.map { (it as JsonPrimitive).asInt(1) }.min()!!
             val max = range.map { (it as JsonPrimitive).asInt(1) }.max()!!

@@ -1,0 +1,48 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:bauxite",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:bauxite_ore",
+          "weight": 6
+        },
+        {
+          "id": "techreborn:iron_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 2
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        3000,
+        10000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA"
+          ],
+          "weight": 4
+        }
+      ]
+    }
+  ]
+}

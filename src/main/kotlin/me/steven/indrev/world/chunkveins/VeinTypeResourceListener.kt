@@ -14,7 +14,7 @@ class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
         ids?.forEach { id ->
             val json = jankson.load(manager.getResource(id).inputStream)
             val veinType = VeinType.fromJson(json)
-            if (veinType.isEmpty()) {
+            if (veinType == null) {
                 LOGGER.error("Unable to load vein type $id!")
                 return@forEach
             }
