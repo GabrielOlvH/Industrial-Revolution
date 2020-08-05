@@ -10,6 +10,9 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.*
+import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
+import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
+import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -50,6 +53,8 @@ object IndustrialRevolution : EnergyModInitializer() {
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, IRBlastingRecipe.IDENTIFIER, IRBlastingRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, IRBlastingRecipe.IDENTIFIER, IRBlastingRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
 

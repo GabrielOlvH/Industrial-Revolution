@@ -1,0 +1,9 @@
+{
+  "type": "indrev:blasting",
+  "group": "tin_ingots",
+  "ingredient": {
+    "tag": "c:tin_dusts"
+  },
+  "result": "tin_ingot",
+  "cookingTime": 200
+}

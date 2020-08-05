@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.compatibility
 
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -24,12 +24,14 @@ class IRShapelessRecipe(
     input: DefaultedList<Ingredient>
 ) : ShapelessRecipe(id, group, output, input) {
 
-    override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
+    override fun getSerializer(): RecipeSerializer<*> =
+        SERIALIZER
 
     companion object {
         val IDENTIFIER = identifier("crafting_shapeless")
         val TYPE = object : RecipeType<IRShapelessRecipe> {}
-        val SERIALIZER = Serializer()
+        val SERIALIZER =
+            Serializer()
 
         class Serializer : ShapelessRecipe.Serializer() {
             override fun read(
@@ -62,7 +64,11 @@ class IRShapelessRecipe(
                                         identifier(itemPath)
                                     ), Registry.ITEM
                                 )
-                        val itemStack = getItemStack(JsonHelper.getObject(jsonObject, "result"), item)
+                        val itemStack =
+                            getItemStack(
+                                JsonHelper.getObject(jsonObject, "result"),
+                                item
+                            )
                         ShapelessRecipe(identifier, string, itemStack, defaultedList)
                     }
                 }

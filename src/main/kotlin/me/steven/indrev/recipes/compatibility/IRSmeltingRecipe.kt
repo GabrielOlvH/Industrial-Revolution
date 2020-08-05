@@ -1,8 +1,9 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.compatibility
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.utils.getFirstMatch
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.ItemStack
@@ -22,14 +23,16 @@ class IRSmeltingRecipe(
     output: ItemStack,
     override val amount: Float,
     cookTime: Int
-) : SmeltingRecipe(id, group, input, output, amount, cookTime), ExperienceRewardRecipe {
+) : SmeltingRecipe(id, group, input, output, amount, cookTime),
+    ExperienceRewardRecipe {
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
         val IDENTIFIER = identifier("smelting")
         val TYPE = object : RecipeType<IRSmeltingRecipe> {}
-        val SERIALIZER = Serializer()
+        val SERIALIZER =
+            Serializer()
 
         class Serializer : RecipeSerializer<IRSmeltingRecipe> {
             override fun read(identifier: Identifier, jsonObject: JsonObject): IRSmeltingRecipe {
@@ -52,7 +55,14 @@ class IRSmeltingRecipe(
                 val itemStack = ItemStack { item }
                 val f = JsonHelper.getFloat(jsonObject, "experience", 0.0f)
                 val i = JsonHelper.getInt(jsonObject, "cookingtime", 200)
-                return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
+                return IRSmeltingRecipe(
+                    identifier,
+                    string,
+                    ingredient,
+                    itemStack,
+                    f,
+                    i
+                )
             }
 
             override fun read(identifier: Identifier, packetByteBuf: PacketByteBuf): IRSmeltingRecipe {
@@ -61,7 +71,14 @@ class IRSmeltingRecipe(
                 val itemStack = packetByteBuf.readItemStack()
                 val f = packetByteBuf.readFloat()
                 val i = packetByteBuf.readVarInt()
-                return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
+                return IRSmeltingRecipe(
+                    identifier,
+                    string,
+                    ingredient,
+                    itemStack,
+                    f,
+                    i
+                )
             }
 
             override fun write(packetByteBuf: PacketByteBuf, abstractCookingRecipe: IRSmeltingRecipe) {

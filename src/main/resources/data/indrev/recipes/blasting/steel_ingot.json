@@ -1,0 +1,8 @@
+{
+  "type": "indrev:blasting",
+  "ingredient": {
+    "tag": "c:steel_dusts"
+  },
+  "result": "steel_ingot",
+  "cookingTime": 200
+}
