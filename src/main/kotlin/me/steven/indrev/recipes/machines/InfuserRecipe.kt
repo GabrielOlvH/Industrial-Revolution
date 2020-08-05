@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
 import me.steven.indrev.utils.identifier
@@ -19,11 +19,13 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
 
     override fun getId(): Identifier = id
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): RecipeType<*> =
+        TYPE
 
     override fun fits(width: Int, height: Int): Boolean = true
 
-    override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
+    override fun getSerializer(): RecipeSerializer<*> =
+        SERIALIZER
 
     override fun getOutput(): ItemStack = output
 
@@ -60,7 +62,12 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
                 }
                 output.count = result.get("count").asInt
                 val ticks = json.get("processTime").asInt
-                return InfuserRecipe(id, ticks, output, ingredients)
+                return InfuserRecipe(
+                    id,
+                    ticks,
+                    output,
+                    ingredients
+                )
             }
 
             override fun read(id: Identifier, buf: PacketByteBuf): InfuserRecipe {
@@ -69,7 +76,12 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
                 (0 until size).forEach { i -> input[i] = Ingredient.fromPacket(buf) }
                 val processTime = buf.readInt()
                 val output = buf.readItemStack()
-                return InfuserRecipe(id, processTime, output, input)
+                return InfuserRecipe(
+                    id,
+                    processTime,
+                    output,
+                    input
+                )
             }
 
         }

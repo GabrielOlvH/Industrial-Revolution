@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
 import me.steven.indrev.IndustrialRevolution
@@ -23,11 +23,13 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
 
     override fun getId(): Identifier = id
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): RecipeType<*> =
+        TYPE
 
     override fun fits(width: Int, height: Int): Boolean = true
 
-    override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
+    override fun getSerializer(): RecipeSerializer<*> =
+        SERIALIZER
 
     override fun getOutput(): ItemStack = output
 
@@ -84,8 +86,20 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                             )
                     val extraOutputStack = ItemStack { extraItem }
                     val chance = extra.get("chance").asDouble
-                    PulverizerRecipe(id, ticks, output, Pair(extraOutputStack, chance), input)
-                } else PulverizerRecipe(id, ticks, output, null, input)
+                    PulverizerRecipe(
+                        id,
+                        ticks,
+                        output,
+                        Pair(extraOutputStack, chance),
+                        input
+                    )
+                } else PulverizerRecipe(
+                    id,
+                    ticks,
+                    output,
+                    null,
+                    input
+                )
             }
 
             override fun read(id: Identifier, buf: PacketByteBuf): PulverizerRecipe {
@@ -95,9 +109,21 @@ class PulverizerRecipe(private val id: Identifier, val processTime: Int, private
                 if (buf.readBoolean()) {
                     val extraOutputStack = buf.readItemStack()
                     val chance = buf.readDouble()
-                    return PulverizerRecipe(id, processTime, output, Pair(extraOutputStack, chance), input)
+                    return PulverizerRecipe(
+                        id,
+                        processTime,
+                        output,
+                        Pair(extraOutputStack, chance),
+                        input
+                    )
                 }
-                return PulverizerRecipe(id, processTime, output, null, input)
+                return PulverizerRecipe(
+                    id,
+                    processTime,
+                    output,
+                    null,
+                    input
+                )
             }
         }
     }

@@ -6,10 +6,10 @@ import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
 import me.steven.indrev.compat.rei.plugins.MachinePlugin
 import me.steven.indrev.compat.rei.plugins.MachineRecipeCategory
-import me.steven.indrev.recipes.CompressorRecipe
-import me.steven.indrev.recipes.InfuserRecipe
-import me.steven.indrev.recipes.PulverizerRecipe
-import me.steven.indrev.recipes.RecyclerRecipe
+import me.steven.indrev.recipes.machines.CompressorRecipe
+import me.steven.indrev.recipes.machines.InfuserRecipe
+import me.steven.indrev.recipes.machines.PulverizerRecipe
+import me.steven.indrev.recipes.machines.RecyclerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier

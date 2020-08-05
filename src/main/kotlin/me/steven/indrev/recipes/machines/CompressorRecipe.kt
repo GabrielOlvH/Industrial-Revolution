@@ -1,4 +1,4 @@
-package me.steven.indrev.recipes
+package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
 import me.steven.indrev.IndustrialRevolution
@@ -22,11 +22,13 @@ class CompressorRecipe(private val id: Identifier, val processTime: Int, private
 
     override fun getId(): Identifier = id
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): RecipeType<*> =
+        TYPE
 
     override fun fits(width: Int, height: Int): Boolean = true
 
-    override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
+    override fun getSerializer(): RecipeSerializer<*> =
+        SERIALIZER
 
     override fun getOutput(): ItemStack = output
 
@@ -69,7 +71,12 @@ class CompressorRecipe(private val id: Identifier, val processTime: Int, private
                 val input = Ingredient.fromPacket(buf)
                 val processTime = buf.readInt()
                 val output = buf.readItemStack()
-                return CompressorRecipe(id, processTime, output, input)
+                return CompressorRecipe(
+                    id,
+                    processTime,
+                    output,
+                    input
+                )
             }
 
         }

@@ -8,7 +8,7 @@ import me.steven.indrev.items.IRCoolerItem
 import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.recipes.RecyclerRecipe
+import me.steven.indrev.recipes.machines.RecyclerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 

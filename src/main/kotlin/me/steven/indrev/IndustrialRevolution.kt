@@ -9,10 +9,15 @@ import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
-import me.steven.indrev.recipes.*
+import me.steven.indrev.recipes.PatchouliBookRecipe
+import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
 import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
 import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
+import me.steven.indrev.recipes.machines.CompressorRecipe
+import me.steven.indrev.recipes.machines.InfuserRecipe
+import me.steven.indrev.recipes.machines.PulverizerRecipe
+import me.steven.indrev.recipes.machines.RecyclerRecipe
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
