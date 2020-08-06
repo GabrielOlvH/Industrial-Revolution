@@ -16,7 +16,7 @@ class IRTooltipedItemSlot private constructor(
 ) : WItemSlot(inventory, startIndex, slotsWide, slotsHigh, big) {
 
     override fun renderTooltip(matrices: MatrixStack?, x: Int, y: Int, tX: Int, tY: Int) {
-        val slots = startIndex until startIndex + (slotsHigh * slotsWide) - 1
+        val slots = startIndex until startIndex + (slotsHigh * slotsWide)
         if (emptyTooltip.size != 0 && slots.all { inventory.getStack(it).isEmpty }) {
             val screen = MinecraftClient.getInstance().currentScreen
             screen?.renderTooltip(matrices, emptyTooltip, tX + x, tY + y)
