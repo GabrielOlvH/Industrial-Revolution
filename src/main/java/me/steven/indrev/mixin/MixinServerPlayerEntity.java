@@ -98,7 +98,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                         case BREATHING:
                         case FIRE_RESISTANCE:
                             StatusEffectInstance effect = module.getApply().invoke(player, level);
-                            if (effect != null && Energy.of(itemStack).use(10.0)) {
+                            if (effect != null && Energy.of(itemStack).use(20.0)) {
                                 if (!player.hasStatusEffect(effect.getEffectType()))
                                     player.addStatusEffect(effect);
                                 appliedEffects.add(module);
@@ -111,7 +111,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(15.0))
+                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(30.0))
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
                                 }
