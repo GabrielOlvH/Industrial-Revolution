@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "indrev:coolant_still",
+    "indrev:coolant_flowing"
+  ]
+}
