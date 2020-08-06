@@ -1,7 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "EME"
+    " E ",
+    " M ",
+    "MMM"
   ],
   "key": {
     "E": {
@@ -12,6 +14,7 @@
     }
   },
   "result": {
-    "item": "indrev:cable_mk3"
+    "item": "indrev:cable_mk3",
+    "count": 4
   }
 }

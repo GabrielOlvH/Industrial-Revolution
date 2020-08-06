@@ -30,7 +30,7 @@ object IRRegistry {
     fun registerAll() {
         val oregen = IndustrialRevolution.CONFIG.oregen
         ResourceHelper("tin") {
-            withItems("dust", "ingot", "plate", "gear")
+            withItems("dust", "ingot", "plate")
             withBlock()
             withOre(if (oregen.tin) ResourceHelper.TIN_FEATURE else null)
             withTools(
@@ -43,7 +43,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.TIN)
         }.register()
         ResourceHelper("copper") {
-            withItems("dust", "ingot", "plate", "gear")
+            withItems("dust", "ingot", "plate")
             withBlock()
             withOre(if (oregen.copper) ResourceHelper.COPPER_FEATURE else null)
             withTools(
@@ -56,7 +56,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.COPPER)
         }.register()
         ResourceHelper("steel") {
-            withItems("dust", "ingot", "plate", "gear")
+            withItems("dust", "ingot", "plate")
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
@@ -67,14 +67,14 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
-        ResourceHelper("iron") { withItems("dust", "plate", "gear") }.register()
+        ResourceHelper("iron") { withItems("dust", "plate") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre(if (oregen.nikolite) ResourceHelper.NIKOLITE_FEATURE else null)
         }.register()
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
         ResourceHelper("diamond") { withItems("dust") }.register()
-        ResourceHelper("gold") { withItems("dust") }.register()
+        ResourceHelper("gold") { withItems("dust", "plate") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
 
         Registry.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }

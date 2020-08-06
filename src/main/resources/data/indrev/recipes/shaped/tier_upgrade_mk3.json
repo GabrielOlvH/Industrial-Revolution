@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " N ",
-    "NCN",
+    "TCT",
     " N "
   ],
   "key": {
@@ -11,6 +11,9 @@
     },
     "N": {
       "tag": "c:copper_plates"
+    },
+    "T": {
+      "tag": "c:tin_plates"
     }
   },
   "result": {

@@ -3,14 +3,17 @@
   "pattern": [
     "NPN",
     "ACS",
-    "OBO"
+    "BMB"
   ],
   "key": {
+    "M": {
+      "item": "indrev:mining_drill_mk1"
+    },
     "C": {
       "item": "indrev:circuit_mk4"
     },
     "N": {
-      "item": "indrev:nikolite_dust"
+      "item": "indrev:enriched_nikolite_ingot"
     },
     "P": {
       "item": "minecraft:netherite_pickaxe"
@@ -23,9 +26,6 @@
     },
     "B": {
       "item": "indrev:battery"
-    },
-    "O": {
-      "tag": "c:copper_plates"
     }
   },
   "result": {

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " EN",
-    "ECE",
-    "NE "
+    "NEN",
+    "RCR",
+    " E "
   ],
   "key": {
     "N": {
@@ -14,6 +14,9 @@
     },
     "C": {
       "item": "indrev:circuit_mk3"
+    },
+    "R": {
+      "item": "minecraft:redstone"
     }
   },
   "result": {

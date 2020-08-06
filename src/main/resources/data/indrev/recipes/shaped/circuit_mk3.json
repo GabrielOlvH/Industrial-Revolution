@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " EN",
-    "ECE",
-    "NE "
+    " E ",
+    "LCL",
+    " L "
   ],
   "key": {
-    "N": {
-      "item": "indrev:nikolite_dust"
-    },
     "E": {
       "item": "indrev:enriched_nikolite_dust"
     },
     "C": {
       "item": "indrev:circuit_mk2"
+    },
+    "L": {
+      "item": "minecraft:lapis_lazuli"
     }
   },
   "result": {
