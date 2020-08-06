@@ -7,6 +7,7 @@
     "MixinCraftingResultSlot",
     "MixinItemStack",
     "MixinLivingEntity",
+    "MixinPiglinBrain",
     "MixinServerPlayerEntity"
   ],
   "client": [

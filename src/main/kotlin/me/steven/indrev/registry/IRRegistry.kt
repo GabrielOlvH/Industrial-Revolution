@@ -145,6 +145,8 @@ object IRRegistry {
         identifier("module_auto_feeder").item(AUTO_FEEDER_MODULE_ITEM)
         identifier("module_charger").item(CHARGER_MODULE_ITEM)
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
+        identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
+        identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -230,6 +232,8 @@ object IRRegistry {
     val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(Module.AUTO_FEEDER, itemSettings().maxCount(1))
     val CHARGER_MODULE_ITEM = IRModuleItem(Module.CHARGER, itemSettings().maxCount(1))
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(Module.SOLAR_PANEL, itemSettings().maxCount(1))
+    val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(Module.PIGLIN_TRICKER, itemSettings().maxCount(1))
+    val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(Module.FIRE_RESISTANCE, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings())
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings())

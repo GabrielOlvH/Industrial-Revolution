@@ -96,6 +96,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                         case SPEED:
                         case JUMP_BOOST:
                         case BREATHING:
+                        case FIRE_RESISTANCE:
                             StatusEffectInstance effect = module.getApply().invoke(player, level);
                             if (effect != null && Energy.of(itemStack).use(10.0)) {
                                 if (!player.hasStatusEffect(effect.getEffectType()))

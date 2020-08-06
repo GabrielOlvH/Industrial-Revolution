@@ -42,9 +42,15 @@ enum class Module(
     AUTO_FEEDER("auto_feeder", arrayOf(EquipmentSlot.HEAD), 1, false, false),
     CHARGER("charger", arrayOf(EquipmentSlot.CHEST), 1, false, false),
     SOLAR_PANEL("solar_panel", arrayOf(EquipmentSlot.HEAD), 2, false, false),
+    FIRE_RESISTANCE("fire_resistance", arrayOf(EquipmentSlot.CHEST), 1, false, false, { _, level ->
+        StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 1000000, level - 1, false, false)
+    }),
+    PIGLIN_TRICKER("piglin_tricker", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, false, false),
     COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1, false, false);
 
     companion object {
+        fun isInstalled(stack: ItemStack, upgrade: Module): Boolean = stack.tag?.contains(upgrade.key) == true
+
         fun getInstalled(stack: ItemStack): Array<Module> {
             val tag = stack.tag ?: return emptyArray()
             return values().filter { module -> module != COLOR }.mapNotNull { module ->
