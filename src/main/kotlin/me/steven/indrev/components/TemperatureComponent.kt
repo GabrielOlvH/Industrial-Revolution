@@ -63,6 +63,7 @@ class TemperatureComponent(
         if (temperature > explosionLimit - 5) {
             machine.explode = true
         }
+        inputOverflow = false
     }
 
     private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
