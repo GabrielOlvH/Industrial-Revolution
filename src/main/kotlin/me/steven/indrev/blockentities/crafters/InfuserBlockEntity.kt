@@ -4,13 +4,13 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import team.reborn.energy.Energy
 
 class InfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
@@ -21,7 +21,7 @@ class InfuserBlockEntity(tier: Tier) :
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     slot == 2 || slot == 3 -> true
                     else -> false

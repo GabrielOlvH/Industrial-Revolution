@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext

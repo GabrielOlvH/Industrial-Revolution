@@ -1,9 +1,9 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
+import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.blocks.VerticalFacingMachineBlock
 import me.steven.indrev.utils.Tier
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
@@ -32,10 +32,10 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
         if (block.tier == from) {
             if (!blockEntity.registry.upgradeable) return ActionResult.PASS
             var newState = blockEntity.registry.block(to).defaultState
-            if (state.contains(VerticalFacingMachineBlock.FACING))
-                newState = newState.with(VerticalFacingMachineBlock.FACING, state[VerticalFacingMachineBlock.FACING])
-            else if (state.contains(FacingMachineBlock.HORIZONTAL_FACING))
-                newState = newState.with(FacingMachineBlock.HORIZONTAL_FACING, state[FacingMachineBlock.HORIZONTAL_FACING])
+            if (state.contains(FacingMachineBlock.FACING))
+                newState = newState.with(FacingMachineBlock.FACING, state[FacingMachineBlock.FACING])
+            else if (state.contains(HorizontalFacingMachineBlock.HORIZONTAL_FACING))
+                newState = newState.with(HorizontalFacingMachineBlock.HORIZONTAL_FACING, state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
             world.setBlockState(blockPos, newState)
             val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
                 ?: throw RuntimeException("This should never happen, what the fuck")

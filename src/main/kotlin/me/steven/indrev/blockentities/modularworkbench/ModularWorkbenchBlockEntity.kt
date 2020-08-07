@@ -8,7 +8,6 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
@@ -26,7 +25,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     slot == 1 -> item is IRModuleItem
                     slot == 2 -> item is IRModularArmor
                     else -> false

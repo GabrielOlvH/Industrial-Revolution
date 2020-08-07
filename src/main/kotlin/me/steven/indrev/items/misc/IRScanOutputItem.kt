@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import me.steven.indrev.utils.getChunkPos
 import net.minecraft.client.item.TooltipContext

@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.energy
 
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
@@ -27,7 +27,7 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder {
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem {
 
     override fun appendTooltip(
         stack: ItemStack?,

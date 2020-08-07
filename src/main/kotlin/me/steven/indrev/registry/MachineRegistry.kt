@@ -88,7 +88,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.coalGenerator, ::CoalGeneratorController
                 ) { CoalGeneratorBlockEntity() }
             },
@@ -115,7 +115,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.biomassGenerator, ::BiomassGeneratorController
                 ) { BiomassGeneratorBlockEntity(tier) }
             },
@@ -124,7 +124,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
                 ) { HeatGeneratorBlockEntity(tier) }
             },
@@ -133,7 +133,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
             { tier ->
-                VerticalFacingMachineBlock(
+                FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, null, ::BatteryController
                 ) { BatteryBlockEntity(tier) }
             },
@@ -150,7 +150,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK1 -> CONFIG.machines.electricFurnaceMk1
@@ -173,7 +173,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK1 -> CONFIG.machines.pulverizerMk1
@@ -196,7 +196,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK1 -> CONFIG.machines.compressorMk1
@@ -219,7 +219,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK1 -> CONFIG.machines.infuserMk1
@@ -242,7 +242,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.recycler, ::RecyclerController
                 ) { RecyclerBlockEntity(tier) }
             },
@@ -257,7 +257,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.chopper, ::ChopperController
                 ) { ChopperBlockEntity(tier) }
             },
@@ -274,7 +274,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
             { tier ->
-                FacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.rancher, ::RancherController
                 ) { RancherBlockEntity(tier) }
             },
@@ -291,7 +291,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val MINER_REGISTRY = MachineRegistry(identifier("miner"), false, Tier.MK4).register(
             { tier ->
-                object : FacingMachineBlock(
+                object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier, CONFIG.machines.miner,
                     ::MinerController,
@@ -308,7 +308,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val ENDER_MINER_REGISTRY = MachineRegistry(identifier("ender_miner"), false, Tier.MK4).register(
             { tier ->
-                object : FacingMachineBlock(
+                object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier, CONFIG.machines.enderMiner,
                     ::MinerController,

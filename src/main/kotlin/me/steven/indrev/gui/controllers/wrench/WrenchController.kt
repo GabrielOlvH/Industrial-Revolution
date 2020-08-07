@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.FacingMachineBlock
+import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
@@ -45,7 +45,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                 val inventoryController = blockEntity.inventoryComponent!!
                 val id = Registry.BLOCK.getId(blockState.block).path.replace(TIER_REGEX, "")
                 MachineSide.values().forEach { side ->
-                    val facing = blockState[FacingMachineBlock.HORIZONTAL_FACING]
+                    val facing = blockState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
                     val direction = offset(facing, side.direction)
                     val mode = getMode(inventoryController, direction)
                     val widget = MachineSideDisplayWidget(identifier("textures/block/${id}.png"), side, mode)

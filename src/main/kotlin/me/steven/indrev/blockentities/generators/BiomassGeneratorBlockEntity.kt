@@ -6,14 +6,14 @@ import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ArrayPropertyDelegate
+import team.reborn.energy.Energy
 
 class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.BIOMASS_GENERATOR_REGISTRY) {
 
@@ -23,7 +23,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
             IRInventory(3, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     slot == 2 -> stack?.item == IRRegistry.BIOMASS
                     else -> false

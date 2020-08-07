@@ -2,7 +2,7 @@ package me.steven.indrev.components
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.items.IRCoolerItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate

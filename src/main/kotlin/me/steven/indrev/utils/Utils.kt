@@ -3,10 +3,15 @@ package me.steven.indrev.utils
 import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.config.CableConfig
+import me.steven.indrev.config.GeneratorConfig
+import me.steven.indrev.config.HeatMachineConfig
+import me.steven.indrev.config.MachineConfig
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.BufferRenderer
 import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormats
@@ -111,6 +116,158 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
     tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
     tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+}
+
+fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
+    if (Screen.hasShiftDown()) {
+        when (config) {
+            is MachineConfig -> {
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.maxInput
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lf",
+                                getShortEnergyDisplay(config.maxEnergyStored)
+                            ).formatted(
+                                Formatting.GOLD
+                            )
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lf",
+                                config.energyCost
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
+                        .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
+                )
+            }
+            is HeatMachineConfig -> {
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.maxInput
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lf",
+                                getShortEnergyDisplay(config.maxEnergyStored)
+                            ).formatted(
+                                Formatting.GOLD
+                            )
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lf",
+                                config.energyCost
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
+                        .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.processTemperatureBoost
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+            }
+            is GeneratorConfig -> {
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.maxOutput
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lf",
+                                getShortEnergyDisplay(config.maxEnergyStored)
+                            ).formatted(
+                                Formatting.GOLD
+                            )
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.ratio").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.ratio
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(
+                                Formatting.GOLD
+                            )
+                        )
+                )
+            }
+            is CableConfig -> {
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.maxInput
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+                tooltip?.add(
+                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.BLUE)
+                        .append(
+                            TranslatableText(
+                                "gui.indrev.tooltip.lftick",
+                                config.maxOutput
+                            ).formatted(Formatting.GOLD)
+                        )
+                )
+            }
+        }
+    } else {
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.press_shift").formatted(
+                Formatting.BLUE,
+                Formatting.ITALIC
+            )
+        )
+    }
 }
 
 fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {

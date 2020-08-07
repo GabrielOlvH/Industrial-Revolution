@@ -24,6 +24,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
+import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
@@ -34,12 +35,9 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import team.reborn.energy.Energy
-import team.reborn.energy.minecraft.EnergyModInitializer
 
-
-object IndustrialRevolution : EnergyModInitializer() {
+object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
-        super.onInitialize()
         AutoConfig.register(
             IRConfig::class.java,
             PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)

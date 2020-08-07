@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.energy
 
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
@@ -16,7 +16,7 @@ class IRPortableChargerItem(
     settings: Settings,
     private val tier: Tier,
     private val maxStored: Double
-) : Item(settings), EnergyHolder {
+) : Item(settings), EnergyHolder, IREnergyItem {
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -31,7 +31,7 @@ class IRPortableChargerItem(
 
     override fun getMaxInput(side: EnergySide?): Double = tier.io
 
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+    override fun getMaxOutput(side: EnergySide?): Double = tier.io
 
     override fun getTier(): EnergyTier = EnergyTier.HIGH
 

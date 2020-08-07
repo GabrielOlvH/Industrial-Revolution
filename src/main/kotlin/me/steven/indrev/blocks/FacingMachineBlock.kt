@@ -1,23 +1,18 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemPlacementContext
-import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 
-open class FacingMachineBlock(
+class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
     config: Any?,
@@ -27,27 +22,15 @@ open class FacingMachineBlock(
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)
-        return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing?.opposite)
+        return this.defaultState.with(FACING, ctx?.playerLookDirection?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         super.appendProperties(builder)
-        builder?.add(HORIZONTAL_FACING)
-    }
-
-    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
-        val blockEntity = world?.getBlockEntity(pos)
-        if (blockEntity is MachineBlockEntity) {
-            val direction = state?.get(HORIZONTAL_FACING) ?: return
-            val inventoryController = blockEntity.inventoryComponent ?: return
-            val itemConfig = inventoryController.itemConfig
-            itemConfig[direction.rotateYClockwise()] = InventoryComponent.Mode.INPUT
-            itemConfig[direction.rotateYCounterclockwise()] = InventoryComponent.Mode.OUTPUT
-        }
-        super.onPlaced(world, pos, state, placer, itemStack)
+        builder?.add(FACING)
     }
 
     companion object {
-        val HORIZONTAL_FACING: DirectionProperty = Properties.HORIZONTAL_FACING
+        val FACING: DirectionProperty = Properties.FACING
     }
 }

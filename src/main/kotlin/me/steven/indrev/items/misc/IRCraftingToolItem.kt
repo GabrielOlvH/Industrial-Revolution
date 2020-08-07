@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import me.steven.indrev.FabricRecipeRemainder
 import net.minecraft.entity.player.PlayerEntity

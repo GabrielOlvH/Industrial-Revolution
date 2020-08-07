@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.energy
 
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
@@ -25,7 +25,7 @@ class IRMiningDrill(
     private val maxStored: Double,
     private val miningSpeedMultiplier: Float,
     settings: Settings
-) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder {
+) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0

@@ -4,8 +4,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -40,7 +39,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     slot in 2..5 -> item?.isIn(FabricToolTags.AXES) == true || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock)
                     slot in 6 until 15 -> true

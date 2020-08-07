@@ -1,10 +1,10 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.CableBlock
 import me.steven.indrev.blocks.FacingMachineBlock
+import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.blocks.VerticalFacingMachineBlock
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import net.minecraft.client.item.TooltipContext
@@ -79,7 +79,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             Mode.CONFIGURE -> {
                 if (state?.block?.hasBlockEntity() == true) {
                     val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.PASS
-                    if (blockEntity.inventoryComponent != null && state.block is FacingMachineBlock) {
+                    if (blockEntity.inventoryComponent != null && state.block is HorizontalFacingMachineBlock) {
                         player?.openHandledScreen(IRScreenHandlerFactory(::WrenchController, pos!!))
                     }
                 }
@@ -108,8 +108,8 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             .filter { direction -> direction.axis.isHorizontal }
             .sortedBy { dir -> dir.horizontal }
             .toTypedArray()
-        private val VERTICAL_FACING = VerticalFacingMachineBlock.FACING
-        private val HORIZONTAL_FACING = FacingMachineBlock.HORIZONTAL_FACING
+        private val VERTICAL_FACING = FacingMachineBlock.FACING
+        private val HORIZONTAL_FACING = HorizontalFacingMachineBlock.HORIZONTAL_FACING
 
         private enum class Mode {
             CONFIGURE, ROTATE;

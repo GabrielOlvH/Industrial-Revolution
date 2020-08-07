@@ -6,8 +6,7 @@ import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
@@ -19,6 +18,7 @@ import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
+import team.reborn.energy.Energy
 
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
@@ -27,7 +27,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     else -> false
                 }

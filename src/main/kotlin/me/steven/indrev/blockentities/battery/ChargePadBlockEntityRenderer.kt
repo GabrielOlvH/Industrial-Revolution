@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.battery
 
-import me.steven.indrev.blocks.FacingMachineBlock
+import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
@@ -25,7 +25,7 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
         val inventory = entity?.inventoryComponent?.inventory
         val stack = inventory?.getStack(0)
         if (stack?.isEmpty == false) {
-            val facing = entity.cachedState[FacingMachineBlock.HORIZONTAL_FACING].rotateYClockwise()
+            val facing = entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].rotateYClockwise()
             var x = abs(facing.offsetX.toFloat()) * 0.5
             var z = abs(facing.offsetZ.toFloat()) * 0.5
             if (facing.offsetX == -1)

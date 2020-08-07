@@ -5,13 +5,13 @@ import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import team.reborn.energy.Energy
 
 class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
@@ -22,7 +22,7 @@ class PulverizerBlockEntity(tier: Tier) :
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     slot == 2 -> true
                     else -> false

@@ -5,14 +5,14 @@ import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.IRCoolerItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
+import team.reborn.energy.Energy
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
@@ -23,7 +23,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    item is IRRechargeableItem && item.canOutput -> slot == 0
+                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
                     slot == 2 -> true
                     else -> false

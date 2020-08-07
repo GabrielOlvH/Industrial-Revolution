@@ -31,7 +31,7 @@ import java.util.*
 import java.util.stream.Stream
 
 class ChargePadBlock(settings: Settings, tier: Tier) :
-    FacingMachineBlock(settings, tier, null, null, { ChargePadBlockEntity(tier) }) {
+    HorizontalFacingMachineBlock(settings, tier, null, null, { ChargePadBlockEntity(tier) }) {
 
     override fun getOutlineShape(
         state: BlockState,

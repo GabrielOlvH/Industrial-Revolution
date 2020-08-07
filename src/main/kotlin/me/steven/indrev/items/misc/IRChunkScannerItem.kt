@@ -1,4 +1,4 @@
-package me.steven.indrev.items
+package me.steven.indrev.items.misc
 
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.asString

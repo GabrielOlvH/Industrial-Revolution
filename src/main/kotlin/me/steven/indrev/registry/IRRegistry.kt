@@ -5,11 +5,14 @@ import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
-import me.steven.indrev.items.*
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.items.rechargeable.IRRechargeableItem
+import me.steven.indrev.items.energy.IRBatteryItem
+import me.steven.indrev.items.energy.IRGamerAxeItem
+import me.steven.indrev.items.energy.IRMiningDrill
+import me.steven.indrev.items.energy.IRPortableChargerItem
+import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -91,7 +94,7 @@ object IRRegistry {
                 Tier.MK4, Tier.CREATIVE -> MINING_DRILL_MK4
             }
         }
-        identifier("battery").item(IRRechargeableItem(itemSettings().maxDamage(4096), 4096.0, true))
+        identifier("battery").item(IRBatteryItem(itemSettings().maxDamage(4096), 4096.0, true))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
