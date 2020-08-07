@@ -28,6 +28,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import org.apache.logging.log4j.LogManager
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
@@ -59,6 +60,12 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 LogManager.getLogger("Industrial Revolution")
                     .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
                 return
+            }
+            val inventory = inventoryComponent?.inventory
+            if (inventoryComponent != null && inventory!!.size() > 0) {
+                val stack = inventory.getStack(0)
+                if (Energy.valid(stack))
+                    Energy.of(stack).into(Energy.of(this)).move()
             }
             transfer()
             machineTick()

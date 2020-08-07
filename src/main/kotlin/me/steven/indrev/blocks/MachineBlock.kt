@@ -5,8 +5,8 @@ import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.buildMachineTooltip
-import me.steven.indrev.utils.getShortEnergyDisplay
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -29,11 +29,8 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
-import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -41,6 +38,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import team.reborn.energy.Energy
 import java.util.*
 
 open class MachineBlock(
@@ -73,14 +71,8 @@ open class MachineBlock(
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        val infoTag = stack?.getSubTag("MachineInfo")
-        if (infoTag != null) {
-            val energy = infoTag.getDouble("Energy")
-            tooltip?.add(
-                TranslatableText("gui.widget.energy").formatted(Formatting.BLUE)
-                    .append(LiteralText(": ${getShortEnergyDisplay(energy)} LF").formatted(Formatting.GOLD))
-            )
-        }
+        if (Energy.valid(stack))
+            buildEnergyTooltip(stack, tooltip)
         buildMachineTooltip(config ?: return, tooltip)
     }
 
@@ -121,8 +113,9 @@ open class MachineBlock(
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item
                 if (blockEntity is MachineBlockEntity && item is BlockItem && item.block is MachineBlock) {
+                    if (Energy.valid(stack))
+                        Energy.of(stack).set(blockEntity.energy)
                     val tag = stack.getOrCreateSubTag("MachineInfo")
-                    tag.putDouble("Energy", blockEntity.energy)
                     val temperatureController = blockEntity.temperatureComponent
                     if (temperatureController != null)
                         tag.putDouble("Temperature", temperatureController.temperature)
@@ -138,8 +131,8 @@ open class MachineBlock(
         val tag = itemStack?.getSubTag("MachineInfo") ?: return
         val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return
         val temperatureController = blockEntity.temperatureComponent
-        val energy = tag.getDouble("Energy")
-        blockEntity.energy = energy
+        if (Energy.valid(itemStack))
+            Energy.of(blockEntity).set(Energy.of(itemStack).energy)
         if (temperatureController != null) {
             val temperature = tag.getDouble("Temperature")
             temperatureController.temperature = temperature

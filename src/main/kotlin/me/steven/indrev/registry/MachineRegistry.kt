@@ -17,6 +17,7 @@ import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blocks.*
 import me.steven.indrev.gui.controllers.*
+import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
@@ -43,7 +44,11 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
-            val blockItem = BlockItem(block, itemSettings())
+            val blockItem =
+                if (block is MachineBlock)
+                    MachineBlockItem(block, this, itemSettings())
+                else
+                    BlockItem(block, itemSettings())
             val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
             identifier("${identifier.path}_${tier.toString().toLowerCase()}").apply {
                 block(block)
