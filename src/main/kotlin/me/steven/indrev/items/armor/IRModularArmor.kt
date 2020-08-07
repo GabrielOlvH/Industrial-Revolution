@@ -55,4 +55,38 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         val handler = Energy.of(stack)
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
+
+    fun regenShield(itemStack: ItemStack, protectionLevel: Int) {
+        val tag = itemStack.tag
+        if (tag?.contains("shield") == false) {
+            tag.putDouble("shield", 0.0)
+        }
+        val maxShield = getMaxShield(protectionLevel)
+        val currentShield = tag?.getDouble("shield")!!
+        if (currentShield >= maxShield || !Energy.of(itemStack).use(50.0)) return
+        tag.putDouble("shield", currentShield + SHIELD_REGEN_RATE)
+    }
+
+    fun useShield(itemStack: ItemStack, amount: Double): Double {
+        val tag = itemStack.tag
+        if (tag?.contains("shield") == false) {
+            return amount
+        }
+        val shield = tag?.getDouble("shield")!!
+        val used = amount.coerceAtMost(shield)
+        tag.putDouble("shield", shield - used)
+        return used
+    }
+
+    fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0
+
+    fun getShield(itemStack: ItemStack): Double {
+        val tag = itemStack.tag
+        return if (tag?.contains("shield") == false) return 0.0
+        else tag!!.getDouble("shield")
+    }
+
+    companion object {
+        const val SHIELD_REGEN_RATE = 10
+    }
 }

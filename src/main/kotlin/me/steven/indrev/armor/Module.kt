@@ -31,7 +31,7 @@ enum class Module(
             null
         }
     }),
-    FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 3, false, false),
+    FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 1, false, false),
     PROTECTION(
         "protection",
         arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET),

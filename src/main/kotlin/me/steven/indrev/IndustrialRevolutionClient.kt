@@ -10,6 +10,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.registry.FluidRenderRegistry
+import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -26,7 +27,7 @@ import net.minecraft.client.render.RenderLayer
 object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         FluidRenderRegistry.registerAll()
-
+        IRHudRender
         arrayOf(
             IndustrialRevolution.COAL_GENERATOR_HANDLER,
             IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
@@ -75,6 +76,5 @@ object IndustrialRevolutionClient : ClientModInitializer {
             val tag = stack?.orCreateTag ?: return@predicate 0f
             return@predicate tag.getFloat("Progress")
         }
-
     }
 }
