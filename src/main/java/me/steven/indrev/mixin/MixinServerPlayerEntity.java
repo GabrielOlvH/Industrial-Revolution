@@ -39,7 +39,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void indrev_applyEffects(CallbackInfo ci) {
         ticks++;
-        if (ticks % 120 == 0) {
+        if (ticks % 40 == 0) {
             applyArmorEffects();
             useActiveAxeEnergy();
         }
