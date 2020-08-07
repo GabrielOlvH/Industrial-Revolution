@@ -14,14 +14,20 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.LiteralText
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
 val EMPTY_INT_ARRAY = intArrayOf()
@@ -99,6 +105,13 @@ fun getShortEnergyDisplay(energy: Double): String =
         energy > 1000 -> "${"%.1f".format(energy / 1000)}k"
         else -> "%.1f".format(energy)
     }
+
+fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
+    val handler = Energy.of(stack)
+    tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
+    tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
+    tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+}
 
 fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {
     val matrix = matrices.peek().model

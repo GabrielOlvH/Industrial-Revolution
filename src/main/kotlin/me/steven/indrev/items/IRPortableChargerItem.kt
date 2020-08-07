@@ -1,17 +1,13 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.getShortEnergyDisplay
+import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.World
 import team.reborn.energy.*
@@ -20,7 +16,7 @@ class IRPortableChargerItem(
     settings: Settings,
     private val tier: Tier,
     private val maxStored: Double
-) : Item(settings), EnergyHolder, IRRechargeable {
+) : Item(settings), EnergyHolder {
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -28,11 +24,7 @@ class IRPortableChargerItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        super.appendTooltip(stack, world, tooltip, context)
-        val handler = Energy.of(stack)
-        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
-        tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+        buildEnergyTooltip(stack, tooltip)
     }
 
     override fun getMaxStoredPower(): Double = maxStored

@@ -1,8 +1,7 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.getShortEnergyDisplay
+import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
@@ -11,10 +10,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
@@ -31,7 +27,7 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IRRechargeable {
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder {
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -39,11 +35,7 @@ class IRGamerAxeItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        super.appendTooltip(stack, world, tooltip, context)
-        val handler = Energy.of(stack)
-        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
-        tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+        buildEnergyTooltip(stack, tooltip)
     }
 
 

@@ -1,8 +1,7 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.getShortEnergyDisplay
+import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
@@ -12,10 +11,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import team.reborn.energy.Energy
@@ -29,7 +25,7 @@ class IRMiningDrill(
     private val maxStored: Double,
     private val miningSpeedMultiplier: Float,
     settings: Settings
-) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IRRechargeable {
+) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
@@ -59,11 +55,7 @@ class IRMiningDrill(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        super.appendTooltip(stack, world, tooltip, context)
-        val handler = Energy.of(stack)
-        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
-        tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+        buildEnergyTooltip(stack, tooltip)
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false

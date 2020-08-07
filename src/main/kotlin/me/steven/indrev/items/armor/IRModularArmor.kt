@@ -2,15 +2,13 @@ package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
-import me.steven.indrev.items.rechargeable.IRRechargeable
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.getShortEnergyDisplay
+import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -21,7 +19,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRRechargeable {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder {
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         val upgrades = Module.getInstalled(stack)
         if (upgrades.isNotEmpty()) {
@@ -35,10 +33,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
                 )
             }
         }
-        val handler = Energy.of(stack)
-        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF"))
-        tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+        buildEnergyTooltip(stack, tooltip)
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
