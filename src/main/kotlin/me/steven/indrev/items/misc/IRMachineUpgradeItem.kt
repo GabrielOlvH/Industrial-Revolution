@@ -31,17 +31,25 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
         val blockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity ?: return ActionResult.PASS
         if (block.tier == from) {
             if (!blockEntity.registry.upgradeable) return ActionResult.PASS
+            
+            val inventoryTag = blockEntity.inventoryComponent?.toTag(CompoundTag())
+            blockEntity.inventoryComponent?.inventory?.clear()
+            val temperatureTag = blockEntity.temperatureComponent?.toTag(CompoundTag())
+            val energy = blockEntity.energy
+
             var newState = blockEntity.registry.block(to).defaultState
             if (state.contains(FacingMachineBlock.FACING))
                 newState = newState.with(FacingMachineBlock.FACING, state[FacingMachineBlock.FACING])
             else if (state.contains(HorizontalFacingMachineBlock.HORIZONTAL_FACING))
                 newState = newState.with(HorizontalFacingMachineBlock.HORIZONTAL_FACING, state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
             world.setBlockState(blockPos, newState)
+
             val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
                 ?: throw RuntimeException("This should never happen, what the fuck")
-            upgradedBlockEntity.energy = blockEntity.energy
-            upgradedBlockEntity.inventoryComponent?.fromTag(blockEntity.inventoryComponent?.toTag(CompoundTag()))
-            upgradedBlockEntity.temperatureComponent?.fromTag(blockEntity.temperatureComponent?.toTag(CompoundTag()))
+            upgradedBlockEntity.energy = energy
+            upgradedBlockEntity.inventoryComponent?.fromTag(inventoryTag)
+            upgradedBlockEntity.temperatureComponent?.fromTag(temperatureTag)
+
             context.player?.getStackInHand(context.hand)?.decrement(1)
             return ActionResult.CONSUME
         }
