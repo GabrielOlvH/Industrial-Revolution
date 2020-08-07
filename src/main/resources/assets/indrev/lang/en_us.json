@@ -522,5 +522,16 @@
   "advancements.indrev.modular_armor": "Modularity",
   "advancements.indrev.modular_armor.description": "Get a Modular Armor full set",
   "advancements.indrev.gamer_axe": "Not enough RGB",
-  "advancements.indrev.gamer_axe.description": "Get a Gamer Axe"
+  "advancements.indrev.gamer_axe.description": "Get a Gamer Axe",
+  "gui.indrev.tip": "TIP ",
+  "gui.indrev.tip_0": "Make sure to configure item input and output",
+  "gui.indrev.tip_1": "Do not use cables above the input limit",
+  "gui.indrev.tip_2": "Use coolers like a cool guy",
+  "gui.indrev.tip_3": "Use coolers to never loose efficiency",
+  "gui.indrev.tip_4": "Factory. Must. Grow.",
+  "gui.indrev.tip_5": "You should check out the Modular Armor",
+  "gui.indrev.tip_6": "Real gamers use the Gamer Axe",
+  "gui.indrev.tip_7": "If you have issues or suggestions join our Discord!",
+  "gui.indrev.tip_8": "Always backup your worlds before updating",
+  "gui.indrev.tip_9": "Cover your toes at night"
 }

@@ -11,6 +11,7 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.BookShortcutWidget
 import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.gui.widgets.TipWidget
 import me.steven.indrev.gui.widgets.machines.EnergyWidget
 import me.steven.indrev.gui.widgets.machines.TemperatureWidget
 import me.steven.indrev.gui.widgets.slots.IRTooltipedItemSlot
@@ -44,13 +45,13 @@ fun SyncedGuiDescription.configure(
     blockInventory: Inventory,
     propertyDelegate: PropertyDelegate
 ) {
-    (rootPanel as WGridPanel).also {
-        it.setSize(150, 120)
-        it.add(createPlayerInventoryPanel(), 0, 5)
-        it.add(StringWidget(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
+    (rootPanel as WGridPanel).also { panel ->
+        panel.setSize(150, 120)
+        panel.add(createPlayerInventoryPanel(), 0, 5)
+        panel.add(StringWidget(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
 
         val energyWidget = EnergyWidget(screenHandlerContext)
-        it.add(energyWidget, 0, 0, 16, 64)
+        panel.add(energyWidget, 0, 0, 16, 64)
 
         val batterySlot = IRTooltipedItemSlot.of(
             blockInventory,
@@ -62,9 +63,10 @@ fun SyncedGuiDescription.configure(
                 )
             )
         )
-        it.add(batterySlot, 0.0, 3.7)
+        panel.add(batterySlot, 0.0, 3.7)
 
         screenHandlerContext.run { world, blockPos ->
+            panel.add(TipWidget(world.random), -1, -1)
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
@@ -78,12 +80,12 @@ fun SyncedGuiDescription.configure(
                             )
                         )
                     )
-                    it.add(s, 8, i)
+                    panel.add(s, 8, i)
                 }
             }
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
-                it.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
+                panel.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
                 val coolerSlot = IRTooltipedItemSlot.of(
                     blockInventory,
                     1,
@@ -94,7 +96,7 @@ fun SyncedGuiDescription.configure(
                         )
                     )
                 )
-                it.add(coolerSlot, 1.0, 3.7)
+                panel.add(coolerSlot, 1.0, 3.7)
             }
             if (blockEntity is AOEMachineBlockEntity) {
                 val button = object : WButton(TranslatableText("block.indrev.aoe.toggle.btn")) {
@@ -105,11 +107,11 @@ fun SyncedGuiDescription.configure(
                 button.setOnClick {
                     blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
                 }
-                it.add(button, 8.0, 4.0)
+                panel.add(button, 8.0, 4.0)
             }
         }
         if (this is PatchouliEntryShortcut) {
-            addBookEntryShortcut(playerInventory, it, 7, 0)
+            addBookEntryShortcut(playerInventory, panel, 7, 0)
         }
     }
 }
