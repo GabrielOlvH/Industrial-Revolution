@@ -38,6 +38,8 @@ class CableBlockEntity(tier: Tier) :
         }.maxOutput
     }
 
+    override fun getBaseBuffer(): Double = tier.io * 2
+
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         if (tag?.contains("cover") == true)
             cover = Identifier(tag.getString("cover"))

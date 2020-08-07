@@ -83,6 +83,8 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         } else processTime = 0
     }
 
+    override fun getBaseBuffer(): Double = 500000.0
+
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

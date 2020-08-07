@@ -64,6 +64,8 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         }
     }
 
+    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
+
     private fun getIdentifiers(tier: Tier) = when (tier) {
         Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
         Tier.MK3 -> arrayOf(FISH_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
@@ -74,7 +76,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getMaxStoredPower(): Double = getConfig().maxEnergyStored
+    override fun getMaxStoredPower(): Double = Upgrade.BUFFER(this)
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(6, 7, 8, 9)
 

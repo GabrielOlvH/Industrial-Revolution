@@ -33,7 +33,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
+abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
@@ -95,7 +95,7 @@ open class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         this.energy = amount
     }
 
-    open fun getBaseBuffer() = registry.buffer(tier)
+    abstract fun getBaseBuffer(): Double
 
     override fun getMaxStoredPower(): Double = getBaseBuffer()
 

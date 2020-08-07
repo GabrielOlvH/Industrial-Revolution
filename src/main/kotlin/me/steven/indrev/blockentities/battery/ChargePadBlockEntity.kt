@@ -23,4 +23,6 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistr
             Energy.of(this).into(Energy.of(stack)).move()
         } else setWorkingState(false)
     }
+
+    override fun getBaseBuffer(): Double = tier.io * 2
 }

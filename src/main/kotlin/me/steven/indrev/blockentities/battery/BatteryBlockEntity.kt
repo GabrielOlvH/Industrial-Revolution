@@ -41,4 +41,12 @@ class BatteryBlockEntity(tier: Tier) :
         val state = this.cachedState
         return if (side == EnergySide.fromMinecraft(state[FacingMachineBlock.FACING])) super.getMaxInput(side) else 0.0
     }
+
+    override fun getBaseBuffer(): Double = when (tier) {
+        Tier.MK1 -> 10000.0
+        Tier.MK2 -> 100000.0
+        Tier.MK3 -> 1000000.0
+        Tier.MK4 -> 10000000.0
+        Tier.CREATIVE -> Double.MAX_VALUE
+    }
 }
