@@ -15,7 +15,7 @@ class MachineBlockItem(private val machineBlock: MachineBlock, settings: Setting
             is MachineConfig -> config.maxEnergyStored
             is HeatMachineConfig -> config.maxEnergyStored
             is GeneratorConfig -> config.maxEnergyStored
-            else -> 100.0
+            else -> Double.MAX_VALUE
         }
     }
 
