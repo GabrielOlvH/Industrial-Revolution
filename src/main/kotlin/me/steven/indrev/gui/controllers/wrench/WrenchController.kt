@@ -9,8 +9,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.MachineSideDisplayWidget
-import me.steven.indrev.gui.widgets.StringWidget
+import me.steven.indrev.gui.widgets.machines.MachineSideDisplayWidget
+import me.steven.indrev.gui.widgets.misc.StringWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier

@@ -4,8 +4,8 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.StringWidget
 import me.steven.indrev.gui.widgets.machines.ProcessWidget
+import me.steven.indrev.gui.widgets.misc.StringWidget
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier

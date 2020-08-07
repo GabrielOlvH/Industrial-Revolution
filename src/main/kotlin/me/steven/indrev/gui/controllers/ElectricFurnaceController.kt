@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.ProcessWidget
-import me.steven.indrev.gui.widgets.slots.IROutputItemSlot
+import me.steven.indrev.gui.widgets.misc.IROutputItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier

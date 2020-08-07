@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.widgets
+package me.steven.indrev.gui.widgets.misc
 
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import net.minecraft.client.MinecraftClient
