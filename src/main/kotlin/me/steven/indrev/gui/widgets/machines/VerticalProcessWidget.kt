@@ -22,8 +22,8 @@ class VerticalProcessWidget(private val delegate: PropertyDelegate) : WWidget() 
             val barSize = (height * percent).toInt()
             if (barSize > 0)
                 ScreenDrawing.texturedRect(
-                    x, y + getHeight() - barSize, width, barSize,
-                    PROCESS_FULL, 0f, 1 - percent, 1f, 1f, -1
+                    x, y, width, height - barSize,
+                    PROCESS_FULL, 0f, 0f, 1f, 1f - percent, -1
                 )
         }
     }

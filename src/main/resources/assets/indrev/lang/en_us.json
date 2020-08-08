@@ -533,5 +533,10 @@
   "gui.indrev.tip_6": "Real gamers use the Gamer Axe",
   "gui.indrev.tip_7": "If you have issues or suggestions join our Discord!",
   "gui.indrev.tip_8": "Always backup your worlds before updating",
-  "gui.indrev.tip_9": "Cover your toes at night"
+  "gui.indrev.tip_9": "Cover your toes at night",
+  "gui.indrev.modules_installed": "Modules installed: ",
+  "gui.indrev.shield": "Shield: ",
+  "gui.indrev.installing": "Installing",
+  "gui.indrev.incompatible": "Incompatible module",
+  "gui.indrev.progress": "Progress: "
 }

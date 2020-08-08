@@ -55,8 +55,8 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             && module.slots.contains(armorItem.slotType)
             && Energy.of(this).use(16.0)) {
             setWorkingState(true)
-            processTime = (processTime - 1.0).coerceAtLeast(0.0).toInt()
-            if (processTime <= 0) {
+            processTime = (processTime + 1.0).coerceAtMost(1200.0).toInt()
+            if (processTime >= 1200) {
                 inventory.setStack(1, ItemStack.EMPTY)
                 val tag = armorStack.orCreateTag
                 when {
@@ -72,15 +72,15 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
                 }
                 processTime = 0
             }
-        } else if (energy > 0 && !armorStack.isEmpty && !moduleStack.isEmpty && processTime <= 0) {
+        } else if (energy > 0 && !armorStack.isEmpty && !moduleStack.isEmpty && module.slots.contains(armorItem.slotType)) {
             val tag = armorStack.orCreateTag
             if (tag.contains(module.key)) {
                 val level = tag.getInt(module.key)
                 if (module != Module.COLOR && level >= module.maxLevel) return
             }
-            processTime = 1200
+            processTime = 1
             setWorkingState(true)
-        } else processTime = 0
+        } else processTime = -1
     }
 
     override fun getBaseBuffer(): Double = 500000.0
