@@ -11,8 +11,10 @@ import java.util.*
 class WTip(random: Random) : WWidget() {
     val tip = getRandomTip(random)
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        val textWidth = MinecraftClient.getInstance().textRenderer.getWidth(tip)
+        val offset = parent!!.width / 2 - textWidth / 2
         val client = MinecraftClient.getInstance()
-        client.currentScreen?.renderTooltip(matrices, tip, x, y)
+        client.currentScreen?.renderTooltip(matrices, tip, x + offset, y)
     }
 
     companion object {
