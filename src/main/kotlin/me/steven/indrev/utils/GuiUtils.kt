@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
@@ -100,7 +100,7 @@ fun SyncedGuiDescription.configure(
             }
             if (blockEntity is AOEMachineBlockEntity) {
                 val button = object : WButton(TranslatableText("block.indrev.aoe.toggle.btn")) {
-                    override fun addTooltip(information: MutableList<StringRenderable>?) {
+                    override fun addTooltip(information: MutableList<StringVisitable>?) {
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
                     }
                 }
@@ -122,7 +122,7 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
             stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
         })
     val button = object : WBookEntryShortcut() {
-        override fun addTooltip(tooltip: MutableList<StringRenderable>?) {
+        override fun addTooltip(tooltip: MutableList<StringVisitable>?) {
             if (containsBook)
                 tooltip?.add(
                     TranslatableText("gui.indrev.guide_book_shortcut.contains").formatted(

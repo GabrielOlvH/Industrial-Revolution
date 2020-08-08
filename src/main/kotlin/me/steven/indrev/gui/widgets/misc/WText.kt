@@ -4,14 +4,14 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.StringVisitable
 
 class WText(
-    private val string: () -> StringRenderable,
+    private val string: () -> StringVisitable,
     private val alignment: HorizontalAlignment = HorizontalAlignment.CENTER,
     private val color: Int = -1
 ) : WWidget() {
-    constructor(string: StringRenderable, alignment: HorizontalAlignment = HorizontalAlignment.CENTER, color: Int = -1) : this(
+    constructor(string: StringVisitable, alignment: HorizontalAlignment = HorizontalAlignment.CENTER, color: Int = -1) : this(
         { string },
         alignment,
         color

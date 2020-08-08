@@ -26,6 +26,7 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -80,8 +81,8 @@ object IRRegistry {
         ResourceHelper("gold") { withItems("dust", "plate") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
 
-        Registry.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }
-        RegistryEntryAddedCallback.event(Registry.BIOME)
+        BuiltinRegistries.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }
+        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
             .register(RegistryEntryAddedCallback { _, _, biome -> ResourceHelper.registerFeatures(biome) })
 
         identifier("hammer").item(HAMMER)

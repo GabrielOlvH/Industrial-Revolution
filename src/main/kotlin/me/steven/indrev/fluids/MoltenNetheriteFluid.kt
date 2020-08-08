@@ -38,7 +38,7 @@ abstract class MoltenNetheriteFluid : FlowableFluid() {
 
     override fun beforeBreakingBlock(world: WorldAccess, pos: BlockPos?, state: BlockState) {
         val blockEntity = if (state.block.hasBlockEntity()) world.getBlockEntity(pos) else null
-        Block.dropStacks(state, world.world, pos, blockEntity)
+        Block.dropStacks(state, world, pos, blockEntity)
     }
 
     override fun matchesType(fluid: Fluid?): Boolean = fluid == flowing || fluid == still

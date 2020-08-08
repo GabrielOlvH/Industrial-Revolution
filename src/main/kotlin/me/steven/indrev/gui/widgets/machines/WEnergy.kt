@@ -8,7 +8,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
@@ -38,7 +38,7 @@ class WEnergy(private val ctx: ScreenHandlerContext) : WWidget() {
         }
     }
 
-    override fun addTooltip(information: MutableList<StringRenderable>?) {
+    override fun addTooltip(information: MutableList<StringVisitable>?) {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {

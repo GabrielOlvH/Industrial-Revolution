@@ -115,7 +115,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         }
         val droppedStacks = blockState.getDroppedStacks(
             LootContext.Builder(world as ServerWorld).random(world?.random)
-                .parameter(LootContextParameters.POSITION, blockPos)
+                .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
                 .parameter(LootContextParameters.TOOL, axeStack)
         )
         droppedStacks.map { inventory.addStack(it) }.filterNot(ItemStack::isEmpty).forEach {

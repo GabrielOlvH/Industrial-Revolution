@@ -10,7 +10,6 @@ import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.Decorator
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig
 import net.minecraft.world.gen.feature.ConfiguredFeature
@@ -69,38 +68,39 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
             if (biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND)
                 oreFeatures.forEach {
                     val feature = it()
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, feature)
+                    TODO("find out how the fuck does this work")
+                    //biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, feature)
                 }
         }
 
         val COPPER_FEATURE = {
             Feature.ORE.configure(
                 OreFeatureConfig(
-                    OreFeatureConfig.Target.NATURAL_STONE,
+                    OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
                     IRRegistry.COPPER_ORE().defaultState,
                     10
                 )
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 64)))
+                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(14, 0, 64)))
         }
 
 
         val TIN_FEATURE = {
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, IRRegistry.TIN_ORE().defaultState, 10)
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(14, 0, 0, 48)))
+                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(14, 0, 48)))
         }
 
         val NIKOLITE_FEATURE = {
             Feature.ORE.configure(
                 OreFeatureConfig(
-                    OreFeatureConfig.Target.NATURAL_STONE,
+                    OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
                     IRRegistry.NIKOLITE_ORE().defaultState,
                     7
                 )
             )
-                .createDecoratedFeature(Decorator.COUNT_RANGE.configure(RangeDecoratorConfig(10, 0, 0, 16)))
+                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(10, 0, 16)))
         }
 
     }

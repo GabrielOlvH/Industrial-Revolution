@@ -10,6 +10,7 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.toVec3d
 import net.minecraft.item.FishingRodItem
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
@@ -51,7 +52,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
                 val id = identifiers[world!!.random!!.nextInt(identifiers.size)]
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(id)
                 val ctx = LootContext.Builder(world as ServerWorld).random(world!!.random)
-                    .parameter(LootContextParameters.POSITION, pos)
+                    .parameter(LootContextParameters.ORIGIN, pos.toVec3d())
                     .parameter(LootContextParameters.TOOL, rodStack)
                     .build(LootContextTypes.FISHING)
                 val loot = lootTable.generateLoot(ctx)

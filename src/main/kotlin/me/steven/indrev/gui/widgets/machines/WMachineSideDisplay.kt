@@ -7,7 +7,7 @@ import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.utils.draw2Colors
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
@@ -32,7 +32,7 @@ class WMachineSideDisplay(private val identifier: Identifier, private val side: 
             DrawableHelper.fill(matrices, x, y, x + width, y + height, -2130706433)
     }
 
-    override fun addTooltip(tooltip: MutableList<StringRenderable>?) {
+    override fun addTooltip(tooltip: MutableList<StringVisitable>?) {
         tooltip?.add(TranslatableText("item.indrev.wrench.mode",
             TranslatableText("item.indrev.wrench.${mode.toString().toLowerCase()}").formatted(Formatting.WHITE))
             .formatted(Formatting.BLUE))

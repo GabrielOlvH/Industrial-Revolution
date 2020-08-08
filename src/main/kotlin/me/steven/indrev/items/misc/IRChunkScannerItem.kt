@@ -18,7 +18,7 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
-import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.world.World
 import kotlin.random.asKotlinRandom
 
@@ -42,7 +42,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val info = state.veins[chunkPos]
                 val biome = world.getBiome(user?.blockPos)
                 val identifier = info?.veinIdentifier
-                    ?: Picker.PICKERS.getOrDefault(Registry.BIOME.getId(biome), Picker.PICKERS[Identifier("minecraft:ocean")])
+                    ?: Picker.PICKERS.getOrDefault(BuiltinRegistries.BIOME.getId(biome), Picker.PICKERS[Identifier("minecraft:ocean")])
                         ?.veins?.pickRandom(world.random)
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {

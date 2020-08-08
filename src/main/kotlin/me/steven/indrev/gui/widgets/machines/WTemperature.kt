@@ -7,7 +7,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.LiteralText
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
@@ -32,7 +32,7 @@ class WTemperature(private val delegate: PropertyDelegate, private val temperatu
         }
     }
 
-    override fun addTooltip(information: MutableList<StringRenderable>?) {
+    override fun addTooltip(information: MutableList<StringVisitable>?) {
         val temperature = delegate[2]
         val maxTemperature = temperatureComponent.explosionLimit.toInt()
         val info = when {
