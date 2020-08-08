@@ -7,7 +7,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.screen.ScreenHandlerContext
 
-class IROutputItemSlot private constructor(
+class WOutputItemSlot private constructor(
     private val ctx: ScreenHandlerContext,
     private val player: PlayerEntity,
     inventory: Inventory? = null,
@@ -25,6 +25,6 @@ class IROutputItemSlot private constructor(
             player: PlayerEntity,
             inventory: Inventory?,
             index: Int
-        ): IROutputItemSlot = IROutputItemSlot(ctx, player, inventory, index, 1, 1, false)
+        ): WOutputItemSlot = WOutputItemSlot(ctx, player, inventory, index, 1, 1, false)
     }
 }

@@ -5,8 +5,8 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.misc.IRTooltipedItemSlot
-import me.steven.indrev.gui.widgets.misc.StringWidget
+import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -32,7 +32,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         configure("block.indrev.miner", ctx, playerInventory, blockInventory, propertyDelegate)
 
         root.add(
-            IRTooltipedItemSlot.of(
+            WTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
                 TranslatableText("gui.indrev.output_slot_type").formatted(
                     Formatting.BLUE, Formatting.ITALIC
@@ -43,11 +43,11 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             0.7
         )
 
-        root.add(StringWidget({
+        root.add(WText({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
         }, HorizontalAlignment.CENTER), 4.0, 3.9)
         root.add(
-            IRTooltipedItemSlot.of(
+            WTooltipedItemSlot.of(
                 blockInventory,
                 14,
                 mutableListOf(

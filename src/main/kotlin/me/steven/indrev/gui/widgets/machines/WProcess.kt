@@ -6,7 +6,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 
-class ProcessWidget(private val delegate: PropertyDelegate) : WWidget() {
+class WProcess(private val delegate: PropertyDelegate) : WWidget() {
     init {
         this.setSize(24, 17)
     }

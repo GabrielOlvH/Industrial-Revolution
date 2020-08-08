@@ -11,7 +11,7 @@ import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
-class TemperatureWidget(private val delegate: PropertyDelegate, private val temperatureComponent: TemperatureComponent) : WWidget() {
+class WTemperature(private val delegate: PropertyDelegate, private val temperatureComponent: TemperatureComponent) : WWidget() {
     init {
         this.setSize(16, 64)
     }

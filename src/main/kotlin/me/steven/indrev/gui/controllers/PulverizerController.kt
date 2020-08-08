@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.machines.ProcessWidget
+import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -30,7 +30,7 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 2.3, 1.5)
 
-        val processWidget = ProcessWidget(propertyDelegate)
+        val processWidget = WProcess(propertyDelegate)
         root.add(processWidget, 3.5, 1.5)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)

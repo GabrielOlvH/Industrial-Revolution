@@ -9,12 +9,12 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.machines.EnergyWidget
-import me.steven.indrev.gui.widgets.machines.TemperatureWidget
-import me.steven.indrev.gui.widgets.misc.BookShortcutWidget
-import me.steven.indrev.gui.widgets.misc.IRTooltipedItemSlot
-import me.steven.indrev.gui.widgets.misc.StringWidget
-import me.steven.indrev.gui.widgets.misc.TipWidget
+import me.steven.indrev.gui.widgets.machines.WEnergy
+import me.steven.indrev.gui.widgets.machines.WTemperature
+import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
+import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.gui.widgets.misc.WTip
+import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -48,12 +48,12 @@ fun SyncedGuiDescription.configure(
     (rootPanel as WGridPanel).also { panel ->
         panel.setSize(150, 120)
         panel.add(createPlayerInventoryPanel(), 0, 5)
-        panel.add(StringWidget(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
+        panel.add(WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
 
-        val energyWidget = EnergyWidget(screenHandlerContext)
+        val energyWidget = WEnergy(screenHandlerContext)
         panel.add(energyWidget, 0, 0, 16, 64)
 
-        val batterySlot = IRTooltipedItemSlot.of(
+        val batterySlot = WTooltipedItemSlot.of(
             blockInventory,
             0,
             mutableListOf(
@@ -66,11 +66,11 @@ fun SyncedGuiDescription.configure(
         panel.add(batterySlot, 0.0, 3.7)
 
         screenHandlerContext.run { world, blockPos ->
-            panel.add(TipWidget(world.random), -1, -1)
+            panel.add(WTip(world.random), -1, -1)
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
-                    val s = IRTooltipedItemSlot.of(
+                    val s = WTooltipedItemSlot.of(
                         blockInventory,
                         slot,
                         mutableListOf(
@@ -85,8 +85,8 @@ fun SyncedGuiDescription.configure(
             }
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
-                panel.add(TemperatureWidget(propertyDelegate, controller), 1, 0, 16, 64)
-                val coolerSlot = IRTooltipedItemSlot.of(
+                panel.add(WTemperature(propertyDelegate, controller), 1, 0, 16, 64)
+                val coolerSlot = WTooltipedItemSlot.of(
                     blockInventory,
                     1,
                     mutableListOf(
@@ -121,7 +121,7 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
         playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
             stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
         })
-    val button = object : BookShortcutWidget() {
+    val button = object : WBookEntryShortcut() {
         override fun addTooltip(tooltip: MutableList<StringRenderable>?) {
             if (containsBook)
                 tooltip?.add(

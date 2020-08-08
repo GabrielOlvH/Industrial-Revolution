@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WButton
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 
-open class BookShortcutWidget : WButton() {
+open class WBookEntryShortcut : WButton() {
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, ICON_IDENTIFIER, -1)

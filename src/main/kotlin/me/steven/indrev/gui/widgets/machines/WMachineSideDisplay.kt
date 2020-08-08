@@ -12,7 +12,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
-class MachineSideDisplayWidget(private val identifier: Identifier, private val side: WrenchController.MachineSide, var mode: InventoryComponent.Mode) : WButton() {
+class WMachineSideDisplay(private val identifier: Identifier, private val side: WrenchController.MachineSide, var mode: InventoryComponent.Mode) : WButton() {
     init {
         this.setSize(16, 16)
     }

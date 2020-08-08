@@ -5,10 +5,10 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.Module
-import me.steven.indrev.gui.widgets.machines.VerticalProcessWidget
-import me.steven.indrev.gui.widgets.misc.IRTooltipedItemSlot
-import me.steven.indrev.gui.widgets.misc.StringWidget
+import me.steven.indrev.gui.widgets.machines.WVerticalProcess
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
+import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.utils.add
@@ -35,7 +35,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         setRootPanel(root)
         configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val armorSlot = IRTooltipedItemSlot.of(
+        val armorSlot = WTooltipedItemSlot.of(
             blockInventory,
             2,
             mutableListOf(
@@ -47,14 +47,14 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         )
         root.add(armorSlot, 1.5, 3.5)
 
-        val moduleSlot = IRTooltipedItemSlot.of(
+        val moduleSlot = WTooltipedItemSlot.of(
             blockInventory,
             1,
             mutableListOf(TranslatableText("gui.indrev.module_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
         )
         root.add(moduleSlot, 1.5, 1.0)
 
-        val process = VerticalProcessWidget(propertyDelegate)
+        val process = WVerticalProcess(propertyDelegate)
         root.add(process, 1.5, 2.0)
 
         val info = WStaticTooltip()
@@ -67,14 +67,14 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
     }
 
     private fun addTextInfo(panel: WGridPanel) {
-        val armorInfoText = StringWidget({
+        val armorInfoText = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty)
                 TranslatableText(stack.item.translationKey).formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE)
             else Text.EMPTY
         }, HorizontalAlignment.LEFT)
 
-        val modulesInstalled = StringWidget({
+        val modulesInstalled = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty) {
                 val modules = Module.getInstalled(stack).size.toString()
@@ -82,7 +82,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             } else Text.EMPTY
         }, HorizontalAlignment.LEFT)
 
-        val shield = StringWidget({
+        val shield = WText({
             val stack = blockInventory.getStack(2)
             val item = stack.item
             if (!stack.isEmpty && item is IRModularArmor) {
@@ -91,7 +91,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             } else Text.EMPTY
         }, HorizontalAlignment.LEFT)
 
-        val installing = StringWidget({
+        val installing = WText({
             val stack = blockInventory.getStack(1)
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
@@ -99,7 +99,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             } else Text.EMPTY
         }, HorizontalAlignment.LEFT)
 
-        val moduleToInstall = StringWidget({
+        val moduleToInstall = WText({
             val stack = blockInventory.getStack(1)
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
@@ -107,7 +107,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             } else Text.EMPTY
         }, HorizontalAlignment.LEFT)
 
-        val progress = StringWidget({
+        val progress = WText({
             val stack = blockInventory.getStack(1)
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {

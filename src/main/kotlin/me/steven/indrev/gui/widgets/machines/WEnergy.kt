@@ -12,7 +12,7 @@ import net.minecraft.text.StringRenderable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
-class EnergyWidget(private val ctx: ScreenHandlerContext) : WWidget() {
+class WEnergy(private val ctx: ScreenHandlerContext) : WWidget() {
     init {
         this.setSize(16, 64)
     }

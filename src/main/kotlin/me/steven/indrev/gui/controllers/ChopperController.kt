@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.misc.IRTooltipedItemSlot
+import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -29,7 +29,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
         root.add(
-            IRTooltipedItemSlot.of(
+            WTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
                 TranslatableText("gui.indrev.output_slot_type").formatted(
                     Formatting.BLUE, Formatting.ITALIC
@@ -40,7 +40,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
             1.0
         )
         root.add(
-            IRTooltipedItemSlot.of(
+            WTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, mutableListOf(
                 TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC)
             )

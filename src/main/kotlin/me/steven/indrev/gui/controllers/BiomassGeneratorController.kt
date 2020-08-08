@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.misc.FuelWidget
+import me.steven.indrev.gui.widgets.misc.WFuel
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
@@ -33,7 +33,7 @@ class BiomassGeneratorController(
         // Fuel input
         root.add(WItemSlot.of(blockInventory, 2), 4, 2)
         // Burning widget
-        root.add(FuelWidget(propertyDelegate), 4, 1)
+        root.add(WFuel(propertyDelegate), 4, 1)
 
         root.validate(this)
     }

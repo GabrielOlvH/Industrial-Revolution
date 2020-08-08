@@ -8,7 +8,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import java.util.*
 
-class TipWidget(random: Random) : WWidget() {
+class WTip(random: Random) : WWidget() {
     val tip = getRandomTip(random)
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         val client = MinecraftClient.getInstance()

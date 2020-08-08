@@ -9,8 +9,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.machines.MachineSideDisplayWidget
-import me.steven.indrev.gui.widgets.misc.StringWidget
+import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
+import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
@@ -36,7 +36,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         val root = WGridPanel()
         setRootPanel(root)
         root.setSize(96, 96)
-        val titleWidget = StringWidget(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
+        val titleWidget = WText(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
         root.add(titleWidget, 0.2, 0.0)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
@@ -48,7 +48,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     val facing = blockState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
                     val direction = offset(facing, side.direction)
                     val mode = getMode(inventoryController, direction)
-                    val widget = MachineSideDisplayWidget(identifier("textures/block/${id}.png"), side, mode)
+                    val widget = WMachineSideDisplay(identifier("textures/block/${id}.png"), side, mode)
                     widget.setOnClick {
                         widget.mode = widget.mode.next()
                         inventoryController.itemConfig[direction] = widget.mode

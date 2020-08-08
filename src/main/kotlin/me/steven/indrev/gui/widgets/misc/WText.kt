@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.StringRenderable
 
-class StringWidget(
+class WText(
     private val string: () -> StringRenderable,
     private val alignment: HorizontalAlignment = HorizontalAlignment.CENTER,
     private val color: Int = -1

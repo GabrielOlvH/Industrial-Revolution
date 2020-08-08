@@ -6,7 +6,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 
-class FuelWidget(private val propertyDelegate: PropertyDelegate) : WWidget() {
+class WFuel(private val propertyDelegate: PropertyDelegate) : WWidget() {
     init {
         this.setSize(14, 14)
     }
