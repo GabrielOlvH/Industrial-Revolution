@@ -1,6 +1,7 @@
 package me.steven.indrev.registry
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.Module
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.utils.identifier
@@ -17,11 +18,8 @@ object IRHudRender : HudRenderCallback {
 
     override fun onHudRender(matrixStack: MatrixStack?, tickDelta: Float) {
         val client = MinecraftClient.getInstance()
-        //TODO add to config and get it from there
-        //TODO toggle on/off armor render
-        //TODO toggle on/off shield render
-        val x = 0
-        val y = 0
+        val x = IndustrialRevolution.CONFIG.hud.renderPosX
+        val y = IndustrialRevolution.CONFIG.hud.renderPosY
         val armor = MinecraftClient.getInstance().player?.inventory?.armor?.filter { it.item is IRModularArmor }
         armor?.forEach { itemStack ->
             val item = itemStack.item as IRModularArmor
@@ -32,28 +30,53 @@ object IRHudRender : HudRenderCallback {
                 EquipmentSlot.FEET -> 20 * 3
                 else -> return@forEach
             }
-            val totalShield = item.getMaxShield(Module.getLevel(itemStack, Module.PROTECTION))
-            val currentShield = item.getShield(itemStack)
-            var percent = currentShield.toFloat() / totalShield.toFloat()
-            val height = 16
-            val width = 16
-            percent = (percent * height).toInt() / height.toFloat()
-            val barSize = (height * percent).toInt()
-            ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, -1, 0.5f)
-            if (barSize > 0)
-                ScreenDrawing.texturedRect(
-                    x + 18, y + yOffset + height - barSize + 1, width, barSize,
-                    SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, -1)
-
-            val armorIcon = when (item.slotType) {
-                EquipmentSlot.HEAD -> HELMET_ICON
-                EquipmentSlot.CHEST -> CHEST_ICON
-                EquipmentSlot.LEGS -> LEGS_ICON
-                EquipmentSlot.FEET -> BOOTS_ICON
-                else -> return@forEach
+            if (shouldRenderShield(item.slotType)) {
+                val totalShield = item.getMaxShield(Module.getLevel(itemStack, Module.PROTECTION))
+                val currentShield = item.getShield(itemStack)
+                var percent = currentShield.toFloat() / totalShield.toFloat()
+                val height = 16
+                val width = 16
+                percent = (percent * height).toInt() / height.toFloat()
+                val barSize = (height * percent).toInt()
+                ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, -1, 0.5f)
+                if (barSize > 0)
+                    ScreenDrawing.texturedRect(
+                        x + 18, y + yOffset + height - barSize + 1, width, barSize,
+                        SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, -1)
             }
-            ScreenDrawing.texturedRect(x, y + yOffset, 16, 16, armorIcon, 0f, 0f, 1f, 1f, -1, 0.8f)
-            client.itemRenderer.renderGuiItemOverlay(client.textRenderer, itemStack, x, y + yOffset)
+            if (shouldRenderArmor(item.slotType)) {
+                val armorIcon = when (item.slotType) {
+                    EquipmentSlot.HEAD -> HELMET_ICON
+                    EquipmentSlot.CHEST -> CHEST_ICON
+                    EquipmentSlot.LEGS -> LEGS_ICON
+                    EquipmentSlot.FEET -> BOOTS_ICON
+                    else -> return@forEach
+                }
+                ScreenDrawing.texturedRect(x, y + yOffset, 16, 16, armorIcon, 0f, 0f, 1f, 1f, -1, 0.8f)
+                client.itemRenderer.renderGuiItemOverlay(client.textRenderer, itemStack, x, y + yOffset)
+            }
+        }
+    }
+
+    private fun shouldRenderArmor(equipmentSlot: EquipmentSlot): Boolean {
+        val hud = IndustrialRevolution.CONFIG.hud
+        return when (equipmentSlot) {
+            EquipmentSlot.HEAD -> hud.renderHelmetArmor
+            EquipmentSlot.CHEST -> hud.renderChestplateArmor
+            EquipmentSlot.LEGS -> hud.renderLeggingsArmor
+            EquipmentSlot.FEET -> hud.renderBootsArmor
+            else -> false
+        }
+    }
+
+    private fun shouldRenderShield(equipmentSlot: EquipmentSlot): Boolean {
+        val hud = IndustrialRevolution.CONFIG.hud
+        return when (equipmentSlot) {
+            EquipmentSlot.HEAD -> hud.renderHelmetShield
+            EquipmentSlot.CHEST -> hud.renderChestplateShield
+            EquipmentSlot.LEGS -> hud.renderLeggingsShield
+            EquipmentSlot.FEET -> hud.renderBootsShield
+            else -> false
         }
     }
 
