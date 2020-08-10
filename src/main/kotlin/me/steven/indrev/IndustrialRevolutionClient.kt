@@ -66,7 +66,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CHARGE_PAD_REGISTRY.forEach { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, :: ChargePadBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, ::ChargePadBlockEntityRenderer)
         }
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())

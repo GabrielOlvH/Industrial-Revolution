@@ -17,7 +17,7 @@ class BatteryBlockEntity(tier: Tier) :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryComponent = InventoryComponent {
-            IRInventory(1, intArrayOf(0), EMPTY_INT_ARRAY) { _, stack -> Energy.valid(stack) }
+            IRInventory(1, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { _, stack -> Energy.valid(stack) }
         }
     }
 
