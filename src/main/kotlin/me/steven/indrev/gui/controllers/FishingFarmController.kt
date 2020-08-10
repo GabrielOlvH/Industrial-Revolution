@@ -4,12 +4,15 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 
 class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -26,11 +29,13 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
 
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 2, 2),
-            3.0,
+            3.5,
             0.7
         )
 
-        root.add(WItemSlot.of(blockInventory, 1), 4.0, 4.4)
+        root.add(WTooltipedItemSlot.of(blockInventory, 1, mutableListOf(
+            TranslatableText("gui.indrev.fishingrod").formatted(Formatting.BLUE, Formatting.ITALIC)
+        )), 4.0, 3.0)
 
         root.validate(this)
     }
