@@ -8,7 +8,8 @@
     },
     "description": {
       "translate": "advancements.indrev.nikolite.description"
-    }
+    },
+    "background": "minecraft:textures/gui/advancements/backgrounds/adventure.png"
   },
   "criteria": {
     "checkInv": {

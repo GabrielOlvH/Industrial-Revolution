@@ -10,7 +10,7 @@
       "translate": "advancements.indrev.cable_mk2.description"
     }
   },
-  "parent": "indrev:nikolite",
+  "parent": "indrev:cable_mk1",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
