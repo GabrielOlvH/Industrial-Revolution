@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WWidget
@@ -21,7 +22,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
@@ -100,7 +100,7 @@ fun SyncedGuiDescription.configure(
             }
             if (blockEntity is AOEMachineBlockEntity) {
                 val button = object : WButton(TranslatableText("block.indrev.aoe.toggle.btn")) {
-                    override fun addTooltip(information: MutableList<StringVisitable>?) {
+                    override fun addTooltip(information: TooltipBuilder?) {
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
                     }
                 }
@@ -122,7 +122,7 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
             stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
         })
     val button = object : WBookEntryShortcut() {
-        override fun addTooltip(tooltip: MutableList<StringVisitable>?) {
+        override fun addTooltip(tooltip: TooltipBuilder?) {
             if (containsBook)
                 tooltip?.add(
                     TranslatableText("gui.indrev.guide_book_shortcut.contains").formatted(

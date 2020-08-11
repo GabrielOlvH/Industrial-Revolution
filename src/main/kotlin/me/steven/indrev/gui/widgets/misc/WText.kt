@@ -18,6 +18,6 @@ class WText(
     )
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.drawString(matrices, string(), alignment, x, y, this.width, color)
+        ScreenDrawing.drawString(matrices, string().string, alignment, x, y, this.width, color)
     }
 }

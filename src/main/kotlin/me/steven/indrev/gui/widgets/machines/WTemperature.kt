@@ -1,13 +1,13 @@
 package me.steven.indrev.gui.widgets.machines
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
+import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.LiteralText
-import net.minecraft.text.StringVisitable
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
@@ -32,7 +32,7 @@ class WTemperature(private val delegate: PropertyDelegate, private val temperatu
         }
     }
 
-    override fun addTooltip(information: MutableList<StringVisitable>?) {
+    override fun addTooltip(information: TooltipBuilder?) {
         val temperature = delegate[2]
         val maxTemperature = temperatureComponent.explosionLimit.toInt()
         val info = when {
