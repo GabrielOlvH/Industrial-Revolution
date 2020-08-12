@@ -33,11 +33,6 @@ class IRConfig : PartitioningSerializer.GlobalData() {
     @ConfigEntry.Category(value = "oregen")
     @ConfigEntry.Gui.TransitiveObject
     val oregen: OreGen = OreGen()
-
-    @ConfigEntry.Category(value = "hud")
-    @ConfigEntry.Gui.TransitiveObject
-    val hud: Hud = Hud()
-
 }
 
 @Config(name = "generators")
@@ -142,19 +137,26 @@ class Machines : ConfigData {
 
 // this is so auto config actually generates the config properly
 class HeatMachineConfig(
-    private val energyCost1: Double,
-    private val processSpeed1: Double,
+    override val energyCost: Double,
+    override val processSpeed: Double,
     val processTemperatureBoost: Double,
-    private val maxEnergyStored1: Double,
-    private val maxInput1: Double
-) : MachineConfig(energyCost1, processSpeed1, maxEnergyStored1, maxInput1)
+    override val maxEnergyStored: Double,
+    override val maxInput: Double
+) : IConfig
 
 open class MachineConfig(
-    val energyCost: Double,
-    val processSpeed: Double,
-    val maxEnergyStored: Double,
+    override val energyCost: Double,
+    override val processSpeed: Double,
+    override val maxEnergyStored: Double,
+    override val maxInput: Double
+) : IConfig
+
+interface IConfig {
+    val energyCost: Double
+    val processSpeed: Double
+    val maxEnergyStored: Double
     val maxInput: Double
-)
+}
 
 @Config(name = "cables")
 class Cables : ConfigData {
@@ -190,18 +192,4 @@ class OreGen : ConfigData {
     val copper = true
     val tin = true
     val nikolite = true
-}
-
-@Config(name = "hud")
-class Hud : ConfigData {
-    val renderPosX = 0
-    val renderPosY = 0
-    val renderHelmetArmor = true
-    val renderHelmetShield = true
-    val renderChestplateArmor = true
-    val renderChestplateShield = true
-    val renderLeggingsArmor = true
-    val renderLeggingsShield = true
-    val renderBootsArmor = true
-    val renderBootsShield = true
 }

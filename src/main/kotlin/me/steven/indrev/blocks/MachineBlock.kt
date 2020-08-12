@@ -65,7 +65,7 @@ open class MachineBlock(
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
 
-    override fun buildTooltip(
+    override fun appendTooltip(
         stack: ItemStack?,
         view: BlockView?,
         tooltip: MutableList<Text>?,
@@ -122,8 +122,8 @@ open class MachineBlock(
                 }
                 dropStack(world, pos, stack)
             }
+            state!!.onStacksDropped(world, pos, toolStack)
         }
-        state!!.onStacksDropped(world, pos, toolStack)
     }
 
     override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {

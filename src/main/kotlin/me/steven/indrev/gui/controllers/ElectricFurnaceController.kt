@@ -4,9 +4,9 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WProcess
-import me.steven.indrev.gui.widgets.misc.WOutputItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -38,7 +38,16 @@ class ElectricFurnaceController(
         val processWidget = WProcess(propertyDelegate)
         root.add(processWidget, 3.5, 1.5)
 
-        val outputSlot = WOutputItemSlot.outputOf(ctx, playerInventory.player, blockInventory, 3)
+        val outputSlot = WItemSlot.outputOf(blockInventory, 3)
+        outputSlot.addChangeListener { widget, inventory, slot, stack ->
+            val player = playerInventory.player
+            if (!player.world.isClient) {
+                ctx.run { world, pos ->
+                    val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@run
+                    blockEntity.dropExperience(player)
+                }
+            }
+        }
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.5, 1.5)
 

@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.Property
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.ExperienceRewardRecipe
@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
+import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
 import net.minecraft.util.Tickable
@@ -64,7 +65,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                         else continue
                         break
                     }
-                    //usedRecipes.addTo(recipe.id, 1)
+                    usedRecipes[recipe.id] = usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
                     onCraft()
                     reset()
                 }
@@ -127,7 +128,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         return super.toClientTag(tag)
     }
 
-    abstract fun getConfig(): MachineConfig
+    abstract fun getConfig(): IConfig
 
     private fun getHeatConfig(): HeatMachineConfig? = getConfig() as? HeatMachineConfig
 
@@ -136,7 +137,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         usedRecipes.forEach { (id, amount) ->
             world!!.recipeManager[id].ifPresent { recipe ->
                 list.add(recipe as? T ?: return@ifPresent)
-                spawnOrbs(world!!, player.pos, amount, (recipe as? ExperienceRewardRecipe ?: return@ifPresent).amount)
+                spawnOrbs(
+                    world!!,
+                    player.pos,
+                    amount,
+                    ((recipe as? ExperienceRewardRecipe)?.amount ?: (recipe as? SmeltingRecipe)?.experience
+                    ?: return@ifPresent)
+                )
             }
         }
         player.unlockRecipes(list.toList())

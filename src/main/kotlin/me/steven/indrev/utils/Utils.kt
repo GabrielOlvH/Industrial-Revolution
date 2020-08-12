@@ -6,7 +6,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
@@ -121,7 +121,7 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
     if (Screen.hasShiftDown()) {
         when (config) {
-            is MachineConfig -> {
+            is IConfig -> {
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
                         .append(

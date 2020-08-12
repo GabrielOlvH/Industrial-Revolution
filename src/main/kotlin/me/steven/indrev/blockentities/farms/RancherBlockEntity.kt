@@ -20,7 +20,6 @@ import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Hand
-import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Vec3d
 import team.reborn.energy.Energy
@@ -51,7 +50,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         cooldown += Upgrade.SPEED(this)
         if (cooldown < getConfig().processSpeed) return
         val input = inventory.getInputInventory()
-        val animals = world?.getEntities(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
+        val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
         if (animals.isEmpty() || !Energy.of(this).simulate().use(Upgrade.ENERGY(this))) {
             setWorkingState(false)
@@ -72,7 +71,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                     animals.remove(animal)
                     val lootContext = LootContext.Builder(world as ServerWorld)
                         .random(world?.random)
-                        .parameter(LootContextParameters.POSITION, BlockPos(animal.pos))
+                        .parameter(LootContextParameters.ORIGIN, animal.pos)
                         .parameter(LootContextParameters.DAMAGE_SOURCE, DamageSource.player(fakePlayer))
                         .parameter(LootContextParameters.THIS_ENTITY, animal)
                         .build(LootContextTypes.ENTITY)

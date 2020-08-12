@@ -4,10 +4,10 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.inventory.Inventory
-import net.minecraft.text.StringRenderable
+import net.minecraft.text.Text
 
 class WTooltipedItemSlot private constructor(
-    private val emptyTooltip: MutableList<StringRenderable>,
+    private val emptyTooltip: MutableList<Text>,
     private val inventory: Inventory,
     private val startIndex: Int = 0,
     private val slotsWide: Int = 1,
@@ -24,7 +24,7 @@ class WTooltipedItemSlot private constructor(
     }
 
     companion object {
-        fun of(inventory: Inventory, index: Int, emptyTooltip: MutableList<StringRenderable>): WTooltipedItemSlot =
+        fun of(inventory: Inventory, index: Int, emptyTooltip: MutableList<Text>): WTooltipedItemSlot =
             WTooltipedItemSlot(emptyTooltip, inventory, index)
 
         fun of(
@@ -32,7 +32,7 @@ class WTooltipedItemSlot private constructor(
             startIndex: Int,
             slotsWide: Int,
             slotsHigh: Int,
-            emptyTooltip: MutableList<StringRenderable>
+            emptyTooltip: MutableList<Text>
         ): WTooltipedItemSlot = WTooltipedItemSlot(emptyTooltip, inventory, startIndex, slotsWide, slotsHigh)
     }
 }

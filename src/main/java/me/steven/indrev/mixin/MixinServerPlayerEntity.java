@@ -35,8 +35,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private int lastDamageTick = 0;
     private final Set<Module> appliedEffects = new HashSet<>();
 
-    public MixinServerPlayerEntity(World world, BlockPos blockPos, GameProfile gameProfile) {
-        super(world, blockPos, gameProfile);
+    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
+        super(world, pos, yaw, profile);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

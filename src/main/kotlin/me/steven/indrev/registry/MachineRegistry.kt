@@ -234,8 +234,8 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::MinerController,
                     { MinerBlockEntity(tier, true) }
                 ) {
-                    override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
-                        super.buildTooltip(stack, view, tooltip, options)
+                    override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
+                        super.appendTooltip(stack, view, tooltip, options)
                         tooltip?.add(TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
                     }
                 }
@@ -251,8 +251,8 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::MinerController,
                     { MinerBlockEntity(tier, false) }
                 ) {
-                    override fun buildTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
-                        super.buildTooltip(stack, view, tooltip, options)
+                    override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
+                        super.appendTooltip(stack, view, tooltip, options)
                         tooltip?.add(TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
                     }
                 }

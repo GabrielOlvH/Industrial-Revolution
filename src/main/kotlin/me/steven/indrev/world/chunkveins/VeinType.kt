@@ -6,6 +6,7 @@ import blue.endless.jankson.JsonPrimitive
 import net.minecraft.block.Block
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 
@@ -47,9 +48,9 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                 if (element.containsKey("category")) {
                     element.get(JsonArray::class.java, "category")?.forEach { e ->
                         val cat = Biome.Category.valueOf((e as JsonPrimitive).asString().toUpperCase())
-                        Registry.BIOME.ids
+                        BuiltinRegistries.BIOME.ids
                             .filter {
-                                Registry.BIOME[it]?.category == cat
+                                BuiltinRegistries.BIOME[it]?.category == cat
                             }.forEach {
                                 biomes[it] = weight
                             }
@@ -57,7 +58,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                 } else {
                     element.get(JsonArray::class.java, "ids")?.forEach { s ->
                         val biomeId = Identifier(s.toString())
-                        if (!Registry.BIOME.containsId(biomeId)) {
+                        if (!BuiltinRegistries.BIOME.containsId(biomeId)) {
                             VeinTypeResourceListener.LOGGER.error("Expected biome but received unkown string $biomeId when loading vein type $id")
                         }
                         biomes[biomeId] = weight
