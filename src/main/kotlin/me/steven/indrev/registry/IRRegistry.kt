@@ -36,7 +36,7 @@ object IRRegistry {
         ResourceHelper("tin") {
             withItems("dust", "ingot", "plate")
             withBlock()
-            withOre(if (oregen.tin) ResourceHelper.TIN_FEATURE else null)
+            withOre()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.TIN, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.TIN, 6f, -3.1f, itemSettings()),
@@ -49,7 +49,7 @@ object IRRegistry {
         ResourceHelper("copper") {
             withItems("dust", "ingot", "plate")
             withBlock()
-            withOre(if (oregen.copper) ResourceHelper.COPPER_FEATURE else null)
+            withOre()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -2.8f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 6f, -3.1f, itemSettings()),
@@ -74,16 +74,17 @@ object IRRegistry {
         ResourceHelper("iron") { withItems("dust", "plate") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre(if (oregen.nikolite) ResourceHelper.NIKOLITE_FEATURE else null)
+            withOre()
         }.register()
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
         ResourceHelper("diamond") { withItems("dust") }.register()
         ResourceHelper("gold") { withItems("dust", "plate") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
 
-        BuiltinRegistries.BIOME.forEach { biome -> ResourceHelper.registerFeatures(biome) }
+        WorldGeneration.init()
+        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
         RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
-            .register(RegistryEntryAddedCallback { _, _, biome -> ResourceHelper.registerFeatures(biome) })
+            .register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
 
         identifier("hammer").item(HAMMER)
 
