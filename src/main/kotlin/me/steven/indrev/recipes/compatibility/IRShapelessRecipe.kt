@@ -17,7 +17,7 @@ import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.registry.Registry
 
-class IRShapelessRecipe(
+open class IRShapelessRecipe(
     id: Identifier,
     group: String,
     output: ItemStack,
@@ -33,7 +33,7 @@ class IRShapelessRecipe(
         val SERIALIZER =
             Serializer()
 
-        class Serializer : ShapelessRecipe.Serializer() {
+        open class Serializer : ShapelessRecipe.Serializer() {
             override fun read(
                 identifier: Identifier,
                 jsonObject: JsonObject

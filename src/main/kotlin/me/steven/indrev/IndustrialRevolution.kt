@@ -11,6 +11,7 @@ import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.PatchouliBookRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
+import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
 import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
 import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
@@ -64,6 +65,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, IRBlastingRecipe.IDENTIFIER, IRBlastingRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val pos = buf.readBlockPos()

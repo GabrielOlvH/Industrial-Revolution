@@ -1,5 +1,5 @@
 {
-  "type": "indrev:crafting_shapeless",
+  "type": "indrev:selfremainder",
   "ingredients": [
     {
       "item": "minecraft:iron_ingot"

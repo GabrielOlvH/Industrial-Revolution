@@ -1,5 +1,5 @@
 {
-  "type": "indrev:crafting_shapeless",
+  "type": "indrev:selfremainder",
   "ingredients": [
     {
       "tag": "c:tin_ingots"
