@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import com.google.common.collect.ImmutableList
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.itemSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -8,13 +9,14 @@ import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.gen.decorator.Decorator
-import net.minecraft.world.gen.decorator.RangeDecoratorConfig
+import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
+import java.util.function.Supplier
 
 class ResourceHelper(private val id: String, private val block: ResourceHelper.() -> Unit) {
 
@@ -31,8 +33,10 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
         val identifier = identifier("${id}_ore")
         Registry.register(Registry.BLOCK, identifier, ore)
         Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
-        if (feature != null)
+        if (feature != null) {
             oreFeatures.add(feature)
+            BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier, feature())
+        }
         return this
     }
 
@@ -66,10 +70,14 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
         private val oreFeatures = mutableListOf<() -> ConfiguredFeature<*, *>>()
         fun registerFeatures(biome: Biome) {
             if (biome.category != Biome.Category.NETHER && biome.category != Biome.Category.THEEND)
-                oreFeatures.forEach {
-                    val feature = it()
-                    TODO("find out how the fuck does this work")
-                    //biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, feature)
+                oreFeatures.forEach { featureSupplier ->
+                    val feature = featureSupplier()
+                    val features = biome.generationSettings.features
+                    val stepIndex = GenerationStep.Feature.UNDERGROUND_ORES.ordinal
+                    while (features.size <= stepIndex) features.add(mutableListOf())
+                    if (features[stepIndex] is ImmutableList)
+                        features[stepIndex] = features[stepIndex].toMutableList()
+                    features[stepIndex].add(Supplier { feature })
                 }
         }
 
@@ -81,7 +89,9 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
                     10
                 )
             )
-                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(14, 0, 64)))
+                .method_30377(64)
+                .spreadHorizontally()
+                .repeat(14)
         }
 
 
@@ -89,7 +99,9 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
             )
-                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(14, 0, 48)))
+                .method_30377(48)
+                .spreadHorizontally()
+                .repeat(14)
         }
 
         val NIKOLITE_FEATURE = {
@@ -100,7 +112,9 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
                     7
                 )
             )
-                .decorate(Decorator.RANGE.configure(RangeDecoratorConfig(10, 0, 16)))
+                .method_30377(16)
+                .spreadHorizontally()
+                .repeat(8)
         }
 
     }

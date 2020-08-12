@@ -5,6 +5,7 @@
   "mixins": [
     "AccessorEnergyHandler",
     "MixinCraftingResultSlot",
+    "MixinGenerationSettings",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",

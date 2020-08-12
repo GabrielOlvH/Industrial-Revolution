@@ -47,11 +47,11 @@ dependencies {
     modCompile "io.github.prospector:modmenu:${project.modmenu_version}"
     modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
 
-    modImplementation "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"
-    include "vazkii.patchouli:Patchouli_1.16-fabric:${project.patchouli_version}"
+    modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
+    include "vazkii.patchouli:Patchouli:${project.patchouli_version}"
 
-    modApi "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-    include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
+    //modApi "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
+    //include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
 
     modApi "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
     include "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
