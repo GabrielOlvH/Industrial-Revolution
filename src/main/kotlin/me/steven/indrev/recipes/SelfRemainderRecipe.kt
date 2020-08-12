@@ -10,6 +10,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.util.Identifier
+import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 
 class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingredients: DefaultedList<Ingredient>) :
@@ -40,7 +41,8 @@ class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingr
         class Serializer : IRShapelessRecipe.Companion.Serializer() {
             override fun read(identifier: Identifier, jsonObject: JsonObject): SelfRemainderRecipe {
                 val shaped = super.read(identifier, jsonObject)!!
-                return SelfRemainderRecipe(shaped.id, shaped.group, shaped.output, shaped.previewInputs)
+                val group = JsonHelper.getString(jsonObject, "group", "")
+                return SelfRemainderRecipe(shaped.id, group, shaped.output, shaped.previewInputs)
             }
 
             override fun read(identifier: Identifier?, packetByteBuf: PacketByteBuf?): SelfRemainderRecipe {

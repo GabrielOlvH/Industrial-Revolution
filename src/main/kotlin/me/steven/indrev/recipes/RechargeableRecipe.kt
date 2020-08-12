@@ -10,6 +10,7 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.ShapedRecipe
 import net.minecraft.util.Identifier
+import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 import team.reborn.energy.Energy
 
@@ -37,7 +38,8 @@ class RechargeableRecipe(id: Identifier, group: String, width: Int, height: Int,
         class Serializer : ShapedRecipe.Serializer() {
             override fun read(identifier: Identifier?, jsonObject: JsonObject?): RechargeableRecipe {
                 val shaped = super.read(identifier, jsonObject)
-                return RechargeableRecipe(shaped.id, shaped.group, shaped.width, shaped.height, shaped.previewInputs, shaped.output)
+                val group = JsonHelper.getString(jsonObject, "group", "")
+                return RechargeableRecipe(shaped.id, group, shaped.width, shaped.height, shaped.previewInputs, shaped.output)
             }
 
             override fun read(identifier: Identifier?, packetByteBuf: PacketByteBuf?): RechargeableRecipe {

@@ -328,4 +328,4 @@ fun parsePossibleOutputs(obj: JsonObject): Array<Identifier> =
     Array(obj.size()) { i -> Identifier(obj.get(i.toString()).asString) }
 
 fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
-    registry[identifier.first { registry.containsId(it) }]!!
+    registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
