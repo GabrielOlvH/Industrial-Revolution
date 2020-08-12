@@ -10,7 +10,7 @@
       "translate": "advancements.indrev.cable_mk4.description"
     }
   },
-  "parent": "indrev:cable_mk4",
+  "parent": "indrev:cable_mk3",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
