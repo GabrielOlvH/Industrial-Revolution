@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -52,5 +52,5 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 
-    override fun getConfig(): MachineConfig = IndustrialRevolution.CONFIG.machines.recycler
+    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.recycler
 }

@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -53,7 +53,7 @@ class InfuserBlockEntity(tier: Tier) :
 
     override fun getCurrentRecipe(): InfuserRecipe? = currentRecipe
 
-    override fun getConfig(): MachineConfig =
+    override fun getConfig(): IConfig =
         when (tier) {
             Tier.MK1 -> IndustrialRevolution.CONFIG.machines.infuserMk1
             Tier.MK2 -> IndustrialRevolution.CONFIG.machines.infuserMk2

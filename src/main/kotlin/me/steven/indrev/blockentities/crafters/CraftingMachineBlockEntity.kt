@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.Property
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.ExperienceRewardRecipe
@@ -128,7 +128,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         return super.toClientTag(tag)
     }
 
-    abstract fun getConfig(): MachineConfig
+    abstract fun getConfig(): IConfig
 
     private fun getHeatConfig(): HeatMachineConfig? = getConfig() as? HeatMachineConfig
 

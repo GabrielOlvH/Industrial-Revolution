@@ -4,7 +4,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.MachineConfig
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -89,7 +89,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         Upgrade.BUFFER -> getBaseBuffer()
     }
 
-    fun getConfig(): MachineConfig {
+    fun getConfig(): IConfig {
         val machines = IndustrialRevolution.CONFIG.machines
         return when (tier) {
             Tier.MK2 -> machines.fishingMk2
