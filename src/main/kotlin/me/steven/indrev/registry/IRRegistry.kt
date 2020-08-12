@@ -205,12 +205,12 @@ object IRRegistry {
 
     val COOLANT_FLUID_FLOWING = CoolantFluid.Flowing()
     val COOLANT_FLUID_STILL = CoolantFluid.Still()
-    val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings())
+    val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
 
     val MOLTEN_NETHERITE_FLOWING = MoltenNetheriteFluid.Flowing()
     val MOLTEN_NETHERITE_STILL = MoltenNetheriteFluid.Still()
-    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings())
+    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
