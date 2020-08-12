@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
+import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
 import net.minecraft.util.Tickable
@@ -64,7 +65,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                         else continue
                         break
                     }
-                    //usedRecipes.addTo(recipe.id, 1)
+                    usedRecipes[recipe.id] = usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
                     onCraft()
                     reset()
                 }
@@ -136,7 +137,13 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         usedRecipes.forEach { (id, amount) ->
             world!!.recipeManager[id].ifPresent { recipe ->
                 list.add(recipe as? T ?: return@ifPresent)
-                spawnOrbs(world!!, player.pos, amount, (recipe as? ExperienceRewardRecipe ?: return@ifPresent).amount)
+                spawnOrbs(
+                    world!!,
+                    player.pos,
+                    amount,
+                    ((recipe as? ExperienceRewardRecipe)?.amount ?: (recipe as? SmeltingRecipe)?.experience
+                    ?: return@ifPresent)
+                )
             }
         }
         player.unlockRecipes(list.toList())
