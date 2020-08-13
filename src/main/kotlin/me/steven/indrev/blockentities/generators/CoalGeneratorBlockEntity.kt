@@ -44,12 +44,17 @@ class CoalGeneratorBlockEntity :
         else if (maxStoredPower > energy) {
             val inventory = inventoryComponent?.inventory ?: return false
             val invStack = inventory.getStack(2)
+            val item = invStack.item
             if (!invStack.isEmpty && BURN_TIME_MAP.containsKey(invStack.item)) {
                 burnTime = BURN_TIME_MAP[invStack.item] ?: return false
                 maxBurnTime = burnTime
                 invStack.count--
-                if (invStack.isEmpty) inventory.setStack(2, ItemStack.EMPTY)
-                else inventory.setStack(2, invStack)
+                if (!invStack.isEmpty)
+                    inventory.setStack(2, invStack)
+                else if (item.hasRecipeRemainder())
+                    inventory.setStack(2, ItemStack(item.recipeRemainder))
+                else
+                    inventory.setStack(2, ItemStack.EMPTY)
             }
         }
         markDirty()

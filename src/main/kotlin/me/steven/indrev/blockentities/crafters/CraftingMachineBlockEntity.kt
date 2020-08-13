@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.SmeltingRecipe
@@ -52,10 +53,21 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                 setWorkingState(true)
                 processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
-                    inventory.inputSlots.forEachIndexed { index, slot ->
-                        inventory.setStack(slot, inputInventory.getStack(index).apply { decrement(1) })
-                    }
                     val output = recipe?.craft(inventory) ?: return
+                    inventory.inputSlots.forEachIndexed { index, slot ->
+                        val stack = inputInventory.getStack(index)
+                        val item = stack.item
+                        if (
+                            item.hasRecipeRemainder()
+                            && !output.item.hasRecipeRemainder()
+                            && item.recipeRemainder != output.item.recipeRemainder
+                        )
+                            inventory.setStack(slot, ItemStack(item.recipeRemainder))
+                        else {
+                            stack.decrement(1)
+                            inventory.setStack(slot, stack)
+                        }
+                    }
                     for (outputSlot in inventory.outputSlots) {
                         val outputStack = inventory.getStack(outputSlot)
                         if (outputStack.item == output.item)
