@@ -5,8 +5,6 @@ import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.buildEnergyTooltip
-import me.steven.indrev.utils.buildMachineTooltip
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -14,7 +12,6 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -29,7 +26,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
@@ -64,17 +60,6 @@ open class MachineBlock(
     }
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
-
-    override fun appendTooltip(
-        stack: ItemStack?,
-        view: BlockView?,
-        tooltip: MutableList<Text>?,
-        options: TooltipContext?
-    ) {
-        if (Energy.valid(stack))
-            buildEnergyTooltip(stack, tooltip)
-        buildMachineTooltip(config ?: return, tooltip)
-    }
 
     override fun onUse(
         state: BlockState?,
