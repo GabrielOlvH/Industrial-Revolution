@@ -1,7 +1,12 @@
 package me.steven.indrev.registry
 
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.fluids.CoolantFluid
 import me.steven.indrev.fluids.MoltenNetheriteFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -18,7 +23,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
@@ -31,6 +35,10 @@ import net.minecraft.util.registry.Registry
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
     fun registerAll() {
+        AutoConfig.register(
+            IRConfig::class.java,
+            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
+        )
         ResourceHelper("tin") {
             withItems("dust", "ingot", "plate")
             withBlock()
@@ -81,8 +89,8 @@ object IRRegistry {
 
         WorldGeneration.init()
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
-        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
-            .register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
+        //RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
+        //.register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
 
         identifier("hammer").item(HAMMER)
 

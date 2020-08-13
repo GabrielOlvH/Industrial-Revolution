@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AccessorEnergyHandler",
+    "MixinBootstrap",
     "MixinGenerationSettings",
     "MixinItemStack",
     "MixinLivingEntity",
