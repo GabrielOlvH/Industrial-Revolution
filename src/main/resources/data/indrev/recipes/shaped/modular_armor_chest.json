@@ -10,7 +10,7 @@
       "item": "indrev:circuit_mk4"
     },
     "S": {
-      "item": "indrev:steel_chestplate"
+      "tag": "c:steel_chestplates"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"

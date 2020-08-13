@@ -10,7 +10,7 @@
       "item": "indrev:circuit_mk4"
     },
     "S": {
-      "item": "indrev:steel_boots"
+      "tag": "c:steel_boots"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"

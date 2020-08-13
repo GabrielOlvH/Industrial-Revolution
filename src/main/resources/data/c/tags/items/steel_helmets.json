@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "indrev:steel_helmet",
+    {
+      "id": "astromine:steel_helmet",
+      "required": false
+    }
+  ]
+}
