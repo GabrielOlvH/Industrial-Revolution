@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.fluids.CoolantFluid
@@ -32,7 +31,6 @@ import net.minecraft.util.registry.Registry
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
     fun registerAll() {
-        val oregen = IndustrialRevolution.CONFIG.oregen
         ResourceHelper("tin") {
             withItems("dust", "ingot", "plate")
             withBlock()
