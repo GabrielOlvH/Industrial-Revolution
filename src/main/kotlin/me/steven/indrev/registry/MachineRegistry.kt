@@ -19,12 +19,16 @@ import me.steven.indrev.blocks.*
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
+import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
@@ -43,6 +47,8 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
+            if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)
+                BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout())
             val blockItem =
                 if (block is MachineBlock)
                     MachineBlockItem(block, itemSettings())

@@ -1,5 +1,5 @@
 {
-  "parent": "indrev:block/machine",
+  "parent": "indrev:block/machine_mk3",
   "textures": {
     "texture": "indrev:block/biomass_generator_on"
   }

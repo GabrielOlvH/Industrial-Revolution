@@ -1,5 +1,5 @@
 {
-  "parent": "indrev:block/machine",
+  "parent": "indrev:block/machine_mk2",
   "textures": {
     "texture": "indrev:block/infuser_on"
   }
