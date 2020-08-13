@@ -1,0 +1,61 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:nikolite",
+      "output": [
+        {
+          "id": "indrev:nikolite_ore",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:lapis_ore",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:redstone_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        6000,
+        10000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "TAIGA",
+            "ICY"
+          ],
+          "weight": 6
+        },
+        {
+          "category": [
+            "FOREST",
+            "SWAMP",
+            "OCEAN",
+            "DESERT",
+            "RIVER"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

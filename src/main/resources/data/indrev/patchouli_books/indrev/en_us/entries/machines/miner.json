@@ -22,7 +22,7 @@
     {
       "anchor": "vein_types",
       "type": "text",
-      "text": "$(br)$(l:machines/miner#peat)$(t:Go to Peat)Peat$()$(br)$(l:machines/miner#lignite)$(t:Go to Lignite)Lignite$()$(br)$(l:machines/miner#bituminous)$(t:Go to Bituminous)Bituminous$()$(br)$(l:machines/miner#anthracite)$(t:Go to Anthracite)Anthracite$()$(br)$(l:machines/miner#siderite)$(t:Go to Siderite)Siderite$()$(br)$(l:machines/miner#limonite)$(t:Go to Limonite)Limonite$()$(br)$(l:machines/miner#hematite)$(t:Go to Hematite)Hematite$()$(br)$(l:machines/miner#magnetite)$(t:Go to Magnetite)Magnetite$()$(br)$(l:machines/miner#chalcopryte)$(t:Go to Chalcopryte)Chalcopryte$()$(br)$(l:machines/miner#cuprite)$(t:Go to Cuprite)Cuprite$()$(br)$(l:machines/miner#cassiterite)$(t:Go to Cassiterite)Cassiterite$()$(br)$(l:machines/miner#stannite)$(t:Go to Stannite)Stannite$()$(br)$(l:machines/miner#cavalerite)$(t:Go to Cavalerite)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:Go to Quartz)Quartz$()$(br)"
+      "text": "$(br)$(l:machines/miner#peat)$(t:Go to Peat)Peat$()$(br)$(l:machines/miner#lignite)$(t:Go to Lignite)Lignite$()$(br)$(l:machines/miner#bituminous)$(t:Go to Bituminous)Bituminous$()$(br)$(l:machines/miner#anthracite)$(t:Go to Anthracite)Anthracite$()$(br)$(l:machines/miner#siderite)$(t:Go to Siderite)Siderite$()$(br)$(l:machines/miner#limonite)$(t:Go to Limonite)Limonite$()$(br)$(l:machines/miner#hematite)$(t:Go to Hematite)Hematite$()$(br)$(l:machines/miner#magnetite)$(t:Go to Magnetite)Magnetite$()$(br)$(l:machines/miner#chalcopryte)$(t:Go to Chalcopryte)Chalcopryte$()$(br)$(l:machines/miner#cuprite)$(t:Go to Cuprite)Cuprite$()$(br)$(l:machines/miner#cassiterite)$(t:Go to Cassiterite)Cassiterite$()$(br)$(l:machines/miner#stannite)$(t:Go to Stannite)Stannite$()$(br)$(l:machines/miner#cavalerite)$(t:Go to Cavalerite)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:Go to Quartz)Quartz$()$(br)$(l:machines/miner#nikolite)$(t:Go to Nikolite)Nikolite$()"
     },
     {
       "anchor": "peat",
@@ -107,6 +107,13 @@
       "title": "Stannite",
       "item": "indrev:tin_ore",
       "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), with lots of tin, alongside $(#666666)$(l)iron$(), $(#FFA500)$(l)copper$(), stone, dirt and gravel.$(br)It can be found in many places but more commonly on hills, mesas and deserts."
+    },
+    {
+      "anchor": "nikolite",
+      "type": "spotlight",
+      "title": "Nikolite",
+      "item": "indrev:nikolite_ore",
+      "text": "Mainly composed by $(#5555BB)$(l)Nikolite Ore$(), $(#FF0000)$(l)Redstone Ore$() and $(#0000FF)$(l)Lapis Ore$(), with lots of stone, dirt and gravel. It can be found in many places but more commonly on taigas and icy biomes."
     },
     {
       "anchor": "cavalerite",
