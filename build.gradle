@@ -38,17 +38,33 @@ dependencies {
 
     //modImplementation "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
 
-    modApi "teamreborn:energy:${project.energy_api_version}"
-    include "teamreborn:energy:${project.energy_api_version}"
+    modApi("teamreborn:energy:${project.energy_api_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("teamreborn:energy:${project.energy_api_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
-    modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
-    include "io.github.cottonmc:LibGui:${project.libgui_version}"
+    modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("io.github.cottonmc:LibGui:${project.libgui_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
-    modCompile "io.github.prospector:modmenu:${project.modmenu_version}"
-    modCompile "me.shedaniel:RoughlyEnoughItems:${project.rei_version}"
+    modCompile("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
-    modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
-    include "vazkii.patchouli:Patchouli:${project.patchouli_version}"
+    modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -57,8 +73,13 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modApi "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
-    include "me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}"
+    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+
+    include("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
