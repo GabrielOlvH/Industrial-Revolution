@@ -2,19 +2,17 @@ package me.steven.indrev.gui.widgets.machines
 
 import alexiil.mc.lib.attributes.fluid.render.DefaultFluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
+import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import net.minecraft.util.math.Direction
 
 class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
     init {
@@ -34,8 +32,9 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
                     percent = (percent * height).toInt() / height.toFloat()
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
+                        fluid.getInvFluid(0)
                         val fluidRenderFace =
-                            FluidRenderFace.createFlatFace(
+                            FluidRenderFace.createFlatFaceZ(
                                 x.toDouble(),
                                 y.toDouble() + height - barSize,
                                 .0,
@@ -43,14 +42,13 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
                                 y.toDouble() + height,
                                 .0,
                                 1.0,
-                                Direction.DOWN,
+                                true,
                                 true
                             )
-                        val immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().buffer)
                         DefaultFluidVolumeRenderer.INSTANCE.render(
                             blockEntity.fluidComponent!!.volume,
                             listOf(fluidRenderFace),
-                            immediate,
+                            FluidVolumeRenderer.VCPS,
                             matrices
                         )
                     }
