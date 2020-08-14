@@ -12,10 +12,7 @@ import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
 import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
 import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
-import me.steven.indrev.recipes.machines.CompressorRecipe
-import me.steven.indrev.recipes.machines.InfuserRecipe
-import me.steven.indrev.recipes.machines.PulverizerRecipe
-import me.steven.indrev.recipes.machines.RecyclerRecipe
+import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -59,6 +56,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val pos = buf.readBlockPos()
@@ -95,7 +94,9 @@ object IndustrialRevolution : ModInitializer {
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
     val FISHING_FARM_HANDLER = FishingFarmController.SCREEN_ID.registerScreenHandler(::FishingFarmController)
-    val MODULAR_WORKBENCH_HANDLER = ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val MODULAR_WORKBENCH_HANDLER =
+        ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val SMELTER_HANDLER = SmelterController.SCREEN_ID.registerScreenHandler(::SmelterController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 

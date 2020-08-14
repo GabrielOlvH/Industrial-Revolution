@@ -296,5 +296,17 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> ChargePadBlock(MACHINE_BLOCK_SETTINGS(), tier) },
             { tier -> { ChargePadBlockEntity(tier) } }
         )
+
+        val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
+            { tier ->
+                MachineBlock(
+                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    tier,
+                    null,
+                    ::SmelterController
+                ) { SmelterBlockEntity(tier) }
+            },
+            { tier -> { SmelterBlockEntity(tier) } }
+        )
     }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "item": "minecraft:iron_ingot"
+  },
+  "fluid": {
+    "fluid": "minecraft:water",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 300
+}

@@ -44,7 +44,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.MINER_HANDLER,
             IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
             IndustrialRevolution.FISHING_FARM_HANDLER,
-            IndustrialRevolution.WRENCH_HANDLER
+            IndustrialRevolution.WRENCH_HANDLER,
+            IndustrialRevolution.SMELTER_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
