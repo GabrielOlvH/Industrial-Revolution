@@ -8,7 +8,6 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.then
 import me.steven.indrev.utils.toIntArray
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
@@ -192,8 +191,8 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     }
 
     private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
-        (inventory is SidedInventory) then { (inventory as SidedInventory).getAvailableSlots(side) }
-            ?: (0 until inventory.size()).toIntArray()
+        if (inventory is SidedInventory) inventory.getAvailableSlots(side)
+        else (0 until inventory.size()).toIntArray()
 
     private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
         first.item == second.item

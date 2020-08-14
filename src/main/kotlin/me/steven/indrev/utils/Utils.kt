@@ -1,6 +1,5 @@
 package me.steven.indrev.utils
 
-import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.config.CableConfig
@@ -83,8 +82,6 @@ fun IntRange.toIntArray(): IntArray = this.map { it }.toIntArray()
 fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
 fun ChunkPos.asString() = "$x,$z"
-
-infix fun <T> Boolean.then(param: () -> T): T? = if (this) param() else null
 
 fun getChunkPos(s: String): ChunkPos? {
     val split = s.split(",")
@@ -323,9 +320,6 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     RenderSystem.enableTexture()
     RenderSystem.disableBlend()
 }
-
-fun parsePossibleOutputs(obj: JsonObject): Array<Identifier> =
-    Array(obj.size()) { i -> Identifier(obj.get(i.toString()).asString) }
 
 fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
     registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
