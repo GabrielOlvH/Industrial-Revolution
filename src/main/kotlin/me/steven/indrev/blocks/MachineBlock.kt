@@ -94,6 +94,10 @@ open class MachineBlock(
     override fun afterBreak(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
         player?.incrementStat(Stats.MINED.getOrCreateStat(this))
         player?.addExhaustion(0.005f)
+        toTagComponents(world, player, pos, state, blockEntity, toolStack)
+    }
+
+    fun toTagComponents(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
         if (world is ServerWorld) {
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item

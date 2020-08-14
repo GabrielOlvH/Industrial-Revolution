@@ -42,33 +42,36 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
         val stack = context?.stack
         val pos = context?.blockPos
         val player = context?.player
-        var state = world?.getBlockState(pos)
+        var state = world?.getBlockState(pos) ?: return ActionResult.FAIL
+        val block = state.block
+        val blockEntity = if (block.hasBlockEntity()) world.getBlockEntity(pos) else null
         when (getMode(stack)) {
             Mode.ROTATE -> {
-                if (world?.isClient == true) return super.useOnBlock(context)
-                if (state?.block is CableBlock && player?.isSneaking == false) {
+                if (world.isClient) return super.useOnBlock(context)
+                if (block is CableBlock && player?.isSneaking == false) {
                     val side = context.side
                     val property = CableBlock.getProperty(side)
                     state = state.with(property, !state[property])
-                    world?.setBlockState(pos, state)
+                    world.setBlockState(pos, state)
                     stack?.damage(1, context.player) { p -> p?.sendToolBreakStatus(context.hand) }
                     return ActionResult.SUCCESS
-                } else if (state?.block is MachineBlock) {
+                } else if (block is MachineBlock) {
                     when {
                         player?.isSneaking == true -> {
-                            world?.breakBlock(pos, true, context.player)
+                            block.toTagComponents(world, player, pos, state, blockEntity, stack)
+                            world.breakBlock(pos, false, context.player)
                         }
                         state.contains(VERTICAL_FACING) -> {
                             val facing = state[VERTICAL_FACING]
                             val rotated = if (facing.ordinal + 1 >= ALL.size) 0 else facing.ordinal + 1
                             state = state.with(VERTICAL_FACING, ALL[rotated])
-                            world?.setBlockState(pos, state)
+                            world.setBlockState(pos, state)
                         }
                         state.contains(HORIZONTAL_FACING) -> {
                             val facing = state[HORIZONTAL_FACING]
                             val rotated = if (facing.horizontal + 1 >= HORIZONTAL.size) 0 else facing.horizontal + 1
                             state = state.with(HORIZONTAL_FACING, HORIZONTAL[rotated])
-                            world?.setBlockState(pos, state)
+                            world.setBlockState(pos, state)
                         }
                         else -> return super.useOnBlock(context)
                     }
@@ -77,8 +80,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
                 }
             }
             Mode.CONFIGURE -> {
-                if (state?.block?.hasBlockEntity() == true) {
-                    val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.PASS
+                if (blockEntity is MachineBlockEntity) {
                     val inventoryComponent = blockEntity.inventoryComponent
                     if (inventoryComponent != null
                         && (inventoryComponent.inventory.inputSlots.isNotEmpty() || inventoryComponent.inventory.outputSlots.isNotEmpty())) {
