@@ -42,7 +42,7 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.add(outputSlot, 6.0, 1.5)
 
         val fluid = WFluid(ctx)
-        root.add(fluid, -2, -2)
+        root.add(fluid, 1, 0)
 
         root.validate(this)
     }

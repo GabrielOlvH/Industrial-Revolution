@@ -1,8 +1,5 @@
 package me.steven.indrev.gui.widgets.machines
 
-import alexiil.mc.lib.attributes.fluid.render.DefaultFluidVolumeRenderer
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
@@ -32,24 +29,12 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
                     percent = (percent * height).toInt() / height.toFloat()
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
-                        fluid.getInvFluid(0)
-                        val fluidRenderFace =
-                            FluidRenderFace.createFlatFaceZ(
-                                x.toDouble(),
-                                y.toDouble() + height - barSize,
-                                .0,
-                                x.toDouble() + width,
-                                y.toDouble() + height,
-                                .0,
-                                1.0,
-                                true,
-                                true
-                            )
-                        DefaultFluidVolumeRenderer.INSTANCE.render(
-                            blockEntity.fluidComponent!!.volume,
-                            listOf(fluidRenderFace),
-                            FluidVolumeRenderer.VCPS,
-                            matrices
+                        val offset = 2.0
+                        blockEntity.fluidComponent!!.volume.renderGuiRect(
+                            x + offset,
+                            y.toDouble() + height - barSize + offset,
+                            x.toDouble() + width - offset,
+                            y.toDouble() + height - offset
                         )
                     }
                 }
@@ -62,8 +47,8 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = fluid.volume.amount_F.whole
-                val maxEnergy = fluid.limit.whole
+                val energy = fluid.volume.amount_F.toDisplayString()
+                val maxEnergy = fluid.limit.toDisplayString()
                 information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
                 information?.add(LiteralText("$energy / $maxEnergy LF"))
                 super.addTooltip(information)
