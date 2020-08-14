@@ -85,7 +85,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    /*modImplementation("alexiil.mc.lib:libblockattributes-core:${lba_version}") {
+    modImplementation("alexiil.mc.lib:libblockattributes-core:${lba_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
     modImplementation("alexiil.mc.lib:libblockattributes-fluids:${lba_version}") {
@@ -96,9 +96,7 @@ dependencies {
     }
     include("alexiil.mc.lib:libblockattributes-fluids:${lba_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }*/
-    modImplementation("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
-    include("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
+    }
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
