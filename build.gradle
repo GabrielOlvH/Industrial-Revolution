@@ -18,6 +18,10 @@ minecraft {
 repositories {
     maven { url = "http://maven.fabricmc.net/" }
     maven {
+        name = "BuildCraft"
+        url = "https://mod-buildcraft.com/maven"
+    }
+    maven {
         name = "CottonMC"
         url = "https://server.bbkr.space/artifactory/libs-release"
     }
@@ -78,6 +82,19 @@ dependencies {
     }
 
     include("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+
+    modImplementation("alexiil.mc.lib:libblockattributes-core:${lba_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${lba_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("alexiil.mc.lib:libblockattributes-core:${lba_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("alexiil.mc.lib:libblockattributes-fluids:${lba_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
