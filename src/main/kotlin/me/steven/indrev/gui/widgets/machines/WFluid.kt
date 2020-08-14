@@ -4,12 +4,11 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.utils.getShortEnergyDisplay
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 
 class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
     init {
@@ -47,10 +46,10 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = fluid.volume.amount_F.toDisplayString()
-                val maxEnergy = fluid.limit.toDisplayString()
-                information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-                information?.add(LiteralText("$energy / $maxEnergy LF"))
+                val energy = getShortEnergyDisplay(fluid.volume.amount_F.asInexactDouble() * 1000)
+                val maxEnergy = getShortEnergyDisplay(fluid.limit.asInexactDouble() * 1000)
+                information?.add(*fluid.volume.fluidKey.fullTooltip.toTypedArray())
+                information?.add(LiteralText("$energy / $maxEnergy mB"))
                 super.addTooltip(information)
             }
         }
