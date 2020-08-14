@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
@@ -40,6 +41,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, maxStoredPower) }
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
+    var fluidComponent: FluidComponent? = null
 
     var itemTransferCooldown = 0
 
@@ -118,6 +120,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         super.fromTag(state, tag)
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
+        fluidComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -126,6 +129,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (tag != null) {
             inventoryComponent?.toTag(tag)
             temperatureComponent?.toTag(tag)
+            fluidComponent?.toTag(tag)
         }
         return super.toTag(tag)
     }
@@ -133,6 +137,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     override fun fromClientTag(tag: CompoundTag?) {
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
+        fluidComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -140,6 +145,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (tag == null) return CompoundTag()
         inventoryComponent?.toTag(tag)
         temperatureComponent?.toTag(tag)
+        fluidComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }

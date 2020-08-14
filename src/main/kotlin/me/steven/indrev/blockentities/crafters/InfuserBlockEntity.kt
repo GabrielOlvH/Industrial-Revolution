@@ -1,6 +1,10 @@
 package me.steven.indrev.blockentities.crafters
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
@@ -28,6 +32,7 @@ class InfuserBlockEntity(tier: Tier) :
                 }
             }
         }
+        this.fluidComponent = FluidComponent(FluidAmount(50000))
     }
 
     private var currentRecipe: InfuserRecipe? = null
@@ -45,6 +50,10 @@ class InfuserBlockEntity(tier: Tier) :
             this.currentRecipe = recipe
         }
         return recipe
+    }
+
+    override fun onCraft() {
+        fluidComponent?.insertable?.insert(object : FluidVolume(FluidKeys.WATER, FluidAmount.BUCKET) {})
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
