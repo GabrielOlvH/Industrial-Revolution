@@ -4,22 +4,16 @@ import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.crafters.InfuserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.machines.WProcess
-import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
-import java.util.*
-import java.util.function.BiFunction
 
 class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -47,12 +41,7 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 6.0, 1.5)
 
-        val fluid = WText({
-            ctx.run(BiFunction { world: World, pos: BlockPos ->
-                val blockEntity = world.getBlockEntity(pos) as? InfuserBlockEntity
-                return@BiFunction Optional.of(LiteralText(blockEntity?.fluidComponent?.volume?.localizeAmount()))
-            }, null).orElse(LiteralText("empty"))
-        })
+        val fluid = WFluid(ctx)
         root.add(fluid, -2, -2)
 
         root.validate(this)
