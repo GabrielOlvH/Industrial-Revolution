@@ -26,6 +26,8 @@ import net.minecraft.client.render.RenderLayer
 @Suppress("UNCHECKED_CAST")
 object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
+        FluidType.WATER.registerReloadListener()
+        FluidType.LAVA.registerReloadListener()
         IRRegistry.COOLANT_STILL.registerRender(FluidType.WATER)
         arrayOf(
             IRRegistry.MOLTEN_NETHERITE_STILL,

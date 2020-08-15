@@ -35,6 +35,14 @@ object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         //IRRegistry.registerAll()
+        arrayOf(
+            IRRegistry.COOLANT_STILL,
+            IRRegistry.MOLTEN_NETHERITE_STILL,
+            IRRegistry.MOLTEN_IRON_STILL,
+            IRRegistry.MOLTEN_GOLD_STILL,
+            IRRegistry.MOLTEN_COPPER_STILL,
+            IRRegistry.MOLTEN_TIN_STILL
+        ).forEach { it.registerFluidKey() }
         IRLootTables.register()
         MachineRegistry.COAL_GENERATOR_REGISTRY
 

@@ -1,16 +1,15 @@
 package me.steven.indrev.fluids
 
-import me.steven.indrev.utils.identifier
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
-import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.texture.Sprite
 import net.minecraft.fluid.FlowableFluid
@@ -18,10 +17,8 @@ import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.FluidState
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceType
-import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.state.StateManager
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -68,32 +65,14 @@ abstract class BaseFluid(
     override fun matchesType(fluid: Fluid?): Boolean = fluid == flowing || fluid == still
 
     fun registerRender(fluidType: FluidType) {
-        val stillSpriteId = fluidType.stillId
-        val flowSpriteId = fluidType.flowId
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
-            .register(ClientSpriteRegistryCallback { _, registry ->
-                registry.register(stillSpriteId)
-                registry.register(flowSpriteId)
-            })
-        val moltenFluidSprites = arrayOfNulls<Sprite>(2)
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
-            .registerReloadListener(object : SimpleSynchronousResourceReloadListener {
-                override fun apply(manager: ResourceManager?) {
-                    val atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
-                    moltenFluidSprites[0] = atlas.apply(stillSpriteId)
-                    moltenFluidSprites[1] = atlas.apply(flowSpriteId)
-                }
+        val fluidRenderHandler = object : FluidRenderHandler {
+            override fun getFluidSprites(view: BlockRenderView?, pos: BlockPos?, state: FluidState?): Array<Sprite?> =
+                fluidType.sprites
 
-                override fun getFabricId(): Identifier = identifier("${identifier.path}_reload_listener")
-            })
-        val moltenOreFluidRender = object : FluidRenderHandler {
-            override fun getFluidSprites(view: BlockRenderView, pos: BlockPos, state: FluidState): Array<Sprite?> =
-                moltenFluidSprites
-
-            override fun getFluidColor(view: BlockRenderView, pos: BlockPos, state: FluidState): Int = color
+            override fun getFluidColor(view: BlockRenderView?, pos: BlockPos?, state: FluidState?): Int = color
         }
-        FluidRenderHandlerRegistry.INSTANCE.register(still, moltenOreFluidRender)
-        FluidRenderHandlerRegistry.INSTANCE.register(flowing, moltenOreFluidRender)
+        FluidRenderHandlerRegistry.INSTANCE.register(still, fluidRenderHandler)
+        FluidRenderHandlerRegistry.INSTANCE.register(flowing, fluidRenderHandler)
         BlockRenderLayerMap.INSTANCE.putFluids(
             RenderLayer.getTranslucent(),
             still,
@@ -101,6 +80,19 @@ abstract class BaseFluid(
         )
     }
 
+    fun registerFluidKey() {
+        FluidKeys.put(
+            this, SimpleFluidKey(
+                FluidKey.FluidKeyBuilder(this)
+                    .setName(TranslatableText(block().translationKey))
+                    .setViscosity(FluidAmount.of(5, 5))
+                    .setNetherViscosity(FluidAmount.of(5, 5))
+                    .setCohesion(FluidAmount.ofWhole(2))
+                    .setNetherCohesion(FluidAmount.ofWhole(2))
+                    .setRenderColor(color)
+            )
+        )
+    }
 
     class Flowing(
         identifier: Identifier,
