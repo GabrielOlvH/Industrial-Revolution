@@ -30,7 +30,7 @@ class SmelterBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.fluidComponent = FluidComponent(FluidAmount(50))
+        this.fluidComponent = FluidComponent(FluidAmount(8))
     }
 
     private var currentRecipe: SmelterRecipe? = null
