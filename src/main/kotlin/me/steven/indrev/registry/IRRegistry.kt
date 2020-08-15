@@ -39,7 +39,7 @@ object IRRegistry {
             PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
         )
         ResourceHelper("tin") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withOre()
             withTools(
@@ -52,7 +52,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.TIN)
         }.register()
         ResourceHelper("copper") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withOre()
             withTools(
@@ -65,7 +65,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.COPPER)
         }.register()
         ResourceHelper("steel") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
