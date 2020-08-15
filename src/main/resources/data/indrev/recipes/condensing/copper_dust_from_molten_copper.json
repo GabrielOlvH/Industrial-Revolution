@@ -1,0 +1,13 @@
+{
+  "type": "indrev:condenser",
+  "output": {
+    "item": "indrev:copper_dust",
+    "count": 1
+  },
+  "fluid": {
+    "fluid": "indrev:molten_copper_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}
