@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "item": "minecraft:gold_ingot"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_gold_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}

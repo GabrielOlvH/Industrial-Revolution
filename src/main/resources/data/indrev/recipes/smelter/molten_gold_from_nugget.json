@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "item": "minecraft:gold_nugget"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_gold_still",
+    "type": "nugget",
+    "count": 1
+  },
+  "processTime": 600
+}

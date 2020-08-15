@@ -1,12 +1,12 @@
 {
   "type": "indrev:smelter",
   "ingredient": {
-    "item": "minecraft:iron_block"
+    "tag": "c:tin_blocks"
   },
   "fluid": {
-    "fluid": "minecraft:water",
+    "fluid": "indrev:molten_tin_still",
     "type": "block",
     "count": 1
   },
-  "processTime": 300
+  "processTime": 600
 }

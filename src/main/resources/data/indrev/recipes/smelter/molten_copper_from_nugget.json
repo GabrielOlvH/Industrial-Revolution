@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "tag": "c:copper_nuggets"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_copper_still",
+    "type": "nugget",
+    "count": 1
+  },
+  "processTime": 600
+}

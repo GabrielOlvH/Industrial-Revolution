@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "tag": "c:tin_ores"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_tin_still",
+    "type": "ingot",
+    "count": 3
+  },
+  "processTime": 600
+}
