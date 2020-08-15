@@ -308,5 +308,17 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             },
             { tier -> { SmelterBlockEntity(tier) } }
         )
+
+        val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
+            { tier ->
+                MachineBlock(
+                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    tier,
+                    null,
+                    ::CondenserController
+                ) { CondenserBlockEntity(tier) }
+            },
+            { tier -> { CondenserBlockEntity(tier) } }
+        )
     }
 }
