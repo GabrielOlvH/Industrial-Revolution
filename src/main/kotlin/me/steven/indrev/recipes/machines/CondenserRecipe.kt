@@ -53,7 +53,7 @@ class CondenserRecipe(
             }
 
             override fun read(id: Identifier, json: JsonObject): CondenserRecipe {
-                val result = json.get("input").asJsonObject
+                val result = json.get("output").asJsonObject
                 val output = ItemStack {
                     Registry.ITEM.getOrEmpty(Identifier(result.get("item").asString)).orElse(null)
                         ?: throw IllegalArgumentException("no such item $result")
