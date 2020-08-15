@@ -36,7 +36,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     protected var processTime: Int by Property(3, 0)
     protected var totalProcessTime: Int by Property(4, 0)
-    private val usedRecipes = mutableMapOf<Identifier, Int>()
+    protected val usedRecipes = mutableMapOf<Identifier, Int>()
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -93,7 +93,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     abstract fun getCurrentRecipe(): T?
 
-    private fun reset() {
+    protected fun reset() {
         processTime = 0
         totalProcessTime = 0
     }
