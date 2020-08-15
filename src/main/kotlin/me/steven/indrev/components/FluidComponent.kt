@@ -10,10 +10,16 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.math.Direction
 
 class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
 
     var volume: FluidVolume = object : FluidVolume(FluidKeys.WATER, FluidAmount.ZERO) {}
+
+    val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
+        Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
+    }
+
 
     override fun getTankCount(): Int = 1
 
@@ -39,10 +45,25 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
 
     fun toTag(tag: CompoundTag) {
         tag.put("fluids", volume.toTag())
+        val icTag = CompoundTag()
+        transferConfig.forEach { (dir, mode) ->
+            icTag.putString(dir.toString(), mode.toString())
+        }
+        tag.put("TransferConfig", icTag)
     }
 
     fun fromTag(tag: CompoundTag?) {
         val f = tag?.getCompound("fluids")
         volume = FluidVolume.fromTag(f)
+        if (tag?.contains("TransferConfig") == true) {
+            val icTag = tag.getCompound("TransferConfig")
+            Direction.values().forEach { dir ->
+                val value = icTag.getString(dir.toString()).toUpperCase()
+                if (value.isNotEmpty()) {
+                    val mode = TransferMode.valueOf(value)
+                    transferConfig[dir] = mode
+                }
+            }
+        }
     }
 }

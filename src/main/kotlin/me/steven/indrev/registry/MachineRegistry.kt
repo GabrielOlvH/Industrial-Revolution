@@ -1,5 +1,8 @@
 package me.steven.indrev.registry
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.AttributeProvider
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import me.steven.indrev.IndustrialRevolution.CONFIG
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.battery.BatteryBlockEntity
@@ -25,6 +28,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
@@ -36,7 +40,9 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
@@ -84,7 +90,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .strength(5.0f, 6.0f)
                 .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
-        
+
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
                 HorizontalFacingMachineBlock(
@@ -299,24 +305,49 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
             { tier ->
-                MachineBlock(
+                object : MachineBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
                     null,
-                    ::SmelterController
-                ) { SmelterBlockEntity(tier) }
+                    ::SmelterController,
+                    { SmelterBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                        val blockEntity = world?.getBlockEntity(pos) as? SmelterBlockEntity ?: return
+                        val searchDirection = to?.searchDirection ?: return
+                        if (to.attribute == FluidAttributes.INSERTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
+                            to.offer(blockEntity.fluidComponent)
+                        else if (to.attribute == FluidAttributes.EXTRACTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
+                            to.offer(blockEntity.fluidComponent)
+                    }
+                }
             },
             { tier -> { SmelterBlockEntity(tier) } }
         )
 
         val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
             { tier ->
-                MachineBlock(
+                object : MachineBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
                     null,
-                    ::CondenserController
-                ) { CondenserBlockEntity(tier) }
+                    ::CondenserController,
+                    { CondenserBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                        val blockEntity = world?.getBlockEntity(pos) as? CondenserBlockEntity ?: return
+                        val searchDirection = to?.searchDirection ?: return
+                        if (to.attribute == FluidAttributes.INSERTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
+                            to.offer(blockEntity.fluidComponent)
+                        else if (to.attribute == FluidAttributes.EXTRACTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
+                            to.offer(blockEntity.fluidComponent)
+
+                    }
+                }
             },
             { tier -> { CondenserBlockEntity(tier) } }
         )

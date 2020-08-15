@@ -57,5 +57,4 @@ class CondenserBlockEntity(tier: Tier) :
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
-
 }

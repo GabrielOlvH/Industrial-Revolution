@@ -116,7 +116,7 @@ fun SyncedGuiDescription.configure(
     }
 }
 
-fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Int, y: Int) {
+fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Int, y: Int): WButton {
     val containsBook =
         playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
             stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
@@ -150,4 +150,5 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
     }
     panel.add(button, x, y)
     button.setSize(16, 16)
+    return button
 }

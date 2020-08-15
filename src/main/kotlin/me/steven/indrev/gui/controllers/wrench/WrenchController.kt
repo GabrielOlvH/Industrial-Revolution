@@ -1,6 +1,7 @@
 package me.steven.indrev.gui.controllers.wrench
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.netty.buffer.Unpooled
@@ -8,7 +9,6 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.HorizontalFacingMachineBlock
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
@@ -34,17 +34,34 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         getBlockPropertyDelegate(ctx)
     ), PatchouliEntryShortcut {
 
+    private var isItemConfig = true
+    private val displays = mutableMapOf<Direction, WMachineSideDisplay>()
+
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        root.setSize(96, 96)
-        val titleWidget = WText(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
-        root.add(titleWidget, 0.2, 0.0)
+        root.setSize(96, 120)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             val blockState = world.getBlockState(pos)
-            if (blockEntity is MachineBlockEntity && blockEntity.inventoryComponent != null) {
-                val inventoryController = blockEntity.inventoryComponent!!
+            if (blockEntity is MachineBlockEntity) {
+                val toggle = WButton(TranslatableText("item.indrev.wrench.item"))
+                toggle.setOnClick {
+                    updateMachineDisplays(if (isItemConfig) blockEntity.inventoryComponent!!.itemConfig else blockEntity.fluidComponent!!.transferConfig)
+                    toggle.label = TranslatableText(if (isItemConfig) "item.indrev.wrench.item" else "item.indrev.wrench.fluid")
+                    isItemConfig = !isItemConfig
+                }
+                root.add(toggle, 2.2, 0.9)
+                toggle.setSize(30, 20)
+                val titleWidget = WText(
+                    TranslatableText("item.indrev.wrench.title")
+                    , HorizontalAlignment.LEFT, 0x404040)
+                root.add(titleWidget, 0.0, 0.2)
+
+
+                val inventoryComponent = blockEntity.inventoryComponent
+                val fluidComponent = blockEntity.fluidComponent
+                val initConfig = inventoryComponent?.itemConfig ?: fluidComponent?.transferConfig ?: return@run
                 val id = Registry.BLOCK.getId(blockState.block).path.replace(TIER_REGEX, "")
                 MachineSide.values().forEach { side ->
                     val facing =
@@ -57,23 +74,35 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                                 Direction.UP
                         }
                     val direction = offset(facing, side.direction)
-                    val mode = getMode(inventoryController, direction)
+                    val mode = getMode(initConfig, direction)
                     val widget = WMachineSideDisplay(identifier("textures/block/${id}.png"), side, mode)
                     widget.setOnClick {
                         widget.mode = widget.mode.next()
-                        inventoryController.itemConfig[direction] = widget.mode
+                        if (isItemConfig)
+                            inventoryComponent?.itemConfig?.set(direction, widget.mode)
+                        else
+                            fluidComponent?.transferConfig?.set(direction, widget.mode)
                         val buf = PacketByteBuf(Unpooled.buffer())
+                        buf.writeBoolean(isItemConfig)
                         buf.writeBlockPos(pos)
                         buf.writeInt(direction.id)
                         buf.writeInt(widget.mode.ordinal)
                         ClientSidePacketRegistry.INSTANCE.sendToServer(SAVE_PACKET_ID, buf)
                     }
-                    root.add(widget, side.x + 0.1, side.y + 0.2)
+                    displays[direction] = widget
+                    root.add(widget, side.x + 0.5, side.y + 1.6)
                 }
             }
-            addBookEntryShortcut(playerInventory, root, 5, 1)
+            val button = addBookEntryShortcut(playerInventory, root, 5, 0)
+            button.setLocation((5.2 * 18).toInt(), 0)
         }
         root.validate(this)
+    }
+
+    private fun updateMachineDisplays(config: Map<Direction, TransferMode>) {
+        displays.forEach { (direction, display) ->
+            display.mode = config[direction]!!
+        }
     }
 
     override fun getEntry(): Identifier = identifier("tools/wrench")
@@ -90,7 +119,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             else -> side
         }
 
-    private fun getMode(controller: InventoryComponent, side: Direction): TransferMode = controller.itemConfig[side]
+    private fun getMode(config: Map<Direction, TransferMode>, side: Direction): TransferMode = config[side]
         ?: TransferMode.NONE
 
     enum class MachineSide(val x: Int, val y: Int, val direction: Direction, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {

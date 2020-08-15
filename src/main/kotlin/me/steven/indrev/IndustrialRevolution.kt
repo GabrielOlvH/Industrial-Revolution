@@ -70,15 +70,17 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, CondenserRecipe.IDENTIFIER, CondenserRecipe.TYPE)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
+            val isItemConfig = buf.readBoolean()
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
             val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
-                if (blockEntity.inventoryComponent != null) {
+                if (isItemConfig && blockEntity.inventoryComponent != null) {
                     blockEntity.inventoryComponent!!.itemConfig[dir] = mode
-                }
+                } else if (blockEntity.fluidComponent != null)
+                    blockEntity.fluidComponent!!.transferConfig[dir] = mode
             }
         }
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())

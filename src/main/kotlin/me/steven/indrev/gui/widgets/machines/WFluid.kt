@@ -20,8 +20,8 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = fluid.volume.amount().whole
-                val maxEnergy = fluid.limit.whole
+                val energy = fluid.volume.amount().asInexactDouble() * 1000
+                val maxEnergy = fluid.limit.asInexactDouble() * 1000
                 if (energy > 0) {
                     var percent = energy.toFloat() / maxEnergy.toFloat()
                     percent = (percent * height).toInt() / height.toFloat()

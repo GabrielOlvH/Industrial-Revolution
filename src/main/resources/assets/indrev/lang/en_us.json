@@ -145,6 +145,8 @@
   "item.indrev.wrench": "Wrench",
   "item.indrev.wrench.switch_mode": "Wrench Mode: %s",
   "item.indrev.wrench.title": "Configure Machine",
+  "item.indrev.wrench.item": "Item",
+  "item.indrev.wrench.fluid": "Fluid",
   "item.indrev.wrench.output": "Output",
   "item.indrev.wrench.input": "Input",
   "item.indrev.wrench.input_output": "Input and Output",
