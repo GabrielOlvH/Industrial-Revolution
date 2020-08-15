@@ -8,8 +8,8 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
+import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
-import me.steven.indrev.registry.FluidRenderRegistry
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -26,7 +26,14 @@ import net.minecraft.client.render.RenderLayer
 @Suppress("UNCHECKED_CAST")
 object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
-        FluidRenderRegistry.registerAll()
+        IRRegistry.COOLANT_STILL.registerRender(FluidType.WATER)
+        arrayOf(
+            IRRegistry.MOLTEN_NETHERITE_STILL,
+            IRRegistry.MOLTEN_IRON_STILL,
+            IRRegistry.MOLTEN_GOLD_STILL,
+            IRRegistry.MOLTEN_COPPER_STILL,
+            IRRegistry.MOLTEN_TIN_STILL
+        ).forEach { it.registerRender(FluidType.LAVA) }
         IRHudRender
         arrayOf(
             IndustrialRevolution.COAL_GENERATOR_HANDLER,

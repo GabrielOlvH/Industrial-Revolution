@@ -7,8 +7,7 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.config.IRConfig
-import me.steven.indrev.fluids.CoolantFluid
-import me.steven.indrev.fluids.MoltenNetheriteFluid
+import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
@@ -129,15 +128,36 @@ object IRRegistry {
 
         identifier("biomass").item(BIOMASS)
 
-        identifier("coolant").block(COOLANT)
-        identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
-        identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
-        identifier("coolant_bucket").item(COOLANT_BUCKET)
+        COOLANT_IDENTIFIER.block(COOLANT)
+        identifier("${COOLANT_IDENTIFIER.path}_still").fluid(COOLANT_STILL)
+        identifier("${COOLANT_IDENTIFIER.path}_flowing").fluid(COOLANT_FLOWING)
+        identifier("${COOLANT_IDENTIFIER.path}_bucket").item(COOLANT_BUCKET)
 
-        identifier("molten_netherite").block(MOLTEN_NETHERITE)
-        identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
-        identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
-        identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
+        MOLTEN_NETHERITE_IDENTIFIER.block(MOLTEN_NETHERITE)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_still").fluid(MOLTEN_NETHERITE_STILL)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_bucket").item(MOLTEN_NETHERITE_BUCKET)
+
+        MOLTEN_IRON_IDENTIFIER.block(MOLTEN_IRON)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_still").fluid(MOLTEN_IRON_STILL)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_flowing").fluid(MOLTEN_IRON_FLOWING)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_bucket").item(MOLTEN_IRON_BUCKET)
+
+        MOLTEN_GOLD_IDENTIFIER.block(MOLTEN_GOLD)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_still").fluid(MOLTEN_GOLD_STILL)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_flowing").fluid(MOLTEN_GOLD_FLOWING)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_bucket").item(MOLTEN_GOLD_BUCKET)
+
+        MOLTEN_COPPER_IDENTIFIER.block(MOLTEN_COPPER)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_still").fluid(MOLTEN_COPPER_STILL)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_flowing").fluid(MOLTEN_COPPER_FLOWING)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_bucket").item(MOLTEN_COPPER_BUCKET)
+
+        MOLTEN_TIN_IDENTIFIER.block(MOLTEN_TIN)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_still").fluid(MOLTEN_TIN_STILL)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_flowing").fluid(MOLTEN_TIN_FLOWING)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_bucket").item(MOLTEN_TIN_BUCKET)
+
         identifier("wrench").item(WRENCH)
 
         identifier("tech_soup").item(TECH_SOUP)
@@ -209,17 +229,89 @@ object IRRegistry {
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
-    val COOLANT_FLUID_FLOWING = CoolantFluid.Flowing()
-    val COOLANT_FLUID_STILL = CoolantFluid.Still()
-    val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
-    val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
+    val COOLANT_IDENTIFIER = identifier("coolant")
+    val COOLANT_STILL: BaseFluid.Still =
+        BaseFluid.Still(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_FLOWING }
+    val COOLANT_FLOWING =
+        BaseFluid.Flowing(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_STILL }
+    val COOLANT_BUCKET = BucketItem(COOLANT_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val COOLANT = object : FluidBlock(COOLANT_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val MOLTEN_NETHERITE_FLOWING = MoltenNetheriteFluid.Flowing()
-    val MOLTEN_NETHERITE_STILL = MoltenNetheriteFluid.Still()
+    val MOLTEN_NETHERITE_IDENTIFIER = identifier("molten_netherite")
+    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_FLOWING }
+    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_STILL }
     val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val MOLTEN_IRON_IDENTIFIER = identifier("molten_iron")
+    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_FLOWING }
+    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_STILL }
+    val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_IRON = object : FluidBlock(MOLTEN_IRON_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_GOLD_IDENTIFIER = identifier("molten_gold")
+    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xD8C800
+    ) { MOLTEN_GOLD_FLOWING }
+    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xD8C800
+    ) { MOLTEN_GOLD_STILL }
+    val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_GOLD = object : FluidBlock(MOLTEN_GOLD_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_COPPER_IDENTIFIER = identifier("molten_copper")
+    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_FLOWING }
+    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_STILL }
+    val MOLTEN_COPPER_BUCKET = BucketItem(MOLTEN_COPPER_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_COPPER = object : FluidBlock(MOLTEN_COPPER_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_TIN_IDENTIFIER = identifier("molten_tin")
+    val MOLTEN_TIN_STILL: BaseFluid.Still =
+        BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xC6C3BF) { MOLTEN_TIN_FLOWING }
+    val MOLTEN_TIN_FLOWING =
+        BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xC6C3BF) { MOLTEN_TIN_STILL }
+    val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MACHINE_BLOCK = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
