@@ -62,7 +62,7 @@ class SmelterRecipe(
                 val fluidObj = json.getAsJsonObject("fluid")
                 val fluidId = fluidObj.get("fluid").asString
                 val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
-                val amount = JsonHelper.getLong(fluidObj, "amount", 1)
+                val amount = JsonHelper.getLong(fluidObj, "count", 1)
                 val fluidAmount = when (val type = fluidObj.get("type").asString) {
                     "nugget" -> NUGGET_AMOUNT
                     "ingot" -> INGOT_AMOUNT
