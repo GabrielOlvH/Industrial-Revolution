@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TransferMode
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -41,8 +41,8 @@ open class HorizontalFacingMachineBlock(
             val direction = state?.get(HORIZONTAL_FACING) ?: return
             val inventoryController = blockEntity.inventoryComponent ?: return
             val itemConfig = inventoryController.itemConfig
-            itemConfig[direction.rotateYClockwise()] = InventoryComponent.Mode.INPUT
-            itemConfig[direction.rotateYCounterclockwise()] = InventoryComponent.Mode.OUTPUT
+            itemConfig[direction.rotateYClockwise()] = TransferMode.INPUT
+            itemConfig[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
         }
         super.onPlaced(world, pos, state, placer, itemStack)
     }

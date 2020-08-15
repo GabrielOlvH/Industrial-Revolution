@@ -2,7 +2,7 @@ package me.steven.indrev
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
@@ -72,7 +72,7 @@ object IndustrialRevolution : ModInitializer {
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
-            val mode = InventoryComponent.Mode.values()[buf.readInt()]
+            val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute

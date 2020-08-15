@@ -9,8 +9,8 @@ import net.minecraft.util.math.Direction
 class InventoryComponent(supplier: () -> IRInventory) {
     val inventory: IRInventory = supplier().also { it.component = this }
 
-    val itemConfig: MutableMap<Direction, Mode> = mutableMapOf<Direction, Mode>().also { map ->
-        Direction.values().forEach { dir -> map[dir] = Mode.NONE }
+    val itemConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
+        Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
     }
 
     fun fromTag(tag: CompoundTag?) {
@@ -25,7 +25,7 @@ class InventoryComponent(supplier: () -> IRInventory) {
             Direction.values().forEach { dir ->
                 val value = icTag.getString(dir.toString()).toUpperCase()
                 if (value.isNotEmpty()) {
-                    val mode = Mode.valueOf(value)
+                    val mode = TransferMode.valueOf(value)
                     itemConfig[dir] = mode
                 }
             }
@@ -48,17 +48,4 @@ class InventoryComponent(supplier: () -> IRInventory) {
         return tag
     }
 
-    enum class Mode(val rgb: Long, val input: Boolean, val output: Boolean) {
-        INPUT(0x997e75ff, true, false),
-        OUTPUT(0x99ffb175, false, true),
-        INPUT_OUTPUT(0x99d875ff, true, true),
-        NONE(-1, false, false);
-
-        fun next(): Mode = when (this) {
-            INPUT -> OUTPUT
-            OUTPUT -> INPUT_OUTPUT
-            INPUT_OUTPUT -> NONE
-            NONE -> INPUT
-        }
-    }
 }

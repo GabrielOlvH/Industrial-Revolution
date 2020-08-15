@@ -30,7 +30,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             if (stack.item != this) return TypedActionResult.pass(stack)
             val mode = getMode(stack).next()
             val tag = stack.tag ?: CompoundTag()
-            tag.putString("Mode", mode.toString())
+            tag.putString("TransferMode", mode.toString())
             stack.tag = tag
             user.sendMessage(TranslatableText("item.indrev.wrench.switch_mode", mode), true)
         }
@@ -99,8 +99,8 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
 
     private fun getMode(stack: ItemStack?): Mode {
         val tag = stack?.tag
-        if (tag != null && tag.contains("Mode")) {
-            val s = tag.getString("Mode").toUpperCase()
+        if (tag != null && tag.contains("TransferMode")) {
+            val s = tag.getString("TransferMode").toUpperCase()
             return Mode.valueOf(s)
         }
         return Mode.ROTATE

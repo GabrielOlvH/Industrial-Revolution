@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.blocks.HorizontalFacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TransferMode
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
 import me.steven.indrev.gui.widgets.misc.WText
@@ -89,8 +90,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             else -> side
         }
 
-    private fun getMode(controller: InventoryComponent, side: Direction): InventoryComponent.Mode = controller.itemConfig[side]
-        ?: InventoryComponent.Mode.NONE
+    private fun getMode(controller: InventoryComponent, side: Direction): TransferMode = controller.itemConfig[side]
+        ?: TransferMode.NONE
 
     enum class MachineSide(val x: Int, val y: Int, val direction: Direction, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {
         NORTH(2, 2, Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),
