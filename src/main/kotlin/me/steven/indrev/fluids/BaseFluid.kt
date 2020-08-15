@@ -18,6 +18,8 @@ import net.minecraft.fluid.FluidState
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
 import net.minecraft.state.StateManager
+import net.minecraft.text.Style
+import net.minecraft.text.TextColor
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -84,7 +86,15 @@ abstract class BaseFluid(
         FluidKeys.put(
             this, SimpleFluidKey(
                 FluidKey.FluidKeyBuilder(this)
-                    .setName(TranslatableText(block().translationKey))
+                    .setName(
+                        TranslatableText(block().translationKey).setStyle(
+                            Style.EMPTY.withColor(
+                                TextColor.fromRgb(
+                                    color
+                                )
+                            )
+                        )
+                    )
                     .setViscosity(FluidAmount.of(5, 5))
                     .setNetherViscosity(FluidAmount.of(5, 5))
                     .setCohesion(FluidAmount.ofWhole(2))
