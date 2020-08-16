@@ -11,6 +11,7 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.Direction
 import team.reborn.energy.EnergySide
 
 class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.PUMP_REGISTRY) {
@@ -22,11 +23,10 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
     override fun machineTick() {
         if ((world?.time ?: return) % 20 == 0L || fluidComponent?.volume?.isEmpty == false) return
         val fluidComponent = fluidComponent ?: return
-        val down = pos.down()
-        val hasFluid = world?.getFluidState(down)?.isEmpty == false
+        val hasFluid = Direction.values().mapNotNull { world?.getFluidState(pos.offset(it)) }.any { !it.isEmpty }
         val range = getWorkingArea()
         if (hasFluid) {
-            val mutablePos = down.mutableCopy()
+            val mutablePos = pos.mutableCopy()
             for (x in range.minX.toInt()..range.maxX.toInt())
                 for (y in range.minY.toInt()..range.maxY.toInt()) {
                     for (z in range.minZ.toInt()..range.maxZ.toInt()) {
