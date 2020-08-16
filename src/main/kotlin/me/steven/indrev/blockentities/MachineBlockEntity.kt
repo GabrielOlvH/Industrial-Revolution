@@ -231,27 +231,26 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     fluidComponent?.volume?.amount()) ?: return@forEach
             val fluid = fluidComponent?.volume?.fluidKey?.withAmount(fluidAmount)
             if (mode.output) {
-                val firstOrNull = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
                     ?: return@forEach
-                val amount = firstOrNull.attemptInsertion(fluid, Simulation.SIMULATE)
+                val amount = insertable.attemptInsertion(fluid, Simulation.SIMULATE)
                 val extractable = fluidComponent?.extractable
                 val amountToExtract = fluidAmount.sub(amount?.amount())
-                if (amount?.amount() != fluid?.amount()
-                    && extractable?.attemptAnyExtraction(amountToExtract, Simulation.SIMULATE)?.isEmpty == true) {
-                    firstOrNull.insert(fluid)
-                    extractable.extract(amountToExtract)
+                val extractionResult = extractable?.attemptAnyExtraction(amountToExtract, Simulation.SIMULATE)
+                if (extractionResult?.isEmpty == false) {
+                    insertable.insert(extractionResult)
+                    extractable.extract(extractionResult.amount())
                 }
             }
             if (mode.input) {
-                val firstOrNull = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
                     ?: return@forEach
-                val amount = firstOrNull.attemptAnyExtraction(fluid?.amount(), Simulation.SIMULATE)
+                val amount = extractable.attemptAnyExtraction(fluid?.amount(), Simulation.SIMULATE)
                 val insertable = fluidComponent?.insertable
                 val amountToInsert = fluidAmount.sub(amount?.amount())
                 val fluidToInsert = fluid?.fluidKey?.withAmount(amountToInsert)
-                if (amount?.amount() != fluid?.amount()
-                    && insertable?.attemptInsertion(fluidToInsert, Simulation.SIMULATE)?.isEmpty == true) {
-                    firstOrNull.extract(amount?.amount())
+                if (insertable?.attemptInsertion(fluidToInsert, Simulation.SIMULATE)?.isEmpty == true) {
+                    extractable.extract(fluidToInsert?.amount())
                     insertable.insert(fluidToInsert)
                 }
             }
