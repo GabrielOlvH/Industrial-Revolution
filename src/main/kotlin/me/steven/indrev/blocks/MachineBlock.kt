@@ -128,7 +128,7 @@ open class MachineBlock(
         }
     }
 
-    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider
             ?: throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)

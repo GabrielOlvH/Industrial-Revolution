@@ -9,10 +9,7 @@ import me.steven.indrev.blockentities.battery.BatteryBlockEntity
 import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
-import me.steven.indrev.blockentities.farms.ChopperBlockEntity
-import me.steven.indrev.blockentities.farms.FishingFarmBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
-import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
@@ -350,6 +347,18 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 }
             },
             { tier -> { CondenserBlockEntity(tier) } }
+        )
+
+        val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
+            { tier ->
+                MachineBlock(
+                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    tier,
+                    null,
+                    null
+                ) { PumpBlockEntity(tier) }
+            },
+            { tier -> { PumpBlockEntity(tier) } }
         )
     }
 }

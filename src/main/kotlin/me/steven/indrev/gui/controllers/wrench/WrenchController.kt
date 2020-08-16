@@ -46,6 +46,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             val blockState = world.getBlockState(pos)
             if (blockEntity is MachineBlockEntity) {
                 val toggle = WButton(TranslatableText("item.indrev.wrench.item"))
+                isItemConfig = blockEntity.inventoryComponent != null
                 toggle.setOnClick {
                     isItemConfig = !isItemConfig
                     updateMachineDisplays(
@@ -57,7 +58,8 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                         else "item.indrev.wrench.fluid"
                     )
                 }
-                root.add(toggle, 2.2, 0.9)
+                if (blockEntity.inventoryComponent != null && blockEntity.fluidComponent != null)
+                    root.add(toggle, 2.2, 0.9)
                 toggle.setSize(30, 20)
                 val titleWidget = WText(
                     TranslatableText("item.indrev.wrench.title")

@@ -112,9 +112,8 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
 
     override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
-    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         return inventoryComponent?.inventory
-            ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
