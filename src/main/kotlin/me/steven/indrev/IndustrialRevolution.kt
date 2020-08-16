@@ -76,14 +76,13 @@ object IndustrialRevolution : ModInitializer {
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
             val mode = TransferMode.values()[buf.readInt()]
-            val tank = buf.readInt()
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
                 if (isItemConfig && blockEntity.inventoryComponent != null) {
                     blockEntity.inventoryComponent!!.itemConfig[dir] = mode
                 } else if (blockEntity.fluidComponent != null)
-                    blockEntity.fluidComponent!!.tanks[tank].transferConfig[dir] = mode
+                    blockEntity.fluidComponent!!.transferConfig[dir] = mode
             }
         }
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())

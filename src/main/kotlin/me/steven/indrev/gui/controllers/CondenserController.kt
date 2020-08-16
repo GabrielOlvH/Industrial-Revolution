@@ -28,7 +28,7 @@ class CondenserController(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
         setRootPanel(root)
         configure("block.indrev.condenser", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val fluid = WFluid(ctx)
+        val fluid = WFluid(ctx, 0)
         root.add(fluid, 2.3, 0.5)
 
         val processWidget = WProcess(propertyDelegate)

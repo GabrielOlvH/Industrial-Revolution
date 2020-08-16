@@ -223,7 +223,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
 
     private fun transferFluids() {
         fluidComponent?.tanks?.forEach { tank ->
-            tank.transferConfig.forEach innerForEach@{ (direction, mode) ->
+            fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
                 if (mode == TransferMode.NONE) return@innerForEach
                 val fluidAmount =
                     (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)

@@ -12,9 +12,9 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 
-class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
+class FluidComponent(val limit: FluidAmount, tankCount: Int = 1) : FixedFluidInv {
 
-    val tanks = Array(2) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
+    val tanks = Array(tankCount) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
     val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
         Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
@@ -39,7 +39,8 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
         } else false
     }
 
-    override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean = (fluid == tanks[tank].volume.fluidKey || tanks[tank].volume.isEmpty) && !tanks[tank].locked
+    override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean =
+        fluid == tanks[tank].volume.fluidKey || tanks[tank].volume.isEmpty
 
     override fun getInvFluid(tank: Int): FluidVolume = tanks[tank].volume
 
@@ -48,7 +49,6 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
         tanks.forEachIndexed { index, tank ->
             val tankTag = CompoundTag()
             tankTag.put("fluids", tank.volume.toTag())
-            tankTag.putBoolean("locked", tank.locked)
             tanksTag.put(index.toString(), tankTag)
         }
         tag.put("tanks", tanksTag)
@@ -67,7 +67,6 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
             val volume = FluidVolume.fromTag(tankTag.getCompound("fluids"))
             val tank = tanks[index]
             tank.volume = volume
-            tank.locked = tankTag.getBoolean("locked")
         }
         if (tag?.contains("TransferConfig") == true) {
             val icTag = tag.getCompound("TransferConfig")
@@ -81,9 +80,5 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
         }
     }
 
-    class IRTank(var volume: FluidVolume, var locked: Boolean = false) {
-        val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
-            Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
-        }
-    }
+    class IRTank(var volume: FluidVolume)
 }

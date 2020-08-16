@@ -34,7 +34,7 @@ class SmelterController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         val processWidget = WProcess(propertyDelegate)
         root.add(processWidget, 3.5, 2.0)
 
-        val fluid = WFluid(ctx)
+        val fluid = WFluid(ctx, 0)
         root.add(fluid, 5.5, 0.5)
 
         root.validate(this)
