@@ -229,15 +229,13 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                     NUGGET_AMOUNT
                 else
                     fluidComponent?.volume?.amount()) ?: return@forEach
-            val fluid = fluidComponent?.volume?.fluidKey?.withAmount(fluidAmount)
             if (mode.output) {
                 val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
                     ?: return@forEach
-                val amount = insertable.attemptInsertion(fluid, Simulation.SIMULATE)
                 val extractable = fluidComponent?.extractable
-                val amountToExtract = fluidAmount.sub(amount?.amount())
-                val extractionResult = extractable?.attemptAnyExtraction(amountToExtract, Simulation.SIMULATE)
-                if (extractionResult?.isEmpty == false) {
+                val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                if (extractionResult?.isEmpty == false && insertionResult.isEmpty) {
                     insertable.insert(extractionResult)
                     extractable.extract(extractionResult.amount())
                 }
@@ -245,13 +243,12 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             if (mode.input) {
                 val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
                     ?: return@forEach
-                val amount = extractable.attemptAnyExtraction(fluid?.amount(), Simulation.SIMULATE)
                 val insertable = fluidComponent?.insertable
-                val amountToInsert = fluidAmount.sub(amount?.amount())
-                val fluidToInsert = fluid?.fluidKey?.withAmount(amountToInsert)
-                if (insertable?.attemptInsertion(fluidToInsert, Simulation.SIMULATE)?.isEmpty == true) {
-                    extractable.extract(fluidToInsert?.amount())
-                    insertable.insert(fluidToInsert)
+                val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                if (insertionResult?.isEmpty == true && !extractionResult.isEmpty) {
+                    extractable.extract(extractionResult?.amount())
+                    insertable.insert(extractionResult)
                 }
             }
         }

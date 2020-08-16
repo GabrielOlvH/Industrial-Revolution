@@ -34,7 +34,8 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
 
     override fun setInvFluid(tank: Int, to: FluidVolume, simulation: Simulation?): Boolean {
         return if (isFluidValidForTank(tank, to.fluidKey)) {
-            volume = to
+            if (simulation?.isAction == true)
+                volume = to
             true
         } else false
     }
