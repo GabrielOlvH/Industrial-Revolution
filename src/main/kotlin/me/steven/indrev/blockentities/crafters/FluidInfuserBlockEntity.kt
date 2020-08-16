@@ -1,14 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidExtractable
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.FluidInfuserFluidComponent
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
@@ -21,7 +14,6 @@ import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 import team.reborn.energy.Energy
-import java.math.RoundingMode
 import kotlin.math.ceil
 
 class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
@@ -39,40 +31,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
                 }
             }
         }
-        this.fluidComponent = object : FluidComponent(FluidAmount(8) , 2) {
-            override fun getExtractable(): FluidExtractable {
-                return object : GroupedFluidInvFixedWrapper(this) {
-                    override fun attemptExtraction(filter: FluidFilter?, maxAmount: FluidAmount?, simulation: Simulation?): FluidVolume {
-                        require(!maxAmount!!.isNegative) { "maxAmount cannot be negative! (was $maxAmount)" }
-                        var fluid = FluidVolumeUtil.EMPTY
-                        if (maxAmount.isZero) {
-                            return fluid
-                        }
-                        val t = 1
-                        val thisMax = maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
-                        fluid = FluidVolumeUtil.extractSingle(inv(), t, filter, fluid, thisMax, simulation)
-                        if (fluid.amount_F >= maxAmount) {
-                            return fluid
-                        }
-                        return fluid
-                    }
-
-                    override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
-                        var fluid = fluid
-                        if (fluid.isEmpty) {
-                            return FluidVolumeUtil.EMPTY
-                        }
-                        fluid = fluid.copy()
-                        val t = 0
-                        fluid = FluidVolumeUtil.insertSingle(inv(), t, fluid, simulation)
-                        if (fluid.isEmpty) {
-                            return FluidVolumeUtil.EMPTY
-                        }
-                        return fluid
-                    }
-                }
-            }
-        }
+        this.fluidComponent = FluidInfuserFluidComponent()
     }
 
     private var currentRecipe: FluidInfuserRecipe? = null
