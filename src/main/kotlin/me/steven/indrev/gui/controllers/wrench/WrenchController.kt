@@ -47,9 +47,15 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             if (blockEntity is MachineBlockEntity) {
                 val toggle = WButton(TranslatableText("item.indrev.wrench.item"))
                 toggle.setOnClick {
-                    updateMachineDisplays(if (isItemConfig) blockEntity.inventoryComponent!!.itemConfig else blockEntity.fluidComponent!!.transferConfig)
-                    toggle.label = TranslatableText(if (isItemConfig) "item.indrev.wrench.item" else "item.indrev.wrench.fluid")
                     isItemConfig = !isItemConfig
+                    updateMachineDisplays(
+                        if (isItemConfig) blockEntity.inventoryComponent!!.itemConfig
+                        else blockEntity.fluidComponent!!.transferConfig
+                    )
+                    toggle.label = TranslatableText(
+                        if (isItemConfig) "item.indrev.wrench.item"
+                        else "item.indrev.wrench.fluid"
+                    )
                 }
                 root.add(toggle, 2.2, 0.9)
                 toggle.setSize(30, 20)

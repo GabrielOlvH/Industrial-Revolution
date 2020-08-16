@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities
 
+import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
@@ -232,14 +233,28 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             val fluid = fluidComponent?.volume?.fluidKey?.withAmount(fluidAmount)
             if (mode.output) {
                 val firstOrNull = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                val excess = firstOrNull?.insert(fluid) ?: return@forEach
-                fluidComponent?.extractable?.extract(fluidAmount.sub(excess.amount()))
+                    ?: return@forEach
+                val amount = firstOrNull.attemptInsertion(fluid, Simulation.SIMULATE)
+                val extractable = fluidComponent?.extractable
+                val amountToExtract = fluidAmount.sub(amount?.amount())
+                if (amount?.amount() != fluid?.amount()
+                    && extractable?.attemptAnyExtraction(amountToExtract, Simulation.SIMULATE)?.isEmpty == true) {
+                    firstOrNull.insert(fluid)
+                    extractable.extract(amountToExtract)
+                }
             }
             if (mode.input) {
                 val firstOrNull = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                val excess = fluidComponent?.insertable?.insert(fluid) ?: return@forEach
-                firstOrNull?.extract(fluidAmount.sub(excess.amount()))
-
+                    ?: return@forEach
+                val amount = firstOrNull.attemptAnyExtraction(fluid?.amount(), Simulation.SIMULATE)
+                val insertable = fluidComponent?.insertable
+                val amountToInsert = fluidAmount.sub(amount?.amount())
+                val fluidToInsert = fluid?.fluidKey?.withAmount(amountToInsert)
+                if (amount?.amount() != fluid?.amount()
+                    && insertable?.attemptInsertion(fluidToInsert, Simulation.SIMULATE)?.isEmpty == true) {
+                    firstOrNull.extract(amount?.amount())
+                    insertable.insert(fluidToInsert)
+                }
             }
         }
     }
