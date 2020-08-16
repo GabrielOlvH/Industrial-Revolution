@@ -1,6 +1,7 @@
 package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
+import me.steven.indrev.utils.getItemStackFromJson
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -11,7 +12,6 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
 class RecyclerRecipe(
@@ -53,12 +53,7 @@ class RecyclerRecipe(
 
             override fun read(id: Identifier, json: JsonObject): RecyclerRecipe {
                 val input = Ingredient.fromJson(json.getAsJsonObject("ingredient"))
-                val result = json.get("output").asJsonObject
-                val output = ItemStack {
-                    Registry.ITEM.getOrEmpty(Identifier(result.get("item").asString)).orElse(null)
-                        ?: throw IllegalArgumentException("no such item $result")
-                }
-                output.count = result.get("count").asInt
+                val output = getItemStackFromJson(json.getAsJsonObject("output"))
                 val ticks = json.get("processTime").asInt
                 return RecyclerRecipe(id, ticks, output, input)
             }

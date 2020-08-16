@@ -1,5 +1,9 @@
 package me.steven.indrev.utils
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.config.CableConfig
@@ -26,6 +30,7 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.util.JsonHelper
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
@@ -323,3 +328,34 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
 
 fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
     registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
+
+fun getFluidFromJson(json: JsonObject): FluidVolume {
+    val fluidObj = json.getAsJsonObject("fluid")
+    val fluidId = fluidObj.get("fluid").asString
+    val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
+    val amount = JsonHelper.getLong(fluidObj, "count", 1)
+    val fluidAmount = when (val type = fluidObj.get("type").asString) {
+        "nugget" -> NUGGET_AMOUNT
+        "ingot" -> INGOT_AMOUNT
+        "block" -> BLOCK_AMOUNT
+        "bucket" -> FluidAmount.BUCKET
+        else -> throw IllegalArgumentException("unknown amount type $type")
+    }.mul(amount)
+    return fluidKey.withAmount(fluidAmount)
+}
+
+fun getItemStackFromJson(json: JsonObject): ItemStack {
+    val itemPath = json.get("item").asString
+    val item =
+        if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
+        else
+            getFirstMatch(
+                arrayOf(
+                    Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                    identifier(itemPath)
+                ), Registry.ITEM
+            )
+    val output = ItemStack { item }
+    output.count = JsonHelper.getInt(json, "count", 1)
+    return output
+}
