@@ -1,7 +1,7 @@
 {
   "type": "indrev:condenser",
   "output": {
-    "item": "indrev:iron_dust",
+    "item": "indrev:iron_chunk",
     "count": 1
   },
   "fluid": {

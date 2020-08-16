@@ -39,7 +39,7 @@ object IRRegistry {
             PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
         )
         ResourceHelper("tin") {
-            withItems("dust", "ingot", "plate", "nugget")
+            withItems("dust", "ingot", "plate", "nugget", "chunk")
             withBlock()
             withOre()
             withTools(
@@ -52,7 +52,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.TIN)
         }.register()
         ResourceHelper("copper") {
-            withItems("dust", "ingot", "plate", "nugget")
+            withItems("dust", "ingot", "plate", "nugget", "chunk")
             withBlock()
             withOre()
             withTools(
@@ -76,14 +76,14 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
-        ResourceHelper("iron") { withItems("dust", "plate") }.register()
+        ResourceHelper("iron") { withItems("dust", "plate", "chunk") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre()
         }.register()
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
         ResourceHelper("diamond") { withItems("dust") }.register()
-        ResourceHelper("gold") { withItems("dust", "plate") }.register()
+        ResourceHelper("gold") { withItems("dust", "plate", "chunk") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
 
         WorldGeneration.init()

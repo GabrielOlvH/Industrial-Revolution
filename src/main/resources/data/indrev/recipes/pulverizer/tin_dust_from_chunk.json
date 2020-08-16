@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredient": {
+    "item": "indrev:tin_chunk"
+  },
+  "output": {
+    "item": "tin_dust",
+    "count": 1
+  },
+  "processTime": 200
+}

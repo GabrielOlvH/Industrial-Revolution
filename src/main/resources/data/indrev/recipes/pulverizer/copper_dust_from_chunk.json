@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredient": {
+    "item": "indrev:copper_chunk"
+  },
+  "output": {
+    "item": "copper_dust",
+    "count": 1
+  },
+  "processTime": 200
+}

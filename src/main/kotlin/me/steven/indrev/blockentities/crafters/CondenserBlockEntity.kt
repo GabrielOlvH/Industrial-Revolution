@@ -62,8 +62,8 @@ class CondenserBlockEntity(tier: Tier) :
                 setWorkingState(true)
                 processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
-                    fluidComponent.extractable.extract(recipe?.fluid?.amount())
-                    val output = recipe?.craft(inventory) ?: return
+                    fluidComponent.extractable.extract(recipe?.fluid?.amount() ?: return reset())
+                    val output = recipe.craft(inventory)
                     for (outputSlot in inventory.outputSlots) {
                         val outputStack = inventory.getStack(outputSlot)
                         if (outputStack.item == output.item)

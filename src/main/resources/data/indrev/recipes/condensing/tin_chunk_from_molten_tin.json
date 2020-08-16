@@ -1,11 +1,11 @@
 {
   "type": "indrev:condenser",
   "output": {
-    "item": "indrev:gold_dust",
+    "item": "indrev:tin_chunk",
     "count": 1
   },
   "fluid": {
-    "fluid": "indrev:molten_gold_still",
+    "fluid": "indrev:molten_tin_still",
     "type": "ingot",
     "count": 1
   },
