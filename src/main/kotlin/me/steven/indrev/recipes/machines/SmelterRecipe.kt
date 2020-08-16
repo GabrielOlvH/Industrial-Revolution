@@ -56,7 +56,7 @@ class SmelterRecipe(
             override fun read(id: Identifier, json: JsonObject): SmelterRecipe {
                 val input = Ingredient.fromJson(json.getAsJsonObject("ingredient"))
                 val processTime = json.get("processTime").asInt
-                val fluidVolume = getFluidFromJson(json)
+                val fluidVolume = getFluidFromJson(json.getAsJsonObject("fluid"))
                 return SmelterRecipe(id, processTime, input, fluidVolume)
             }
 
@@ -66,7 +66,7 @@ class SmelterRecipe(
                 val fluidId = buf.readIdentifier()
                 val fluidAmount = FluidAmount.fromMcBuffer(buf)
                 val fluidKey = FluidKeys.get(Registry.FLUID.get(fluidId))
-                val fluidVolume = object : FluidVolume(fluidKey, fluidAmount) {}
+                val fluidVolume = fluidKey.withAmount(fluidAmount)
 
                 return SmelterRecipe(id, processTime, stack, fluidVolume)
             }

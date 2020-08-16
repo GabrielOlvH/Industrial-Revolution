@@ -330,11 +330,10 @@ fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
     registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
 
 fun getFluidFromJson(json: JsonObject): FluidVolume {
-    val fluidObj = json.getAsJsonObject("fluid")
-    val fluidId = fluidObj.get("fluid").asString
+    val fluidId = json.get("fluid").asString
     val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
-    val amount = JsonHelper.getLong(fluidObj, "count", 1)
-    val fluidAmount = when (val type = fluidObj.get("type").asString) {
+    val amount = JsonHelper.getLong(json, "count", 1)
+    val fluidAmount = when (val type = json.get("type").asString) {
         "nugget" -> NUGGET_AMOUNT
         "ingot" -> INGOT_AMOUNT
         "block" -> BLOCK_AMOUNT

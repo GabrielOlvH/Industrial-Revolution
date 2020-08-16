@@ -53,7 +53,7 @@ class CondenserRecipe(
             override fun read(id: Identifier, json: JsonObject): CondenserRecipe {
                 val output = getItemStackFromJson(json.getAsJsonObject("output"))
                 val processTime = json.get("processTime").asInt
-                val fluidVolume = getFluidFromJson(json)
+                val fluidVolume = getFluidFromJson(json.getAsJsonObject("fluid"))
                 return CondenserRecipe(id, processTime, output, fluidVolume)
             }
 
@@ -63,7 +63,7 @@ class CondenserRecipe(
                 val fluidId = buf.readIdentifier()
                 val fluidAmount = FluidAmount.fromMcBuffer(buf)
                 val fluidKey = FluidKeys.get(Registry.FLUID.get(fluidId))
-                val fluidVolume = object : FluidVolume(fluidKey, fluidAmount) {}
+                val fluidVolume = fluidKey.withAmount(fluidAmount)
 
                 return CondenserRecipe(id, processTime, stack, fluidVolume)
             }

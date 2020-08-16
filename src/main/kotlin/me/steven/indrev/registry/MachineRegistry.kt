@@ -302,7 +302,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
             { tier ->
-                object : MachineBlock(
+                object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
                     null,
@@ -326,7 +326,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
             { tier ->
-                object : MachineBlock(
+                object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
                     null,
@@ -351,14 +351,50 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
             { tier ->
-                MachineBlock(
+                object : FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
                     null,
-                    null
-                ) { PumpBlockEntity(tier) }
+                    null,
+                    { PumpBlockEntity(tier) }), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                        val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
+                        val searchDirection = to?.searchDirection ?: return
+                        if (to.attribute == FluidAttributes.INSERTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
+                            to.offer(blockEntity.fluidComponent)
+                        else if (to.attribute == FluidAttributes.EXTRACTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
+                            to.offer(blockEntity.fluidComponent)
+
+                    }
+                }
             },
             { tier -> { PumpBlockEntity(tier) } }
+        )
+
+        val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
+            { tier ->
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    tier,
+                    null,
+                    ::FluidInfuserController,
+                    { FluidInfuserBlockEntity(tier) }), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                        val blockEntity = world?.getBlockEntity(pos) as? FluidInfuserBlockEntity ?: return
+                        val searchDirection = to?.searchDirection ?: return
+                        if (to.attribute == FluidAttributes.INSERTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
+                            to.offer(blockEntity.fluidComponent)
+                        else if (to.attribute == FluidAttributes.EXTRACTABLE
+                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
+                            to.offer(blockEntity.fluidComponent)
+
+                    }
+                }
+            },
+            { tier -> { FluidInfuserBlockEntity(tier) } }
         )
     }
 }

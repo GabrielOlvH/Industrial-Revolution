@@ -12,7 +12,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
 
-class FacingMachineBlock(
+open class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
     config: Any?,
