@@ -37,9 +37,8 @@ class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx:
         val processWidget = WProcess(propertyDelegate)
         root.add(processWidget, 4.2, 2.0)
 
-        val outputSlot = WItemSlot.outputOf(blockInventory, 3)
-        outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.0, 2.0)
+        val output = WFluid(ctx, 1)
+        root.add(output, 6.0, 0.5)
 
         root.validate(this)
     }

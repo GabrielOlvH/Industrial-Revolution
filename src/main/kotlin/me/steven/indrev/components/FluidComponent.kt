@@ -12,7 +12,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 
-class FluidComponent(val limit: FluidAmount, tankCount: Int = 1) : FixedFluidInv {
+open class FluidComponent(val limit: FluidAmount, private val tankCount: Int = 1) : FixedFluidInv {
 
     val tanks = Array(tankCount) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
@@ -20,7 +20,7 @@ class FluidComponent(val limit: FluidAmount, tankCount: Int = 1) : FixedFluidInv
         Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
     }
 
-    override fun getTankCount(): Int = 1
+    override fun getTankCount(): Int = tankCount
 
     override fun addListener(
         listener: FluidInvTankChangeListener?,
