@@ -21,7 +21,7 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
     }
 
     override fun machineTick() {
-        if ((world?.time ?: return) % 20 == 0L || fluidComponent?.volume?.isEmpty == false) return
+        if ((world?.time ?: return) % 20 == 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
         val fluidComponent = fluidComponent ?: return
         val hasFluid = Direction.values().mapNotNull { world?.getFluidState(pos.offset(it)) }.any { !it.isEmpty }
         val range = getWorkingArea()

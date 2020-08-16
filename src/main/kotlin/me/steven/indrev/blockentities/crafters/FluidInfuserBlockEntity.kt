@@ -38,7 +38,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
 
     override fun tryStartRecipe(inventory: IRInventory): FluidInfuserRecipe? {
         val inputStacks = inventory.getInputInventory()
-        val fluid = fluidComponent!!.volume
+        val fluid = fluidComponent!!.tanks[0].volume
         val recipe = world?.recipeManager?.listAllOfType(FluidInfuserRecipe.TYPE)
             ?.firstOrNull { it.matches(inputStacks, fluid, world) }
             ?: return null
@@ -62,7 +62,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             setWorkingState(false)
         } else if (isProcessing()) {
             val recipe = getCurrentRecipe()
-            if (recipe?.matches(inputInventory, fluidComponent!!.volume, this.world) == false)
+            if (recipe?.matches(inputInventory, fluidComponent!!.tanks[0].volume, this.world) == false)
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
                 setWorkingState(true)

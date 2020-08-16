@@ -39,7 +39,7 @@ class SmelterBlockEntity(tier: Tier) :
         val inputStacks = inventory.getInputInventory()
         val recipe = world?.recipeManager?.getAllMatches(SmelterRecipe.TYPE, inputStacks, world)
             ?.firstOrNull { it.matches(inputStacks, world) } ?: return null
-        val fluidVolume = fluidComponent!!.volume
+        val fluidVolume = fluidComponent!!.tanks[0].volume
         if (fluidVolume.isEmpty || fluidVolume.amount().add(recipe.fluid.amount()) <= fluidComponent!!.limit) {
             if (!isProcessing()) {
                 processTime = recipe.processTime

@@ -36,7 +36,7 @@ class CondenserBlockEntity(tier: Tier) :
     private var currentRecipe: CondenserRecipe? = null
 
     override fun tryStartRecipe(inventory: IRInventory): CondenserRecipe? {
-        val fluid = fluidComponent!!.volume
+        val fluid = fluidComponent!!.tanks[0].volume
         val recipe = world?.recipeManager?.listAllOfType(CondenserRecipe.TYPE)
             ?.firstOrNull { it.fluid.fluidKey == fluid.fluidKey && fluid.amount() >= it.fluid.amount() } ?: return null
         val outputStack = inventory.getStack(2).copy()
@@ -56,7 +56,7 @@ class CondenserBlockEntity(tier: Tier) :
         val fluidComponent = fluidComponent ?: return
         if (isProcessing()) {
             val recipe = getCurrentRecipe()
-            if (recipe != null && (fluidComponent.volume.fluidKey != recipe.fluid.fluidKey || fluidComponent.volume.amount() <= recipe.fluid.amount()))
+            if (recipe != null && (fluidComponent.tanks[0].volume.fluidKey != recipe.fluid.fluidKey || fluidComponent.tanks[0].volume.amount() <= recipe.fluid.amount()))
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
                 setWorkingState(true)
@@ -78,7 +78,7 @@ class CondenserBlockEntity(tier: Tier) :
                     reset()
                 }
             }
-        } else if (energy > 0 && !fluidComponent.volume.isEmpty && processTime <= 0) {
+        } else if (energy > 0 && !fluidComponent.tanks[0].volume.isEmpty && processTime <= 0) {
             reset()
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
         }

@@ -14,12 +14,11 @@ import net.minecraft.util.math.Direction
 
 class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
 
-    var volume: FluidVolume = object : FluidVolume(FluidKeys.WATER, FluidAmount.ZERO) {}
+    val tanks = Array(2) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
     val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
         Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
     }
-
 
     override fun getTankCount(): Int = 1
 
@@ -35,17 +34,24 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
     override fun setInvFluid(tank: Int, to: FluidVolume, simulation: Simulation?): Boolean {
         return if (isFluidValidForTank(tank, to.fluidKey)) {
             if (simulation?.isAction == true)
-                volume = to
+                tanks[tank].volume = to
             true
         } else false
     }
 
-    override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean = fluid == volume.fluidKey || volume.isEmpty
+    override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean = (fluid == tanks[tank].volume.fluidKey || tanks[tank].volume.isEmpty) && !tanks[tank].locked
 
-    override fun getInvFluid(tank: Int): FluidVolume = volume
+    override fun getInvFluid(tank: Int): FluidVolume = tanks[tank].volume
 
     fun toTag(tag: CompoundTag) {
-        tag.put("fluids", volume.toTag())
+        val tanksTag = CompoundTag()
+        tanks.forEachIndexed { index, tank ->
+            val tankTag = CompoundTag()
+            tankTag.put("fluids", tank.volume.toTag())
+            tankTag.putBoolean("locked", tank.locked)
+            tanksTag.put(index.toString(), tankTag)
+        }
+        tag.put("tanks", tanksTag)
         val icTag = CompoundTag()
         transferConfig.forEach { (dir, mode) ->
             icTag.putString(dir.toString(), mode.toString())
@@ -54,8 +60,15 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
     }
 
     fun fromTag(tag: CompoundTag?) {
-        val f = tag?.getCompound("fluids")
-        volume = FluidVolume.fromTag(f)
+        val tanksTag = tag?.getCompound("tanks")
+        tanksTag?.keys?.forEach { key ->
+            val index = key.toInt()
+            val tankTag = tanksTag.getCompound(key)
+            val volume = FluidVolume.fromTag(tankTag.getCompound("fluids"))
+            val tank = tanks[index]
+            tank.volume = volume
+            tank.locked = tankTag.getBoolean("locked")
+        }
         if (tag?.contains("TransferConfig") == true) {
             val icTag = tag.getCompound("TransferConfig")
             Direction.values().forEach { dir ->
@@ -65,6 +78,12 @@ class FluidComponent(val limit: FluidAmount) : FixedFluidInv {
                     transferConfig[dir] = mode
                 }
             }
+        }
+    }
+
+    class IRTank(var volume: FluidVolume, var locked: Boolean = false) {
+        val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
+            Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
         }
     }
 }

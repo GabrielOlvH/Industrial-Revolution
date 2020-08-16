@@ -9,7 +9,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 
-class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
+class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     init {
         this.setSize(16, 64)
     }
@@ -20,7 +20,7 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = fluid.volume.amount().asInexactDouble() * 1000
+                val energy = fluid.tanks[tank].volume.amount().asInexactDouble() * 1000
                 val maxEnergy = fluid.limit.asInexactDouble() * 1000
                 if (energy > 0) {
                     var percent = energy.toFloat() / maxEnergy.toFloat()
@@ -28,7 +28,7 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
                         val offset = 2.0
-                        blockEntity.fluidComponent!!.volume.renderGuiRect(
+                        blockEntity.fluidComponent!!.tanks[tank].volume.renderGuiRect(
                             x + offset,
                             y.toDouble() + height - barSize + offset,
                             x.toDouble() + width - offset,
@@ -45,9 +45,9 @@ class WFluid(private val ctx: ScreenHandlerContext) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = (fluid.volume.amount_F.asInexactDouble() * 1000).toInt()
+                val energy = (fluid.tanks[tank].volume.amount_F.asInexactDouble() * 1000).toInt()
                 val maxEnergy = (fluid.limit.asInexactDouble() * 1000).toInt()
-                information?.add(*fluid.volume.fluidKey.fullTooltip.toTypedArray())
+                information?.add(*fluid.tanks[tank].volume.fluidKey.fullTooltip.toTypedArray())
                 information?.add(LiteralText("$energy / $maxEnergy mB"))
                 super.addTooltip(information)
             }

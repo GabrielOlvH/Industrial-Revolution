@@ -222,33 +222,35 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     }
 
     private fun transferFluids() {
-        fluidComponent?.transferConfig?.forEach { (direction, mode) ->
-            if (mode == TransferMode.NONE) return@forEach
-            val fluidAmount =
-                (if (fluidComponent?.volume?.amount()?.compareTo(NUGGET_AMOUNT) ?: return@forEach > 0)
-                    NUGGET_AMOUNT
-                else
-                    fluidComponent?.volume?.amount()) ?: return@forEach
-            if (mode.output) {
-                val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                    ?: return@forEach
-                val extractable = fluidComponent?.extractable
-                val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
-                val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
-                if (extractionResult?.isEmpty == false && insertionResult.isEmpty) {
-                    insertable.insert(extractionResult)
-                    extractable.extract(extractionResult.amount())
+        fluidComponent?.tanks?.forEach { tank ->
+            tank.transferConfig.forEach innerForEach@{ (direction, mode) ->
+                if (mode == TransferMode.NONE) return@innerForEach
+                val fluidAmount =
+                    (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)
+                        NUGGET_AMOUNT
+                    else
+                        tank.volume.amount()) ?: return@innerForEach
+                if (mode.output) {
+                    val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                        ?: return@innerForEach
+                    val extractable = fluidComponent?.extractable
+                    val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                    val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                    if (extractionResult?.isEmpty == false && insertionResult.isEmpty) {
+                        insertable.insert(extractionResult)
+                        extractable.extract(extractionResult.amount())
+                    }
                 }
-            }
-            if (mode.input) {
-                val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                    ?: return@forEach
-                val insertable = fluidComponent?.insertable
-                val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
-                val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)
-                if (insertionResult?.isEmpty == true && !extractionResult.isEmpty) {
-                    extractable.extract(extractionResult?.amount())
-                    insertable.insert(extractionResult)
+                if (mode.input) {
+                    val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                        ?: return@innerForEach
+                    val insertable = fluidComponent?.insertable
+                    val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                    val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                    if (insertionResult?.isEmpty == true && !extractionResult.isEmpty) {
+                        extractable.extract(extractionResult?.amount())
+                        insertable.insert(extractionResult)
+                    }
                 }
             }
         }
