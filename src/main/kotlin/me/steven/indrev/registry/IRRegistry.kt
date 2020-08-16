@@ -274,13 +274,13 @@ object IRRegistry {
         MOLTEN_GOLD_IDENTIFIER,
         { MOLTEN_GOLD },
         { MOLTEN_GOLD_BUCKET },
-        0xD8C800
+        0xFFCC00
     ) { MOLTEN_GOLD_FLOWING }
     val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(
         MOLTEN_GOLD_IDENTIFIER,
         { MOLTEN_GOLD },
         { MOLTEN_GOLD_BUCKET },
-        0xD8C800
+        0xFFCC00
     ) { MOLTEN_GOLD_STILL }
     val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_GOLD = object : FluidBlock(MOLTEN_GOLD_STILL, FabricBlockSettings.of(Material.LAVA)) {}
@@ -303,9 +303,9 @@ object IRRegistry {
 
     val MOLTEN_TIN_IDENTIFIER = identifier("molten_tin")
     val MOLTEN_TIN_STILL: BaseFluid.Still =
-        BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xC6C3BF) { MOLTEN_TIN_FLOWING }
+        BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_FLOWING }
     val MOLTEN_TIN_FLOWING =
-        BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xC6C3BF) { MOLTEN_TIN_STILL }
+        BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_STILL }
     val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
