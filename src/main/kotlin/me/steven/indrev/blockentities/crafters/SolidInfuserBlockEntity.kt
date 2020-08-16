@@ -12,7 +12,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import team.reborn.energy.Energy
 
-class InfuserBlockEntity(tier: Tier) :
+class SolidInfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
 
     init {

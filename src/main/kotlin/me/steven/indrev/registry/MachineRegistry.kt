@@ -197,9 +197,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                         Tier.MK3 -> CONFIG.machines.infuserMk3
                         else -> CONFIG.machines.infuserMk4
                     }, ::InfuserController
-                ) { InfuserBlockEntity(tier) }
+                ) { SolidInfuserBlockEntity(tier) }
             },
-            { tier -> { InfuserBlockEntity(tier) } }
+            { tier -> { SolidInfuserBlockEntity(tier) } }
         )
 
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
