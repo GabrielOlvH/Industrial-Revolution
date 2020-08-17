@@ -83,6 +83,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4), RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.CONCENTRATED_SULFURIC_ACID, RenderLayer.getCutout())
 
         FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f
