@@ -35,7 +35,7 @@ class FluidInfuserRecipe(
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
-    override fun getOutput(): ItemStack = error("do not use this")
+    override fun getOutput(): ItemStack = ItemStack.EMPTY
 
     override fun getPreviewInputs(): DefaultedList<Ingredient> = ingredients
 
