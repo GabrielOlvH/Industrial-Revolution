@@ -19,6 +19,11 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
         return this
     }
 
+    fun withItem(): ResourceHelper {
+        Registry.register(Registry.ITEM, identifier(id), Item(itemSettings()))
+        return this
+    }
+
     fun withOre(): ResourceHelper {
         val ore =
             Block(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))

@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/sulfur_crystal",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "indrev:block/sulfur_crystal",
+      "x": 90,
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/sulfur_crystal",
+      "x": 90,
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/sulfur_crystal",
+      "x": 270,
+      "y": 270
+    },
+    "facing=up": {
+      "model": "indrev:block/sulfur_crystal"
+    },
+    "facing=down": {
+      "model": "indrev:block/sulfur_crystal",
+      "x": 180,
+      "y": 180
+    }
+  }
+}

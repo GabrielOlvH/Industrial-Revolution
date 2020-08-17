@@ -3,7 +3,7 @@ package me.steven.indrev.registry
 import com.google.common.collect.ImmutableList
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.world.features.AcidLakeFeature
+import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
@@ -28,7 +28,8 @@ object WorldGeneration {
         if (config.nikolite) {
             BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier("ore_nikolite"), nikoliteFeature)
         }
-        Registry.register(Registry.FEATURE, identifier("acid_lake"), acidLake)
+        Registry.register(Registry.FEATURE, identifier("sulfur_crystal"), sulfurCrystalFeature)
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier("sulfur_crystal"), sulfurFeature)
         BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier("acid_lake"), acidLakesFeature)
     }
 
@@ -37,6 +38,7 @@ object WorldGeneration {
             addOres(biome)
             if (biome.category == Biome.Category.SWAMP)
                 addLake(biome)
+            addCrystal(biome)
         }
     }
 
@@ -68,6 +70,19 @@ object WorldGeneration {
             ores.add(Supplier { tinFeature })
         if (config.nikolite)
             ores.add(Supplier { nikoliteFeature })
+    }
+
+    fun addCrystal(biome: Biome) {
+        val config = IndustrialRevolution.CONFIG.oregen
+        val features = biome.generationSettings.features
+        val stepIndex = GenerationStep.Feature.UNDERGROUND_DECORATION.ordinal
+        while (features.size <= stepIndex) features.add(mutableListOf())
+        var decoration = features[stepIndex]
+        if (decoration is ImmutableList) {
+            decoration = decoration.toMutableList()
+            features[stepIndex] = decoration
+        }
+        decoration.add(Supplier { sulfurFeature })
     }
 
     val copperFeature =
@@ -102,9 +117,15 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(8)
 
-    val acidLake = AcidLakeFeature(SingleStateFeatureConfig.CODEC)
+    val sulfurCrystalFeature = SulfurCrystalFeature(SingleStateFeatureConfig.CODEC)
 
-    val acidLakesFeature = acidLake.configure(
+    val sulfurFeature = sulfurCrystalFeature.configure(
+        SingleStateFeatureConfig(
+        IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState)
+    ).method_30377(16).repeat(30)
+
+    val acidLakesFeature = Feature.LAKE.configure(
         SingleStateFeatureConfig(IRRegistry.CONCENTRATED_SULFURIC_ACID.defaultState)
-    ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(2)))
+    ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
+
 }

@@ -7,6 +7,7 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blocks.AcidFluidBlock
+import me.steven.indrev.blocks.SulfurCrystalBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -88,6 +89,11 @@ object IRRegistry {
         ResourceHelper("diamond") { withItems("dust") }.register()
         ResourceHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
+        ResourceHelper("sulfur") {
+            withItem()
+        }
+
+        identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
         WorldGeneration.init()
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
@@ -239,6 +245,9 @@ object IRRegistry {
     val SCAN_OUTPUT_ITEM = IRScanOutputItem(itemSettings().maxCount(1))
 
     val ENERGY_READER = IREnergyReader(itemSettings())
+
+    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.GLASS))
+    val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 

@@ -358,3 +358,27 @@ fun getItemStackFromJson(json: JsonObject): ItemStack {
     output.count = JsonHelper.getInt(json, "count", 1)
     return output
 }
+
+inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                if (f(x, y, z)) return true
+    return false
+}
+
+inline fun Box.forEach(f: (Int, Int, Int) -> Unit): Unit {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                f(x, y, z)
+}
+
+
+inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                if (f(x, y, z)) return BlockPos(x, y, z)
+    return null
+}
