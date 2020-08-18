@@ -1,4 +1,4 @@
-package me.steven.indrev.blockentities.battery
+package me.steven.indrev.blockentities.storage
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent

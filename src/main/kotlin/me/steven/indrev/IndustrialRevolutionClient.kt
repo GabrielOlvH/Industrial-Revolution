@@ -1,13 +1,13 @@
 package me.steven.indrev
 
-import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
-import me.steven.indrev.blockentities.battery.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
+import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
+import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.registry.IRHudRender

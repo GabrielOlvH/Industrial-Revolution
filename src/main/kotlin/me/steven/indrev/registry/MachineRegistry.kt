@@ -5,8 +5,6 @@ import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import me.steven.indrev.IndustrialRevolution.CONFIG
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.battery.BatteryBlockEntity
-import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
@@ -15,6 +13,8 @@ import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.storage.BatteryBlockEntity
+import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blocks.*
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.items.energy.MachineBlockItem

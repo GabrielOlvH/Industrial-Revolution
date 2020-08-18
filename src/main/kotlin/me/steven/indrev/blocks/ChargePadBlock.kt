@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import com.google.common.collect.Iterables
-import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
+import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.utils.Tier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
