@@ -2,7 +2,7 @@
   "type": "indrev:fluid_infuse",
   "ingredients": [
     {
-      "item": "minecraft:tin_ore"
+      "tag": "c:tin_ores"
     }
   ],
   "fluid": {

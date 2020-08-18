@@ -90,9 +90,8 @@ object IRRegistry {
         ResourceHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
         ResourceHelper("sulfur") {
-            withItem()
             withItems("dust")
-        }
+        }.register()
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
