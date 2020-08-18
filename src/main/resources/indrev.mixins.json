@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorBucketItem",
     "AccessorEnergyHandler",
     "MixinBootstrap",
     "MixinGenerationSettings",

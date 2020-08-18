@@ -6,8 +6,10 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
+import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.AcidFluidBlock
 import me.steven.indrev.blocks.SulfurCrystalBlock
+import me.steven.indrev.blocks.TankBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -30,6 +32,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.block.MaterialColor
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.util.registry.BuiltinRegistries
@@ -212,6 +215,11 @@ object IRRegistry {
         identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
 
         identifier("gamer_axe").item(GAMER_AXE_ITEM)
+
+        identifier("tank_mk1").block(TANK_BLOCK_MK1).item(TANK_BLOCK_ITEM_MK1).blockEntityType(TANK_BLOCK_ENTITY_MK1)
+        identifier("tank_mk2").block(TANK_BLOCK_MK2).item(TANK_BLOCK_ITEM_MK2).blockEntityType(TANK_BLOCK_ENTITY_MK2)
+        identifier("tank_mk3").block(TANK_BLOCK_MK3).item(TANK_BLOCK_ITEM_MK3).blockEntityType(TANK_BLOCK_ENTITY_MK3)
+        identifier("tank_mk4").block(TANK_BLOCK_MK4).item(TANK_BLOCK_ITEM_MK4).blockEntityType(TANK_BLOCK_ENTITY_MK4)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -345,4 +353,19 @@ object IRRegistry {
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
     val GAMER_AXE_ITEM = IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
+
+    val TANK_BLOCK_MK1 = TankBlock(Tier.MK1, FabricBlockSettings.of(Material.GLASS))
+    val TANK_BLOCK_MK2 = TankBlock(Tier.MK2, FabricBlockSettings.of(Material.GLASS))
+    val TANK_BLOCK_MK3 = TankBlock(Tier.MK3, FabricBlockSettings.of(Material.GLASS))
+    val TANK_BLOCK_MK4 = TankBlock(Tier.MK4, FabricBlockSettings.of(Material.GLASS))
+
+    val TANK_BLOCK_ITEM_MK1 = BlockItem(TANK_BLOCK_MK1, itemSettings())
+    val TANK_BLOCK_ITEM_MK2 = BlockItem(TANK_BLOCK_MK2, itemSettings())
+    val TANK_BLOCK_ITEM_MK3 = BlockItem(TANK_BLOCK_MK3, itemSettings())
+    val TANK_BLOCK_ITEM_MK4 = BlockItem(TANK_BLOCK_MK4, itemSettings())
+
+    val TANK_BLOCK_ENTITY_MK1 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK1) }, arrayOf(TANK_BLOCK_MK1)).build(null)
+    val TANK_BLOCK_ENTITY_MK2 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK2) }, arrayOf(TANK_BLOCK_MK2)).build(null)
+    val TANK_BLOCK_ENTITY_MK3 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK3) }, arrayOf(TANK_BLOCK_MK3)).build(null)
+    val TANK_BLOCK_ENTITY_MK4 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK4) }, arrayOf(TANK_BLOCK_MK4)).build(null)
 }
