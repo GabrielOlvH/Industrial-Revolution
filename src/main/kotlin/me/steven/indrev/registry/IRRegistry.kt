@@ -247,7 +247,7 @@ object IRRegistry {
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
-    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.GLASS))
+    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).requiresTool())
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))

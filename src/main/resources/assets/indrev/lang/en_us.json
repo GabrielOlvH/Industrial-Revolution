@@ -583,5 +583,7 @@
   "gui.indrev.shield": "Shield: ",
   "gui.indrev.installing": "Installing",
   "gui.indrev.incompatible": "Incompatible module",
-  "gui.indrev.progress": "Progress: "
+  "gui.indrev.progress": "Progress: ",
+  "death.attack.acid": "%s was dissolved in sulfuric acid",
+  "death.attack.acid.player": "%s was dissolved in sulfuric acid while trying to escape %s"
 }
