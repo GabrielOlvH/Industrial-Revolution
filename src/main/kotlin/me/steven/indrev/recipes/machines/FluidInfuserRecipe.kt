@@ -45,7 +45,7 @@ class FluidInfuserRecipe(
         (0 until (inv?.size() ?: 0)).any { ingredient.test(inv?.getStack(it)) }
     }
 
-    fun matches(inv: Inventory?, fluidVolume: FluidVolume, world: World?): Boolean =
+    fun matches(inv: Inventory?, fluidVolume: FluidVolume): Boolean =
         ingredients.all { ingredient ->
             (0 until (inv?.size() ?: 0)).any { ingredient.test(inv?.getStack(it)) }
         } && fluidVolume.fluidKey == inputFluid.fluidKey && fluidVolume.amount() >= inputFluid.amount()

@@ -10,6 +10,7 @@ import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
+import net.minecraft.world.gen.feature.ConfiguredFeature
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.SingleStateFeatureConfig
@@ -42,7 +43,7 @@ object WorldGeneration {
         }
     }
 
-    fun addLake(biome: Biome) {
+    private fun addLake(biome: Biome) {
         val features = biome.generationSettings.features
         val stepIndex = GenerationStep.Feature.LAKES.ordinal
         while (features.size <= stepIndex) features.add(mutableListOf())
@@ -54,7 +55,7 @@ object WorldGeneration {
         lakes.add(Supplier { acidLakesFeature })
     }
 
-    fun addOres(biome: Biome) {
+    private fun addOres(biome: Biome) {
         val config = IndustrialRevolution.CONFIG.oregen
         val features = biome.generationSettings.features
         val stepIndex = GenerationStep.Feature.UNDERGROUND_ORES.ordinal
@@ -72,8 +73,7 @@ object WorldGeneration {
             ores.add(Supplier { nikoliteFeature })
     }
 
-    fun addCrystal(biome: Biome) {
-        val config = IndustrialRevolution.CONFIG.oregen
+    private fun addCrystal(biome: Biome) {
         val features = biome.generationSettings.features
         val stepIndex = GenerationStep.Feature.UNDERGROUND_DECORATION.ordinal
         while (features.size <= stepIndex) features.add(mutableListOf())
@@ -85,7 +85,7 @@ object WorldGeneration {
         decoration.add(Supplier { sulfurFeature })
     }
 
-    val copperFeature =
+    val copperFeature: ConfiguredFeature<*, *> =
         Feature.ORE.configure(
             OreFeatureConfig(
                 OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
@@ -97,7 +97,7 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(14)
 
-    val tinFeature =
+    val tinFeature: ConfiguredFeature<*, *> =
         Feature.ORE.configure(
             OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
         )
@@ -105,7 +105,7 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(14)
 
-    val nikoliteFeature =
+    val nikoliteFeature: ConfiguredFeature<*, *> =
         Feature.ORE.configure(
             OreFeatureConfig(
                 OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
@@ -117,14 +117,14 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(8)
 
-    val sulfurCrystalFeature = SulfurCrystalFeature(SingleStateFeatureConfig.CODEC)
+    private val sulfurCrystalFeature = SulfurCrystalFeature(SingleStateFeatureConfig.CODEC)
 
-    val sulfurFeature = sulfurCrystalFeature.configure(
+    val sulfurFeature: ConfiguredFeature<*, *> = sulfurCrystalFeature.configure(
         SingleStateFeatureConfig(
         IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState)
     ).method_30377(16).repeat(30)
 
-    val acidLakesFeature = Feature.LAKE.configure(
+    private val acidLakesFeature: ConfiguredFeature<*, *> = Feature.LAKE.configure(
         SingleStateFeatureConfig(IRRegistry.SULFURIC_ACID.defaultState)
     ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
 

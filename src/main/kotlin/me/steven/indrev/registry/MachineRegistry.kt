@@ -2,7 +2,6 @@ package me.steven.indrev.registry
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import me.steven.indrev.IndustrialRevolution.CONFIG
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
@@ -309,15 +308,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::SmelterController,
                     { SmelterBlockEntity(tier) }
                 ), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
                         val blockEntity = world?.getBlockEntity(pos) as? SmelterBlockEntity ?: return
-                        val searchDirection = to?.searchDirection ?: return
-                        if (to.attribute == FluidAttributes.INSERTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
-                            to.offer(blockEntity.fluidComponent)
-                        else if (to.attribute == FluidAttributes.EXTRACTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
-                            to.offer(blockEntity.fluidComponent)
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
                     }
                 }
             },
@@ -333,16 +326,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::CondenserController,
                     { CondenserBlockEntity(tier) }
                 ), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
                         val blockEntity = world?.getBlockEntity(pos) as? CondenserBlockEntity ?: return
-                        val searchDirection = to?.searchDirection ?: return
-                        if (to.attribute == FluidAttributes.INSERTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
-                            to.offer(blockEntity.fluidComponent)
-                        else if (to.attribute == FluidAttributes.EXTRACTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
-                            to.offer(blockEntity.fluidComponent)
-
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
                     }
                 }
             },
@@ -357,16 +343,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     null,
                     null,
                     { PumpBlockEntity(tier) }), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
                         val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
-                        val searchDirection = to?.searchDirection ?: return
-                        if (to.attribute == FluidAttributes.INSERTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
-                            to.offer(blockEntity.fluidComponent)
-                        else if (to.attribute == FluidAttributes.EXTRACTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
-                            to.offer(blockEntity.fluidComponent)
-
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
                     }
                 }
             },
@@ -381,16 +360,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     null,
                     ::FluidInfuserController,
                     { FluidInfuserBlockEntity(tier) }), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>?) {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
                         val blockEntity = world?.getBlockEntity(pos) as? FluidInfuserBlockEntity ?: return
-                        val searchDirection = to?.searchDirection ?: return
-                        if (to.attribute == FluidAttributes.INSERTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.input == true)
-                            to.offer(blockEntity.fluidComponent)
-                        else if (to.attribute == FluidAttributes.EXTRACTABLE
-                            && blockEntity.fluidComponent!!.transferConfig[searchDirection]?.output == true)
-                            to.offer(blockEntity.fluidComponent)
-
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
                     }
                 }
             },

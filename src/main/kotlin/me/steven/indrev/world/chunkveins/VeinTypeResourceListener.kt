@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.resource.ResourceManager
 import net.minecraft.util.Identifier
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
     override fun apply(manager: ResourceManager?) {
@@ -26,6 +27,6 @@ class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
     override fun getFabricId(): Identifier = identifier("veintypes")
 
     companion object {
-        val LOGGER = LogManager.getLogger("Vein Type Resource Reloader")
+        val LOGGER: Logger = LogManager.getLogger("Vein Type Resource Reloader")
     }
 }

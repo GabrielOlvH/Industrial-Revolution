@@ -295,8 +295,8 @@ object IRRegistry {
     val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val ACID_MATERIAL = FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
-    val MUD_MATERIAL = FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
+    val ACID_MATERIAL: Material = FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
+    val MUD_MATERIAL: Material = FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
 
     val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
     val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_FLOWING }
@@ -364,8 +364,8 @@ object IRRegistry {
     val TANK_BLOCK_ITEM_MK3 = BlockItem(TANK_BLOCK_MK3, itemSettings())
     val TANK_BLOCK_ITEM_MK4 = BlockItem(TANK_BLOCK_MK4, itemSettings())
 
-    val TANK_BLOCK_ENTITY_MK1 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK1) }, arrayOf(TANK_BLOCK_MK1)).build(null)
-    val TANK_BLOCK_ENTITY_MK2 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK2) }, arrayOf(TANK_BLOCK_MK2)).build(null)
-    val TANK_BLOCK_ENTITY_MK3 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK3) }, arrayOf(TANK_BLOCK_MK3)).build(null)
-    val TANK_BLOCK_ENTITY_MK4 = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK4) }, arrayOf(TANK_BLOCK_MK4)).build(null)
+    val TANK_BLOCK_ENTITY_MK1: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK1) }, arrayOf(TANK_BLOCK_MK1)).build(null)
+    val TANK_BLOCK_ENTITY_MK2: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK2) }, arrayOf(TANK_BLOCK_MK2)).build(null)
+    val TANK_BLOCK_ENTITY_MK3: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK3) }, arrayOf(TANK_BLOCK_MK3)).build(null)
+    val TANK_BLOCK_ENTITY_MK4: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK4) }, arrayOf(TANK_BLOCK_MK4)).build(null)
 }

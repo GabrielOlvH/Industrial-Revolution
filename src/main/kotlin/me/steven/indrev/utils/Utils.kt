@@ -1,11 +1,14 @@
 package me.steven.indrev.utils
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
@@ -368,7 +371,7 @@ inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {
     return false
 }
 
-inline fun Box.forEach(f: (Int, Int, Int) -> Unit): Unit {
+inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
     for (x in minX.toInt()..maxX.toInt())
         for (y in minY.toInt()..maxY.toInt())
             for (z in minZ.toInt()..maxZ.toInt())
@@ -382,4 +385,12 @@ inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
             for (z in minZ.toInt()..maxZ.toInt())
                 if (f(x, y, z)) return BlockPos(x, y, z)
     return null
+}
+
+fun offerDefaultAttributes(fluidComponent: FluidComponent, to: AttributeList<*>) {
+    val opposite = to.searchDirection?.opposite
+    if (to.attribute == FluidAttributes.INSERTABLE && fluidComponent.transferConfig[opposite]?.input == true)
+        to.offer(fluidComponent)
+    else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
+        to.offer(fluidComponent)
 }

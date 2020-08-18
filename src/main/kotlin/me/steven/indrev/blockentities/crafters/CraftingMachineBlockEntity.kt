@@ -42,12 +42,9 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val inputInventory = inventory.getInputInventory()
-        if (inputInventory.isEmpty) {
-            reset()
-            setWorkingState(false)
-        } else if (isProcessing()) {
+        if (isProcessing()) {
             val recipe = getCurrentRecipe()
-            if (recipe?.matches(inputInventory, this.world) == false)
+            if (!matchesRecipe(recipe, inputInventory))
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
                 setWorkingState(true)
@@ -82,12 +79,14 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
                     reset()
                 }
             }
-        } else if (energy > 0 && !inputInventory.isEmpty && processTime <= 0) {
+        } else if (energy > 0 && processTime <= 0) {
             reset()
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
         }
         temperatureComponent?.tick(isProcessing())
     }
+
+    protected open fun matchesRecipe(recipe: T?, inventory: Inventory): Boolean = recipe?.matches(inventory, this.world) == true
 
     abstract fun tryStartRecipe(inventory: IRInventory): T?
 

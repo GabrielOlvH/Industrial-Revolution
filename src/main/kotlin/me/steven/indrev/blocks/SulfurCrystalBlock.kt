@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
+import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.function.BooleanBiFunction
 import net.minecraft.util.math.BlockPos
@@ -43,7 +44,7 @@ class SulfurCrystalBlock(settings: Settings) : Block(settings) {
     }
 
     companion object {
-        val FACING = Properties.FACING
+        val FACING: DirectionProperty = Properties.FACING
         private val UP_SHAPE = Stream.of(
             createCuboidShape(2.0, 5.0, 4.0, 3.0, 6.0, 5.0),
             createCuboidShape(2.0, 4.0, 4.0, 4.0, 5.0, 6.0),

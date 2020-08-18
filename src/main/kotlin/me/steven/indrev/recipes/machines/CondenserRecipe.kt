@@ -37,6 +37,10 @@ class CondenserRecipe(
 
     override fun matches(inv: Inventory?, world: World?): Boolean = false
 
+
+    fun matches(fluidVolume: FluidVolume): Boolean =
+       fluidVolume.fluidKey == fluid.fluidKey && fluidVolume.amount() >= fluid.amount()
+
     companion object {
         val IDENTIFIER = identifier("condenser")
         val TYPE = object : RecipeType<CondenserRecipe> {}

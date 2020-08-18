@@ -12,8 +12,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.inventory.Inventory
 import team.reborn.energy.Energy
-import kotlin.math.ceil
 
 class CondenserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
@@ -38,7 +38,7 @@ class CondenserBlockEntity(tier: Tier) :
     override fun tryStartRecipe(inventory: IRInventory): CondenserRecipe? {
         val fluid = fluidComponent!!.tanks[0].volume
         val recipe = world?.recipeManager?.listAllOfType(CondenserRecipe.TYPE)
-            ?.firstOrNull { it.fluid.fluidKey == fluid.fluidKey && fluid.amount() >= it.fluid.amount() } ?: return null
+            ?.firstOrNull { it.matches(fluid) } ?: return null
         val outputStack = inventory.getStack(2).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing()) {
@@ -50,39 +50,11 @@ class CondenserBlockEntity(tier: Tier) :
         return recipe
     }
 
-    override fun machineTick() {
-        if (world?.isClient == true) return
-        val inventory = inventoryComponent?.inventory ?: return
-        val fluidComponent = fluidComponent ?: return
-        if (isProcessing()) {
-            val recipe = getCurrentRecipe()
-            if (recipe != null && (fluidComponent.tanks[0].volume.fluidKey != recipe.fluid.fluidKey || fluidComponent.tanks[0].volume.amount() < recipe.fluid.amount()))
-                tryStartRecipe(inventory) ?: reset()
-            else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
-                setWorkingState(true)
-                processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
-                if (processTime <= 0) {
-                    fluidComponent.extractable.extract(recipe?.fluid?.amount() ?: return reset())
-                    val output = recipe.craft(inventory)
-                    for (outputSlot in inventory.outputSlots) {
-                        val outputStack = inventory.getStack(outputSlot)
-                        if (outputStack.item == output.item)
-                            inventory.setStack(outputSlot, outputStack.apply { increment(output.count) })
-                        else if (outputStack.isEmpty)
-                            inventory.setStack(outputSlot, output)
-                        else continue
-                        break
-                    }
-                    usedRecipes[recipe.id] = usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
-                    onCraft()
-                    reset()
-                }
-            }
-        } else if (energy > 0 && !fluidComponent.tanks[0].volume.isEmpty && processTime <= 0) {
-            reset()
-            if (tryStartRecipe(inventory) == null) setWorkingState(false)
-        }
-        temperatureComponent?.tick(isProcessing())
+    override fun matchesRecipe(recipe: CondenserRecipe?, inventory: Inventory): Boolean =
+        recipe?.matches(fluidComponent!!.tanks[0].volume) == true
+
+    override fun onCraft() {
+        fluidComponent?.extractable?.extract(currentRecipe?.fluid?.amount() ?: return reset())
     }
 
     override fun getCurrentRecipe(): CondenserRecipe? = currentRecipe
