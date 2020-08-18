@@ -20,37 +20,32 @@ class FluidInfuserFluidComponent : FluidComponent(FluidAmount(8) , 2) {
                 maxAmount: FluidAmount,
                 simulation: Simulation?
             ): FluidVolume {
-                if (maxAmount.isNegative) {
+                if (maxAmount.isNegative)
                     throw IllegalArgumentException("maxAmount cannot be negative! (was $maxAmount)")
-                } else {
+
                     var fluid = FluidVolumeUtil.EMPTY
-                    return if (maxAmount.isZero) {
+                    return if (maxAmount.isZero)
                         fluid
-                    } else {
-                        val t = 1
-                        val thisMax =
-                            maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
-                        fluid = FluidVolumeUtil.extractSingle(this.inv(), t, filter, fluid, thisMax, simulation)
-                        if (!fluid.amount_F.isLessThan(maxAmount)) {
+                    else {
+                        val tank = 1
+                        val thisMax = maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
+                        fluid = FluidVolumeUtil.extractSingle(this.inv(), tank, filter, fluid, thisMax, simulation)
+                        if (!fluid.amount_F.isLessThan(maxAmount))
                             return fluid
-                        }
                         fluid
                     }
-                }
             }
 
             override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
                 var fluid = fluid
-                return if (fluid.isEmpty) {
+                return if (fluid.isEmpty)
                     FluidVolumeUtil.EMPTY
-                } else {
+                else {
                     fluid = fluid.copy()
-                    val t = 0
-                    fluid = FluidVolumeUtil.insertSingle(this.inv(), t, fluid, simulation)
-                    if (fluid.isEmpty) {
+                    val tank = 0
+                    fluid = FluidVolumeUtil.insertSingle(this.inv(), tank, fluid, simulation)
+                    if (fluid.isEmpty)
                         return FluidVolumeUtil.EMPTY
-                    }
-
                     fluid
                 }
             }
