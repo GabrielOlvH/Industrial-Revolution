@@ -345,6 +345,7 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
 
 fun getItemStackFromJson(json: JsonObject): ItemStack {
     val itemPath = json.get("item").asString
+    if (itemPath == "empty") return ItemStack.EMPTY
     val item =
         if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
         else

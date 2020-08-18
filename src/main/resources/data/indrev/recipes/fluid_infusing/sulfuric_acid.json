@@ -2,7 +2,7 @@
   "type": "indrev:fluid_infuse",
   "ingredients": [
     {
-      "item": "minecraft:lapis_lazuli"
+      "tag": "c:sulfur_dusts"
     }
   ],
   "fluid": {
@@ -11,12 +11,12 @@
     "count": 1
   },
   "output": {
-    "fluid": "indrev:coolant_still",
-    "type": "bucket",
+    "fluid": "indrev:sulfuric_acid_still",
+    "type": "nugget",
     "count": 1
   },
   "outputStack": {
     "item": "empty"
   },
-  "processTime": 600
+  "processTime": 800
 }

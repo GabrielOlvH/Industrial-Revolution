@@ -5,6 +5,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import me.steven.indrev.utils.getFluidFromJson
+import me.steven.indrev.utils.getItemStackFromJson
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -23,7 +24,8 @@ class FluidInfuserRecipe(
     val processTime: Int,
     val inputFluid: FluidVolume,
     val ingredients: DefaultedList<Ingredient>,
-    val outputFluid: FluidVolume
+    val outputFluid: FluidVolume,
+    private val output: ItemStack
 ) : Recipe<Inventory> {
     override fun craft(inv: Inventory?): ItemStack = output.copy()
 
@@ -35,7 +37,7 @@ class FluidInfuserRecipe(
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
-    override fun getOutput(): ItemStack = ItemStack.EMPTY
+    override fun getOutput(): ItemStack = output
 
     override fun getPreviewInputs(): DefaultedList<Ingredient> = ingredients
 
@@ -62,6 +64,7 @@ class FluidInfuserRecipe(
                 recipe.outputFluid.amount().toMcBuffer(buf)
                 buf.writeIdentifier(recipe.inputFluid.fluidKey.entry.id)
                 recipe.inputFluid.amount().toMcBuffer(buf)
+                buf.writeItemStack(recipe.output)
             }
 
             override fun read(id: Identifier, json: JsonObject): FluidInfuserRecipe {
@@ -74,7 +77,8 @@ class FluidInfuserRecipe(
                 val fluid = getFluidFromJson(json.getAsJsonObject("fluid"))
                 val output = getFluidFromJson(json.getAsJsonObject("output"))
                 val ticks = json.get("processTime").asInt
-                return FluidInfuserRecipe(id, ticks, fluid, ingredients, output)
+                val outputStack = getItemStackFromJson(json.getAsJsonObject("outputStack"))
+                return FluidInfuserRecipe(id, ticks, fluid, ingredients, output, outputStack)
             }
 
             override fun read(id: Identifier, buf: PacketByteBuf): FluidInfuserRecipe {
@@ -90,7 +94,8 @@ class FluidInfuserRecipe(
                 val inputFluidAmount = FluidAmount.fromMcBuffer(buf)
                 val inputFluidKey = FluidKeys.get(Registry.FLUID.get(inputFluidId))
                 val inputFluidVolume = inputFluidKey.withAmount(inputFluidAmount)
-                return FluidInfuserRecipe(id, processTime, inputFluidVolume, input, outputFluidVolume)
+                val output = buf.readItemStack()
+                return FluidInfuserRecipe(id, processTime, inputFluidVolume, input, outputFluidVolume, output)
             }
 
         }

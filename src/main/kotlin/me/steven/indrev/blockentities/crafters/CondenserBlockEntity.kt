@@ -56,7 +56,7 @@ class CondenserBlockEntity(tier: Tier) :
         val fluidComponent = fluidComponent ?: return
         if (isProcessing()) {
             val recipe = getCurrentRecipe()
-            if (recipe != null && (fluidComponent.tanks[0].volume.fluidKey != recipe.fluid.fluidKey || fluidComponent.tanks[0].volume.amount() <= recipe.fluid.amount()))
+            if (recipe != null && (fluidComponent.tanks[0].volume.fluidKey != recipe.fluid.fluidKey || fluidComponent.tanks[0].volume.amount() < recipe.fluid.amount()))
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
                 setWorkingState(true)

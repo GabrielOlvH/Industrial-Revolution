@@ -125,7 +125,7 @@ object WorldGeneration {
     ).method_30377(16).repeat(30)
 
     val acidLakesFeature = Feature.LAKE.configure(
-        SingleStateFeatureConfig(IRRegistry.CONCENTRATED_SULFURIC_ACID.defaultState)
+        SingleStateFeatureConfig(IRRegistry.SULFURIC_ACID.defaultState)
     ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
 
 }

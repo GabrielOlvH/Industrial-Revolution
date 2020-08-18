@@ -10,7 +10,6 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 import team.reborn.energy.Energy
@@ -20,7 +19,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
 
     init {
         this.inventoryComponent = InventoryComponent {
-            IRInventory(7, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
+            IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
@@ -43,7 +42,9 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             ?.firstOrNull { it.matches(inputStacks, fluid, world) }
             ?: return null
         val fluidVolume = fluidComponent!!.tanks[1].volume
-        if (fluidVolume.isEmpty || fluidVolume.amount().add(recipe.inputFluid.amount()) <= fluidComponent!!.limit) {
+        val outputStack = inventory.getStack(3).copy()
+        if ((fluidVolume.isEmpty || fluidVolume.amount().add(recipe.inputFluid.amount()) <= fluidComponent!!.limit)
+            && (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item))) {
             if (!isProcessing()) {
                 processTime = recipe.processTime
                 totalProcessTime = recipe.processTime
@@ -68,6 +69,16 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
                 setWorkingState(true)
                 processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
+                    val output = recipe?.craft(inventory) ?: return
+                    for (outputSlot in inventory.outputSlots) {
+                        val outputStack = inventory.getStack(outputSlot)
+                        if (outputStack.item == output.item)
+                            inventory.setStack(outputSlot, outputStack.apply { increment(output.count) })
+                        else if (outputStack.isEmpty)
+                            inventory.setStack(outputSlot, output)
+                        else continue
+                        break
+                    }
                     inventory.inputSlots.forEachIndexed { index, slot ->
                         val stack = inputInventory.getStack(index)
                         val item = stack.item
@@ -82,8 +93,8 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
                     }
                     val inputTank = fluidComponent!!.tanks[0]
                     val outputTank = fluidComponent!!.tanks[1]
-                    inputTank.volume = inputTank.volume.fluidKey.withAmount(inputTank.volume.amount().sub(recipe!!.inputFluid.amount()))
-                    outputTank.volume = outputTank.volume.fluidKey.withAmount(outputTank.volume.amount().add(recipe.outputFluid.amount()))
+                    inputTank.volume = inputTank.volume.fluidKey.withAmount(inputTank.volume.amount().sub(recipe.inputFluid.amount()))
+                    outputTank.volume = recipe.outputFluid.fluidKey.withAmount(outputTank.volume.amount().add(recipe.outputFluid.amount()))
 
                     usedRecipes[recipe.id] = usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
                     onCraft()
@@ -101,7 +112,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
 
     override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.pulverizerMk4
 
-    override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
+    override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
 }

@@ -91,6 +91,7 @@ object IRRegistry {
         ResourceHelper("coal") { withItems("dust") }.register()
         ResourceHelper("sulfur") {
             withItem()
+            withItems("dust")
         }
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
@@ -167,15 +168,15 @@ object IRRegistry {
         identifier("${MOLTEN_TIN_IDENTIFIER.path}_flowing").fluid(MOLTEN_TIN_FLOWING)
         identifier("${MOLTEN_TIN_IDENTIFIER.path}_bucket").item(MOLTEN_TIN_BUCKET)
 
-        CONCENTRATED_SULFURIC_ACID_IDENTIFIER.block(CONCENTRATED_SULFURIC_ACID)
-        identifier("${CONCENTRATED_SULFURIC_ACID_IDENTIFIER.path}_still").fluid(CONCENTRATED_SULFURIC_ACID_STILL)
-        identifier("${CONCENTRATED_SULFURIC_ACID_IDENTIFIER.path}_flowing").fluid(CONCENTRATED_SULFURIC_ACID_FLOWING)
-        identifier("${CONCENTRATED_SULFURIC_ACID_IDENTIFIER.path}_bucket").item(CONCENTRATED_SULFURIC_ACID_BUCKET)
-
         SULFURIC_ACID_IDENTIFIER.block(SULFURIC_ACID)
         identifier("${SULFURIC_ACID_IDENTIFIER.path}_still").fluid(SULFURIC_ACID_STILL)
         identifier("${SULFURIC_ACID_IDENTIFIER.path}_flowing").fluid(SULFURIC_ACID_FLOWING)
         identifier("${SULFURIC_ACID_IDENTIFIER.path}_bucket").item(SULFURIC_ACID_BUCKET)
+
+        TOXIC_MUD_IDENTIFIER.block(TOXIC_MUD)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_still").fluid(TOXIC_MUD_STILL)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_flowing").fluid(TOXIC_MUD_FLOWING)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_bucket").item(TOXIC_MUD_BUCKET)
 
         identifier("wrench").item(WRENCH)
 
@@ -288,18 +289,19 @@ object IRRegistry {
     val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val ACID_MATERIAL = FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
-
-    val CONCENTRATED_SULFURIC_ACID_IDENTIFIER = identifier("concentrated_sulfuric_acid")
-    val CONCENTRATED_SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(CONCENTRATED_SULFURIC_ACID_IDENTIFIER, { CONCENTRATED_SULFURIC_ACID }, { CONCENTRATED_SULFURIC_ACID_BUCKET }, 0x526646) { CONCENTRATED_SULFURIC_ACID_FLOWING }
-    val CONCENTRATED_SULFURIC_ACID_FLOWING = BaseFluid.Flowing(CONCENTRATED_SULFURIC_ACID_IDENTIFIER, { CONCENTRATED_SULFURIC_ACID }, { CONCENTRATED_SULFURIC_ACID_BUCKET }, 0x526646) { CONCENTRATED_SULFURIC_ACID_STILL }
-    val CONCENTRATED_SULFURIC_ACID_BUCKET = BucketItem(CONCENTRATED_SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
-    val CONCENTRATED_SULFURIC_ACID = AcidFluidBlock(CONCENTRATED_SULFURIC_ACID_STILL, FabricBlockSettings.of(ACID_MATERIAL).ticksRandomly())
+    val MUD_MATERIAL = FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
 
     val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
     val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_FLOWING }
     val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_STILL }
     val SULFURIC_ACID_BUCKET = BucketItem(SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val SULFURIC_ACID = AcidFluidBlock(SULFURIC_ACID_STILL, FabricBlockSettings.of(ACID_MATERIAL).ticksRandomly())
+
+    val TOXIC_MUD_IDENTIFIER = identifier("toxic_mud")
+    val TOXIC_MUD_STILL: BaseFluid.Still = BaseFluid.Still(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_FLOWING }
+    val TOXIC_MUD_FLOWING = BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
+    val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
 
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)

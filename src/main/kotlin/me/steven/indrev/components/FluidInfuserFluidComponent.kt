@@ -1,8 +1,8 @@
 package me.steven.indrev.components
 
 import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidExtractable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
+import alexiil.mc.lib.attributes.fluid.GroupedFluidInv
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
@@ -10,7 +10,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import java.math.RoundingMode
 
 class FluidInfuserFluidComponent : FluidComponent(FluidAmount(8) , 2) {
-    override fun getExtractable(): FluidExtractable {
+    override fun getGroupedInv(): GroupedFluidInv {
         return object : GroupedFluidInvFixedWrapper(this) {
             override fun attemptExtraction(filter: FluidFilter?, maxAmount: FluidAmount?, simulation: Simulation?): FluidVolume {
                 require(!maxAmount!!.isNegative) { "maxAmount cannot be negative! (was $maxAmount)" }

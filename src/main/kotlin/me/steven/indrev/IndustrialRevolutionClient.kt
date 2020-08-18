@@ -28,7 +28,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         FluidType.WATER.registerReloadListener()
         FluidType.LAVA.registerReloadListener()
-        IRRegistry.COOLANT_STILL.registerRender(FluidType.WATER)
+        arrayOf(
+            IRRegistry.COOLANT_STILL,
+            IRRegistry.SULFURIC_ACID_STILL,
+            IRRegistry.TOXIC_MUD_STILL
+        ).forEach { it.registerRender(FluidType.WATER) }
         arrayOf(
             IRRegistry.MOLTEN_NETHERITE_STILL,
             IRRegistry.MOLTEN_IRON_STILL,

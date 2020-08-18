@@ -41,7 +41,9 @@ object IndustrialRevolution : ModInitializer {
             IRRegistry.MOLTEN_IRON_STILL,
             IRRegistry.MOLTEN_GOLD_STILL,
             IRRegistry.MOLTEN_COPPER_STILL,
-            IRRegistry.MOLTEN_TIN_STILL
+            IRRegistry.MOLTEN_TIN_STILL,
+            IRRegistry.SULFURIC_ACID_STILL,
+            IRRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }
         IRLootTables.register()
         MachineRegistry.COAL_GENERATOR_REGISTRY

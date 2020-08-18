@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "item": "indrev:copper_purified_ore"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_copper_still",
+    "type": "ingot",
+    "count": 4
+  },
+  "processTime": 600
+}
