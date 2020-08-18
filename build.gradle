@@ -85,10 +85,10 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modImplementation("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
-    modImplementation("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
-    include("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
-    include("com.github.shartte:LibBlockAttributes:1.16.2-update-SNAPSHOT")
+    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
+    include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
+    include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
