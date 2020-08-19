@@ -24,28 +24,27 @@ class SulfurCrystalFeature(codec: Codec<SingleStateFeatureConfig>) : Feature<Sin
         blockPos: BlockPos?,
         featureConfig: SingleStateFeatureConfig?
     ): Boolean {
-        if (world?.getBlockState(blockPos)?.block == Blocks.CAVE_AIR) {
-            val mutablePos = BlockPos.Mutable()
-            val coveredArea = Box(blockPos).expand(10.0, 10.0, 10.0)
-            val isNearLava = coveredArea.any { x, y, z ->
-                mutablePos.set(x, y, z)
-                world?.getBlockState(mutablePos)?.isOf(Blocks.LAVA) == true
-            }
-            if (!isNearLava) return false
-            coveredArea.forEach { x, y, z ->
-                mutablePos.set(x, y, z)
-                Direction.values().forEach { dir ->
-                    val blockState = world?.getBlockState(mutablePos)
-                    val pos = mutablePos.offset(dir)
-                    val airState = world?.getBlockState(pos)
-                    if (blockState?.material == Material.STONE && airState?.block == Blocks.CAVE_AIR) {
-                        world?.setBlockState(pos, IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir), 2)
-                        return true
-                    }
+
+        val mutablePos = BlockPos.Mutable()
+        val coveredArea = Box(blockPos).expand(8.0, 8.0, 8.0)
+        val isNearLava = coveredArea.any { x, y, z ->
+            mutablePos.set(x, y, z)
+            world?.getBlockState(mutablePos)?.isOf(Blocks.LAVA) == true
+        }
+        if (!isNearLava) return false
+        coveredArea.forEach { x, y, z ->
+            mutablePos.set(x, y, z)
+            Direction.values().forEach { dir ->
+                val blockState = world?.getBlockState(mutablePos)
+                val pos = mutablePos.offset(dir)
+                val airState = world?.getBlockState(pos)
+                if (blockState?.material == Material.STONE && airState?.isAir == true) {
+                    world.setBlockState(pos, IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir), 2)
+                    return true
                 }
             }
         }
+
         return false
     }
-
 }
