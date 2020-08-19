@@ -86,28 +86,16 @@ object REIPlugin : REIPluginV0 {
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) {
-            BaseMachinePlugin(
-                it,
-                PULVERIZING
-            )
+            BaseMachinePlugin(it, PULVERIZING)
         }
         recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) {
-            BaseMachinePlugin(
-                it,
-                INFUSING
-            )
+            BaseMachinePlugin(it, INFUSING)
         }
         recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) {
-            BaseMachinePlugin(
-                it,
-                COMPRESSING
-            )
+            BaseMachinePlugin(it, COMPRESSING)
         }
         recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) {
-            BaseMachinePlugin(
-                it,
-                RECYCLING
-            )
+            BaseMachinePlugin(it, RECYCLING)
         }
         recipeHelper?.registerRecipes(FLUID_INFUSER, FluidInfuserRecipe::class.java) {
             FluidInfuserMachinePlugin(it, FLUID_INFUSER)
