@@ -1,4 +1,4 @@
-package me.steven.indrev.compat.rei.plugins
+package me.steven.indrev.compat.rei.categories
 
 import it.unimi.dsi.fastutil.ints.IntList
 import me.shedaniel.math.Point
@@ -9,23 +9,24 @@ import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.entries.RecipeEntry
 import me.shedaniel.rei.gui.entries.SimpleRecipeEntry
 import me.shedaniel.rei.gui.widget.Widget
+import me.steven.indrev.compat.rei.plugins.BaseMachinePlugin
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
 
-class MachineRecipeCategory(
-    private val identifier: Identifier?,
-    private val logo: EntryStack?,
-    private val categoryName: String?
-) : TransferRecipeCategory<MachinePlugin> {
+open class BaseMachineRecipeCategory(
+    private val identifier: Identifier,
+    private val logo: EntryStack,
+    private val categoryName: String
+) : TransferRecipeCategory<BaseMachinePlugin> {
 
     override fun renderRedSlots(
         matrices: MatrixStack,
         widgets: List<Widget?>?,
         bounds: Rectangle,
-        display: MachinePlugin?,
+        display: BaseMachinePlugin?,
         redSlots: IntList
     ) {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
@@ -44,7 +45,7 @@ class MachineRecipeCategory(
         matrices.pop()
     }
 
-    override fun setupDisplay(recipeDisplay: MachinePlugin, bounds: Rectangle): MutableList<Widget> {
+    override fun setupDisplay(recipeDisplay: BaseMachinePlugin, bounds: Rectangle): MutableList<Widget> {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
         val widgets: MutableList<Widget> = mutableListOf(Widgets.createRecipeBase(bounds))
         widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
@@ -60,7 +61,7 @@ class MachineRecipeCategory(
         return widgets
     }
 
-    override fun getSimpleRenderer(recipe: MachinePlugin): RecipeEntry =
+    override fun getSimpleRenderer(recipe: BaseMachinePlugin): RecipeEntry =
         SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
 
     override fun getDisplayHeight(): Int = 49

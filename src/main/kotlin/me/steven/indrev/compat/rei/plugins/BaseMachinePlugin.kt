@@ -8,7 +8,7 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import java.util.*
 
-class MachinePlugin(private val recipe: Recipe<*>, private val category: Identifier) : TransferRecipeDisplay {
+open class BaseMachinePlugin(val recipe: Recipe<*>, private val category: Identifier) : TransferRecipeDisplay {
 
     private val output: MutableList<EntryStack> =
         mutableListOf(EntryStack.create(recipe.output))

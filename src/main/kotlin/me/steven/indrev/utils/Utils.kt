@@ -7,16 +7,21 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
+import me.shedaniel.math.Point
+import me.shedaniel.rei.api.widgets.Widgets
+import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.gui.widgets.machines.WFluid
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.BufferRenderer
 import net.minecraft.client.render.Tessellator
@@ -29,6 +34,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
+import net.minecraft.text.OrderedText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -393,4 +399,17 @@ fun offerDefaultAttributes(fluidComponent: FluidComponent, to: AttributeList<*>)
         to.offer(fluidComponent)
     else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
         to.offer(fluidComponent)
+}
+
+fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
+    widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
+        fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
+        if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
+            val information = mutableListOf<OrderedText>()
+            information.addAll(fluid.fluidKey.fullTooltip.map { it.asOrderedText() })
+            information.add(LiteralText("${(fluid.amount().asInexactDouble() * 1000).toInt()} mB").asOrderedText())
+            MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
+        }
+    })
 }

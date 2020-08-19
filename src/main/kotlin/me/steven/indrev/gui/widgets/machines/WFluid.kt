@@ -58,7 +58,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     override fun canResize(): Boolean = false
 
     companion object {
-        private val ENERGY_EMPTY =
+        val ENERGY_EMPTY =
             identifier("textures/gui/widget_energy_empty.png")
     }
 }
