@@ -302,9 +302,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
             { tier ->
                 object : HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    null,
+                    CONFIG.machines.condenser,
                     ::SmelterController,
                     { SmelterBlockEntity(tier) }
                 ), AttributeProvider {
@@ -320,9 +320,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
             { tier ->
                 object : HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    null,
+                    CONFIG.machines.condenser,
                     ::CondenserController,
                     { CondenserBlockEntity(tier) }
                 ), AttributeProvider {
@@ -338,9 +338,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
             { tier ->
                 object : FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    null,
+                    CONFIG.machines.pump,
                     null,
                     { PumpBlockEntity(tier) }), AttributeProvider {
                     override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
@@ -355,9 +355,14 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
             { tier ->
                 object : HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS().nonOpaque(),
+                    MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    null,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.fluidInfuserMk1
+                        Tier.MK2 -> CONFIG.machines.fluidInfuserMk2
+                        Tier.MK3 -> CONFIG.machines.fluidInfuserMk3
+                        else -> CONFIG.machines.fluidInfuserMk4
+                    },
                     ::FluidInfuserController,
                     { FluidInfuserBlockEntity(tier) }), AttributeProvider {
                     override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {

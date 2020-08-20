@@ -65,7 +65,13 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
 
     override fun getCurrentRecipe(): FluidInfuserRecipe? = currentRecipe
 
-    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.pulverizerMk4
+    override fun getConfig(): IConfig =
+        when (tier) {
+            Tier.MK1 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk1
+            Tier.MK2 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk2
+            Tier.MK3 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk3
+            else -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk4
+        }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

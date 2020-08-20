@@ -124,9 +124,10 @@ fun getShortEnergyDisplay(energy: Double): String =
 
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     val handler = Energy.of(stack)
-    tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-    tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF").formatted(Formatting.GOLD))
-    tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+    if (handler.energy > 0) {
+        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} LF").formatted(Formatting.GOLD))
+    }
 }
 
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {

@@ -26,7 +26,7 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
         val fluidComponent = fluidComponent ?: return
         val hasFluid = Direction.values().mapNotNull { world?.getFluidState(pos.offset(it)) }.any { !it.isEmpty }
         val range = getWorkingArea()
-        if (hasFluid && Energy.of(this).simulate().use(2.0)) {
+        if (hasFluid && Energy.of(this).simulate().use(getConfig().energyCost)) {
             val mutablePos = pos.mutableCopy()
             for (x in range.minX.toInt()..range.maxX.toInt())
                 for (y in range.minY.toInt()..range.maxY.toInt()) {
@@ -57,5 +57,5 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.chopper
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.pump
 }

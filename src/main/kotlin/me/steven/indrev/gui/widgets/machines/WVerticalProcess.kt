@@ -20,11 +20,10 @@ class WVerticalProcess(private val delegate: PropertyDelegate) : WWidget() {
             var percent = processTime.toFloat() / maxProcessTime.toFloat()
             percent = (percent * height).toInt() / height.toFloat()
             val barSize = (height * percent).toInt()
-            if (barSize > 0)
-                ScreenDrawing.texturedRect(
-                    x, y, width, height - barSize,
-                    PROCESS_FULL, 0f, 0f, 1f, 1f - percent, -1
-                )
+            ScreenDrawing.texturedRect(
+                x, y, width, height - barSize,
+                PROCESS_FULL, 0f, 0f, 1f, 1f - percent, -1
+            )
         }
     }
 

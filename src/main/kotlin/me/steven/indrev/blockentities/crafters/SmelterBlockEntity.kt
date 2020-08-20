@@ -56,7 +56,7 @@ class SmelterBlockEntity(tier: Tier) :
 
     override fun getCurrentRecipe(): SmelterRecipe? = currentRecipe
 
-    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.pulverizerMk4
+    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.smelter
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

@@ -59,7 +59,7 @@ class CondenserBlockEntity(tier: Tier) :
 
     override fun getCurrentRecipe(): CondenserRecipe? = currentRecipe
 
-    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.pulverizerMk4
+    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.condenser
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

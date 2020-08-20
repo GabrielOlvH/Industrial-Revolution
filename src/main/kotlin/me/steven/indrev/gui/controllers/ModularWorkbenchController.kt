@@ -17,7 +17,6 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
-import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
@@ -71,7 +70,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty)
                 TranslatableText(stack.item.translationKey).formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE)
-            else Text.EMPTY
+            else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         val modulesInstalled = WText({
@@ -79,7 +78,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             if (!stack.isEmpty) {
                 val modules = Module.getInstalled(stack).size.toString()
                 TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE).append(LiteralText(modules).formatted(Formatting.WHITE))
-            } else Text.EMPTY
+            } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         val shield = WText({
@@ -88,7 +87,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             if (!stack.isEmpty && item is IRModularArmor) {
                 val shield = item.getMaxShield(Module.getLevel(stack, Module.PROTECTION)).toString()
                 TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE).append(LiteralText(shield).formatted(Formatting.WHITE))
-            } else Text.EMPTY
+            } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         val installing = WText({
@@ -96,7 +95,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
                 TranslatableText("gui.indrev.installing").formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE)
-            } else Text.EMPTY
+            } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         val moduleToInstall = WText({
@@ -104,7 +103,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
                 TranslatableText(item.translationKey).formatted(Formatting.GRAY, Formatting.ITALIC)
-            } else Text.EMPTY
+            } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         val progress = WText({
@@ -118,7 +117,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
                     val percent = ((progress / 1200f) * 100).toInt()
                     TranslatableText("gui.indrev.progress").formatted(Formatting.BLUE).append(LiteralText("$percent%"))
                 }
-            } else Text.EMPTY
+            } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
 
         panel.add(armorInfoText, 3, 1)
