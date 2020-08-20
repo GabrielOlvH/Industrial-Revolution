@@ -20,7 +20,7 @@ class SulfurCrystalFeature(codec: Codec<SingleStateFeatureConfig>) : Feature<Sin
     override fun generate(
         world: StructureWorldAccess?,
         chunkGenerator: ChunkGenerator?,
-        random: Random?,
+        random: Random,
         blockPos: BlockPos?,
         featureConfig: SingleStateFeatureConfig?
     ): Boolean {
@@ -34,7 +34,7 @@ class SulfurCrystalFeature(codec: Codec<SingleStateFeatureConfig>) : Feature<Sin
         if (!isNearLava) return false
         coveredArea.forEach { x, y, z ->
             mutablePos.set(x, y, z)
-            Direction.values().forEach { dir ->
+            DIRECTIONS_LIST.shuffled(random).forEach { dir ->
                 val blockState = world?.getBlockState(mutablePos)
                 val pos = mutablePos.offset(dir)
                 val airState = world?.getBlockState(pos)
@@ -46,5 +46,9 @@ class SulfurCrystalFeature(codec: Codec<SingleStateFeatureConfig>) : Feature<Sin
         }
 
         return false
+    }
+
+    companion object {
+        private val DIRECTIONS_LIST = Direction.values().toMutableList()
     }
 }
