@@ -2,6 +2,7 @@ package me.steven.indrev.energy
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.CableBlock
+import me.steven.indrev.utils.Tier
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.LongTag
@@ -17,6 +18,8 @@ class EnergyNetwork(
     val cables: MutableSet<BlockPos> = mutableSetOf(),
     val machines: MutableMap<BlockPos, MutableSet<Direction>> = mutableMapOf()
 ) {
+
+    var tier =  Tier.MK1
 
     fun tick(world: ServerWorld) {
         val receiversHandlers = mutableSetOf<EnergyHandler>()
@@ -65,7 +68,7 @@ class EnergyNetwork(
                 sender = senderIt.next()
             }
             val remainingInput = receiver.maxInput - receivedThisTick
-            val amount = (remainingInput / totalInput) * totalEnergy
+            val amount = ((remainingInput / totalInput) * totalEnergy).coerceAtMost(tier.io)
             if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount) {
                 if (!receiverIt.hasNext()) break
                 sentThisTick = 0.0
@@ -151,6 +154,7 @@ class EnergyNetwork(
                         Direction.values().forEach { dir ->
                             search(scanned, state, network, world, blockPos.offset(dir), dir)
                         }
+                        network.tier = blockEntity.tier
                         network.cables.add(blockPos)
                         blockEntity.network = network
                         state.networksByPos[blockPos] = network

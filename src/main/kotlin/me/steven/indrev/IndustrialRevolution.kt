@@ -1,6 +1,9 @@
 package me.steven.indrev
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
@@ -36,8 +39,12 @@ import team.reborn.energy.Energy
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
+        AutoConfig.register(
+            IRConfig::class.java,
+            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
+        )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
-        //IRRegistry.registerAll()
+        IRRegistry.registerAll()
         arrayOf(
             IRRegistry.COOLANT_STILL,
             IRRegistry.MOLTEN_NETHERITE_STILL,
