@@ -4,6 +4,7 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
+import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.PatchouliBookRecipe
@@ -21,6 +22,8 @@ import me.steven.indrev.utils.registerScreenHandler
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.item.ItemGroup
@@ -89,12 +92,16 @@ object IndustrialRevolution : ModInitializer {
         }
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
         LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
+
+        ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
+        ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+        ServerLifecycleEvents.SERVER_STARTED.register(NetworkEvents)
     }
 
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(IRRegistry.NIKOLITE_ORE()) }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRRegistry.NIKOLITE_ORE().asItem() } }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)

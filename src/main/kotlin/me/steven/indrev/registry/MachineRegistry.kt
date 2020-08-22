@@ -3,7 +3,6 @@ package me.steven.indrev.registry
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import me.steven.indrev.IndustrialRevolution.CONFIG
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
@@ -26,6 +25,7 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.render.RenderLayer
@@ -46,7 +46,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
 
-    fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
+    fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> BlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
             if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)

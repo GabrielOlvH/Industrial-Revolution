@@ -35,7 +35,7 @@ open class HorizontalFacingMachineBlock(
         builder?.add(HORIZONTAL_FACING)
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity) {
             val direction = state?.get(HORIZONTAL_FACING) ?: return
