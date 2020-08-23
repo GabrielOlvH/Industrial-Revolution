@@ -34,7 +34,7 @@ class MachineBlockItem(private val machineBlock: Block, settings: Settings) : Bl
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        if (Energy.valid(stack))
+        if (machineBlock !is CableBlock && Energy.valid(stack))
             buildEnergyTooltip(stack, tooltip)
         val config = (machineBlock as? MachineBlock)?.config ?: (machineBlock as? CableBlock)?.getConfig()
         buildMachineTooltip(config ?: return, tooltip)
