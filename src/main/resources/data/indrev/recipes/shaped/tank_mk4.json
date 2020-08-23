@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " I ",
+    "TBT",
+    " I "
+  ],
+  "key": {
+    "T": {
+      "item": "indrev:tank_mk3"
+    },
+    "I": {
+      "tag": "c:iron_plates"
+    },
+    "B": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "indrev:tank_mk4"
+  }
+}

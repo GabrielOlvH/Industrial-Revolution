@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "NMN",
+    " B "
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:fishing_farm_mk2"
+    },
+    "C": {
+      "item": "indrev:circuit_mk3"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_dust"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:fishing_farm_mk3"
+  }
+}
