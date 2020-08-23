@@ -46,8 +46,8 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
             if (blockEntity is MachineBlockEntity) {
                 val fluid = blockEntity.fluidComponent ?: return@run
                 val tank = fluid.tanks[tank]
-                val energy = (tank.volume.amount_F.asInexactDouble() * 1000).toInt()
-                val maxEnergy = (fluid.limit.asInexactDouble() * 1000).toInt()
+                val energy = tank.volume.amount_F.asInt(10000)
+                val maxEnergy = fluid.limit.asInt(10000)
                 information?.add(*tank.volume.fluidKey.fullTooltip.toTypedArray())
                 information?.add(LiteralText("$energy / $maxEnergy mB"))
                 super.addTooltip(information)

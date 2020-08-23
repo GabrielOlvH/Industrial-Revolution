@@ -162,7 +162,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 }
             }
             if (mode.input) {
-                getAvailableSlots(neighborInv, direction).forEach { slot ->
+                getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
                     transferItems(neighborInv, inventory, slot, direction.opposite)
                 }
             }

@@ -29,7 +29,6 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
@@ -51,11 +50,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             val block = blockProvider(tier)
             if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)
                 BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout())
-            val blockItem =
-                if (block is MachineBlock)
-                    MachineBlockItem(block, itemSettings())
-                else
-                    BlockItem(block, itemSettings())
+            val blockItem = MachineBlockItem(block, itemSettings())
             val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
             identifier("${identifier.path}_${tier.toString().toLowerCase()}").apply {
                 block(block)

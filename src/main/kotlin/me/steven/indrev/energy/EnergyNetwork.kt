@@ -2,6 +2,7 @@ package me.steven.indrev.energy
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.CableBlock
+import me.steven.indrev.mixin.AccessorEnergyHandler
 import me.steven.indrev.utils.Tier
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -54,7 +55,7 @@ class EnergyNetwork(
         var receivedThisTick = 0.0
 
         while (true) {
-            if (sender == receiver) {
+            if ((sender as AccessorEnergyHandler).holder == (receiver as AccessorEnergyHandler).holder) {
                 if (senderIt.hasNext())
                     sender = senderIt.next()
                 else if (receiverIt.hasNext())
@@ -62,21 +63,20 @@ class EnergyNetwork(
                 else break
                 continue
             }
+            val amount = ((receiver.maxInput / totalInput) * totalEnergy).coerceAtMost(tier.io)
+            val moved = sender.into(receiver).move(amount)
+            sentThisTick += moved
+            receivedThisTick += moved
             if (sentThisTick >= sender.maxOutput) {
                 if (!senderIt.hasNext()) break
                 sentThisTick = 0.0
                 sender = senderIt.next()
             }
-            val remainingInput = receiver.maxInput - receivedThisTick
-            val amount = ((remainingInput / totalInput) * totalEnergy).coerceAtMost(tier.io)
             if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount) {
                 if (!receiverIt.hasNext()) break
                 sentThisTick = 0.0
                 receiver = receiverIt.next()
             }
-            val moved = sender.into(receiver).move(amount)
-            sentThisTick += moved
-            receivedThisTick += moved
         }
     }
 
@@ -104,6 +104,7 @@ class EnergyNetwork(
         }
         tag.put("cables", cablesList)
         tag.put("machines", machinesList)
+        tag.putInt("tier", tier.ordinal)
     }
 
     companion object {
@@ -156,7 +157,6 @@ class EnergyNetwork(
                         }
                         network.tier = blockEntity.tier
                         network.cables.add(blockPos)
-                        blockEntity.network = network
                         state.networksByPos[blockPos] = network
                     }
                 } else {
@@ -186,6 +186,8 @@ class EnergyNetwork(
                 }
                 network.machines[pos] = directions
             }
+            val tier = Tier.values()[tag.getInt("tier")]
+            network.tier = tier
             return network
         }
     }

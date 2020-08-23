@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.Tier
@@ -149,6 +150,13 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
     }
 
     override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
+
+    fun getConfig() = when(tier) {
+        Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1
+        Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2
+        Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3
+        else -> IndustrialRevolution.CONFIG.cables.cableMk4
+    }
 
     companion object {
 

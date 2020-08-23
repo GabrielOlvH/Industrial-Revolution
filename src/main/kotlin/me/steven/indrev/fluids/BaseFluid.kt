@@ -86,15 +86,7 @@ abstract class BaseFluid(
         FluidKeys.put(
             this, SimpleFluidKey(
                 FluidKey.FluidKeyBuilder(this)
-                    .setName(
-                        TranslatableText(block().translationKey).setStyle(
-                            Style.EMPTY.withColor(
-                                TextColor.fromRgb(
-                                    color
-                                )
-                            )
-                        )
-                    )
+                    .setName(TranslatableText(block().translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color))))
                     .setViscosity(FluidAmount.of(5, 5))
                     .setNetherViscosity(FluidAmount.of(5, 5))
                     .setCohesion(FluidAmount.ofWhole(2))
