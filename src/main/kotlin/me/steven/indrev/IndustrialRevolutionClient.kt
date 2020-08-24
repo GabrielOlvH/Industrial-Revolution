@@ -4,6 +4,8 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntity
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
+import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
+import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
@@ -89,6 +91,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         MachineRegistry.CONDENSER_REGISTRY.forEach { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CondenserBlockEntity>, ::CondenserBlockEntityRenderer)
+        }
+
+        MachineRegistry.FLUID_INFUSER_REGISTRY.forEach { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
         }
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
