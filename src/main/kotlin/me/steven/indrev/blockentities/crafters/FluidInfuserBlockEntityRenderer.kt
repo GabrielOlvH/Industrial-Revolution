@@ -33,7 +33,7 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
         }
 
         val outputFace = when (entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) {
-            Direction.NORTH -> OUTOUT_NORTH_FACE
+            Direction.NORTH -> OUTPUT_NORTH_FACE
             Direction.SOUTH -> OUTPUT_SOUTH_FACE
             Direction.WEST -> OUTPUT_WEST_FACE
             Direction.EAST -> OUTPUT_EAST_FACE
@@ -56,7 +56,7 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
         private val INPUT_EAST_FACE =
             listOf(FluidRenderFace.createFlatFaceX(1.005, 0.690, 0.815, 1.005, 0.815, 0.19, 2.0, false, false))
 
-        private val OUTOUT_NORTH_FACE =
+        private val OUTPUT_NORTH_FACE =
             listOf(FluidRenderFace.createFlatFaceZ(0.815, 0.190, -0.005, 0.19, 0.32, -0.005, 2.0, true, false))
         private val OUTPUT_SOUTH_FACE =
             listOf(FluidRenderFace.createFlatFaceZ(0.185, 0.190, 1.005, 0.81, 0.32, 1.005, 2.0, true, false))
