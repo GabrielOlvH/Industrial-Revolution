@@ -12,7 +12,7 @@
   },
   "output": {
     "fluid": "indrev:sulfuric_acid_still",
-    "type": "nugget",
+    "type": "bucket",
     "count": 1
   },
   "outputStack": {
