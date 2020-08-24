@@ -21,17 +21,24 @@ class CondenserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
     ) {
         val fluidComponent = entity?.fluidComponent ?: return
         val faces = when (entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) {
-            Direction.SOUTH ->
-                FluidRenderFace.createFlatFaceZ(0.185, 0.625, 1.005, 0.81, 0.815, 1.005, 2.0, true, false)
-            Direction.NORTH ->
-                FluidRenderFace.createFlatFaceZ(0.815, 0.625, -0.005, 0.19, 0.815, -0.005, 2.0, true, false)
-            Direction.WEST ->
-                FluidRenderFace.createFlatFaceX(-0.005, 0.625, 0.185, -0.005, 0.815, 0.81, 2.0, false, false)
-            Direction.EAST ->
-                FluidRenderFace.createFlatFaceX(1.005, 0.625, 0.815, 1.005, 0.815, 0.19, 2.0, false, false)
+            Direction.NORTH -> NORTH_FACE
+            Direction.SOUTH -> SOUTH_FACE
+            Direction.WEST -> WEST_FACE
+            Direction.EAST -> EAST_FACE
             else -> return
         }
-        fluidComponent.tanks[0].volume.render(listOf(faces), FluidVolumeRenderer.VCPS, matrices)
+        fluidComponent.tanks[0].volume.render(faces, FluidVolumeRenderer.VCPS, matrices)
         FluidVolumeRenderer.VCPS.draw()
+    }
+
+    companion object {
+        private val NORTH_FACE =
+            listOf(FluidRenderFace.createFlatFaceZ(0.815, 0.625, -0.005, 0.19, 0.815, -0.005, 2.0, true, false))
+        private val SOUTH_FACE =
+            listOf(FluidRenderFace.createFlatFaceZ(0.185, 0.625, 1.005, 0.81, 0.815, 1.005, 2.0, true, false))
+        private val WEST_FACE =
+            listOf(FluidRenderFace.createFlatFaceX(-0.005, 0.625, 0.185, -0.005, 0.815, 0.81, 2.0, false, false))
+        private val EAST_FACE =
+            listOf(FluidRenderFace.createFlatFaceX(1.005, 0.625, 0.815, 1.005, 0.815, 0.19, 2.0, false, false))
     }
 }
