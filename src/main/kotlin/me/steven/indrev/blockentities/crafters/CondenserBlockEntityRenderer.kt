@@ -27,8 +27,11 @@ class CondenserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
             Direction.EAST -> EAST_FACE
             else -> return
         }
-        fluidComponent.tanks[0].volume.render(faces, FluidVolumeRenderer.VCPS, matrices)
-        FluidVolumeRenderer.VCPS.draw()
+        val volume = fluidComponent.tanks[0].volume
+        if (!volume.isEmpty) {
+            volume.render(faces, FluidVolumeRenderer.VCPS, matrices)
+            FluidVolumeRenderer.VCPS.draw()
+        }
     }
 
     companion object {

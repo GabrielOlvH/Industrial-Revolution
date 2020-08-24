@@ -26,7 +26,11 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
             Direction.EAST -> INPUT_EAST_FACE
             else -> return
         }
-        fluidComponent.tanks[0].volume.render(inputFace, FluidVolumeRenderer.VCPS, matrices)
+        val inputVolume = fluidComponent.tanks[0].volume
+        if (!inputVolume.isEmpty) {
+            inputVolume.render(inputFace, FluidVolumeRenderer.VCPS, matrices)
+            FluidVolumeRenderer.VCPS.draw()
+        }
 
         val outputFace = when (entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) {
             Direction.NORTH -> OUTOUT_NORTH_FACE
@@ -35,8 +39,11 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
             Direction.EAST -> OUTPUT_EAST_FACE
             else -> return
         }
-        fluidComponent.tanks[1].volume.render(outputFace, FluidVolumeRenderer.VCPS, matrices)
-        FluidVolumeRenderer.VCPS.draw()
+        val outputVolume = fluidComponent.tanks[1].volume
+        if (!outputVolume.isEmpty) {
+            outputVolume.render(outputFace, FluidVolumeRenderer.VCPS, matrices)
+            FluidVolumeRenderer.VCPS.draw()
+        }
     }
 
     companion object {
