@@ -15,7 +15,7 @@ import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.PUMP_REGISTRY) {
+class DrainBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.DRAIN_REGISTRY) {
 
     init {
         this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
@@ -49,7 +49,7 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
         }
     }
 
-    override fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 1.0, 0.0)
+    override fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 
@@ -57,5 +57,5 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.pump
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.drain
 }

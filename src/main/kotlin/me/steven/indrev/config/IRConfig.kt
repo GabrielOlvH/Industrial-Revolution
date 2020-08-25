@@ -139,7 +139,7 @@ class Machines : ConfigData {
     val fishingMk4: MachineConfig = MachineConfig(64.0, 200.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val pump: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
+    val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val smelter: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)

@@ -335,21 +335,21 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { CondenserBlockEntity(tier) } }
         )
 
-        val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
+        val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
                 object : FacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    CONFIG.machines.pump,
+                    CONFIG.machines.drain,
                     null,
-                    { PumpBlockEntity(tier) }), AttributeProvider {
+                    { DrainBlockEntity(tier) }), AttributeProvider {
                     override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
+                        val blockEntity = world?.getBlockEntity(pos) as? DrainBlockEntity ?: return
                         offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
                     }
                 }
             },
-            { tier -> { PumpBlockEntity(tier) } }
+            { tier -> { DrainBlockEntity(tier) } }
         )
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
