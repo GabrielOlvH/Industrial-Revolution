@@ -101,8 +101,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     root.add(widget, side.x + 0.5, side.y + 1.6)
                 }
             }
-            val button = addBookEntryShortcut(playerInventory, root, 5, 0)
-            button.setLocation((5.2 * 18).toInt(), 0)
+            addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
         }
         root.validate(this)
     }

@@ -111,12 +111,12 @@ fun SyncedGuiDescription.configure(
             }
         }
         if (this is PatchouliEntryShortcut) {
-            addBookEntryShortcut(playerInventory, panel, 7, 0)
+            addBookEntryShortcut(playerInventory, panel, -1.4, -0.47)
         }
     }
 }
 
-fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Int, y: Int): WButton {
+fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Double, y: Double): WButton {
     val containsBook =
         playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
             stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
@@ -138,6 +138,9 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
                     )
                 )
         }
+
+        override fun isWithinBounds(x: Int, y: Int): Boolean =
+            x < this.width && y < this.height
     }
     if (containsBook) {
         button.setOnClick {
@@ -149,6 +152,6 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
         }
     }
     panel.add(button, x, y)
-    button.setSize(16, 16)
+    button.setSize(24, 24)
     return button
 }
