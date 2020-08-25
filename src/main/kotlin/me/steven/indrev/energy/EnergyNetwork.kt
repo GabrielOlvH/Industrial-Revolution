@@ -16,18 +16,19 @@ import net.minecraft.world.chunk.Chunk
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHandler
 
+@Suppress("CAST_NEVER_SUCCEEDS")
 class EnergyNetwork(
     val world: ServerWorld,
     val cables: MutableSet<BlockPos> = mutableSetOf(),
     val machines: MutableMap<BlockPos, MutableSet<Direction>> = mutableMapOf()
 ) {
     var tier =  Tier.MK1
-    val cachedChunks = mutableMapOf<ChunkPos, Chunk>()
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
         val receiversHandlers = mutableSetOf<EnergyHandler>()
         val senderHandlers = mutableSetOf<EnergyHandler>()
+        val cachedChunks = mutableMapOf<ChunkPos, Chunk>()
         machines.forEach { (pos, directions) ->
             if (!world.isChunkLoaded(pos)) return@forEach
             val chunk = cachedChunks.computeIfAbsent(ChunkPos(pos)) { world.getChunk(pos) }
