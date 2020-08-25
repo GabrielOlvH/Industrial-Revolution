@@ -1,6 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
+import alexiil.mc.lib.attributes.Simulation
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
@@ -12,7 +15,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
@@ -22,7 +24,7 @@ import team.reborn.energy.Energy
 
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(6)
         this.inventoryComponent = InventoryComponent {
             IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
@@ -40,6 +42,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             7000..9000,
             10000.0
         )
+        this.fluidComponent = FluidComponent(FluidAmount.ofWhole(4))
     }
 
     private var stableTemperature: Int = 0
@@ -49,23 +52,26 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
         else if (maxStoredPower > energy) {
-            for (direction in DIRECTIONS.shuffled(world!!.random)) {
-                val sidePos = pos.offset(direction)
-                val fluidState = world?.getFluidState(sidePos)
-                if (TEMPERATURE_MAP.containsKey(fluidState?.fluid)) {
-                    stableTemperature = TEMPERATURE_MAP[fluidState!!.fluid] ?: return false
-                    burnTime = 1600
-                    maxBurnTime = burnTime
-                    world?.setBlockState(sidePos, Blocks.AIR.defaultState, 3)
-                    break
-                }
+            val fluidComponent = fluidComponent!!
+            val volume = fluidComponent.tanks[0].volume
+            val extractable = fluidComponent.extractable
+            if (TEMPERATURE_MAP.containsKey(volume.rawFluid)
+                && extractable.attemptAnyExtraction(FluidAmount.BUCKET, Simulation.SIMULATE).amount() == FluidAmount.BUCKET) {
+                stableTemperature = TEMPERATURE_MAP[volume.rawFluid] ?: return false
+                burnTime = 1600
+                maxBurnTime = burnTime
+                extractable.extract(FluidAmount.BUCKET)
             }
         }
         markDirty()
         return burnTime > 0 && energy < maxStoredPower
     }
 
-    override fun getGenerationRatio(): Double = 64.0 * (if (temperatureComponent?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
+    override fun getGenerationRatio(): Double {
+        val ratio = 64.0 * (if (temperatureComponent?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
+        propertyDelegate[5] = ratio.toInt()
+        return ratio
+    }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)

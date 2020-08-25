@@ -120,9 +120,14 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
-                HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
-                ) { HeatGeneratorBlockEntity(tier) }
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController, { HeatGeneratorBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
         )
