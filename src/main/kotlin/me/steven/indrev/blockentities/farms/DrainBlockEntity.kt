@@ -11,7 +11,6 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.Box
-import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -24,21 +23,25 @@ class DrainBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry
     override fun machineTick() {
         if ((world?.time ?: return) % 20 == 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
         val fluidComponent = fluidComponent ?: return
-        val hasFluid = Direction.values().mapNotNull { world?.getFluidState(pos.offset(it)) }.any { !it.isEmpty }
+        val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()
         if (hasFluid && Energy.of(this).simulate().use(getConfig().energyCost)) {
             val mutablePos = pos.mutableCopy()
+            var currentChunk = world!!.getChunk(pos)
             for (x in range.minX.toInt()..range.maxX.toInt())
                 for (y in range.minY.toInt()..range.maxY.toInt()) {
                     for (z in range.minZ.toInt()..range.maxZ.toInt()) {
                         mutablePos.set(x, y, z)
-                        val blockState = world?.getBlockState(mutablePos)
+                        if (currentChunk.pos.x != x shr 4 && currentChunk.pos.z != z shr 4) {
+                            currentChunk = world!!.getChunk(mutablePos)
+                        }
+                        val blockState = currentChunk.getBlockState(mutablePos)
                         val block = blockState?.block
                         if (block is FluidDrainable && block is FluidBlock) {
                             val drained = block.tryDrainFluid(world, mutablePos, blockState)
                             if (drained != Fluids.EMPTY) {
                                 val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
-                                world?.setBlockState(mutablePos, Blocks.AIR.defaultState)
+                                currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
                                 fluidComponent.insertable.insert(toInsert)
                                 Energy.of(this).use(2.0)
                                 break
