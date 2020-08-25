@@ -7,20 +7,20 @@ import net.minecraft.server.world.ServerWorld
 
 object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.ServerStopped, ServerLifecycleEvents.ServerStarted {
     override fun onEndTick(world: ServerWorld) {
-        EnergyNetworkState.getNetworkState(world).networks.forEach { network -> network.tick(world) }
+        EnergyNetworkState.NETWORK_STATES.forEach { (world, networkState) ->
+            world.profiler.push("indrev_networkTick")
+            networkState.networks.forEach { network -> network.tick(world) }
+            world.profiler.pop()
+        }
     }
 
     override fun onServerStarted(server: MinecraftServer?) {
         server?.worlds?.forEach { world ->
-            EnergyNetworkState.getNetworkState(world)
+            EnergyNetworkState.NETWORK_STATES[world] = EnergyNetworkState.getNetworkState(world)
         }
     }
 
     override fun onServerStopped(server: MinecraftServer?) {
-        server?.worlds?.forEach { world ->
-            val state = EnergyNetworkState.getNetworkState(world)
-            state.networks.clear()
-            state.networksByPos.clear()
-        }
+        EnergyNetworkState.NETWORK_STATES.clear()
     }
 }

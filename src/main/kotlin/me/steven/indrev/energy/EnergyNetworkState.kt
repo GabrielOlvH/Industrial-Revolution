@@ -32,6 +32,7 @@ class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indr
     }
 
     companion object {
+        val NETWORK_STATES = mutableMapOf<ServerWorld, EnergyNetworkState>()
         fun getNetworkState(world: ServerWorld) = world.persistentStateManager.getOrCreate({ EnergyNetworkState(world) }, "indrev_networks")
     }
 }
