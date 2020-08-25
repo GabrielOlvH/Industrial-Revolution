@@ -27,7 +27,7 @@ class EnergyNetwork(
         val senderHandlers = mutableSetOf<EnergyHandler>()
 
         machines.forEach { (pos, directions) ->
-            if (!world.isChunkLoaded(pos.x shr 4, pos.z shr 4)) return@forEach
+            if (!world.isChunkLoaded(pos)) return@forEach
             val blockEntity = world.getBlockEntity(pos) ?: return@forEach
             if (Energy.valid(blockEntity)) {
                 directions.forEach { dir ->
