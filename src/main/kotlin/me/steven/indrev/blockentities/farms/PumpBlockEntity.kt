@@ -49,7 +49,7 @@ class PumpBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.
         }
     }
 
-    override fun getWorkingArea(): Box = Box(pos).expand(8.0, 1.0, 8.0)
+    override fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 1.0, 0.0)
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 
