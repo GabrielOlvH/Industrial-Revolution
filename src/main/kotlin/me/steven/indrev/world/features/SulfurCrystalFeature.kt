@@ -12,17 +12,17 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import net.minecraft.world.StructureWorldAccess
 import net.minecraft.world.gen.chunk.ChunkGenerator
+import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
-import net.minecraft.world.gen.feature.SingleStateFeatureConfig
 import java.util.*
 
-class SulfurCrystalFeature(codec: Codec<SingleStateFeatureConfig>) : Feature<SingleStateFeatureConfig>(codec) {
+class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
     override fun generate(
         world: StructureWorldAccess?,
         chunkGenerator: ChunkGenerator?,
         random: Random,
         blockPos: BlockPos?,
-        featureConfig: SingleStateFeatureConfig?
+        featureConfig: DefaultFeatureConfig?
     ): Boolean {
 
         val mutablePos = BlockPos.Mutable()

@@ -10,10 +10,7 @@ import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
-import net.minecraft.world.gen.feature.ConfiguredFeature
-import net.minecraft.world.gen.feature.Feature
-import net.minecraft.world.gen.feature.OreFeatureConfig
-import net.minecraft.world.gen.feature.SingleStateFeatureConfig
+import net.minecraft.world.gen.feature.*
 import java.util.function.Supplier
 
 object WorldGeneration {
@@ -41,23 +38,25 @@ object WorldGeneration {
                 )
             )
         }
-        Registry.register(Registry.FEATURE, identifier("sulfur_crystal"), sulfurCrystalFeature)
-
-        configuredFeatures.add(
-            IRConfiguredFeature(
-                identifier("sulfur_crystal"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeature, IRConfiguredFeature.IS_OVERWORLD
+        if (config.sulfurCrystals) {
+            configuredFeatures.add(
+                IRConfiguredFeature(
+                    identifier("sulfur_crystal"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeature, IRConfiguredFeature.IS_OVERWORLD
+                )
             )
-        )
-        configuredFeatures.add(
-            IRConfiguredFeature(
-                identifier("sulfur_crystal_nether"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeatureNether, IRConfiguredFeature.IS_NETHER
+            configuredFeatures.add(
+                IRConfiguredFeature(
+                    identifier("sulfur_crystal_nether"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeatureNether, IRConfiguredFeature.IS_NETHER
+                )
             )
-        )
-        configuredFeatures.add(
-            IRConfiguredFeature(
-                identifier("acid_lake"), GenerationStep.Feature.LAKES, acidLakesFeature
-            ) { biome -> biome.category == Biome.Category.SWAMP }
-        )
+        }
+        if (config.sulfuricAcidLake) {
+            configuredFeatures.add(
+                IRConfiguredFeature(
+                    identifier("acid_lake"), GenerationStep.Feature.LAKES, acidLakesFeature
+                ) { biome -> biome.category == Biome.Category.SWAMP }
+            )
+        }
     }
 
     fun handleBiome(biome: Biome) {
@@ -106,16 +105,14 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(8)
 
-    private val sulfurCrystalFeature = SulfurCrystalFeature(SingleStateFeatureConfig.CODEC)
+    val sulfurCrystalFeature = Registry.register(Registry.FEATURE, identifier("sulfur_crystal"), SulfurCrystalFeature(DefaultFeatureConfig.CODEC))
 
     val sulfurFeature: ConfiguredFeature<*, *> = sulfurCrystalFeature.configure(
-        SingleStateFeatureConfig(
-        IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState)
+        DefaultFeatureConfig()
     ).method_30377(16).repeat(10).spreadHorizontally()
 
     val sulfurFeatureNether: ConfiguredFeature<*, *> = sulfurCrystalFeature.configure(
-        SingleStateFeatureConfig(
-            IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState)
+        DefaultFeatureConfig()
     ).method_30377(100).repeat(10).spreadHorizontally()
 
     private val acidLakesFeature: ConfiguredFeature<*, *> = Feature.LAKE.configure(

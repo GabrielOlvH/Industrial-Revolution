@@ -220,6 +220,8 @@ class OreGen : ConfigData {
     val copper = true
     val tin = true
     val nikolite = true
+    val sulfuricAcidLake = true
+    val sulfurCrystals = true
 }
 
 @Config(name = "hud")

@@ -89,11 +89,6 @@ object IRRegistry {
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
-        WorldGeneration.init()
-        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
-        //RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
-        //.register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
-
         identifier("hammer").item(HAMMER)
 
         identifier("mining_drill").tierBasedItem { tier ->
@@ -211,6 +206,11 @@ object IRRegistry {
         identifier("tank_mk2").block(TANK_BLOCK_MK2).item(TANK_BLOCK_ITEM_MK2).blockEntityType(TANK_BLOCK_ENTITY_MK2)
         identifier("tank_mk3").block(TANK_BLOCK_MK3).item(TANK_BLOCK_ITEM_MK3).blockEntityType(TANK_BLOCK_ENTITY_MK3)
         identifier("tank_mk4").block(TANK_BLOCK_MK4).item(TANK_BLOCK_ITEM_MK4).blockEntityType(TANK_BLOCK_ENTITY_MK4)
+
+        WorldGeneration.init()
+        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
+        //RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
+        //.register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
