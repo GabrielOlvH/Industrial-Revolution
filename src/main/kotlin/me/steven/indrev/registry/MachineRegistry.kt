@@ -337,7 +337,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
-                object : FacingMachineBlock(
+                object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     CONFIG.machines.drain,

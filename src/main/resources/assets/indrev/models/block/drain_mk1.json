@@ -1,5 +1,5 @@
 {
-  "parent": "indrev:block/machine_mk1",
+  "parent": "indrev:block/machine",
   "textures": {
     "texture": "indrev:block/drain"
   }

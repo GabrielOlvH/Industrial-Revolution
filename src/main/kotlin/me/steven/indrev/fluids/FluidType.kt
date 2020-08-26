@@ -12,7 +12,7 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 
 enum class FluidType(val stillId: Identifier, val flowId: Identifier) {
-    LAVA(identifier("block/molten_netherite_still"), identifier("block/molten_netherite_flow")),
+    LAVA(identifier("block/gray_lava_still"), identifier("block/gray_lava_flow")),
     WATER(Identifier("block/water_still"), Identifier("block/water_flow"));
 
     var sprites = arrayOfNulls<Sprite>(2)
