@@ -80,15 +80,21 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             }
         }
         for (animal in animals) {
-            (0 until input.size()).forEach { slot ->
+            inventory.inputSlots.forEach { slot ->
                 val stack = inventory.getStack(slot).copy()
+                fakePlayer.inventory.selectedSlot = 8
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                 if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
                     Energy.of(this).use(Upgrade.ENERGY(this))
-                val res = inventory.addStack(fakePlayer.inventory.getStack(1))
+                val res = inventory.addStack(fakePlayer.inventory.getStack(0))
+                val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
+                if (!handStack.isEmpty && handStack.item != stack.item) {
+                    inventory.addStack(handStack)
+                    fakePlayer.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
+                }
                 if (res.isEmpty)
                     inventory.setStack(slot, stack)
-                fakePlayer.inventory.setStack(1, ItemStack.EMPTY)
+                fakePlayer.inventory.clear()
             }
         }
         cooldown = 0.0
