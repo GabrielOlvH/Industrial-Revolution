@@ -1,124 +1,77 @@
 package me.steven.indrev.registry
 
-import com.google.common.collect.ImmutableList
+import me.shedaniel.cloth.api.dynamic.registry.v1.BiomesRegistry
+import me.shedaniel.cloth.api.dynamic.registry.v1.DynamicRegistryCallback
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.features.IRConfiguredFeature
-import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
-import net.minecraft.world.gen.decorator.ChanceDecoratorConfig
-import net.minecraft.world.gen.decorator.Decorator
-import net.minecraft.world.gen.feature.*
-import java.util.function.Supplier
 
 object WorldGeneration {
     fun init() {
         val config = IndustrialRevolution.CONFIG.oregen
 
         if (config.copper) {
+            val copperFeature = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("copper_ore"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("ore_copper"), GenerationStep.Feature.UNDERGROUND_ORES, copperFeature, IRConfiguredFeature.IS_OVERWORLD
+                    GenerationStep.Feature.UNDERGROUND_ORES, copperFeature, IRConfiguredFeature.IS_OVERWORLD
                 )
             )
         }
         if (config.tin) {
+            val tinFeature = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("tin_ore"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("ore_tin"), GenerationStep.Feature.UNDERGROUND_ORES, tinFeature, IRConfiguredFeature.IS_OVERWORLD
+                    GenerationStep.Feature.UNDERGROUND_ORES, tinFeature, IRConfiguredFeature.IS_OVERWORLD
                 )
             )
         }
         if (config.nikolite) {
+            val nikoliteFeature = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("nikolite_ore"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("ore_nikolite"), GenerationStep.Feature.UNDERGROUND_ORES, nikoliteFeature, IRConfiguredFeature.IS_OVERWORLD
+                    GenerationStep.Feature.UNDERGROUND_ORES, nikoliteFeature, IRConfiguredFeature.IS_OVERWORLD
                 )
             )
         }
         if (config.sulfurCrystals) {
+            val sulfurFeatureOverworld = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("sulfur_crystal_overworld"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("sulfur_crystal"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeature, IRConfiguredFeature.IS_OVERWORLD
+                    GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeatureOverworld, IRConfiguredFeature.IS_OVERWORLD
                 )
             )
+            val sulfurFeatureNether = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("sulfur_crystal_nether"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("sulfur_crystal_nether"), GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeatureNether, IRConfiguredFeature.IS_NETHER
+                    GenerationStep.Feature.UNDERGROUND_DECORATION, sulfurFeatureNether, IRConfiguredFeature.IS_NETHER
                 )
             )
         }
         if (config.sulfuricAcidLake) {
+            val acidLakesFeature = RegistryKey.of(Registry.CONFIGURED_FEATURE_WORLDGEN, identifier("sulfuric_acid_lake"))
             configuredFeatures.add(
                 IRConfiguredFeature(
-                    identifier("acid_lake"), GenerationStep.Feature.LAKES, acidLakesFeature
+                    GenerationStep.Feature.LAKES, acidLakesFeature
                 ) { biome -> biome.category == Biome.Category.SWAMP }
             )
         }
     }
 
-    fun handleBiome(biome: Biome) {
-        configuredFeatures.filter { it.biomePredicate(biome) }.forEach {
-            val features = biome.generationSettings.features
-            val stepIndex = it.step.ordinal
-            while (features.size <= stepIndex) features.add(mutableListOf())
-            var registeredFeatures = features[stepIndex]
-            if (registeredFeatures is ImmutableList) {
-                registeredFeatures = registeredFeatures.toMutableList()
-                features[stepIndex] = registeredFeatures
+    fun registerCallback() {
+        DynamicRegistryCallback.callback(Registry.BIOME_KEY).register(DynamicRegistryCallback { manager, key, biome ->
+            configuredFeatures.forEach { feature ->
+                if (feature.biomePredicate(biome)) {
+                    BiomesRegistry.registerFeature(manager, biome, feature.step, feature.configuredFeature)
+                }
             }
-            registeredFeatures.add(Supplier { it.configuredFeature })
-        }
+        })
+
     }
-
-    val copperFeature: ConfiguredFeature<*, *> =
-        Feature.ORE.configure(
-            OreFeatureConfig(
-                OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                IRRegistry.COPPER_ORE().defaultState,
-                10
-            )
-        )
-            .method_30377(64)
-            .spreadHorizontally()
-            .repeat(14)
-
-    val tinFeature: ConfiguredFeature<*, *> =
-        Feature.ORE.configure(
-            OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
-        )
-            .method_30377(48)
-            .spreadHorizontally()
-            .repeat(14)
-
-    val nikoliteFeature: ConfiguredFeature<*, *> =
-        Feature.ORE.configure(
-            OreFeatureConfig(
-                OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                IRRegistry.NIKOLITE_ORE().defaultState,
-                7
-            )
-        )
-            .method_30377(16)
-            .spreadHorizontally()
-            .repeat(8)
-
-    val sulfurCrystalFeature = Registry.register(Registry.FEATURE, identifier("sulfur_crystal"), SulfurCrystalFeature(DefaultFeatureConfig.CODEC))
-
-    val sulfurFeature: ConfiguredFeature<*, *> = sulfurCrystalFeature.configure(
-        DefaultFeatureConfig()
-    ).method_30377(16).repeat(10).spreadHorizontally()
-
-    val sulfurFeatureNether: ConfiguredFeature<*, *> = sulfurCrystalFeature.configure(
-        DefaultFeatureConfig()
-    ).method_30377(100).repeat(10).spreadHorizontally()
-
-    private val acidLakesFeature: ConfiguredFeature<*, *> = Feature.LAKE.configure(
-        SingleStateFeatureConfig(IRRegistry.SULFURIC_ACID.defaultState)
-    ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
-
 
     private val configuredFeatures = mutableListOf<IRConfiguredFeature>()
 }

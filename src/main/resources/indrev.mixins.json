@@ -5,7 +5,7 @@
   "mixins": [
     "AccessorBucketItem",
     "AccessorEnergyHandler",
-    "MixinGenerationSettings",
+    "FluidKeysMixin",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",

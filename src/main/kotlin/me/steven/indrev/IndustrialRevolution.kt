@@ -45,16 +45,6 @@ object IndustrialRevolution : ModInitializer {
         )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
         IRRegistry.registerAll()
-        arrayOf(
-            IRRegistry.COOLANT_STILL,
-            IRRegistry.MOLTEN_NETHERITE_STILL,
-            IRRegistry.MOLTEN_IRON_STILL,
-            IRRegistry.MOLTEN_GOLD_STILL,
-            IRRegistry.MOLTEN_COPPER_STILL,
-            IRRegistry.MOLTEN_TIN_STILL,
-            IRRegistry.SULFURIC_ACID_STILL,
-            IRRegistry.TOXIC_MUD_STILL
-        ).forEach { it.registerFluidKey() }
         IRLootTables.register()
         MachineRegistry.COAL_GENERATOR_REGISTRY
 
@@ -133,4 +123,17 @@ object IndustrialRevolution : ModInitializer {
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
+
+    fun registerFluids() {
+        arrayOf(
+            IRRegistry.COOLANT_STILL,
+            IRRegistry.MOLTEN_NETHERITE_STILL,
+            IRRegistry.MOLTEN_IRON_STILL,
+            IRRegistry.MOLTEN_GOLD_STILL,
+            IRRegistry.MOLTEN_COPPER_STILL,
+            IRRegistry.MOLTEN_TIN_STILL,
+            IRRegistry.SULFURIC_ACID_STILL,
+            IRRegistry.TOXIC_MUD_STILL
+        ).forEach { it.registerFluidKey() }
+    }
 }
