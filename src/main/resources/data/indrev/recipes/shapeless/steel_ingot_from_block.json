@@ -1,0 +1,12 @@
+{
+  "type": "indrev:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:steel_blocks"
+    }
+  ],
+  "result": {
+    "item": "steel_ingot",
+    "count": 9
+  }
+}

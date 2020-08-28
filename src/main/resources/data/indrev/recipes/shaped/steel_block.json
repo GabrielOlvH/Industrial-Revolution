@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:steel_ingots"
+    }
+  },
+  "result": {
+    "item": "indrev:steel_block"
+  }
+}

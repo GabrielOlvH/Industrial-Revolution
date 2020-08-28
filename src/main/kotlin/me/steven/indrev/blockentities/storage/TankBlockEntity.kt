@@ -17,6 +17,8 @@ class TankBlockEntity : BlockEntity(IRRegistry.TANK_BLOCK_ENTITY), BlockEntityCl
     val fluidComponent = FluidComponent(FluidAmount(8))
 
     override fun tick() {
+        if (world?.isClient == true) return
+        sync()
         if (!cachedState[TankBlock.DOWN]) return
         val tank = fluidComponent.tanks[0]
         val fluidAmount = tank.volume.amount()

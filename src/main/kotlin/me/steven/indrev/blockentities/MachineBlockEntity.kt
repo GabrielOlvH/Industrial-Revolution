@@ -225,12 +225,12 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         fluidComponent?.tanks?.forEach { tank ->
             fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
                 if (mode == TransferMode.NONE) return@innerForEach
-                val fluidAmount =
-                    (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)
-                        NUGGET_AMOUNT
-                    else
-                        tank.volume.amount()) ?: return@innerForEach
                 if (mode.output) {
+                    val fluidAmount =
+                        (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)
+                            NUGGET_AMOUNT
+                        else
+                            tank.volume.amount()) ?: return@innerForEach
                     val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
                         ?: return@innerForEach
                     val extractable = fluidComponent?.extractable
@@ -244,6 +244,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 if (mode.input) {
                     val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
                         ?: return@innerForEach
+                    val fluidAmount = NUGGET_AMOUNT
                     val insertable = fluidComponent?.insertable
                     val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
                     val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)

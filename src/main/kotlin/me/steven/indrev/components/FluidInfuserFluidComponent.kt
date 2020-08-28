@@ -30,7 +30,7 @@ class FluidInfuserFluidComponent : FluidComponent(FluidAmount(8) , 2) {
                         val tank = 1
                         val thisMax = maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
                         fluid = FluidVolumeUtil.extractSingle(this.inv(), tank, filter, fluid, thisMax, simulation)
-                        if (!fluid.amount_F.isLessThan(maxAmount))
+                        if (fluid.amount_F >= maxAmount)
                             return fluid
                         fluid
                     }

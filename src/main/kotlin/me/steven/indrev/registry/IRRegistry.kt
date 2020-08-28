@@ -31,6 +31,7 @@ import net.minecraft.block.MaterialColor
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
+import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
@@ -247,7 +248,7 @@ object IRRegistry {
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
-    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).requiresTool())
+    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
 
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
@@ -257,71 +258,31 @@ object IRRegistry {
         BaseFluid.Still(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_FLOWING }
     val COOLANT_FLOWING =
         BaseFluid.Flowing(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_STILL }
-    val COOLANT_BUCKET = BucketItem(COOLANT_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val COOLANT_BUCKET = BucketItem(COOLANT_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val COOLANT = object : FluidBlock(COOLANT_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_NETHERITE_IDENTIFIER = identifier("molten_netherite")
-    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(
-        MOLTEN_NETHERITE_IDENTIFIER,
-        { MOLTEN_NETHERITE },
-        { MOLTEN_NETHERITE_BUCKET },
-        0x654740
-    ) { MOLTEN_NETHERITE_FLOWING }
-    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(
-        MOLTEN_NETHERITE_IDENTIFIER,
-        { MOLTEN_NETHERITE },
-        { MOLTEN_NETHERITE_BUCKET },
-        0x654740
-    ) { MOLTEN_NETHERITE_STILL }
-    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_NETHERITE_IDENTIFIER, { MOLTEN_NETHERITE }, { MOLTEN_NETHERITE_BUCKET }, 0x654740) { MOLTEN_NETHERITE_FLOWING }
+    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(MOLTEN_NETHERITE_IDENTIFIER, { MOLTEN_NETHERITE }, { MOLTEN_NETHERITE_BUCKET }, 0x654740) { MOLTEN_NETHERITE_STILL }
+    val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_IRON_IDENTIFIER = identifier("molten_iron")
-    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(
-        MOLTEN_IRON_IDENTIFIER,
-        { MOLTEN_IRON },
-        { MOLTEN_IRON_BUCKET },
-        0x7A0019
-    ) { MOLTEN_IRON_FLOWING }
-    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(
-        MOLTEN_IRON_IDENTIFIER,
-        { MOLTEN_IRON },
-        { MOLTEN_IRON_BUCKET },
-        0x7A0019
-    ) { MOLTEN_IRON_STILL }
-    val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_FLOWING }
+    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_STILL }
+    val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_IRON = object : FluidBlock(MOLTEN_IRON_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_GOLD_IDENTIFIER = identifier("molten_gold")
-    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(
-        MOLTEN_GOLD_IDENTIFIER,
-        { MOLTEN_GOLD },
-        { MOLTEN_GOLD_BUCKET },
-        0xFFCC00
-    ) { MOLTEN_GOLD_FLOWING }
-    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(
-        MOLTEN_GOLD_IDENTIFIER,
-        { MOLTEN_GOLD },
-        { MOLTEN_GOLD_BUCKET },
-        0xFFCC00
-    ) { MOLTEN_GOLD_STILL }
-    val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_GOLD_IDENTIFIER, { MOLTEN_GOLD }, { MOLTEN_GOLD_BUCKET }, 0xFFCC00) { MOLTEN_GOLD_FLOWING }
+    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(MOLTEN_GOLD_IDENTIFIER, { MOLTEN_GOLD }, { MOLTEN_GOLD_BUCKET }, 0xFFCC00) { MOLTEN_GOLD_STILL }
+    val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_GOLD = object : FluidBlock(MOLTEN_GOLD_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_COPPER_IDENTIFIER = identifier("molten_copper")
-    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(
-        MOLTEN_COPPER_IDENTIFIER,
-        { MOLTEN_COPPER },
-        { MOLTEN_COPPER_BUCKET },
-        0xEA7708
-    ) { MOLTEN_COPPER_FLOWING }
-    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(
-        MOLTEN_COPPER_IDENTIFIER,
-        { MOLTEN_COPPER },
-        { MOLTEN_COPPER_BUCKET },
-        0xEA7708
-    ) { MOLTEN_COPPER_STILL }
-    val MOLTEN_COPPER_BUCKET = BucketItem(MOLTEN_COPPER_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_COPPER_IDENTIFIER, { MOLTEN_COPPER }, { MOLTEN_COPPER_BUCKET }, 0xEA7708) { MOLTEN_COPPER_FLOWING }
+    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(MOLTEN_COPPER_IDENTIFIER, { MOLTEN_COPPER }, { MOLTEN_COPPER_BUCKET }, 0xEA7708) { MOLTEN_COPPER_STILL }
+    val MOLTEN_COPPER_BUCKET = BucketItem(MOLTEN_COPPER_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_COPPER = object : FluidBlock(MOLTEN_COPPER_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_TIN_IDENTIFIER = identifier("molten_tin")
@@ -329,7 +290,7 @@ object IRRegistry {
         BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_FLOWING }
     val MOLTEN_TIN_FLOWING =
         BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_STILL }
-    val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val ACID_MATERIAL: Material =
@@ -340,19 +301,9 @@ object IRRegistry {
             .liquid().build()
 
     val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
-    val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(
-        SULFURIC_ACID_IDENTIFIER,
-        { SULFURIC_ACID },
-        { SULFURIC_ACID_BUCKET },
-        0x9ab58a
-    ) { SULFURIC_ACID_FLOWING }
-    val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(
-        SULFURIC_ACID_IDENTIFIER,
-        { SULFURIC_ACID },
-        { SULFURIC_ACID_BUCKET },
-        0x9ab58a
-    ) { SULFURIC_ACID_STILL }
-    val SULFURIC_ACID_BUCKET = BucketItem(SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_FLOWING }
+    val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_STILL }
+    val SULFURIC_ACID_BUCKET = BucketItem(SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val SULFURIC_ACID = AcidFluidBlock(SULFURIC_ACID_STILL, FabricBlockSettings.of(ACID_MATERIAL).ticksRandomly())
 
     val TOXIC_MUD_IDENTIFIER = identifier("toxic_mud")
@@ -360,7 +311,7 @@ object IRRegistry {
         BaseFluid.Still(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_FLOWING }
     val TOXIC_MUD_FLOWING =
         BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
-    val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
 
     val MACHINE_BLOCK = Block(
