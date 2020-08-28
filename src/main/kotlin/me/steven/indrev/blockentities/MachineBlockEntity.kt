@@ -1,12 +1,13 @@
 package me.steven.indrev.blockentities
 
+import alexiil.mc.lib.attributes.Simulation
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
-import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.Property
-import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
+import me.steven.indrev.utils.NUGGET_AMOUNT
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
@@ -40,6 +41,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, maxStoredPower) }
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
+    var fluidComponent: FluidComponent? = null
 
     var itemTransferCooldown = 0
 
@@ -66,7 +68,8 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 if (Energy.valid(stack))
                     Energy.of(stack).into(Energy.of(this)).move()
             }
-            transfer()
+            transferItems()
+            transferFluids()
             machineTick()
             markDirty()
             sync()
@@ -109,15 +112,15 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
 
     override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
-    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         return inventoryComponent?.inventory
-            ?: throw IllegalStateException("retrieving inventory from machine without inventory controller!")
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
+        fluidComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -126,6 +129,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (tag != null) {
             inventoryComponent?.toTag(tag)
             temperatureComponent?.toTag(tag)
+            fluidComponent?.toTag(tag)
         }
         return super.toTag(tag)
     }
@@ -133,6 +137,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     override fun fromClientTag(tag: CompoundTag?) {
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
+        fluidComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -140,11 +145,12 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         if (tag == null) return CompoundTag()
         inventoryComponent?.toTag(tag)
         temperatureComponent?.toTag(tag)
+        fluidComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }
 
-    private fun transfer() {
+    private fun transferItems() {
         itemTransferCooldown--
         inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
             val pos = pos.offset(direction)
@@ -152,12 +158,12 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
             val inventory = inventoryComponent?.inventory ?: return@forEach
             if (mode.output) {
                 inventory.outputSlots.forEach { slot ->
-                    transfer(inventory, neighborInv, slot, direction)
+                    transferItems(inventory, neighborInv, slot, direction)
                 }
             }
             if (mode.input) {
-                getAvailableSlots(neighborInv, direction).forEach { slot ->
-                    transfer(neighborInv, inventory, slot, direction.opposite)
+                getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
+                    transferItems(neighborInv, inventory, slot, direction.opposite)
                 }
             }
         }
@@ -166,13 +172,13 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     private fun getFirstSlot(inventory: Inventory, predicate: (Int, ItemStack) -> Boolean): Int? =
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
-    private fun transfer(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
+    private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
         if (itemTransferCooldown > 0) return
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
-                        && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
+                    && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
             } ?: break
             val targetStack = to.getStack(firstSlot)
             if (from is SidedInventory && !from.canExtract(slot, toTransfer, direction))
@@ -212,6 +218,41 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
                 else blockEntity
             }
             else -> null
+        }
+    }
+
+    private fun transferFluids() {
+        fluidComponent?.tanks?.forEach { tank ->
+            fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
+                if (mode == TransferMode.NONE) return@innerForEach
+                val fluidAmount =
+                    (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)
+                        NUGGET_AMOUNT
+                    else
+                        tank.volume.amount()) ?: return@innerForEach
+                if (mode.output) {
+                    val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                        ?: return@innerForEach
+                    val extractable = fluidComponent?.extractable
+                    val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                    val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                    if (extractionResult?.isEmpty == false && insertionResult.isEmpty) {
+                        insertable.insert(extractionResult)
+                        extractable.extract(extractionResult.amount())
+                    }
+                }
+                if (mode.input) {
+                    val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                        ?: return@innerForEach
+                    val insertable = fluidComponent?.insertable
+                    val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
+                    val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)
+                    if (insertionResult?.isEmpty == true && !extractionResult.isEmpty) {
+                        extractable.extract(extractionResult?.amount())
+                        insertable.insert(extractionResult)
+                    }
+                }
+            }
         }
     }
 }

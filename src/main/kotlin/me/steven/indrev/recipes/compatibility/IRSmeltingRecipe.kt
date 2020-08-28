@@ -55,14 +55,7 @@ class IRSmeltingRecipe(
                 val itemStack = ItemStack { item }
                 val f = JsonHelper.getFloat(jsonObject, "experience", 0.0f)
                 val i = JsonHelper.getInt(jsonObject, "cookingtime", 200)
-                return IRSmeltingRecipe(
-                    identifier,
-                    string,
-                    ingredient,
-                    itemStack,
-                    f,
-                    i
-                )
+                return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
             }
 
             override fun read(identifier: Identifier, packetByteBuf: PacketByteBuf): IRSmeltingRecipe {
@@ -71,14 +64,7 @@ class IRSmeltingRecipe(
                 val itemStack = packetByteBuf.readItemStack()
                 val f = packetByteBuf.readFloat()
                 val i = packetByteBuf.readVarInt()
-                return IRSmeltingRecipe(
-                    identifier,
-                    string,
-                    ingredient,
-                    itemStack,
-                    f,
-                    i
-                )
+                return IRSmeltingRecipe(identifier, string, ingredient, itemStack, f, i)
             }
 
             override fun write(packetByteBuf: PacketByteBuf, abstractCookingRecipe: IRSmeltingRecipe) {

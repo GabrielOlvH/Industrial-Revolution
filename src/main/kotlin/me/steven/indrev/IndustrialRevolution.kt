@@ -1,9 +1,13 @@
 package me.steven.indrev
 
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData
+import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
+import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
+import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.recipes.PatchouliBookRecipe
@@ -12,10 +16,7 @@ import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
 import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
 import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
-import me.steven.indrev.recipes.machines.CompressorRecipe
-import me.steven.indrev.recipes.machines.InfuserRecipe
-import me.steven.indrev.recipes.machines.PulverizerRecipe
-import me.steven.indrev.recipes.machines.RecyclerRecipe
+import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -24,6 +25,8 @@ import me.steven.indrev.utils.registerScreenHandler
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.item.ItemGroup
@@ -36,8 +39,12 @@ import team.reborn.energy.Energy
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
+        AutoConfig.register(
+            IRConfig::class.java,
+            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
+        )
         Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
-        //IRRegistry.registerAll()
+        IRRegistry.registerAll()
         IRLootTables.register()
         MachineRegistry.COAL_GENERATOR_REGISTRY
 
@@ -47,6 +54,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, CompressorRecipe.IDENTIFIER, CompressorRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, InfuserRecipe.IDENTIFIER, InfuserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
@@ -59,27 +68,37 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, CondenserRecipe.IDENTIFIER, CondenserRecipe.TYPE)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
+            val isItemConfig = buf.readBoolean()
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
-            val mode = InventoryComponent.Mode.values()[buf.readInt()]
+            val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
-                if (blockEntity.inventoryComponent != null) {
+                if (isItemConfig && blockEntity.inventoryComponent != null) {
                     blockEntity.inventoryComponent!!.itemConfig[dir] = mode
-                }
+                } else if (blockEntity.fluidComponent != null)
+                    blockEntity.fluidComponent!!.transferConfig[dir] = mode
             }
         }
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
         LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
+
+        ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
+        ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+        ServerLifecycleEvents.SERVER_STARTED.register(NetworkEvents)
     }
 
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack(IRRegistry.NIKOLITE_ORE()) }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRRegistry.NIKOLITE_ORE().asItem() } }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)
@@ -95,9 +114,26 @@ object IndustrialRevolution : ModInitializer {
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
     val MINER_HANDLER = MinerController.SCREEN_ID.registerScreenHandler(::MinerController)
     val FISHING_FARM_HANDLER = FishingFarmController.SCREEN_ID.registerScreenHandler(::FishingFarmController)
-    val MODULAR_WORKBENCH_HANDLER = ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val MODULAR_WORKBENCH_HANDLER =
+        ModularWorkbenchController.SCREEN_ID.registerScreenHandler(::ModularWorkbenchController)
+    val SMELTER_HANDLER = SmelterController.SCREEN_ID.registerScreenHandler(::SmelterController)
+    val CONDENSER_HANDLER = CondenserController.SCREEN_ID.registerScreenHandler(::CondenserController)
+    val FLUID_INFUSER_HANDLER = FluidInfuserController.SCREEN_ID.registerScreenHandler(::FluidInfuserController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
+
+    fun registerFluids() {
+        arrayOf(
+            IRRegistry.COOLANT_STILL,
+            IRRegistry.MOLTEN_NETHERITE_STILL,
+            IRRegistry.MOLTEN_IRON_STILL,
+            IRRegistry.MOLTEN_GOLD_STILL,
+            IRRegistry.MOLTEN_COPPER_STILL,
+            IRRegistry.MOLTEN_TIN_STILL,
+            IRRegistry.SULFURIC_ACID_STILL,
+            IRRegistry.TOXIC_MUD_STILL
+        ).forEach { it.registerFluidKey() }
+    }
 }

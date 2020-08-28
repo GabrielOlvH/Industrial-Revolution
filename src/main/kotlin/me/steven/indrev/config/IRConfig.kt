@@ -137,6 +137,30 @@ class Machines : ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     val fishingMk4: MachineConfig = MachineConfig(64.0, 200.0, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val smelter: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val condenser: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fluidInfuserMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fluidInfuserMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fluidInfuserMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val modularWorkbench: MachineConfig = MachineConfig(16.0, 1.0, 500000.0, Tier.MK4.io)
 }
 
 // this is so auto config actually generates the config properly
@@ -196,6 +220,8 @@ class OreGen : ConfigData {
     val copper = true
     val tin = true
     val nikolite = true
+    val sulfuricAcidLake = true
+    val sulfurCrystals = true
 }
 
 @Config(name = "hud")

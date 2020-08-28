@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "tag": "c:tin_blocks"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_tin_still",
+    "type": "block",
+    "count": 1
+  },
+  "processTime": 600
+}

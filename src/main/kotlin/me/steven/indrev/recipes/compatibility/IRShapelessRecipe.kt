@@ -41,11 +41,7 @@ open class IRShapelessRecipe(
                 val string = JsonHelper.getString(jsonObject, "group", "")
                 val defaultedList =
                     getIngredients(
-                        JsonHelper.getArray(
-                            jsonObject,
-                            "ingredients"
-                        )
-                    )
+                        JsonHelper.getArray(jsonObject, "ingredients"))
                 return when {
                     defaultedList.isEmpty() -> {
                         throw JsonParseException("No ingredients for shapeless recipe")

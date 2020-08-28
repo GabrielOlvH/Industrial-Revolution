@@ -1,0 +1,13 @@
+{
+  "type": "indrev:condenser",
+  "output": {
+    "item": "indrev:iron_chunk",
+    "count": 1
+  },
+  "fluid": {
+    "fluid": "indrev:molten_iron_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}

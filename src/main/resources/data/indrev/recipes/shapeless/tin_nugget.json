@@ -1,0 +1,12 @@
+{
+  "type": "indrev:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:tin_ingots"
+    }
+  ],
+  "result": {
+    "item": "tin_nugget",
+    "count": 9
+  }
+}

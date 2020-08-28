@@ -1,6 +1,7 @@
 package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
+import me.steven.indrev.utils.getItemStackFromJson
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -11,7 +12,6 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
 class InfuserRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val ingredients: DefaultedList<Ingredient>) : Recipe<Inventory> {
@@ -55,19 +55,9 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
                     list.forEachIndexed { index, ingredient -> ing[index] = ingredient }
                     ing
                 }
-                val result = json.get("output").asJsonObject
-                val output = ItemStack {
-                    Registry.ITEM.getOrEmpty(Identifier(result.get("item").asString)).orElse(null)
-                        ?: throw IllegalArgumentException("no such item $result")
-                }
-                output.count = result.get("count").asInt
+                val output = getItemStackFromJson(json.getAsJsonObject("output"))
                 val ticks = json.get("processTime").asInt
-                return InfuserRecipe(
-                    id,
-                    ticks,
-                    output,
-                    ingredients
-                )
+                return InfuserRecipe(id, ticks, output, ingredients)
             }
 
             override fun read(id: Identifier, buf: PacketByteBuf): InfuserRecipe {
@@ -76,12 +66,7 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
                 (0 until size).forEach { i -> input[i] = Ingredient.fromPacket(buf) }
                 val processTime = buf.readInt()
                 val output = buf.readItemStack()
-                return InfuserRecipe(
-                    id,
-                    processTime,
-                    output,
-                    input
-                )
+                return InfuserRecipe(id, processTime, output, input)
             }
 
         }

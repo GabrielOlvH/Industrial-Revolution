@@ -1,15 +1,19 @@
 package me.steven.indrev.blocks
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
@@ -82,7 +86,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity !is CableBlockEntity) return ActionResult.FAIL
             val id = Registry.ITEM.getId(handStack.item)
-            if (!Registry.BLOCK.containsId(id)) return ActionResult.FAIL
+            if (!Registry.BLOCK.getOrEmpty(id).isPresent) return ActionResult.FAIL
             val block = Registry.BLOCK.get(id)
             if (block is BlockEntityProvider || !block.defaultState.isFullCube(world, pos)) return ActionResult.FAIL
             blockEntity.cover = id
@@ -99,9 +103,38 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         val blockPos = ctx?.blockPos ?: return state
         for (direction in Direction.values()) {
             val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            state = state.with(getProperty(direction), Energy.valid(neighbor))
+            state = state.with(getProperty(direction), isConnectable(neighbor))
         }
         return state
+    }
+
+    override fun onStateReplaced(
+        state: BlockState,
+        world: World,
+        pos: BlockPos,
+        newState: BlockState,
+        moved: Boolean
+    ) {
+        super.onStateReplaced(state, world, pos, newState, moved)
+        if (!world.isClient) {
+            EnergyNetwork.updateBlock(world as ServerWorld, pos, true)
+        }
+    }
+
+    private fun isConnectable(blockEntity: BlockEntity?) =
+        blockEntity != null && Energy.valid(blockEntity) || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
+
+    override fun onPlaced(
+        world: World,
+        pos: BlockPos,
+        state: BlockState?,
+        placer: LivingEntity?,
+        itemStack: ItemStack?
+    ) {
+        super.onPlaced(world, pos, state, placer, itemStack)
+        if (!world.isClient) {
+            EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
+        }
     }
 
     override fun getStateForNeighborUpdate(
@@ -113,10 +146,17 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         neighborPos: BlockPos?
     ): BlockState {
         val neighborBlockEntity = world?.getBlockEntity(neighborPos)
-        return state.with(getProperty(facing), neighborBlockEntity != null && Energy.valid(neighborBlockEntity))
+        return state.with(getProperty(facing), isConnectable(neighborBlockEntity))
     }
 
     override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
+
+    fun getConfig() = when(tier) {
+        Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1
+        Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2
+        Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3
+        else -> IndustrialRevolution.CONFIG.cables.cableMk4
+    }
 
     companion object {
 

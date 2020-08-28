@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.modularworkbench
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent
@@ -53,9 +54,9 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             setWorkingState(false)
         } else if (isProcessing()
             && module.slots.contains(armorItem.slotType)
-            && Energy.of(this).use(16.0)) {
+            && Energy.of(this).use(getConfig().maxEnergyStored)) {
             setWorkingState(true)
-            processTime = (processTime + 1.0).coerceAtMost(1200.0).toInt()
+            processTime += getConfig().processSpeed.toInt()
             if (processTime >= 1200) {
                 inventory.setStack(1, ItemStack.EMPTY)
                 val tag = armorStack.orCreateTag
@@ -83,11 +84,13 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         } else processTime = -1
     }
 
-    override fun getBaseBuffer(): Double = 500000.0
+    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.modularWorkbench
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0

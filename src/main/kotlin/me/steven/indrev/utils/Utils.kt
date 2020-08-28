@@ -1,15 +1,27 @@
 package me.steven.indrev.utils
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
+import me.shedaniel.math.Point
+import me.shedaniel.rei.api.widgets.Widgets
+import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.gui.widgets.machines.WFluid
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.BufferRenderer
 import net.minecraft.client.render.Tessellator
@@ -22,10 +34,12 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
+import net.minecraft.text.OrderedText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.util.JsonHelper
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
@@ -110,9 +124,10 @@ fun getShortEnergyDisplay(energy: Double): String =
 
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     val handler = Energy.of(stack)
-    tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-    tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} / ${getShortEnergyDisplay(handler.maxStored)} LF").formatted(Formatting.GOLD))
-    tooltip?.add(TranslatableText("item.indrev.rechargeable.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY))
+    if (handler.energy > 0) {
+        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} LF").formatted(Formatting.GOLD))
+    }
 }
 
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
@@ -323,3 +338,79 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
 
 fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
     registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
+
+fun getFluidFromJson(json: JsonObject): FluidVolume {
+    val fluidId = json.get("fluid").asString
+    val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
+    val amount = JsonHelper.getLong(json, "count", 1)
+    val fluidAmount = when (val type = json.get("type").asString) {
+        "nugget" -> NUGGET_AMOUNT
+        "ingot" -> INGOT_AMOUNT
+        "block" -> BLOCK_AMOUNT
+        "bucket" -> FluidAmount.BUCKET
+        else -> throw IllegalArgumentException("unknown amount type $type")
+    }.mul(amount)
+    return fluidKey.withAmount(fluidAmount)
+}
+
+fun getItemStackFromJson(json: JsonObject): ItemStack {
+    val itemPath = json.get("item").asString
+    if (itemPath == "empty") return ItemStack.EMPTY
+    val item =
+        if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
+        else
+            getFirstMatch(
+                arrayOf(
+                    Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
+                    identifier(itemPath)
+                ), Registry.ITEM
+            )
+    val output = ItemStack { item }
+    output.count = JsonHelper.getInt(json, "count", 1)
+    return output
+}
+
+inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                if (f(x, y, z)) return true
+    return false
+}
+
+inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                f(x, y, z)
+}
+
+
+inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
+    for (x in minX.toInt()..maxX.toInt())
+        for (y in minY.toInt()..maxY.toInt())
+            for (z in minZ.toInt()..maxZ.toInt())
+                if (f(x, y, z)) return BlockPos(x, y, z)
+    return null
+}
+
+fun offerDefaultAttributes(fluidComponent: FluidComponent, to: AttributeList<*>) {
+    val opposite = to.searchDirection?.opposite
+    if (to.attribute == FluidAttributes.INSERTABLE && fluidComponent.transferConfig[opposite]?.input == true)
+        to.offer(fluidComponent)
+    else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
+        to.offer(fluidComponent)
+}
+
+fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
+    widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
+        fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
+        if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
+            val information = mutableListOf<OrderedText>()
+            information.addAll(fluid.fluidKey.fullTooltip.map { it.asOrderedText() })
+            information.add(LiteralText("${(fluid.amount().asInexactDouble() * 1000).toInt()} mB").asOrderedText())
+            MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
+        }
+    })
+}

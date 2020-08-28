@@ -32,7 +32,7 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
 
         root.add(createPlayerInventoryPanel(), 0, 4)
 
-        addBookEntryShortcut(playerInventory, root, 7, 0)
+        addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
 
         root.validate(this)
     }

@@ -1,8 +1,7 @@
 package me.steven.indrev.recipes.machines
 
 import com.google.gson.JsonObject
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.utils.getFirstMatch
+import me.steven.indrev.utils.getItemStackFromJson
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -12,9 +11,7 @@ import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
-import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
 class CompressorRecipe(private val id: Identifier, val processTime: Int, private val output: ItemStack, val input: Ingredient) : Recipe<Inventory> {
@@ -50,19 +47,7 @@ class CompressorRecipe(private val id: Identifier, val processTime: Int, private
 
             override fun read(id: Identifier, json: JsonObject): CompressorRecipe {
                 val input = Ingredient.fromJson(json.getAsJsonObject("ingredient"))
-                val result = json.get("output").asJsonObject
-                val itemPath = result.get("item").asString
-                val item =
-                    if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
-                    else
-                        getFirstMatch(
-                            arrayOf(
-                                Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
-                                identifier(itemPath)
-                            ), Registry.ITEM
-                        )
-                val output = ItemStack { item }
-                output.count = JsonHelper.getInt(result, "count", 1)
+                val output = getItemStackFromJson(json.getAsJsonObject("output"))
                 val ticks = json.get("processTime").asInt
                 return CompressorRecipe(id, ticks, output, input)
             }

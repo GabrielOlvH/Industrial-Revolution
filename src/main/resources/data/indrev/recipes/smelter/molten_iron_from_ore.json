@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "item": "minecraft:iron_ore"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_iron_still",
+    "type": "ingot",
+    "count": 3
+  },
+  "processTime": 600
+}

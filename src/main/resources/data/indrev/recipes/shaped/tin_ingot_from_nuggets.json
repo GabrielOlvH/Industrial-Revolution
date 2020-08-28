@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:tin_nuggets"
+    }
+  },
+  "result": {
+    "item": "indrev:tin_ingot"
+  }
+}

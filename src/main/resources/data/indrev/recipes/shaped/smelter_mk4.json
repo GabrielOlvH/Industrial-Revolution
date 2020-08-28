@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "NMN",
+    "SBS"
+  ],
+  "key": {
+    "M": {
+      "item": "minecraft:blast_furnace"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "S": {
+      "tag": "c:steel_ingots"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:smelter_mk4"
+  }
+}

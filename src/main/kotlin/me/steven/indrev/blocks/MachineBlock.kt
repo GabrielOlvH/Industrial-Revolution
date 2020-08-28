@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
@@ -80,14 +81,15 @@ open class MachineBlock(
         return ActionResult.SUCCESS
     }
 
-    override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos?, newState: BlockState, moved: Boolean) {
-        if (!state.isOf(newState.block)) {
-            val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return
-            if (blockEntity.inventoryComponent != null) {
+    override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity
+        super.onStateReplaced(state, world, pos, newState, moved)
+        if (!state.isOf(newState.block) && !world.isClient) {
+            if (blockEntity?.inventoryComponent != null) {
                 ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
                 world.updateComparators(pos, this)
             }
-            super.onStateReplaced(state, world, pos, newState, moved)
+            EnergyNetwork.updateBlock(world as ServerWorld, pos, true)
         }
     }
 
@@ -115,20 +117,24 @@ open class MachineBlock(
         }
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos?, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
-        val tag = itemStack?.getSubTag("MachineInfo") ?: return
-        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity ?: return
-        val temperatureController = blockEntity.temperatureComponent
-        if (Energy.valid(itemStack))
-            Energy.of(blockEntity).set(Energy.of(itemStack).energy)
-        if (temperatureController != null) {
-            val temperature = tag.getDouble("Temperature")
-            temperatureController.temperature = temperature
+        if (world?.isClient == true) return
+        EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
+        val blockEntity = world.getBlockEntity(pos)
+        if (blockEntity is MachineBlockEntity) {
+            val tag = itemStack?.getSubTag("MachineInfo") ?: return
+            val temperatureController = blockEntity.temperatureComponent
+            if (Energy.valid(itemStack))
+                Energy.of(blockEntity).set(Energy.of(itemStack).energy)
+            if (temperatureController != null) {
+                val temperature = tag.getDouble("Temperature")
+                temperatureController.temperature = temperature
+            }
         }
     }
 
-    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory {
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider
             ?: throw IllegalArgumentException("tried to retrieve an inventory from an invalid block entity")
         return blockEntity.getInventory(state, world, pos)

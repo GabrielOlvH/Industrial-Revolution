@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "up=false,down=false": {
+      "model": "indrev:block/tank_single"
+    },
+    "up=true,down=false": {
+      "model": "indrev:block/tank_up"
+    },
+    "up=false,down=true": {
+      "model": "indrev:block/tank_down"
+    },
+    "up=true,down=true": {
+      "model": "indrev:block/tank_both"
+    }
+  }
+}

@@ -1,14 +1,12 @@
 package me.steven.indrev.registry
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
-import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
-import me.steven.indrev.config.IRConfig
-import me.steven.indrev.fluids.CoolantFluid
-import me.steven.indrev.fluids.MoltenNetheriteFluid
+import me.steven.indrev.blockentities.storage.TankBlockEntity
+import me.steven.indrev.blocks.AcidFluidBlock
+import me.steven.indrev.blocks.SulfurCrystalBlock
+import me.steven.indrev.blocks.TankBlock
+import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
@@ -22,25 +20,25 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.utils.*
+import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
+import net.minecraft.block.MaterialColor
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
-import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
     fun registerAll() {
-        AutoConfig.register(
-            IRConfig::class.java,
-            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
-        )
         ResourceHelper("tin") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
             withTools(
@@ -53,7 +51,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.TIN)
         }.register()
         ResourceHelper("copper") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
             withTools(
@@ -66,7 +64,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.COPPER)
         }.register()
         ResourceHelper("steel") {
-            withItems("dust", "ingot", "plate")
+            withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
@@ -77,20 +75,20 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
-        ResourceHelper("iron") { withItems("dust", "plate") }.register()
+        ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre()
         }.register()
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
         ResourceHelper("diamond") { withItems("dust") }.register()
-        ResourceHelper("gold") { withItems("dust", "plate") }.register()
+        ResourceHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
         ResourceHelper("coal") { withItems("dust") }.register()
+        ResourceHelper("sulfur") {
+            withItems("dust")
+        }.register()
 
-        WorldGeneration.init()
-        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
-        //RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME)
-        //.register(RegistryEntryAddedCallback { _, _, biome -> WorldGeneration.handleBiome(biome) })
+        identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
         identifier("hammer").item(HAMMER)
 
@@ -129,15 +127,46 @@ object IRRegistry {
 
         identifier("biomass").item(BIOMASS)
 
-        identifier("coolant").block(COOLANT)
-        identifier("coolant_still").fluid(COOLANT_FLUID_STILL)
-        identifier("coolant_flowing").fluid(COOLANT_FLUID_FLOWING)
-        identifier("coolant_bucket").item(COOLANT_BUCKET)
+        COOLANT_IDENTIFIER.block(COOLANT)
+        identifier("${COOLANT_IDENTIFIER.path}_still").fluid(COOLANT_STILL)
+        identifier("${COOLANT_IDENTIFIER.path}_flowing").fluid(COOLANT_FLOWING)
+        identifier("${COOLANT_IDENTIFIER.path}_bucket").item(COOLANT_BUCKET)
 
-        identifier("molten_netherite").block(MOLTEN_NETHERITE)
-        identifier("molten_netherite_still").fluid(MOLTEN_NETHERITE_STILL)
-        identifier("molten_netherite_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
-        identifier("molten_netherite_bucket").item(MOLTEN_NETHERITE_BUCKET)
+        MOLTEN_NETHERITE_IDENTIFIER.block(MOLTEN_NETHERITE)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_still").fluid(MOLTEN_NETHERITE_STILL)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_flowing").fluid(MOLTEN_NETHERITE_FLOWING)
+        identifier("${MOLTEN_NETHERITE_IDENTIFIER.path}_bucket").item(MOLTEN_NETHERITE_BUCKET)
+
+        MOLTEN_IRON_IDENTIFIER.block(MOLTEN_IRON)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_still").fluid(MOLTEN_IRON_STILL)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_flowing").fluid(MOLTEN_IRON_FLOWING)
+        identifier("${MOLTEN_IRON_IDENTIFIER.path}_bucket").item(MOLTEN_IRON_BUCKET)
+
+        MOLTEN_GOLD_IDENTIFIER.block(MOLTEN_GOLD)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_still").fluid(MOLTEN_GOLD_STILL)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_flowing").fluid(MOLTEN_GOLD_FLOWING)
+        identifier("${MOLTEN_GOLD_IDENTIFIER.path}_bucket").item(MOLTEN_GOLD_BUCKET)
+
+        MOLTEN_COPPER_IDENTIFIER.block(MOLTEN_COPPER)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_still").fluid(MOLTEN_COPPER_STILL)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_flowing").fluid(MOLTEN_COPPER_FLOWING)
+        identifier("${MOLTEN_COPPER_IDENTIFIER.path}_bucket").item(MOLTEN_COPPER_BUCKET)
+
+        MOLTEN_TIN_IDENTIFIER.block(MOLTEN_TIN)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_still").fluid(MOLTEN_TIN_STILL)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_flowing").fluid(MOLTEN_TIN_FLOWING)
+        identifier("${MOLTEN_TIN_IDENTIFIER.path}_bucket").item(MOLTEN_TIN_BUCKET)
+
+        SULFURIC_ACID_IDENTIFIER.block(SULFURIC_ACID)
+        identifier("${SULFURIC_ACID_IDENTIFIER.path}_still").fluid(SULFURIC_ACID_STILL)
+        identifier("${SULFURIC_ACID_IDENTIFIER.path}_flowing").fluid(SULFURIC_ACID_FLOWING)
+        identifier("${SULFURIC_ACID_IDENTIFIER.path}_bucket").item(SULFURIC_ACID_BUCKET)
+
+        TOXIC_MUD_IDENTIFIER.block(TOXIC_MUD)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_still").fluid(TOXIC_MUD_STILL)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_flowing").fluid(TOXIC_MUD_FLOWING)
+        identifier("${TOXIC_MUD_IDENTIFIER.path}_bucket").item(TOXIC_MUD_BUCKET)
+
         identifier("wrench").item(WRENCH)
 
         identifier("tech_soup").item(TECH_SOUP)
@@ -173,6 +202,17 @@ object IRRegistry {
         identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
 
         identifier("gamer_axe").item(GAMER_AXE_ITEM)
+
+        identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
+
+        Registry.register(
+            Registry.FEATURE,
+            identifier("sulfur_crystal"),
+            SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
+        )
+        WorldGeneration.init()
+
+        WorldGeneration.registerCallback()
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -207,19 +247,125 @@ object IRRegistry {
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
+    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).requiresTool())
+    val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
+
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
-    val COOLANT_FLUID_FLOWING = CoolantFluid.Flowing()
-    val COOLANT_FLUID_STILL = CoolantFluid.Still()
-    val COOLANT_BUCKET = BucketItem(COOLANT_FLUID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
-    val COOLANT = object : FluidBlock(COOLANT_FLUID_STILL, FabricBlockSettings.of(Material.WATER)) {}
+    val COOLANT_IDENTIFIER = identifier("coolant")
+    val COOLANT_STILL: BaseFluid.Still =
+        BaseFluid.Still(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_FLOWING }
+    val COOLANT_FLOWING =
+        BaseFluid.Flowing(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_STILL }
+    val COOLANT_BUCKET = BucketItem(COOLANT_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val COOLANT = object : FluidBlock(COOLANT_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val MOLTEN_NETHERITE_FLOWING = MoltenNetheriteFluid.Flowing()
-    val MOLTEN_NETHERITE_STILL = MoltenNetheriteFluid.Still()
+    val MOLTEN_NETHERITE_IDENTIFIER = identifier("molten_netherite")
+    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_FLOWING }
+    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_STILL }
     val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val MACHINE_BLOCK = Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val MOLTEN_IRON_IDENTIFIER = identifier("molten_iron")
+    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_FLOWING }
+    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_STILL }
+    val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_IRON = object : FluidBlock(MOLTEN_IRON_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_GOLD_IDENTIFIER = identifier("molten_gold")
+    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xFFCC00
+    ) { MOLTEN_GOLD_FLOWING }
+    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xFFCC00
+    ) { MOLTEN_GOLD_STILL }
+    val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_GOLD = object : FluidBlock(MOLTEN_GOLD_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_COPPER_IDENTIFIER = identifier("molten_copper")
+    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_FLOWING }
+    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_STILL }
+    val MOLTEN_COPPER_BUCKET = BucketItem(MOLTEN_COPPER_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_COPPER = object : FluidBlock(MOLTEN_COPPER_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val MOLTEN_TIN_IDENTIFIER = identifier("molten_tin")
+    val MOLTEN_TIN_STILL: BaseFluid.Still =
+        BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_FLOWING }
+    val MOLTEN_TIN_FLOWING =
+        BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_STILL }
+    val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val ACID_MATERIAL: Material =
+        FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+            .liquid().build()
+    val MUD_MATERIAL: Material =
+        FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+            .liquid().build()
+
+    val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
+    val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(
+        SULFURIC_ACID_IDENTIFIER,
+        { SULFURIC_ACID },
+        { SULFURIC_ACID_BUCKET },
+        0x9ab58a
+    ) { SULFURIC_ACID_FLOWING }
+    val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(
+        SULFURIC_ACID_IDENTIFIER,
+        { SULFURIC_ACID },
+        { SULFURIC_ACID_BUCKET },
+        0x9ab58a
+    ) { SULFURIC_ACID_STILL }
+    val SULFURIC_ACID_BUCKET = BucketItem(SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val SULFURIC_ACID = AcidFluidBlock(SULFURIC_ACID_STILL, FabricBlockSettings.of(ACID_MATERIAL).ticksRandomly())
+
+    val TOXIC_MUD_IDENTIFIER = identifier("toxic_mud")
+    val TOXIC_MUD_STILL: BaseFluid.Still =
+        BaseFluid.Still(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_FLOWING }
+    val TOXIC_MUD_FLOWING =
+        BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
+    val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
+    val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
+
+    val MACHINE_BLOCK = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
@@ -259,5 +405,12 @@ object IRRegistry {
 
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
-    val GAMER_AXE_ITEM = IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
+    val GAMER_AXE_ITEM =
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
+
+    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque())
+
+    val TANK_BLOCK_ITEM = BlockItem(TANK_BLOCK, itemSettings())
+
+    val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, arrayOf(TANK_BLOCK)).build(null)
 }

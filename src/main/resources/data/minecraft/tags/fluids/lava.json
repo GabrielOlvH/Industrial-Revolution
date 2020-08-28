@@ -2,6 +2,14 @@
   "replace": false,
   "values": [
     "indrev:molten_netherite_still",
-    "indrev:molten_netherite_flowing"
+    "indrev:molten_netherite_flowing",
+    "indrev:molten_iron_still",
+    "indrev:molten_iron_flowing",
+    "indrev:molten_copper_still",
+    "indrev:molten_copper_flowing",
+    "indrev:molten_gold_still",
+    "indrev:molten_gold_flowing",
+    "indrev:molten_tin_still",
+    "indrev:molten_tin_flowing"
   ]
 }

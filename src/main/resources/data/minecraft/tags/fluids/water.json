@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "indrev:coolant_still",
-    "indrev:coolant_flowing"
+    "indrev:coolant_flowing",
+    "indrev:sulfuric_acid_still",
+    "indrev:sulfuric_acid_flowing",
+    "indrev:toxic_mud_still",
+    "indrev:toxic_mud_flowing"
   ]
 }

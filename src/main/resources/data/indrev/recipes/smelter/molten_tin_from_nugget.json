@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredient": {
+    "tag": "c:tin_nuggets"
+  },
+  "fluid": {
+    "fluid": "indrev:molten_tin_still",
+    "type": "nugget",
+    "count": 1
+  },
+  "processTime": 600
+}

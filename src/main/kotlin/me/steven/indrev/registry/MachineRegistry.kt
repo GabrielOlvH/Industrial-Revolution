@@ -1,20 +1,18 @@
 package me.steven.indrev.registry
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.AttributeProvider
 import me.steven.indrev.IndustrialRevolution.CONFIG
-import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.battery.BatteryBlockEntity
-import me.steven.indrev.blockentities.battery.ChargePadBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
-import me.steven.indrev.blockentities.farms.ChopperBlockEntity
-import me.steven.indrev.blockentities.farms.FishingFarmBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
-import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.storage.BatteryBlockEntity
+import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blocks.*
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.items.energy.MachineBlockItem
@@ -25,18 +23,21 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.Material
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
@@ -44,16 +45,12 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
 
-    fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> MachineBlockEntity): MachineRegistry {
+    fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> BlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val block = blockProvider(tier)
             if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)
                 BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout())
-            val blockItem =
-                if (block is MachineBlock)
-                    MachineBlockItem(block, itemSettings())
-                else
-                    BlockItem(block, itemSettings())
+            val blockItem = MachineBlockItem(block, itemSettings())
             val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
             identifier("${identifier.path}_${tier.toString().toLowerCase()}").apply {
                 block(block)
@@ -84,7 +81,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .strength(5.0f, 6.0f)
                 .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
-        
+
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
             { tier ->
                 HorizontalFacingMachineBlock(
@@ -123,9 +120,14 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
-                HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
-                ) { HeatGeneratorBlockEntity(tier) }
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController, { HeatGeneratorBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
         )
@@ -194,9 +196,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                         Tier.MK3 -> CONFIG.machines.infuserMk3
                         else -> CONFIG.machines.infuserMk4
                     }, ::InfuserController
-                ) { InfuserBlockEntity(tier) }
+                ) { SolidInfuserBlockEntity(tier) }
             },
-            { tier -> { InfuserBlockEntity(tier) } }
+            { tier -> { SolidInfuserBlockEntity(tier) } }
         )
 
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
@@ -295,6 +297,81 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         val CHARGE_PAD_REGISTRY = MachineRegistry(identifier("charge_pad"), false, Tier.MK4).register(
             { tier -> ChargePadBlock(MACHINE_BLOCK_SETTINGS(), tier) },
             { tier -> { ChargePadBlockEntity(tier) } }
+        )
+
+        val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
+            { tier ->
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    CONFIG.machines.condenser,
+                    ::SmelterController,
+                    { SmelterBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? SmelterBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
+            },
+            { tier -> { SmelterBlockEntity(tier) } }
+        )
+
+        val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
+            { tier ->
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    CONFIG.machines.condenser,
+                    ::CondenserController,
+                    { CondenserBlockEntity(tier) }
+                ), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? CondenserBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
+            },
+            { tier -> { CondenserBlockEntity(tier) } }
+        )
+
+        val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
+            { tier ->
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    CONFIG.machines.drain,
+                    null,
+                    { DrainBlockEntity(tier) }), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? DrainBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
+            },
+            { tier -> { DrainBlockEntity(tier) } }
+        )
+
+        val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
+            { tier ->
+                object : HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.fluidInfuserMk1
+                        Tier.MK2 -> CONFIG.machines.fluidInfuserMk2
+                        Tier.MK3 -> CONFIG.machines.fluidInfuserMk3
+                        else -> CONFIG.machines.fluidInfuserMk4
+                    },
+                    ::FluidInfuserController,
+                    { FluidInfuserBlockEntity(tier) }), AttributeProvider {
+                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
+                        val blockEntity = world?.getBlockEntity(pos) as? FluidInfuserBlockEntity ?: return
+                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
+                    }
+                }
+            },
+            { tier -> { FluidInfuserBlockEntity(tier) } }
         )
     }
 }
