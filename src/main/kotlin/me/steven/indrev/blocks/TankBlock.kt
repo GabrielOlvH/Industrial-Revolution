@@ -114,6 +114,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         blockEntity: BlockEntity?,
         toolStack: ItemStack?
     ) {
+        if (world?.isClient == true) return
         player?.incrementStat(Stats.MINED.getOrCreateStat(this))
         player?.addExhaustion(0.005f)
         toTagComponents(world, player, pos, state, blockEntity, toolStack)
@@ -163,8 +164,8 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         itemStack: ItemStack?
     ) {
         val tag = itemStack?.tag
-        if (tag?.isEmpty == false) {
-            val tankEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return
+        if (tag?.isEmpty == false && world?.isClient == false) {
+            val tankEntity = world.getBlockEntity(pos) as? TankBlockEntity ?: return
             tankEntity.fluidComponent.fromTag(tag)
         }
     }
@@ -248,8 +249,8 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
             createCuboidShape(1.0, 1.0, 14.0, 2.0, 14.0, 15.0),
             createCuboidShape(1.0, 1.0, 1.0, 2.0, 14.0, 2.0),
             createCuboidShape(14.0, 1.0, 1.0, 15.0, 14.0, 2.0),
-            createCuboidShape(14.5, 1.0, 1.5, 14.700000000000001, 14.0, 14.5),
-            createCuboidShape(1.5, 1.0, 1.5, 1.700000000000001, 14.0, 14.5),
+            createCuboidShape(14.5, 1.0, 1.5, 14.7, 14.0, 14.5),
+            createCuboidShape(1.5, 1.0, 1.5, 1.7, 14.0, 14.5),
             createCuboidShape(1.5, 1.0, 1.5, 14.5, 14.0, 1.7),
             createCuboidShape(1.5, 1.0, 14.5, 14.5, 14.0, 14.7)
         ).reduce { v1, v2 -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR) }.get()

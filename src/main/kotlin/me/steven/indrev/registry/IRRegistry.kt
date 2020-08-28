@@ -408,7 +408,7 @@ object IRRegistry {
     val GAMER_AXE_ITEM =
         IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
 
-    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque())
+    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f))
 
     val TANK_BLOCK_ITEM = BlockItem(TANK_BLOCK, itemSettings())
 
