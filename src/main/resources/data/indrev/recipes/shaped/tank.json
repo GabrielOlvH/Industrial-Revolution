@@ -1,13 +1,13 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " I ",
-    "TBT",
-    " I "
+    "IGI",
+    "GBG",
+    "IGI"
   ],
   "key": {
-    "T": {
-      "item": "indrev:tank_mk2"
+    "G": {
+      "item": "minecraft:glass"
     },
     "I": {
       "tag": "c:iron_plates"
@@ -17,6 +17,6 @@
     }
   },
   "result": {
-    "item": "indrev:tank_mk3"
+    "item": "indrev:tank"
   }
 }

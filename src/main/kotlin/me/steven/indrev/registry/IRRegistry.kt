@@ -203,12 +203,13 @@ object IRRegistry {
 
         identifier("gamer_axe").item(GAMER_AXE_ITEM)
 
-        identifier("tank_mk1").block(TANK_BLOCK_MK1).item(TANK_BLOCK_ITEM_MK1).blockEntityType(TANK_BLOCK_ENTITY_MK1)
-        identifier("tank_mk2").block(TANK_BLOCK_MK2).item(TANK_BLOCK_ITEM_MK2).blockEntityType(TANK_BLOCK_ENTITY_MK2)
-        identifier("tank_mk3").block(TANK_BLOCK_MK3).item(TANK_BLOCK_ITEM_MK3).blockEntityType(TANK_BLOCK_ENTITY_MK3)
-        identifier("tank_mk4").block(TANK_BLOCK_MK4).item(TANK_BLOCK_ITEM_MK4).blockEntityType(TANK_BLOCK_ENTITY_MK4)
+        identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
-        Registry.register(Registry.FEATURE, identifier("sulfur_crystal"), SulfurCrystalFeature(DefaultFeatureConfig.CODEC))
+        Registry.register(
+            Registry.FEATURE,
+            identifier("sulfur_crystal"),
+            SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
+        )
         WorldGeneration.init()
 
         WorldGeneration.registerCallback()
@@ -252,53 +253,113 @@ object IRRegistry {
     val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
     val COOLANT_IDENTIFIER = identifier("coolant")
-    val COOLANT_STILL: BaseFluid.Still = BaseFluid.Still(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_FLOWING }
-    val COOLANT_FLOWING = BaseFluid.Flowing(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_STILL }
+    val COOLANT_STILL: BaseFluid.Still =
+        BaseFluid.Still(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_FLOWING }
+    val COOLANT_FLOWING =
+        BaseFluid.Flowing(COOLANT_IDENTIFIER, { COOLANT }, { COOLANT_BUCKET }, 0x0C2340) { COOLANT_STILL }
     val COOLANT_BUCKET = BucketItem(COOLANT_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val COOLANT = object : FluidBlock(COOLANT_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_NETHERITE_IDENTIFIER = identifier("molten_netherite")
-    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_NETHERITE_IDENTIFIER, { MOLTEN_NETHERITE }, { MOLTEN_NETHERITE_BUCKET }, 0x654740) { MOLTEN_NETHERITE_FLOWING }
-    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(MOLTEN_NETHERITE_IDENTIFIER, { MOLTEN_NETHERITE }, { MOLTEN_NETHERITE_BUCKET }, 0x654740) { MOLTEN_NETHERITE_STILL }
+    val MOLTEN_NETHERITE_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_FLOWING }
+    val MOLTEN_NETHERITE_FLOWING = BaseFluid.Flowing(
+        MOLTEN_NETHERITE_IDENTIFIER,
+        { MOLTEN_NETHERITE },
+        { MOLTEN_NETHERITE_BUCKET },
+        0x654740
+    ) { MOLTEN_NETHERITE_STILL }
     val MOLTEN_NETHERITE_BUCKET = BucketItem(MOLTEN_NETHERITE_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_IRON_IDENTIFIER = identifier("molten_iron")
-    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_FLOWING }
-    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_STILL }
+    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_FLOWING }
+    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(
+        MOLTEN_IRON_IDENTIFIER,
+        { MOLTEN_IRON },
+        { MOLTEN_IRON_BUCKET },
+        0x7A0019
+    ) { MOLTEN_IRON_STILL }
     val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_IRON = object : FluidBlock(MOLTEN_IRON_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_GOLD_IDENTIFIER = identifier("molten_gold")
-    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_GOLD_IDENTIFIER, { MOLTEN_GOLD }, { MOLTEN_GOLD_BUCKET }, 0xFFCC00) { MOLTEN_GOLD_FLOWING }
-    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(MOLTEN_GOLD_IDENTIFIER, { MOLTEN_GOLD }, { MOLTEN_GOLD_BUCKET }, 0xFFCC00) { MOLTEN_GOLD_STILL }
+    val MOLTEN_GOLD_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xFFCC00
+    ) { MOLTEN_GOLD_FLOWING }
+    val MOLTEN_GOLD_FLOWING = BaseFluid.Flowing(
+        MOLTEN_GOLD_IDENTIFIER,
+        { MOLTEN_GOLD },
+        { MOLTEN_GOLD_BUCKET },
+        0xFFCC00
+    ) { MOLTEN_GOLD_STILL }
     val MOLTEN_GOLD_BUCKET = BucketItem(MOLTEN_GOLD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_GOLD = object : FluidBlock(MOLTEN_GOLD_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_COPPER_IDENTIFIER = identifier("molten_copper")
-    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_COPPER_IDENTIFIER, { MOLTEN_COPPER }, { MOLTEN_COPPER_BUCKET }, 0xEA7708) { MOLTEN_COPPER_FLOWING }
-    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(MOLTEN_COPPER_IDENTIFIER, { MOLTEN_COPPER }, { MOLTEN_COPPER_BUCKET }, 0xEA7708) { MOLTEN_COPPER_STILL }
+    val MOLTEN_COPPER_STILL: BaseFluid.Still = BaseFluid.Still(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_FLOWING }
+    val MOLTEN_COPPER_FLOWING = BaseFluid.Flowing(
+        MOLTEN_COPPER_IDENTIFIER,
+        { MOLTEN_COPPER },
+        { MOLTEN_COPPER_BUCKET },
+        0xEA7708
+    ) { MOLTEN_COPPER_STILL }
     val MOLTEN_COPPER_BUCKET = BucketItem(MOLTEN_COPPER_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_COPPER = object : FluidBlock(MOLTEN_COPPER_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_TIN_IDENTIFIER = identifier("molten_tin")
-    val MOLTEN_TIN_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_FLOWING }
-    val MOLTEN_TIN_FLOWING = BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_STILL }
+    val MOLTEN_TIN_STILL: BaseFluid.Still =
+        BaseFluid.Still(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_FLOWING }
+    val MOLTEN_TIN_FLOWING =
+        BaseFluid.Flowing(MOLTEN_TIN_IDENTIFIER, { MOLTEN_TIN }, { MOLTEN_TIN_BUCKET }, 0xFDFDFD) { MOLTEN_TIN_STILL }
     val MOLTEN_TIN_BUCKET = BucketItem(MOLTEN_TIN_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val MOLTEN_TIN = object : FluidBlock(MOLTEN_TIN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
-    val ACID_MATERIAL: Material = FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
-    val MUD_MATERIAL: Material = FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable().liquid().build()
+    val ACID_MATERIAL: Material =
+        FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+            .liquid().build()
+    val MUD_MATERIAL: Material =
+        FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+            .liquid().build()
 
     val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
-    val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_FLOWING }
-    val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(SULFURIC_ACID_IDENTIFIER, { SULFURIC_ACID }, { SULFURIC_ACID_BUCKET }, 0x9ab58a) { SULFURIC_ACID_STILL }
+    val SULFURIC_ACID_STILL: BaseFluid.Still = BaseFluid.Still(
+        SULFURIC_ACID_IDENTIFIER,
+        { SULFURIC_ACID },
+        { SULFURIC_ACID_BUCKET },
+        0x9ab58a
+    ) { SULFURIC_ACID_FLOWING }
+    val SULFURIC_ACID_FLOWING = BaseFluid.Flowing(
+        SULFURIC_ACID_IDENTIFIER,
+        { SULFURIC_ACID },
+        { SULFURIC_ACID_BUCKET },
+        0x9ab58a
+    ) { SULFURIC_ACID_STILL }
     val SULFURIC_ACID_BUCKET = BucketItem(SULFURIC_ACID_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val SULFURIC_ACID = AcidFluidBlock(SULFURIC_ACID_STILL, FabricBlockSettings.of(ACID_MATERIAL).ticksRandomly())
 
     val TOXIC_MUD_IDENTIFIER = identifier("toxic_mud")
-    val TOXIC_MUD_STILL: BaseFluid.Still = BaseFluid.Still(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_FLOWING }
-    val TOXIC_MUD_FLOWING = BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
+    val TOXIC_MUD_STILL: BaseFluid.Still =
+        BaseFluid.Still(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_FLOWING }
+    val TOXIC_MUD_FLOWING =
+        BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
     val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET))
     val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
 
@@ -344,20 +405,12 @@ object IRRegistry {
 
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
-    val GAMER_AXE_ITEM = IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
+    val GAMER_AXE_ITEM =
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
 
-    val TANK_BLOCK_MK1 = TankBlock(Tier.MK1, FabricBlockSettings.of(Material.GLASS))
-    val TANK_BLOCK_MK2 = TankBlock(Tier.MK2, FabricBlockSettings.of(Material.GLASS))
-    val TANK_BLOCK_MK3 = TankBlock(Tier.MK3, FabricBlockSettings.of(Material.GLASS))
-    val TANK_BLOCK_MK4 = TankBlock(Tier.MK4, FabricBlockSettings.of(Material.GLASS))
+    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque())
 
-    val TANK_BLOCK_ITEM_MK1 = BlockItem(TANK_BLOCK_MK1, itemSettings())
-    val TANK_BLOCK_ITEM_MK2 = BlockItem(TANK_BLOCK_MK2, itemSettings())
-    val TANK_BLOCK_ITEM_MK3 = BlockItem(TANK_BLOCK_MK3, itemSettings())
-    val TANK_BLOCK_ITEM_MK4 = BlockItem(TANK_BLOCK_MK4, itemSettings())
+    val TANK_BLOCK_ITEM = BlockItem(TANK_BLOCK, itemSettings())
 
-    val TANK_BLOCK_ENTITY_MK1: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK1) }, arrayOf(TANK_BLOCK_MK1)).build(null)
-    val TANK_BLOCK_ENTITY_MK2: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK2) }, arrayOf(TANK_BLOCK_MK2)).build(null)
-    val TANK_BLOCK_ENTITY_MK3: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK3) }, arrayOf(TANK_BLOCK_MK3)).build(null)
-    val TANK_BLOCK_ENTITY_MK4: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity(Tier.MK4) }, arrayOf(TANK_BLOCK_MK4)).build(null)
+    val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, arrayOf(TANK_BLOCK)).build(null)
 }
