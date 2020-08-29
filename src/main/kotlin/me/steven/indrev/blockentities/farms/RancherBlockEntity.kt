@@ -43,6 +43,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     var cooldown = 0.0
+    val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -57,7 +58,6 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             return
         } else setWorkingState(true)
         val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
-        val fakePlayer = FakePlayerEntity(world!!, pos)
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
@@ -97,6 +97,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 fakePlayer.inventory.clear()
             }
         }
+        fakePlayer.inventory.clear()
         cooldown = 0.0
     }
 

@@ -50,6 +50,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
+    private val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
     var cooldown = 0.0
 
     override fun machineTick() {
@@ -125,20 +126,21 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     private fun tryUse(itemStack: ItemStack, world: World, pos: BlockPos): Boolean {
-        val fakePlayer = FakePlayerEntity(world, pos)
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        return (
-            (item is BoneMealItem && world.getBlockState(pos).block is SaplingBlock)
-                || (item is BlockItem && item.block is SaplingBlock)
-            )
-            && itemStack.useOnBlock(
+        val isAccepted = ((
+                (item is BoneMealItem && world.getBlockState(pos).block is SaplingBlock)
+                        || (item is BlockItem && item.block is SaplingBlock)
+                )
+                && itemStack.useOnBlock(
             ItemUsageContext(
                 fakePlayer,
                 Hand.MAIN_HAND,
                 BlockHitResult(pos.toVec3d(), Direction.UP, pos, false)
             )
-        ).isAccepted
+        ).isAccepted)
+        fakePlayer.inventory.clear()
+        return isAccepted
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
