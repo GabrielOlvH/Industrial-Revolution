@@ -25,10 +25,10 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.world.chunk.Chunk
+import net.minecraft.world.chunk.ChunkSection
+import net.minecraft.world.chunk.WorldChunk
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -51,6 +51,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
     private val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
+    override var range = 5
     var cooldown = 0.0
 
     override fun machineTick() {
@@ -59,7 +60,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         cooldown += Upgrade.SPEED(this)
         if (cooldown < getConfig().processSpeed || !Energy.of(this).simulate().use(Upgrade.ENERGY(this)))
             return
-        val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
             val area = getWorkingArea()
@@ -72,17 +72,35 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
             }
             scheduledBlocks = list.iterator()
         } else {
+            var currentChunk: Chunk? = null
+            var currentSection: ChunkSection? = null
             var performedAction = false
+            val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
             outer@ while (scheduledBlocks.hasNext()) {
                 val pos = scheduledBlocks.next()
-                val blockState = world?.getBlockState(pos) ?: continue
-                if (axeStack != null && !axeStack.isEmpty && tryChop(axeStack, pos, blockState, inventory)) {
+                if (pos.x shr 4 != currentChunk?.pos?.x || pos.z shr 4 != currentChunk.pos.z) {
+                    currentChunk = world?.getChunk(pos)
+                    currentSection = currentChunk!!.sectionArray[pos.y shr 4]
+                    if (currentSection == WorldChunk.EMPTY_SECTION) {
+                        currentSection = ChunkSection(pos.y shr 4 shl 4)
+                        currentChunk.sectionArray[pos.y shr 4] = currentSection
+                    }
+                }
+                val blockState = currentSection?.getBlockState(pos.x and 15, pos.y and 15, pos.z and 15) ?: continue
+                if (axeStack != null
+                    && !axeStack.isEmpty
+                    && tryChop(currentSection, axeStack, pos, blockState, inventory)
+                ) {
                     performedAction = true
                     break
                 }
                 for (slot in inventory.inputSlots) {
                     val stack = inventory.getStack(slot)
-                    if ((axeStack != null && stack.isItemEqual(axeStack)) || stack.isEmpty || !tryUse(stack, world!!, pos)) continue
+                    if (
+                        (axeStack != null && stack.isItemEqual(axeStack))
+                        || stack.isEmpty
+                        || !tryUse(blockState, stack, pos)
+                    ) continue
                     performedAction = true
                     break@outer
                 }
@@ -95,6 +113,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     private fun tryChop(
+        section: ChunkSection,
         axeStack: ItemStack,
         blockPos: BlockPos,
         blockState: BlockState,
@@ -111,7 +130,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
                 world?.breakBlock(blockPos, false)
             }
-            is LeavesBlock -> world?.breakBlock(blockPos, false)
+            is LeavesBlock -> {
+                world?.breakBlock(blockPos, false)
+            }
             else -> return false
         }
         val droppedStacks = blockState.getDroppedStacks(
@@ -125,22 +146,20 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         return true
     }
 
-    private fun tryUse(itemStack: ItemStack, world: World, pos: BlockPos): Boolean {
+    private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isAccepted = ((
-                (item is BoneMealItem && world.getBlockState(pos).block is SaplingBlock)
-                        || (item is BlockItem && item.block is SaplingBlock)
-                )
-                && itemStack.useOnBlock(
+        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block is SaplingBlock) || (item is BlockItem && item.block is SaplingBlock)
+        if (!isSaplingOrBoneMeal) return false
+        val useResult = itemStack.useOnBlock(
             ItemUsageContext(
                 fakePlayer,
                 Hand.MAIN_HAND,
                 BlockHitResult(pos.toVec3d(), Direction.UP, pos, false)
             )
-        ).isAccepted)
+        )
         fakePlayer.inventory.clear()
-        return isAccepted
+        return useResult.isAccepted
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
@@ -159,23 +178,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun getWorkingArea(): Box {
-        val box = Box(pos)
-        if (this.hasWorld()) {
-            val range = getRange()
-            return box.expand(range.x, 0.0, range.z).stretch(0.0, range.y, 0.0)
-        }
-        return box
-    }
-
-    private fun getRange() =
-        when (tier) {
-            Tier.MK1 -> Vec3d(5.0, 8.0, 5.0)
-            Tier.MK2 -> Vec3d(6.0, 9.0, 6.0)
-            Tier.MK3 -> Vec3d(7.0, 9.0, 7.0)
-            Tier.MK4, Tier.CREATIVE -> Vec3d(8.0, 10.0, 8.0)
-        }
 
     fun getConfig() = IndustrialRevolution.CONFIG.machines.chopper
 }

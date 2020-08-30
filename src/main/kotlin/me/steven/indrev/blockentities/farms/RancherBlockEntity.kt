@@ -20,8 +20,6 @@ import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Hand
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Vec3d
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -43,7 +41,8 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     var cooldown = 0.0
-    val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
+    override var range = 5
+    private val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -108,26 +107,9 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         return types.values.let { values -> values.map { animals -> animals.filterIndexed { index, _ -> index > 7 } } }.flatten()
     }
 
-    override fun getWorkingArea(): Box {
-        val box = Box(pos)
-        if (this.hasWorld()) {
-            val range = getRange()
-            return box.expand(range.x, 0.0, range.z).stretch(0.0, range.y, 0.0)
-        }
-        return box
-    }
-
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
-
-    private fun getRange() =
-        when (tier) {
-            Tier.MK1 -> Vec3d(3.0, 4.0, 3.0)
-            Tier.MK2 -> Vec3d(4.0, 4.0, 4.0)
-            Tier.MK3 -> Vec3d(5.0, 4.0, 5.0)
-            Tier.MK4, Tier.CREATIVE -> Vec3d(6.0, 4.0, 6.0)
-        }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
 

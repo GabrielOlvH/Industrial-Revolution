@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.farms
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -14,7 +15,7 @@ import net.minecraft.util.math.Box
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class DrainBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.DRAIN_REGISTRY) {
+class DrainBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.DRAIN_REGISTRY) {
 
     init {
         this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
@@ -52,7 +53,7 @@ class DrainBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry
         }
     }
 
-    override fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
+    fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 

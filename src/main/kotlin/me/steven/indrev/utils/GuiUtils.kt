@@ -1,11 +1,13 @@
 package me.steven.indrev.utils
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -99,7 +101,7 @@ fun SyncedGuiDescription.configure(
                 panel.add(coolerSlot, 1.0, 3.7)
             }
             if (blockEntity is AOEMachineBlockEntity) {
-                val button = object : WButton(TranslatableText("block.indrev.aoe.toggle.btn")) {
+                val button = object : WButton() {
                     override fun addTooltip(information: TooltipBuilder?) {
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
                     }
@@ -107,7 +109,10 @@ fun SyncedGuiDescription.configure(
                 button.setOnClick {
                     blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
                 }
-                panel.add(button, 8.0, 4.0)
+                button.icon = Icon { _, x, y, size ->
+                    ScreenDrawing.texturedRect(x, y, 16, 18, identifier("textures/gui/range_icon.png"), -1)
+                }
+                panel.add(button, 8.0, 4.2)
             }
         }
         if (this is PatchouliEntryShortcut) {

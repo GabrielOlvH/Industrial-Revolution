@@ -5,6 +5,7 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
@@ -87,6 +88,20 @@ object IndustrialRevolution : ModInitializer {
                     blockEntity.fluidComponent!!.transferConfig[dir] = mode
             }
         }
+
+        ServerSidePacketRegistry.INSTANCE.register(AOEMachineBlockEntity.UPDATE_VALUE_PACKET_ID) { ctx, buf ->
+            val value = buf.readInt()
+            val pos = buf.readBlockPos()
+            val world = ctx.player.world
+            ctx.taskQueue.execute {
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity ?: return@execute
+                    blockEntity.range = value
+                    blockEntity.markDirty()
+                }
+            }
+        }
+
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
         LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
 
