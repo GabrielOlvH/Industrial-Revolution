@@ -63,7 +63,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         return this
     }
 
-    fun forEach(action: (Tier, BlockEntityType<*>) -> Unit) = blockEntities.forEach(action)
+    fun forEachBlockEntity(action: (Tier, BlockEntityType<*>) -> Unit) = blockEntities.forEach(action)
+
+    fun forEachBlock(action: (Tier, Block) -> Unit) = blocks.forEach(action)
 
     fun blockEntityType(tier: Tier) = blockEntities[tier]
         ?: throw IllegalStateException("invalid tier for machine $identifier")
@@ -270,7 +272,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
             { tier ->
-                MachineBlock(
+                FishingFarmBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK2 -> CONFIG.machines.fishingMk2

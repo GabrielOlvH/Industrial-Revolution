@@ -70,31 +70,31 @@ object IndustrialRevolutionClient : ClientModInitializer {
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
 
-        MachineRegistry.CABLE_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.CABLE_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>, ::CableBlockEntityRenderer)
         }
 
-        MachineRegistry.CHOPPER_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
         }
 
-        MachineRegistry.RANCHER_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.RANCHER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
         }
 
-        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>, ::ModularWorkbenchBlockEntityRenderer)
         }
 
-        MachineRegistry.CHARGE_PAD_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.CHARGE_PAD_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, ::ChargePadBlockEntityRenderer)
         }
 
-        MachineRegistry.CONDENSER_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.CONDENSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CondenserBlockEntity>, ::CondenserBlockEntityRenderer)
         }
 
-        MachineRegistry.FLUID_INFUSER_REGISTRY.forEach { _, blockEntity ->
+        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
         }
 
@@ -104,6 +104,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4), RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
+        MachineRegistry.FISHING_FARM_REGISTRY.forEachBlock { _, block ->
+            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
+        }
 
         FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f

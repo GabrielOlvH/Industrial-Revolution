@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "indrev:block/fishing_farm_mk2"
+    },
+    "facing=south": {
+      "model": "indrev:block/fishing_farm_mk2",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/fishing_farm_mk2",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/fishing_farm_mk2",
+      "y": 90
     }
   }
 }
