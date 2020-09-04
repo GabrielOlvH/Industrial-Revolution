@@ -117,6 +117,8 @@ object IRRegistry {
         identifier("buffer_upgrade").item(BUFFER_UPGRADE)
         identifier("speed_upgrade").item(SPEED_UPGRADE)
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
+        identifier("blast_furnace_upgrade").item(BLAST_FURNACE_UPGRADE)
+        identifier("smoker_upgrade").item(SMOKER_UPGRADE)
 
         identifier("energy_reader").item(ENERGY_READER)
 
@@ -321,6 +323,8 @@ object IRRegistry {
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
     val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+    val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
+    val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 
     val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
 

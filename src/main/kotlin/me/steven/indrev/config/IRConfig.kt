@@ -205,9 +205,9 @@ class CableConfig(val maxOutput: Double, val maxInput: Double)
 
 @Config(name = "upgrades")
 class Upgrades : ConfigData {
-    val speedUpgradeModifier = 1.2
+    val speedUpgradeModifier = 3.0
     val energyUpgradeModifier = 0.1
-    val bufferUpgradeModifier = 20000.0
+    val bufferUpgradeModifier = 25000.0
 }
 
 @Config(name = "compat")

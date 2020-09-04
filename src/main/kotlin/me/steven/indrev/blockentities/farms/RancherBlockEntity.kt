@@ -47,12 +47,13 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        cooldown += Upgrade.SPEED(this)
+        val upgrades = getUpgrades(inventory)
+        cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < getConfig().processSpeed) return
         val input = inventory.getInputInventory()
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        if (animals.isEmpty() || !Energy.of(this).simulate().use(Upgrade.ENERGY(this))) {
+        if (animals.isEmpty() || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this))) {
             setWorkingState(false)
             return
         } else setWorkingState(true)
@@ -61,7 +62,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
-            if (kill.isNotEmpty()) Energy.of(this).use(Upgrade.ENERGY(this))
+            if (kill.isNotEmpty()) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
@@ -84,7 +85,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 fakePlayer.inventory.selectedSlot = 8
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                 if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
-                    Energy.of(this).use(Upgrade.ENERGY(this))
+                    Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
                 val res = inventory.addStack(fakePlayer.inventory.getStack(0))
                 val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
                 if (!handStack.isEmpty && handStack.item != stack.item) {
@@ -113,14 +114,17 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
+            Upgrade.ENERGY -> getConfig().energyCost
             Upgrade.SPEED -> 1.0
             Upgrade.BUFFER -> getBaseBuffer()
+            else -> 0.0
         }
+
+    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 

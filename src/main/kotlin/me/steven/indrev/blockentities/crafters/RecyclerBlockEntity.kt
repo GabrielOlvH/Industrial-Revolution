@@ -50,7 +50,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.recycler
 }

@@ -13,10 +13,7 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
 import me.steven.indrev.utils.toVec3d
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.BlockState
-import net.minecraft.block.LeavesBlock
-import net.minecraft.block.PillarBlock
-import net.minecraft.block.SaplingBlock
+import net.minecraft.block.*
 import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
@@ -57,8 +54,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        cooldown += Upgrade.SPEED(this)
-        if (cooldown < getConfig().processSpeed || !Energy.of(this).simulate().use(Upgrade.ENERGY(this)))
+        val upgrades = getUpgrades(inventory)
+        cooldown += Upgrade.getSpeed(upgrades, this)
+        if (cooldown < getConfig().processSpeed || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this)))
             return
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
@@ -89,7 +87,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 val blockState = currentSection?.getBlockState(pos.x and 15, pos.y and 15, pos.z and 15) ?: continue
                 if (axeStack != null
                     && !axeStack.isEmpty
-                    && tryChop(currentSection, axeStack, pos, blockState, inventory)
+                    && tryChop(axeStack, pos, blockState, inventory)
                 ) {
                     performedAction = true
                     break
@@ -105,7 +103,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                     break@outer
                 }
             }
-            if (performedAction) Energy.of(this).use(Upgrade.ENERGY(this))
+            if (performedAction) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
             temperatureComponent?.tick(performedAction)
             setWorkingState(performedAction)
         }
@@ -113,14 +111,13 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
     }
 
     private fun tryChop(
-        section: ChunkSection,
         axeStack: ItemStack,
         blockPos: BlockPos,
         blockState: BlockState,
         inventory: IRInventory
     ): Boolean {
         when (blockState.block) {
-            is PillarBlock -> {
+            is PillarBlock, is GourdBlock -> {
                 if (Energy.valid(axeStack) && !Energy.of(axeStack).use(1.0))
                     return false
                 else {
@@ -164,16 +161,19 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost * Upgrade.SPEED(this)
+            Upgrade.ENERGY -> getConfig().energyCost
             Upgrade.SPEED -> 1.0
             Upgrade.BUFFER -> getBaseBuffer()
+            else -> 0.0
         }
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
+
+    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
 
     override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
 

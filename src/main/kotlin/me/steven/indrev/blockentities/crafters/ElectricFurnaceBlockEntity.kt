@@ -10,12 +10,12 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.AbstractCookingRecipe
 import net.minecraft.recipe.RecipeType
-import net.minecraft.recipe.SmeltingRecipe
 import team.reborn.energy.Energy
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<SmeltingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
+    CraftingMachineBlockEntity<AbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -33,11 +33,17 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
     }
 
-    private var currentRecipe: SmeltingRecipe? = null
+    private var currentRecipe: AbstractCookingRecipe? = null
 
-    override fun tryStartRecipe(inventory: IRInventory): SmeltingRecipe? {
+    override fun tryStartRecipe(inventory: IRInventory): AbstractCookingRecipe? {
+        val upgrades = getUpgrades(inventory)
         val inputStacks = inventory.getInputInventory()
-        val optional = world?.recipeManager?.getFirstMatch(RecipeType.SMELTING, inputStacks, world)
+        val recipeType = when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
+            Upgrade.BLAST_FURNACE -> RecipeType.BLASTING
+            Upgrade.SMOKER -> RecipeType.SMOKING
+            else -> RecipeType.SMELTING
+        }
+        val optional = world?.recipeManager?.getFirstMatch(recipeType, inputStacks, world)
         val recipe = optional?.orElse(null) ?: return null
         val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
@@ -52,9 +58,9 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
 
-    override fun getCurrentRecipe(): SmeltingRecipe? = currentRecipe
+    override fun getCurrentRecipe(): AbstractCookingRecipe? = currentRecipe
 
     override fun getConfig(): IConfig =
         when (tier) {

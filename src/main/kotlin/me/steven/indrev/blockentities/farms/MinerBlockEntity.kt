@@ -69,8 +69,9 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             val scanOutput = inventory.getStack(14).tag ?: return
             val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val chunkPos = world?.getChunk(pos)?.pos ?: return
-            if ((chunkPos == scanChunkPos || !matchScanOutput) && Energy.of(this).use(Upgrade.ENERGY(this))) {
-                mining += Upgrade.SPEED(this)
+            val upgrades = getUpgrades(inventory)
+            if ((chunkPos == scanChunkPos || !matchScanOutput) && Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) {
+                mining += Upgrade.getSpeed(upgrades, this)
                 temperatureComponent?.tick(true)
             } else {
                 setWorkingState(false)
@@ -106,12 +107,13 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED(this)
+        Upgrade.ENERGY -> getConfig().energyCost
         Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
+        else -> 0.0
     }
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored

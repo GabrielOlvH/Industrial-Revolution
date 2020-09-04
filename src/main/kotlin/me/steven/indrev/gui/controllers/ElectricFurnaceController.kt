@@ -33,13 +33,13 @@ class ElectricFurnaceController(
         configure("block.indrev.electric_furnace", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.3, 1.5)
+        root.add(inputSlot, 2.7, 2.0)
 
         val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 3.5, 1.5)
+        root.add(processWidget, 3.9, 2.0)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
-        outputSlot.addChangeListener { widget, inventory, slot, stack ->
+        outputSlot.addChangeListener { _, _, _, _ ->
             val player = playerInventory.player
             if (!player.world.isClient) {
                 ctx.run { world, pos ->
@@ -49,7 +49,7 @@ class ElectricFurnaceController(
             }
         }
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 5.5, 1.5)
+        root.add(outputSlot, 5.9, 2.0)
 
         root.validate(this)
     }

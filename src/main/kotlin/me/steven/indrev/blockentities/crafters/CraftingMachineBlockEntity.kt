@@ -36,7 +36,7 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
 
     protected var processTime: Int by Property(3, 0)
     protected var totalProcessTime: Int by Property(4, 0)
-    protected val usedRecipes = mutableMapOf<Identifier, Int>()
+    private val usedRecipes = mutableMapOf<Identifier, Int>()
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -44,11 +44,12 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         val inputInventory = inventory.getInputInventory()
         if (isProcessing()) {
             val recipe = getCurrentRecipe()
+            val upgrades = getUpgrades(inventory)
             if (!matchesRecipe(recipe, inputInventory))
                 tryStartRecipe(inventory) ?: reset()
-            else if (Energy.of(this).use(Upgrade.ENERGY(this))) {
+            else if (Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) {
                 setWorkingState(true)
-                processTime = (processTime - ceil(Upgrade.SPEED(this))).coerceAtLeast(0.0).toInt()
+                processTime = (processTime - ceil(Upgrade.getSpeed(upgrades, this))).coerceAtLeast(0.0).toInt()
                 if (processTime <= 0) {
                     val output = recipe?.craft(inventory) ?: return
                     inventory.inputSlots.forEachIndexed { index, slot ->
@@ -97,20 +98,21 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         totalProcessTime = 0
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER(this)
+    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost + (Upgrade.SPEED(this) * 2)
+        Upgrade.ENERGY -> getConfig().energyCost
         Upgrade.SPEED ->
             if (temperatureComponent?.isFullEfficiency() == true)
                 getHeatConfig()?.processTemperatureBoost ?: getConfig().processSpeed
             else
                 getConfig().processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
+        else -> 0.0
     }
 
     override fun getBaseBuffer(): Double = getConfig().maxEnergyStored

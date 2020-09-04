@@ -40,8 +40,9 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
     private var cooldown = getConfig().processSpeed
 
     override fun machineTick() {
-        if (!Energy.of(this).use(Upgrade.ENERGY(this))) return
-        cooldown += Upgrade.SPEED(this)
+        val upgrades = getUpgrades(inventoryComponent!!.inventory)
+        if (!Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) return
+        cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < getConfig().processSpeed) return
         cooldown = 0.0
         val rodStack = inventoryComponent?.inventory?.getStack(1)
@@ -77,16 +78,17 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getMaxStoredPower(): Double = Upgrade.BUFFER(this)
+    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(6, 7, 8, 9)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost + Upgrade.SPEED(this)
+        Upgrade.ENERGY -> getConfig().energyCost
         Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
+        else -> 0.0
     }
 
     fun getConfig(): IConfig {

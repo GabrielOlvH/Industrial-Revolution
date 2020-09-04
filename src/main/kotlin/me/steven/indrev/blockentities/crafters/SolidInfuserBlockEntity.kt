@@ -49,7 +49,7 @@ class SolidInfuserBlockEntity(tier: Tier) :
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.ALL
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getCurrentRecipe(): InfuserRecipe? = currentRecipe
 

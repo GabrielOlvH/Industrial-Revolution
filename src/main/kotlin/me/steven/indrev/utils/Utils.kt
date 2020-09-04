@@ -136,32 +136,15 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
             is IConfig -> {
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.maxInput
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lf",
-                                getShortEnergyDisplay(config.maxEnergyStored)
-                            ).formatted(
-                                Formatting.GOLD
-                            )
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lf",
-                                config.energyCost
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lf", config.energyCost).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
@@ -171,45 +154,23 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
             is HeatMachineConfig -> {
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.maxInput
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lf",
-                                getShortEnergyDisplay(config.maxEnergyStored)
-                            ).formatted(
-                                Formatting.GOLD
-                            )
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lf",
-                                config.energyCost
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lf", config.energyCost).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
                         .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.processTemperatureBoost
-                            ).formatted(Formatting.GOLD)
-                        )
+                    TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.BLUE)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.processTemperatureBoost).formatted(Formatting.GOLD))
                 )
             }
             is GeneratorConfig -> {
@@ -228,47 +189,27 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
                             TranslatableText(
                                 "gui.indrev.tooltip.lf",
                                 getShortEnergyDisplay(config.maxEnergyStored)
-                            ).formatted(
-                                Formatting.GOLD
-                            )
+                            ).formatted(Formatting.GOLD)
                         )
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.ratio").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.ratio
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.ratio).formatted(Formatting.GOLD))
                 )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(
-                                Formatting.GOLD
-                            )
-                        )
-                )
+                if (config.temperatureBoost > 0)
+                    tooltip?.add(
+                        TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.BLUE)
+                            .append(TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(Formatting.GOLD))
+                    )
             }
             is CableConfig -> {
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.maxInput
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
                 )
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.BLUE)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.maxOutput
-                            ).formatted(Formatting.GOLD)
-                        )
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxOutput).formatted(Formatting.GOLD))
                 )
             }
         }

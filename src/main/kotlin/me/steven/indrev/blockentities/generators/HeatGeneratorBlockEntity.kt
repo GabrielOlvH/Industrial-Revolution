@@ -19,7 +19,6 @@ import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
@@ -110,6 +109,5 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             it[IRRegistry.MOLTEN_NETHERITE_STILL] = 8000
             it[IRRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
         }
-        private val DIRECTIONS = Direction.values().toSet()
     }
 }
