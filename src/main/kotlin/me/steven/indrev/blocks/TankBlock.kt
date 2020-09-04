@@ -3,13 +3,11 @@ package me.steven.indrev.blocks
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.mixin.AccessorBucketItem
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -18,11 +16,8 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.fluid.Fluids
-import net.minecraft.item.BucketItem
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
@@ -74,36 +69,12 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         state: BlockState?,
         world: World?,
         pos: BlockPos?,
-        player: PlayerEntity?,
-        hand: Hand?,
+        player: PlayerEntity,
+        hand: Hand,
         hit: BlockHitResult?
     ): ActionResult {
-        val itemStack = player?.getStackInHand(hand)
-        val item = itemStack?.item
-        if (item is BucketItem) {
-            val tankEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return ActionResult.PASS
-            val bucketFluid = (item as AccessorBucketItem).fluid
-            val tank = tankEntity.fluidComponent.tanks[0]
-            if (tank.volume.amount() >= FluidAmount.BUCKET && bucketFluid == Fluids.EMPTY) {
-                val bucket = tank.volume.fluidKey.rawFluid?.bucketItem
-                val extractable = FluidAttributes.EXTRACTABLE.get(world, pos)
-                val volume = tank.volume.fluidKey.withAmount(FluidAmount.BUCKET)
-                if (bucket != null && !extractable.extract(volume.amount()).isEmpty) {
-                    itemStack.decrement(1)
-                    player.inventory?.insertStack(ItemStack(bucket))
-                    return ActionResult.SUCCESS
-                }
-            } else if (bucketFluid != Fluids.EMPTY) {
-                val volume = FluidKeys.get(bucketFluid).withAmount(FluidAmount.BUCKET)
-                val insertable = FluidAttributes.INSERTABLE.get(world, pos)
-                if (insertable.insert(volume).isEmpty) {
-                    itemStack.decrement(1)
-                    player.inventory?.insertStack(ItemStack(Items.BUCKET))
-                    return ActionResult.SUCCESS
-                }
-            }
-        }
-        return super.onUse(state, world, pos, player, hand, hit)
+        val tankEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return ActionResult.PASS
+        return FluidInvUtil.interactHandWithTank(tankEntity.fluidComponent, player, hand).asActionResult()
     }
 
     override fun afterBreak(
