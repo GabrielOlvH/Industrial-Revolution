@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:circuit_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.circuit_mk1"
+    },
+    "description": {
+      "translate": "advancements.indrev.circuit_mk1.description"
+    }
+  },
+  "hidden": true,
+  "parent": "indrev:nikolite",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:circuit_mk1"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:rancher_mk4"
+    },
+    "title": {
+      "translate": "advancements.indrev.rancher_mk4"
+    },
+    "description": {
+      "translate": "advancements.indrev.rancher_mk4.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:rancher_mk4"
+          }
+        ]
+      }
+    }
+  }
+}

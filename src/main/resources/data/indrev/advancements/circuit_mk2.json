@@ -1,15 +1,16 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:lazuli_flux_container_mk1"
+      "item": "indrev:circuit_mk2"
     },
     "title": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk1"
+      "translate": "advancements.indrev.circuit_mk2"
     },
     "description": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk1.description"
+      "translate": "advancements.indrev.circuit_mk2.description"
     }
   },
+  "hidden": true,
   "parent": "indrev:circuit_mk1",
   "criteria": {
     "checkInv": {
@@ -17,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:lazuli_flux_container_mk1"
+            "item": "indrev:circuit_mk2"
           }
         ]
       }

@@ -10,7 +10,7 @@
       "translate": "advancements.indrev.mk4_upgrade.description"
     }
   },
-  "parent": "indrev:mk3_upgrade",
+  "parent": "indrev:circuit_mk4",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:item_used_on_block",

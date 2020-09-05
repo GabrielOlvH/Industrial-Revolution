@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:blast_furnace_upgrade"
+    },
+    "title": {
+      "translate": "advancements.indrev.blast_furnace_upgrade"
+    },
+    "description": {
+      "translate": "advancements.indrev.blast_furnace_upgrade.description"
+    }
+  },
+  "parent": "indrev:empty_upgrade",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:blast_furnace_upgrade"
+          }
+        ]
+      }
+    }
+  }
+}

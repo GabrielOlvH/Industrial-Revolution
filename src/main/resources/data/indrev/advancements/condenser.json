@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:lazuli_flux_container_mk4"
+      "item": "indrev:condenser_mk4"
     },
     "title": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk4"
+      "translate": "advancements.indrev.condenser"
     },
     "description": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk4.description"
+      "translate": "advancements.indrev.condenser"
     }
   },
   "parent": "indrev:circuit_mk4",
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:lazuli_flux_container_mk4"
+            "item": "indrev:condenser_mk4"
           }
         ]
       }

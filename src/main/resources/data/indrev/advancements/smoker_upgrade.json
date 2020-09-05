@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:smoker_upgrade"
+    },
+    "title": {
+      "translate": "advancements.indrev.smoker_upgrade"
+    },
+    "description": {
+      "translate": "advancements.indrev.smoker_upgrade.description"
+    }
+  },
+  "parent": "indrev:empty_upgrade",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:smoker_upgrade"
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:lazuli_flux_container_mk4"
+      "item": "indrev:smelter_mk4"
     },
     "title": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk4"
+      "translate": "advancements.indrev.industrial_smelter"
     },
     "description": {
-      "translate": "advancements.indrev.lazuli_flux_container_mk4.description"
+      "translate": "advancements.indrev.industrial_smelter"
     }
   },
   "parent": "indrev:circuit_mk4",
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:lazuli_flux_container_mk4"
+            "item": "indrev:smelter_mk4"
           }
         ]
       }
