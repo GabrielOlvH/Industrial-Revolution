@@ -341,7 +341,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
             { tier ->
-                FishingFarmBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
                     when (tier) {
                         Tier.MK2 -> CONFIG.machines.fishingMk2
