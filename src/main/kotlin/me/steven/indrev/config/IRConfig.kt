@@ -127,9 +127,6 @@ class Machines : ConfigData {
     val miner: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val enderMiner: MachineConfig = MachineConfig(64.0, 200.0, 50000.0, Tier.MK4.io)
-
-    @ConfigEntry.Gui.CollapsibleObject
     val fishingMk2: MachineConfig = MachineConfig(8.0, 500.0, 50000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject

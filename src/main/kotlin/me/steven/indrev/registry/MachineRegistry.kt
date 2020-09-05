@@ -322,23 +322,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { MinerBlockEntity(tier, true) } }
         )
 
-        val ENDER_MINER_REGISTRY = MachineRegistry(identifier("ender_miner"), false, Tier.MK4).register(
-            { tier ->
-                object : HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(),
-                    tier, CONFIG.machines.enderMiner,
-                    ::MinerController,
-                    { MinerBlockEntity(tier, false) }
-                ) {
-                    override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
-                        super.appendTooltip(stack, view, tooltip, options)
-                        tooltip?.add(TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
-                    }
-                }
-            },
-            { tier -> { MinerBlockEntity(tier, false) } }
-        )
-
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
             { tier ->
                 HorizontalFacingMachineBlock(
