@@ -1,5 +1,5 @@
 {
-  "item.patchouli.industrial_revolution_book.name": "Industrial Revolution",
+  "item.patchouli.industrial_revolution_book.name": "Revolutionary Guide",
   "item.patchouli.industrial_revolution_book.landing": "This book will help you go through some of the important aspects of the mod.$(br2)If you find any issues, questions or suggestions, open an issue on $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() or join our $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Thank you for playing!",
   "itemGroup.indrev.indrev_group": "Industrial Revolution",
   "block.machines.tooltip.io": "I/O: %s",
@@ -206,8 +206,8 @@
   "gui.indrev.heatgen.title": "Generating...",
   "gui.indrev.heatgen.lftick": "%s LF/tick",
   "gui.indrev.heatgen.extra": "Careful, it's hot!",
-  "gui.indrev.guide_book_shortcut.contains": "Opens about page on Guide Book",
-  "gui.indrev.guide_book_shortcut.missing": "Missing Industrial Revolution guide book!",
+  "gui.indrev.guide_book_shortcut.contains": "Opens about page on the Revolutionary Guide",
+  "gui.indrev.guide_book_shortcut.missing": "Missing the Revolutionary Guide!",
   "gui.indrev.tooltip.maxInput": "Max input: ",
   "gui.indrev.tooltip.maxOutput": "Max output: ",
   "gui.indrev.tooltip.maxEnergyStored": "Max energy stored: ",
