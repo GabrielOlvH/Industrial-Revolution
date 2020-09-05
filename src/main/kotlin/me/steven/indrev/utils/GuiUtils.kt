@@ -51,10 +51,10 @@ fun SyncedGuiDescription.configure(
     (rootPanel as WGridPanel).also { panel ->
         panel.setSize(150, 120)
         panel.add(createPlayerInventoryPanel(), 0, 5)
-        panel.add(WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4, 0)
+        panel.add(WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040), 4.3, 0.0)
 
         val energyWidget = WEnergy(screenHandlerContext)
-        panel.add(energyWidget, 0, 0, 16, 64)
+        panel.add(energyWidget, 0.1, 0.0)
 
         val batterySlot = WTooltipedItemSlot.of(
             blockInventory,
@@ -66,6 +66,7 @@ fun SyncedGuiDescription.configure(
                 )
             )
         )
+        batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
         panel.add(batterySlot, 0.0, 3.7)
 
         screenHandlerContext.run { world, blockPos ->
@@ -83,12 +84,13 @@ fun SyncedGuiDescription.configure(
                             )
                         )
                     )
+                    s.backgroundPainter = getUpgradeSlotPainter(blockInventory, slot)
                     panel.add(s, 8, i)
                 }
             }
             if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
-                panel.add(WTemperature(propertyDelegate, controller), 1, 0, 16, 64)
+                panel.add(WTemperature(propertyDelegate, controller), 1.1, 0.0)
                 val coolerSlot = WTooltipedItemSlot.of(
                     blockInventory,
                     1,
@@ -99,6 +101,7 @@ fun SyncedGuiDescription.configure(
                         )
                     )
                 )
+                coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
                 panel.add(coolerSlot, 1.0, 3.7)
             }
             if (blockEntity is AOEMachineBlockEntity) {
@@ -107,11 +110,12 @@ fun SyncedGuiDescription.configure(
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
                     }
                 }
+                button.setSize(20, 20)
                 button.setOnClick {
                     blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
                 }
                 button.icon = Icon { _, x, y, size ->
-                    ScreenDrawing.texturedRect(x, y, 16, 18, identifier("textures/gui/range_icon.png"), -1)
+                    ScreenDrawing.texturedRect(x, y, 16, 16, identifier("textures/gui/range_icon.png"), -1)
                 }
                 panel.add(button, 8.0, 4.2)
             }
@@ -168,4 +172,20 @@ fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { 
     BackgroundPainter.SLOT.paintBackground(left, top, widget)
     if (inventory.getStack(slot).isEmpty)
         ScreenDrawing.texturedRect(left, top, 18, 18, POWER_ICON_ID, -1)
+}
+
+val VENT_ICON_ID = identifier("textures/gui/vent_icon.png")
+
+fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+    if (inventory.getStack(slot).isEmpty)
+        ScreenDrawing.texturedRect(left, top, 18, 18, VENT_ICON_ID, -1)
+}
+
+val UPGRADE_ICON_ID = identifier("textures/gui/upgrade_icon.png")
+
+fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+    if (inventory.getStack(slot).isEmpty)
+        ScreenDrawing.texturedRect(left, top, 18, 18, UPGRADE_ICON_ID, -1)
 }
