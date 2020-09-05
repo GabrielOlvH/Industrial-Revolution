@@ -54,6 +54,7 @@ class TemperatureComponent(
             if (coolerStack != null && coolerItem is IRCoolerItem) {
                 coolingModifier = coolerItem.coolingModifier
                 coolerStack.damage++
+                if (coolerStack.damage >= coolerStack.maxDamage) coolerStack.decrement(1)
             }
         } else if (cooling > 0 && temperature > 25) {
             cooling--

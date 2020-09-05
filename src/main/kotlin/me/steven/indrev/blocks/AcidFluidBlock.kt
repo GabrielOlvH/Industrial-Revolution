@@ -6,6 +6,7 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.entity.Entity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.fluid.FlowableFluid
+import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -20,6 +21,16 @@ class AcidFluidBlock(fluid: FlowableFluid, settings: Settings) : FluidBlock(flui
             val block = blockState?.block
             if (block == Blocks.DIRT || block == Blocks.GRASS_BLOCK || block == Blocks.FARMLAND || block == Blocks.GRASS_PATH)
                 world?.setBlockState(pos, Blocks.COARSE_DIRT.defaultState)
+        }
+    }
+
+    override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random) {
+        if (!world.isAir(pos.up()) || random.nextInt(10) < 5) return
+        (0..1).forEach { a ->
+            (0..1).forEach { b ->
+                world.addParticle(
+                    ParticleTypes.SNEEZE, pos.x + a / 2.0 + (random.nextFloat() / 5), pos.y + 1.0, pos.z + b / 2.0 + (random.nextFloat() / 5), 0.0, 0.005, 0.0)
+            }
         }
     }
 
