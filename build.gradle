@@ -94,8 +94,8 @@ dependencies {
 
     modImplementation("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
+    //modImplementation("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
+    //include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
