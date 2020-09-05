@@ -25,7 +25,7 @@ class TankBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         var percent = fluid.toFloat() / maxFluid.toFloat()
         val maxHeight = if (entity.cachedState[TankBlock.UP]) 16 else 14
         percent = (percent * maxHeight).toInt() / 16f
-        val yHeight = percent.toDouble()
+        val yHeight = percent.toDouble().coerceAtLeast(0.1)
         val FACES = listOf(
             FluidRenderFace.createFlatFaceZ(0.9, 0.0, 0.1, 0.1, yHeight, 0.1, 2.0, true, false),
             FluidRenderFace.createFlatFaceZ(0.1, 0.0, 0.9, 0.9, yHeight, 0.9, 2.0, true, false),
