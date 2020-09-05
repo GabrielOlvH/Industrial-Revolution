@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks
 
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.gui.IRScreenHandlerFactory
@@ -23,6 +24,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
@@ -71,6 +73,10 @@ open class MachineBlock(
         hit: BlockHitResult?
     ): ActionResult? {
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.FAIL
+        if (blockEntity.fluidComponent != null && !world.isClient) {
+            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
+            if (result.asActionResult().isAccepted) return result.asActionResult()
+        }
         val stack = player?.mainHandStack
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
