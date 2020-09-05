@@ -13,11 +13,15 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
 import me.steven.indrev.utils.toVec3d
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.*
+import net.minecraft.block.BlockState
+import net.minecraft.block.GourdBlock
+import net.minecraft.block.LeavesBlock
+import net.minecraft.block.SaplingBlock
 import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.tag.BlockTags
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -116,8 +120,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         blockState: BlockState,
         inventory: IRInventory
     ): Boolean {
-        when (blockState.block) {
-            is PillarBlock, is GourdBlock -> {
+        val block = blockState.block
+        when {
+            block.isIn(BlockTags.LOGS) || block is GourdBlock -> {
                 if (Energy.valid(axeStack) && !Energy.of(axeStack).use(1.0))
                     return false
                 else {
@@ -127,7 +132,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
                 }
                 world?.breakBlock(blockPos, false)
             }
-            is LeavesBlock -> {
+            block is LeavesBlock -> {
                 world?.breakBlock(blockPos, false)
             }
             else -> return false

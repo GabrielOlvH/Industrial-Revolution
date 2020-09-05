@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity(tier, if (matchScanOutput) MachineRegistry.MINER_REGISTRY else MachineRegistry.ENDER_MINER_REGISTRY), UpgradeProvider {
+class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
@@ -148,7 +148,5 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
         super.fromClientTag(tag)
     }
 
-    fun getConfig() =
-        if (matchScanOutput) IndustrialRevolution.CONFIG.machines.enderMiner
-        else IndustrialRevolution.CONFIG.machines.miner
+    fun getConfig() = IndustrialRevolution.CONFIG.machines.miner
 }
