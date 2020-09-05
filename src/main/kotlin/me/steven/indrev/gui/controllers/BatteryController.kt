@@ -5,16 +5,25 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WEnergy
+import me.steven.indrev.gui.widgets.misc.WPlayerRender
+import me.steven.indrev.gui.widgets.misc.WStaticTooltip
+import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
+import me.steven.indrev.utils.getEnergySlotPainter
 import me.steven.indrev.utils.identifier
+import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.item.ArmorItem
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
+import java.util.function.Predicate
 
 class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -36,31 +45,60 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         root.setSize(150, 120)
 
-        root.add(WEnergy(ctx), 0, 0, 16, 64)
+        root.add(WText(TranslatableText("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER,0x404040), 5.4, 0.0)
+        root.add(WText(TranslatableText("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040), 5.4, 0.7)
 
-        root.add(WItemSlot.of(blockInventory, 0), 4, 2)
+        val wEnergy = WEnergy(ctx)
+        root.add(wEnergy, 8.0, 0.5)
+
+        val itemSlot = WItemSlot.of(blockInventory, 0)
+        itemSlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
+        root.add(itemSlot, 5.4, 1.3)
 
         root.add(createPlayerInventoryPanel(), 0.0, 4.2)
 
         val boots = WItemSlot.of(playerInventory, 36)
         boots.backgroundPainter = bootsPainter
-        root.add(boots, 1, 3)
+        boots.filter = Predicate { stack ->
+            val item = stack.item
+            item is ArmorItem && item.slotType == EquipmentSlot.FEET
+        }
+        root.add(boots, 0, 3)
 
         val leggings = WItemSlot.of(playerInventory, 37)
         leggings.backgroundPainter = leggingsPainter
-        root.add(leggings, 1, 2)
+        leggings.filter = Predicate { stack ->
+            val item = stack.item
+            item is ArmorItem && item.slotType == EquipmentSlot.LEGS
+        }
+        root.add(leggings, 0, 2)
 
         val chestplate = WItemSlot.of(playerInventory, 38)
         chestplate.backgroundPainter = chestplatePainter
-        root.add(chestplate, 1, 1)
+        chestplate.filter = Predicate { stack ->
+            val item = stack.item
+            item is ArmorItem && item.slotType == EquipmentSlot.CHEST
+        }
+        root.add(chestplate, 0, 1)
 
         val helmet = WItemSlot.of(playerInventory, 39)
         helmet.backgroundPainter = helmetPainter
-        root.add(helmet, 1, 0)
+        helmet.filter = Predicate { stack ->
+            val item = stack.item
+            item is ArmorItem && item.slotType == EquipmentSlot.HEAD
+        }
+        root.add(helmet, 0, 0)
 
         val shield = WItemSlot.of(playerInventory, 40)
         shield.backgroundPainter = shieldPainter
-        root.add(shield, 2.2, 3.0)
+        root.add(shield, 3.8, 3.0)
+
+        val playerBg = WStaticTooltip()
+        root.add(playerBg, 1.3, 0.2)
+        playerBg.setSize(40, 65)
+
+        val playerWidget = WPlayerRender()
+        root.add(playerWidget, 2.4, 3.5)
 
         addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
 

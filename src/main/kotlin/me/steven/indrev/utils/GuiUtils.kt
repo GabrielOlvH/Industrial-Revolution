@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
@@ -159,4 +160,12 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
     panel.add(button, x, y)
     button.setSize(24, 24)
     return button
+}
+
+val POWER_ICON_ID = identifier("textures/gui/power_icon.png")
+
+fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+    if (inventory.getStack(slot).isEmpty)
+        ScreenDrawing.texturedRect(left, top, 18, 18, POWER_ICON_ID, -1)
 }
