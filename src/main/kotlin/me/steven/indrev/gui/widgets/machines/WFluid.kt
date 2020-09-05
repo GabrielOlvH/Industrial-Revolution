@@ -3,9 +3,12 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.identifier
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 
@@ -55,10 +58,18 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         }
     }
 
+    override fun onClick(x: Int, y: Int, button: Int) {
+        super.onClick(x, y, button)
+        val packet = PacketByteBuf(Unpooled.buffer())
+        ctx.run { _, pos -> packet.writeBlockPos(pos) }
+        ClientSidePacketRegistry.INSTANCE.sendToServer(FLUID_CLICK_PACKET, packet)
+    }
+
     override fun canResize(): Boolean = false
 
     companion object {
         val ENERGY_EMPTY =
             identifier("textures/gui/widget_energy_empty.png")
+        val FLUID_CLICK_PACKET = identifier("fluid_widget_click")
     }
 }

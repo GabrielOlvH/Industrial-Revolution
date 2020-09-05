@@ -1,5 +1,6 @@
 package me.steven.indrev
 
+import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.ConfigData
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
@@ -11,6 +12,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.PatchouliBookRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
@@ -33,6 +35,7 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
@@ -98,6 +101,19 @@ object IndustrialRevolution : ModInitializer {
                     val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity ?: return@execute
                     blockEntity.range = value
                     blockEntity.markDirty()
+                }
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(WFluid.FLUID_CLICK_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val player = ctx.player as ServerPlayerEntity
+            val world = player.world
+            ctx.taskQueue.execute {
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
+                    val fluidComponent = blockEntity.fluidComponent ?: return@execute
+                    FluidInvUtil.interactCursorWithTank(fluidComponent, player)
                 }
             }
         }
