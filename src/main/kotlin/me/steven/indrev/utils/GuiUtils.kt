@@ -66,10 +66,11 @@ fun SyncedGuiDescription.configure(
                 )
             )
         )
-        batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
-        panel.add(batterySlot, 0.0, 3.7)
 
         screenHandlerContext.run { world, blockPos ->
+            if (world.isClient)
+                batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
+            panel.add(batterySlot, 0.0, 3.7)
             panel.add(WTip(world.random), -1, -1)
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
@@ -84,7 +85,8 @@ fun SyncedGuiDescription.configure(
                             )
                         )
                     )
-                    s.backgroundPainter = getUpgradeSlotPainter(blockInventory, slot)
+                    if (world.isClient)
+                        s.backgroundPainter = getUpgradeSlotPainter(blockInventory, slot)
                     panel.add(s, 8, i)
                 }
             }
@@ -101,7 +103,8 @@ fun SyncedGuiDescription.configure(
                         )
                     )
                 )
-                coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
+                if (world.isClient)
+                    coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
                 panel.add(coolerSlot, 1.0, 3.7)
             }
             if (blockEntity is AOEMachineBlockEntity) {
