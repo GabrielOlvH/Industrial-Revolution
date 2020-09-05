@@ -27,13 +27,13 @@ repositories {
     }
     maven { url 'https://maven.blamejared.com' }
     maven { url "https://jitpack.io" }
-    //maven {
-        //name "Modmaven"
-        //url "https://modmaven.k-4u.nl/"
-        //content {
-            //includeGroup 'appeng'
-        //}
-    //}
+    /*maven {
+        name "Modmaven"
+        url "https://modmaven.k-4u.nl/"
+        content {
+            includeGroup 'appeng'
+        }
+    }*/
 }
 
 dependencies {
@@ -94,13 +94,15 @@ dependencies {
 
     modImplementation("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
+    include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
     modCompile "me.shedaniel.cloth.api:cloth-dynamic-registry-api-v1:1.2.1"
     include "me.shedaniel.cloth.api:cloth-dynamic-registry-api-v1:1.2.1"
 
-   // modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.4"
+    //modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.6"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
