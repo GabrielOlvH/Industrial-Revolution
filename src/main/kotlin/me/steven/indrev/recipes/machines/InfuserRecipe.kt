@@ -31,8 +31,17 @@ class InfuserRecipe(private val id: Identifier, val processTime: Int, private va
 
     override fun getPreviewInputs(): DefaultedList<Ingredient> = ingredients
 
-    override fun matches(inv: Inventory?, world: World?): Boolean = ingredients.all { ingredient ->
-        (0 until (inv?.size() ?: 0)).any { ingredient.test(inv?.getStack(it)) }
+    override fun matches(inv: Inventory, world: World?): Boolean {
+        val matched = Array(ingredients.size) { false }
+        for (slot in 0 until inv.size()) {
+            for ((index, ingredient) in ingredients.withIndex()) {
+                if (!matched[index] && ingredient.test(inv.getStack(slot))) {
+                    matched[index] = true
+                    break
+                }
+            }
+        }
+        return matched.all { it }
     }
 
     companion object {

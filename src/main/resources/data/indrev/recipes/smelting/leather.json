@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "indrev:untanned_leather"
+  },
+  "result": "minecraft:leather",
+  "cookingTime": 250
+}

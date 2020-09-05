@@ -129,6 +129,7 @@ object IRRegistry {
         identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
 
         identifier("biomass").item(BIOMASS)
+        identifier("untanned_leather").item(DEFAULT_ITEM())
 
         COOLANT_IDENTIFIER.block(COOLANT)
         identifier("${COOLANT_IDENTIFIER.path}_still").fluid(COOLANT_STILL)
