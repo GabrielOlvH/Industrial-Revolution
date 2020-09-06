@@ -155,8 +155,14 @@ class EnergyNetwork(
             if (Energy.valid(blockEntity) || blockEntity is CableBlockEntity) {
                 if (state.networksByPos.containsKey(blockPos)) {
                     val oldNetwork = state.networksByPos[blockPos]
-                    if (state.networks.contains(oldNetwork) && oldNetwork != network)
+                    if (state.networks.contains(oldNetwork) && oldNetwork != network) {
                         oldNetwork?.remove()
+                        oldNetwork?.cables?.forEach { p ->
+                            network.cables.add(p)
+                            state.networksByPos[p] = network
+                        }
+                        oldNetwork?.machines?.forEach { (p, d) -> network.machines[p] = d }
+                    }
                 }
                 if (blockEntity is CableBlockEntity) {
                     if (blockEntity.cachedState[CableBlock.getProperty(direction.opposite)]) {

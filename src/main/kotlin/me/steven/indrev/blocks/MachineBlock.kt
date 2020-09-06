@@ -96,7 +96,7 @@ open class MachineBlock(
                 world.updateComparators(pos, this)
             }
             val newBlockEntity = world.getBlockEntity(pos)
-            val isSplit = newBlockEntity == null && !Energy.valid(newBlockEntity)
+            val isSplit = newBlockEntity == null || !Energy.valid(newBlockEntity)
             EnergyNetwork.updateBlock(world as ServerWorld, pos, isSplit)
         }
     }

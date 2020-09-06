@@ -116,9 +116,9 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         moved: Boolean
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
-        if (!world.isClient) {
+        if (!world.isClient && !newState.isOf(state.block)) {
             val newBlockEntity = world.getBlockEntity(pos)
-            val isSplit = newBlockEntity != null && !Energy.valid(newBlockEntity)
+            val isSplit = newBlockEntity == null || !Energy.valid(newBlockEntity)
             EnergyNetwork.updateBlock(world as ServerWorld, pos, isSplit)
         }
     }
