@@ -42,7 +42,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             ?: return null
         val fluidVolume = fluidComponent!!.tanks[1].volume
         val outputStack = inventory.getStack(3).copy()
-        if ((fluidVolume.isEmpty || fluidVolume.amount().add(recipe.inputFluid.amount()) <= fluidComponent!!.limit)
+        if ((fluidVolume.isEmpty || (fluidVolume.fluidKey == recipe.outputFluid.fluidKey || fluidVolume.amount().add(recipe.outputFluid.amount()) <= fluidComponent!!.limit))
             && (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item))) {
             if (!isProcessing()) {
                 processTime = recipe.processTime

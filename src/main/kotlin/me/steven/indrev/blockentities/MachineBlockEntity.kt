@@ -1,7 +1,9 @@
 package me.steven.indrev.blockentities
 
-import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.fluid.FluidExtractable
+import alexiil.mc.lib.attributes.fluid.FluidInsertable
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
@@ -157,29 +159,33 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         itemTransferCooldown--
         inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
             val pos = pos.offset(direction)
-            val inventory = inventoryComponent?.inventory ?: return@forEach
+            val inventory = inventoryComponent?.inventory ?: return
             if (mode.output) {
+                val neighborInv = getInventory(pos)
+                if (neighborInv != null) {
+                    inventory.outputSlots.forEach { slot ->
+                        transferItems(inventory, neighborInv, slot, direction)
+                    }
+                    return
+                }
                 val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
                 if (insertable != null) {
                     val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
                     ItemInvUtil.move(extractable, insertable, 64)
-                    return@forEach
-                }
-                val neighborInv = getInventory(pos) ?: return@forEach
-                inventory.outputSlots.forEach { slot ->
-                    transferItems(inventory, neighborInv, slot, direction)
                 }
             }
             if (mode.input) {
+                val neighborInv = getInventory(pos)
+                if (neighborInv != null) {
+                    getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
+                        transferItems(neighborInv, inventory, slot, direction.opposite)
+                    }
+                    return
+                }
                 val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
                 if (extractable != null) {
                     val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
                     ItemInvUtil.move(extractable, insertable, 64)
-                    return@forEach
-                }
-                val neighborInv = getInventory(pos) ?: return@forEach
-                getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
-                    transferItems(neighborInv, inventory, slot, direction.opposite)
                 }
             }
         }
@@ -241,34 +247,20 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         fluidComponent?.tanks?.forEach { tank ->
             fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
                 if (mode == TransferMode.NONE) return@innerForEach
+                var extractable: FluidExtractable? = null
+                var insertable: FluidInsertable? = null
                 if (mode.output) {
-                    val fluidAmount =
-                        (if (tank.volume.amount()?.compareTo(NUGGET_AMOUNT) ?: return@innerForEach > 0)
-                            NUGGET_AMOUNT
-                        else
-                            tank.volume.amount()) ?: return@innerForEach
-                    val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
+                    insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
                         ?: return@innerForEach
-                    val extractable = fluidComponent?.extractable
-                    val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
-                    val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
-                    if (extractionResult?.isEmpty == false && insertionResult.isEmpty) {
-                        insertable.insert(extractionResult)
-                        extractable.extract(extractionResult.amount())
-                    }
+                    extractable = fluidComponent?.extractable
                 }
                 if (mode.input) {
-                    val extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                        ?: return@innerForEach
-                    val fluidAmount = NUGGET_AMOUNT
-                    val insertable = fluidComponent?.insertable
-                    val extractionResult = extractable.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
-                    val insertionResult = insertable?.attemptInsertion(extractionResult, Simulation.SIMULATE)
-                    if (insertionResult?.isEmpty == true && !extractionResult.isEmpty) {
-                        extractable.extract(extractionResult?.amount())
-                        insertable.insert(extractionResult)
-                    }
+                    extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull ?: return@innerForEach
+                    insertable = fluidComponent?.insertable
+
                 }
+                if (extractable != null && insertable != null)
+                    FluidVolumeUtil.move(extractable, insertable, NUGGET_AMOUNT)
             }
         }
     }
