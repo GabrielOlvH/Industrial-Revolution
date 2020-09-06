@@ -1,7 +1,7 @@
 package me.steven.indrev.utils
 
+import alexiil.mc.lib.attributes.fluid.render.DefaultFluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.minecraft.client.render.VertexConsumerProvider
@@ -9,15 +9,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-object IRFluidVolumeRenderer : FluidVolumeRenderer() {
-    override fun render(
-        fluid: FluidVolume,
-        faces: MutableList<FluidRenderFace>?,
-        vcp: VertexConsumerProvider?,
-        matrices: MatrixStack?
-    ) {
-    }
-
+object IRFluidVolumeRenderer : DefaultFluidVolumeRenderer() {
     fun render(
         world: World,
         pos: BlockPos,
