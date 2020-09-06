@@ -95,7 +95,9 @@ open class MachineBlock(
                 ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
                 world.updateComparators(pos, this)
             }
-            EnergyNetwork.updateBlock(world as ServerWorld, pos, true)
+            val newBlockEntity = world.getBlockEntity(pos)
+            val isSplit = newBlockEntity == null && !Energy.valid(newBlockEntity)
+            EnergyNetwork.updateBlock(world as ServerWorld, pos, isSplit)
         }
     }
 
