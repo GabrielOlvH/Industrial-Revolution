@@ -23,7 +23,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockRenderView
-import java.awt.Color
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -31,13 +30,19 @@ import java.io.Reader
 import java.util.*
 import java.util.function.Supplier
 
-class IRTankBlockItem : BakedModel, FabricBakedModel {
+object IRTankItemBakedModel : BakedModel, FabricBakedModel {
+
+    private val modelIdentifier = ModelIdentifier(
+        identifier("tank"),
+        "down=false,up=false"
+    )
 
     override fun isVanillaAdapter(): Boolean = false
 
     override fun emitItemQuads(stack: ItemStack, randSupplier: Supplier<Random>, context: RenderContext) {
-
-        val tankModel = MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(identifier("tank"), "down=false,up=false"))
+        val tankModel = MinecraftClient.getInstance().bakedModelManager.getModel(
+            modelIdentifier
+        )
         context.fallbackConsumer().accept(tankModel)
 
         val stackTag = stack.orCreateTag
@@ -53,7 +58,7 @@ class IRTankBlockItem : BakedModel, FabricBakedModel {
         val fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(fluid) ?: return
         val fluidColor = fluidRenderHandler.getFluidColor(world, pos, fluid.defaultState)
         val fluidSprite = fluidRenderHandler.getFluidSprites(world, pos, fluid.defaultState)[0]
-        val color = Color((fluidColor shr 16 and 255), (fluidColor shr 8 and 255), (fluidColor and 255)).rgb
+        val color = 255 shl 24 or fluidColor
         context.pushTransform { quad ->
             quad.spriteColor(0, color, color, color, color)
             true
@@ -61,8 +66,8 @@ class IRTankBlockItem : BakedModel, FabricBakedModel {
 
         val emitter = context.emitter
 
-        val p = (dummyFluidInv.getInvFluid(0).amount().asLong(1L)/8f).coerceAtMost(0.9f)
-        emitter.draw(Direction.UP, fluidSprite, 0.09375f, 0.09f, 0.9f, 0.90625f, (0.9f-p)+0.09575f)
+        val p = (dummyFluidInv.getInvFluid(0).amount().asLong(1L) / 8f).coerceAtMost(0.9f)
+        emitter.draw(Direction.UP, fluidSprite, 0.09375f, 0.09f, 0.9f, 0.90625f, (0.9f - p) + 0.09575f)
         emitter.draw(Direction.NORTH, fluidSprite, 0.09375f, 0.06f, 0.9f, p, 0.09575f)
         emitter.draw(Direction.SOUTH, fluidSprite, 0.09375f, 0.06f, 0.9f, p, 0.09575f)
         emitter.draw(Direction.EAST, fluidSprite, 0.09375f, 0.06f, 0.9f, p, 0.09575f)
@@ -71,14 +76,28 @@ class IRTankBlockItem : BakedModel, FabricBakedModel {
         context.popTransform()
     }
 
-    private fun QuadEmitter.draw(side: Direction, sprite: Sprite, left: Float, bottom: Float, right: Float, top: Float, depth: Float) {
+    private fun QuadEmitter.draw(
+        side: Direction,
+        sprite: Sprite,
+        left: Float,
+        bottom: Float,
+        right: Float,
+        top: Float,
+        depth: Float
+    ) {
         square(side, left, bottom, right, top, depth)
         spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
         spriteColor(0, -1, -1, -1, -1)
         emit()
     }
 
-    override fun emitBlockQuads(p0: BlockRenderView?, p1: BlockState?, p2: BlockPos?, p3: Supplier<Random>?, p4: RenderContext?) {}
+    override fun emitBlockQuads(
+        p0: BlockRenderView?,
+        p1: BlockState?,
+        p2: BlockPos?,
+        p3: Supplier<Random>?,
+        p4: RenderContext?
+    ) {}
 
     @Throws(IOException::class)
     private fun getReaderForResource(location: Identifier): Reader {

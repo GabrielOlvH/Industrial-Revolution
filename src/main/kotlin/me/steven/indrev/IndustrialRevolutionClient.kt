@@ -15,7 +15,7 @@ import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
-import me.steven.indrev.items.misc.IRTankBlockItem
+import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -34,7 +34,6 @@ import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
-import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import java.util.function.Function
@@ -119,15 +118,13 @@ object IndustrialRevolutionClient : ClientModInitializer {
             BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
         }
 
-        val modelIdentifier = ModelIdentifier(identifier("tank"), "")
         val identifier = identifier("tank")
-        val bakedModel = IRTankBlockItem()
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
             ModelVariantProvider { modelIdentifier, _ ->
                 if(modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
                     return@ModelVariantProvider object : UnbakedModel {
                         override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-                        override fun bake(loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, rotationScreenHandler: ModelBakeSettings, modelId: Identifier) = bakedModel
+                        override fun bake(loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, rotationScreenHandler: ModelBakeSettings, modelId: Identifier) = IRTankItemBakedModel
                         override fun getTextureDependencies(
                             unbakedModelGetter: Function<Identifier, UnbakedModel>?,
                             unresolvedTextureReferences: MutableSet<com.mojang.datafixers.util.Pair<String, String>>?
@@ -137,7 +134,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 return@ModelVariantProvider null
             }
         }
-
 
         FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f
