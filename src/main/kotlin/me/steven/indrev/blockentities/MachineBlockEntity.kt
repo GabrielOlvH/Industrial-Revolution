@@ -2,9 +2,12 @@ package me.steven.indrev.blockentities
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.item.ItemAttributes
+import alexiil.mc.lib.attributes.item.ItemInvUtil
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.*
+import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.NUGGET_AMOUNT
@@ -154,14 +157,27 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         itemTransferCooldown--
         inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
             val pos = pos.offset(direction)
-            val neighborInv = getInventory(pos) ?: return@forEach
             val inventory = inventoryComponent?.inventory ?: return@forEach
             if (mode.output) {
+                val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
+                if (insertable != null) {
+                    val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
+                    ItemInvUtil.move(extractable, insertable, 64)
+                    return@forEach
+                }
+                val neighborInv = getInventory(pos) ?: return@forEach
                 inventory.outputSlots.forEach { slot ->
                     transferItems(inventory, neighborInv, slot, direction)
                 }
             }
             if (mode.input) {
+                val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
+                if (extractable != null) {
+                    val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
+                    ItemInvUtil.move(extractable, insertable, 64)
+                    return@forEach
+                }
+                val neighborInv = getInventory(pos) ?: return@forEach
                 getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
                     transferItems(neighborInv, inventory, slot, direction.opposite)
                 }
