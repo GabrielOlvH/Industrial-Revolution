@@ -42,9 +42,8 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
             Upgrade.BLAST_FURNACE -> RecipeType.BLASTING
             Upgrade.SMOKER -> RecipeType.SMOKING
             else -> RecipeType.SMELTING
-        }
-        val optional = world?.recipeManager?.getFirstMatch(recipeType, inputStacks, world)
-        val recipe = optional?.orElse(null) ?: return null
+         } as RecipeType<AbstractCookingRecipe>
+        val recipe = world?.recipeManager?.getFirstMatch(recipeType, inputStacks, world)?.orElse(null) ?: return null
         val outputStack = inventory.getStack(3).copy()
         if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
             if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
