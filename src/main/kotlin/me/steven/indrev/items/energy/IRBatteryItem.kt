@@ -37,7 +37,9 @@ open class IRBatteryItem(settings: Settings, private val maxStored: Double, val 
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        if (handler.energy > 0) {
+            stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        } else stack.damage = 0
     }
 
 }
