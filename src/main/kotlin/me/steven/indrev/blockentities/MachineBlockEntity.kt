@@ -157,35 +157,38 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
 
     private fun transferItems() {
         itemTransferCooldown--
-        inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
-            val pos = pos.offset(direction)
-            val inventory = inventoryComponent?.inventory ?: return
-            if (mode.output) {
-                val neighborInv = getInventory(pos)
-                if (neighborInv != null) {
-                    inventory.outputSlots.forEach { slot ->
-                        transferItems(inventory, neighborInv, slot, direction)
+        if (itemTransferCooldown <= 0) {
+            itemTransferCooldown = 0
+            inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
+                val pos = pos.offset(direction)
+                val inventory = inventoryComponent?.inventory ?: return@forEach
+                if (mode.output) {
+                    val neighborInv = getInventory(pos)
+                    if (neighborInv != null) {
+                        inventory.outputSlots.forEach { slot ->
+                            transferItems(inventory, neighborInv, slot, direction)
+                        }
+                        return@forEach
                     }
-                    return
-                }
-                val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
-                if (insertable != null) {
-                    val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
-                    ItemInvUtil.move(extractable, insertable, 64)
-                }
-            }
-            if (mode.input) {
-                val neighborInv = getInventory(pos)
-                if (neighborInv != null) {
-                    getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
-                        transferItems(neighborInv, inventory, slot, direction.opposite)
+                    val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
+                    if (insertable != null) {
+                        val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
+                        ItemInvUtil.move(extractable, insertable, 64)
                     }
-                    return
                 }
-                val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
-                if (extractable != null) {
-                    val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
-                    ItemInvUtil.move(extractable, insertable, 64)
+                if (mode.input) {
+                    val neighborInv = getInventory(pos)
+                    if (neighborInv != null) {
+                        getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
+                            transferItems(neighborInv, inventory, slot, direction.opposite)
+                        }
+                        return@forEach
+                    }
+                    val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
+                    if (extractable != null) {
+                        val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
+                        ItemInvUtil.move(extractable, insertable, 64)
+                    }
                 }
             }
         }
