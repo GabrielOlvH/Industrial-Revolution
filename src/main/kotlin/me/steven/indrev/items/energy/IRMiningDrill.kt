@@ -7,7 +7,6 @@ import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
@@ -40,13 +39,16 @@ class IRMiningDrill(
         state: BlockState?,
         pos: BlockPos?,
         miner: LivingEntity?
-    ): Boolean = Energy.of(stack).use(1.0)
+    ): Boolean {
+        if (world?.isClient == false)
+            Energy.of(stack).use(1.0)
+        return true
+    }
 
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
-
-    override fun canMine(state: BlockState?, world: World?, pos: BlockPos?, miner: PlayerEntity?): Boolean {
-        val stack = miner?.mainHandStack ?: return super.canMine(state, world, pos, miner)
-        return super.canMine(state, world, pos, miner) && Energy.of(stack).energy > 0
+    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
+        if (target?.world?.isClient == false)
+            Energy.of(stack).use(2.0)
+        return true
     }
 
     override fun appendTooltip(

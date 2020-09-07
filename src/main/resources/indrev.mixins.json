@@ -8,6 +8,7 @@
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",
+    "MixinPlayerEntity",
     "MixinServerPlayerEntity"
   ],
   "client": [
