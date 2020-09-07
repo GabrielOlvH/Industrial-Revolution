@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -17,9 +18,9 @@ import java.util.stream.Stream
 class ModularWorkbenchBlock(
     settings: Settings,
     tier: Tier,
-    config: Any?,
+    config: IConfig?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    blockEntityProvider: () -> MachineBlockEntity
+    blockEntityProvider: () -> MachineBlockEntity<*>
 ) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getOutlineShape(

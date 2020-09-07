@@ -2,8 +2,8 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.Property
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.ExperienceRewardRecipe
@@ -28,7 +28,7 @@ import kotlin.math.ceil
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, registry: MachineRegistry) :
-    MachineBlockEntity(tier, registry), Tickable, UpgradeProvider {
+    MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
@@ -105,17 +105,15 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
     fun isProcessing() = processTime > 0 && energy > 0
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost
+        Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED ->
             if (temperatureComponent?.isFullEfficiency() == true)
-                getHeatConfig()?.processTemperatureBoost ?: getConfig().processSpeed
+                (config as? HeatMachineConfig?)?.processTemperatureBoost ?: config.processSpeed
             else
-                getConfig().processSpeed
+                config.processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
         else -> 0.0
     }
-
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
@@ -140,10 +138,6 @@ abstract class CraftingMachineBlockEntity<T : Recipe<Inventory>>(tier: Tier, reg
         tag?.putInt("MaxProcessTime", totalProcessTime)
         return super.toClientTag(tag)
     }
-
-    abstract fun getConfig(): IConfig
-
-    private fun getHeatConfig(): HeatMachineConfig? = getConfig() as? HeatMachineConfig
 
     fun dropExperience(player: PlayerEntity) {
         val list = mutableListOf<T>()

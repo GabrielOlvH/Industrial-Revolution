@@ -2,6 +2,7 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.TransferMode
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -20,9 +21,9 @@ import net.minecraft.world.World
 open class HorizontalFacingMachineBlock(
     settings: Settings,
     tier: Tier,
-    config: Any?,
+    config: IConfig?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    blockEntityProvider: () -> MachineBlockEntity
+    blockEntityProvider: () -> MachineBlockEntity<*>
 ) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
@@ -37,7 +38,7 @@ open class HorizontalFacingMachineBlock(
 
     override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         val blockEntity = world?.getBlockEntity(pos)
-        if (blockEntity is MachineBlockEntity) {
+        if (blockEntity is MachineBlockEntity<*>) {
             val direction = state?.get(HORIZONTAL_FACING) ?: return
             val inventoryController = blockEntity.inventoryComponent ?: return
             val itemConfig = inventoryController.itemConfig

@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -60,12 +58,4 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
 
     override fun getCurrentRecipe(): AbstractCookingRecipe? = currentRecipe
-
-    override fun getConfig(): IConfig =
-        when (tier) {
-            Tier.MK1 -> IndustrialRevolution.CONFIG.machines.electricFurnaceMk1
-            Tier.MK2 -> IndustrialRevolution.CONFIG.machines.electricFurnaceMk2
-            Tier.MK3 -> IndustrialRevolution.CONFIG.machines.electricFurnaceMk3
-            else -> IndustrialRevolution.CONFIG.machines.electricFurnaceMk4
-        }
 }

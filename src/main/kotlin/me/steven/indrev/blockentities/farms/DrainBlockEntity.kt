@@ -2,9 +2,9 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Blocks
@@ -15,7 +15,7 @@ import net.minecraft.util.math.Box
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class DrainBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.DRAIN_REGISTRY) {
+class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY) {
 
     init {
         this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
@@ -26,7 +26,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.DR
         val fluidComponent = fluidComponent ?: return
         val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()
-        if (hasFluid && Energy.of(this).simulate().use(getConfig().energyCost)) {
+        if (hasFluid && Energy.of(this).simulate().use(config.energyCost)) {
             val mutablePos = pos.mutableCopy()
             var currentChunk = world!!.getChunk(pos)
             for (x in range.minX.toInt()..range.maxX.toInt())
@@ -55,11 +55,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.DR
 
     fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
 
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
-    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
+    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.drain
 }

@@ -11,9 +11,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
 
-class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<AOEMachineBlockEntity>(dispatcher) {
+class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<AOEMachineBlockEntity<*>>(dispatcher) {
     override fun render(
-        blockEntity: AOEMachineBlockEntity,
+        blockEntity: AOEMachineBlockEntity<*>,
         tickDelta: Float,
         matrices: MatrixStack?,
         vertexConsumers: VertexConsumerProvider?,
@@ -42,6 +42,6 @@ class AOEMachineBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : B
         }
     }
 
-    override fun rendersOutsideBoundingBox(blockEntity: AOEMachineBlockEntity?): Boolean = true
+    override fun rendersOutsideBoundingBox(blockEntity: AOEMachineBlockEntity<*>?): Boolean = true
 
 }

@@ -21,7 +21,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity) {
+            if (blockEntity is MachineBlockEntity<*>) {
                 val fluid = blockEntity.fluidComponent ?: return@run
                 val energy = fluid.tanks[tank].volume.amount().asInexactDouble() * 1000
                 val maxEnergy = fluid.limit.asInexactDouble() * 1000
@@ -46,7 +46,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     override fun addTooltip(information: TooltipBuilder?) {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity) {
+            if (blockEntity is MachineBlockEntity<*>) {
                 val fluid = blockEntity.fluidComponent ?: return@run
                 val tank = fluid.tanks[tank]
                 val energy = tank.volume.amount_F.asInt(1000)

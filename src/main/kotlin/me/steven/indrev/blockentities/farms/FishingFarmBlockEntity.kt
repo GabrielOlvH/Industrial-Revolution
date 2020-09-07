@@ -1,10 +1,9 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.IConfig
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -21,7 +20,7 @@ import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
+class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -37,13 +36,13 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         }
     }
 
-    private var cooldown = getConfig().processSpeed
+    private var cooldown = config.processSpeed
 
     override fun machineTick() {
         val upgrades = getUpgrades(inventoryComponent!!.inventory)
         if (!Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) return
         cooldown += Upgrade.getSpeed(upgrades, this)
-        if (cooldown < getConfig().processSpeed) return
+        if (cooldown < config.processSpeed) return
         cooldown = 0.0
         val rodStack = inventoryComponent?.inventory?.getStack(1)
         Direction.values().forEach { direction ->
@@ -66,15 +65,13 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
         }
     }
 
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
     private fun getIdentifiers(tier: Tier) = when (tier) {
         Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
         Tier.MK3 -> arrayOf(FISH_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
         else -> arrayOf(FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
-    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
+    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
@@ -85,19 +82,10 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegis
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost
+        Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
         else -> 0.0
-    }
-
-    fun getConfig(): IConfig {
-        val machines = IndustrialRevolution.CONFIG.machines
-        return when (tier) {
-            Tier.MK2 -> machines.fishingMk2
-            Tier.MK3 -> machines.fishingMk3
-            else -> machines.fishingMk4
-        }
     }
 
     companion object {

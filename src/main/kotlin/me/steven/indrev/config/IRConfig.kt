@@ -60,9 +60,9 @@ class Generators : ConfigData {
 class GeneratorConfig(
     val ratio: Double = 16.0,
     val temperatureBoost: Double = 1.5,
-    val maxEnergyStored: Double,
+    override val maxEnergyStored: Double,
     val maxOutput: Double
-)
+) : IConfig
 
 @Config(name = "machines")
 class Machines : ConfigData {
@@ -127,6 +127,9 @@ class Machines : ConfigData {
     val miner: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
+    val farmer: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
     val fishingMk2: MachineConfig = MachineConfig(8.0, 500.0, 50000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
@@ -167,20 +170,23 @@ class HeatMachineConfig(
     val processTemperatureBoost: Double,
     override val maxEnergyStored: Double,
     override val maxInput: Double
-) : IConfig
+) : BasicMachineConfig
 
 open class MachineConfig(
     override val energyCost: Double,
     override val processSpeed: Double,
     override val maxEnergyStored: Double,
     override val maxInput: Double
-) : IConfig
+) : BasicMachineConfig
 
-interface IConfig {
+interface BasicMachineConfig : IConfig {
     val energyCost: Double
     val processSpeed: Double
-    val maxEnergyStored: Double
     val maxInput: Double
+}
+
+interface IConfig {
+    val maxEnergyStored: Double
 }
 
 @Config(name = "cables")

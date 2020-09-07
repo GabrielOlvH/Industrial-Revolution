@@ -9,6 +9,7 @@ import alexiil.mc.lib.attributes.item.ItemInvUtil
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.*
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EnergyMovement
@@ -38,7 +39,7 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
 
-abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
+abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
     : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
@@ -49,6 +50,9 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
     var fluidComponent: FluidComponent? = null
 
     var itemTransferCooldown = 0
+
+    val config: T
+        get() = registry.config(tier) as T
 
     protected open fun machineTick() {}
 
@@ -102,7 +106,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
         this.energy = amount
     }
 
-    abstract fun getBaseBuffer(): Double
+    open fun getBaseBuffer(): Double = config.maxEnergyStored
 
     override fun getMaxStoredPower(): Double = getBaseBuffer()
 
@@ -117,9 +121,7 @@ abstract class MachineBlockEntity(val tier: Tier, val registry: MachineRegistry)
 
     override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
-    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
-        return inventoryComponent?.inventory
-    }
+    override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? = inventoryComponent?.inventory
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)

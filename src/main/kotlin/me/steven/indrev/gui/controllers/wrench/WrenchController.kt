@@ -44,7 +44,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             val blockState = world.getBlockState(pos)
-            if (blockEntity is MachineBlockEntity) {
+            if (blockEntity is MachineBlockEntity<*>) {
                 val toggle = WButton(TranslatableText("item.indrev.wrench.item"))
                 isItemConfig = blockEntity.inventoryComponent != null
                 toggle.setOnClick {

@@ -21,7 +21,7 @@ class WEnergy(private val ctx: ScreenHandlerContext) : WWidget() {
         ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity) {
+            if (blockEntity is MachineBlockEntity<*>) {
                 val energy = blockEntity.energy
                 val maxEnergy = blockEntity.maxStoredPower
                 if (energy > 0) {
@@ -41,7 +41,7 @@ class WEnergy(private val ctx: ScreenHandlerContext) : WWidget() {
     override fun addTooltip(information: TooltipBuilder?) {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity) {
+            if (blockEntity is MachineBlockEntity<*>) {
                 val energy = getShortEnergyDisplay(blockEntity.energy)
                 val maxEnergy = getShortEnergyDisplay(blockEntity.maxStoredPower)
                 information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))

@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -33,7 +33,7 @@ import net.minecraft.world.chunk.WorldChunk
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
+class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
         this.inventoryComponent = InventoryComponent {
             IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
@@ -60,7 +60,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val inventory = inventoryComponent?.inventory ?: return
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
-        if (cooldown < getConfig().processSpeed || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this)))
+        if (cooldown < config.processSpeed || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this)))
             return
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
@@ -170,19 +170,15 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost
+            Upgrade.ENERGY -> config.energyCost
             Upgrade.SPEED -> 1.0
             Upgrade.BUFFER -> getBaseBuffer()
             else -> 0.0
         }
 
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
     override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
 
-    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
+    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.chopper
 }

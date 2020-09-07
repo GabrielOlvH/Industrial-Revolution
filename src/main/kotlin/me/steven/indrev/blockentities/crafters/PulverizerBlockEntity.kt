@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -71,12 +69,4 @@ class PulverizerBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getCurrentRecipe(): PulverizerRecipe? = currentRecipe
-
-    override fun getConfig(): IConfig =
-        when (tier) {
-            Tier.MK1 -> IndustrialRevolution.CONFIG.machines.pulverizerMk1
-            Tier.MK2 -> IndustrialRevolution.CONFIG.machines.pulverizerMk2
-            Tier.MK3 -> IndustrialRevolution.CONFIG.machines.pulverizerMk3
-            else -> IndustrialRevolution.CONFIG.machines.pulverizerMk4
-        }
 }

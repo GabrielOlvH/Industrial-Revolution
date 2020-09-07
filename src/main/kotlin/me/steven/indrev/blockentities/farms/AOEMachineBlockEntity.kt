@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
@@ -12,7 +13,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.math.Box
 
-abstract class AOEMachineBlockEntity(tier: Tier, registry: MachineRegistry) : MachineBlockEntity(tier, registry) {
+abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineRegistry) : MachineBlockEntity<T>(tier, registry) {
     var renderWorkingArea = false
     abstract var range: Int
     fun getWorkingArea(): Box {

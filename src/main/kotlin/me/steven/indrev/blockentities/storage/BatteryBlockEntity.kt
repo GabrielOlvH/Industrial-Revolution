@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.storage
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.FacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
@@ -12,7 +13,7 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
-    MachineBlockEntity(tier, MachineRegistry.CONTAINER_REGISTRY) {
+    MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CONTAINER_REGISTRY) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)

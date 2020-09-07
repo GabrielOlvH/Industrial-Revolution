@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 
 class TemperatureComponent(
-    private val machineProvider: () -> MachineBlockEntity,
+    private val machineProvider: () -> MachineBlockEntity<*>,
     private val heatingSpeed: Double,
     private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
@@ -16,7 +16,7 @@ class TemperatureComponent(
 ) : PropertyDelegateHolder {
 
     constructor(
-        machineProvider: () -> MachineBlockEntity,
+        machineProvider: () -> MachineBlockEntity<*>,
         heatingSpeed: Double,
         optimalRange: IntRange,
         explosionLimit: Double

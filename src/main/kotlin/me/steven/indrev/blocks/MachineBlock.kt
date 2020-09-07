@@ -2,6 +2,7 @@ package me.steven.indrev.blocks
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
@@ -43,9 +44,9 @@ import java.util.*
 open class MachineBlock(
     settings: Settings,
     val tier: Tier,
-    val config: Any?,
+    val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    private val blockEntityProvider: () -> MachineBlockEntity
+    private val blockEntityProvider: () -> MachineBlockEntity<*>
 ) : Block(settings), BlockEntityProvider, InventoryProvider {
 
     init {
@@ -72,7 +73,7 @@ open class MachineBlock(
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult? {
-        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return ActionResult.FAIL
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
         if (blockEntity.fluidComponent != null && !world.isClient) {
             val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
@@ -88,7 +89,7 @@ open class MachineBlock(
     }
 
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!state.isOf(newState.block) && !world.isClient) {
             if (blockEntity?.inventoryComponent != null) {
@@ -111,7 +112,7 @@ open class MachineBlock(
         if (world is ServerWorld) {
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item
-                if (blockEntity is MachineBlockEntity && item is BlockItem && item.block is MachineBlock) {
+                if (blockEntity is MachineBlockEntity<*> && item is BlockItem && item.block is MachineBlock) {
                     if (Energy.valid(stack))
                         Energy.of(stack).set(blockEntity.energy)
                     val tag = stack.getOrCreateSubTag("MachineInfo")
@@ -130,7 +131,7 @@ open class MachineBlock(
         if (world?.isClient == true) return
         EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
         val blockEntity = world.getBlockEntity(pos)
-        if (blockEntity is MachineBlockEntity) {
+        if (blockEntity is MachineBlockEntity<*>) {
             val tag = itemStack?.getSubTag("MachineInfo") ?: return
             val temperatureController = blockEntity.temperatureComponent
             if (Energy.valid(itemStack))

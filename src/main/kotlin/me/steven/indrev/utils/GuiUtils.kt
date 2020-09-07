@@ -90,7 +90,7 @@ fun SyncedGuiDescription.configure(
                     panel.add(s, 8, i)
                 }
             }
-            if (blockEntity is MachineBlockEntity && blockEntity.temperatureComponent != null) {
+            if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
                 panel.add(WTemperature(propertyDelegate, controller), 1.1, 0.0)
                 val coolerSlot = WTooltipedItemSlot.of(
@@ -107,7 +107,7 @@ fun SyncedGuiDescription.configure(
                     coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
                 panel.add(coolerSlot, 1.0, 3.7)
             }
-            if (blockEntity is AOEMachineBlockEntity) {
+            if (blockEntity is AOEMachineBlockEntity<*>) {
                 val button = object : WButton() {
                     override fun addTooltip(information: TooltipBuilder?) {
                         information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))

@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.FluidInfuserFluidComponent
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -64,14 +62,6 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
     }
 
     override fun getCurrentRecipe(): FluidInfuserRecipe? = currentRecipe
-
-    override fun getConfig(): IConfig =
-        when (tier) {
-            Tier.MK1 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk1
-            Tier.MK2 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk2
-            Tier.MK3 -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk3
-            else -> IndustrialRevolution.CONFIG.machines.fluidInfuserMk4
-        }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -23,7 +23,7 @@ import net.minecraft.util.Hand
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
+class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -49,7 +49,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
         val inventory = inventoryComponent?.inventory ?: return
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
-        if (cooldown < getConfig().processSpeed) return
+        if (cooldown < config.processSpeed) return
         val input = inventory.getInputInventory()
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
@@ -110,7 +110,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
+    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
 
@@ -118,15 +118,11 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity(tier, MachineRegist
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {
-            Upgrade.ENERGY -> getConfig().energyCost
+            Upgrade.ENERGY -> config.energyCost
             Upgrade.SPEED -> 1.0
             Upgrade.BUFFER -> getBaseBuffer()
             else -> 0.0
         }
 
     override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
-
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.rancher
 }

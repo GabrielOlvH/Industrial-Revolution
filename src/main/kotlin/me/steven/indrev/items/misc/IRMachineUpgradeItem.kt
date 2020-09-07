@@ -28,7 +28,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
         val blockPos = context?.blockPos
         val state = world?.getBlockState(blockPos)
         val block = state?.block as? MachineBlock ?: return ActionResult.PASS
-        val blockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity ?: return ActionResult.PASS
+        val blockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity<*> ?: return ActionResult.PASS
         if (block.tier == from) {
             if (!blockEntity.registry.upgradeable) return ActionResult.PASS
             
@@ -44,7 +44,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
                 newState = newState.with(HorizontalFacingMachineBlock.HORIZONTAL_FACING, state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
             world.setBlockState(blockPos, newState)
 
-            val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity
+            val upgradedBlockEntity = world.getBlockEntity(blockPos) as? MachineBlockEntity<*>
                 ?: throw RuntimeException("This should never happen, what the fuck")
             upgradedBlockEntity.energy = energy
             upgradedBlockEntity.inventoryComponent?.fromTag(inventoryTag)

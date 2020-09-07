@@ -14,6 +14,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.BatteryBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blocks.*
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
@@ -42,6 +43,7 @@ import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
 
+    private val configs: MutableMap<Tier, IConfig> = mutableMapOf()
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()
     private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
 
@@ -56,6 +58,8 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 block(block)
                 item(blockItem)
                 blockEntityType(blockEntityType)
+                if (block is MachineBlock && block.config != null)
+                    configs[tier] = block.config
             }
             blockEntities[tier] = blockEntityType
             blocks[tier] = block
@@ -69,6 +73,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
     fun blockEntityType(tier: Tier) = blockEntities[tier]
         ?: throw IllegalStateException("invalid tier for machine $identifier")
+
+    fun config(tier: Tier) = configs[tier]
+        ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
 
     fun block(tier: Tier) = blocks[tier]
         ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
@@ -217,7 +224,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 object : HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
-                    CONFIG.machines.condenser,
+                    CONFIG.machines.smelter,
                     ::SmelterController,
                     { SmelterBlockEntity(tier) }
                 ), AttributeProvider {
@@ -341,7 +348,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ModularWorkbenchBlock(
                     MACHINE_BLOCK_SETTINGS().nonOpaque(),
                     tier,
-                    null,
+                    CONFIG.machines.modularWorkbench,
                     ::ModularWorkbenchController
                 ) { ModularWorkbenchBlockEntity(tier) }
             },

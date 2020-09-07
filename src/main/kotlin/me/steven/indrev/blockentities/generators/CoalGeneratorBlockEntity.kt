@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.MachineRegistry
@@ -84,8 +82,6 @@ class CoalGeneratorBlockEntity :
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)
     }
-
-    override fun getConfig(): GeneratorConfig = IndustrialRevolution.CONFIG.generators.coalGenerator
 
     companion object {
         private val BURN_TIME_MAP = AbstractFurnaceBlockEntity.createFuelTimeMap()

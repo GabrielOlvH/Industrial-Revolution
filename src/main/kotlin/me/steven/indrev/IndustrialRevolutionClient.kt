@@ -85,11 +85,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
         }
 
         MachineRegistry.RANCHER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity>, ::AOEMachineBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
         }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlockEntity { _, blockEntity ->

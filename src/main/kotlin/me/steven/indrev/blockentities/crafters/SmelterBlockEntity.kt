@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.crafters
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -55,8 +53,6 @@ class SmelterBlockEntity(tier: Tier) :
     }
 
     override fun getCurrentRecipe(): SmelterRecipe? = currentRecipe
-
-    override fun getConfig(): IConfig = IndustrialRevolution.CONFIG.machines.smelter
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

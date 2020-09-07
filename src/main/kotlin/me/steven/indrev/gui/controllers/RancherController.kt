@@ -58,7 +58,7 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, private v
         root.add(slider, 1.4, 4.0)
         slider.setSize(35, 20)
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity ?: return@run
+            val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
             slider.value = blockEntity.range
         }
         slider.setValueChangeListener { newValue -> this.value = newValue }

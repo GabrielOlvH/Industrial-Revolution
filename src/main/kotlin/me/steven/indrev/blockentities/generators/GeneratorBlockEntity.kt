@@ -7,7 +7,7 @@ import me.steven.indrev.utils.Tier
 import team.reborn.energy.EnergySide
 
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
-    MachineBlockEntity(tier, registry) {
+    MachineBlockEntity<GeneratorConfig>(tier, registry) {
 
     override fun machineTick() {
         if (world?.isClient == false) {
@@ -26,12 +26,7 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
 
     abstract fun shouldGenerate(): Boolean
 
-    open fun getGenerationRatio(): Double = getConfig().ratio * if (this.temperatureComponent?.isFullEfficiency() == true) getConfig().temperatureBoost else 1.0
+    open fun getGenerationRatio(): Double = config.ratio * if (this.temperatureComponent?.isFullEfficiency() == true) config.temperatureBoost else 1.0
 
-    override fun getMaxOutput(side: EnergySide?): Double = getConfig().maxOutput
-
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
-    abstract fun getConfig(): GeneratorConfig
-
+    override fun getMaxOutput(side: EnergySide?): Double = config.maxOutput
 }

@@ -16,7 +16,7 @@ enum class Upgrade {
         fun getEnergyCost(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider)
                 = provider.getBaseValue(ENERGY) - (IndustrialRevolution.CONFIG.upgrades.energyUpgradeModifier * (upgrades[ENERGY] ?: 0)) + ((upgrades[SPEED] ?: 0) * 2)
 
-        fun getBuffer(provider: MachineBlockEntity) = getBuffer((provider as UpgradeProvider).getUpgrades(provider.inventoryComponent!!.inventory), provider)
+        fun getBuffer(provider: MachineBlockEntity<*>) = getBuffer((provider as UpgradeProvider).getUpgrades(provider.inventoryComponent!!.inventory), provider)
 
         fun getBuffer(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider)
                 = provider.getBaseValue(BUFFER) + (IndustrialRevolution.CONFIG.upgrades.bufferUpgradeModifier * (upgrades[BUFFER] ?: 0))

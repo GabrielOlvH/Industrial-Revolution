@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -15,9 +16,9 @@ import net.minecraft.state.property.Properties
 open class FacingMachineBlock(
     settings: Settings,
     tier: Tier,
-    config: Any?,
+    config: IConfig?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    blockEntityProvider: () -> MachineBlockEntity
+    blockEntityProvider: () -> MachineBlockEntity<*>
 ) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {

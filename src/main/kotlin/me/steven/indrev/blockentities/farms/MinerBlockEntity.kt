@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.farms
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.misc.IRScanOutputItem
@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
+class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
@@ -77,7 +77,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 setWorkingState(false)
                 temperatureComponent?.tick(false)
             }
-            if (mining >= getConfig().processSpeed) {
+            if (mining >= config.processSpeed) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
                         { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
@@ -110,15 +110,13 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> getConfig().energyCost
+        Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED -> 1.0
         Upgrade.BUFFER -> getBaseBuffer()
         else -> 0.0
     }
 
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
-    override fun getMaxInput(side: EnergySide?): Double = getConfig().maxInput
+    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)
@@ -147,6 +145,4 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         super.fromClientTag(tag)
     }
-
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.miner
 }

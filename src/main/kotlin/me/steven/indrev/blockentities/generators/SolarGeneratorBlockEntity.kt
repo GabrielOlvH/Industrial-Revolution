@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
@@ -20,10 +18,4 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     }
 
     override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < maxStoredPower
-
-    override fun getConfig(): GeneratorConfig = when (tier) {
-        Tier.MK1 -> IndustrialRevolution.CONFIG.generators.solarGeneratorMk1
-        Tier.MK3 -> IndustrialRevolution.CONFIG.generators.solarGeneratorMk3
-        else -> throw IllegalArgumentException("unsupported tier for $this $tier")
-    }
 }

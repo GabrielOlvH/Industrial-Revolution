@@ -2,12 +2,10 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRRegistry
@@ -99,8 +97,6 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         tag?.putInt("StableTemperature", stableTemperature)
         return super.toClientTag(tag)
     }
-
-    override fun getConfig(): GeneratorConfig = IndustrialRevolution.CONFIG.generators.heatGenerator
 
     companion object {
         private val TEMPERATURE_MAP = mutableMapOf<Fluid, Int>().also {

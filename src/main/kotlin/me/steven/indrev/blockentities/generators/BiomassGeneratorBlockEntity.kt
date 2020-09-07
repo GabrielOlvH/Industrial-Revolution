@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRRegistry
@@ -52,6 +50,4 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
         markDirty()
         return burnTime > 0 && energy < maxStoredPower
     }
-
-    override fun getConfig(): GeneratorConfig = IndustrialRevolution.CONFIG.generators.biomassGenerator
 }

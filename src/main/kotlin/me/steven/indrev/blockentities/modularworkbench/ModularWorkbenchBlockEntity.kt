@@ -1,10 +1,10 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.Property
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
@@ -19,7 +19,7 @@ import net.minecraft.screen.ArrayPropertyDelegate
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
-class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
+class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -54,9 +54,9 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
             setWorkingState(false)
         } else if (isProcessing()
             && module.slots.contains(armorItem.slotType)
-            && Energy.of(this).use(getConfig().energyCost)) {
+            && Energy.of(this).use(config.energyCost)) {
             setWorkingState(true)
-            processTime += getConfig().processSpeed.toInt()
+            processTime += config.processSpeed.toInt()
             if (processTime >= 1200) {
                 inventory.setStack(1, ItemStack.EMPTY)
                 val tag = armorStack.orCreateTag
@@ -84,13 +84,9 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity(tier, Machine
         } else processTime = -1
     }
 
-    override fun getBaseBuffer(): Double = getConfig().maxEnergyStored
-
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    fun getConfig() = IndustrialRevolution.CONFIG.machines.modularWorkbench
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0

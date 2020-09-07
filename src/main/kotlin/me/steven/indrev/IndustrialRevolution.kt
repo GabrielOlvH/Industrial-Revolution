@@ -2,7 +2,6 @@ package me.steven.indrev
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -45,9 +44,9 @@ object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
         AutoConfig.register(
             IRConfig::class.java,
-            PartitioningSerializer.wrap<IRConfig, ConfigData>(::GsonConfigSerializer)
+            PartitioningSerializer.wrap(::GsonConfigSerializer)
         )
-        Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity }
+        Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity<*> }
         IRRegistry.registerAll()
         arrayOf(
             IRRegistry.COOLANT_STILL,
@@ -94,7 +93,7 @@ object IndustrialRevolution : ModInitializer {
             val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
-                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
+                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                 if (isItemConfig && blockEntity.inventoryComponent != null) {
                     blockEntity.inventoryComponent!!.itemConfig[dir] = mode
                 } else if (blockEntity.fluidComponent != null)
@@ -108,7 +107,7 @@ object IndustrialRevolution : ModInitializer {
             val world = ctx.player.world
             ctx.taskQueue.execute {
                 if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity ?: return@execute
+                    val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@execute
                     blockEntity.range = value
                     blockEntity.markDirty()
                 }
@@ -121,7 +120,7 @@ object IndustrialRevolution : ModInitializer {
             val world = player.world
             ctx.taskQueue.execute {
                 if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity ?: return@execute
+                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
                     FluidInvUtil.interactCursorWithTank(fluidComponent, player)
                 }

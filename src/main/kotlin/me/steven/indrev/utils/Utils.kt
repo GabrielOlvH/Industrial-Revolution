@@ -12,10 +12,10 @@ import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.widgets.machines.WFluid
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
@@ -133,7 +133,7 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
     if (Screen.hasShiftDown()) {
         when (config) {
-            is IConfig -> {
+            is BasicMachineConfig -> {
                 tooltip?.add(
                     TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
                         .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
