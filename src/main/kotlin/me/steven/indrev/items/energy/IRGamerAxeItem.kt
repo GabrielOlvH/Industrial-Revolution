@@ -10,15 +10,14 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
+import net.minecraft.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHolder
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyTier
+import team.reborn.energy.*
 
 class IRGamerAxeItem(
     material: ToolMaterial,
@@ -65,11 +64,38 @@ class IRGamerAxeItem(
 
     override fun postMine(
         stack: ItemStack,
-        world: World?,
-        state: BlockState?,
-        pos: BlockPos?,
-        miner: LivingEntity?
-    ): Boolean = Energy.of(stack).use(1.0)
+        world: World,
+        state: BlockState,
+        pos: BlockPos,
+        miner: LivingEntity
+    ): Boolean {
+        val tag = stack.orCreateTag
+        val isActive = tag.contains("Active") && tag.getBoolean("Active")
+        if (!isActive) return false
+        val energyHandler = Energy.of(stack)
+        val canStart = energyHandler.use(1.0)
+        if (canStart && !miner.isSneaking && state.block.isIn(BlockTags.LOGS)) {
+            val scanned = mutableSetOf<BlockPos>()
+            Direction.values().forEach { dir ->
+                scanTree(scanned, world, energyHandler, pos.offset(dir))
+            }
+        }
+        return canStart
+    }
+
+    fun scanTree(scanned: MutableSet<BlockPos>, world: World, energyHandler: EnergyHandler, pos: BlockPos) {
+        if (!scanned.add(pos)) return
+        val block = world.getBlockState(pos).block
+        if (block.isIn(BlockTags.LOGS) || block.isIn(BlockTags.LEAVES)) {
+            if (energyHandler.use(1.0)) {
+                world.breakBlock(pos, true)
+                if (scanned.size < 40)
+                    Direction.values().forEach { dir ->
+                        scanTree(scanned, world, energyHandler, pos.offset(dir))
+                    }
+            }
+        }
+    }
 
     override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
 
