@@ -118,16 +118,16 @@ class Machines : ConfigData {
     val recycler: MachineConfig = MachineConfig(8.0, 2.0, 50000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val chopper: MachineConfig = MachineConfig(32.0, 50.0, 50000.0, Tier.MK3.io)
+    val chopper: MachineConfig = MachineConfig(32.0, 50.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val rancher: MachineConfig = MachineConfig(16.0, 50.0, 50000.0, Tier.MK2.io)
+    val farmer: MachineConfig = MachineConfig(32.0, 30.0, 50000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val rancher: MachineConfig = MachineConfig(16.0, 50.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val miner: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
-
-    @ConfigEntry.Gui.CollapsibleObject
-    val farmer: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val fishingMk2: MachineConfig = MachineConfig(8.0, 500.0, 50000.0, Tier.MK2.io)

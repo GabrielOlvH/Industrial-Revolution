@@ -17,7 +17,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class RancherController(syncId: Int, playerInventory: PlayerInventory, private val ctx: ScreenHandlerContext) :
@@ -64,7 +64,7 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, private v
         slider.setValueChangeListener { newValue -> this.value = newValue }
 
         val text = WText({
-            LiteralText("Range: ${slider.value}")
+            TranslatableText("block.indrev.aoe.range", slider.value)
         })
         root.add(text, 2.0, 3.7)
 

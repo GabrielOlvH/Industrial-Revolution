@@ -14,7 +14,6 @@ import me.steven.indrev.utils.toIntArray
 import me.steven.indrev.utils.toVec3d
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
-import net.minecraft.block.GourdBlock
 import net.minecraft.block.LeavesBlock
 import net.minecraft.block.SaplingBlock
 import net.minecraft.item.*
@@ -122,7 +121,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     ): Boolean {
         val block = blockState.block
         when {
-            block.isIn(BlockTags.LOGS) || block is GourdBlock -> {
+            block.isIn(BlockTags.LOGS) -> {
                 if (Energy.valid(axeStack) && !Energy.of(axeStack).use(1.0))
                     return false
                 else {
@@ -151,7 +150,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block is SaplingBlock) || (item is BlockItem && item.block is SaplingBlock)
+        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block is SaplingBlock && itemStack.count > 1) || (item is BlockItem && item.block is SaplingBlock)
         if (!isSaplingOrBoneMeal) return false
         val useResult = itemStack.useOnBlock(
             ItemUsageContext(

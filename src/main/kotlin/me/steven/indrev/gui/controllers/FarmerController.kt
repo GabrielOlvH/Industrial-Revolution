@@ -21,24 +21,27 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
-class ChopperController(syncId: Int, playerInventory: PlayerInventory, private val ctx: ScreenHandlerContext) :
+class FarmerController(
+    syncId: Int,
+    playerInventory: PlayerInventory,
+    private val ctx: ScreenHandlerContext
+) :
     SyncedGuiDescription(
-        IndustrialRevolution.CHOPPER_HANDLER,
+        IndustrialRevolution.FARMER_HANDLER,
         syncId,
         playerInventory,
         getBlockInventory(ctx),
         getBlockPropertyDelegate(ctx)
     ), PatchouliEntryShortcut {
-
-    var value = -1
+    private var value = -1
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.farmer", ctx, playerInventory, blockInventory, propertyDelegate)
         root.add(
             WTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
-                TranslatableText("gui.indrev.output_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
+                    TranslatableText("gui.indrev.output_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
             ).also { it.isInsertingAllowed = false },
             4.2,
             1.0
@@ -46,7 +49,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, private v
         root.add(
             WTooltipedItemSlot.of(
                 blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, mutableListOf(
-                TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
+                    TranslatableText("gui.indrev.farmer_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
             ),
             1.5,
             1.0
@@ -60,7 +63,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, private v
         root.add(outputFrame, 4.1, 0.7)
         outputFrame.setSize(58, 62)
 
-        val slider = WSlider(1, 9, Axis.HORIZONTAL)
+        val slider = WSlider(1, 10, Axis.HORIZONTAL)
         root.add(slider, 1.4, 4.0)
         slider.setSize(35, 20)
         ctx.run { world, pos ->
@@ -77,19 +80,16 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, private v
         root.validate(this)
     }
 
-
     override fun close(player: PlayerEntity?) {
         super.close(player)
         AOEMachineBlockEntity.sendValueUpdatePacket(value, ctx)
     }
 
-    override fun canUse(player: PlayerEntity?): Boolean = true
+    override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getEntry(): Identifier = identifier("machines/chopper")
-
-    override fun getPage(): Int = 0
+    override fun getPage(): Int = 1
 
     companion object {
-        val SCREEN_ID = identifier("chopper_controller")
+        val SCREEN_ID = identifier("farmer_screen")
     }
 }

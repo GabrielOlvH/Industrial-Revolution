@@ -16,7 +16,7 @@ import net.minecraft.util.math.Box
 abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineRegistry) : MachineBlockEntity<T>(tier, registry) {
     var renderWorkingArea = false
     abstract var range: Int
-    fun getWorkingArea(): Box {
+    open fun getWorkingArea(): Box {
         val box = Box(pos)
         return box.expand(range.toDouble(), 0.0, range.toDouble()).stretch(0.0, range.toDouble() * 2, 0.0)
     }
