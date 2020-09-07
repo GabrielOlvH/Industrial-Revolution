@@ -1,7 +1,5 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
@@ -11,7 +9,6 @@ import me.shedaniel.math.Point
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
@@ -333,14 +330,6 @@ inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
             for (z in minZ.toInt()..maxZ.toInt())
                 if (f(x, y, z)) return BlockPos(x, y, z)
     return null
-}
-
-fun offerDefaultAttributes(fluidComponent: FluidComponent, to: AttributeList<*>) {
-    val opposite = to.searchDirection?.opposite
-    if (to.attribute == FluidAttributes.INSERTABLE && fluidComponent.transferConfig[opposite]?.input == true)
-        to.offer(fluidComponent)
-    else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
-        to.offer(fluidComponent)
 }
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {

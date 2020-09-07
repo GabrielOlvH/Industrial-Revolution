@@ -1,7 +1,5 @@
 package me.steven.indrev.registry
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.AttributeProvider
 import me.steven.indrev.IndustrialRevolution.CONFIG
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
@@ -24,7 +22,6 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
-import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
@@ -36,9 +33,7 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
-import net.minecraft.world.World
 import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
@@ -129,14 +124,9 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
-                object : HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController, { HeatGeneratorBlockEntity(tier) }
-                ), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return
-                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
-                    }
-                }
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
+                )  { HeatGeneratorBlockEntity(tier) }
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
         )
@@ -221,60 +211,40 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
             { tier ->
-                object : HorizontalFacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     CONFIG.machines.smelter,
-                    ::SmelterController,
-                    { SmelterBlockEntity(tier) }
-                ), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? SmelterBlockEntity ?: return
-                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
-                    }
-                }
+                    ::SmelterController) { SmelterBlockEntity(tier) }
             },
             { tier -> { SmelterBlockEntity(tier) } }
         )
 
         val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
             { tier ->
-                object : HorizontalFacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     CONFIG.machines.condenser,
-                    ::CondenserController,
-                    { CondenserBlockEntity(tier) }
-                ), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? CondenserBlockEntity ?: return
-                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
-                    }
-                }
+                    ::CondenserController) { CondenserBlockEntity(tier) }
             },
             { tier -> { CondenserBlockEntity(tier) } }
         )
 
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
-                object : HorizontalFacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     CONFIG.machines.drain,
-                    null,
-                    { DrainBlockEntity(tier) }), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? DrainBlockEntity ?: return
-                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
-                    }
-                }
+                    null) { DrainBlockEntity(tier) }
             },
             { tier -> { DrainBlockEntity(tier) } }
         )
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
             { tier ->
-                object : HorizontalFacingMachineBlock(
+                HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     when (tier) {
@@ -283,13 +253,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                         Tier.MK3 -> CONFIG.machines.fluidInfuserMk3
                         else -> CONFIG.machines.fluidInfuserMk4
                     },
-                    ::FluidInfuserController,
-                    { FluidInfuserBlockEntity(tier) }), AttributeProvider {
-                    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState?, to: AttributeList<*>) {
-                        val blockEntity = world?.getBlockEntity(pos) as? FluidInfuserBlockEntity ?: return
-                        offerDefaultAttributes(blockEntity.fluidComponent ?: return, to)
-                    }
-                }
+                    ::FluidInfuserController) { FluidInfuserBlockEntity(tier) }
             },
             { tier -> { FluidInfuserBlockEntity(tier) } }
         )

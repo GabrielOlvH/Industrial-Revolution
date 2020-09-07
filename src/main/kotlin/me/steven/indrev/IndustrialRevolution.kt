@@ -1,6 +1,7 @@
 package me.steven.indrev
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
@@ -122,7 +123,7 @@ object IndustrialRevolution : ModInitializer {
                 if (world.isChunkLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(fluidComponent, player)
+                    FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player)
                 }
             }
         }

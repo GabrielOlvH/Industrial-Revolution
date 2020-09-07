@@ -173,6 +173,8 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         val fluidComponent = tankEntity.fluidComponent
         val volume = fluidComponent.tanks[0].volume
         when (to?.attribute) {
+            FluidAttributes.GROUPED_INV ->
+                to?.offer(fluidComponent.groupedInv)
             FluidAttributes.EXTRACTABLE -> {
                 if (volume.isEmpty && state[DOWN]) {
                     var currentPos = pos?.down()
@@ -190,7 +192,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                 } else
                     to?.offer(fluidComponent)
             }
-            FluidAttributes.INSERTABLE -> {
+            FluidAttributes.INSERTABLE-> {
                 if (fluidComponent.limit <= volume.amount() && state[UP]) {
                     var currentPos = pos?.up()
                     var currentState = world.getBlockState(currentPos)

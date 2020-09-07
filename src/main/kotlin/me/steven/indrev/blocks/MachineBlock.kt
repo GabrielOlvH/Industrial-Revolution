@@ -1,5 +1,8 @@
 package me.steven.indrev.blocks
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.AttributeProvider
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
@@ -47,7 +50,7 @@ open class MachineBlock(
     val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     private val blockEntityProvider: () -> MachineBlockEntity<*>
-) : Block(settings), BlockEntityProvider, InventoryProvider {
+) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
 
     init {
         if (this.defaultState.contains(WORKING_PROPERTY))
@@ -157,6 +160,16 @@ open class MachineBlock(
             val f = pos.z.toDouble() + 0.5
             world.addParticle(ParticleTypes.SMOKE, d, e, f, 0.0, 0.0, 0.0)
         }
+    }
+
+    override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
+        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        val fluidComponent = blockEntity.fluidComponent ?: return
+        val opposite = to.searchDirection?.opposite
+        if (to.attribute == FluidAttributes.INSERTABLE && fluidComponent.transferConfig[opposite]?.input == true)
+            to.offer(fluidComponent)
+        else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
+            to.offer(fluidComponent)
     }
 
     companion object {
