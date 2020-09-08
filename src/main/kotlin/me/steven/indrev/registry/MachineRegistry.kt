@@ -267,7 +267,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { ChopperBlockEntity(tier) } }
         )
 
-        val FARMER_REGISTRY = MachineRegistry(identifier("farmer"), false, Tier.MK4).register(
+        val FARMER_REGISTRY = MachineRegistry(identifier("farmer"), false, Tier.MK3).register(
             { tier ->
                 HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.farmer, ::FarmerController
