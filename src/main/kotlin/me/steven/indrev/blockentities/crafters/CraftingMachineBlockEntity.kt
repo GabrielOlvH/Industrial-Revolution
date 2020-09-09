@@ -194,13 +194,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         usedRecipes.forEach { (id, amount) ->
             world!!.recipeManager[id].ifPresent { recipe ->
                 list.add(recipe as? T ?: return@ifPresent)
-                spawnOrbs(
-                    world!!,
-                    player.pos,
-                    amount,
-                    ((recipe as? ExperienceRewardRecipe)?.amount ?: (recipe as? SmeltingRecipe)?.experience
-                    ?: return@ifPresent)
-                )
+                spawnOrbs(world!!, player.pos, amount, ((recipe as? ExperienceRewardRecipe)?.amount ?: (recipe as? SmeltingRecipe)?.experience ?: return@ifPresent))
             }
         }
         player.unlockRecipes(list.toList())
