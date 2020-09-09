@@ -124,7 +124,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             }
             val outputTankVolume = fluidComponent!!.tanks.last().volume
             val recipeFluidOutput = recipe.fluidOutput!!
-            if (!(outputTankVolume.isEmpty || (outputTankVolume.fluidKey == recipeFluidOutput.fluidKey || outputTankVolume.amount().add(recipeFluidOutput.amount()) <= fluidComponent!!.limit)))
+            if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount().add(recipeFluidOutput.amount()) > fluidComponent!!.limit))
                 return null
         }
         if (inventory.outputSlots.isNotEmpty()) {
