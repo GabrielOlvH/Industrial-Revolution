@@ -10,6 +10,8 @@ import me.shedaniel.rei.gui.entries.RecipeEntry
 import me.shedaniel.rei.gui.entries.SimpleRecipeEntry
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.compat.rei.plugins.BaseMachinePlugin
+import me.steven.indrev.recipes.machines.IRFluidRecipe
+import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
@@ -55,6 +57,17 @@ open class BaseMachineRecipeCategory(
             widgets.add(
                 Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
             )
+        val recipe = recipeDisplay.recipe
+        if (recipe is IRFluidRecipe) {
+            if (recipe.fluidInput != null) {
+                val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
+                createREIFluidWidget(widgets, inputFluidPoint, recipe.fluidInput!!)
+            }
+            if (recipe.fluidOutput != null) {
+                val outputFluidPoint = Point(startPoint.x + 80, startPoint.y)
+                createREIFluidWidget(widgets, outputFluidPoint, recipe.fluidOutput!!)
+            }
+        }
         widgets.add(
             Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
         )

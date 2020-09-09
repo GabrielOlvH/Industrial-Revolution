@@ -5,17 +5,17 @@
       "tag": "c:sulfur_dusts"
     }
   ],
-  "fluid": {
+  "fluidInput": {
     "fluid": "minecraft:water",
     "type": "bucket",
     "count": 1
   },
-  "output": {
+  "fluidOutput": {
     "fluid": "indrev:sulfuric_acid_still",
     "type": "bucket",
     "count": 1
   },
-  "outputStack": {
+  "output": {
     "item": "empty"
   },
   "processTime": 800

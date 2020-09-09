@@ -8,8 +8,6 @@ import me.shedaniel.rei.api.TransferRecipeCategory
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.compat.rei.plugins.CondenserMachinePlugin
-import me.steven.indrev.recipes.machines.CondenserRecipe
-import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
@@ -55,7 +53,8 @@ class CondenserRecipeCategory(
             Widgets.createSlot(Point(startPoint.x + 59, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
         )
         val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
-        createREIFluidWidget(widgets, inputFluidPoint, (recipeDisplay.recipe as CondenserRecipe).fluid)
+        //TODO
+        //createREIFluidWidget(widgets, inputFluidPoint, (recipeDisplay.recipe as CondenserRecipe).fluid)
         return widgets
     }
 

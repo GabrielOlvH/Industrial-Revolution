@@ -1,16 +1,18 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:iron_ore"
   },
-  "output": {
-    "item": "iron_dust",
-    "count": 2
-  },
-  "processTime": 200,
-  "extra": {
-    "item": "iron_dust",
-    "count": 1,
-    "chance": 0.9
-  }
+  "output": [
+    {
+      "item": "iron_dust",
+      "count": 2
+    },
+    {
+      "item": "iron_dust",
+      "count": 1,
+      "chance": 0.9
+    }
+  ],
+  "processTime": 200
 }

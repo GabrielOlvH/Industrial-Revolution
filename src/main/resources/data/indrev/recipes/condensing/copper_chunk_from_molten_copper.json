@@ -4,7 +4,7 @@
     "item": "indrev:copper_chunk",
     "count": 1
   },
-  "fluid": {
+  "fluidInput": {
     "fluid": "indrev:molten_copper_still",
     "type": "ingot",
     "count": 1

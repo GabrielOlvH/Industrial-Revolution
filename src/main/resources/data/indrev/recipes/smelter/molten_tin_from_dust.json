@@ -1,9 +1,9 @@
 {
   "type": "indrev:smelter",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:tin_dusts"
   },
-  "fluid": {
+  "fluidOutput": {
     "fluid": "indrev:molten_tin_still",
     "type": "ingot",
     "count": 1

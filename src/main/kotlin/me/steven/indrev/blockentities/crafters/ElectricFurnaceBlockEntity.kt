@@ -6,14 +6,14 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.mixin.MixinAbstractCookingRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.AbstractCookingRecipe
 import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<AbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
+    CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -31,31 +31,17 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
     }
 
-    private var currentRecipe: AbstractCookingRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): AbstractCookingRecipe? {
-        val upgrades = getUpgrades(inventory)
-        val inputStacks = inventory.getInputInventory()
-        val recipeType = when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
-            Upgrade.BLAST_FURNACE -> RecipeType.BLASTING
-            Upgrade.SMOKER -> RecipeType.SMOKING
-            else -> RecipeType.SMELTING
-         } as RecipeType<AbstractCookingRecipe>
-        val recipe = world?.recipeManager?.getFirstMatch(recipeType, inputStacks, world)?.orElse(null) ?: return null
-        val outputStack = inventory.getStack(3).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
-                processTime = recipe.cookTime
-                totalProcessTime = recipe.cookTime
-            }
-            this.currentRecipe = recipe
+    override val type: RecipeType<MixinAbstractCookingRecipe>
+        get() {
+            val upgrades = getUpgrades(inventoryComponent!!.inventory)
+            return when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
+                Upgrade.BLAST_FURNACE -> RecipeType.BLASTING
+                Upgrade.SMOKER -> RecipeType.SMOKING
+                else -> RecipeType.SMELTING
+            } as RecipeType<MixinAbstractCookingRecipe>
         }
-        return recipe
-    }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
-
-    override fun getCurrentRecipe(): AbstractCookingRecipe? = currentRecipe
 }

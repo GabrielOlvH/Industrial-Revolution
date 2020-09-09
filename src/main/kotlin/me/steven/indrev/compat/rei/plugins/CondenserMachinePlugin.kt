@@ -1,12 +1,11 @@
 package me.steven.indrev.compat.rei.plugins
 
-import me.shedaniel.rei.api.EntryStack
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import net.minecraft.util.Identifier
 
 class CondenserMachinePlugin(recipe: CondenserRecipe, category: Identifier) : BaseMachinePlugin(recipe, category) {
-    private val outputPreview: MutableList<EntryStack> =
-        mutableListOf(EntryStack.create(recipe.output))
+    /*private val outputPreview: MutableList<EntryStack> =
+        mutableListOf(EntryStack.create(recipe.outputs))
 
     private val input: MutableList<MutableList<EntryStack>> =
         recipe.previewInputs.map { preview ->
@@ -16,5 +15,6 @@ class CondenserMachinePlugin(recipe: CondenserRecipe, category: Identifier) : Ba
         }
     override fun getOutputEntries(): MutableList<EntryStack> = outputPreview
 
-    override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input
+    override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input*/
+    //TODO
 }

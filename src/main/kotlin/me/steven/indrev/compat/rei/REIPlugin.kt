@@ -5,13 +5,7 @@ import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
 import me.steven.indrev.compat.rei.categories.BaseMachineRecipeCategory
-import me.steven.indrev.compat.rei.categories.CondenserRecipeCategory
-import me.steven.indrev.compat.rei.categories.FluidInfuserRecipeCategory
-import me.steven.indrev.compat.rei.categories.SmelterRecipeCategory
 import me.steven.indrev.compat.rei.plugins.BaseMachinePlugin
-import me.steven.indrev.compat.rei.plugins.CondenserMachinePlugin
-import me.steven.indrev.compat.rei.plugins.FluidInfuserMachinePlugin
-import me.steven.indrev.compat.rei.plugins.SmelterMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -60,7 +54,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            FluidInfuserRecipeCategory(
+            BaseMachineRecipeCategory(
                 FLUID_INFUSER,
                 EntryStack.create(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.fluid_infusing"
@@ -68,7 +62,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            CondenserRecipeCategory(
+            BaseMachineRecipeCategory(
                 CONDENSER,
                 EntryStack.create(MachineRegistry.CONDENSER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.condensing"
@@ -76,7 +70,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            SmelterRecipeCategory(
+            BaseMachineRecipeCategory(
                 SMELTER,
                 EntryStack.create(MachineRegistry.SMELTER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.smelting"
@@ -98,14 +92,14 @@ object REIPlugin : REIPluginV0 {
             BaseMachinePlugin(it, RECYCLING)
         }
         recipeHelper?.registerRecipes(FLUID_INFUSER, FluidInfuserRecipe::class.java) {
-            FluidInfuserMachinePlugin(it, FLUID_INFUSER)
+            BaseMachinePlugin(it, FLUID_INFUSER)
         }
         recipeHelper?.registerRecipes(SMELTER, SmelterRecipe::class.java) {
-            SmelterMachinePlugin(it, SMELTER)
+            BaseMachinePlugin(it, SMELTER)
         }
 
         recipeHelper?.registerRecipes(CONDENSER, CondenserRecipe::class.java) {
-            CondenserMachinePlugin(it, CONDENSER)
+            BaseMachinePlugin(it, CONDENSER)
         }
     }
 

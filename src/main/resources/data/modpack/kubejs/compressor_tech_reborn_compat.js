@@ -3,7 +3,7 @@ if (mod.isLoaded('techreborn')) {
     events.listen('recipes', function (event) {
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:advanced_alloy_ingot'
             },
             output: {
@@ -15,7 +15,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:aluminum_ingots'
             },
             output: {
@@ -27,7 +27,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:aluminum_blocks'
             },
             output: {
@@ -39,7 +39,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:brass_ingots'
             },
             output: {
@@ -51,7 +51,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:brass_blocks'
             },
             output: {
@@ -63,7 +63,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:bronze_ingot'
             },
             output: {
@@ -75,7 +75,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:bronze_blocks'
             },
             output: {
@@ -87,7 +87,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:carbon_mesh'
             },
             output: {
@@ -99,7 +99,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:chrome_ingot'
             },
             output: {
@@ -111,7 +111,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:chrome_blocks'
             },
             output: {
@@ -123,7 +123,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:coal_dust'
             },
             output: {
@@ -135,7 +135,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:coal_block'
             },
             output: {
@@ -146,7 +146,7 @@ if (mod.isLoaded('techreborn')) {
         })
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:diamond_dusts'
             },
             output: {
@@ -158,7 +158,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:diamond_block'
             },
             output: {
@@ -170,7 +170,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:electrum_ingots'
             },
             output: {
@@ -182,7 +182,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:electrum_blocks'
             },
             output: {
@@ -194,7 +194,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:emerald_dust'
             },
             output: {
@@ -206,7 +206,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:gold_ingot'
             },
             output: {
@@ -218,7 +218,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:gold_block'
             },
             output: {
@@ -230,7 +230,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:invar_ingot'
             },
             output: {
@@ -242,7 +242,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:invar_blocks'
             },
             output: {
@@ -254,7 +254,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:iridium_ingots'
             },
             output: {
@@ -266,7 +266,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:iridium_blocks'
             },
             output: {
@@ -278,7 +278,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:lazurite_dust'
             },
             output: {
@@ -290,7 +290,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:lead_ingots'
             },
             output: {
@@ -302,7 +302,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:lead_blocks'
             },
             output: {
@@ -314,7 +314,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:nickel_ingot'
             },
             output: {
@@ -326,7 +326,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:nickel_blocks'
             },
             output: {
@@ -338,7 +338,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:obsidian'
             },
             output: {
@@ -350,7 +350,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:obsidian_dust'
             },
             output: {
@@ -362,7 +362,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:peridot_blocks'
             },
             output: {
@@ -374,7 +374,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:peridot_dusts'
             },
             output: {
@@ -386,7 +386,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:plantball'
             },
             output: {
@@ -398,7 +398,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:platinum_ingots'
             },
             output: {
@@ -410,7 +410,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:platinum_blocks'
             },
             output: {
@@ -422,7 +422,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:prismarine_crystals'
             },
             output: {
@@ -434,7 +434,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:quartz_dust'
             },
             output: {
@@ -446,7 +446,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:red_garnet_blocks'
             },
             output: {
@@ -458,7 +458,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:red_garnet_dust'
             },
             output: {
@@ -470,7 +470,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:redstone_block'
             },
             output: {
@@ -482,7 +482,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:ruby_blocks'
             },
             output: {
@@ -494,7 +494,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:ruby_dusts'
             },
             output: {
@@ -506,7 +506,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:sapphire_blocks'
             },
             output: {
@@ -518,7 +518,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:sapphire_dusts'
             },
             output: {
@@ -530,7 +530,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:silver_ingots'
             },
             output: {
@@ -542,7 +542,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:silver_blocks'
             },
             output: {
@@ -554,7 +554,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:titanium_ingots'
             },
             output: {
@@ -566,7 +566,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:titanium_blocks'
             },
             output: {
@@ -578,7 +578,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:tungsten_ingots'
             },
             output: {
@@ -590,7 +590,7 @@ if (mod.isLoaded('techreborn')) {
 
 
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:tungsten_blocks'
             },
             output: {
@@ -600,7 +600,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:tungstensteel_ingot'
             },
             output: {
@@ -610,7 +610,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:tungstensteel_blocks'
             },
             output: {
@@ -620,7 +620,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'minecraft:planks'
             },
             output: {
@@ -630,7 +630,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:yellow_garnet_blocks'
             },
             output: {
@@ -640,7 +640,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:yellow_garnet_dust'
             },
             output: {
@@ -650,7 +650,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 250
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:zinc_ingots'
             },
             output: {
@@ -660,7 +660,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:zinc_blocks'
             },
             output: {
@@ -670,7 +670,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:refined_iron_ingot'
             },
             output: {
@@ -679,7 +679,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 300
         })
         event.recipes.indrev.compress({
-            ingredient: {
+            ingredients: {
                 tag: 'c:refined_iron_blocks'
             },
             output: {

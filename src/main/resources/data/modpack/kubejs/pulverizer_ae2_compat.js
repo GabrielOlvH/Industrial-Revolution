@@ -2,7 +2,7 @@ if (mod.isLoaded('appliedenergistics2')) {
 console.log('Applied Energistics 2 is present, loading Pulverizer compatibility recipes with Industrial Revolution.')
   events.listen('recipes', function (event) {
   event.recipes.indrev.pulverize({
-  ingredient: {
+  ingredients: {
     tag: 'c:certus_quartz_crystals'
   },
   output: {
@@ -12,7 +12,7 @@ console.log('Applied Energistics 2 is present, loading Pulverizer compatibility 
   processTime: 250
 })
 event.recipes.indrev.pulverize({
-  ingredient: {
+  ingredients: {
     tag: 'c:certus_quartz_ores'
   },
   output: {
@@ -22,7 +22,7 @@ event.recipes.indrev.pulverize({
   processTime: 250
 })
 event.recipes.indrev.pulverize({
-  ingredient: {
+  ingredients: {
     item: 'appliedenergistics2:fluix_crystal'
   },
   output: {

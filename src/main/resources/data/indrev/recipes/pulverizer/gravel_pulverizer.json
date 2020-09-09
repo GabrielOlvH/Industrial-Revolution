@@ -1,16 +1,11 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:sand"
   },
   "output": {
     "item": "minecraft:gravel",
     "count": 1
   },
-  "processTime": 200,
-  "extra": {
-    "item": "minecraft:cobblestone",
-    "count": 1,
-    "chance": 0.8
-  }
+  "processTime": 200
 }

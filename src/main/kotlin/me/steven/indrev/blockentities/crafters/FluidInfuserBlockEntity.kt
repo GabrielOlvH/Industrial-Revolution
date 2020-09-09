@@ -9,7 +9,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.Inventory
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
@@ -30,38 +30,8 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
         this.fluidComponent = FluidInfuserFluidComponent()
     }
 
-    private var currentRecipe: FluidInfuserRecipe? = null
+    override val type: RecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE
 
-    override fun tryStartRecipe(inventory: IRInventory): FluidInfuserRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val fluid = fluidComponent!!.tanks[0].volume
-        val recipe = world?.recipeManager?.listAllOfType(FluidInfuserRecipe.TYPE)
-            ?.firstOrNull { it.matches(inputStacks, fluid) }
-            ?: return null
-        val fluidVolume = fluidComponent!!.tanks[1].volume
-        val outputStack = inventory.getStack(3).copy()
-        if ((fluidVolume.isEmpty || (fluidVolume.fluidKey == recipe.outputFluid.fluidKey || fluidVolume.amount().add(recipe.outputFluid.amount()) <= fluidComponent!!.limit))
-            && (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item))) {
-            if (!isProcessing()) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
-
-    override fun matchesRecipe(recipe: FluidInfuserRecipe?, inventory: Inventory): Boolean =
-        recipe?.matches(inventory, fluidComponent!!.tanks[0].volume) == true
-
-    override fun onCraft() {
-        val inputTank = fluidComponent!!.tanks[0]
-        val outputTank = fluidComponent!!.tanks[1]
-        inputTank.volume = inputTank.volume.fluidKey.withAmount(inputTank.volume.amount().sub(currentRecipe?.inputFluid?.amount()))
-        outputTank.volume = currentRecipe?.outputFluid?.fluidKey?.withAmount(outputTank.volume.amount().add(currentRecipe?.outputFluid?.amount())) ?: return
-    }
-
-    override fun getCurrentRecipe(): FluidInfuserRecipe? = currentRecipe
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

@@ -5,17 +5,17 @@
       "item": "minecraft:lapis_lazuli"
     }
   ],
-  "fluid": {
+  "fluidInput": {
     "fluid": "minecraft:water",
     "type": "bucket",
     "count": 1
   },
-  "output": {
+  "fluidOutput": {
     "fluid": "indrev:coolant_still",
     "type": "bucket",
     "count": 1
   },
-  "outputStack": {
+  "output": {
     "item": "empty"
   },
   "processTime": 600

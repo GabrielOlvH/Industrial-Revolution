@@ -1,16 +1,18 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:blaze_rod"
   },
-  "output": {
-    "item": "minecraft:blaze_powder",
-    "count": 4
-  },
-  "processTime": 200,
-  "extra": {
-    "item": "minecraft:blaze_powder",
-    "count": 2,
-    "chance": 0.5
-  }
+  "output": [
+    {
+      "item": "minecraft:blaze_powder",
+      "count": 4
+    },
+    {
+      "item": "minecraft:blaze_powder",
+      "count": 2,
+      "chance": 0.5
+    }
+  ],
+  "processTime": 200
 }

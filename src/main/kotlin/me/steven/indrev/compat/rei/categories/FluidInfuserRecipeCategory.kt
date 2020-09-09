@@ -8,8 +8,6 @@ import me.shedaniel.rei.api.TransferRecipeCategory
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.compat.rei.plugins.FluidInfuserMachinePlugin
-import me.steven.indrev.recipes.machines.FluidInfuserRecipe
-import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
@@ -57,9 +55,10 @@ class FluidInfuserRecipeCategory(
             Widgets.createSlot(Point(startPoint.x + 59, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
         )
         val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
-        createREIFluidWidget(widgets, inputFluidPoint, (recipeDisplay.recipe as FluidInfuserRecipe).inputFluid)
+        // TODO createREIFluidWidget(widgets, inputFluidPoint, (recipeDisplay.recipe as FluidInfuserRecipe).inputFluid)
         val outputFluidPoint = Point(startPoint.x + 80, startPoint.y)
-        createREIFluidWidget(widgets, outputFluidPoint, recipeDisplay.recipe.outputFluid)
+        //TODO
+        //createREIFluidWidget(widgets, outputFluidPoint, recipeDisplay.recipe.outputFluid)
         return widgets
     }
 

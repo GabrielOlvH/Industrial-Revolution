@@ -3,17 +3,19 @@ package me.steven.indrev.compat.rei.plugins
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.TransferRecipeDisplay
 import me.shedaniel.rei.server.ContainerInfo
-import net.minecraft.recipe.Recipe
+import me.steven.indrev.recipes.machines.IRRecipe
+import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import java.util.*
 
-open class BaseMachinePlugin(val recipe: Recipe<*>, private val category: Identifier) : TransferRecipeDisplay {
+open class BaseMachinePlugin(val recipe: IRRecipe, private val category: Identifier) : TransferRecipeDisplay {
 
     private val output: MutableList<EntryStack> =
-        mutableListOf(EntryStack.create(recipe.output))
+        recipe.outputs.map { (stack, _) -> EntryStack.create(stack) }.toMutableList()
     private val input: MutableList<MutableList<EntryStack>> =
-        recipe.previewInputs.map { preview -> preview.matchingStacksClient.map { stack -> EntryStack.create(stack) }.toMutableList() }.toMutableList()
+            recipe.input.map { (ingredient, count) -> ingredient.matchingStacksClient.map { stack -> EntryStack.create(ItemStack(stack.item, count)) }.toMutableList() }.toMutableList()
+
 
     override fun getRecipeCategory(): Identifier = category
 

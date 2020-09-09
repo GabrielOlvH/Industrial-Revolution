@@ -10,6 +10,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class SmelterBlockEntity(tier: Tier) :
@@ -31,28 +32,7 @@ class SmelterBlockEntity(tier: Tier) :
         this.fluidComponent = FluidComponent(FluidAmount(8))
     }
 
-    private var currentRecipe: SmelterRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): SmelterRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val recipe = world?.recipeManager?.getAllMatches(SmelterRecipe.TYPE, inputStacks, world)
-            ?.firstOrNull { it.matches(inputStacks, world) } ?: return null
-        val fluidVolume = fluidComponent!!.tanks[0].volume
-        if (fluidVolume.isEmpty ||(fluidVolume.fluidKey == recipe.fluid.fluidKey && fluidVolume.amount().add(recipe.fluid.amount()) <= fluidComponent!!.limit)) {
-            if (!isProcessing()) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
-
-    override fun onCraft() {
-        fluidComponent!!.insertable.insert(currentRecipe!!.fluid)
-    }
-
-    override fun getCurrentRecipe(): SmelterRecipe? = currentRecipe
+    override val type: RecipeType<SmelterRecipe> = SmelterRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

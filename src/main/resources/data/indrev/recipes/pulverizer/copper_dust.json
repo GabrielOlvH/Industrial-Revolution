@@ -1,16 +1,18 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:copper_ores"
   },
-  "output": {
-    "item": "copper_dust",
-    "count": 2
-  },
-  "processTime": 200,
-  "extra": {
-    "item": "copper_dust",
-    "count": 1,
-    "chance": 0.9
-  }
+  "output": [
+    {
+      "item": "copper_dust",
+      "count": 2
+    },
+    {
+      "item": "copper_dust",
+      "count": 1,
+      "chance": 0.9
+    }
+  ],
+  "processTime": 200
 }

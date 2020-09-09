@@ -1,6 +1,6 @@
 {
   "type": "indrev:compress",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:steel_ingots"
   },
   "output": {

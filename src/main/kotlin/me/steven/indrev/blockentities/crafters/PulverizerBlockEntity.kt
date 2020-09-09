@@ -9,6 +9,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class PulverizerBlockEntity(tier: Tier) :
@@ -30,43 +31,9 @@ class PulverizerBlockEntity(tier: Tier) :
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
     }
 
-    private var currentRecipe: PulverizerRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): PulverizerRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val optional =
-            world?.recipeManager?.getFirstMatch(PulverizerRecipe.TYPE, inputStacks, world)
-        val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getStack(3).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
-
-    override fun onCraft() {
-        val inventory = inventoryComponent!!.inventory
-        if (inventory.size() < 3) return
-        val chance = this.currentRecipe?.extraOutput?.right ?: return
-        if (chance < this.world?.random?.nextDouble() ?: 0.0) {
-            val extra = this.currentRecipe?.extraOutput?.left ?: return
-            val invStack = inventory.getStack(2).copy()
-            if (invStack.item == extra.item && invStack.count < invStack.maxCount + extra.count) {
-                invStack.count += extra.count
-                inventory.setStack(4, invStack)
-            } else if (invStack.isEmpty) {
-                inventory.setStack(4, extra.copy())
-            }
-        }
-    }
+    override val type: RecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
-
-    override fun getCurrentRecipe(): PulverizerRecipe? = currentRecipe
 }

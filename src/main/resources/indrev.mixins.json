@@ -5,6 +5,7 @@
   "mixins": [
     "AccessorBucketItem",
     "AccessorEnergyHandler",
+    "MixinAbstractCookingRecipe",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",

@@ -8,8 +8,6 @@ import me.shedaniel.rei.api.TransferRecipeCategory
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.compat.rei.plugins.SmelterMachinePlugin
-import me.steven.indrev.recipes.machines.SmelterRecipe
-import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
@@ -54,7 +52,7 @@ class SmelterRecipeCategory(
         val input = recipeDisplay.inputEntries
         widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
         val outputFluidPoint = Point(startPoint.x + 59, startPoint.y)
-        createREIFluidWidget(widgets, outputFluidPoint, (recipeDisplay.recipe as SmelterRecipe).fluid)
+        //TODO createREIFluidWidget(widgets, outputFluidPoint, (recipeDisplay.recipe as SmelterRecipe).fluid)
         return widgets
     }
 

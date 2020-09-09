@@ -2,7 +2,7 @@ if (mod.isLoaded('techreborn')) {
     console.log('Tech Reborn is present, loading Pulverizer compatibility recipes with Industrial Revolution.')
     events.listen('recipes', function (event) {
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:aluminum_ingots'
             },
             output: {
@@ -12,7 +12,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 250
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:andesite'
             },
             output: {
@@ -22,7 +22,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 250
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:basalt'
             },
             output: {
@@ -32,7 +32,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 250
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:bauxite_ores'
             },
             output: {
@@ -42,7 +42,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:brass_ingots'
             },
             output: {
@@ -51,7 +51,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 200
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:bronze_ingots'
             },
             output: {
@@ -60,7 +60,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 200
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:charcoal'
             },
             output: {
@@ -69,7 +69,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 230
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:chrome_ingot'
             },
             output: {
@@ -78,7 +78,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 250
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:cinnabar_ores'
             },
             output: {
@@ -88,7 +88,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:clay_ball'
             },
             output: {
@@ -97,7 +97,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 180
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:diorite'
             },
             output: {
@@ -106,7 +106,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 1440
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:electrum_ingots'
             },
             output: {
@@ -115,7 +115,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:emerald'
             },
             output: {
@@ -124,7 +124,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:ender_eye'
             },
             output: {
@@ -134,7 +134,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:ender_pearl'
             },
             output: {
@@ -143,7 +143,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:end_stone'
             },
             output: {
@@ -152,7 +152,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:flint'
             },
             output: {
@@ -161,7 +161,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:galena_ores'
             },
             output: {
@@ -171,7 +171,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: "minecraft:granite"
             },
             output: {
@@ -181,7 +181,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 270
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: "techreborn:invar_ingot"
             },
             output: {
@@ -190,7 +190,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:lead_ingots'
             },
             output: {
@@ -199,7 +199,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:lead_ores'
             },
             output: {
@@ -209,7 +209,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:netherrack'
             },
             output: {
@@ -218,7 +218,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 200
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:nickel_ingot'
             },
             output: {
@@ -227,7 +227,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:peridot_gem'
             },
             output: {
@@ -236,7 +236,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 200
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:peridot_ores'
             },
             output: {
@@ -246,7 +246,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:platinum_ingots'
             },
             output: {
@@ -255,7 +255,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:pyrite_ores'
             },
             output: {
@@ -265,7 +265,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:quartz'
             },
             output: {
@@ -274,7 +274,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'minecraft:quartz_block'
             },
             output: {
@@ -284,7 +284,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:red_garnet_gem'
             },
             output: {
@@ -293,7 +293,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:ruby_gem'
             },
             output: {
@@ -302,7 +302,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:ruby_ores'
             },
             output: {
@@ -312,7 +312,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:sapphire_gem'
             },
             output: {
@@ -321,7 +321,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:sapphire_ores'
             },
             output: {
@@ -331,7 +331,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:silver_ingots'
             },
             output: {
@@ -340,7 +340,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:silver_ores'
             },
             output: {
@@ -350,7 +350,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:sodalite_ores'
             },
             output: {
@@ -360,7 +360,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:tungsten_ingots'
             },
             output: {
@@ -369,7 +369,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 item: 'techreborn:yellow_garnet_gem'
             },
             output: {
@@ -378,7 +378,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:zinc_ingots'
             },
             output: {
@@ -387,7 +387,7 @@ if (mod.isLoaded('techreborn')) {
             processTime: 220
         })
         event.recipes.indrev.pulverize({
-            ingredient: {
+            ingredients: {
                 tag: 'c:titanium_ingots'
             },
             output: {

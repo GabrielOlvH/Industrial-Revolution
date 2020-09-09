@@ -1,9 +1,9 @@
 {
   "type": "indrev:smelter",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:iron_block"
   },
-  "fluid": {
+  "fluidOutput": {
     "fluid": "indrev:molten_iron_still",
     "type": "block",
     "count": 1

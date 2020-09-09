@@ -10,7 +10,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.inventory.Inventory
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class CondenserBlockEntity(tier: Tier) :
@@ -31,31 +31,7 @@ class CondenserBlockEntity(tier: Tier) :
         this.fluidComponent = FluidComponent(FluidAmount(8))
     }
 
-    private var currentRecipe: CondenserRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): CondenserRecipe? {
-        val fluid = fluidComponent!!.tanks[0].volume
-        val recipe = world?.recipeManager?.listAllOfType(CondenserRecipe.TYPE)
-            ?.firstOrNull { it.matches(fluid) } ?: return null
-        val outputStack = inventory.getStack(2).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing()) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
-
-    override fun matchesRecipe(recipe: CondenserRecipe?, inventory: Inventory): Boolean =
-        recipe?.matches(fluidComponent!!.tanks[0].volume) == true
-
-    override fun onCraft() {
-        fluidComponent?.extractable?.extract(currentRecipe?.fluid?.amount() ?: return reset())
-    }
-
-    override fun getCurrentRecipe(): CondenserRecipe? = currentRecipe
+    override val type: RecipeType<CondenserRecipe> = CondenserRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

@@ -1,13 +1,11 @@
 package me.steven.indrev.compat.rei.plugins
 
-import me.shedaniel.rei.api.EntryStack
-import me.shedaniel.rei.utils.CollectionUtils
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import net.minecraft.util.Identifier
 
 class SmelterMachinePlugin(recipe: SmelterRecipe, category: Identifier) : BaseMachinePlugin(recipe, category) {
-    private val outputPreview: MutableList<EntryStack> =
-        mutableListOf(EntryStack.create(recipe.output))
+    /*private val outputPreview: MutableList<EntryStack> =
+        mutableListOf(EntryStack.create(recipe.outputs))
 
     private val output = outputPreview.also {
         it.add(EntryStack.create(recipe.fluid.rawFluid))
@@ -23,5 +21,6 @@ class SmelterMachinePlugin(recipe: SmelterRecipe, category: Identifier) : BaseMa
     override fun getResultingEntries(): MutableList<MutableList<EntryStack>> =
         CollectionUtils.map<EntryStack, MutableList<EntryStack>>(output) { o: EntryStack -> mutableListOf(o) }.toMutableList()
 
-    override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input
+    override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input*/
+    //TODO
 }

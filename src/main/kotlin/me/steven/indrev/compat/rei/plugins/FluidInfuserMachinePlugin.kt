@@ -1,13 +1,11 @@
 package me.steven.indrev.compat.rei.plugins
 
-import me.shedaniel.rei.api.EntryStack
-import me.shedaniel.rei.utils.CollectionUtils
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import net.minecraft.util.Identifier
 
 class FluidInfuserMachinePlugin(recipe: FluidInfuserRecipe, category: Identifier) : BaseMachinePlugin(recipe, category) {
-    private val outputPreview: MutableList<EntryStack> =
-        mutableListOf(EntryStack.create(recipe.output))
+    /*private val outputPreview: MutableList<EntryStack> =
+        mutableListOf(EntryStack.create(recipe.outputs))
     private val output = outputPreview.toMutableList().also {
         it.add(EntryStack.create(recipe.outputFluid.rawFluid))
     }
@@ -23,4 +21,6 @@ class FluidInfuserMachinePlugin(recipe: FluidInfuserRecipe, category: Identifier
         CollectionUtils.map<EntryStack, MutableList<EntryStack>>(output) { o: EntryStack -> mutableListOf(o) }.toMutableList()
 
     override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input
+     */
+    //TODO
 }

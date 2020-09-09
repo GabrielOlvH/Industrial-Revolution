@@ -1,6 +1,6 @@
 {
   "type": "indrev:recycle",
-  "ingredient": {
+  "ingredients": {
     "tag": "indrev:triple_biomass"
   },
   "output": {

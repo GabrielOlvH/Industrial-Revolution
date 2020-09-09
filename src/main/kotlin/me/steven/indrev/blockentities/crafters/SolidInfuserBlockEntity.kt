@@ -8,6 +8,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class SolidInfuserBlockEntity(tier: Tier) :
@@ -28,26 +29,9 @@ class SolidInfuserBlockEntity(tier: Tier) :
         }
     }
 
-    private var currentRecipe: InfuserRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): InfuserRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val optional = world?.recipeManager?.getFirstMatch(InfuserRecipe.TYPE, inputStacks, world)
-        val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getStack(4).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
+    override val type: RecipeType<InfuserRecipe> = InfuserRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
-
-    override fun getCurrentRecipe(): InfuserRecipe? = currentRecipe
 }

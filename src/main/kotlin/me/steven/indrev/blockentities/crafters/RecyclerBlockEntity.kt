@@ -8,11 +8,10 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.RecyclerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY), UpgradeProvider {
-
-    private var currentRecipe: RecyclerRecipe? = null
 
     init {
         this.inventoryComponent = InventoryComponent {
@@ -29,22 +28,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
         }
     }
 
-    override fun tryStartRecipe(inventory: IRInventory): RecyclerRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val optional = world?.recipeManager?.getFirstMatch(RecyclerRecipe.TYPE, inputStacks, world)
-        val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getStack(3).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
-
-    override fun getCurrentRecipe(): RecyclerRecipe? = currentRecipe
+    override val type: RecipeType<RecyclerRecipe> = RecyclerRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

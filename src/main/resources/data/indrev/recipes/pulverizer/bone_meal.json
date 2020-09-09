@@ -1,16 +1,21 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:bone"
   },
-  "output": {
-    "item": "minecraft:bone_meal",
-    "count": 5
-  },
+  "output": [
+    {
+      "item": "minecraft:bone_meal",
+      "count": 5
+    },
+    {
+      "item": "minecraft:bone_meal",
+      "count": 2,
+      "chance": 0.5
+    }
+  ],
   "processTime": 200,
   "extra": {
-    "item": "minecraft:bone_meal",
-    "count": 2,
-    "chance": 0.5
+
   }
 }

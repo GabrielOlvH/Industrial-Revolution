@@ -9,6 +9,7 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CompressorRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.recipe.RecipeType
 import team.reborn.energy.Energy
 
 class CompressorBlockEntity(tier: Tier) :
@@ -30,26 +31,9 @@ class CompressorBlockEntity(tier: Tier) :
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1500.0)
     }
 
-    private var currentRecipe: CompressorRecipe? = null
-
-    override fun tryStartRecipe(inventory: IRInventory): CompressorRecipe? {
-        val inputStacks = inventory.getInputInventory()
-        val optional = world?.recipeManager?.getFirstMatch(CompressorRecipe.TYPE, inputStacks, world)
-        val recipe = optional?.orElse(null) ?: return null
-        val outputStack = inventory.getStack(3).copy()
-        if (outputStack.isEmpty || (outputStack.count + recipe.output.count <= outputStack.maxCount && outputStack.item == recipe.output.item)) {
-            if (!isProcessing() && recipe.matches(inputStacks, this.world)) {
-                processTime = recipe.processTime
-                totalProcessTime = recipe.processTime
-            }
-            this.currentRecipe = recipe
-        }
-        return recipe
-    }
+    override val type: RecipeType<CompressorRecipe> = CompressorRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
-
-    override fun getCurrentRecipe(): CompressorRecipe? = currentRecipe
 }

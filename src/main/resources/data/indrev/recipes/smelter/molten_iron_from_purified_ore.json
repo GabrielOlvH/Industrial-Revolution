@@ -1,9 +1,9 @@
 {
   "type": "indrev:smelter",
-  "ingredient": {
+  "ingredients": {
     "item": "indrev:iron_purified_ore"
   },
-  "fluid": {
+  "fluidOutput": {
     "fluid": "indrev:molten_iron_still",
     "type": "ingot",
     "count": 4

@@ -1,6 +1,6 @@
 {
   "type": "indrev:compress",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:gold_ingot"
   },
   "output": {

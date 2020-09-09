@@ -1,9 +1,9 @@
 {
   "type": "indrev:smelter",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:copper_nuggets"
   },
-  "fluid": {
+  "fluidOutput": {
     "fluid": "indrev:molten_copper_still",
     "type": "nugget",
     "count": 1

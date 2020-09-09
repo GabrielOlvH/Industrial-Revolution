@@ -1,6 +1,6 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:iron_ingot"
   },
   "output": {

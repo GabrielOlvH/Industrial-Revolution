@@ -1,6 +1,6 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:coal"
   },
   "output": {

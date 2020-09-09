@@ -5,17 +5,17 @@
       "tag": "c:tin_ores"
     }
   ],
-  "fluid": {
+  "fluidInput": {
     "fluid": "indrev:sulfuric_acid_still",
     "type": "bucket",
     "count": 1
   },
-  "output": {
+  "fluidOutput": {
     "fluid": "indrev:toxic_mud_still",
     "type": "nugget",
     "count": 1
   },
-  "outputStack": {
+  "output": {
     "item": "indrev:tin_purified_ore",
     "count": 1
   },

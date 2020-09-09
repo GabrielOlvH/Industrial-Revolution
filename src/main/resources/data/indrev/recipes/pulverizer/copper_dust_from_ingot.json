@@ -1,6 +1,6 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:copper_ingots"
   },
   "output": {

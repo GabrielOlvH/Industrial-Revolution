@@ -129,12 +129,14 @@ object IndustrialRevolution : ModInitializer {
         }
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
-        LogManager.getLogger("Industrial Revolution").info("Industrial Revolution has initialized.")
+        LOGGER.info("Industrial Revolution has initialized.")
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STARTED.register(NetworkEvents)
     }
+
+    val LOGGER = LogManager.getLogger("Industrial Revolution")
 
     const val MOD_ID = "indrev"
 

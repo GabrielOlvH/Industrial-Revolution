@@ -1,9 +1,9 @@
 {
   "type": "indrev:smelter",
-  "ingredient": {
+  "ingredients": {
     "tag": "c:iron_dusts"
   },
-  "fluid": {
+  "fluidOutput": {
     "fluid": "indrev:molten_iron_still",
     "type": "ingot",
     "count": 1

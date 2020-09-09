@@ -1,6 +1,6 @@
 {
   "type": "indrev:recycle",
-  "ingredient": {
+  "ingredients": {
     "tag": "indrev:single_biomass"
   },
   "output": {

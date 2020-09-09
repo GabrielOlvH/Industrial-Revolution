@@ -1,16 +1,18 @@
 {
   "type": "indrev:pulverize",
-  "ingredient": {
+  "ingredients": {
     "item": "minecraft:gold_ore"
   },
-  "output": {
-    "item": "gold_dust",
-    "count": 2
-  },
-  "processTime": 200,
-  "extra": {
-    "item": "gold_dust",
-    "count": 1,
-    "chance": 0.8
-  }
+  "output": [
+    {
+      "item": "gold_dust",
+      "count": 2
+    },
+    {
+      "item": "gold_dust",
+      "count": 1,
+      "chance": 0.8
+    }
+  ],
+  "processTime": 200
 }
