@@ -6,7 +6,7 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.energy.EnergyNetwork
+import me.steven.indrev.energy.EnergyNetworkState
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
@@ -38,6 +38,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -100,8 +101,16 @@ open class MachineBlock(
                 world.updateComparators(pos, this)
             }
             val newBlockEntity = world.getBlockEntity(pos)
-            val isSplit = newBlockEntity == null || !Energy.valid(newBlockEntity)
-            EnergyNetwork.updateBlock(world as ServerWorld, pos, isSplit)
+            val isRemoved = newBlockEntity == null || !Energy.valid(newBlockEntity)
+            val networkState = EnergyNetworkState.getNetworkState(world as ServerWorld)
+            Direction.values().forEach { dir ->
+                val offset = pos.offset(dir)
+                val network = networkState.networksByPos[offset] ?: return@forEach
+                if (isRemoved)
+                    network.machines.remove(pos)
+                else
+                    network.machines.computeIfAbsent(pos) { mutableSetOf() }.add(dir.opposite)
+            }
         }
     }
 
@@ -132,7 +141,13 @@ open class MachineBlock(
     override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (world?.isClient == true) return
-        EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
+        val networkState = EnergyNetworkState.getNetworkState(world as ServerWorld)
+        Direction.values().forEach { dir ->
+            val offset = pos.offset(dir)
+            val network = networkState.networksByPos[offset] ?: return@forEach
+            network.machines.computeIfAbsent(pos) { mutableSetOf() }.add(dir.opposite)
+        }
+        //EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
         val blockEntity = world.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity<*>) {
             val tag = itemStack?.getSubTag("MachineInfo") ?: return

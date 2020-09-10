@@ -113,7 +113,7 @@ class EnergyNetwork(
 
     companion object {
 
-        fun updateBlock(world: ServerWorld, pos: BlockPos, isRemoved: Boolean) {
+        fun updateBlock(world: ServerWorld, pos: BlockPos, isRemoved: Boolean, tier: Tier) {
             world.profiler.push("indrev_networkUpdate")
             val state = EnergyNetworkState.getNetworkState(world)
             if (state.networksByPos.containsKey(pos))
@@ -138,6 +138,9 @@ class EnergyNetwork(
                     val offset = pos.offset(dir)
                     search(scanned, state, network, world.getChunk(offset), world, offset, dir)
                 }
+                network.tier = tier
+                network.cables.add(pos)
+                state.networksByPos[pos] = network
                 if (network.machines.isEmpty() || network.cables.isEmpty())
                     network.remove()
             }
