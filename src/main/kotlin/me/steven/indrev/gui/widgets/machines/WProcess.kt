@@ -32,8 +32,10 @@ class WProcess(private val delegate: PropertyDelegate) : WWidget() {
     override fun addTooltip(tooltip: TooltipBuilder?) {
         val maxProcessTime = delegate[4]
         val processTime = maxProcessTime - delegate[3]
-        val percent = processTime * 100 / maxProcessTime
-        tooltip?.add(TranslatableText("gui.widget.process", "${percent}%"))
+        if (maxProcessTime > processTime) {
+            val percent = processTime * 100 / maxProcessTime
+            tooltip?.add(TranslatableText("gui.widget.process", "${percent}%"))
+        }
     }
 
     companion object {

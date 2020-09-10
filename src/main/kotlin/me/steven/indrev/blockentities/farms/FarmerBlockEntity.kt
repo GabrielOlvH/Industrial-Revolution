@@ -26,7 +26,7 @@ import team.reborn.energy.Energy
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(18, (1..4).toIntArray(), (5 until 14).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {

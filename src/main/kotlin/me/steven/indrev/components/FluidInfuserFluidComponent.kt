@@ -7,9 +7,10 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.blockentities.MachineBlockEntity
 import java.math.RoundingMode
 
-class FluidInfuserFluidComponent : FluidComponent(FluidAmount(8) , 2) {
+class FluidInfuserFluidComponent(machine: () -> MachineBlockEntity<*>) : FluidComponent(machine, FluidAmount(8) , 2) {
     override fun getGroupedInv(): GroupedFluidInv {
         return object : GroupedFluidInvFixedWrapper(this) {
 

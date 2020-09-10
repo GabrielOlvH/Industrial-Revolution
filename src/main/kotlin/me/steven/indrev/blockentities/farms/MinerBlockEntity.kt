@@ -28,7 +28,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(15, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {

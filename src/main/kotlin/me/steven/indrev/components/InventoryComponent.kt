@@ -1,16 +1,28 @@
 package me.steven.indrev.components
 
+import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.inventories.IRInventory
+import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.InventoryChangedListener
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.Direction
 
-class InventoryComponent(supplier: () -> IRInventory) {
-    val inventory: IRInventory = supplier().also { it.component = this }
+class InventoryComponent(private val syncable: () -> IRSyncableBlockEntity, supplier: () -> IRInventory) : InventoryChangedListener {
+    val inventory: IRInventory = supplier()
+
+    init {
+        inventory.addListener(this)
+        inventory.component = this
+    }
 
     val itemConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
         Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
+    }
+
+    override fun onInventoryChanged(sender: Inventory?) {
+        syncable().markForUpdate()
     }
 
     fun fromTag(tag: CompoundTag?) {

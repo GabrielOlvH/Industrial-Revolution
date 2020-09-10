@@ -18,7 +18,7 @@ class SmelterBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmelterRecipe>(tier, MachineRegistry.SMELTER_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(7, intArrayOf(2), intArrayOf()) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -30,7 +30,7 @@ class SmelterBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.fluidComponent = FluidComponent(FluidAmount(8))
+        this.fluidComponent = FluidComponent({ this }, FluidAmount(8))
         this.temperatureComponent = TemperatureComponent({ this }, 0.2, 1700..2500, 2700.0)
     }
 

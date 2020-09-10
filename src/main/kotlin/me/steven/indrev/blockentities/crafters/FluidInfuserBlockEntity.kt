@@ -16,7 +16,7 @@ import team.reborn.energy.Energy
 class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -28,7 +28,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
                 }
             }
         }
-        this.fluidComponent = FluidInfuserFluidComponent()
+        this.fluidComponent = FluidInfuserFluidComponent({ this })
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
     }
 

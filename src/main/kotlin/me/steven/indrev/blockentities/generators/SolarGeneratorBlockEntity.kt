@@ -11,7 +11,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     GeneratorBlockEntity(tier, MachineRegistry.SOLAR_GENERATOR_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(2, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { _, _ -> true }
         }
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 500..700, 1000.0)

@@ -17,7 +17,7 @@ class CondenserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(7, intArrayOf(), intArrayOf(2)) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -28,7 +28,7 @@ class CondenserBlockEntity(tier: Tier) :
                 }
             }
         }
-        this.fluidComponent = FluidComponent(FluidAmount(8))
+        this.fluidComponent = FluidComponent({ this }, FluidAmount(8))
     }
 
     override val type: RecipeType<CondenserRecipe> = CondenserRecipe.TYPE

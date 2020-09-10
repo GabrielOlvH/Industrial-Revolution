@@ -26,7 +26,7 @@ import team.reborn.energy.EnergySide
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
                 val item = stack?.item
                 when {

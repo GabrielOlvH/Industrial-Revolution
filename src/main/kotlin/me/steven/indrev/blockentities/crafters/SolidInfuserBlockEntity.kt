@@ -16,7 +16,7 @@ class SolidInfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(9, intArrayOf(2, 3), intArrayOf(4)) { slot, stack ->
                 val item = stack?.item
                 when {

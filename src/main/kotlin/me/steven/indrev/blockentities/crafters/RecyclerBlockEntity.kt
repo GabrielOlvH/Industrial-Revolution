@@ -14,7 +14,7 @@ import team.reborn.energy.Energy
 class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

@@ -11,7 +11,7 @@ import team.reborn.energy.Energy
 
 class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY) {
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(1, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { _, stack -> Energy.valid(stack) }
         }
     }

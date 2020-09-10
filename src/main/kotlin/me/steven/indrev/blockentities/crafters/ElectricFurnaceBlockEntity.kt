@@ -16,7 +16,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

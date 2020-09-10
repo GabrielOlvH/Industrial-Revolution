@@ -16,7 +16,7 @@ class CompressorBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(8, intArrayOf(2), intArrayOf(3)) { slot, stack ->
                 val item = stack?.item
                 when {

@@ -6,6 +6,7 @@ import me.steven.indrev.items.misc.IRCoolerItem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
+import kotlin.math.roundToInt
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
@@ -42,6 +43,7 @@ class TemperatureComponent(
     fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
     fun tick(isHeatingUp: Boolean) {
+        val previous = temperature
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
@@ -65,6 +67,7 @@ class TemperatureComponent(
             machine.explode = true
         }
         inputOverflow = false
+        machine.markForUpdate { previous.roundToInt() != temperature.roundToInt() }
     }
 
     private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)

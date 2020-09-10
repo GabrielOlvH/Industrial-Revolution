@@ -16,11 +16,9 @@ import me.steven.indrev.utils.EnergyMovement
 import me.steven.indrev.utils.NUGGET_AMOUNT
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.toIntArray
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.ChestBlockEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
@@ -38,11 +36,14 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
+import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : BlockEntity(registry.blockEntityType(tier)), BlockEntityClientSerializable, EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
+    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
+
+    private var lastEnergyUpdate = 0
 
     var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, maxStoredPower) }
     var inventoryComponent: InventoryComponent? = null
@@ -80,8 +81,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             transferItems()
             transferFluids()
             machineTick()
-            markDirty()
-            sync()
+            if (isMarkedForUpdate) {
+                markDirty()
+                sync()
+                isMarkedForUpdate = false
+            }
         }
     }
 
@@ -103,6 +107,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     override fun setStored(amount: Double) {
+        markForUpdate { lastEnergyUpdate != amount.roundToInt() }
         this.energy = amount
     }
 

@@ -47,7 +47,7 @@ object IRTankItemBakedModel : BakedModel, FabricBakedModel {
 
         val stackTag = stack.orCreateTag
 
-        val dummyFluidInv = FluidComponent(FluidAmount(8))
+        val dummyFluidInv = FluidComponent({ null }, FluidAmount(8))
         dummyFluidInv.fromTag(stackTag)
 
         val player = MinecraftClient.getInstance().player

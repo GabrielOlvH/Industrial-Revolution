@@ -23,7 +23,7 @@ import team.reborn.energy.EnergySide
 class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(10, intArrayOf(1), intArrayOf(2, 3, 4, 5)) { slot, stack ->
                 val item = stack?.item
                 when {

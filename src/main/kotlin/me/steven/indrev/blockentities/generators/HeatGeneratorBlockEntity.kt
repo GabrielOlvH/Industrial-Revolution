@@ -22,7 +22,7 @@ import team.reborn.energy.Energy
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
-        this.inventoryComponent = InventoryComponent {
+        this.inventoryComponent = InventoryComponent({ this }) {
             IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
@@ -39,7 +39,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             7000..9000,
             10000.0
         )
-        this.fluidComponent = FluidComponent(FluidAmount.ofWhole(4))
+        this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(4))
     }
 
     private var stableTemperature: Int = 0

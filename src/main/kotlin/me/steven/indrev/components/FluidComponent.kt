@@ -9,10 +9,11 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 
-open class FluidComponent(val limit: FluidAmount, private val tankCount: Int = 1) : FixedFluidInv {
+open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit: FluidAmount, private val tankCount: Int = 1) : FixedFluidInv {
 
     val tanks = Array(tankCount) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
@@ -31,10 +32,13 @@ open class FluidComponent(val limit: FluidAmount, private val tankCount: Int = 1
 
     override fun getMaxAmount_F(tank: Int): FluidAmount = limit
 
-    override fun setInvFluid(tank: Int, to: FluidVolume, simulation: Simulation?): Boolean {
-        return if (isFluidValidForTank(tank, to.fluidKey)) {
-            if (simulation?.isAction == true)
-                tanks[tank].volume = to
+    override fun setInvFluid(tankIndex: Int, to: FluidVolume, simulation: Simulation?): Boolean {
+        return if (isFluidValidForTank(tankIndex, to.fluidKey)) {
+            if (simulation?.isAction == true) {
+                val tank = tanks[tankIndex]
+                syncable()?.markForUpdate { tank.volume != to }
+                tank.volume = to
+            }
             true
         } else false
     }

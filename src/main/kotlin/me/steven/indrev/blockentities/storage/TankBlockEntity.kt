@@ -3,22 +3,25 @@ package me.steven.indrev.blockentities.storage
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.blocks.TankBlock
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
 
-class TankBlockEntity : BlockEntity(IRRegistry.TANK_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable {
-    val fluidComponent = FluidComponent(FluidAmount(8))
+class TankBlockEntity : IRSyncableBlockEntity(IRRegistry.TANK_BLOCK_ENTITY), Tickable {
+    val fluidComponent = FluidComponent({ this }, FluidAmount(8))
 
     override fun tick() {
         if (world?.isClient == true) return
-        sync()
+        if (isMarkedForUpdate) {
+            markDirty()
+            sync()
+            isMarkedForUpdate = false
+        }
         if (!cachedState[TankBlock.DOWN]) return
         val tank = fluidComponent.tanks[0]
         val fluidAmount = tank.volume.amount()

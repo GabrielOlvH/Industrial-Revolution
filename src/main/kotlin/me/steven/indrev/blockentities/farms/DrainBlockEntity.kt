@@ -18,7 +18,7 @@ import team.reborn.energy.EnergySide
 class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY) {
 
     init {
-        this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
     }
 
     override fun machineTick() {
