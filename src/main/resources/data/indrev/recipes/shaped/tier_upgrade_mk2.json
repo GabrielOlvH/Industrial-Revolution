@@ -1,16 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " N ",
-    "NCN",
-    " N "
+    "CPC",
+    "PNP",
+    "NPN"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk2"
     },
-    "N": {
+    "P": {
       "tag": "c:copper_plates"
+    },
+    "N": {
+      "item": "indrev:nikolite_ingot"
     }
   },
   "result": {

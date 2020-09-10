@@ -67,55 +67,55 @@ class GeneratorConfig(
 @Config(name = "machines")
 class Machines : ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
-    val electricFurnaceMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
+    val electricFurnaceMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val electricFurnaceMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
+    val electricFurnaceMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val electricFurnaceMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
+    val electricFurnaceMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val electricFurnaceMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
+    val electricFurnaceMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val pulverizerMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
+    val pulverizerMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val pulverizerMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
+    val pulverizerMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val pulverizerMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
+    val pulverizerMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val pulverizerMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
+    val pulverizerMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val compressorMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
+    val compressorMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val compressorMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
+    val compressorMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val compressorMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
+    val compressorMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
+    val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
+    val infuserMk1: MachineConfig = MachineConfig(4.0, 1.5, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
+    val infuserMk2: MachineConfig = MachineConfig(8.0, 2.5, 5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
+    val infuserMk3: MachineConfig = MachineConfig(16.0, 3.5, 10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
+    val infuserMk4: MachineConfig = MachineConfig(64.0, 4.5, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val recycler: MachineConfig = MachineConfig(8.0, 2.0, 50000.0, Tier.MK2.io)
+    val recycler: MachineConfig = MachineConfig(8.0, 2.5, 50000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val chopper: MachineConfig = MachineConfig(32.0, 50.0, 50000.0, Tier.MK4.io)
@@ -148,16 +148,16 @@ class Machines : ConfigData {
     val condenser: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val fluidInfuserMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
+    val fluidInfuserMk1: MachineConfig = MachineConfig(4.0, 1.5, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val fluidInfuserMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
+    val fluidInfuserMk2: MachineConfig = MachineConfig(8.0, 2.5, 5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val fluidInfuserMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
+    val fluidInfuserMk3: MachineConfig = MachineConfig(16.0, 3.5, 10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
+    val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.5, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val modularWorkbench: MachineConfig = MachineConfig(16.0, 1.0, 500000.0, Tier.MK4.io)
