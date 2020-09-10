@@ -18,7 +18,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
 class ChopperController(syncId: Int, playerInventory: PlayerInventory, private val ctx: ScreenHandlerContext) :
@@ -35,22 +34,6 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, private v
         val root = WGridPanel()
         setRootPanel(root)
         configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
-        root.add(
-            WTooltipedItemSlot.of(
-                blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, mutableListOf(
-                TranslatableText("gui.indrev.output_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
-            ).also { it.isInsertingAllowed = false },
-            4.2,
-            1.0
-        )
-        root.add(
-            WTooltipedItemSlot.of(
-                blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, mutableListOf(
-                TranslatableText("gui.indrev.chopper_input_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
-            ),
-            1.5,
-            1.0
-        )
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         root.add(inputFrame, 1.4, 0.7)
@@ -59,6 +42,13 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, private v
         val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
         root.add(outputFrame, 4.1, 0.7)
         outputFrame.setSize(58, 62)
+
+
+        val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
+        outputSlot.isInsertingAllowed = false
+        root.add(outputSlot, 4.2, 1.0)
+        val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.chopper_input_slot_type"))
+        root.add(inputSlot, 1.5, 1.0)
 
         val slider = WSlider(1, 9, Axis.HORIZONTAL)
         root.add(slider, 1.4, 4.0)

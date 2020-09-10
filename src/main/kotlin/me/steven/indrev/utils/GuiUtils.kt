@@ -56,16 +56,7 @@ fun SyncedGuiDescription.configure(
         val energyWidget = WEnergy(screenHandlerContext)
         panel.add(energyWidget, 0.1, 0.0)
 
-        val batterySlot = WTooltipedItemSlot.of(
-            blockInventory,
-            0,
-            mutableListOf(
-                TranslatableText("gui.indrev.battery_slot_type").formatted(
-                    Formatting.BLUE,
-                    Formatting.ITALIC
-                )
-            )
-        )
+        val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
 
         screenHandlerContext.run { world, blockPos ->
             if (world.isClient)
@@ -75,16 +66,7 @@ fun SyncedGuiDescription.configure(
             val blockEntity = world.getBlockEntity(blockPos)
             if (blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
-                    val s = WTooltipedItemSlot.of(
-                        blockInventory,
-                        slot,
-                        mutableListOf(
-                            TranslatableText("gui.indrev.upgrade_slot_type").formatted(
-                                Formatting.BLUE,
-                                Formatting.ITALIC
-                            )
-                        )
-                    )
+                    val s = WTooltipedItemSlot.of(blockInventory, slot, TranslatableText("gui.indrev.upgrade_slot_type"))
                     if (world.isClient)
                         s.backgroundPainter = getUpgradeSlotPainter(blockInventory, slot)
                     panel.add(s, 8, i)
@@ -93,16 +75,7 @@ fun SyncedGuiDescription.configure(
             if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
                 val controller = blockEntity.temperatureComponent!!
                 panel.add(WTemperature(propertyDelegate, controller), 1.1, 0.0)
-                val coolerSlot = WTooltipedItemSlot.of(
-                    blockInventory,
-                    1,
-                    mutableListOf(
-                        TranslatableText("gui.indrev.cooler_slot_type").formatted(
-                            Formatting.BLUE,
-                            Formatting.ITALIC
-                        )
-                    )
-                )
+                val coolerSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
                 if (world.isClient)
                     coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
                 panel.add(coolerSlot, 1.0, 3.7)
@@ -117,10 +90,11 @@ fun SyncedGuiDescription.configure(
                 button.setOnClick {
                     blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
                 }
-                button.icon = Icon { _, x, y, size ->
-                    ScreenDrawing.texturedRect(x, y, 16, 16, identifier("textures/gui/range_icon.png"), -1)
+                button.icon = Icon { _, x, y, _ ->
+                    ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
                 }
-                panel.add(button, 8.0, 4.2)
+                panel.add(button, 7.95, 4.2)
+                button.setSize(20, 20)
             }
         }
         if (this is PatchouliEntryShortcut) {

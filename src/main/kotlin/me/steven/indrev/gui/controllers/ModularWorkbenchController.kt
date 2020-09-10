@@ -34,22 +34,13 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         setRootPanel(root)
         configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val armorSlot = WTooltipedItemSlot.of(
-            blockInventory,
-            2,
-            mutableListOf(
-                TranslatableText("gui.indrev.modular_armor_slot_type").formatted(
-                    Formatting.BLUE,
-                    Formatting.ITALIC
-                )
-            )
-        )
+        val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.modular_armor_slot_type"))
         root.add(armorSlot, 1.5, 3.5)
 
         val moduleSlot = WTooltipedItemSlot.of(
             blockInventory,
             1,
-            mutableListOf(TranslatableText("gui.indrev.module_slot_type").formatted(Formatting.BLUE, Formatting.ITALIC))
+            TranslatableText("gui.indrev.module_slot_type")
         )
         root.add(moduleSlot, 1.5, 1.0)
 

@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.FluidInfuserFluidComponent
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -28,6 +29,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             }
         }
         this.fluidComponent = FluidInfuserFluidComponent()
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
     }
 
     override val type: RecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE

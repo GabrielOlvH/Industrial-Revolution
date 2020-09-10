@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -30,6 +31,7 @@ class SmelterBlockEntity(tier: Tier) :
             }
         }
         this.fluidComponent = FluidComponent(FluidAmount(8))
+        this.temperatureComponent = TemperatureComponent({ this }, 0.2, 1700..2500, 2700.0)
     }
 
     override val type: RecipeType<SmelterRecipe> = SmelterRecipe.TYPE

@@ -24,15 +24,15 @@ class WTooltipedItemSlot private constructor(
     }
 
     companion object {
-        fun of(inventory: Inventory, index: Int, emptyTooltip: MutableList<Text>): WTooltipedItemSlot =
-            WTooltipedItemSlot(emptyTooltip, inventory, index)
+        fun of(inventory: Inventory, index: Int, vararg emptyTooltip: Text): WTooltipedItemSlot =
+            WTooltipedItemSlot(emptyTooltip.toMutableList(), inventory, index)
 
         fun of(
             inventory: Inventory,
             startIndex: Int,
             slotsWide: Int,
             slotsHigh: Int,
-            emptyTooltip: MutableList<Text>
-        ): WTooltipedItemSlot = WTooltipedItemSlot(emptyTooltip, inventory, startIndex, slotsWide, slotsHigh)
+            vararg emptyTooltip: Text
+        ): WTooltipedItemSlot = WTooltipedItemSlot(emptyTooltip.toMutableList(), inventory, startIndex, slotsWide, slotsHigh)
     }
 }

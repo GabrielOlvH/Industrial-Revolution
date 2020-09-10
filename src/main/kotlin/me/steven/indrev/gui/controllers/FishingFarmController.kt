@@ -12,7 +12,6 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 
 class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     SyncedGuiDescription(
@@ -33,9 +32,7 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
             0.7
         )
 
-        root.add(WTooltipedItemSlot.of(blockInventory, 1, mutableListOf(
-            TranslatableText("gui.indrev.fishingrod").formatted(Formatting.BLUE, Formatting.ITALIC)
-        )), 4.0, 3.0)
+        root.add(WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod")), 4.0, 3.0)
 
         root.validate(this)
     }

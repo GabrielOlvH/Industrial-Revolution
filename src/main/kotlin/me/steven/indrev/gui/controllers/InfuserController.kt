@@ -28,17 +28,17 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.infuser", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 2.0, 1.5)
+        root.add(firstInput, 2.4, 1.5)
 
         val secondInput = WItemSlot.of(blockInventory, 3)
-        root.add(secondInput, 3.0, 1.5)
+        root.add(secondInput, 3.4, 1.5)
 
         val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 4.2, 1.5)
+        root.add(processWidget, 4.6, 1.5)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 4)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.0, 1.5)
+        root.add(outputSlot, 6.4, 1.5)
 
         root.validate(this)
     }
