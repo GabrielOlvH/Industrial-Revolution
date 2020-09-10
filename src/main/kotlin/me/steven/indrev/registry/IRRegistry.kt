@@ -32,6 +32,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
@@ -331,10 +332,10 @@ object IRRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000))
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000))
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000))
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
@@ -362,11 +363,11 @@ object IRRegistry {
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
     val GAMER_AXE_ITEM =
-        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 10f, -2f, itemSettings().maxDamage(10000))
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 15f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC))
 
     val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f))
 
     val TANK_BLOCK_ITEM = BlockItem(TANK_BLOCK, itemSettings())
 
-    val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, arrayOf(TANK_BLOCK)).build(null)
+    val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, TANK_BLOCK).build(null)
 }
