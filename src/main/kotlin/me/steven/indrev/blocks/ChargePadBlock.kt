@@ -57,8 +57,8 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
         }
         val handStack = player?.mainHandStack
         if (Energy.valid(handStack)) {
-            val remaining = inventory.addStack(handStack)
-            player?.setStackInHand(Hand.MAIN_HAND, remaining)
+            inventory.setStack(0, handStack)
+            player?.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
             return ActionResult.SUCCESS
         }
         return ActionResult.PASS
