@@ -9,7 +9,7 @@ import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.entries.RecipeEntry
 import me.shedaniel.rei.gui.entries.SimpleRecipeEntry
 import me.shedaniel.rei.gui.widget.Widget
-import me.steven.indrev.compat.rei.plugins.BaseMachinePlugin
+import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.gui.DrawableHelper
@@ -18,17 +18,17 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
 
-open class BaseMachineRecipeCategory(
+open class IRMachineRecipeCategory(
     private val identifier: Identifier,
     private val logo: EntryStack,
     private val categoryName: String
-) : TransferRecipeCategory<BaseMachinePlugin> {
+) : TransferRecipeCategory<IRMachinePlugin> {
 
     override fun renderRedSlots(
         matrices: MatrixStack,
         widgets: List<Widget?>?,
         bounds: Rectangle,
-        display: BaseMachinePlugin?,
+        display: IRMachinePlugin?,
         redSlots: IntList
     ) {
         val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
@@ -47,17 +47,19 @@ open class BaseMachineRecipeCategory(
         matrices.pop()
     }
 
-    override fun setupDisplay(recipeDisplay: BaseMachinePlugin, bounds: Rectangle): MutableList<Widget> {
-        val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
-        val widgets: MutableList<Widget> = mutableListOf(Widgets.createRecipeBase(bounds))
-        widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
-        val input = recipeDisplay.inputEntries
-        widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
-        if (input.size > 1)
-            widgets.add(
-                Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
-            )
+    override fun setupDisplay(recipeDisplay: IRMachinePlugin, bounds: Rectangle): MutableList<Widget> {
         val recipe = recipeDisplay.recipe
+        val startPoint = Point(bounds.centerX - 41, bounds.centerY - 27)
+        val widgets = super.setupDisplay(recipeDisplay, bounds).toMutableList()
+        widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
+        if (recipe.input.isNotEmpty()) {
+            val input = recipeDisplay.inputEntries
+            widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
+            if (recipe.input.size > 1)
+                widgets.add(
+                    Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
+                )
+        }
         if (recipe is IRFluidRecipe) {
             if (recipe.fluidInput != null) {
                 val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
@@ -68,16 +70,18 @@ open class BaseMachineRecipeCategory(
                 createREIFluidWidget(widgets, outputFluidPoint, recipe.fluidOutput!!)
             }
         }
-        widgets.add(
-            Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
-        )
+        if (recipe.outputs.isNotEmpty()) {
+            widgets.add(
+                Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
+            )
+        }
         return widgets
     }
 
-    override fun getSimpleRenderer(recipe: BaseMachinePlugin): RecipeEntry =
+    override fun getSimpleRenderer(recipe: IRMachinePlugin): RecipeEntry =
         SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
 
-    override fun getDisplayHeight(): Int = 49
+    override fun getDisplayHeight(): Int = 66
 
     override fun getIdentifier(): Identifier? = identifier
 

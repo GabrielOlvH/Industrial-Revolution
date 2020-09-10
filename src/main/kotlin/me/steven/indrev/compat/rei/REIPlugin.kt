@@ -4,8 +4,8 @@ import me.shedaniel.rei.api.EntryRegistry
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
-import me.steven.indrev.compat.rei.categories.BaseMachineRecipeCategory
-import me.steven.indrev.compat.rei.plugins.BaseMachinePlugin
+import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
+import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -22,7 +22,7 @@ object REIPlugin : REIPluginV0 {
 
     override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 PULVERIZING,
                 EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.pulverizing"
@@ -30,7 +30,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 INFUSING,
                 EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.infusing"
@@ -38,7 +38,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 COMPRESSING,
                 EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.compressing"
@@ -46,7 +46,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 RECYCLING,
                 EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)),
                 "indrev.category.rei.recycling"
@@ -54,7 +54,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 FLUID_INFUSER,
                 EntryStack.create(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.fluid_infusing"
@@ -62,7 +62,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 CONDENSER,
                 EntryStack.create(MachineRegistry.CONDENSER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.condensing"
@@ -70,7 +70,7 @@ object REIPlugin : REIPluginV0 {
         )
 
         recipeHelper?.registerCategory(
-            BaseMachineRecipeCategory(
+            IRMachineRecipeCategory(
                 SMELTER,
                 EntryStack.create(MachineRegistry.SMELTER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.smelting"
@@ -80,58 +80,72 @@ object REIPlugin : REIPluginV0 {
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) {
-            BaseMachinePlugin(it, PULVERIZING)
+            IRMachinePlugin(it, PULVERIZING)
         }
         recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) {
-            BaseMachinePlugin(it, INFUSING)
+            IRMachinePlugin(it, INFUSING)
         }
         recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) {
-            BaseMachinePlugin(it, COMPRESSING)
+            IRMachinePlugin(it, COMPRESSING)
         }
         recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) {
-            BaseMachinePlugin(it, RECYCLING)
+            IRMachinePlugin(it, RECYCLING)
         }
         recipeHelper?.registerRecipes(FLUID_INFUSER, FluidInfuserRecipe::class.java) {
-            BaseMachinePlugin(it, FLUID_INFUSER)
+            IRMachinePlugin(it, FLUID_INFUSER)
         }
         recipeHelper?.registerRecipes(SMELTER, SmelterRecipe::class.java) {
-            BaseMachinePlugin(it, SMELTER)
+            IRMachinePlugin(it, SMELTER)
         }
 
         recipeHelper?.registerRecipes(CONDENSER, CondenserRecipe::class.java) {
-            BaseMachinePlugin(it, CONDENSER)
+            IRMachinePlugin(it, CONDENSER)
         }
     }
 
     override fun registerOthers(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerWorkingStations(
-            PULVERIZING,
-            EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1))
-        )
-        recipeHelper?.registerWorkingStations(
-            INFUSING,
-            EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1))
-        )
-        recipeHelper?.registerWorkingStations(
-            COMPRESSING,
-            EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1))
-        )
-        recipeHelper?.registerWorkingStations(
-            RECYCLING,
-            EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2))
-        )
-        recipeHelper?.registerWorkingStations(
-            FLUID_INFUSER,
-            EntryStack.create(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1))
-        )
-        recipeHelper?.registerWorkingStations(
-            CONDENSER,
-            EntryStack.create(MachineRegistry.CONDENSER_REGISTRY.block(Tier.MK4))
-        )
-        recipeHelper?.registerWorkingStations(
-            SMELTER,
-            EntryStack.create(MachineRegistry.SMELTER_REGISTRY.block(Tier.MK4))
-        )
+        MachineRegistry.PULVERIZER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                PULVERIZING,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.INFUSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                INFUSING,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.COMPRESSOR_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                COMPRESSING,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.RECYCLER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                RECYCLING,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                FLUID_INFUSER,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.CONDENSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                CONDENSER,
+                EntryStack.create(block)
+            )
+        }
+        MachineRegistry.SMELTER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                SMELTER,
+                EntryStack.create(block)
+            )
+        }
     }
 
     private val ID = identifier("rei_plugin")
