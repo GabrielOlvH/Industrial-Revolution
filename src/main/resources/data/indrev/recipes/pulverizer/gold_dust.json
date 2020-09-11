@@ -3,16 +3,10 @@
   "ingredients": {
     "item": "minecraft:gold_ore"
   },
-  "output": [
+  "output":
     {
       "item": "gold_dust",
       "count": 2
     },
-    {
-      "item": "gold_dust",
-      "count": 1,
-      "chance": 0.8
-    }
-  ],
   "processTime": 200
 }

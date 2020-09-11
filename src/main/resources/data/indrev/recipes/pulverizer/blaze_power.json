@@ -3,16 +3,10 @@
   "ingredients": {
     "item": "minecraft:blaze_rod"
   },
-  "output": [
+  "output":
     {
       "item": "minecraft:blaze_powder",
       "count": 4
     },
-    {
-      "item": "minecraft:blaze_powder",
-      "count": 2,
-      "chance": 0.5
-    }
-  ],
   "processTime": 200
 }

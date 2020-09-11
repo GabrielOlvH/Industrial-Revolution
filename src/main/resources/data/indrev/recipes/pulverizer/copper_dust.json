@@ -3,16 +3,10 @@
   "ingredients": {
     "tag": "c:copper_ores"
   },
-  "output": [
+  "output":
     {
       "item": "copper_dust",
       "count": 2
     },
-    {
-      "item": "copper_dust",
-      "count": 1,
-      "chance": 0.9
-    }
-  ],
   "processTime": 200
 }

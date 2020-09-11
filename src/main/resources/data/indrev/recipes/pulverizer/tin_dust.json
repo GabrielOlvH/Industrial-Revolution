@@ -3,16 +3,10 @@
   "ingredients": {
     "tag": "c:tin_ores"
   },
-  "output": [
+  "output":
     {
       "item": "tin_dust",
       "count": 2
     },
-    {
-      "item": "tin_dust",
-      "count": 1,
-      "chance": 0.8
-    }
-  ],
   "processTime": 200
 }
