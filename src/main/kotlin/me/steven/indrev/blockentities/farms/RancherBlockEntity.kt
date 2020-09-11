@@ -42,7 +42,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
+    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
 
     override fun machineTick() {
         if (world?.isClient == true) return

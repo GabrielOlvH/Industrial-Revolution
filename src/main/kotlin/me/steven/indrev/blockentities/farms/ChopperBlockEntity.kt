@@ -50,7 +50,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
-    private val fakePlayer by lazy { FakePlayerEntity(world!!, pos) }
+    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
     override var range = 5
     var cooldown = 0.0
 

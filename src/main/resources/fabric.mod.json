@@ -47,7 +47,8 @@
     "fabricloader": ">=0.7.1",
     "fabric": "*",
     "fabric-language-kotlin": "*",
-    "minecraft": "1.16.x"
+    "minecraft": "1.16.x",
+    "patchouli": "*"
   },
   "suggests": {
     "flamingo": "*"
