@@ -62,6 +62,10 @@ class IRGamerAxeItem(
         else super.getMiningSpeedMultiplier(stack, state)
     }
 
+    override fun hasGlint(stack: ItemStack?): Boolean {
+        return stack?.tag?.getBoolean("Active") == true
+    }
+
     override fun postMine(
         stack: ItemStack,
         world: World,
