@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig

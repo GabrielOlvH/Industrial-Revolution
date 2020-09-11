@@ -1,7 +1,7 @@
 package me.steven.indrev.energy
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blocks.CableBlock
+import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.mixin.AccessorEnergyHandler
 import me.steven.indrev.utils.Tier
 import net.minecraft.nbt.CompoundTag

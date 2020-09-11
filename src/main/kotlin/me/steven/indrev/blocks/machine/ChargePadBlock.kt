@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.machine
 
 import com.google.common.collect.Iterables
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity

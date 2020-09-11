@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks
+package me.steven.indrev.blocks.machine
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider

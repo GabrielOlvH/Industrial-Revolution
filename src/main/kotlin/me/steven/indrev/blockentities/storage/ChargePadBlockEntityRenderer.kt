@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import me.steven.indrev.blocks.HorizontalFacingMachineBlock
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer

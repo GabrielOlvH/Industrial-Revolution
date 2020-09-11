@@ -1,9 +1,9 @@
 package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.FacingMachineBlock
-import me.steven.indrev.blocks.HorizontalFacingMachineBlock
-import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.blocks.machine.FacingMachineBlock
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.Tier
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item

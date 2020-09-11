@@ -7,8 +7,8 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.FacingMachineBlock
-import me.steven.indrev.blocks.HorizontalFacingMachineBlock
+import me.steven.indrev.blocks.machine.FacingMachineBlock
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay

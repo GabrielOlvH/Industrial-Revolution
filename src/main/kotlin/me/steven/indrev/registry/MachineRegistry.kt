@@ -11,7 +11,7 @@ import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.storage.BatteryBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
-import me.steven.indrev.blocks.*
+import me.steven.indrev.blocks.machine.*
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.controllers.*
 import me.steven.indrev.items.energy.MachineBlockItem

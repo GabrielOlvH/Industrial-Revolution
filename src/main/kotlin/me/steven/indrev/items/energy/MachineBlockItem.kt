@@ -1,7 +1,7 @@
 package me.steven.indrev.items.energy
 
-import me.steven.indrev.blocks.CableBlock
-import me.steven.indrev.blocks.MachineBlock
+import me.steven.indrev.blocks.machine.CableBlock
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig

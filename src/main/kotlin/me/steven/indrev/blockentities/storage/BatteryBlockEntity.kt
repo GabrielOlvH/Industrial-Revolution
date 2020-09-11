@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.storage
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.FacingMachineBlock
+import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory

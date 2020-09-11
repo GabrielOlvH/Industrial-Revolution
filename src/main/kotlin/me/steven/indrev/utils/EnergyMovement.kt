@@ -2,7 +2,7 @@ package me.steven.indrev.utils
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blocks.CableBlock
+import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.mixin.AccessorEnergyHandler
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
