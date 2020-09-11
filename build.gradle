@@ -75,9 +75,6 @@ dependencies {
     modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
 
     modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -105,7 +102,7 @@ dependencies {
     include "me.shedaniel.cloth.api:cloth-dynamic-registry-api-v1:1.2.1"
 
     //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
-    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.6"
+    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.8"
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
 
