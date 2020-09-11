@@ -19,18 +19,45 @@ repositories {
     maven {
         name = "Modmuss50"
         url = "https://maven.modmuss50.me/"
+        content {
+            includeGroup "RebornCore"
+            includeGroup "TechReborn"
+            includeGroup "teamreborn"
+        }
     }
-    maven { url = "http://maven.fabricmc.net/" }
+    maven {
+        url = "http://maven.fabricmc.net/"
+        content {
+            includeGroup "net.fabricmc"
+        }
+    }
     maven {
         name = "BuildCraft"
         url = "https://mod-buildcraft.com/maven"
+        content {
+            includeGroup "alexiil.mc.lib"
+        }
     }
     maven {
         name = "CottonMC"
         url = "https://server.bbkr.space/artifactory/libs-release"
+        content {
+            includeGroup "io.github.cottonmc"
+        }
     }
-    maven { url 'https://maven.blamejared.com' }
-    maven { url "https://jitpack.io" }
+    maven {
+        name = "Patchouli"
+        url = "https://maven.blamejared.com"
+        content {
+            includeGroup "vazkii.patchouli"
+        }
+    }
+    maven {
+        url = "https://jitpack.io"
+        content {
+            includeGroup "com.github.KubeJS-Mods"
+        }
+    }
     maven {
         name "Modmaven"
         url "https://modmaven.k-4u.nl/"
