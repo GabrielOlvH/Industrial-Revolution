@@ -13,6 +13,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 import java.util.stream.Stream
 
 class SulfurCrystalBlock(settings: Settings) : Block(settings) {
@@ -33,6 +34,21 @@ class SulfurCrystalBlock(settings: Settings) : Block(settings) {
         Direction.WEST -> WEST_SHAPE
         Direction.EAST -> EAST_SHAPE
         else -> UP_SHAPE
+    }
+
+    override fun neighborUpdate(
+        state: BlockState,
+        world: World?,
+        pos: BlockPos,
+        block: Block?,
+        fromPos: BlockPos,
+        notify: Boolean
+    ) {
+        val vec = pos.subtract(fromPos)
+        val dir = Direction.fromVector(vec.x, vec.y, vec.z)
+        if (state[FACING] == dir) {
+            world?.breakBlock(pos, true)
+        }
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
