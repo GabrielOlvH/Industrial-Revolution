@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine_mk4",
+  "textures": {
+    "texture": "indrev:block/farmer"
+  }
+}

@@ -258,28 +258,49 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { FluidInfuserBlockEntity(tier) } }
         )
 
-        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), false, Tier.MK4).register(
+        val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), true).register(
             { tier ->
                 HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.chopper, ::ChopperController
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.chopperMk1
+                        Tier.MK2 -> CONFIG.machines.chopperMk2
+                        Tier.MK3 -> CONFIG.machines.chopperMk3
+                        else -> CONFIG.machines.chopperMk4
+                    }, ::ChopperController
                 ) { ChopperBlockEntity(tier) }
             },
             { tier -> { ChopperBlockEntity(tier) } }
         )
 
-        val FARMER_REGISTRY = MachineRegistry(identifier("farmer"), false, Tier.MK3).register(
+        val FARMER_REGISTRY = MachineRegistry(identifier("farmer"), true).register(
             { tier ->
                 HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.farmer, ::FarmerController
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.farmerMk1
+                        Tier.MK2 -> CONFIG.machines.farmerMk2
+                        Tier.MK3 -> CONFIG.machines.farmerMk3
+                        else -> CONFIG.machines.farmerMk4
+                    }, ::FarmerController
                 ) { FarmerBlockEntity(tier) }
             },
             { tier -> { FarmerBlockEntity(tier) } }
         )
 
-        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), false, Tier.MK4).register(
+        val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), true).register(
             { tier ->
                 HorizontalFacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, CONFIG.machines.rancher, ::RancherController
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.rancherMk1
+                        Tier.MK2 -> CONFIG.machines.rancherMk2
+                        Tier.MK3 -> CONFIG.machines.rancherMk3
+                        else -> CONFIG.machines.rancherMk4
+                    }, ::RancherController
                 ) { RancherBlockEntity(tier) }
             },
             { tier -> { RancherBlockEntity(tier) } }

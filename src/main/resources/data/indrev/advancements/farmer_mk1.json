@@ -1,13 +1,13 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:rancher_mk1"
+      "item": "indrev:farmer_mk1"
     },
     "title": {
-      "translate": "advancements.indrev.rancher_mk4"
+      "translate": "advancements.indrev.farmer_mk1"
     },
     "description": {
-      "translate": "advancements.indrev.rancher_mk4.description"
+      "translate": "advancements.indrev.farmer_mk1.description"
     }
   },
   "parent": "indrev:machine_block",
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:rancher_mk1"
+            "item": "indrev:farmer_mk1"
           }
         ]
       }

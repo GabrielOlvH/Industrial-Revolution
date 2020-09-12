@@ -50,10 +50,11 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
+        if (!Energy.of(this).simulate().use(config.energyCost)) return
         if (nextBlocks.hasNext()) {
             var pos = nextBlocks.next()
             var state = world.getBlockState(pos)
-            while (Energy.of(this).simulate().use(config.energyCost) && !tryHarvest(state, pos, world) && nextBlocks.hasNext()) {
+            while (!tryHarvest(state, pos, world) && nextBlocks.hasNext()) {
                 pos = nextBlocks.next()
                 state = world.getBlockState(pos)
             }
@@ -71,7 +72,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         val block = state.block
 
         val inventory = inventoryComponent?.inventory
-        inventory?.inputSlots?.forEach { slot ->
+        val performedAction = inventory?.inputSlots?.any { slot ->
             val stack = inventory.getStack(slot)
             val item = stack.item
             val isValidSeed = item is BlockItem && (item.block is CropBlock || item.block is StemBlock)
@@ -83,6 +84,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                     stack.decrement(1)
                     (block as Fertilizable).grow(world, world.random, pos, state)
                     world.syncWorldEvent(2005, pos, 0)
+                    true
                 }
                 shouldHarvest -> {
                     if (block is CropBlock && stack.count > 1) {
@@ -99,18 +101,21 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
                         .build(LootContextTypes.BLOCK)
                     lootTable.generateLoot(lootContext).forEach { inventory.addStack(it) }
+                    true
                 }
                 block == Blocks.AIR && isValidSeed -> {
                     val cropState = (item as BlockItem).block.defaultState
                     if (cropState.canPlaceAt(world, pos)) {
                         world.setBlockState(pos, cropState)
-                    }
+                        true
+                    } else false
                 }
-                else -> return false
+                else -> false
             }
-        }
-        Energy.of(this).use(config.energyCost)
-        return true
+        } ?: false
+        if (performedAction)
+            Energy.of(this).use(config.energyCost)
+        return performedAction
     }
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())

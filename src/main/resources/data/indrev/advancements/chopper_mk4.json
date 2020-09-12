@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:chopper_mk4"
+      "item": "indrev:chopper_mk1"
     },
     "title": {
       "translate": "advancements.indrev.chopper_mk4"
@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:chopper_mk4"
+            "item": "indrev:chopper_mk1"
           }
         ]
       }
