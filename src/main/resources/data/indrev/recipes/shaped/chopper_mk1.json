@@ -1,28 +1,28 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NCN",
-    "IFI",
-    "IBI"
+    "GCG",
+    "NMN",
+    " B "
   ],
   "key": {
-    "F": {
+    "M": {
       "item": "indrev:machine_block"
     },
     "C": {
       "item": "indrev:circuit_mk1"
     },
-    "I": {
-      "tag": "c:iron_plates"
-    },
     "N": {
-      "item": "minecraft:iron_hoe"
+      "item": "indrev:nikolite_dust"
+    },
+    "G": {
+      "item": "minecraft:golden_axe"
     },
     "B": {
       "item": "indrev:battery"
     }
   },
   "result": {
-    "item": "indrev:farmer_mk3"
+    "item": "indrev:chopper_mk1"
   }
 }

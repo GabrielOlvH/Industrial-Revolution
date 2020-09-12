@@ -1,28 +1,34 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "GCG",
+    "LCF",
     "NMN",
-    " B "
+    "WBW"
   ],
   "key": {
     "M": {
       "item": "indrev:machine_block"
     },
     "C": {
-      "item": "indrev:circuit_mk2"
+      "item": "indrev:circuit_mk1"
     },
     "N": {
       "item": "indrev:nikolite_dust"
     },
-    "G": {
-      "item": "minecraft:golden_axe"
+    "F": {
+      "item": "minecraft:feather"
+    },
+    "L": {
+      "item": "minecraft:milk_bucket"
+    },
+    "W": {
+      "tag": "minecraft:wool"
     },
     "B": {
       "item": "indrev:battery"
     }
   },
   "result": {
-    "item": "indrev:chopper_mk4"
+    "item": "indrev:rancher_mk1"
   }
 }
