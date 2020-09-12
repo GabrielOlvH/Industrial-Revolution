@@ -36,6 +36,7 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 import team.reborn.energy.EnergyTier
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
@@ -82,8 +83,10 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             transferFluids()
             machineTick()
             if (isMarkedForUpdate) {
+                lastEnergyUpdate = energy.roundToInt()
                 markDirty()
                 sync()
+                println("updated $this")
                 isMarkedForUpdate = false
             }
         }
@@ -107,7 +110,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     override fun setStored(amount: Double) {
-        markForUpdate { lastEnergyUpdate != amount.roundToInt() }
+        markForUpdate {
+            val abs = abs(lastEnergyUpdate - amount)
+            val max = (0.001 * maxStoredPower).coerceAtLeast(1.0)
+            this.tier != Tier.CREATIVE && abs > max
+        }
         this.energy = amount
     }
 

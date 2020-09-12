@@ -6,7 +6,6 @@ import me.steven.indrev.items.misc.IRCoolerItem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
-import kotlin.math.roundToInt
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
@@ -64,10 +63,10 @@ class TemperatureComponent(
         } else
             temperature += heatingSpeed + overflowModifier
         if (temperature > explosionLimit - 5) {
-            machine.explode = true
+            //machine.explode = true
         }
         inputOverflow = false
-        machine.markForUpdate { previous.roundToInt() != temperature.roundToInt() }
+        //machine.markForUpdate { floor(previous) != floor(temperature) }
     }
 
     private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)

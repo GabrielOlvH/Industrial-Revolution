@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
@@ -22,12 +21,11 @@ class SolarGeneratorController(
     playerInventory: PlayerInventory,
     ctx: ScreenHandlerContext
 ) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ), PatchouliEntryShortcut {
     init {
         val root = WGridPanel()

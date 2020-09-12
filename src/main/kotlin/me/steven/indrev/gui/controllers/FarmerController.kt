@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WSlider
 import io.github.cottonmc.cotton.gui.widget.WSprite
@@ -23,14 +22,13 @@ import net.minecraft.util.Identifier
 class FarmerController(
     syncId: Int,
     playerInventory: PlayerInventory,
-    private val ctx: ScreenHandlerContext
+    ctx: ScreenHandlerContext
 ) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.FARMER_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ), PatchouliEntryShortcut {
     private var value = -1
     init {

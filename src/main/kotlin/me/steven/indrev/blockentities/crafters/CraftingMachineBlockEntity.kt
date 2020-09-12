@@ -82,6 +82,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                     stack.decrement(count)
                     inventory.setStack(slot, stack)
                 }
+                return@forEach
             }
         }
 

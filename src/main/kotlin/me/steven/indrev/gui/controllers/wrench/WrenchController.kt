@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers.wrench
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
@@ -11,6 +10,7 @@ import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
@@ -26,12 +26,11 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
 class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.WRENCH_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ), PatchouliEntryShortcut {
 
     private var isItemConfig = true

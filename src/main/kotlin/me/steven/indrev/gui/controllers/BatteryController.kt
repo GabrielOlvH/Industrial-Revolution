@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
@@ -26,12 +25,11 @@ import net.minecraft.util.Identifier
 import java.util.function.Predicate
 
 class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.BATTERY_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ), PatchouliEntryShortcut {
 
     val shieldPainter = getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png"))

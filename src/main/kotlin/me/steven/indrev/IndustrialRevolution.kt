@@ -133,6 +133,16 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+
+        ServerTickEvents.START_SERVER_TICK.register { server ->
+            server.playerManager.playerList.forEach { player ->
+                val handler = player.currentScreenHandler as? IRGuiController ?: return@forEach
+                handler.ctx.run { world, pos ->
+                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
+                    blockEntity.sync()
+                }
+            }
+        }
     }
 
     val LOGGER = LogManager.getLogger("Industrial Revolution")

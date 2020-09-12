@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
@@ -14,12 +13,11 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 
 class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.FISHING_FARM_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ) {
     init {
         val root = WGridPanel()

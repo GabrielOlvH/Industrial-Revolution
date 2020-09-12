@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.controllers
 
-import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
@@ -18,12 +17,11 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
-    SyncedGuiDescription(
+    IRGuiController(
         IndustrialRevolution.MINER_HANDLER,
         syncId,
         playerInventory,
-        getBlockInventory(ctx),
-        getBlockPropertyDelegate(ctx)
+        ctx
     ), PatchouliEntryShortcut {
     init {
         val root = WGridPanel()
