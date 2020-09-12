@@ -8,7 +8,9 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
+import net.minecraft.world.biome.BiomeKeys
 
 data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val sizeRange: IntRange) {
     companion object {
@@ -38,10 +40,10 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                 VeinTypeResourceListener.LOGGER.error("Missing range entry when loading vein type $id")
                 return null
             }
-            val min = range.map { (it as JsonPrimitive).asInt(1) }.min()!!
-            val max = range.map { (it as JsonPrimitive).asInt(1) }.max()!!
+            val min = range.map { (it as JsonPrimitive).asInt(1) }.minOrNull()!!
+            val max = range.map { (it as JsonPrimitive).asInt(1) }.maxOrNull()!!
             val biomeArray = json.get(JsonArray::class.java, "biomes")
-            val biomes = mutableMapOf<Identifier, Int>()
+            val biomes = mutableMapOf<RegistryKey<Biome>, Int>()
             biomeArray?.forEach { element ->
                 element as JsonObject
                 val weight = element.getInt("weight", 1)
@@ -52,7 +54,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                             .filter {
                                 BuiltinRegistries.BIOME[it]?.category == cat
                             }.forEach {
-                                biomes[it] = weight
+                                biomes[RegistryKey.of(Registry.BIOME_KEY, it)] = weight
                             }
                     }
                 } else {
@@ -61,10 +63,11 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                         if (!BuiltinRegistries.BIOME.containsId(biomeId)) {
                             VeinTypeResourceListener.LOGGER.error("Expected biome but received unkown string $biomeId when loading vein type $id")
                         }
-                        biomes[biomeId] = weight
+                        biomes[RegistryKey.of(Registry.BIOME_KEY, biomeId)] = weight
                     }
                 }
             }
+            BiomeKeys.FROZEN_RIVER
             biomes.forEach { (biome, weight) -> Picker.PICKERS.computeIfAbsent(biome) { Picker(biome, WeightedList()) }.veins.add(id, weight) }
             return arrayOf(VeinType(id, weightedList, min..max))
         }

@@ -19,7 +19,9 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
 import net.minecraft.util.registry.BuiltinRegistries
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
+import net.minecraft.world.biome.BuiltinBiomes
 import kotlin.random.asKotlinRandom
 
 class IRChunkScannerItem(settings: Settings) : Item(settings) {
@@ -40,10 +42,12 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                     )
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
-                val biome = world.getBiome(user?.blockPos)
-                val identifier = info?.veinIdentifier
-                    ?: Picker.PICKERS.getOrDefault(BuiltinRegistries.BIOME.getId(biome), Picker.PICKERS[Identifier("minecraft:ocean")])
-                        ?.veins?.pickRandom(world.random)
+                val default = BuiltinRegistries.BIOME.getKey(BuiltinBiomes.PLAINS).get()
+                val biomeKey = world.registryManager.get(Registry.BIOME_KEY)
+                    .getKey(world.getBiome(user?.blockPos))
+                    .orElse(default)
+                val picker = Picker.PICKERS.getOrDefault(biomeKey, Picker.PICKERS[default])
+                val identifier = info?.veinIdentifier ?: picker?.veins?.pickRandom(world.random)
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
                     val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))
