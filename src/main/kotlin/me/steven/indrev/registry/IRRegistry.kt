@@ -4,6 +4,7 @@ import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.AcidFluidBlock
+import me.steven.indrev.blocks.NikoliteOreBlock
 import me.steven.indrev.blocks.SulfurCrystalBlock
 import me.steven.indrev.blocks.TankBlock
 import me.steven.indrev.fluids.BaseFluid
@@ -80,7 +81,7 @@ object IRRegistry {
         ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre()
+            withOre { settings -> NikoliteOreBlock(settings) }
         }.register()
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
         ResourceHelper("diamond") { withItems("dust") }.register()

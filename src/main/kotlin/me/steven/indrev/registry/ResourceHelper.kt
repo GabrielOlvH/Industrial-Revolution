@@ -24,9 +24,8 @@ class ResourceHelper(private val id: String, private val block: ResourceHelper.(
         return this
     }
 
-    fun withOre(): ResourceHelper {
-        val ore =
-            Block(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+    fun withOre(supplier: (FabricBlockSettings) -> Block = { Block(it) }): ResourceHelper {
+        val ore = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
         val identifier = identifier("${id}_ore")
         Registry.register(Registry.BLOCK, identifier, ore)
         Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
