@@ -133,7 +133,6 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
-        ServerLifecycleEvents.SERVER_STARTED.register(NetworkEvents)
     }
 
     val LOGGER = LogManager.getLogger("Industrial Revolution")

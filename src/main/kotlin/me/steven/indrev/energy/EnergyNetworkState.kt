@@ -5,6 +5,7 @@ import net.minecraft.nbt.ListTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
+import java.util.*
 
 class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indrev_networks") {
     var networks = mutableSetOf<EnergyNetwork>()
@@ -32,7 +33,7 @@ class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indr
     }
 
     companion object {
-        val NETWORK_STATES = mutableMapOf<ServerWorld, EnergyNetworkState>()
+        val NETWORK_STATES = WeakHashMap<ServerWorld, EnergyNetworkState>()
         fun getNetworkState(world: ServerWorld) = world.persistentStateManager.getOrCreate({ EnergyNetworkState(world) }, "indrev_networks")
     }
 }
