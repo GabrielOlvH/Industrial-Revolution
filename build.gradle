@@ -52,12 +52,12 @@ repositories {
             includeGroup "vazkii.patchouli"
         }
     }
-    maven {
-        url = "https://jitpack.io"
-        content {
-            includeGroup "com.github.KubeJS-Mods"
-        }
-    }
+    //maven {
+        //url = "https://jitpack.io"
+        //content {
+            //includeGroup "com.github.KubeJS-Mods"
+        //}
+    //}
     maven {
         name "Modmaven"
         url "https://modmaven.k-4u.nl/"

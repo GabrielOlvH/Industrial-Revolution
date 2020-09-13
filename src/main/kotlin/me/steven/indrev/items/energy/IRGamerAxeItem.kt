@@ -9,9 +9,11 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
 import net.minecraft.tag.BlockTags
 import net.minecraft.text.Text
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
@@ -54,6 +56,10 @@ class IRGamerAxeItem(
             return TypedActionResult.pass(stack)
         }
         return super.use(world, user, hand)
+    }
+
+    override fun useOnBlock(context: ItemUsageContext?): ActionResult {
+        return ActionResult.PASS
     }
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
