@@ -111,7 +111,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     override fun setStored(amount: Double) {
         markForUpdate {
             val abs = abs(lastEnergyUpdate - amount)
-            val max = (0.001 * maxStoredPower).coerceAtLeast(1.0)
+            val max = (0.01 * maxStoredPower).coerceAtLeast(1.0)
             this.tier != Tier.CREATIVE && abs > max
         }
         this.energy = amount
