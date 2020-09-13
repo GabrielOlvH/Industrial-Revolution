@@ -86,7 +86,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 lastEnergyUpdate = energy.roundToInt()
                 markDirty()
                 sync()
-                println("updated $this")
                 isMarkedForUpdate = false
             }
         }
