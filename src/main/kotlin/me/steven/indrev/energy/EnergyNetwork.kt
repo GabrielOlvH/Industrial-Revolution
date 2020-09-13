@@ -169,7 +169,6 @@ class EnergyNetwork(
                     }
                 } else {
                     network.machines.computeIfAbsent(blockPos) { mutableSetOf() }.add(direction.opposite)
-                    state.networksByPos[blockPos] = network
                 }
             }
         }
