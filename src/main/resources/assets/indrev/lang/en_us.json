@@ -212,7 +212,7 @@
   "gui.furnace.mode.furnace": "Furnace",
   "gui.furnace.mode.blast_furnace": "Blast Furnace",
   "gui.furnace.mode.smoker": "Smoker",
-  "gui.widget.progress": "Progress: %s",
+  "gui.widget.process": "Progress: %s",
   "gui.widget.energy": "Energy",
   "gui.widget.temperature": "Temperature",
   "gui.widget.temperature_info.high": "Too hot",
