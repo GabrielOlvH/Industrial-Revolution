@@ -10,7 +10,8 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
-import me.steven.indrev.gui.controllers.*
+import me.steven.indrev.gui.controllers.IRGuiController
+import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.PatchouliBookRecipe

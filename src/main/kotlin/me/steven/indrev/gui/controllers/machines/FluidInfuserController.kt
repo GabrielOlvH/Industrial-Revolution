@@ -1,9 +1,11 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
+import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -13,9 +15,9 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 
-class RecyclerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
-        IndustrialRevolution.RECYCLER_HANDLER,
+        IndustrialRevolution.FLUID_INFUSER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -23,17 +25,22 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, ctx: Scr
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.recycler", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.fluid_infuser", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.3, 1.5)
+        val firstInput = WItemSlot.of(blockInventory, 2)
+        root.add(firstInput, 3.3, 2.2)
+
+        val fluid = WFluid(ctx, 0)
+        root.add(fluid, 2.3, 0.7)
 
         val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 3.5, 1.5)
+        root.add(processWidget, 4.35, 2.2)
 
-        val outputSlot = WItemSlot.outputOf(blockInventory, 3)
-        outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 5.5, 1.5)
+        val outputStack = WItemSlot.of(blockInventory, 3)
+        root.add(outputStack, 5.8, 2.2)
+
+        val outputFluid = WFluid(ctx, 1)
+        root.add(outputFluid, 6.9, 0.7)
 
         root.validate(this)
     }
@@ -42,9 +49,9 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, ctx: Scr
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 5
+    override fun getPage(): Int = 4
 
     companion object {
-        val SCREEN_ID = identifier("recycler")
+        val SCREEN_ID = identifier("fluid_infuser")
     }
 }

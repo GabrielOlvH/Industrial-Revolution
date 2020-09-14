@@ -1,9 +1,10 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WFuel
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier

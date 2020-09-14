@@ -1,9 +1,10 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.armor.Module
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WVerticalProcess
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText

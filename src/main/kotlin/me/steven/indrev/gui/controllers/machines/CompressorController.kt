@@ -1,9 +1,10 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -13,9 +14,9 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 
-class PulverizerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class CompressorController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
-        IndustrialRevolution.PULVERIZER_HANDLER,
+        IndustrialRevolution.COMPRESSOR_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -23,7 +24,7 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, ctx: S
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.pulverizer", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.compressor", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 2.3, 1.5)
@@ -35,10 +36,6 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, ctx: S
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.5, 1.5)
 
-        val extraOutputSlot = WItemSlot.of(blockInventory, 4)
-        extraOutputSlot.isInsertingAllowed = false
-        root.add(extraOutputSlot, 5.5, 2.8)
-
         root.validate(this)
     }
 
@@ -46,9 +43,9 @@ class PulverizerController(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 2
+    override fun getPage(): Int = 3
 
     companion object {
-        val SCREEN_ID = identifier("pulverizer_screen")
+        val SCREEN_ID = identifier("compressor_screen")
     }
 }

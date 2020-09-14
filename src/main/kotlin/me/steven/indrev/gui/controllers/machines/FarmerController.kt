@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WSlider
@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
@@ -19,19 +20,22 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
-class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class FarmerController(
+    syncId: Int,
+    playerInventory: PlayerInventory,
+    ctx: ScreenHandlerContext
+) :
     IRGuiController(
-        IndustrialRevolution.CHOPPER_HANDLER,
+        IndustrialRevolution.FARMER_HANDLER,
         syncId,
         playerInventory,
         ctx
     ), PatchouliEntryShortcut {
-
-    var value = -1
+    private var value = -1
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.farmer", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         root.add(inputFrame, 1.4, 0.7)
@@ -41,14 +45,13 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.add(outputFrame, 4.1, 0.7)
         outputFrame.setSize(58, 62)
 
-
         val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 4.2, 1.0)
-        val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.chopper_input_slot_type"))
+        val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.farmer_input_slot_type"))
         root.add(inputSlot, 1.5, 1.0)
 
-        val slider = WSlider(1, 9, Axis.HORIZONTAL)
+        val slider = WSlider(1, 10, Axis.HORIZONTAL)
         root.add(slider, 1.4, 4.0)
         slider.setSize(35, 20)
         ctx.run { world, pos ->
@@ -65,19 +68,16 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.validate(this)
     }
 
-
     override fun close(player: PlayerEntity?) {
         super.close(player)
         AOEMachineBlockEntity.sendValueUpdatePacket(value, ctx)
     }
 
-    override fun canUse(player: PlayerEntity?): Boolean = true
+    override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getEntry(): Identifier = identifier("machines/chopper")
-
-    override fun getPage(): Int = 0
+    override fun getPage(): Int = 1
 
     companion object {
-        val SCREEN_ID = identifier("chopper_controller")
+        val SCREEN_ID = identifier("farmer_screen")
     }
 }

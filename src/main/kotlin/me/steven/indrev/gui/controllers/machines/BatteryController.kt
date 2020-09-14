@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.controllers
+package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WEnergy
 import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
