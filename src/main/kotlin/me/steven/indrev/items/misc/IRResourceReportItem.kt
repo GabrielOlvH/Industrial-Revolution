@@ -1,7 +1,6 @@
 package me.steven.indrev.items.misc
 
-import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.resreport.ResourceReportScreenHandlerFactory
 import me.steven.indrev.utils.getChunkPos
 import me.steven.indrev.world.chunkveins.WorldChunkVeinData
@@ -9,7 +8,6 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
@@ -44,14 +42,9 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
         val tag = user.getStackInHand(hand).tag ?: return super.use(world, user, hand)
         val chunkPos = getChunkPos(tag.getString("ChunkPos")) ?: return super.use(world, user, hand)
         val veinData = state.veins[chunkPos]!!
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeBlockPos(user.blockPos)
-        buf.writeIdentifier(veinData.veinIdentifier)
-        buf.writeInt(veinData.explored)
-        buf.writeInt(veinData.size)
         user.openHandledScreen(
             ResourceReportScreenHandlerFactory(
-                { syncId, inv, _ -> IndustrialRevolution.RESOURCE_REPORT_HANDLER.create(syncId, inv, buf) },
+                { syncId, inv, ctx -> ResourceReportController(syncId, inv, ctx, veinData) },
                 user.blockPos,
                 veinData
             )

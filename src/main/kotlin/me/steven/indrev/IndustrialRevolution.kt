@@ -2,6 +2,7 @@ package me.steven.indrev
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
+import io.netty.buffer.Unpooled
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
@@ -25,9 +26,12 @@ import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
+import me.steven.indrev.utils.weight
 import me.steven.indrev.world.chunkveins.ChunkVeinData
+import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -39,6 +43,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
@@ -191,4 +196,26 @@ object IndustrialRevolution : ModInitializer {
     } as ExtendedScreenHandlerType<ResourceReportController>
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
+
+    val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
+
+    fun syncVeinData(playerEntity: ServerPlayerEntity) {
+        val buf = PacketByteBuf(Unpooled.buffer())
+        buf.writeInt(VeinType.REGISTERED.size)
+        VeinType.REGISTERED.forEach { (identifier, veinType) ->
+            buf.writeIdentifier(identifier)
+            val entries = veinType.outputs.entries
+            buf.writeInt(entries.size)
+            entries.forEach { entry ->
+                val block = entry.element
+                val weight = entry.weight
+                val rawId = Registry.BLOCK.getRawId(block)
+                buf.writeInt(rawId)
+                buf.writeInt(weight)
+            }
+            buf.writeInt(veinType.sizeRange.first)
+            buf.writeInt(veinType.sizeRange.last)
+        }
+        ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, SYNC_VEINS_PACKET, buf)
+    }
 }

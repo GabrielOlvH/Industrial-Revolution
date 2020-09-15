@@ -21,6 +21,7 @@ import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
@@ -28,6 +29,8 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.model.ModelBakeSettings
@@ -36,6 +39,8 @@ import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
+import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.registry.Registry
 import java.util.function.Function
 
 @Suppress("UNCHECKED_CAST")
@@ -144,6 +149,25 @@ object IndustrialRevolutionClient : ClientModInitializer {
         FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f
             return@predicate tag.getFloat("Progress")
+        }
+
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.SYNC_VEINS_PACKET) { ctx, buf ->
+            val totalVeins = buf.readInt()
+            for (x in 0 until totalVeins) {
+                val id = buf.readIdentifier()
+                val entriesSize = buf.readInt()
+                val outputs = WeightedList<Block>()
+                for (y in 0 until entriesSize) {
+                    val rawId = buf.readInt()
+                    val weight = buf.readInt()
+                    val block = Registry.BLOCK.get(rawId)
+                    outputs.add(block, weight)
+                }
+                val minSize = buf.readInt()
+                val maxSize = buf.readInt()
+                val veinType = VeinType(id, outputs, minSize..maxSize)
+                VeinType.REGISTERED[id] = veinType
+            }
         }
     }
 }
