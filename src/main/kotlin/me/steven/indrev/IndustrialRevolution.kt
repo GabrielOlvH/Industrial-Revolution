@@ -71,7 +71,7 @@ object IndustrialRevolution : ModInitializer {
             IRRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }
         IRLootTables.register()
-        MachineRegistry.COAL_GENERATOR_REGISTRY
+        MachineRegistry
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
