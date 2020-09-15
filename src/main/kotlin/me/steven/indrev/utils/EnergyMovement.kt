@@ -3,7 +3,6 @@ package me.steven.indrev.utils
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
-import me.steven.indrev.mixin.AccessorEnergyHandler
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -33,9 +32,8 @@ object EnergyMovement {
             (targetHandler.maxStored - targetHandler.energy).coerceAtMost(targetHandler.maxInput)
         }
         targets.sortedByDescending { it.energy }.forEach { targetHandler ->
-            val accessor = targetHandler as AccessorEnergyHandler
-            val direction = accessor.side
-            val target = accessor.holder
+            val direction = targetHandler.side
+            val target = targetHandler.holder
             sourceHandler.side(direction.opposite())
             val targetMaxInput = targetHandler.maxInput
             val energy = sourceHandler.energy.coerceAtMost(sourceHandler.maxOutput)
