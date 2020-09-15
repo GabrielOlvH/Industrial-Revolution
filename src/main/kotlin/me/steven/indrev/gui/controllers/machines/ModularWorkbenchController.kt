@@ -66,7 +66,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val modulesInstalled = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty) {
-                val modules = Module.getInstalled(stack).size.toString()
+                val modules = Module.getInstalled(stack).sumBy { Module.getLevel(stack, it) }.toString()
                 TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE).append(LiteralText(modules).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
