@@ -249,7 +249,7 @@ object IRRegistry {
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
-    val SCAN_OUTPUT_ITEM = IRScanOutputItem(itemSettings().maxCount(1))
+    val SCAN_OUTPUT_ITEM = IRResourceReportItem(itemSettings().maxCount(1))
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 

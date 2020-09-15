@@ -6,7 +6,7 @@ import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.items.misc.IRScanOutputItem
+import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -35,7 +35,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                     item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
                     Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     item is IRCoolerItem -> slot == 1
-                    item is IRScanOutputItem -> slot == 14
+                    item is IRResourceReportItem -> slot == 14
                     slot in 1 until 10 -> true
                     else -> false
                 }

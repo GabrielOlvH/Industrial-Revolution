@@ -1,5 +1,6 @@
 package me.steven.indrev.world.chunkveins
 
+import me.steven.indrev.utils.identifier
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.PersistentState
@@ -10,7 +11,7 @@ class WorldChunkVeinData(key: String) : PersistentState(key) {
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         val t = tag ?: CompoundTag()
-        veins.filter { (_, data) -> data.veinIdentifier != null }.forEach { (chunkPos, veinData) ->
+        veins.filter { (_, data) -> data.veinIdentifier.toString() != "indrev:empty" }.forEach { (chunkPos, veinData) ->
             t.put("${chunkPos.x},${chunkPos.z}", veinData.toTag(CompoundTag()))
         }
         return t
@@ -18,7 +19,7 @@ class WorldChunkVeinData(key: String) : PersistentState(key) {
 
     override fun fromTag(tag: CompoundTag?) {
         tag?.keys?.forEach { key ->
-            val chunkVeinData = ChunkVeinData(null, 0)
+            val chunkVeinData = ChunkVeinData(identifier("empty"), 0)
             chunkVeinData.fromTag(tag.getCompound(key))
             val index = key.indexOf(',')
             val x = key.substring(0, index).toInt()

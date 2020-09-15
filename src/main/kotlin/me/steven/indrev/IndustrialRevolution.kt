@@ -12,6 +12,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
+import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.PatchouliBookRecipe
@@ -26,6 +27,7 @@ import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
+import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -33,9 +35,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
@@ -175,6 +180,15 @@ object IndustrialRevolution : ModInitializer {
     val FARMER_HANDLER = FarmerController.SCREEN_ID.registerScreenHandler(::FarmerController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
+
+    val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportController.SCREEN_ID) { syncId, inv, buf ->
+        val pos = buf.readBlockPos()
+        val id = buf.readIdentifier()
+        val explored = buf.readInt()
+        val size = buf.readInt()
+        val veinData = ChunkVeinData(id, size, explored)
+        ResourceReportController(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
+    } as ExtendedScreenHandlerType<ResourceReportController>
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 }

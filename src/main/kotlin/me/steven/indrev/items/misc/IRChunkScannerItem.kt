@@ -47,7 +47,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                     .getKey(world.getBiome(user?.blockPos))
                     .orElse(default)
                 val picker = Picker.PICKERS.getOrDefault(biomeKey, Picker.PICKERS[default])
-                val identifier = info?.veinIdentifier ?: picker?.veins?.pickRandom(world.random)
+                val identifier = info?.veinIdentifier ?: picker?.veins?.pickRandom(world.random)!!
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
                     val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))
