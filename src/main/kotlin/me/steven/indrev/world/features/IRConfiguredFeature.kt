@@ -1,17 +1,19 @@
 package me.steven.indrev.world.features
 
-import net.minecraft.util.registry.RegistryKey
+import net.minecraft.util.Identifier
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.feature.ConfiguredFeature
 
 class IRConfiguredFeature(
+    val identifier: Identifier,
     val step: GenerationStep.Feature,
-    val configuredFeature: RegistryKey<ConfiguredFeature<*,*>>,
+    val configuredFeature: ConfiguredFeature<*,*>,
     val biomePredicate: (Biome) -> Boolean
 ) {
     init {
-        //BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier, configuredFeature)
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, identifier, configuredFeature)
     }
 
     companion object {

@@ -125,9 +125,6 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
-    modCompile "me.shedaniel.cloth.api:cloth-dynamic-registry-api-v1:1.2.1"
-    include "me.shedaniel.cloth.api:cloth-dynamic-registry-api-v1:1.2.1"
-
     //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
     modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.9"
     //modRuntime 'RebornCore:RebornCore-1.16:+'

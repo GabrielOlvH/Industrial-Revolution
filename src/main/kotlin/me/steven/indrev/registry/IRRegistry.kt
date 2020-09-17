@@ -21,9 +21,9 @@ import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.utils.*
-import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
@@ -34,8 +34,8 @@ import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Rarity
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
-import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
@@ -211,14 +211,10 @@ object IRRegistry {
 
         identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
-        Registry.register(
-            Registry.FEATURE,
-            identifier("sulfur_crystal"),
-            SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
-        )
         WorldGeneration.init()
 
-        WorldGeneration.registerCallback()
+        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
+        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register { _, _, biome -> WorldGeneration.handleBiome(biome) }
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
