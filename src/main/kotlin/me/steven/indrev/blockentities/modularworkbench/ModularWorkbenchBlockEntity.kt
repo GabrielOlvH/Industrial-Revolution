@@ -3,7 +3,6 @@ package me.steven.indrev.blockentities.modularworkbench
 import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.Property
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -11,6 +10,7 @@ import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
+import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack

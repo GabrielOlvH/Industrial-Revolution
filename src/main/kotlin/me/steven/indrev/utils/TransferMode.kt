@@ -1,4 +1,4 @@
-package me.steven.indrev.components
+package me.steven.indrev.utils
 
 enum class TransferMode(val rgb: Long, val input: Boolean, val output: Boolean) {
     INPUT(0x997e75ff, true, false),

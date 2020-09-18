@@ -2,6 +2,7 @@ package me.steven.indrev.components
 
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.inventories.IRInventory
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.InventoryChangedListener
 import net.minecraft.item.ItemStack

@@ -1,9 +1,9 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity

@@ -3,8 +3,8 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
-import me.steven.indrev.components.TransferMode
 import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.draw2Colors
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack

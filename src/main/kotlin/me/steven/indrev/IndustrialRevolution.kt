@@ -8,7 +8,6 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
@@ -26,10 +25,7 @@ import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.entries
-import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.registerScreenHandler
-import me.steven.indrev.utils.weight
+import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener

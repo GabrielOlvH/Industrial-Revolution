@@ -1,13 +1,13 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.Property
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
+import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ArrayPropertyDelegate

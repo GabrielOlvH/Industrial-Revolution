@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.Property
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.inventories.IRInventory
@@ -11,6 +10,7 @@ import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
