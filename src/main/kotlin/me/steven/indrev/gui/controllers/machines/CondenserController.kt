@@ -43,7 +43,7 @@ class CondenserController(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 3
+    override fun getPage(): Int = 6
 
     companion object {
         val SCREEN_ID = identifier("condenser")

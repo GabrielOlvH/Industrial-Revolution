@@ -1,0 +1,17 @@
+{
+  "name": "Farmer",
+  "category": "machines",
+  "sortnum": 7,
+  "icon": "indrev:farmer_mk1",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/farmer_mk1",
+      "text": "The $(l)Farmer$() is a machine focused in crop farming, and it also supports enhancement upgrades.$(br)Note that it requires some items for it to function: (put them in the 2x2 square)"
+    },
+    {
+      "type": "text",
+      "text": "$(l)Seeds:$() if present will be planted in the farmer's range. Note that it will try to match a crop and its seeds so you can use multiple crops.$(br2)$(l)Bone meal:$() if present, will fertilize any crops possible within range."
+    }
+  ]
+}

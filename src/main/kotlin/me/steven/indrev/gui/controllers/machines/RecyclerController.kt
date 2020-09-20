@@ -43,7 +43,7 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, ctx: Scr
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 5
+    override fun getPage(): Int = 8
 
     companion object {
         val SCREEN_ID = identifier("recycler")

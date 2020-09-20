@@ -49,7 +49,7 @@ class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx:
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 4
+    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("fluid_infuser")

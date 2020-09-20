@@ -43,7 +43,7 @@ class SmelterController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
 
     override fun getEntry(): Identifier = identifier("machines/basic_machines")
 
-    override fun getPage(): Int = 3
+    override fun getPage(): Int = 7
 
     companion object {
         val SCREEN_ID = identifier("smelter")

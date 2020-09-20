@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " EN",
+    "NEN",
     " C ",
-    "NB "
+    " B "
   ],
   "key": {
     "C": {

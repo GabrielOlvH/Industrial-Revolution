@@ -1,0 +1,12 @@
+{
+  "name": "Doubling Ores",
+  "category": "enhanced_ore_processing",
+  "sortnum": 0,
+  "icon": "indrev:pulverizer_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Ore doubling is the first step for enhanced ore processing.$(br)To get started, you'll need a $(l:machines/basic_machines#pulverizer)$(t:Go to Pulverizer)$(l)$(o)Pulverizer$().$(br)The Pulverizer will turn 1 ore into 2 dusts which can then be smelted into 2 ingots."
+    }
+  ]
+}

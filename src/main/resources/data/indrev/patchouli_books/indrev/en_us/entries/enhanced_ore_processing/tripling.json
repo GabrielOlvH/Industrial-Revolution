@@ -1,0 +1,16 @@
+{
+  "name": "Tripling Ores",
+  "category": "enhanced_ore_processing",
+  "sortnum": 1,
+  "icon": "indrev:smelter_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Ore tripling is the next step for enhanced ore processing. For this, you'll need a $(l:machines/basic_machines#smelter)$(t:Go to Industrial Smelter)$(l)$(o)Industrial Smelter$(), a $(l:machines/basic_machines#condenser)$(t:Go to Condenser)$(l)$(o)Condenser$() and a  $(l:machines/basic_machines#pulverizer)$(t:Go to Pulverizer)$(l)$(o)Pulverizer$()."
+    },
+    {
+      "type": "text",
+      "text": "$(l)1)$() Insert your ores into an Industrial Smelter. It will smelt them into their fluid forms.$(br)$(l)2)$() Move your molten ore into a Condenser. It will solidify them into a Ore Chunk.$(br)$(l)3)$() Pulverize your Ore Chunk, which will then give you a dust.$(br)$(l)4)$() Smelt your dust.$(br2)Done! Now you've transformed 1 ore into 3 ingots!"
+    }
+  ]
+}
