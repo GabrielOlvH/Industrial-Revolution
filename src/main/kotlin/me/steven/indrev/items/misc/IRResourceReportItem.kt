@@ -30,6 +30,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
             LiteralText("X: ${pos.endX} Z: ${pos.endZ}").formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
         val dim = tag.getString("Dimension")
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip4", TranslatableText(dim).formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
+        tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip5").formatted(Formatting.DARK_GRAY, Formatting.ITALIC))
     }
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {

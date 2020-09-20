@@ -1,10 +1,14 @@
 package me.steven.indrev.gui.controllers.resreport
 
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
+import io.github.cottonmc.cotton.gui.widget.WPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.utils.add
 import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.weight
@@ -17,6 +21,7 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.Style
 import net.minecraft.text.TextColor
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 
 class ResourceReportController(
     syncId: Int,
@@ -31,16 +36,15 @@ class ResourceReportController(
         ctx
     ) {
     init {
-        val root = WGridPanel()
+        val root = object : WGridPanel() {
+            override fun setBackgroundPainter(painter: BackgroundPainter?): WPanel {
+                return super.setBackgroundPainter(BACKGROUND_PAINTER)
+            }
+        }
         setRootPanel(root)
-        root.setSize(100, 150)
-        root.add(WText(TranslatableText(veinData.translationKey), HorizontalAlignment.LEFT), 0, 0)
-        root.add(
-            WText(
-                TranslatableText("gui.indrev.resourcereport.size", getSizeText(veinData.size)),
-                HorizontalAlignment.LEFT
-            ), 0, 1
-        )
+        root.setSize(128, 0)
+        val titleText = WText(TranslatableText(veinData.translationKey).append(LiteralText(" (").append(getSizeText(veinData.size)).append(LiteralText(")"))).formatted(Formatting.DARK_GRAY), HorizontalAlignment.CENTER)
+        root.add(titleText, 3.0, 0.3)
 
         val outputs = VeinType.REGISTERED[veinData.veinIdentifier]!!.outputs
         val sum = outputs.entries.sumBy { it.weight }
@@ -48,11 +52,11 @@ class ResourceReportController(
             .forEachIndexed { index, entry ->
                 val block = (entry.element as Block)
                 val weight = entry.weight
-                val text = LiteralText("${((weight / sum.toDouble()) * 100).toInt()}% ")
+                val text = LiteralText("${((weight / sum.toDouble()) * 100).toInt()}% ").formatted(Formatting.DARK_GRAY)
                     .append(
                         TranslatableText(block.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(block.defaultMaterialColor.color)))
                     )
-                root.add(WText(text, HorizontalAlignment.LEFT), 0, 2 + index)
+                root.add(WText(text, HorizontalAlignment.LEFT), 0.2, 1.5 + index)
             }
         root.validate(this)
     }
@@ -74,5 +78,8 @@ class ResourceReportController(
 
     companion object {
         val SCREEN_ID = identifier("resource_report_screen")
+        val BACKGROUND_PAINTER = BackgroundPainter { left, top, panel ->
+            ScreenDrawing.texturedRect(left, top, panel.width, panel.height, identifier("textures/gui/paper.png"), -1)
+        }
     }
 }
