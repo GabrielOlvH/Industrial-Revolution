@@ -1,8 +1,8 @@
 package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
+import me.steven.indrev.armor.ArmorModule;
 import me.steven.indrev.armor.IRArmorMaterial;
-import me.steven.indrev.armor.Module;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
@@ -33,7 +33,7 @@ import java.util.Set;
 public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private int ticks = 0;
     private int lastDamageTick = 0;
-    private final Set<Module> appliedEffects = new HashSet<>();
+    private final Set<ArmorModule> appliedEffects = new HashSet<>();
 
     public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -57,7 +57,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         for (ItemStack itemStack : inventory.armor) {
             Item item = itemStack.getItem();
             if (!(item instanceof IRModularArmor)) continue;
-            int level = Module.Companion.getLevel(itemStack, Module.PROTECTION);
+            int level = ArmorModule.Companion.getLevel(itemStack, ArmorModule.PROTECTION);
             double absorb = amount * (0.25 * (level / 3f));
             if (level > 0
                     && ((IRModularArmor) item).getShield(itemStack) > absorb
@@ -73,8 +73,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     private boolean canUseShield(ItemStack itemStack, DamageSource source) {
-        if (source.equals(DamageSource.FALL)) return Module.Companion.isInstalled(itemStack, Module.FEATHER_FALLING);
-        else if (source.isFire()) return Module.Companion.isInstalled(itemStack, Module.FIRE_RESISTANCE);
+        if (source.equals(DamageSource.FALL)) return ArmorModule.Companion.isInstalled(itemStack, ArmorModule.FEATHER_FALLING);
+        else if (source.isFire()) return ArmorModule.Companion.isInstalled(itemStack, ArmorModule.FIRE_RESISTANCE);
         else return !source.bypassesArmor();
     }
 
@@ -94,13 +94,13 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private void applyArmorEffects() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
-        Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
+        Set<ArmorModule> effectsToRemove = new HashSet<>(appliedEffects);
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof ArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
-                Module[] modules = Module.Companion.getInstalled(itemStack);
-                for (Module module : modules) {
-                    int level = Module.Companion.getLevel(itemStack, module);
+                ArmorModule[] modules = ArmorModule.Companion.getInstalled(itemStack);
+                for (ArmorModule module : modules) {
+                    int level = ArmorModule.Companion.getLevel(itemStack, module);
                     switch (module) {
                         case NIGHT_VISION:
                         case SPEED:
@@ -149,7 +149,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
             }
         }
-        for (Module module : effectsToRemove) {
+        for (ArmorModule module : effectsToRemove) {
             StatusEffectInstance effect = module.getApply().invoke(player, 1);
             if (effect != null)
                 player.removeStatusEffect(effect.getEffectType());

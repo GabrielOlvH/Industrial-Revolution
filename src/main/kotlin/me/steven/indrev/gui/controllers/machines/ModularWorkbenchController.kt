@@ -3,7 +3,7 @@ package me.steven.indrev.gui.controllers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WVerticalProcess
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
@@ -66,7 +66,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val modulesInstalled = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty) {
-                val modules = Module.getInstalled(stack).sumBy { Module.getLevel(stack, it) }.toString()
+                val modules = ArmorModule.getInstalled(stack).sumBy { ArmorModule.getLevel(stack, it) }.toString()
                 TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE).append(LiteralText(modules).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
@@ -75,7 +75,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             val stack = blockInventory.getStack(2)
             val item = stack.item
             if (!stack.isEmpty && item is IRModularArmor) {
-                val shield = item.getMaxShield(Module.getLevel(stack, Module.PROTECTION)).toString()
+                val shield = item.getMaxShield(ArmorModule.getLevel(stack, ArmorModule.PROTECTION)).toString()
                 TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE).append(LiteralText(shield).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)

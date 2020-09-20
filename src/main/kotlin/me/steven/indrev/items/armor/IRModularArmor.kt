@@ -1,7 +1,7 @@
 package me.steven.indrev.items.armor
 
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.armor.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
@@ -21,14 +21,14 @@ import team.reborn.energy.EnergyTier
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
     DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder {
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        val upgrades = Module.getInstalled(stack)
+        val upgrades = ArmorModule.getInstalled(stack)
         if (upgrades.isNotEmpty()) {
             tooltip?.add(TranslatableText("item.indrev.modular_armor.upgrade").formatted(Formatting.GOLD))
             upgrades.forEach { upgrade ->
                 tooltip?.add(
                     TranslatableText(
                         "item.indrev.modular_armor.upgrade.${upgrade.key}",
-                        Module.getLevel(stack, upgrade)
+                        ArmorModule.getLevel(stack, upgrade)
                     ).formatted(Formatting.BLUE)
                 )
             }

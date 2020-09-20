@@ -1,7 +1,7 @@
 package me.steven.indrev.registry
 
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.AcidFluidBlock
 import me.steven.indrev.blocks.NikoliteOreBlock
@@ -334,17 +334,17 @@ object IRRegistry {
     val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
     val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
 
-    val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
-    val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
-    val JUMP_BOOST_MODULE_ITEM = IRModuleItem(Module.JUMP_BOOST, itemSettings().maxCount(1))
-    val BREATHING_MODULE_ITEM = IRModuleItem(Module.BREATHING, itemSettings().maxCount(1))
-    val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
-    val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(Module.FEATHER_FALLING, itemSettings().maxCount(1))
-    val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(Module.AUTO_FEEDER, itemSettings().maxCount(1))
-    val CHARGER_MODULE_ITEM = IRModuleItem(Module.CHARGER, itemSettings().maxCount(1))
-    val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(Module.SOLAR_PANEL, itemSettings().maxCount(1))
-    val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(Module.PIGLIN_TRICKER, itemSettings().maxCount(1))
-    val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(Module.FIRE_RESISTANCE, itemSettings().maxCount(1))
+    val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
+    val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))
+    val JUMP_BOOST_MODULE_ITEM = IRModuleItem(ArmorModule.JUMP_BOOST, itemSettings().maxCount(1))
+    val BREATHING_MODULE_ITEM = IRModuleItem(ArmorModule.BREATHING, itemSettings().maxCount(1))
+    val NIGHT_VISION_MODULE_ITEM = IRModuleItem(ArmorModule.NIGHT_VISION, itemSettings().maxCount(1))
+    val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(ArmorModule.FEATHER_FALLING, itemSettings().maxCount(1))
+    val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(ArmorModule.AUTO_FEEDER, itemSettings().maxCount(1))
+    val CHARGER_MODULE_ITEM = IRModuleItem(ArmorModule.CHARGER, itemSettings().maxCount(1))
+    val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
+    val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
+    val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings().maxCount(1))
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings().maxCount(1))

@@ -2,7 +2,7 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
@@ -31,7 +31,7 @@ object IRHudRender : HudRenderCallback {
                 else -> return@forEach
             }
             if (shouldRenderShield(item.slotType)) {
-                val totalShield = item.getMaxShield(Module.getLevel(itemStack, Module.PROTECTION))
+                val totalShield = item.getMaxShield(ArmorModule.getLevel(itemStack, ArmorModule.PROTECTION))
                 val currentShield = item.getShield(itemStack)
                 var percent = currentShield.toFloat() / totalShield.toFloat()
                 val color = if (percent < 0.35) 0xff0000 else -1

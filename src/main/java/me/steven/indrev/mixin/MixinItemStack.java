@@ -2,7 +2,7 @@ package me.steven.indrev.mixin;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import me.steven.indrev.armor.Module;
+import me.steven.indrev.armor.ArmorModule;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import net.minecraft.entity.EquipmentSlot;
@@ -37,7 +37,7 @@ public abstract class MixinItemStack {
             if (Energy.of(stack).getEnergy() <= 0) {
                 cir.setReturnValue(ImmutableMultimap.of());
             } else if (equipmentSlot == item.getSlotType()) {
-                int level = Module.Companion.getLevel(stack, Module.PROTECTION);
+                int level = ArmorModule.Companion.getLevel(stack, ArmorModule.PROTECTION);
                 UUID uUID = MODIFIERS[equipmentSlot.getEntitySlotId()];
                 ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> attr = ImmutableMultimap.builder();
                 if (level > 0) {

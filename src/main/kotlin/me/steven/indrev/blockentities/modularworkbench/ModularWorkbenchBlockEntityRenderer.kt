@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.utils.identifier
@@ -78,8 +78,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         renderArmorParts(
             matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
         )
-        Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
-            if (module != Module.COLOR) {
+        ArmorModule.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
+            if (module != ArmorModule.COLOR) {
                 renderArmorParts(
                     matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
                 )

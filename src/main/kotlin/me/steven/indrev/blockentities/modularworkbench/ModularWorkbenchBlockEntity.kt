@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
@@ -61,7 +61,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 inventory.setStack(1, ItemStack.EMPTY)
                 val tag = armorStack.orCreateTag
                 when {
-                    module == Module.COLOR -> {
+                    module == ArmorModule.COLOR -> {
                         val colorModuleItem = moduleItem as IRColorModuleItem
                         armorItem.setColor(armorStack, colorModuleItem.color)
                     }
@@ -77,7 +77,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             val tag = armorStack.orCreateTag
             if (tag.contains(module.key)) {
                 val level = tag.getInt(module.key)
-                if (module != Module.COLOR && level >= module.maxLevel) return
+                if (module != ArmorModule.COLOR && level >= module.maxLevel) return
             }
             processTime = 1
             setWorkingState(true)

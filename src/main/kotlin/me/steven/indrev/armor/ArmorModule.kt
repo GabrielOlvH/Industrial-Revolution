@@ -6,7 +6,7 @@ import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.item.ItemStack
 import net.minecraft.server.network.ServerPlayerEntity
 
-enum class Module(
+enum class ArmorModule(
     val key: String,
     val slots: Array<EquipmentSlot>,
     val maxLevel: Int,
@@ -49,9 +49,9 @@ enum class Module(
     COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1, false, false);
 
     companion object {
-        fun isInstalled(stack: ItemStack, upgrade: Module): Boolean = stack.tag?.contains(upgrade.key) == true
+        fun isInstalled(stack: ItemStack, upgrade: ArmorModule): Boolean = stack.tag?.contains(upgrade.key) == true
 
-        fun getInstalled(stack: ItemStack): Array<Module> {
+        fun getInstalled(stack: ItemStack): Array<ArmorModule> {
             val tag = stack.tag ?: return emptyArray()
             return values().filter { module -> module != COLOR }.mapNotNull { module ->
                 if (tag.contains(module.key)) module
@@ -59,7 +59,7 @@ enum class Module(
             }.toTypedArray()
         }
 
-        fun getLevel(stack: ItemStack, upgrade: Module): Int {
+        fun getLevel(stack: ItemStack, upgrade: ArmorModule): Int {
             val tag = stack.tag ?: return 0
             return if (tag.contains(upgrade.key)) tag.getInt(upgrade.key) else 0
         }

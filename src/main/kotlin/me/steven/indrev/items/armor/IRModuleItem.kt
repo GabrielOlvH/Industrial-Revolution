@@ -1,6 +1,6 @@
 package me.steven.indrev.items.armor
 
-import me.steven.indrev.armor.Module
+import me.steven.indrev.armor.ArmorModule
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
@@ -11,7 +11,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
-open class IRModuleItem(val module: Module, settings: Settings) : Item(settings) {
+open class IRModuleItem(val module: ArmorModule, settings: Settings) : Item(settings) {
     override fun appendTooltip(
         stack: ItemStack?,
         world: World?,
@@ -26,7 +26,7 @@ open class IRModuleItem(val module: Module, settings: Settings) : Item(settings)
         )
         tooltip?.add(LiteralText(" "))
         if (Screen.hasShiftDown()) {
-            if (module != Module.COLOR)
+            if (module != ArmorModule.COLOR)
                 tooltip?.add(
                     TranslatableText(
                         "item.indrev.module_max_level",

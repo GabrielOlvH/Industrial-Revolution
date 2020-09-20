@@ -1,6 +1,6 @@
 package me.steven.indrev.mixin;
 
-import me.steven.indrev.armor.Module;
+import me.steven.indrev.armor.ArmorModule;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.item.ArmorItem;
@@ -17,7 +17,7 @@ public class MixinPiglinBrain {
     private static void indrev_hasPiglinTrickerModule(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
         for (ItemStack armorItem : entity.getArmorItems()) {
             if (armorItem.getItem() instanceof ArmorItem
-                    && Module.Companion.isInstalled(armorItem, Module.PIGLIN_TRICKER)
+                    && ArmorModule.Companion.isInstalled(armorItem, ArmorModule.PIGLIN_TRICKER)
                     && Energy.of(armorItem).use(10.0)) {
                 cir.setReturnValue(true);
             }
