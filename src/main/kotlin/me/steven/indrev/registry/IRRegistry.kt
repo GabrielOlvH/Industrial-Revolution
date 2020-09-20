@@ -360,7 +360,7 @@ object IRRegistry {
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
     val GAMER_AXE_ITEM =
-        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 15f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC))
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 16f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC))
 
     val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f))
 
