@@ -1,0 +1,12 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:tin_plates",
+    "count": 4
+  },
+  "output": {
+    "item": "indrev:empty_upgrade",
+    "count": 1
+  },
+  "processTime": 300
+}
