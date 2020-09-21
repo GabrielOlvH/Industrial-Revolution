@@ -2,6 +2,8 @@ package me.steven.indrev.items.energy
 
 import draylar.magna.item.HammerItem
 import me.steven.indrev.tools.modular.DrillModule
+import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
@@ -25,11 +27,11 @@ class IRMiningDrill(
     private val tier: Tier,
     private val maxStored: Double,
     settings: Settings
-) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
+) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
-        val speedMultiplier = DrillModule.SPEED.getLevel(stack) + 1
+        val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
         return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) 8 * speedMultiplier.toFloat()
         else if (!hasEnergy) 0F
         else super.getMiningSpeedMultiplier(stack, state)
@@ -59,7 +61,7 @@ class IRMiningDrill(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        Module.getInstalledTooltip(DrillModule.getInstalled(stack) as Array<Module>, stack, tooltip)
+        Module.getInstalledTooltip(DrillModule.getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 
@@ -78,12 +80,14 @@ class IRMiningDrill(
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
 
-    fun getMaxModules(): Int = when (tier) {
+    override fun getSlotLimit(): Int = when (tier) {
         Tier.MK1 -> 2
         Tier.MK2 -> 6
         Tier.MK3 -> 10
         else -> 14
     }
+
+    override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
 
     override fun getRadius(stack: ItemStack): Int {
         return DrillModule.RANGE.getLevel(stack)

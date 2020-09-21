@@ -21,6 +21,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.DrillModule
+import me.steven.indrev.tools.modular.GamerAxeModule
+import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
@@ -195,9 +197,13 @@ object IRRegistry {
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
         identifier("module_range").item(RANGE_MODULE_ITEM)
-        identifier("module_mining_speed").item(MINING_SPEED_MODULE_ITEM)
+        identifier("module_efficiency").item(EFFICIENCY_MODULE_ITEM)
         identifier("module_fortune").item(FORTUNE_MODULE_ITEM)
         identifier("module_silk_touch").item(SILK_TOUCH_MODULE_ITEM)
+        identifier("module_looting").item(LOOTING_MODULE_ITEM)
+        identifier("module_fire_aspect").item(FIRE_ASPECT_MODULE_ITEM)
+        identifier("module_sharpness").item(SHARPNESS_MODULE_ITEM)
+        identifier("module_reach").item(REACH_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -350,10 +356,14 @@ object IRRegistry {
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
     val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
     val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
-    val MINING_SPEED_MODULE_ITEM = IRModuleItem(DrillModule.SPEED, itemSettings().maxCount(1))
     val SILK_TOUCH_MODULE_ITEM = IRModuleItem(DrillModule.SILK_TOUCH, itemSettings().maxCount(1))
     val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
     val RANGE_MODULE_ITEM = IRModuleItem(DrillModule.RANGE, itemSettings().maxCount(1))
+    val REACH_MODULE_ITEM = IRModuleItem(GamerAxeModule.REACH, itemSettings().maxCount(1))
+    val EFFICIENCY_MODULE_ITEM = IRModuleItem(MiningToolModule.EFFICIENCY, itemSettings().maxCount(1))
+    val LOOTING_MODULE_ITEM = IRModuleItem(GamerAxeModule.LOOTING, itemSettings().maxCount(1))
+    val FIRE_ASPECT_MODULE_ITEM = IRModuleItem(GamerAxeModule.FIRE_ASPECT, itemSettings().maxCount(1))
+    val SHARPNESS_MODULE_ITEM = IRModuleItem(GamerAxeModule.SHARPNESS, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings().maxCount(1))
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings().maxCount(1))

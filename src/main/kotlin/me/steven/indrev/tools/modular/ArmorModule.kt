@@ -3,7 +3,6 @@ package me.steven.indrev.tools.modular
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
@@ -16,8 +15,7 @@ enum class ArmorModule(
     override val maxLevel: Int,
     val hasTexture: Boolean,
     val hasOverlay: Boolean,
-    val apply: (ServerPlayerEntity, Int) -> StatusEffectInstance? = { _, _ -> null },
-    override val isValid: (ItemStack) -> Boolean = { itemStack -> itemStack.item is ArmorItem && slots.contains((itemStack.item as ArmorItem).slotType) }
+    val apply: (ServerPlayerEntity, Int) -> StatusEffectInstance? = { _, _ -> null }
 ) : Module {
     NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, true, true, { _, _ ->
         StatusEffectInstance(StatusEffects.NIGHT_VISION, 1000000, 0, false, false)
@@ -62,11 +60,17 @@ enum class ArmorModule(
     }
 
     companion object {
+        val COMPATIBLE: Array<ArmorModule> = values()
+        val COMPATIBLE_HELMET: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.HEAD) }.toTypedArray()
+        val COMPATIBLE_CHEST: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.CHEST) }.toTypedArray()
+        val COMPATIBLE_LEGS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.LEGS) }.toTypedArray()
+        val COMPATIBLE_BOOTS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.FEET) }.toTypedArray()
+
         fun isInstalled(stack: ItemStack, upgrade: ArmorModule): Boolean = stack.tag?.contains(upgrade.key) == true
 
         fun getInstalled(stack: ItemStack): Array<ArmorModule> {
             val tag = stack.tag ?: return emptyArray()
-            return values().filter { module -> module != COLOR }.mapNotNull { module ->
+            return COMPATIBLE.filter { module -> module != COLOR }.mapNotNull { module ->
                 if (tag.contains(module.key)) module
                 else null
             }.toTypedArray()

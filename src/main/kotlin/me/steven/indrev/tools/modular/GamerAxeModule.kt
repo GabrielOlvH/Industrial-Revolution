@@ -5,22 +5,23 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
-enum class DrillModule(
+enum class GamerAxeModule(
     override val key: String,
     override val maxLevel: Int
 ) : Module {
-    RANGE("range", 5),
-    FORTUNE("fortune", 3),
-    SILK_TOUCH("silk_touch", 1);
+    LOOTING("looting", 3),
+    FIRE_ASPECT("fire_aspect", 1),
+    SHARPNESS("sharpness", 5),//TODO actually implement
+    REACH("reach", 4);//TODO actually implement
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)
         tooltip?.add(TranslatableText("item.indrev.module_parts").formatted(Formatting.BLUE))
-        tooltip?.add(TranslatableText("item.indrev.module_parts_drill").formatted(Formatting.GOLD))
+        tooltip?.add(TranslatableText("item.indrev.module_parts_gamer_axe").formatted(Formatting.GOLD))
     }
 
     companion object {
-        val COMPATIBLE: Array<Module> = arrayOf(RANGE, FORTUNE, SILK_TOUCH, MiningToolModule.EFFICIENCY)
+        val COMPATIBLE: Array<Module> = arrayOf(LOOTING, FIRE_ASPECT, SHARPNESS, REACH, MiningToolModule.EFFICIENCY)
         fun getInstalled(stack: ItemStack): Array<Module> {
             val tag = stack.tag ?: return emptyArray()
             return COMPATIBLE.mapNotNull { module ->
@@ -34,5 +35,4 @@ enum class DrillModule(
             else 0
         }.sum()
     }
-
 }

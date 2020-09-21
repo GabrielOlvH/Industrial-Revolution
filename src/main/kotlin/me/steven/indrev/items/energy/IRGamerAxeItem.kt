@@ -1,5 +1,9 @@
 package me.steven.indrev.items.energy
 
+import me.steven.indrev.tools.modular.GamerAxeModule
+import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.tools.modular.MiningToolModule
+import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
@@ -28,17 +32,17 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem {
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem, IRModularItem {
 
     override fun appendTooltip(
-        stack: ItemStack?,
+        stack: ItemStack,
         world: World?,
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
+        Module.getInstalledTooltip(GamerAxeModule.getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
-
 
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {
@@ -64,8 +68,9 @@ class IRGamerAxeItem(
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val tag = stack.orCreateTag
+        val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
         return if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(stack).energy <= 0) 0f
-        else super.getMiningSpeedMultiplier(stack, state)
+        else 8f * speedMultiplier
     }
 
     override fun hasGlint(stack: ItemStack?): Boolean {
@@ -118,6 +123,10 @@ class IRGamerAxeItem(
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun getSlotLimit(): Int = -1
+
+    override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = GamerAxeModule.COMPATIBLE
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateTag ?: return

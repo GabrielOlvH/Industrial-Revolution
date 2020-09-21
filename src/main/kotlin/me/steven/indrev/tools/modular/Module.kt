@@ -10,7 +10,6 @@ import net.minecraft.util.Formatting
 interface Module {
     val key: String
     val maxLevel: Int
-    val isValid: (ItemStack) -> Boolean
 
     fun isInstalled(itemStack: ItemStack): Boolean {
         val tag = itemStack.orCreateTag

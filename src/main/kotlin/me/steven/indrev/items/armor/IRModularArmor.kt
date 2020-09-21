@@ -2,12 +2,14 @@ package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.ArmorItem
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
@@ -18,7 +20,8 @@ import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRModularItem {
+
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         Module.getInstalledTooltip(ArmorModule.getInstalled(stack) as Array<Module>, stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
@@ -72,6 +75,19 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         val tag = itemStack.tag
         return if (tag?.contains("shield") == false) return 0.0
         else tag!!.getDouble("shield")
+    }
+
+    override fun getSlotLimit(): Int = -1
+
+    override fun getCompatibleModules(itemStack: ItemStack): Array<Module> {
+        val armor = itemStack.item as? ArmorItem ?: return emptyArray()
+        return when (armor.slotType) {
+            EquipmentSlot.HEAD -> ArmorModule.COMPATIBLE_HELMET
+            EquipmentSlot.CHEST -> ArmorModule.COMPATIBLE_CHEST
+            EquipmentSlot.LEGS -> ArmorModule.COMPATIBLE_LEGS
+            EquipmentSlot.FEET -> ArmorModule.COMPATIBLE_BOOTS
+            else -> return emptyArray()
+        }
     }
 
     companion object {
