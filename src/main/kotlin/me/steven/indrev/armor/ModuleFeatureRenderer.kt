@@ -1,6 +1,7 @@
 package me.steven.indrev.armor
 
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer

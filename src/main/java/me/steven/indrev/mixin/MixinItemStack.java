@@ -2,9 +2,9 @@ package me.steven.indrev.mixin;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import me.steven.indrev.armor.ArmorModule;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
+import me.steven.indrev.tools.modular.ArmorModule;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;

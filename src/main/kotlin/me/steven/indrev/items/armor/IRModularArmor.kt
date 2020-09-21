@@ -1,8 +1,8 @@
 package me.steven.indrev.items.armor
 
-import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.tools.Module
+import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext

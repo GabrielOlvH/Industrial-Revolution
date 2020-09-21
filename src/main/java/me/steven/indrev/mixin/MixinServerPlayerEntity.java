@@ -1,11 +1,11 @@
 package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
-import me.steven.indrev.armor.ArmorModule;
 import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
+import me.steven.indrev.tools.modular.ArmorModule;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;

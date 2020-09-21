@@ -1,6 +1,6 @@
 package me.steven.indrev.items.armor
 
-import me.steven.indrev.tools.Module
+import me.steven.indrev.tools.modular.Module
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item

@@ -1,8 +1,8 @@
-package me.steven.indrev.items.miningdrill
+package me.steven.indrev.items.energy
 
 import draylar.magna.item.HammerItem
-import me.steven.indrev.items.energy.IREnergyItem
-import me.steven.indrev.tools.Module
+import me.steven.indrev.tools.modular.DrillModule
+import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState

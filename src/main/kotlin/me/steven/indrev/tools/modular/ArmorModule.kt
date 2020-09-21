@@ -1,6 +1,5 @@
-package me.steven.indrev.armor
+package me.steven.indrev.tools.modular
 
-import me.steven.indrev.tools.Module
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects

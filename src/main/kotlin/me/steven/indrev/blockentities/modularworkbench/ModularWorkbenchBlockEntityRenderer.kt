@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.client.render.OverlayTexture

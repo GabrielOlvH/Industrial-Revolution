@@ -1,6 +1,6 @@
-package me.steven.indrev.items.miningdrill
+package me.steven.indrev.tools.modular
 
-import me.steven.indrev.tools.Module
+import me.steven.indrev.items.energy.IRMiningDrill
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText

@@ -1,6 +1,6 @@
 package me.steven.indrev.mixin;
 
-import me.steven.indrev.armor.ArmorModule;
+import me.steven.indrev.tools.modular.ArmorModule;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.item.ArmorItem;

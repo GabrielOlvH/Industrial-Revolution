@@ -1,6 +1,5 @@
-package me.steven.indrev.tools
+package me.steven.indrev.tools.modular
 
-import me.steven.indrev.armor.ArmorModule
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText

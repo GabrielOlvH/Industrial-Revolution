@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.AcidFluidBlock
@@ -13,14 +12,15 @@ import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.energy.IRBatteryItem
 import me.steven.indrev.items.energy.IRGamerAxeItem
+import me.steven.indrev.items.energy.IRMiningDrill
 import me.steven.indrev.items.energy.IRPortableChargerItem
-import me.steven.indrev.items.miningdrill.DrillModule
-import me.steven.indrev.items.miningdrill.IRMiningDrill
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
+import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder

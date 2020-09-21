@@ -2,8 +2,8 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient

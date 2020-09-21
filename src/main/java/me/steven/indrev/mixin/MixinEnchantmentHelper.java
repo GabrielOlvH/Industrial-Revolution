@@ -1,8 +1,8 @@
 package me.steven.indrev.mixin;
 
-import me.steven.indrev.items.miningdrill.DrillModule;
-import me.steven.indrev.items.miningdrill.IRMiningDrill;
-import me.steven.indrev.tools.Module;
+import me.steven.indrev.items.energy.IRMiningDrill;
+import me.steven.indrev.tools.modular.DrillModule;
+import me.steven.indrev.tools.modular.Module;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;

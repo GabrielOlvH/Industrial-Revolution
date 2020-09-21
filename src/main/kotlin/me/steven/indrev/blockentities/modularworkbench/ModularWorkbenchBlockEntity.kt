@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
@@ -9,6 +8,7 @@ import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
