@@ -2,6 +2,7 @@ package me.steven.indrev.items.armor
 
 import me.steven.indrev.armor.ArmorModule
 import me.steven.indrev.armor.IRArmorMaterial
+import me.steven.indrev.tools.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
@@ -10,8 +11,6 @@ import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
@@ -21,18 +20,7 @@ import team.reborn.energy.EnergyTier
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
     DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder {
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        val upgrades = ArmorModule.getInstalled(stack)
-        if (upgrades.isNotEmpty()) {
-            tooltip?.add(TranslatableText("item.indrev.modular_armor.upgrade").formatted(Formatting.GOLD))
-            upgrades.forEach { upgrade ->
-                tooltip?.add(
-                    TranslatableText(
-                        "item.indrev.modular_armor.upgrade.${upgrade.key}",
-                        ArmorModule.getLevel(stack, upgrade)
-                    ).formatted(Formatting.BLUE)
-                )
-            }
-        }
+        Module.getInstalledTooltip(ArmorModule.getInstalled(stack) as Array<Module>, stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 

@@ -1,5 +1,8 @@
-package me.steven.indrev.items.energy
+package me.steven.indrev.items.miningdrill
 
+import draylar.magna.item.HammerItem
+import me.steven.indrev.items.energy.IREnergyItem
+import me.steven.indrev.tools.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
@@ -8,7 +11,6 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
-import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
@@ -22,13 +24,13 @@ class IRMiningDrill(
     toolMaterial: ToolMaterial,
     private val tier: Tier,
     private val maxStored: Double,
-    private val miningSpeedMultiplier: Float,
     settings: Settings
-) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
+) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
-        return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) miningSpeedMultiplier
+        val speedMultiplier = DrillModule.SPEED.getLevel(stack) + 1
+        return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) 8 * speedMultiplier.toFloat()
         else if (!hasEnergy) 0F
         else super.getMiningSpeedMultiplier(stack, state)
     }
@@ -52,11 +54,12 @@ class IRMiningDrill(
     }
 
     override fun appendTooltip(
-        stack: ItemStack?,
+        stack: ItemStack,
         world: World?,
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
+        Module.getInstalledTooltip(DrillModule.getInstalled(stack) as Array<Module>, stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 
@@ -73,6 +76,17 @@ class IRMiningDrill(
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+    }
+
+    fun getMaxModules(): Int = when (tier) {
+        Tier.MK1 -> 2
+        Tier.MK2 -> 6
+        Tier.MK3 -> 10
+        else -> 14
+    }
+
+    override fun getRadius(stack: ItemStack): Int {
+        return DrillModule.RANGE.getLevel(stack)
     }
 
     companion object {

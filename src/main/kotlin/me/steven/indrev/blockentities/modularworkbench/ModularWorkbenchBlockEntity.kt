@@ -26,7 +26,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
-                    item is IRModularArmor -> slot == 2
+                    stack != null && inventory.getStack(1).item is IRModuleItem && (inventory.getStack(1).item as IRModuleItem).module.isValid(stack) -> slot == 2
                     Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     slot == 1 -> item is IRModuleItem
                     else -> false
@@ -40,30 +40,32 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
-        val armorStack = inventory.getStack(2)
+        val targetStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
-        if (armorStack.item !is IRModularArmor || moduleStack.item !is IRModuleItem) {
+        if (moduleStack.item !is IRModuleItem) {
             processTime = 0
             return
         }
-        val armorItem = armorStack.item as IRModularArmor
+        //val armorItem = armorStack.item as IRModularArmor
+        val targetItem = targetStack.item
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
         if (inventory.isEmpty) {
             processTime = 0
             setWorkingState(false)
         } else if (isProcessing()
-            && module.slots.contains(armorItem.slotType)
+            && module.isValid(targetStack)
             && Energy.of(this).use(config.energyCost)) {
             setWorkingState(true)
             processTime += config.processSpeed.toInt()
             if (processTime >= 1200) {
                 inventory.setStack(1, ItemStack.EMPTY)
-                val tag = armorStack.orCreateTag
+                val tag = targetStack.orCreateTag
                 when {
                     module == ArmorModule.COLOR -> {
+                        if (targetItem !is IRModularArmor) return
                         val colorModuleItem = moduleItem as IRColorModuleItem
-                        armorItem.setColor(armorStack, colorModuleItem.color)
+                        targetItem.setColor(targetStack, colorModuleItem.color)
                     }
                     tag.contains(module.key) -> {
                         val level = tag.getInt(module.key) + 1
@@ -73,8 +75,8 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 }
                 processTime = 0
             }
-        } else if (energy > 0 && !armorStack.isEmpty && !moduleStack.isEmpty && module.slots.contains(armorItem.slotType)) {
-            val tag = armorStack.orCreateTag
+        } else if (energy > 0 && !targetStack.isEmpty && !moduleStack.isEmpty && module.isValid(targetStack)) {
+            val tag = targetStack.orCreateTag
             if (tag.contains(module.key)) {
                 val level = tag.getInt(module.key)
                 if (module != ArmorModule.COLOR && level >= module.maxLevel) return

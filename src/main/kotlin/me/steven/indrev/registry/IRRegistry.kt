@@ -13,8 +13,9 @@ import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.energy.IRBatteryItem
 import me.steven.indrev.items.energy.IRGamerAxeItem
-import me.steven.indrev.items.energy.IRMiningDrill
 import me.steven.indrev.items.energy.IRPortableChargerItem
+import me.steven.indrev.items.miningdrill.DrillModule
+import me.steven.indrev.items.miningdrill.IRMiningDrill
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -193,6 +194,10 @@ object IRRegistry {
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
+        identifier("module_range").item(RANGE_MODULE_ITEM)
+        identifier("module_mining_speed").item(MINING_SPEED_MODULE_ITEM)
+        identifier("module_fortune").item(FORTUNE_MODULE_ITEM)
+        identifier("module_silk_touch").item(SILK_TOUCH_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -235,13 +240,13 @@ object IRRegistry {
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, itemSettings().maxDamage(4000))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, itemSettings().maxDamage(8000))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000))
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, itemSettings().maxDamage(16000))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 50f, itemSettings().maxDamage(32000)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(32000)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
@@ -345,6 +350,10 @@ object IRRegistry {
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
     val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
     val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
+    val MINING_SPEED_MODULE_ITEM = IRModuleItem(DrillModule.SPEED, itemSettings().maxCount(1))
+    val SILK_TOUCH_MODULE_ITEM = IRModuleItem(DrillModule.SILK_TOUCH, itemSettings().maxCount(1))
+    val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
+    val RANGE_MODULE_ITEM = IRModuleItem(DrillModule.RANGE, itemSettings().maxCount(1))
 
     val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings().maxCount(1))
     val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings().maxCount(1))

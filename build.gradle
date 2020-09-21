@@ -52,12 +52,13 @@ repositories {
             includeGroup "vazkii.patchouli"
         }
     }
-    //maven {
-        //url = "https://jitpack.io"
-        //content {
+    maven {
+        url = "https://jitpack.io"
+        content {
             //includeGroup "com.github.KubeJS-Mods"
-        //}
-    //}
+            includeGroup "com.github.Draylar"
+        }
+    }
     maven {
         name "Modmaven"
         url "https://modmaven.k-4u.nl/"
@@ -125,6 +126,12 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
+    modApi("com.github.Draylar:magna:${project.magna_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include("com.github.Draylar:magna:${project.magna_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
     //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
     modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.9"
     //modRuntime 'RebornCore:RebornCore-1.16:+'

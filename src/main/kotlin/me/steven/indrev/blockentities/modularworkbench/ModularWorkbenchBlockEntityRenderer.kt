@@ -39,23 +39,25 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         light: Int,
         overlay: Int
     ) {
-        val armor = entity?.inventoryComponent?.inventory?.getStack(2)
-        if (armor?.isEmpty == false) {
+        val itemStack = entity?.inventoryComponent?.inventory?.getStack(2)
+        if (itemStack?.isEmpty == false) {
             matrices.run {
                 push()
-                val yOffset = when ((armor.item as IRModularArmor).slotType) {
-                    EquipmentSlot.HEAD -> 1.0
-                    EquipmentSlot.CHEST -> 1.5
-                    EquipmentSlot.LEGS -> 1.7
-                    EquipmentSlot.FEET -> 2.0
-                    else -> -1.0
-                }
+                val yOffset = if (itemStack.item is IRModularArmor) {
+                    when ((itemStack.item as IRModularArmor).slotType) {
+                        EquipmentSlot.HEAD -> 1.0
+                        EquipmentSlot.CHEST -> 1.5
+                        EquipmentSlot.LEGS -> 1.7
+                        EquipmentSlot.FEET -> 2.0
+                        else -> -1.0
+                    }
+                } else 0.0
                 val time = entity.world?.time ?: 1
                 translate(0.5, yOffset, 0.5)
                 multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
                 multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
                 val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
-                renderArmor(this, vertexConsumers, armor, lightMapCoords)
+                renderArmor(this, vertexConsumers, itemStack, lightMapCoords)
                 pop()
             }
         }
