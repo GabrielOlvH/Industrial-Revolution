@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.tools.modular.ArmorModule;
+import me.steven.indrev.tools.modular.GamerAxeModule;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -28,6 +29,8 @@ import java.util.function.Consumer;
 @Mixin(ItemStack.class)
 public abstract class MixinItemStack {
     private static final UUID[] MODIFIERS = new UUID[]{UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"), UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"), UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"), UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")};
+    private static final UUID ATTACK_DAMAGE_MODIFIER_ID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF");
+    private static final UUID ATTACK_SPEED_MODIFIER_ID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3");
 
     @Inject(method = "getAttributeModifiers", at = @At("TAIL"), cancellable = true)
     private void indrev_calcAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> cir) {
@@ -52,6 +55,12 @@ public abstract class MixinItemStack {
             CompoundTag tag = stack.getOrCreateTag();
             if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(stack).getEnergy() <= 0)
                 cir.setReturnValue(ImmutableMultimap.of());
+            else if (equipmentSlot == EquipmentSlot.MAINHAND) {
+                ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+                builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Tool modifier", ((IRGamerAxeItem) stack.getItem()).getAttackDamage() * ((GamerAxeModule.SHARPNESS.getLevel(stack) / 2f) + 1), EntityAttributeModifier.Operation.ADDITION));
+                builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Tool modifier", -2f, EntityAttributeModifier.Operation.ADDITION));
+                cir.setReturnValue(builder.build());
+            }
         }
     }
 

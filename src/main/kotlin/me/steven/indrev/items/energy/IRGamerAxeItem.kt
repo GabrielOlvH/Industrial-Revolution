@@ -21,6 +21,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import team.reborn.energy.*
@@ -67,9 +68,8 @@ class IRGamerAxeItem(
     }
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
-        val tag = stack.orCreateTag
         val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
-        return if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(stack).energy <= 0) 0f
+        return if (!isActive(stack) || Energy.of(stack).energy <= 0) 0f
         else 8f * speedMultiplier
     }
 
@@ -84,9 +84,7 @@ class IRGamerAxeItem(
         pos: BlockPos,
         miner: LivingEntity
     ): Boolean {
-        val tag = stack.orCreateTag
-        val isActive = tag.contains("Active") && tag.getBoolean("Active")
-        if (!isActive) return false
+        if (!isActive(stack)) return false
         val energyHandler = Energy.of(stack)
         val canStart = energyHandler.use(1.0)
         if (canStart && !miner.isSneaking && state.block.isIn(BlockTags.LOGS)) {
@@ -112,7 +110,19 @@ class IRGamerAxeItem(
         }
     }
 
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
+    override fun postHit(stack: ItemStack, target: LivingEntity?, attacker: LivingEntity?): Boolean {
+        val level = GamerAxeModule.REACH.getLevel(stack)
+        val handler = Energy.of(stack)
+        if (attacker is PlayerEntity && isActive(stack) && level > 0) {
+            target?.world?.getEntitiesByClass(LivingEntity::class.java, Box(target.blockPos).expand(level.toDouble())) { true }?.forEach { entity ->
+                if (handler.use(1.0)) {
+                    attacker.resetLastAttackedTicks()
+                    attacker.attack(entity)
+                }
+            }
+        }
+        return handler.use(1.0)
+    }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
@@ -127,6 +137,12 @@ class IRGamerAxeItem(
     override fun getSlotLimit(): Int = -1
 
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = GamerAxeModule.COMPATIBLE
+
+    fun isActive(stack: ItemStack): Boolean {
+        val tag = stack.orCreateTag ?: return false
+        if (!tag.contains("Active")) return false
+        return tag.getBoolean("Active")
+    }
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateTag ?: return
