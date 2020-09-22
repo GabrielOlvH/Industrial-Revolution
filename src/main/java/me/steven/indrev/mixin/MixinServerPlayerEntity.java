@@ -42,6 +42,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void indrev_applyEffects(CallbackInfo ci) {
         ticks++;
+
         if (ticks % 40 == 0) {
             applyArmorEffects();
             useActiveAxeEnergy();
@@ -49,7 +50,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
-    private float indrev_absorbExplosionDamage(float amount, DamageSource source) {
+    private float indrev_absorbDamage(float amount, DamageSource source) {
         lastDamageTick = ticks;
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
@@ -63,7 +64,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                     && ((IRModularArmor) item).getShield(itemStack) > absorb
                     && canUseShield(itemStack, source)
             ) {
-                if (source.equals(DamageSource.FALL) || source.isFire())
+                if (source.equals(DamageSource.FALL))
                     damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, amount);
                 else
                     damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, absorb);
@@ -74,7 +75,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
 
     private boolean canUseShield(ItemStack itemStack, DamageSource source) {
         if (source.equals(DamageSource.FALL)) return ArmorModule.Companion.isInstalled(itemStack, ArmorModule.FEATHER_FALLING);
-        else if (source.isFire()) return ArmorModule.Companion.isInstalled(itemStack, ArmorModule.FIRE_RESISTANCE);
+        else if (source.isFire()) return false;
         else return !source.bypassesArmor();
     }
 

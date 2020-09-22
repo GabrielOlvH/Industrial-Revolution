@@ -1,6 +1,7 @@
 package me.steven.indrev.items.energy
 
 import draylar.magna.item.HammerItem
+import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
@@ -10,6 +11,8 @@ import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
@@ -27,7 +30,7 @@ class IRMiningDrill(
     private val tier: Tier,
     private val maxStored: Double,
     settings: Settings
-) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem {
+) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem, CustomEnchantmentProvider {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
@@ -91,6 +94,16 @@ class IRMiningDrill(
 
     override fun getRadius(stack: ItemStack): Int {
         return DrillModule.RANGE.getLevel(stack)
+    }
+
+    override fun getLevel(enchantment: Enchantment, itemStack: ItemStack): Int {
+        val module =
+            when {
+                Enchantments.FORTUNE == enchantment -> DrillModule.FORTUNE
+                Enchantments.SILK_TOUCH == enchantment -> DrillModule.SILK_TOUCH
+                else -> return 0
+            }
+        return module.getLevel(itemStack)
     }
 
     companion object {
