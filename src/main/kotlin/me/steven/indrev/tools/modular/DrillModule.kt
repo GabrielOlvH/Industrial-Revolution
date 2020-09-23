@@ -21,18 +21,5 @@ enum class DrillModule(
 
     companion object {
         val COMPATIBLE: Array<Module> = arrayOf(RANGE, FORTUNE, SILK_TOUCH, MiningToolModule.EFFICIENCY)
-        fun getInstalled(stack: ItemStack): Array<Module> {
-            val tag = stack.tag ?: return emptyArray()
-            return COMPATIBLE.mapNotNull { module ->
-                if (tag.contains(module.key)) module
-                else null
-            }.toTypedArray()
-        }
-        fun getCount(stack: ItemStack): Int = COMPATIBLE.map { module ->
-            val tag = stack.orCreateTag
-            if (tag.contains(module.key)) tag.getInt(module.key)
-            else 0
-        }.sum()
     }
-
 }

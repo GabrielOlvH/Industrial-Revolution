@@ -11,6 +11,7 @@ import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -66,7 +67,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val modulesInstalled = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty) {
-                val modules = ArmorModule.getInstalled(stack).sumBy { it.getLevel(stack) }.toString()
+                val modules = Module.getCount(stack).toString()
                 TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE).append(LiteralText(modules).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)

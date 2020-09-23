@@ -33,6 +33,15 @@ interface Module {
     }
 
     companion object {
+        @Suppress("UNCHECKED_CAST")
+        inline fun <reified T : Module> getInstalled(stack: ItemStack): Array<T> {
+            val tag = stack.tag ?: return emptyArray()
+            val item = stack.item as? IRModularItem ?: return emptyArray()
+            return item.getCompatibleModules(stack).filter { module -> module != ArmorModule.COLOR }.mapNotNull { module ->
+                if (tag.contains(module.key)) module
+                else null
+            }.toTypedArray() as Array<T>
+        }
         fun getInstalledTooltip(upgrades: Array<Module>, stack: ItemStack, tooltip: MutableList<Text>?) {
             if (upgrades.isNotEmpty()) {
                 tooltip?.add(TranslatableText("item.indrev.modular.upgrade").formatted(Formatting.GOLD))
@@ -41,6 +50,14 @@ interface Module {
                     tooltip?.add(text.formatted(Formatting.BLUE))
                 }
             }
+        }
+        fun getCount(stack: ItemStack): Int {
+            val item = stack.item as? IRModularItem ?: return 0
+            return item.getCompatibleModules(stack).map { module ->
+                val tag = stack.orCreateTag
+                if (tag.contains(module.key)) tag.getInt(module.key)
+                else 0
+            }.sum()
         }
     }
 }

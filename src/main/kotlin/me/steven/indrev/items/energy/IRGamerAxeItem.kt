@@ -53,7 +53,7 @@ class IRGamerAxeItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        Module.getInstalledTooltip(GamerAxeModule.getInstalled(stack), stack, tooltip)
+        Module.getInstalledTooltip(Module.getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 

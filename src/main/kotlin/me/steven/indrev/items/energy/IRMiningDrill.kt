@@ -64,7 +64,7 @@ class IRMiningDrill(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        Module.getInstalledTooltip(DrillModule.getInstalled(stack), stack, tooltip)
+        Module.getInstalledTooltip(Module.getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 

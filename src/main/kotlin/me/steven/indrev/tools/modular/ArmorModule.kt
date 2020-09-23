@@ -66,12 +66,6 @@ enum class ArmorModule(
         val COMPATIBLE_LEGS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.LEGS) }.toTypedArray()
         val COMPATIBLE_BOOTS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.FEET) }.toTypedArray()
 
-        fun getInstalled(stack: ItemStack): Array<ArmorModule> {
-            val tag = stack.tag ?: return emptyArray()
-            return COMPATIBLE.filter { module -> module != COLOR }.mapNotNull { module ->
-                if (tag.contains(module.key)) module
-                else null
-            }.toTypedArray()
-        }
+        fun getInstalled(stack: ItemStack): Array<ArmorModule> = Module.getInstalled(stack)
     }
 }
