@@ -12,8 +12,7 @@ interface Module {
     val maxLevel: Int
 
     fun isInstalled(itemStack: ItemStack): Boolean {
-        val tag = itemStack.orCreateTag
-        return tag.contains(key)
+        return itemStack.orCreateTag.contains(key)
     }
 
     fun getLevel(itemStack: ItemStack): Int {
@@ -34,7 +33,6 @@ interface Module {
     }
 
     companion object {
-
         fun getInstalledTooltip(upgrades: Array<Module>, stack: ItemStack, tooltip: MutableList<Text>?) {
             if (upgrades.isNotEmpty()) {
                 tooltip?.add(TranslatableText("item.indrev.modular.upgrade").formatted(Formatting.GOLD))

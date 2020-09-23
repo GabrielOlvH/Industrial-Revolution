@@ -17,7 +17,7 @@ public class MixinPiglinBrain {
     private static void indrev_hasPiglinTrickerModule(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
         for (ItemStack armorItem : entity.getArmorItems()) {
             if (armorItem.getItem() instanceof ArmorItem
-                    && ArmorModule.Companion.isInstalled(armorItem, ArmorModule.PIGLIN_TRICKER)
+                    && ArmorModule.PIGLIN_TRICKER.isInstalled(armorItem)
                     && Energy.of(armorItem).use(10.0)) {
                 cir.setReturnValue(true);
             }

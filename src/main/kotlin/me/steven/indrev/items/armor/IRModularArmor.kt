@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.tools.modular.ArmorModule
-import me.steven.indrev.tools.modular.ArmorModule.Companion.getLevel
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
@@ -106,7 +105,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         if (Energy.of(itemStack).energy <= 0) {
             return ImmutableMultimap.of()
         } else if (equipmentSlot == item.slotType) {
-            val level = getLevel(itemStack, ArmorModule.PROTECTION).toDouble()
+            val level = ArmorModule.PROTECTION.getLevel(itemStack).toDouble()
             val uUID = MODIFIERS[equipmentSlot.entitySlotId]
             val attr = ImmutableMultimap.builder<EntityAttribute, EntityAttributeModifier>()
             if (level > 0) {

@@ -66,7 +66,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val modulesInstalled = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty) {
-                val modules = ArmorModule.getInstalled(stack).sumBy { ArmorModule.getLevel(stack, it) }.toString()
+                val modules = ArmorModule.getInstalled(stack).sumBy { it.getLevel(stack) }.toString()
                 TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE).append(LiteralText(modules).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)
@@ -75,7 +75,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             val stack = blockInventory.getStack(2)
             val item = stack.item
             if (!stack.isEmpty && item is IRModularArmor) {
-                val shield = item.getMaxShield(ArmorModule.getLevel(stack, ArmorModule.PROTECTION)).toString()
+                val shield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(stack)).toString()
                 TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE).append(LiteralText(shield).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY
         }, HorizontalAlignment.LEFT)

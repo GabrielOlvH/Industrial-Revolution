@@ -58,7 +58,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         for (ItemStack itemStack : inventory.armor) {
             Item item = itemStack.getItem();
             if (!(item instanceof IRModularArmor)) continue;
-            int level = ArmorModule.Companion.getLevel(itemStack, ArmorModule.PROTECTION);
+            int level = ArmorModule.PROTECTION.getLevel(itemStack);
             double absorb = amount * (0.25 * (level / 3f));
             if (level > 0
                     && ((IRModularArmor) item).getShield(itemStack) > absorb
@@ -74,7 +74,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     private boolean canUseShield(ItemStack itemStack, DamageSource source) {
-        if (source.equals(DamageSource.FALL)) return ArmorModule.Companion.isInstalled(itemStack, ArmorModule.FEATHER_FALLING);
+        if (source.equals(DamageSource.FALL)) return ArmorModule.FEATHER_FALLING.isInstalled(itemStack);
         else if (source.isFire()) return false;
         else return !source.bypassesArmor();
     }
@@ -101,7 +101,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
             if (itemStack.getItem() instanceof ArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
                 ArmorModule[] modules = ArmorModule.Companion.getInstalled(itemStack);
                 for (ArmorModule module : modules) {
-                    int level = ArmorModule.Companion.getLevel(itemStack, module);
+                    int level = module.getLevel(itemStack);
                     switch (module) {
                         case NIGHT_VISION:
                         case SPEED:

@@ -31,7 +31,7 @@ object IRHudRender : HudRenderCallback {
                 else -> return@forEach
             }
             if (shouldRenderShield(item.slotType)) {
-                val totalShield = item.getMaxShield(ArmorModule.getLevel(itemStack, ArmorModule.PROTECTION))
+                val totalShield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack))
                 val currentShield = item.getShield(itemStack)
                 var percent = currentShield.toFloat() / totalShield.toFloat()
                 val color = if (percent < 0.35) 0xff0000 else -1

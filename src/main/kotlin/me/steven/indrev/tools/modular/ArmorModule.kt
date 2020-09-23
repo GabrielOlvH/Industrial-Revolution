@@ -66,19 +66,12 @@ enum class ArmorModule(
         val COMPATIBLE_LEGS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.LEGS) }.toTypedArray()
         val COMPATIBLE_BOOTS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.FEET) }.toTypedArray()
 
-        fun isInstalled(stack: ItemStack, upgrade: ArmorModule): Boolean = stack.tag?.contains(upgrade.key) == true
-
         fun getInstalled(stack: ItemStack): Array<ArmorModule> {
             val tag = stack.tag ?: return emptyArray()
             return COMPATIBLE.filter { module -> module != COLOR }.mapNotNull { module ->
                 if (tag.contains(module.key)) module
                 else null
             }.toTypedArray()
-        }
-
-        fun getLevel(stack: ItemStack, upgrade: ArmorModule): Int {
-            val tag = stack.tag ?: return 0
-            return if (tag.contains(upgrade.key)) tag.getInt(upgrade.key) else 0
         }
     }
 }
