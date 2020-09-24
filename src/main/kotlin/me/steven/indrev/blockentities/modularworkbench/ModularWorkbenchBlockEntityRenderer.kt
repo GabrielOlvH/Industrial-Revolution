@@ -80,7 +80,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         renderArmorParts(
             matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
         )
-        ArmorModule.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
+        item.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
             if (module != ArmorModule.COLOR) {
                 renderArmorParts(
                     matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key

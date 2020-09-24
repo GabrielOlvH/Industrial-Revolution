@@ -27,7 +27,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
                 val item = stack?.item
                 when {
-                    stack != null && inventory.getStack(1).item is IRModuleItem && item is IRModularItem && item.getCompatibleModules(stack).contains((inventory.getStack(1).item as IRModuleItem).module) -> slot == 2
+                    stack != null && inventory.getStack(1).item is IRModuleItem && item is IRModularItem<*> && item.getCompatibleModules(stack).contains((inventory.getStack(1).item as IRModuleItem).module) -> slot == 2
                     Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
                     slot == 1 -> item is IRModuleItem
                     else -> false
@@ -43,12 +43,12 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
         val inventory = inventoryComponent?.inventory ?: return
         val targetStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
-        if (moduleStack.item !is IRModuleItem || targetStack.item !is IRModularItem) {
+        if (moduleStack.item !is IRModuleItem || targetStack.item !is IRModularItem<*>) {
             processTime = 0
             return
         }
         //val armorItem = armorStack.item as IRModularArmor
-        val targetItem = targetStack.item as IRModularItem
+        val targetItem = targetStack.item as IRModularItem<*>
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
         val compatible = targetItem.getCompatibleModules(targetStack)

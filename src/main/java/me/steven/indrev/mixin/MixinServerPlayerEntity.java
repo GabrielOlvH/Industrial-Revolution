@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import team.reborn.energy.Energy;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayerEntity.class)
@@ -98,8 +99,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         Set<ArmorModule> effectsToRemove = new HashSet<>(appliedEffects);
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
-            if (itemStack.getItem() instanceof ArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
-                ArmorModule[] modules = ArmorModule.Companion.getInstalled(itemStack);
+            if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
+                List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);//ArmorModule.Companion.getInstalled(itemStack);
                 for (ArmorModule module : modules) {
                     int level = module.getLevel(itemStack);
                     switch (module) {

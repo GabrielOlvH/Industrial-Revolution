@@ -45,7 +45,7 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem, IRModularItem, AttributeModifierProvider, CustomEnchantmentProvider {
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider {
 
     override fun appendTooltip(
         stack: ItemStack,
@@ -53,7 +53,7 @@ class IRGamerAxeItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        Module.getInstalledTooltip(Module.getInstalled(stack), stack, tooltip)
+        getInstalledTooltip(getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 

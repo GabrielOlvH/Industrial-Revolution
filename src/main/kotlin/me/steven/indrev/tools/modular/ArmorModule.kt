@@ -61,11 +61,9 @@ enum class ArmorModule(
 
     companion object {
         val COMPATIBLE: Array<ArmorModule> = values()
-        val COMPATIBLE_HELMET: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.HEAD) }.toTypedArray()
-        val COMPATIBLE_CHEST: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.CHEST) }.toTypedArray()
-        val COMPATIBLE_LEGS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.LEGS) }.toTypedArray()
-        val COMPATIBLE_BOOTS: Array<Module> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.FEET) }.toTypedArray()
-
-        fun getInstalled(stack: ItemStack): Array<ArmorModule> = Module.getInstalled(stack)
+        val COMPATIBLE_HELMET: Array<ArmorModule> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.HEAD) }.toTypedArray()
+        val COMPATIBLE_CHEST: Array<ArmorModule> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.CHEST) }.toTypedArray()
+        val COMPATIBLE_LEGS: Array<ArmorModule> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.LEGS) }.toTypedArray()
+        val COMPATIBLE_BOOTS: Array<ArmorModule> = COMPATIBLE.filter { it.slots.contains(EquipmentSlot.FEET) }.toTypedArray()
     }
 }

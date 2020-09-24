@@ -30,7 +30,7 @@ class IRMiningDrill(
     private val tier: Tier,
     private val maxStored: Double,
     settings: Settings
-) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem, CustomEnchantmentProvider {
+) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem<Module>, CustomEnchantmentProvider {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
@@ -64,7 +64,7 @@ class IRMiningDrill(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        Module.getInstalledTooltip(Module.getInstalled(stack), stack, tooltip)
+        getInstalledTooltip(getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 
