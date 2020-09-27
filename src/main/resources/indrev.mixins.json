@@ -17,7 +17,8 @@
     "MixinServerPlayerEntity"
   ],
   "client": [
-    "MixinPlayerEntityRenderer"
+    "MixinPlayerEntityRenderer",
+    "MixinWItemSlot"
   ],
   "injectors": {
     "defaultRequire": 1
