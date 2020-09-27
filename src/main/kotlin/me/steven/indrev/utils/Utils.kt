@@ -14,6 +14,7 @@ import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.gui.widgets.machines.WFluid
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
@@ -86,7 +87,7 @@ fun <T : ScreenHandler> Identifier.registerScreenHandler(
 fun Box.isSide(vec3d: Vec3d) =
     vec3d.x == minX || vec3d.x == maxX - 1 || vec3d.y == minY || vec3d.y == maxY - 1 || vec3d.z == minZ || vec3d.z == maxZ - 1
 
-fun itemSettings(): Item.Settings = Item.Settings().group(IndustrialRevolution.MOD_GROUP)
+fun itemSettings(): FabricItemSettings = FabricItemSettings().group(IndustrialRevolution.MOD_GROUP)
 
 fun IntRange.toIntArray(): IntArray = this.map { it }.toIntArray()
 

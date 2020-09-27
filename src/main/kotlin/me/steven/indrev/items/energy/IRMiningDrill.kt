@@ -14,11 +14,9 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
-import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
@@ -38,24 +36,6 @@ class IRMiningDrill(
         return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) 8 * speedMultiplier.toFloat()
         else if (!hasEnergy) 0F
         else super.getMiningSpeedMultiplier(stack, state)
-    }
-
-    override fun postMine(
-        stack: ItemStack,
-        world: World?,
-        state: BlockState?,
-        pos: BlockPos?,
-        miner: LivingEntity?
-    ): Boolean {
-        if (world?.isClient == false)
-            Energy.of(stack).use(1.0)
-        return true
-    }
-
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
-        if (target?.world?.isClient == false)
-            Energy.of(stack).use(2.0)
-        return true
     }
 
     override fun appendTooltip(
@@ -92,9 +72,7 @@ class IRMiningDrill(
 
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
 
-    override fun getRadius(stack: ItemStack): Int {
-        return DrillModule.RANGE.getLevel(stack)
-    }
+    override fun getRadius(stack: ItemStack): Int = DrillModule.RANGE.getLevel(stack)
 
     override fun getLevel(enchantment: Enchantment, itemStack: ItemStack): Int {
         val module =

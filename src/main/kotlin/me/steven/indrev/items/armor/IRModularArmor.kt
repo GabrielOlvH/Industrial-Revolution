@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.armor.IRArmorMaterial
+import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.Tier
@@ -26,7 +27,7 @@ import team.reborn.energy.EnergyTier
 import java.util.*
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRModularItem<ArmorModule>, AttributeModifierProvider {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem {
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         getInstalledTooltip(getInstalled(stack), stack, tooltip)
