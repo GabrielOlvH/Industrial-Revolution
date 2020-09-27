@@ -51,6 +51,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        getShield(stack)
     }
 
     fun regenShield(itemStack: ItemStack, protectionLevel: Int) {
@@ -69,9 +70,9 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         if (tag?.contains("shield") == false) {
             return amount
         }
-        val shield = tag?.getDouble("shield")!!
+        val shield = getShield(itemStack)
         val used = amount.coerceAtMost(shield)
-        tag.putDouble("shield", shield - used)
+        tag?.putDouble("shield", shield - used)
         return used
     }
 
@@ -80,7 +81,11 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
     fun getShield(itemStack: ItemStack): Double {
         val tag = itemStack.tag
         return if (tag?.contains("shield") == false) return 0.0
-        else tag!!.getDouble("shield")
+        else {
+            val shield = tag!!.getDouble("shield").coerceAtMost(getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack)))
+            tag.putDouble("shield", shield)
+            shield
+        }
     }
 
     override fun getSlotLimit(): Int = -1

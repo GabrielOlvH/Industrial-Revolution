@@ -48,7 +48,8 @@
     "fabric": "*",
     "fabric-language-kotlin": "*",
     "minecraft": "1.16.x",
-    "patchouli": "*"
+    "patchouli": "*",
+    "libgui": "*"
   },
   "suggests": {
     "flamingo": "*"

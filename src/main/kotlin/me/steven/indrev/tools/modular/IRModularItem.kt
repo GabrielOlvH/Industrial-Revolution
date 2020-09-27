@@ -21,7 +21,10 @@ interface IRModularItem<T : Module> {
         if (upgrades.isNotEmpty()) {
             tooltip?.add(TranslatableText("item.indrev.modular.upgrade").formatted(Formatting.GOLD))
             upgrades.forEach { upgrade ->
-                val text = TranslatableText("item.indrev.modular.upgrade.${upgrade.key}", upgrade.getLevel(stack))
+                val level = upgrade.getLevel(stack)
+                val text = TranslatableText("item.indrev.modular.upgrade.${upgrade.key}", level)
+                if (upgrade.getMaxInstalledLevel(stack) != level)
+                    text.formatted(Formatting.ITALIC)
                 tooltip?.add(text.formatted(Formatting.BLUE))
             }
         }

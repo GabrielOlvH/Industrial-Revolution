@@ -100,9 +100,10 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
-                List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);//ArmorModule.Companion.getInstalled(itemStack);
+                List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);
                 for (ArmorModule module : modules) {
                     int level = module.getLevel(itemStack);
+                    if (level <= 0) continue;
                     switch (module) {
                         case NIGHT_VISION:
                         case SPEED:

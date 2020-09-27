@@ -81,7 +81,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             } else if (energy > 0 && !targetStack.isEmpty && !moduleStack.isEmpty && compatible.contains(module)) {
                 val tag = targetStack.orCreateTag
                 if (tag.contains(module.key)) {
-                    val level = tag.getInt(module.key)
+                    val level = module.getMaxInstalledLevel(targetStack)
                     if (module != ArmorModule.COLOR && level >= module.maxLevel) return
                 }
                 processTime = 1

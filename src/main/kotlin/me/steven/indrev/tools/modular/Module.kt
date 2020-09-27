@@ -16,6 +16,11 @@ interface Module {
     }
 
     fun getLevel(itemStack: ItemStack): Int {
+        val tag = itemStack.getOrCreateSubTag("selected")
+        return if (tag.contains(key)) tag.getInt(key) else getMaxInstalledLevel(itemStack)
+    }
+
+    fun getMaxInstalledLevel(itemStack: ItemStack): Int {
         val tag = itemStack.orCreateTag
         return if (tag.contains(key)) tag.getInt(key) else 0
     }
@@ -31,6 +36,4 @@ interface Module {
             }
         }
     }
-
-    companion object
 }

@@ -32,18 +32,21 @@ object IRHudRender : HudRenderCallback {
             }
             if (shouldRenderShield(item.slotType)) {
                 val totalShield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack))
-                val currentShield = item.getShield(itemStack)
-                var percent = currentShield.toFloat() / totalShield.toFloat()
-                val color = if (percent < 0.35) 0xff0000 else -1
-                val height = 16
-                val width = 16
-                percent = (percent * height).toInt() / height.toFloat()
-                val barSize = (height * percent).toInt()
-                ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, color, 0.5f)
-                if (barSize > 0)
-                    ScreenDrawing.texturedRect(
-                        x + 18, y + yOffset + height - barSize + 1, width, barSize,
-                        SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, color)
+                if (totalShield > 0) {
+                    val currentShield = item.getShield(itemStack)
+                    var percent = currentShield.toFloat() / totalShield.toFloat()
+                    val color = if (percent < 0.35) 0xff0000 else -1
+                    val height = 16
+                    val width = 16
+                    percent = (percent * height).toInt() / height.toFloat()
+                    val barSize = (height * percent).toInt()
+                    ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, color, 0.5f)
+                    if (barSize > 0)
+                        ScreenDrawing.texturedRect(
+                            x + 18, y + yOffset + height - barSize + 1, width, barSize,
+                            SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, color
+                        )
+                }
             }
             if (shouldRenderArmor(item.slotType)) {
                 val armorIcon = when (item.slotType) {

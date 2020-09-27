@@ -135,6 +135,17 @@ object IndustrialRevolution : ModInitializer {
             }
         }
 
+        ServerSidePacketRegistry.INSTANCE.register(UPDATE_MODULAR_TOOL_LEVEL) { ctx, buf ->
+            val key = buf.readString(32767)
+            val value = buf.readInt()
+            val slot = buf.readInt()
+            ctx.taskQueue.execute {
+                val stack = ctx.player.inventory.getStack(slot)
+                val tag = stack.getOrCreateSubTag("selected")
+                tag.putInt(key, value)
+            }
+        }
+
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
         LOGGER.info("Industrial Revolution has initialized.")
 
@@ -194,6 +205,7 @@ object IndustrialRevolution : ModInitializer {
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
+    val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())

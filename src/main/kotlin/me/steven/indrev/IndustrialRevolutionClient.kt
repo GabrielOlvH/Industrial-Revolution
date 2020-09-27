@@ -15,6 +15,8 @@ import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
+import me.steven.indrev.gui.IRModularControllerScreen
+import me.steven.indrev.gui.controllers.modular.ModularController
 import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
@@ -25,6 +27,8 @@ import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
@@ -32,15 +36,19 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
+import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.registry.Registry
+import org.lwjgl.glfw.GLFW
 import java.util.function.Function
 
 @Suppress("UNCHECKED_CAST")
@@ -169,5 +177,18 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 VeinType.REGISTERED[id] = veinType
             }
         }
+
+        ClientTickEvents.END_CLIENT_TICK.register { client ->
+            while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
+                MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+            }
+        }
     }
+
+    val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(KeyBinding(
+        "key.indrev.modular",
+        InputUtil.Type.KEYSYM,
+        GLFW.GLFW_KEY_M,
+        "category.indrev"
+    ))
 }

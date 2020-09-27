@@ -14,7 +14,6 @@ group = project.maven_group
 minecraft {
 }
 
-
 repositories {
     maven {
         name = "Modmuss50"
