@@ -2,13 +2,13 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.toVec3d
 import net.minecraft.item.FishingRodItem
 import net.minecraft.loot.context.LootContext
@@ -23,16 +23,12 @@ import team.reborn.energy.EnergySide
 class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(10, intArrayOf(1), intArrayOf(2, 3, 4, 5)) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is FishingRodItem -> slot == 1
-                    else -> false
-                }
+        this.inventoryComponent = inventory(this) {
+            input {
+                slot = 1
+                filter { (_, item), _ -> item is FishingRodItem }
             }
+            output { slots = intArrayOf(2, 3, 4, 5) }
         }
     }
 

@@ -36,7 +36,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.world.BlockView
 import java.util.function.Supplier
 
-class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
+class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, vararg val tiers: Tier = Tier.values()) {
 
     private val configs: MutableMap<Tier, IConfig> = mutableMapOf()
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()

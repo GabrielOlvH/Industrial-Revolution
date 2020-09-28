@@ -1,16 +1,12 @@
 package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.toIntArray
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.item.ItemStack
@@ -26,17 +22,10 @@ import team.reborn.energy.EnergySide
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is IRCoolerItem -> slot == 1
-                    slot in 2 until 15 -> true
-                    else -> false
-                }
-            }
+        this.inventoryComponent = inventory(this) {
+            input { slots = intArrayOf(2, 3, 4, 5) }
+            output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
+            coolerSlot = 1
         }
     }
 

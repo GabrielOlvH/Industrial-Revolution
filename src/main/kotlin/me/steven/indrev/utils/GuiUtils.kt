@@ -64,11 +64,11 @@ fun SyncedGuiDescription.configure(
             panel.add(batterySlot, 0.0, 3.7)
             panel.add(WTip(world.random), -1, -1)
             val blockEntity = world.getBlockEntity(blockPos)
-            if (blockEntity is UpgradeProvider) {
+            if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
                 for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
                     val s = WTooltipedItemSlot.of(blockInventory, slot, TranslatableText("gui.indrev.upgrade_slot_type"))
                     if (world.isClient)
-                        s.backgroundPainter = getUpgradeSlotPainter(blockInventory, slot)
+                        s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(blockInventory, slot) else getUpgradeSlotPainter(blockInventory, slot)
                     panel.add(s, 8, i)
                 }
             }
@@ -165,4 +165,12 @@ fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter {
     BackgroundPainter.SLOT.paintBackground(left, top, widget)
     if (inventory.getStack(slot).isEmpty)
         ScreenDrawing.texturedRect(left, top, 18, 18, UPGRADE_ICON_ID, -1)
+}
+
+val LOCKED_ICON_ID = identifier("textures/gui/locked_icon.png")
+
+fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+    if (inventory.getStack(slot).isEmpty)
+        ScreenDrawing.texturedRect(left, top, 18, 18, LOCKED_ICON_ID, -1)
 }

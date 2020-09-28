@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.utils.Tier
 import net.minecraft.inventory.Inventory
 
 interface UpgradeProvider {
@@ -20,4 +21,6 @@ interface UpgradeProvider {
             }
         return map
     }
+
+    fun isLocked(slot: Int, tier: Tier) = getUpgradeSlots().indexOf(slot) > tier.ordinal
 }

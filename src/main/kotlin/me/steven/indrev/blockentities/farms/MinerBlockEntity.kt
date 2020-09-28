@@ -2,15 +2,11 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.misc.IRCoolerItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
-import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getChunkPos
 import me.steven.indrev.world.chunkveins.VeinType
@@ -28,18 +24,13 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(15, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is IRCoolerItem -> slot == 1
-                    item is IRResourceReportItem -> slot == 14
-                    slot in 1 until 10 -> true
-                    else -> false
-                }
+        this.inventoryComponent = inventory(this) {
+            input {
+                slot = 14
+                filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
+            output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
+            coolerSlot = 1
         }
     }
 

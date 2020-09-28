@@ -1,18 +1,18 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
@@ -23,18 +23,12 @@ import team.reborn.energy.EnergySide
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
-                val item = stack?.item
-                when {
-                    stack != null && inventory.getStack(1).item is IRModuleItem && item is IRModularItem<*> && item.getCompatibleModules(stack).contains((inventory.getStack(1).item as IRModuleItem).module) -> slot == 2
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    slot == 1 -> item is IRModuleItem
-                    else -> false
-                }
-            }
-        }
         this.propertyDelegate = ArrayPropertyDelegate(3)
+        this.inventoryComponent = inventory(this) {
+            0 filter { (stack, item) -> item !is IRModularArmor && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
+            1 filter { stack -> stack.item is IRModuleItem }
+            2 filter { stack -> stack.item is IRModularItem<*> }
+        }
     }
 
     private var processTime: Int by Property(2, 0)

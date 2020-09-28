@@ -84,6 +84,9 @@ fun <T : ScreenHandler> Identifier.registerScreenHandler(
         f(syncId, inv, ScreenHandlerContext.create(inv.player.world, buf.readBlockPos()))
     } as ExtendedScreenHandlerType<T>
 
+operator fun ItemStack.component1(): ItemStack = this
+operator fun ItemStack.component2(): Item = item
+
 fun Box.isSide(vec3d: Vec3d) =
     vec3d.x == minX || vec3d.x == maxX - 1 || vec3d.y == minY || vec3d.y == maxY - 1 || vec3d.z == minZ || vec3d.z == maxZ - 1
 

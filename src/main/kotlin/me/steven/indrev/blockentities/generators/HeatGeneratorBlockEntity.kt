@@ -3,13 +3,10 @@ package me.steven.indrev.blockentities.generators
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.components.FluidComponent
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.misc.IRCoolerItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
@@ -17,21 +14,10 @@ import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
-import team.reborn.energy.Energy
 
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(2, intArrayOf(2), EMPTY_INT_ARRAY) { slot, stack ->
-                val item = stack?.item
-                when {
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is IRCoolerItem -> slot == 1
-                    else -> false
-                }
-            }
-        }
         this.temperatureComponent = TemperatureComponent(
             { this },
             2.3,
@@ -39,6 +25,9 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             7000..9000,
             10000.0
         )
+        this.inventoryComponent = inventory(this) {
+            input { slot = 2 }
+        }
         this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(4))
     }
 
