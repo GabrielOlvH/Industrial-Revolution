@@ -33,12 +33,17 @@ import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.block.MaterialColor
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.World
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
@@ -114,6 +119,7 @@ object IRRegistry {
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
         identifier("heatsink").item(HEATSINK)
+        identifier("heat_coil").item(HEAT_COIL)
 
         identifier("chunk_scanner").item(CHUNK_SCANNER_ITEM)
         identifier("scan_output").item(SCAN_OUTPUT_ITEM)
@@ -244,6 +250,16 @@ object IRRegistry {
     val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
+    val HEAT_COIL = object : Item(itemSettings().maxDamage(128)) {
+        override fun appendTooltip(
+            stack: ItemStack?,
+            world: World?,
+            tooltip: MutableList<Text>?,
+            context: TooltipContext?
+        ) {
+            tooltip?.add(TranslatableText("item.indrev.heat_coil.tooltip").formatted(Formatting.BLUE))
+        }
+    }
 
     val MINING_DRILL_MK1 =
         IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))

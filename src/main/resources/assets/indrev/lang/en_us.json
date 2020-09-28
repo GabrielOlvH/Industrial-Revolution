@@ -170,6 +170,8 @@
   "item.indrev.fan": "Fan",
   "item.indrev.cooler_cell": "Cooler Cell",
   "item.indrev.heatsink": "Heatsink",
+  "item.indrev.heat_coil": "Heat Coil",
+  "item.indrev.heat_coil.tooltip": "Converts Lazuli Flux into heat",
   "item.indrev.mining_drill_mk1": "Mining Drill MK1",
   "item.indrev.mining_drill_mk2": "Mining Drill MK2",
   "item.indrev.mining_drill_mk3": "Mining Drill MK3",

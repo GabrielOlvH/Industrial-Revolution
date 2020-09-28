@@ -91,7 +91,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 inventory.addStack(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
                 setWorkingState(true)
             }
-        }
+        } else setWorkingState(false)
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

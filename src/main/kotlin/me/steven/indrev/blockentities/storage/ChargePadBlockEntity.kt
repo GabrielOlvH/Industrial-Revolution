@@ -16,9 +16,8 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
-        if (Energy.valid(stack)) {
+        if (Energy.valid(stack) && Energy.of(this).into(Energy.of(stack)).move() > 0) {
             setWorkingState(true)
-            Energy.of(this).into(Energy.of(stack)).move()
         } else setWorkingState(false)
     }
 

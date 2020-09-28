@@ -3,10 +3,12 @@ package me.steven.indrev.components
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.misc.IRCoolerItem
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.Property
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
+import team.reborn.energy.Energy
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
@@ -42,11 +44,12 @@ class TemperatureComponent(
 
     fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
-    fun tick(isHeatingUp: Boolean) {
+    fun tick(shouldHeatUp: Boolean) {
         val previous = temperature
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && Energy.of(machine).use(5.0))
         val overflowModifier = if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier
@@ -70,7 +73,7 @@ class TemperatureComponent(
         //machine.markForUpdate { floor(previous) != floor(temperature) }
     }
 
-    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
+    fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()
