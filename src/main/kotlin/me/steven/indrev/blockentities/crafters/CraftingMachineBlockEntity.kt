@@ -61,7 +61,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                     onCraft()
                     reset()
                 }
-            }
+            } else setWorkingState(false)
         } else if (energy > 0 && processTime <= 0) {
             reset()
             if (tryStartRecipe(inventory) == null) setWorkingState(false)
