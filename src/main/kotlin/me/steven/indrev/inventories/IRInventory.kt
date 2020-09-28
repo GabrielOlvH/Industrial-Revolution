@@ -29,47 +29,24 @@ class IRInventory(
 
     fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
 
-    override fun addStack(itemStack: ItemStack?): ItemStack {
-        val itemStack2 = itemStack!!.copy()
-        addToExistingSlot(itemStack2)
-        return if (itemStack2.isEmpty) {
-            ItemStack.EMPTY
-        } else {
-            addToNewSlot(itemStack2)
-            if (itemStack2.isEmpty) ItemStack.EMPTY else itemStack2
+    fun fits(stack: ItemStack): Boolean {
+        for (outputSlot in outputSlots) {
+            val outStack = getStack(outputSlot)
+            if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count < stack.maxCount))
+                return true
         }
+        return false
     }
 
-    private fun addToNewSlot(stack: ItemStack) {
-        for (i in 0 until size()) {
-            val itemStack = getStack(i)
-            if (itemStack.isEmpty && isValid(i, itemStack) && outputSlots.contains(i)) {
-                setStack(i, stack.copy())
-                stack.count = 0
-                return
-            }
-        }
-    }
-
-    private fun addToExistingSlot(stack: ItemStack) {
-        for (i in 0 until size()) {
-            val itemStack = getStack(i)
-            if (ItemStack.areItemsEqualIgnoreDamage(itemStack, stack)) {
-                transfer(stack, itemStack)
-                if (stack.isEmpty) {
-                    return
-                }
-            }
-        }
-    }
-
-    private fun transfer(source: ItemStack, target: ItemStack) {
-        val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
-        val j = source.count.coerceAtMost(i - target.count)
-        if (j > 0) {
-            target.increment(j)
-            source.decrement(j)
-            markDirty()
+    fun craft(stack: ItemStack) {
+        for (outputSlot in outputSlots) {
+            val outStack = getStack(outputSlot)
+            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count < stack.maxCount)
+                outStack.increment(stack.count)
+            else if (outStack.isEmpty)
+                setStack(outputSlot, stack)
+            else continue
+            break
         }
     }
 }

@@ -5,6 +5,7 @@ import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
 import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
+import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.MachineRegistry
@@ -76,6 +77,14 @@ object REIPlugin : REIPluginV0 {
                 "indrev.category.rei.smelting"
             )
         )
+
+        recipeHelper?.registerCategory(
+            IRSawmillRecipeCategory(
+                SAWMILL,
+                EntryStack.create(MachineRegistry.SAWMILL_REGISTRY.block(Tier.MK4)),
+                "indrev.category.rei.sawmill"
+            )
+        )
     }
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
@@ -97,9 +106,11 @@ object REIPlugin : REIPluginV0 {
         recipeHelper?.registerRecipes(SMELTER, SmelterRecipe::class.java) {
             IRMachinePlugin(it, SMELTER)
         }
-
         recipeHelper?.registerRecipes(CONDENSER, CondenserRecipe::class.java) {
             IRMachinePlugin(it, CONDENSER)
+        }
+        recipeHelper?.registerRecipes(SAWMILL, SawmillRecipe::class.java) {
+            IRMachinePlugin(it, SAWMILL)
         }
     }
 
@@ -146,6 +157,12 @@ object REIPlugin : REIPluginV0 {
                 EntryStack.create(block)
             )
         }
+        MachineRegistry.SAWMILL_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                SAWMILL,
+                EntryStack.create(block)
+            )
+        }
     }
 
     private val ID = identifier("rei_plugin")
@@ -156,4 +173,5 @@ object REIPlugin : REIPluginV0 {
     private val SMELTER = identifier("plugins/smelter")
     private val CONDENSER = identifier("plugins/condenser")
     private val FLUID_INFUSER = identifier("plugins/fluid_infusing")
+    private val SAWMILL = identifier("plugins/sawmill")
 }

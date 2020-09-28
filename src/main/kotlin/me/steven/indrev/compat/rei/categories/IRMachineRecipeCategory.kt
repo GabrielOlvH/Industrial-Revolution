@@ -17,7 +17,6 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
-
 open class IRMachineRecipeCategory(
     private val identifier: Identifier,
     private val logo: EntryStack,

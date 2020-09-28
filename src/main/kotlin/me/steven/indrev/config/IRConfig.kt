@@ -103,6 +103,18 @@ class Machines : ConfigData {
     val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
+    val sawmillMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val sawmillMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val sawmillMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val sawmillMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
     val infuserMk1: MachineConfig = MachineConfig(4.0, 1.5, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject

@@ -54,6 +54,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 item(blockItem)
                 blockEntityType(blockEntityType)
                 if (block is MachineBlock && block.config != null)
+                if (block is MachineBlock && block.config != null)
                     configs[tier] = block.config
             }
             blockEntities[tier] = blockEntityType
@@ -198,6 +199,21 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { SolidInfuserBlockEntity(tier) }
             },
             { tier -> { SolidInfuserBlockEntity(tier) } }
+        )
+
+        val SAWMILL_REGISTRY = MachineRegistry(identifier("sawmill")).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.sawmillMk1
+                        Tier.MK2 -> CONFIG.machines.sawmillMk2
+                        Tier.MK3 -> CONFIG.machines.sawmillMk3
+                        else -> CONFIG.machines.sawmillMk4
+                    }, ::SawmillController
+                ) { SawmillBlockEntity(tier) }
+            },
+            { tier -> { SawmillBlockEntity(tier) } }
         )
 
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(

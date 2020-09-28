@@ -69,7 +69,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         temperatureComponent?.tick(isProcessing())
     }
 
-    fun handleInventories(inventory: IRInventory, inputInventory: Inventory, recipe: IRRecipe) {
+    private fun handleInventories(inventory: IRInventory, inputInventory: Inventory, recipe: IRRecipe) {
         val output = recipe.craft(world!!.random)
         recipe.input.forEach { (ingredient, count) ->
             inventory.inputSlots.forEachIndexed { index, slot ->
@@ -101,14 +101,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             }
         }
 
-        output.forEachIndexed { index, stack ->
-            val outputSlot = inventory.outputSlots[index]
-            val outputStack = inventory.getStack(outputSlot)
-            if (outputStack.item == stack.item)
-                inventory.setStack(outputSlot, outputStack.apply { increment(stack.count) })
-            else if (outputStack.isEmpty)
-                inventory.setStack(outputSlot, stack)
-        }
+        output.forEach { stack -> inventory.craft(stack) }
     }
 
     private fun tryStartRecipe(inventory: IRInventory): T? {
@@ -128,14 +121,8 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount().add(recipeFluidOutput.amount()) > fluidComponent!!.limit))
                 return null
         }
-        if (inventory.outputSlots.isNotEmpty()) {
-            for ((index, entry) in recipe.outputs.withIndex()) {
-                val stack = entry.stack
-                val outputStack = inventory.getStack(inventory.outputSlots[index])
-                if (!outputStack.isEmpty && (outputStack.item != stack.item || outputStack.count + stack.count > outputStack.maxCount))
-                    return null
-            }
-        }
+        if (inventory.outputSlots.isNotEmpty() && recipe.outputs.any { !inventory.fits(it.stack) })
+            return null
         if (!isProcessing()) {
             processTime = recipe.ticks
             totalProcessTime = recipe.ticks

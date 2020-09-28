@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine_mk3",
+  "textures": {
+    "texture": "indrev:block/sawmill_on"
+  }
+}

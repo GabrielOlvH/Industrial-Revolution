@@ -101,6 +101,8 @@ object IRRegistry {
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
+        identifier("sawdust").item(DEFAULT_ITEM())
+
         identifier("hammer").item(HAMMER)
 
         identifier("mining_drill").tierBasedItem { tier ->
