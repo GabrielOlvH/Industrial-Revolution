@@ -159,7 +159,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED ->
             if (temperatureComponent?.isFullEfficiency() == true)
-                (config as? HeatMachineConfig?)?.processTemperatureBoost ?: config.processSpeed
+                ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
             else
                 config.processSpeed
         Upgrade.BUFFER -> getBaseBuffer()
