@@ -247,6 +247,51 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { CondenserBlockEntity(tier) } }
         )
 
+        val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry(identifier("electric_furnace_factory")).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.electricFurnaceMk1
+                        Tier.MK2 -> CONFIG.machines.electricFurnaceMk2
+                        Tier.MK3 -> CONFIG.machines.electricFurnaceMk3
+                        else -> CONFIG.machines.electricFurnaceMk4
+                    }, ::ElectricFurnaceFactoryController
+                ) { ElectricFurnaceFactoryBlockEntity(tier) }
+            },
+            { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
+        )
+
+        val PULVERIZER_FACTORY_REGISTRY = MachineRegistry(identifier("pulverizer_factory")).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.pulverizerMk1
+                        Tier.MK2 -> CONFIG.machines.pulverizerMk2
+                        Tier.MK3 -> CONFIG.machines.pulverizerMk3
+                        else -> CONFIG.machines.pulverizerMk4
+                    }, ::PulverizerFactoryController
+                ) { PulverizerFactoryBlockEntity(tier) }
+            },
+            { tier -> { PulverizerFactoryBlockEntity(tier) } }
+        )
+
+        val COMPRESSOR_FACTORY_REGISTRY = MachineRegistry(identifier("compressor_factory")).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.compressorMk1
+                        Tier.MK2 -> CONFIG.machines.compressorMk2
+                        Tier.MK3 -> CONFIG.machines.compressorMk3
+                        else -> CONFIG.machines.compressorMk4
+                    }, ::CompressorFactoryController
+                ) { CompressorFactoryBlockEntity(tier) }
+            },
+            { tier -> { CompressorFactoryBlockEntity(tier) } }
+        )
+
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
                 HorizontalFacingMachineBlock(

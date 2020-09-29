@@ -34,7 +34,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     private var currentRecipe: T? = null
     val usedRecipes = mutableMapOf<Identifier, Int>()
     abstract val type: RecipeType<T>
-    open val craftingComponents = Array(1) { CraftingComponent(0, this) }
+    var craftingComponents = Array(1) { CraftingComponent(0, this) }
 
     override fun machineTick() {
        craftingComponents.forEach { it.tick() }

@@ -28,13 +28,4 @@ class IRInventory(
     fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
 
     fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
-
-    fun fits(stack: ItemStack): Boolean {
-        for (outputSlot in outputSlots) {
-            val outStack = getStack(outputSlot)
-            if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count < stack.maxCount))
-                return true
-        }
-        return false
-    }
 }

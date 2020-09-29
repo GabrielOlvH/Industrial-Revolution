@@ -8,15 +8,15 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.text.TranslatableText
 
-class WProcess(private val delegate: PropertyDelegate) : WWidget() {
+class WProcess(private val delegate: PropertyDelegate, val process: Int = 3, val maxProcess: Int = 4) : WWidget() {
     init {
         this.setSize(24, 17)
     }
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(x, y, width, height, PROCESS_EMPTY, -1)
-        val maxProcessTime = delegate[4]
-        val processTime = maxProcessTime - delegate[3]
+        val maxProcessTime = delegate[maxProcess]
+        val processTime = maxProcessTime - delegate[process]
         if (processTime > 0) {
             var percent = processTime.toFloat() / maxProcessTime.toFloat()
             percent = (percent * width).toInt() / width.toFloat()
@@ -30,8 +30,8 @@ class WProcess(private val delegate: PropertyDelegate) : WWidget() {
     }
 
     override fun addTooltip(tooltip: TooltipBuilder?) {
-        val maxProcessTime = delegate[4]
-        val processTime = maxProcessTime - delegate[3]
+        val maxProcessTime = delegate[maxProcess]
+        val processTime = maxProcessTime - delegate[process]
         if (maxProcessTime > processTime) {
             val percent = processTime * 100 / maxProcessTime
             tooltip?.add(TranslatableText("gui.widget.process", "${percent}%"))
@@ -43,5 +43,9 @@ class WProcess(private val delegate: PropertyDelegate) : WWidget() {
             identifier("textures/gui/widget_processing_empty.png")
         val PROCESS_FULL =
             identifier("textures/gui/widget_processing_full.png")
+        val PROCESS_VERTICAL_EMPTY =
+            identifier("textures/gui/widget_processing_empty_vertical.png")
+        val PROCESS_VERTICAL_FULL =
+            identifier("textures/gui/widget_processing_full_vertical.png")
     }
 }

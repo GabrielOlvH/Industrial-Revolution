@@ -91,7 +91,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.FLUID_INFUSER_HANDLER,
             IndustrialRevolution.FARMER_HANDLER,
             IndustrialRevolution.RESOURCE_REPORT_HANDLER,
-            IndustrialRevolution.SAWMILL_HANDLER
+            IndustrialRevolution.SAWMILL_HANDLER,
+            IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
+            IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
+            IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }

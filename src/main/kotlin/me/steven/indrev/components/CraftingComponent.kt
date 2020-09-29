@@ -42,8 +42,8 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                 tryStartRecipe(inventory) ?: reset()
             else if (Energy.of(machine).use(Upgrade.getEnergyCost(upgrades, machine))) {
                 machine.setWorkingState(true)
-                processTime = (processTime - ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
-                if (processTime <= 0) {
+                processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
+                if (processTime >= totalProcessTime) {
                     handleInventories(inventory, inputInventory, recipe)
                     machine.usedRecipes[recipe.id] = machine.usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
                     machine.onCraft()
@@ -96,13 +96,22 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         val inventory = inventoryComponent.inventory
         for (outputSlot in outputSlots!!) {
             val outStack = inventory.getStack(outputSlot)
-            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count < stack.maxCount)
+            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount)
                 outStack.increment(stack.count)
             else if (outStack.isEmpty)
                 inventory.setStack(outputSlot, stack)
             else continue
             break
         }
+    }
+
+    fun fits(stack: ItemStack): Boolean {
+        for (outputSlot in outputSlots!!) {
+            val outStack = inventoryComponent.inventory.getStack(outputSlot)
+            if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount))
+                return true
+        }
+        return false
     }
 
     private fun tryStartRecipe(inventory: IRInventory): T? {
@@ -122,10 +131,10 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
             if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount().add(recipeFluidOutput.amount()) > fluidComponent!!.limit))
                 return null
         }
-        if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !inventory.fits(it.stack) })
+        if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !fits(it.stack) })
             return null
         if (!isProcessing()) {
-            processTime = recipe.ticks
+            processTime = 0
             totalProcessTime = recipe.ticks
         }
         this.currentRecipe = recipe
@@ -137,7 +146,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         totalProcessTime = 0
     }
 
-    fun isProcessing() = processTime > 0 && machine.energy > 0
+    fun isProcessing() = totalProcessTime > 0 && processTime < totalProcessTime && machine.energy > 0
 
     override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
 
