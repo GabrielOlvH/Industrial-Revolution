@@ -90,7 +90,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    protected fun setWorkingState(value: Boolean) {
+    fun setWorkingState(value: Boolean) {
         if (world?.isClient == false && this.cachedState.contains(MachineBlock.WORKING_PROPERTY) && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
             val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
             world!!.setBlockState(pos, state)

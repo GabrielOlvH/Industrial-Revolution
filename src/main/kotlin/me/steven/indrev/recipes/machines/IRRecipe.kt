@@ -47,11 +47,10 @@ interface IRRecipe : Recipe<Inventory> {
         return produced.toTypedArray()
     }
 
-    fun matches(inv: Inventory, fluidVolume: FluidVolume?): Boolean {
-        if (inv.size() == 0) return true
+    fun matches(inv: Array<ItemStack>, fluidVolume: FluidVolume?): Boolean {
+        if (inv.isEmpty()) return true
         val remainder = input.map { it.copy() }.toMutableList()
-        for (slot in 0 until inv.size()) {
-            val stack = inv.getStack(slot)
+        for (stack in inv) {
             val result = remainder.firstOrNull { (ingredient, count) -> ingredient.test(stack) && stack.count >= count } ?: continue
             result.count -= stack.count
             if (result.count <= 0) remainder.remove(result)

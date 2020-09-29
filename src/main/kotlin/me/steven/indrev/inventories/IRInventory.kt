@@ -37,16 +37,4 @@ class IRInventory(
         }
         return false
     }
-
-    fun craft(stack: ItemStack) {
-        for (outputSlot in outputSlots) {
-            val outStack = getStack(outputSlot)
-            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count < stack.maxCount)
-                outStack.increment(stack.count)
-            else if (outStack.isEmpty)
-                setStack(outputSlot, stack)
-            else continue
-            break
-        }
-    }
 }

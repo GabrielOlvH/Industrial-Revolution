@@ -4,7 +4,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import me.steven.indrev.recipes.machines.IRRecipe;
 import me.steven.indrev.recipes.machines.entries.InputEntry;
 import me.steven.indrev.recipes.machines.entries.OutputEntry;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
@@ -54,8 +54,8 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull Inventory inv, @Nullable FluidVolume fluidVolume) {
-        return ((AbstractCookingRecipe) (Object) this).matches(inv, null);
+    public boolean matches(@NotNull ItemStack[] inv, @Nullable FluidVolume fluidVolume) {
+        return ((AbstractCookingRecipe) (Object) this).matches(new SimpleInventory(inv), null);
     }
 
     @NotNull
