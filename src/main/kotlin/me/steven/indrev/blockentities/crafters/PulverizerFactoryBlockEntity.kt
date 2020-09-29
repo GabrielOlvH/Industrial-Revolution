@@ -4,10 +4,10 @@ import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 import net.minecraft.screen.ArrayPropertyDelegate
 
 class PulverizerFactoryBlockEntity(tier: Tier) :
@@ -42,7 +42,7 @@ class PulverizerFactoryBlockEntity(tier: Tier) :
         }
     }
 
-    override val type: RecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
+    override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 

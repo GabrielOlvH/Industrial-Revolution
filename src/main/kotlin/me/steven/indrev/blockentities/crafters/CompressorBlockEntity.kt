@@ -4,9 +4,9 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CompressorRecipe
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 
 class CompressorBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_REGISTRY) {
@@ -19,7 +19,7 @@ class CompressorBlockEntity(tier: Tier) :
         }
     }
 
-    override val type: RecipeType<CompressorRecipe> = CompressorRecipe.TYPE
+    override val type: IRRecipeType<CompressorRecipe> = CompressorRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

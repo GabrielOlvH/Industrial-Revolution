@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "AccessorEnergyHandler",
+    "AccessorRecipeManager",
     "AccessorWeightedList",
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",
@@ -14,6 +15,7 @@
     "MixinPiglinBrain",
     "MixinPlayerEntity",
     "MixinPlayerManager",
+    "MixinRecipeType",
     "MixinServerPlayerEntity"
   ],
   "client": [

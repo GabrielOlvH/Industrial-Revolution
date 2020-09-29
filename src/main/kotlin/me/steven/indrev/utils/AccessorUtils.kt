@@ -1,8 +1,13 @@
 package me.steven.indrev.utils
 
 import me.steven.indrev.mixin.AccessorEnergyHandler
+import me.steven.indrev.mixin.AccessorRecipeManager
 import me.steven.indrev.mixin.AccessorWeightedList
 import me.steven.indrev.mixin.AccessorWeightedListEntry
+import me.steven.indrev.recipes.machines.IRRecipe
+import net.minecraft.recipe.RecipeManager
+import net.minecraft.recipe.RecipeType
+import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import team.reborn.energy.EnergyHandler
 import team.reborn.energy.EnergyHolder
@@ -19,3 +24,6 @@ val EnergyHandler.holder: EnergyHolder
 
 val EnergyHandler.side: EnergySide
     get() = (this as AccessorEnergyHandler).side
+
+fun <T : IRRecipe> RecipeManager.getAllOfType(type: RecipeType<T>): Map<Identifier, T>
+        = (this as AccessorRecipeManager).indrev_getAllOfType(type) as Map<Identifier, T>

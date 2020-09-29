@@ -5,6 +5,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.mixin.MixinAbstractCookingRecipe
+import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import net.minecraft.recipe.RecipeType
@@ -42,14 +43,14 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
         }
     }
 
-    override val type: RecipeType<MixinAbstractCookingRecipe>
+    override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {
             val upgrades = getUpgrades(inventoryComponent!!.inventory)
             return when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
                 Upgrade.BLAST_FURNACE -> RecipeType.BLASTING
                 Upgrade.SMOKER -> RecipeType.SMOKING
                 else -> RecipeType.SMELTING
-            } as RecipeType<MixinAbstractCookingRecipe>
+            } as IRecipeGetter<MixinAbstractCookingRecipe>
         }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)

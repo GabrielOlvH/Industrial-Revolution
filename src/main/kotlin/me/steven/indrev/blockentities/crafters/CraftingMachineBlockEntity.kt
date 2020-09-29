@@ -6,6 +6,7 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.ExperienceRewardRecipe
+import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -14,7 +15,6 @@ import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
-import net.minecraft.recipe.RecipeType
 import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
@@ -33,7 +33,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     private var currentRecipe: T? = null
     val usedRecipes = mutableMapOf<Identifier, Int>()
-    abstract val type: RecipeType<T>
+    abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
 
     override fun machineTick() {

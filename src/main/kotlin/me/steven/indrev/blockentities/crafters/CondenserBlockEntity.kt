@@ -5,9 +5,9 @@ import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CondenserRecipe
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 
 class CondenserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
@@ -20,7 +20,7 @@ class CondenserBlockEntity(tier: Tier) :
         this.fluidComponent = FluidComponent({ this }, FluidAmount(8))
     }
 
-    override val type: RecipeType<CondenserRecipe> = CondenserRecipe.TYPE
+    override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

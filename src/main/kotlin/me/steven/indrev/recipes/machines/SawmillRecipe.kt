@@ -4,7 +4,6 @@ import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.identifier
 import net.minecraft.recipe.RecipeSerializer
-import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 
 class SawmillRecipe(
@@ -18,11 +17,11 @@ class SawmillRecipe(
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): IRRecipeType<*> = TYPE
 
     companion object {
         val IDENTIFIER = identifier("sawmill")
-        val TYPE = object : RecipeType<SawmillRecipe> {}
+        val TYPE = IRRecipeType<SawmillRecipe>()
         val SERIALIZER = IRRecipe.IRRecipeSerializer(::SawmillRecipe)
     }
 }

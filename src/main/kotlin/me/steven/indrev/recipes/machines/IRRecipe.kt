@@ -39,6 +39,8 @@ interface IRRecipe : Recipe<Inventory> {
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("matches(Inventory, FluidVolume?)"), DeprecationLevel.ERROR)
     override fun matches(inv: Inventory?, world: World?): Boolean = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
 
+    override fun getType(): IRRecipeType<*>
+
     fun craft(random: Random?): Array<ItemStack> {
         val produced = mutableListOf<ItemStack>()
         outputs.forEach { (stack, chance) ->

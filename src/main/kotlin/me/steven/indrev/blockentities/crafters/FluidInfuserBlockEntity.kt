@@ -5,9 +5,9 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 
 class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
 
@@ -20,7 +20,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
         this.fluidComponent = FluidInfuserFluidComponent({ this })
     }
 
-    override val type: RecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE
+    override val type: IRRecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

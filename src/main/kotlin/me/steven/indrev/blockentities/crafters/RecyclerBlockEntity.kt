@@ -2,10 +2,10 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.RecyclerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 
 class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY), UpgradeProvider {
 
@@ -17,7 +17,7 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
         }
     }
 
-    override val type: RecipeType<RecyclerRecipe> = RecyclerRecipe.TYPE
+    override val type: IRRecipeType<RecyclerRecipe> = RecyclerRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
 

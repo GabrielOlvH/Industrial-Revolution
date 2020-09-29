@@ -5,10 +5,10 @@ import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import net.minecraft.recipe.RecipeType
 
 class SmelterBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmelterRecipe>(tier, MachineRegistry.SMELTER_REGISTRY) {
@@ -21,7 +21,7 @@ class SmelterBlockEntity(tier: Tier) :
         this.fluidComponent = FluidComponent({ this }, FluidAmount(8))
     }
 
-    override val type: RecipeType<SmelterRecipe> = SmelterRecipe.TYPE
+    override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 

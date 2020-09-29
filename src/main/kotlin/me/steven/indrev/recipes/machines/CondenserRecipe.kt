@@ -5,7 +5,6 @@ import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.identifier
 import net.minecraft.recipe.RecipeSerializer
-import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 
 class CondenserRecipe(
@@ -17,7 +16,7 @@ class CondenserRecipe(
 ) : IRFluidRecipe() {
     override val fluidOutput: FluidVolume? = null
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): IRRecipeType<*> = TYPE
 
     override fun fits(width: Int, height: Int): Boolean = true
 
@@ -25,7 +24,7 @@ class CondenserRecipe(
 
     companion object {
         val IDENTIFIER = identifier("condenser")
-        val TYPE = object : RecipeType<CondenserRecipe> {}
+        val TYPE = IRRecipeType<CondenserRecipe>()
         val SERIALIZER = Serializer()
 
         class Serializer : IRFluidRecipeSerializer<CondenserRecipe>({ id, ingredients, output, fluidInput, _, ticks -> CondenserRecipe(id, ingredients, output, fluidInput!!, ticks) })

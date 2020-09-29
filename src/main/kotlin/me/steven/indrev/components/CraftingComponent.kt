@@ -5,13 +5,14 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.utils.Property
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.recipe.RecipeType
 import net.minecraft.screen.PropertyDelegate
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import kotlin.math.ceil
@@ -22,7 +23,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
     val inventoryComponent: InventoryComponent get() = machine.inventoryComponent!!
     val temperatureComponent: TemperatureComponent? get() = machine.temperatureComponent
-    val type: RecipeType<T> get() = machine.type
+    val type: IRecipeGetter<T> get() = machine.type
     val world: World? get() = machine.world
 
     var inputSlots: IntArray? = null
@@ -117,9 +118,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     private fun tryStartRecipe(inventory: IRInventory): T? {
         val inputStacks = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
         val inputFluid = fluidComponent?.tanks?.get(0)?.volume
-        val recipe = world?.recipeManager?.listAllOfType(type)
-            ?.firstOrNull { it.matches(inputStacks, inputFluid) }
-            ?: return null
+        val recipe = inputStacks.flatMap { type.getMatchingRecipe(world as ServerWorld, it) }.firstOrNull { it.matches(inputStacks, inputFluid) } ?: return null
         if (recipe is IRFluidRecipe && recipe.fluidOutput != null) {
             val tanks = if (recipe.fluidInput != null) 2 else 1
             if (fluidComponent!!.tankCount < tanks) {
