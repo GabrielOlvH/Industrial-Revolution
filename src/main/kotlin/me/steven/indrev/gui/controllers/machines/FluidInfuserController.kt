@@ -6,9 +6,9 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WFluid
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -33,8 +33,8 @@ class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx:
         val fluid = WFluid(ctx, 0)
         root.add(fluid, 2.3, 0.7)
 
-        val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 4.35, 2.2)
+        val processWidget = createProcessBar()
+        root.add(processWidget, 4.5, 2.2)
 
         val outputStack = WItemSlot.of(blockInventory, 3)
         root.add(outputStack, 5.8, 2.2)

@@ -23,7 +23,7 @@ import team.reborn.energy.EnergySide
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(3)
+        this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryComponent = inventory(this) {
             0 filter { (stack, item) -> item !is IRModularArmor && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
             1 filter { stack -> stack.item is IRModuleItem }
@@ -32,6 +32,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     }
 
     private var processTime: Int by Property(2, 0)
+    private var maxProcessTime: Int by Property(3, 0)
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
@@ -55,7 +56,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 && Energy.of(this).use(config.energyCost)) {
                 setWorkingState(true)
                 processTime += config.processSpeed.toInt()
-                if (processTime >= 1200) {
+                if (processTime >= maxProcessTime) {
                     inventory.setStack(1, ItemStack.EMPTY)
                     val tag = targetStack.orCreateTag
                     when {
@@ -79,6 +80,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                     if (module != ArmorModule.COLOR && level >= module.maxLevel) return
                 }
                 processTime = 1
+                maxProcessTime = 1200
                 setWorkingState(true)
             } else processTime = -1
         }

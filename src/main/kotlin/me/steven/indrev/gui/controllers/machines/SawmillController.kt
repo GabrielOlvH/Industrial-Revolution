@@ -5,9 +5,9 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -27,14 +27,14 @@ class SawmillController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.sawmill", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.5, 2.0)
+        root.add(inputSlot, 2.7, 2.0)
 
-        val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 3.7, 2.0)
+        val processWidget = createProcessBar()
+        root.add(processWidget, 3.9, 2.0)
 
         val outputSlots = WItemSlot.of(blockInventory, 3, 2, 2)
         outputSlots.isInsertingAllowed = false
-        root.add(outputSlots, 5.4, 1.5)
+        root.add(outputSlots, 5.2, 1.5)
 
         root.validate(this)
     }

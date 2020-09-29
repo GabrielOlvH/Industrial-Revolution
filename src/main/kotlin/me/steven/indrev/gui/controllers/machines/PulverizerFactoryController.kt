@@ -8,11 +8,8 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.PulverizerFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.utils.add
-import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -46,7 +43,7 @@ class PulverizerFactoryController(
             }
 
             for (i in 0 until slotsAmount) {
-                val processWidget = WBar(WProcess.PROCESS_VERTICAL_EMPTY, WProcess.PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2), WBar.Direction.DOWN)
+                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
                 root.add(processWidget, offset + i, 2.3)
             }
 

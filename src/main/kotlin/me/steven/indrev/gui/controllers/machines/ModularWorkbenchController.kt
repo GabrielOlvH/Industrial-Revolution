@@ -1,10 +1,10 @@
 package me.steven.indrev.gui.controllers.machines
 
+import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WVerticalProcess
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -12,9 +12,7 @@ import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.add
-import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
@@ -44,8 +42,8 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         )
         root.add(moduleSlot, 1.5, 1.0)
 
-        val process = WVerticalProcess(propertyDelegate)
-        root.add(process, 1.5, 2.0)
+        val process = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 2, 3)
+        root.add(process, 1.5, 2.2)
 
         val info = WStaticTooltip()
         info.setSize(100, 60)

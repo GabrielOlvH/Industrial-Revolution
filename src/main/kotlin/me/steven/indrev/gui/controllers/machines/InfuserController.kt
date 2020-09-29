@@ -5,9 +5,9 @@ import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -27,17 +27,17 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.infuser", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 2.4, 1.5)
+        root.add(firstInput, 2.6, 1.8)
 
         val secondInput = WItemSlot.of(blockInventory, 3)
-        root.add(secondInput, 3.4, 1.5)
+        root.add(secondInput, 3.6, 1.8)
 
-        val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 4.6, 1.5)
+        val processWidget = createProcessBar()
+        root.add(processWidget, 4.75, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 4)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.4, 1.5)
+        root.add(outputSlot, 6.2, 1.8)
 
         root.validate(this)
     }

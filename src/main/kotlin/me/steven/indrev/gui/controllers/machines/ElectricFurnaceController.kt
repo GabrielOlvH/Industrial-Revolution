@@ -6,9 +6,9 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -32,10 +32,10 @@ class ElectricFurnaceController(
         configure("block.indrev.electric_furnace", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.7, 2.0)
+        root.add(inputSlot, 3.0, 2.0)
 
-        val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 3.9, 2.0)
+        val processWidget = createProcessBar()
+        root.add(processWidget, 4.2, 2.0)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.addChangeListener { _, _, _, _ ->
@@ -48,7 +48,7 @@ class ElectricFurnaceController(
             }
         }
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 5.9, 2.0)
+        root.add(outputSlot, 5.7, 2.0)
 
         root.validate(this)
     }

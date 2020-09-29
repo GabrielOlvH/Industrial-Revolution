@@ -6,9 +6,9 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WFluid
-import me.steven.indrev.gui.widgets.machines.WProcess
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -28,13 +28,13 @@ class SmelterController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.smelter", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.8, 2.2)
+        root.add(inputSlot, 3.0, 2.2)
 
-        val processWidget = WProcess(propertyDelegate)
-        root.add(processWidget, 4.0, 2.2)
+        val processWidget = createProcessBar()
+        root.add(processWidget, 4.3, 2.2)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 5.8, 0.7)
+        root.add(fluid, 5.7, 0.7)
 
         root.validate(this)
     }
