@@ -3,6 +3,7 @@ package me.steven.indrev.inventories
 import me.steven.indrev.components.InventoryComponent
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.inventory.SimpleInventory
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
@@ -28,4 +29,11 @@ class IRInventory(
     fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
 
     fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
+
+    fun fits(stack: Item, outputSlot: Int): Boolean {
+        val outStack = getStack(outputSlot)
+        if (outStack.isEmpty || (stack == outStack.item && outStack.tag?.isEmpty != false))
+            return true
+        return false
+    }
 }

@@ -70,16 +70,18 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         }.maxByOrNull { it.value } ?: return
         if (sum <= 0) return
 
-        val freeSlots = craftingComponents.flatMap { component -> component.inputSlots!!.filter { component.fits(item, it) } }
+        val freeSlots = inventory.inputSlots.filter { inventory.fits(item, it) }
         var remaining = sum
+        val slotsUsed = freeSlots.size.coerceAtMost(sum)
+        val rem = sum % slotsUsed
+        val isBelowLimit = slotsUsed > freeSlots.size
+        val baseAmount = Math.floorDiv(sum, slotsUsed)
         freeSlots.forEachIndexed { index, slot ->
-            val slotsUsed = freeSlots.size.coerceAtMost(sum)
-            if (slotsUsed > freeSlots.size && index + 1 > slotsUsed) {
+            if (isBelowLimit && index + 1 > slotsUsed) {
                 inventory.setStack(slot, ItemStack.EMPTY)
                 return@forEachIndexed
             }
-            var set = floor(sum.toDouble() / slotsUsed.toDouble()).toInt()
-            val rem = sum % slotsUsed
+            var set = baseAmount
             if (rem != 0 && rem > index && remaining > 0)
                 set++
             if (index == slotsUsed - 1)
