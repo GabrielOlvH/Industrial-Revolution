@@ -348,3 +348,15 @@ fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid:
         }
     })
 }
+
+inline fun <K> IntArray.associateSum(transform: (Int) -> Pair<K, Int>): Map<K, Int> {
+    return associateToSum(LinkedHashMap(5), transform)
+}
+
+inline fun <K, M : MutableMap<in K, Int>> IntArray.associateToSum(destination: M, transform: (Int) -> Pair<K, Int>): M {
+    for (element in this) {
+        val pair = transform(element)
+        destination += Pair(pair.first, destination.getOrDefault(pair.first, 0) + pair.second)
+    }
+    return destination
+}

@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.Direction
 
-class InventoryComponent(private val syncable: IRSyncableBlockEntity, supplier: InventoryComponent.() -> IRInventory) : InventoryChangedListener {
+class InventoryComponent(val syncable: IRSyncableBlockEntity, supplier: InventoryComponent.() -> IRInventory) : InventoryChangedListener {
     val inventory: IRInventory = supplier()
 
     init {

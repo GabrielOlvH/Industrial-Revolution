@@ -9,6 +9,7 @@ import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.utils.Property
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
@@ -115,9 +116,9 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         return false
     }
 
-    fun fits(stack: ItemStack, outputSlot: Int): Boolean {
+    fun fits(stack: Item, outputSlot: Int): Boolean {
         val outStack = inventoryComponent.inventory.getStack(outputSlot)
-        if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag))
+        if (outStack.isEmpty || (stack == outStack.item && outStack.tag?.isEmpty != false))
             return true
         return false
     }

@@ -155,7 +155,8 @@ object IndustrialRevolution : ModInitializer {
                 val world = ctx.player.world
                 if (world.isChunkLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@execute
-                    blockEntity.splitStacks()
+                    blockEntity.isSplitOn = !blockEntity.isSplitOn
+                    if (blockEntity.isSplitOn) blockEntity.splitStacks()
                 }
             }
         }

@@ -10,6 +10,7 @@ import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.associateSum
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -36,9 +37,13 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     val usedRecipes = mutableMapOf<Identifier, Int>()
     abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
+    var isSplitOn = false
+    var ticks = 0
 
     override fun machineTick() {
-       craftingComponents.forEach { it.tick() }
+        ticks++
+        craftingComponents.forEach { it.tick() }
+        if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 
     override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
@@ -59,10 +64,13 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     fun splitStacks() {
         if (craftingComponents.size <= 1) return
         val inventory = inventoryComponent!!.inventory
-        val stacks = craftingComponents.flatMap { component -> component.inputSlots!!.map { inventory.getStack(it) }.filter { s -> !s.isEmpty } }
-        val itemStack = stacks.maxByOrNull { stacks.filter { s -> s.item == it.item }.sumBy { s -> s.count } } ?: return
-        val sum = stacks.filter { s -> s.item == itemStack.item }.sumBy { s -> s.count }
-        val freeSlots = craftingComponents.flatMap { component -> component.inputSlots!!.filter { component.fits(ItemStack(itemStack.item), it) } }
+        val (item, sum) = inventory.inputSlots.associateSum {
+            val stack = inventory.getStack(it)
+            Pair(stack.item, if (stack?.tag?.isEmpty == false) 0 else stack.count)
+        }.maxByOrNull { it.value } ?: return
+        if (sum <= 0) return
+
+        val freeSlots = craftingComponents.flatMap { component -> component.inputSlots!!.filter { component.fits(item, it) } }
         var remaining = sum
         freeSlots.forEachIndexed { index, slot ->
             val slotsUsed = freeSlots.size.coerceAtMost(sum)
@@ -71,13 +79,14 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                 return@forEachIndexed
             }
             var set = floor(sum.toDouble() / slotsUsed.toDouble()).toInt()
-            if (sum % slotsUsed != 0 && sum % slotsUsed > index && remaining > 0)
+            val rem = sum % slotsUsed
+            if (rem != 0 && rem > index && remaining > 0)
                 set++
             if (index == slotsUsed - 1)
                 set += remaining
             remaining -= set
             if (remaining < 0) set += remaining
-            inventory.setStack(slot, ItemStack(itemStack.item, set))
+            inventory.setStack(slot, ItemStack(item, set))
         }
     }
 
@@ -87,6 +96,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             val index = (craftTag as CompoundTag).getInt("index")
             craftingComponents[index].fromTag(craftTag)
         }
+        isSplitOn = tag?.getBoolean("split") ?: isSplitOn
         super.fromTag(state, tag)
     }
 
@@ -98,6 +108,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             craftTag.putInt("index", index)
         }
         tag?.put("craftingComponents", craftTags)
+        tag?.putBoolean("split", isSplitOn)
         return super.toTag(tag)
     }
 
@@ -107,6 +118,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             val index = (craftTag as CompoundTag).getInt("index")
             craftingComponents[index].fromTag(craftTag)
         }
+        isSplitOn = tag?.getBoolean("split") ?: isSplitOn
         super.fromClientTag(tag)
     }
 
@@ -117,6 +129,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             craftTags.add(crafting.toTag(craftTag))
             craftTag.putInt("index", index)
         }
+        tag?.putBoolean("split", isSplitOn)
         return super.toClientTag(tag)
     }
 
