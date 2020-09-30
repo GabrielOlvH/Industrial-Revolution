@@ -1,18 +1,23 @@
 package me.steven.indrev.gui.controllers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WBar
+import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.PulverizerFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.*
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
@@ -58,7 +63,13 @@ class PulverizerFactoryController(
                 }
                 outputSlot.isInsertingAllowed = false
             }
-
+            val button = WButton(LiteralText("S"))
+            button.setOnClick {
+                val buf = PacketByteBuf(Unpooled.buffer())
+                buf.writeBlockPos(pos)
+                ClientSidePacketRegistry.INSTANCE.sendToServer(SPLIT_STACKS_PACKET, buf)
+            }
+            root.add(button, 8, 4)
         }
         root.validate(this)
     }
@@ -71,5 +82,6 @@ class PulverizerFactoryController(
 
     companion object {
         val SCREEN_ID = identifier("pulverizer_factory_screen")
+        val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
     }
 }

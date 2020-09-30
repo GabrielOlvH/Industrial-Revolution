@@ -13,6 +13,7 @@ import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.recipe.SmeltingRecipe
@@ -55,18 +56,46 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         else -> 0.0
     }
 
+    fun splitStacks() {
+        if (craftingComponents.size <= 1) return
+        val inventory = inventoryComponent!!.inventory
+        val stacks = craftingComponents.flatMap { component -> component.inputSlots!!.map { inventory.getStack(it) }.filter { s -> !s.isEmpty } }
+        val itemStack = stacks.maxByOrNull { stacks.filter { s -> s.item == it.item }.sumBy { s -> s.count } } ?: return
+        val sum = stacks.filter { s -> s.item == itemStack.item }.sumBy { s -> s.count }
+        val freeSlots = craftingComponents.flatMap { component -> component.inputSlots!!.filter { component.fits(ItemStack(itemStack.item), it) } }
+        var remaining = sum
+        freeSlots.forEachIndexed { index, slot ->
+            val slotsUsed = freeSlots.size.coerceAtMost(sum)
+            if (slotsUsed > freeSlots.size && index + 1 > slotsUsed) {
+                inventory.setStack(slot, ItemStack.EMPTY)
+                return@forEachIndexed
+            }
+            var set = floor(sum.toDouble() / slotsUsed.toDouble()).toInt()
+            if (sum % slotsUsed != 0 && sum % slotsUsed > index && remaining > 0)
+                set++
+            if (index == slotsUsed - 1)
+                set += remaining
+            remaining -= set
+            if (remaining < 0) set += remaining
+            inventory.setStack(slot, ItemStack(itemStack.item, set))
+        }
+    }
+
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         val craftTags = tag?.getList("craftingComponents", 10)
-        craftTags?.forEachIndexed { index, craftTag ->
-            craftingComponents[index].fromTag(craftTag as CompoundTag)
+        craftTags?.forEach { craftTag ->
+            val index = (craftTag as CompoundTag).getInt("index")
+            craftingComponents[index].fromTag(craftTag)
         }
         super.fromTag(state, tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         val craftTags = ListTag()
-        craftingComponents.forEach {
-            craftTags.add(it.toTag(CompoundTag()))
+        craftingComponents.forEachIndexed { index, crafting ->
+            val craftTag = CompoundTag()
+            craftTags.add(crafting.toTag(craftTag))
+            craftTag.putInt("index", index)
         }
         tag?.put("craftingComponents", craftTags)
         return super.toTag(tag)
@@ -74,18 +103,20 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     override fun fromClientTag(tag: CompoundTag?) {
         val craftTags = tag?.getList("craftingComponents", 10)
-        craftTags?.forEachIndexed { index, craftTag ->
-            craftingComponents[index].fromTag(craftTag as CompoundTag)
+        craftTags?.forEach { craftTag ->
+            val index = (craftTag as CompoundTag).getInt("index")
+            craftingComponents[index].fromTag(craftTag)
         }
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         val craftTags = ListTag()
-        craftingComponents.forEach {
-            craftTags.add(it.toTag(CompoundTag()))
+        craftingComponents.forEachIndexed { index, crafting ->
+            val craftTag = CompoundTag()
+            craftTags.add(crafting.toTag(craftTag))
+            craftTag.putInt("index", index)
         }
-        tag?.put("craftingComponents", craftTags)
         return super.toClientTag(tag)
     }
 

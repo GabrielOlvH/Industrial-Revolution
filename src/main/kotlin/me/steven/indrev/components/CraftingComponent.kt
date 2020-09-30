@@ -115,6 +115,13 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         return false
     }
 
+    fun fits(stack: ItemStack, outputSlot: Int): Boolean {
+        val outStack = inventoryComponent.inventory.getStack(outputSlot)
+        if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag))
+            return true
+        return false
+    }
+
     private fun tryStartRecipe(inventory: IRInventory): T? {
         val inputStacks = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
         val inputFluid = fluidComponent?.tanks?.get(0)?.volume

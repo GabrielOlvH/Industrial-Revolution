@@ -7,6 +7,7 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
@@ -145,6 +146,17 @@ object IndustrialRevolution : ModInitializer {
                 val stack = ctx.player.inventory.getStack(slot)
                 val tag = stack.getOrCreateSubTag("selected")
                 tag.putInt(key, value)
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(PulverizerFactoryController.SPLIT_STACKS_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@execute
+                    blockEntity.splitStacks()
+                }
             }
         }
 
