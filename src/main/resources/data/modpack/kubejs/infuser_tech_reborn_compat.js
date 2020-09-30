@@ -221,45 +221,11 @@ processTime: 200
 event.recipes.indrev.infuse({
 ingredients: [
 {
-item: 'minecraft:iron_ingot',
-count: 2
-},
-{
-item: 'techreborn:nickel_dust'
-}
-],
-output: {
-item: 'techreborn:invar_ingot',
-count: 3
-},
-processTime: 200
-})
-
-event.recipes.indrev.infuse({
-ingredients: [
-{
 tag: 'c:iron_dusts',
 count: 2
 },
 {
 item: 'techreborn:nickel_dust'
-}
-],
-output: {
-item: 'techreborn:invar_ingot',
-count: 3
-},
-processTime: 200
-})
-
-event.recipes.indrev.infuse({
-ingredients: [
-{
-c: 'c:iron_dusts',
-count: 2
-},
-{
-item: 'techreborn:nickel_ingot'
 }
 ],
 output: {
