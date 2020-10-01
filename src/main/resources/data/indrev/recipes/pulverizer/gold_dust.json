@@ -5,7 +5,7 @@
   },
   "output":
     {
-      "item": "gold_dust",
+      "item": "indrev:gold_dust",
       "count": 2
     },
   "processTime": 200

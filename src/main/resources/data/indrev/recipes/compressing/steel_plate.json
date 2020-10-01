@@ -4,7 +4,7 @@
     "tag": "c:steel_ingots"
   },
   "output": {
-    "item": "steel_plate",
+    "item": "indrev:steel_plate",
     "count": 1
   },
   "processTime": 600

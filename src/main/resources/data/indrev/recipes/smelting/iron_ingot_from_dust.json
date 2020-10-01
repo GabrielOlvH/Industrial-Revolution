@@ -1,5 +1,5 @@
 {
-  "type": "indrev:smelting",
+  "type": "minecraft:smelting",
   "group": "iron_ingots",
   "ingredient": {
     "tag": "c:iron_dusts"

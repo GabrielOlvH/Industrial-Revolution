@@ -1,5 +1,5 @@
 {
-  "type": "indrev:blasting",
+  "type": "minecraft:blasting",
   "group": "iron_ingots",
   "ingredient": {
     "tag": "c:iron_dusts"

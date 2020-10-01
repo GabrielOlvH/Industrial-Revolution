@@ -4,7 +4,7 @@
     "item": "minecraft:gold_ingot"
   },
   "output": {
-    "item": "gold_plate",
+    "item": "indrev:gold_plate",
     "count": 1
   },
   "processTime": 400

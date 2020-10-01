@@ -4,11 +4,8 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
-import me.steven.indrev.utils.getFirstMatch
-import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
@@ -133,18 +130,11 @@ interface IRRecipe : Recipe<Inventory> {
         }
 
         fun itemStackFromJson(json: JsonObject): OutputEntry? {
-            val itemPath = json.get("item").asString
-            if (itemPath == "empty") return null
-            val item =
-                if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
-                else
-                    getFirstMatch(
-                        arrayOf(
-                            Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
-                            identifier(itemPath)
-                        ), Registry.ITEM
-                    )
+            val itemId = json.get("item").asString
+            if (itemId == "empty") return null
+            val item = Registry.ITEM.get(Identifier(itemId))
             val output = ItemStack { item }
+            if (output.isEmpty) println("empty $itemId")
             output.count = JsonHelper.getInt(json, "count", 1)
             val chance = JsonHelper.getFloat(json, "chance", 1f).toDouble()
             return OutputEntry(output, chance)

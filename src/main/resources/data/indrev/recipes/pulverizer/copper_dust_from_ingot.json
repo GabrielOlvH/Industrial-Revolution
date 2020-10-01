@@ -4,7 +4,7 @@
     "tag": "c:copper_ingots"
   },
   "output": {
-    "item": "copper_dust",
+    "item": "indrev:copper_dust",
     "count": 1
   },
   "processTime": 200

@@ -4,7 +4,7 @@
     "item": "minecraft:diamond"
   },
   "output": {
-    "item": "diamond_dust"
+    "item": "indrev:diamond_dust"
   },
   "processTime": 200
 }

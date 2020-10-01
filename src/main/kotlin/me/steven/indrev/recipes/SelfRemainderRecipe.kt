@@ -2,19 +2,19 @@ package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
 import me.steven.indrev.FabricRecipeRemainder
-import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
+import net.minecraft.recipe.ShapelessRecipe
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 
 class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingredients: DefaultedList<Ingredient>) :
-    IRShapelessRecipe(id, group, output, ingredients) {
+    ShapelessRecipe(id, group, output, ingredients) {
     override fun craft(input: CraftingInventory): ItemStack {
         return output.copy()
     }
@@ -38,7 +38,7 @@ class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingr
         val IDENTIFIER = identifier("selfremainder")
         val SERIALIZER = Serializer()
 
-        class Serializer : IRShapelessRecipe.Companion.Serializer() {
+        class Serializer : ShapelessRecipe.Serializer() {
             override fun read(identifier: Identifier, jsonObject: JsonObject): SelfRemainderRecipe {
                 val shaped = super.read(identifier, jsonObject)!!
                 val group = JsonHelper.getString(jsonObject, "group", "")

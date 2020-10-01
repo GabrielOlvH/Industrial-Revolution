@@ -278,9 +278,6 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     RenderSystem.disableBlend()
 }
 
-fun <T> getFirstMatch(identifier: Array<Identifier>, registry: Registry<T>): T =
-    registry[identifier.first { registry.getOrEmpty(it).isPresent }]!!
-
 fun getFluidFromJson(json: JsonObject): FluidVolume {
     val fluidId = json.get("fluid").asString
     val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
@@ -294,23 +291,6 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
         else -> throw IllegalArgumentException("unknown amount type $type")
     }.mul(amount)
     return fluidKey.withAmount(fluidAmount)
-}
-
-fun getItemStackFromJson(json: JsonObject): ItemStack {
-    val itemPath = json.get("item").asString
-    if (itemPath == "empty") return ItemStack.EMPTY
-    val item =
-        if (itemPath.contains(":")) Registry.ITEM.get(Identifier(itemPath))
-        else
-            getFirstMatch(
-                arrayOf(
-                    Identifier(IndustrialRevolution.CONFIG.compatibility.targetModId, itemPath),
-                    identifier(itemPath)
-                ), Registry.ITEM
-            )
-    val output = ItemStack { item }
-    output.count = JsonHelper.getInt(json, "count", 1)
-    return output
 }
 
 inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {

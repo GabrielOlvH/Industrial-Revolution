@@ -5,7 +5,7 @@
   },
   "output":
     {
-      "item": "iron_dust",
+      "item": "indrev:iron_dust",
       "count": 2
     },
   "processTime": 200

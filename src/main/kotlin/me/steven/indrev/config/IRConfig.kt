@@ -25,11 +25,6 @@ class IRConfig : PartitioningSerializer.GlobalData() {
     @ConfigEntry.Gui.TransitiveObject
     val upgrades: Upgrades = Upgrades()
 
-    @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.Category(value = "compatibility")
-    @ConfigEntry.Gui.TransitiveObject
-    val compatibility: Compatibility = Compatibility()
-
     @ConfigEntry.Category(value = "oregen")
     @ConfigEntry.Gui.TransitiveObject
     val oregen: OreGen = OreGen()
@@ -250,11 +245,6 @@ class Upgrades : ConfigData {
     val speedUpgradeModifier = 4.0
     val energyUpgradeModifier = 0.1
     val bufferUpgradeModifier = 25000.0
-}
-
-@Config(name = "compat")
-class Compatibility : ConfigData {
-    val targetModId: String = ""
 }
 
 @Config(name = "oregen")

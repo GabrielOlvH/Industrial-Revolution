@@ -1,9 +1,9 @@
 {
-  "type": "indrev:smelting",
+  "type": "minecraft:smelting",
   "group": "tin_ingots",
   "ingredient": {
     "tag": "c:tin_ores"
   },
-  "result": "tin_ingot",
+  "result": "indrev:tin_ingot",
   "cookingTime": 200
 }

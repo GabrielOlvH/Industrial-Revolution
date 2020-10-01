@@ -1,5 +1,5 @@
 {
-  "type": "indrev:smelting",
+  "type": "minecraft:smelting",
   "ingredient": {
     "tag": "c:netherite_scrap_dusts"
   },
