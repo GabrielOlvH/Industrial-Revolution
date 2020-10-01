@@ -17,22 +17,8 @@ class CompressorFactoryBlockEntity(tier: Tier) :
         this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
-            input {
-                slots = when (tier) {
-                    Tier.MK1 -> intArrayOf(6, 8)
-                    Tier.MK2 -> intArrayOf(6, 8, 10)
-                    Tier.MK3 -> intArrayOf(6, 8, 10, 12)
-                    else -> intArrayOf(6, 8, 10, 12, 14)
-                }
-            }
-            output {
-                slots = when (tier) {
-                    Tier.MK1 -> intArrayOf(7, 9)
-                    Tier.MK2 -> intArrayOf(7, 9, 11)
-                    Tier.MK3 -> intArrayOf(7, 9, 11, 13)
-                    else ->  intArrayOf(7, 9, 11, 13, 15)
-                }
-            }
+            input { slots = intArrayOf(6, 8, 10, 12, 14) }
+            output { slots = intArrayOf(7, 9, 11, 13, 15) }
         }
         this.craftingComponents = Array(5) { index ->
             CraftingComponent(index, this).apply {

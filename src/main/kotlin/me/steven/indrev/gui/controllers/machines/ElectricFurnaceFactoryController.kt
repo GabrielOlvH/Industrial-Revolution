@@ -34,15 +34,14 @@ class ElectricFurnaceFactoryController(
         root.add(WText(TranslatableText("block.indrev.factory"), HorizontalAlignment.CENTER, 0x404040), 4.3, 0.5)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? ElectricFurnaceFactoryBlockEntity ?: return@run
-            val slotsAmount = (blockEntity.tier.ordinal + 2).coerceAtMost(5)
-            val offset = (10 - slotsAmount) / 2.0
+            val offset = 2.5
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.inputSlots.withIndex()) {
                 val inputSlot = WItemSlot.of(blockInventory, slot)
                 root.add(inputSlot, offset + index, 1.2)
             }
 
-            for (i in 0 until slotsAmount) {
+            for (i in 0 until 5) {
                 val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
                 root.add(processWidget, offset + i, 2.3)
             }

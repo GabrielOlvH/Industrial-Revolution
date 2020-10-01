@@ -246,7 +246,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { CondenserBlockEntity(tier) } }
         )
 
-        val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry(identifier("electric_furnace_factory")).register(
+        val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry(identifier("electric_furnace_factory"), false, Tier.MK4).register(
             { tier ->
                 HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
@@ -261,7 +261,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
         )
 
-        val PULVERIZER_FACTORY_REGISTRY = MachineRegistry(identifier("pulverizer_factory")).register(
+        val PULVERIZER_FACTORY_REGISTRY = MachineRegistry(identifier("pulverizer_factory"), false, Tier.MK4).register(
             { tier ->
                 HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
@@ -276,7 +276,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { PulverizerFactoryBlockEntity(tier) } }
         )
 
-        val COMPRESSOR_FACTORY_REGISTRY = MachineRegistry(identifier("compressor_factory")).register(
+        val COMPRESSOR_FACTORY_REGISTRY = MachineRegistry(identifier("compressor_factory"), false, Tier.MK4).register(
             { tier ->
                 HorizontalFacingMachineBlock(
                     MACHINE_BLOCK_SETTINGS(), tier,
