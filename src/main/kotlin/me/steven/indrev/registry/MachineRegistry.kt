@@ -54,7 +54,6 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 item(blockItem)
                 blockEntityType(blockEntityType)
                 if (block is MachineBlock && block.config != null)
-                if (block is MachineBlock && block.config != null)
                     configs[tier] = block.config
             }
             blockEntities[tier] = blockEntityType
