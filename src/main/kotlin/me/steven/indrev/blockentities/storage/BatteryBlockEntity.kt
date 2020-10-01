@@ -15,7 +15,9 @@ class BatteryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
-        this.inventoryComponent = inventory(this) {}
+        this.inventoryComponent = inventory(this) {
+            0 filter { stack -> Energy.valid(stack) }
+        }
     }
 
     override fun machineTick() {
