@@ -25,7 +25,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     init {
         this.propertyDelegate = ArrayPropertyDelegate(4)
         this.inventoryComponent = inventory(this) {
-            0 filter { (stack, item) -> item !is IRModularArmor && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
+            0 filter { (stack, item) -> item !is IRModularItem<*> && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
         }
