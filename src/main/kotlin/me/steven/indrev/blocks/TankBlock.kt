@@ -212,6 +212,13 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         }
     }
 
+    override fun getPickStack(world: BlockView?, pos: BlockPos?, state: BlockState?): ItemStack {
+        val stack = super.getPickStack(world, pos, state)
+        val blockEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return stack
+        blockEntity.fluidComponent.toTag(stack.orCreateTag)
+        return stack
+    }
+
     companion object {
         val UP = BooleanProperty.of("up")
         val DOWN = BooleanProperty.of("down")
