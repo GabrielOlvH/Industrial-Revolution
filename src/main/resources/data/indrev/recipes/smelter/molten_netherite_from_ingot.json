@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_netherite_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}

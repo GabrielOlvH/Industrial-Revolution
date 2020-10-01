@@ -118,7 +118,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     private fun tryStartRecipe(inventory: IRInventory): T? {
         val inputStacks = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
         val inputFluid = fluidComponent?.tanks?.get(0)?.volume
-        val recipe = inputStacks.flatMap { type.getMatchingRecipe(world as ServerWorld, it) }.firstOrNull { it.matches(inputStacks, inputFluid) } ?: return null
+        val recipe =
+            (if (inputStacks.isEmpty())
+                type.getMatchingRecipe(world as ServerWorld, ItemStack.EMPTY, inputFluid?.fluidKey)
+            else inputStacks.flatMap {
+                type.getMatchingRecipe(world as ServerWorld, it, inputFluid?.fluidKey)
+            }).firstOrNull { it.matches(inputStacks, inputFluid) } ?: return null
         if (recipe is IRFluidRecipe && recipe.fluidOutput != null) {
             val tanks = if (recipe.fluidInput != null) 2 else 1
             if (fluidComponent!!.tankCount < tanks) {
@@ -127,7 +132,9 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
             }
             val outputTankVolume = fluidComponent!!.tanks.last().volume
             val recipeFluidOutput = recipe.fluidOutput!!
-            if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount().add(recipeFluidOutput.amount()) > fluidComponent!!.limit))
+            if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount()
+                    .add(recipeFluidOutput.amount()) > fluidComponent!!.limit)
+            )
                 return null
         }
         if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !fits(it.stack) })

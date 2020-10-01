@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "item": "indrev:netherite_scrap_purified_ore"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_netherite_still",
+    "type": "scrap",
+    "count": 4
+  },
+  "processTime": 600
+}

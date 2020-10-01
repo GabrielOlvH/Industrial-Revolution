@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "item": "minecraft:netherite_block"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_netherite_still",
+    "type": "block",
+    "count": 1
+  },
+  "processTime": 600
+}

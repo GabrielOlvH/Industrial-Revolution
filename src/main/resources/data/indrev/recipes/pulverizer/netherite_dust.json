@@ -1,0 +1,12 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "minecraft:ancient_debris"
+  },
+  "output":
+  {
+    "item": "indrev:netherite_dust",
+    "count": 2
+  },
+  "processTime": 200
+}

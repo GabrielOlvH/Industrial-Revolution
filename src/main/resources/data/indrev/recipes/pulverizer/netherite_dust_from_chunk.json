@@ -1,0 +1,12 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "indrev:netherite_scrap_chunk"
+  },
+  "output":
+  {
+    "item": "indrev:netherite_scrap_dust",
+    "count": 1
+  },
+  "processTime": 200
+}

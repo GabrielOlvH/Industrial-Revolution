@@ -87,6 +87,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.STEEL)
         }.register()
         ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+        ResourceHelper("netherite_scrap") { withItems("dust", "chunk", "purified_ore") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre { settings -> NikoliteOreBlock(settings) }

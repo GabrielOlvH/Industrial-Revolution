@@ -290,6 +290,7 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
         "ingot" -> INGOT_AMOUNT
         "block" -> BLOCK_AMOUNT
         "bucket" -> FluidAmount.BUCKET
+        "scrap" -> SCRAP_AMOUNT
         else -> throw IllegalArgumentException("unknown amount type $type")
     }.mul(amount)
     return fluidKey.withAmount(fluidAmount)
