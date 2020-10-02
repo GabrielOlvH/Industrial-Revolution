@@ -34,22 +34,22 @@ class CompressorFactoryController (
         root.add(WText(TranslatableText("block.indrev.factory"), HorizontalAlignment.CENTER, 0x404040), 4.3, 0.5)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? CompressorFactoryBlockEntity ?: return@run
-            val slotsAmount = (blockEntity.tier.ordinal + 2).coerceAtMost(5)
-            val offset = (10 - slotsAmount) / 2.0
+            val slotsAmount = 5
+            val offset = 2.3
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.inputSlots.withIndex()) {
                 val inputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(inputSlot, offset + index, 1.2)
+                root.add(inputSlot, offset + (index * 1.1), 1.2)
             }
 
             for (i in 0 until slotsAmount) {
                 val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
-                root.add(processWidget, offset + i, 2.3)
+                root.add(processWidget, offset + (i * 1.1), 2.3)
             }
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.outputSlots.withIndex()) {
                 val outputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(outputSlot, offset + index, 3.4)
+                root.add(outputSlot, offset + (index * 1.1), 3.4)
                 outputSlot.addChangeListener { _, _, _, _ ->
                     val player = playerInventory.player
                     if (!player.world.isClient) {

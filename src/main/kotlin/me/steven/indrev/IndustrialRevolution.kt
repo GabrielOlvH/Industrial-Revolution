@@ -204,6 +204,7 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryController)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryController.SCREEN_ID.registerScreenHandler(::PulverizerFactoryController)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
+    val INFUSER_FACTORY_HANDLER = InfuserFactoryController.SCREEN_ID.registerScreenHandler(::InfuserFactoryController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 

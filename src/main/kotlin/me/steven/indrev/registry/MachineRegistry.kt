@@ -291,6 +291,21 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { CompressorFactoryBlockEntity(tier) } }
         )
 
+        val INFUSER_FACTORY_REGISTRY = MachineRegistry(identifier("infuser_factory"), false, Tier.MK4).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.infuserMk1
+                        Tier.MK2 -> CONFIG.machines.infuserMk2
+                        Tier.MK3 -> CONFIG.machines.infuserMk3
+                        else -> CONFIG.machines.infuserMk4
+                    }, ::InfuserFactoryController
+                ) { InfuserFactoryBlockEntity(tier) }
+            },
+            { tier -> { InfuserFactoryBlockEntity(tier) } }
+        )
+
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
                 HorizontalFacingMachineBlock(
