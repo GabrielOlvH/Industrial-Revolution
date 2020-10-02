@@ -143,7 +143,7 @@ object IndustrialRevolution : ModInitializer {
             }
         }
 
-        ServerSidePacketRegistry.INSTANCE.register(PulverizerFactoryController.SPLIT_STACKS_PACKET) { ctx, buf ->
+        ServerSidePacketRegistry.INSTANCE.register(SPLIT_STACKS_PACKET) { ctx, buf ->
             val pos = buf.readBlockPos()
             ctx.taskQueue.execute {
                 val world = ctx.player.world

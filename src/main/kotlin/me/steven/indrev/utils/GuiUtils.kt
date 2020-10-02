@@ -6,7 +6,9 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.icon.Icon
+import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
@@ -16,10 +18,12 @@ import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTip
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
@@ -37,6 +41,10 @@ fun WGridPanel.add(w: WWidget, x: Double, y: Double) {
     this.add(w, x.toInt(), y.toInt())
     w.setLocation((x * 18).toInt(), (y * 18).toInt())
 }
+
+val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
+val SPLIT_ON_ICON = identifier("textures/gui/split_on.png")
+val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
 
 fun SyncedGuiDescription.configure(
     titleId: String,
@@ -91,6 +99,21 @@ fun SyncedGuiDescription.configure(
                     ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
                 }
                 panel.add(button, 7.95, 4.2)
+                button.setSize(20, 20)
+            }
+            if (blockEntity is CraftingMachineBlockEntity<*> && blockEntity.craftingComponents.size > 1) {
+                val button = WButton { _, x, y, size ->
+                    val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
+                    ScreenDrawing.texturedRect(x + 1, y + 1, size, size, id, -1)
+                }
+                button.label = TranslatableText("gui.indrev.button.auto_split")
+                button.setOnClick {
+                    blockEntity.isSplitOn = !blockEntity.isSplitOn
+                    val buf = PacketByteBuf(Unpooled.buffer())
+                    buf.writeBlockPos(blockPos)
+                    ClientSidePacketRegistry.INSTANCE.sendToServer(SPLIT_STACKS_PACKET, buf)
+                }
+                panel.add(button, 7.95, 4.0)
                 button.setSize(20, 20)
             }
         }

@@ -223,6 +223,7 @@
   "item.indrev.scan_output": "Resource Report",
   "item.indrev.portable_charger": "Portable Charger",
   "item.indrev.gamer_axe": "Gamer Axe",
+  "gui.indrev.button.auto_split": "Auto-Split Stacks",
   "gui.indrev.resourcereport.size": "Vein size: %s",
   "gui.indrev.resourcereport.size.tiny": "Tiny",
   "gui.indrev.resourcereport.size.small": "Small",

@@ -1,22 +1,17 @@
 package me.steven.indrev.gui.controllers.machines
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WBar
-import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.PulverizerFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.*
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
@@ -63,18 +58,6 @@ class PulverizerFactoryController(
                 }
                 outputSlot.isInsertingAllowed = false
             }
-            val button = WButton { _, x, y, size ->
-                val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
-                ScreenDrawing.texturedRect(x + 1, y + 1, size, size, id, -1)
-            }
-            button.setOnClick {
-                blockEntity.isSplitOn = !blockEntity.isSplitOn
-                val buf = PacketByteBuf(Unpooled.buffer())
-                buf.writeBlockPos(pos)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(SPLIT_STACKS_PACKET, buf)
-            }
-            root.add(button, 7.95, 4.0)
-            button.setSize(20, 20)
         }
         root.validate(this)
     }
@@ -87,8 +70,5 @@ class PulverizerFactoryController(
 
     companion object {
         val SCREEN_ID = identifier("pulverizer_factory_screen")
-        val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
-        val SPLIT_ON_ICON = identifier("textures/gui/split_on.png")
-        val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
     }
 }
