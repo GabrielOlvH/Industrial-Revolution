@@ -29,11 +29,11 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
 
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 2, 2),
-            3.5,
+            3.95,
             0.7
         )
 
-        root.add(WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod")), 4.0, 3.0)
+        root.add(WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod")), 4.45, 3.5)
 
         root.validate(this)
     }

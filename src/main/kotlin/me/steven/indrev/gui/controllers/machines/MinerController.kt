@@ -31,14 +31,14 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
 
         val outputSlots = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlots.isInsertingAllowed = false
-        root.add(outputSlots, 3.0, 0.7)
+        root.add(outputSlots, 5.0, 1.0)
 
         root.add(WText({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        }, HorizontalAlignment.CENTER), 4.0, 3.9)
+        }, HorizontalAlignment.CENTER), 3.0, 3.2)
 
         val scanSlot = WTooltipedItemSlot.of(blockInventory, 14, TranslatableText("gui.indrev.scan_output_slot_type"))
-        root.add(scanSlot, 4.0, 4.4)
+        root.add(scanSlot, 2.5, 2.0)
 
         root.validate(this)
     }

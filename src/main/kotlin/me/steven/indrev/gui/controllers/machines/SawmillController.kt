@@ -27,14 +27,14 @@ class SawmillController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.sawmill", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 2.7, 2.0)
+        root.add(inputSlot, 3.2, 2.0)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 3.9, 2.0)
+        root.add(processWidget, 4.35, 2.0)
 
         val outputSlots = WItemSlot.of(blockInventory, 3, 2, 2)
         outputSlots.isInsertingAllowed = false
-        root.add(outputSlots, 5.2, 1.5)
+        root.add(outputSlots, 5.7, 1.5)
 
         root.validate(this)
     }

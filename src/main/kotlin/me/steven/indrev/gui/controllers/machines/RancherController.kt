@@ -34,24 +34,23 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         setRootPanel(root)
         configure("block.indrev.rancher", ctx, playerInventory, blockInventory, propertyDelegate)
 
+        val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
+        root.add(inputFrame, 1.9, 0.7)
+        inputFrame.setSize(40, 44)
+        val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
+        root.add(outputFrame, 5.1, 0.7)
+        outputFrame.setSize(58, 62)
+
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
-            4.2,
+            5.2,
             1.0
         )
         root.add(
             WItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2),
-            1.5,
+            2.0,
             1.0
         )
-
-        val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
-        root.add(inputFrame, 1.4, 0.7)
-        inputFrame.setSize(40, 44)
-
-        val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
-        root.add(outputFrame, 4.1, 0.7)
-        outputFrame.setSize(58, 62)
 
         val slider = WSlider(1, 9, Axis.HORIZONTAL)
         root.add(slider, 1.4, 4.0)

@@ -28,19 +28,19 @@ class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx:
         configure("block.indrev.fluid_infuser", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 3.3, 2.2)
+        root.add(firstInput, 3.7, 2.2)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 2.3, 0.7)
+        root.add(fluid, 2.5, 0.7)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.5, 2.2)
+        root.add(processWidget, 5.0, 2.2)
 
         val outputStack = WItemSlot.of(blockInventory, 3)
-        root.add(outputStack, 5.8, 2.2)
+        root.add(outputStack, 6.4, 2.2)
 
         val outputFluid = WFluid(ctx, 1)
-        root.add(outputFluid, 6.9, 0.7)
+        root.add(outputFluid, 7.7, 0.7)
 
         root.validate(this)
     }

@@ -27,25 +27,25 @@ class InfuserFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory, propertyDelegate)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? InfuserFactoryBlockEntity ?: return@run
-            val offset = 2.3
+            val offset = 2.6
 
             for (index in blockEntity.inventoryComponent!!.inventory.inputSlots.indices step 2) {
                 val slot = blockEntity.inventoryComponent!!.inventory.inputSlots[index]
                 val inputSlot = WItemSlot.of(blockInventory, slot, 1, 2)
-                root.add(inputSlot, offset + ((index * 1.1) / 2), 0.6)
+                root.add(inputSlot, offset + ((index * 1.2) / 2), 0.6)
             }
 
             for (i in 0 until 5) {
                 val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
-                root.add(processWidget, offset + (i * 1.1), 2.7)
+                root.add(processWidget, offset + (i * 1.2), 2.7)
             }
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.outputSlots.withIndex()) {
                 val outputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(outputSlot, offset + (index * 1.1), 3.8)
+                root.add(outputSlot, offset + (index * 1.2), 3.8)
                 outputSlot.addChangeListener { _, _, _, _ ->
                     val player = playerInventory.player
                     if (!player.world.isClient) {

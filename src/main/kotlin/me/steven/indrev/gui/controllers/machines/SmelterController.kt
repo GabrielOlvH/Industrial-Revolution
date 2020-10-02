@@ -28,13 +28,13 @@ class SmelterController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.smelter", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.0, 2.2)
+        root.add(inputSlot, 3.5, 2.5)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.3, 2.2)
+        root.add(processWidget, 4.8, 2.5)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 5.7, 0.7)
+        root.add(fluid, 6.2, 1.0)
 
         root.validate(this)
     }

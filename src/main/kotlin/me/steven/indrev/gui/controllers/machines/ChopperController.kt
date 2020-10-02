@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WSlider
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.Axis
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
@@ -35,22 +36,20 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
-        root.add(inputFrame, 1.4, 0.7)
+        root.add(inputFrame, 1.9, 0.7)
         inputFrame.setSize(40, 44)
-
         val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
-        root.add(outputFrame, 4.1, 0.7)
+        root.add(outputFrame, 5.1, 0.7)
         outputFrame.setSize(58, 62)
-
 
         val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 4.2, 1.0)
+        root.add(outputSlot, 5.2, 1.0)
         val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.chopper_input_slot_type"))
-        root.add(inputSlot, 1.5, 1.0)
+        root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 9, Axis.HORIZONTAL)
-        root.add(slider, 1.4, 4.0)
+        root.add(slider, 1.9, 4.0)
         slider.setSize(35, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
@@ -60,8 +59,8 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
 
         val text = WText({
             TranslatableText("block.indrev.aoe.range", slider.value)
-        })
-        root.add(text, 2.0, 3.7)
+        }, HorizontalAlignment.LEFT)
+        root.add(text, 1.8, 3.7)
 
         root.validate(this)
     }

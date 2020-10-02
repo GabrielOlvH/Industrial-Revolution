@@ -38,18 +38,17 @@ class FarmerController(
         configure("block.indrev.farmer", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
-        root.add(inputFrame, 1.4, 0.7)
+        root.add(inputFrame, 1.9, 0.7)
         inputFrame.setSize(40, 44)
-
         val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
-        root.add(outputFrame, 4.1, 0.7)
+        root.add(outputFrame, 5.1, 0.7)
         outputFrame.setSize(58, 62)
 
         val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 4.2, 1.0)
+        root.add(outputSlot, 5.2, 1.0)
         val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.farmer_input_slot_type"))
-        root.add(inputSlot, 1.5, 1.0)
+        root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
         root.add(slider, 1.4, 4.0)

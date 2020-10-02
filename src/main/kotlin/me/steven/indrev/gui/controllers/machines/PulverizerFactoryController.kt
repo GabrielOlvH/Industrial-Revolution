@@ -3,17 +3,14 @@ package me.steven.indrev.gui.controllers.machines
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.PulverizerFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class PulverizerFactoryController(
@@ -30,26 +27,25 @@ class PulverizerFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.pulverizer", ctx, playerInventory, blockInventory, propertyDelegate)
-        root.add(WText(TranslatableText("block.indrev.factory"), HorizontalAlignment.CENTER, 0x404040), 4.3, 0.5)
+        configure("block.indrev.pulverizer_factory", ctx, playerInventory, blockInventory, propertyDelegate)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? PulverizerFactoryBlockEntity ?: return@run
             val slotsAmount = 5
-            val offset = 2.3
+            val offset = 2.6
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.inputSlots.withIndex()) {
                 val inputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(inputSlot, offset + (index * 1.1), 1.2)
+                root.add(inputSlot, offset + (index * 1.2), 1.0)
             }
 
             for (i in 0 until slotsAmount) {
                 val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
-                root.add(processWidget, offset + (i * 1.1), 2.3)
+                root.add(processWidget, offset + (i * 1.2), 2.2)
             }
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.outputSlots.withIndex()) {
                 val outputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(outputSlot, offset + (index * 1.1), 3.4)
+                root.add(outputSlot, offset + (index * 1.2), 3.5)
                 outputSlot.addChangeListener { _, _, _, _ ->
                     val player = playerInventory.player
                     if (!player.world.isClient) {

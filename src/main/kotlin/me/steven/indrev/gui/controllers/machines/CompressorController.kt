@@ -27,14 +27,14 @@ class CompressorController(syncId: Int, playerInventory: PlayerInventory, ctx: S
         configure("block.indrev.compressor", ctx, playerInventory, blockInventory, propertyDelegate)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.0, 1.5)
+        root.add(inputSlot, 3.5, 2.0)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.2, 1.5)
+        root.add(processWidget, 4.65, 2.0)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 5.7, 1.5)
+        root.add(outputSlot, 6.14, 2.0)
 
         root.validate(this)
     }
