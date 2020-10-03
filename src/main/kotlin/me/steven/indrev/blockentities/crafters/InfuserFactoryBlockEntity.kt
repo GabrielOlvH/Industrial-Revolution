@@ -28,6 +28,11 @@ class InfuserFactoryBlockEntity(tier: Tier) :
         }
     }
 
+    override fun splitStacks() {
+        splitStacks(intArrayOf(6, 9, 12, 15, 18))
+        splitStacks(intArrayOf(7, 10, 13, 16, 19))
+    }
+
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)

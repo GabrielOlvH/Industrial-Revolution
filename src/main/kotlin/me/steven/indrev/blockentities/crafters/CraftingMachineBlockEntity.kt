@@ -10,7 +10,7 @@ import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.associateSum
+import me.steven.indrev.utils.associateStacks
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -61,16 +61,19 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         else -> 0.0
     }
 
-    fun splitStacks() {
+    open fun splitStacks() {
         if (craftingComponents.size <= 1) return
         val inventory = inventoryComponent!!.inventory
-        val (item, sum) = inventory.inputSlots.associateSum {
-            val stack = inventory.getStack(it)
-            Pair(stack.item, if (stack?.tag?.isEmpty == false) 0 else stack.count)
-        }.maxByOrNull { it.value } ?: return
+        splitStacks(inventory.inputSlots)
+    }
+
+    fun splitStacks(inputSlots: IntArray) {
+        if (craftingComponents.size <= 1) return
+        val inventory = inventoryComponent!!.inventory
+        val (item, sum) = inputSlots.associateStacks { inventory.getStack(it) }.maxByOrNull { it.value } ?: return
         if (sum <= 0) return
 
-        val freeSlots = inventory.inputSlots.filter { inventory.fits(item, it) }
+        val freeSlots = inputSlots.filter { inventory.fits(item, it) }
         var remaining = sum
         val slotsUsed = freeSlots.size.coerceAtMost(sum)
         val rem = sum % slotsUsed
