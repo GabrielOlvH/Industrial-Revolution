@@ -19,7 +19,7 @@ assignees: ''
  - Industrial Revolution: 
  - Modpack: 
 
-**Logs?**
+**Logs:**
 - Use a paste service, do not paste the logs directly here.
 
 **Details:**
