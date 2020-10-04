@@ -49,8 +49,8 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 9, Axis.HORIZONTAL)
-        root.add(slider, 1.9, 4.0)
-        slider.setSize(35, 20)
+        root.add(slider, 1.6, 4.0)
+        slider.setSize(50, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
             slider.value = blockEntity.range

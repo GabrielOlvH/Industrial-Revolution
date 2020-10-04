@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WSlider
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.Axis
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
@@ -51,8 +52,8 @@ class FarmerController(
         root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
-        root.add(slider, 1.4, 4.0)
-        slider.setSize(35, 20)
+        root.add(slider, 1.6, 4.0)
+        slider.setSize(50, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
             slider.value = blockEntity.range
@@ -61,8 +62,8 @@ class FarmerController(
 
         val text = WText({
             TranslatableText("block.indrev.aoe.range", slider.value)
-        })
-        root.add(text, 2.0, 3.7)
+        }, HorizontalAlignment.LEFT)
+        root.add(text, 1.8, 3.7)
 
         root.validate(this)
     }
