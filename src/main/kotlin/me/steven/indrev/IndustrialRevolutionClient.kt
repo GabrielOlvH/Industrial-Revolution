@@ -8,6 +8,8 @@ import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.PumpBlockEntity
+import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
@@ -130,6 +132,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
+        }
+
+        MachineRegistry.PUMP_REGISTRY.forEachBlockEntity { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<PumpBlockEntity>, ::PumpBlockEntityRenderer)
         }
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)

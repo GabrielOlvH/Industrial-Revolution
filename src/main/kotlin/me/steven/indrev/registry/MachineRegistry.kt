@@ -317,6 +317,17 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { DrainBlockEntity(tier) } }
         )
 
+        val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(),
+                    tier,
+                    CONFIG.machines.drain,
+                    null) { PumpBlockEntity(tier) }
+            },
+            { tier -> { PumpBlockEntity(tier) } }
+        )
+
         val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
             { tier ->
                 HorizontalFacingMachineBlock(
