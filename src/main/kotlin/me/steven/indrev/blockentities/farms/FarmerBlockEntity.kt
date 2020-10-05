@@ -93,10 +93,11 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                     lootTable.generateLoot(lootContext).forEach { inventory.addStack(it) }
                     true
                 }
-                block == Blocks.AIR && isValidSeed -> {
+                block == Blocks.AIR && isValidSeed && stack.count > 1 -> {
                     val cropState = (item as BlockItem).block.defaultState
                     if (cropState.canPlaceAt(world, pos)) {
                         world.setBlockState(pos, cropState)
+                        stack.count--
                         true
                     } else false
                 }

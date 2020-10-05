@@ -115,6 +115,7 @@ object IndustrialRevolution : ModInitializer {
                     val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@execute
                     blockEntity.range = value
                     blockEntity.markDirty()
+                    blockEntity.sync()
                 }
             }
         }
