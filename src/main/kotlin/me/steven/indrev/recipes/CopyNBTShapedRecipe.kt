@@ -40,8 +40,9 @@ class CopyNBTShapedRecipe(
             override fun read(identifier: Identifier?, jsonObject: JsonObject?): CopyNBTShapedRecipe {
                 val shaped = super.read(identifier, jsonObject)
                 val copyNbtFrom = JsonHelper.getString(jsonObject?.getAsJsonObject("result"), "copyNbt")
+                val group = JsonHelper.getString(jsonObject, "group", "")
                 val item = Registry.ITEM.get(Identifier(copyNbtFrom))
-                return CopyNBTShapedRecipe(shaped.id, shaped.group, shaped.width, shaped.height, shaped.previewInputs, shaped.output, item)
+                return CopyNBTShapedRecipe(shaped.id, group, shaped.width, shaped.height, shaped.previewInputs, shaped.output, item)
             }
 
             override fun write(packetByteBuf: PacketByteBuf?, shapedRecipe: ShapedRecipe?) {

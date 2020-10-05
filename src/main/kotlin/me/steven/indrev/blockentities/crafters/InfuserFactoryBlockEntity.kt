@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.CraftingComponent
+import me.steven.indrev.components.MultiblockComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
@@ -8,7 +9,9 @@ import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import net.minecraft.block.Blocks
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.BlockPos
 
 class InfuserFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_FACTORY_REGISTRY) {
@@ -26,6 +29,13 @@ class InfuserFactoryBlockEntity(tier: Tier) :
                 outputSlots = intArrayOf(6 + (index * 3) + 2)
             }
         }
+        val backPos = BlockPos(0, 0, 1)
+        this.multiblockComponent = MultiblockComponent.Builder()
+            .add(backPos, Blocks.IRON_BLOCK.defaultState)
+            .diamond(backPos, 1, Blocks.REDSTONE_BLOCK.defaultState)
+            .corners(backPos, 1, Blocks.DIAMOND_BLOCK.defaultState)
+            .cube(BlockPos(-1, -1, 2),3, 2, 3, Blocks.COAL_BLOCK.defaultState)
+            .build(this)
     }
 
     override fun splitStacks() {

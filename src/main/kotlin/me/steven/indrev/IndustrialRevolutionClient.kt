@@ -1,11 +1,9 @@
 package me.steven.indrev
 
+import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.CondenserBlockEntity
-import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
-import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
+import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
@@ -130,6 +128,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
             BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
+        }
+
+        MachineRegistry.INFUSER_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<InfuserFactoryBlockEntity>, ::MultiblockBlockEntityRenderer)
         }
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)

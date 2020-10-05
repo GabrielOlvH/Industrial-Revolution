@@ -12,7 +12,6 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WEnergy
 import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
@@ -83,7 +82,8 @@ fun SyncedGuiDescription.configure(
                         ) else getUpgradeSlotPainter(blockInventory, slot)
                     slotPanel.add(s, 0, i)
                 }
-                slotPanel.backgroundPainter = IRGuiController.UPGRADE_SLOT_PANEL_PAINTER
+                if (world.isClient)
+                slotPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
                 panel.add(slotPanel, 9.7, -0.25)
             }
             if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
@@ -109,7 +109,8 @@ fun SyncedGuiDescription.configure(
                 button.icon = Icon { _, x, y, _ ->
                     ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
                 }
-                buttonPanel.backgroundPainter = IRGuiController.UPGRADE_SLOT_PANEL_PAINTER
+                if (world.isClient)
+                buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
                 buttonPanel.add(button, 0, 0)
                 panel.add(buttonPanel, 9.7, 4.2)
                 button.setSize(20, 20)
@@ -133,7 +134,8 @@ fun SyncedGuiDescription.configure(
                     buf.writeBlockPos(blockPos)
                     ClientSidePacketRegistry.INSTANCE.sendToServer(SPLIT_STACKS_PACKET, buf)
                 }
-                buttonPanel.backgroundPainter = IRGuiController.UPGRADE_SLOT_PANEL_PAINTER
+                if (world.isClient)
+                buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
                 buttonPanel.add(button, 0, 0)
                 panel.add(buttonPanel, 9.7, 4.2)
                 button.setSize(20, 20)

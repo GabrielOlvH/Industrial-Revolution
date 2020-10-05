@@ -33,6 +33,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
+import net.minecraft.text.LiteralText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
@@ -77,14 +78,17 @@ open class MachineBlock(
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult? {
+        if (world.isClient) return ActionResult.CONSUME
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
-        if (blockEntity.fluidComponent != null && !world.isClient) {
+        if (blockEntity.fluidComponent != null) {
             val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
         }
         val stack = player?.mainHandStack
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
+        else if (blockEntity.multiblockComponent != null && !blockEntity.multiblockComponent!!.isBuilt)
+            player?.sendMessage(LiteralText("multiblock not formed"), true)
         else if (screenHandler != null
             && blockEntity.inventoryComponent != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
