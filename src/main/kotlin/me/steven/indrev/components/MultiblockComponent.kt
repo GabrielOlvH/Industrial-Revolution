@@ -32,7 +32,7 @@ class MultiblockComponent(val blockEntity: MachineBlockEntity<*>, val structure:
             if (statePos.z shr 4 shl 4 != currentSection.yOffset && statePos.y >= 0 && statePos.y shr 4 < currentChunk.sectionArray.size) {
                 currentSection = currentChunk.sectionArray[statePos.y shr 4]
             }
-            !ChunkSection.isEmpty(currentSection) && currentSection.getBlockState(statePos.x and 15, statePos.y and 15, statePos.z and 15) == state
+            !ChunkSection.isEmpty(currentSection) && currentSection.getBlockState(statePos.x and 15, statePos.y and 15, statePos.z and 15).rotate(rotation) == state
         }
     }
 
@@ -59,11 +59,11 @@ class MultiblockComponent(val blockEntity: MachineBlockEntity<*>, val structure:
             return this
         }
 
-        fun corners(center: BlockPos, radius: Int, state: BlockState): Builder {
-            add(center.add(radius, radius, 0), state)
-            add(center.add(-radius, radius, 0), state)
-            add(center.add(radius, -radius, 0), state)
-            add(center.add(-radius, -radius, 0), state)
+        fun corners(center: BlockPos, radius: Int, state: BlockState, rotation: BlockRotation = BlockRotation.NONE): Builder {
+            add(center.add(radius, radius, 0).rotate(rotation), state)
+            add(center.add(-radius, radius, 0).rotate(rotation), state)
+            add(center.add(radius, -radius, 0).rotate(rotation), state)
+            add(center.add(-radius, -radius, 0).rotate(rotation), state)
             return this
         }
 

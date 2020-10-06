@@ -28,7 +28,7 @@ class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: Block
                 matrices.scale(0.5f, 0.5f, 0.5f)
                 MinecraftClient.getInstance().blockRenderManager
                     .renderBlockAsEntity(state, matrices, vertexConsumers, 15728880, overlay)
-            } else if (blockState != state) {
+            } else if (blockState.rotate(rotation) != state) {
                 matrices.translate(-rotated.x.toDouble() - 0.00025, -rotated.y.toDouble() - 0.00025, -rotated.z.toDouble() - 0.00025)
                 matrices.scale(1.0005f, 1.0005f, 1.0005f)
                 MinecraftClient.getInstance().blockRenderManager

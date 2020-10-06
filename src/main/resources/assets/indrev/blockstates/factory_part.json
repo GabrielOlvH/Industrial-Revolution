@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "y=true,z=false,x=false": {
+      "model": "indrev:block/factory_part_y"
+    },
+    "z=true,y=false,x=false": {
+      "model": "indrev:block/factory_part_z"
+    },
+    "x=true,y=false,z=false": {
+      "model": "indrev:block/factory_part_x"
+    },
+    "x=false,y=false,z=false": {
+      "model": "indrev:block/factory_part"
+    }
+  }
+}

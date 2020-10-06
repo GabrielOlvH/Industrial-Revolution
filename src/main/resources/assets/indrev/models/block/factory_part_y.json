@@ -1,0 +1,25 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "particle": "indrev:block/factory_part",
+    "down": "indrev:block/factory_part",
+    "up": "indrev:block/factory_part",
+    "north": "indrev:block/factory_part",
+    "east": "indrev:block/factory_part",
+    "south": "indrev:block/factory_part",
+    "west": "indrev:block/factory_part"
+  },
+  "elements": [
+    {   "from": [ 1, 0, 1 ],
+      "to": [ 15, 16, 15 ],
+      "faces": {
+        "down":  { "texture": "#down", "cullface": "down", "uv": [1, 1, 15, 15] },
+        "up":    { "texture": "#up", "cullface": "up", "uv": [1, 1, 15, 15] },
+        "north": { "texture": "#north", "uv": [1, 1, 15, 15] },
+        "south": { "texture": "#south", "uv": [1, 1, 15, 15] },
+        "west":  { "texture": "#west", "uv": [1, 1, 15, 15] },
+        "east":  { "texture": "#east", "uv": [1, 1, 15, 15] }
+      }
+    }
+  ]
+}

@@ -2,10 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.blocks.AcidFluidBlock
-import me.steven.indrev.blocks.NikoliteOreBlock
-import me.steven.indrev.blocks.SulfurCrystalBlock
-import me.steven.indrev.blocks.TankBlock
+import me.steven.indrev.blocks.*
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
@@ -231,6 +228,8 @@ object IRRegistry {
 
         identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
+        identifier("factory_part").block(FACTORY_PART).item(BlockItem(FACTORY_PART, itemSettings()))
+
         WorldGeneration.init()
 
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
@@ -347,6 +346,9 @@ object IRRegistry {
 
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val FACTORY_PART = FactoryPartBlock(
+        FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
