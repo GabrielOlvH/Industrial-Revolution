@@ -1,0 +1,12 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "item": "indrev:sawdust",
+    "count": 4
+  },
+  "output": {
+    "item": "indrev:planks",
+    "count": 1
+  },
+  "processTime": 300
+}

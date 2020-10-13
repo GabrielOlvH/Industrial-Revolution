@@ -4,6 +4,8 @@
     "minecraft:grass_block",
     "minecraft:stone",
     "minecraft:bamboo",
-    "#minecraft:planks"
+    "#minecraft:planks",
+    "indrev:planks",
+    "indrev:plank_block"
   ]
 }

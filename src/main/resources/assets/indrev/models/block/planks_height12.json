@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/snow_height12",
+  "textures": {
+    "texture": "indrev:block/planks",
+    "particle": "indrev:block/planks"
+  }
+}

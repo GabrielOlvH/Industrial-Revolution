@@ -3,7 +3,7 @@
   "pattern": [
     "LCF",
     "NMN",
-    "WBW"
+    "PBP"
   ],
   "key": {
     "M": {
@@ -21,11 +21,11 @@
     "L": {
       "item": "minecraft:milk_bucket"
     },
-    "W": {
-      "tag": "minecraft:wool"
-    },
     "B": {
       "item": "indrev:battery"
+    },
+    "P": {
+      "item": "indrev:planks"
     }
   },
   "result": {

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "FCF",
+    "PCP",
     "NMN",
-    " B "
+    "FBF"
   ],
   "key": {
     "M": {
@@ -20,6 +20,9 @@
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "P": {
+      "item": "indrev:planks"
     }
   },
   "result": {

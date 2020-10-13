@@ -1,0 +1,12 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "item": "indrev:planks",
+    "count": 8
+  },
+  "output": {
+    "item": "indrev:plank_block",
+    "count": 1
+  },
+  "processTime": 300
+}

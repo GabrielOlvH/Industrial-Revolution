@@ -100,6 +100,8 @@ object IRRegistry {
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
 
         identifier("sawdust").item(DEFAULT_ITEM())
+        identifier("planks").block(PLANKS).item(BlockItem(PLANKS, itemSettings()))
+        identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
 
         identifier("hammer").item(HAMMER)
 
@@ -349,6 +351,12 @@ object IRRegistry {
     )
     val FACTORY_PART = FactoryPartBlock(
         FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val PLANKS = PlankBlock(
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+    )
+    val PLANK_BLOCK = Block(
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
     )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
