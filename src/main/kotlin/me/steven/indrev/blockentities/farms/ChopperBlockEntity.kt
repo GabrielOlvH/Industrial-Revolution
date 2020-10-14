@@ -16,6 +16,7 @@ import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
+import net.minecraft.tag.ItemTags
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -32,7 +33,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3, 4, 5)
-                filter { (_, item), _ -> item.isIn(FabricToolTags.AXES) || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock) }
+                2 filter { (_, item) -> item.isIn(FabricToolTags.AXES) }
+                3 filter { (_, item) -> item is BoneMealItem }
+                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS) }
             }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
             coolerSlot = 1

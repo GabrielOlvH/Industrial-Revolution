@@ -188,6 +188,20 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
     return button
 }
 
+fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: BackgroundPainter) {
+    ctx.run { world, _ ->
+        if (world.isClient) this.backgroundPainter = painter
+    }
+}
+
+fun WItemSlot.setIcon(ctx: ScreenHandlerContext, inventory: Inventory, slot: Int, identifier: Identifier) {
+    setPainterSafe(ctx) { left, top, widget ->
+        BackgroundPainter.SLOT.paintBackground(left, top, widget)
+        if (inventory.getStack(slot).isEmpty)
+            ScreenDrawing.texturedRect(left + 1, top + 1, 16, 16, identifier, -1)
+    }
+}
+
 val POWER_ICON_ID = identifier("textures/gui/power_icon.png")
 
 fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
