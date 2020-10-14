@@ -10,6 +10,7 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.setIcon
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
@@ -33,7 +34,9 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
             0.7
         )
 
-        root.add(WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod")), 4.45, 3.5)
+        val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod"))
+        fishingRodSlot.setIcon(ctx, blockInventory, 1, FISHING_ROD_ICON)
+        root.add(fishingRodSlot, 4.45, 3.5)
 
         root.validate(this)
     }
@@ -44,5 +47,6 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
 
     companion object {
         val SCREEN_ID = identifier("fishing_farm_screen")
+        val FISHING_ROD_ICON = identifier("textures/gui/fishing_rod_icon.png")
     }
 }
