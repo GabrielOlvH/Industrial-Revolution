@@ -1,7 +1,22 @@
 {
-  "parent": "minecraft:block/snow_height8",
+  "parent": "block/thin_block",
   "textures": {
-    "texture": "indrev:block/planks",
-    "particle": "indrev:block/planks"
-  }
+    "particle": "indrev:block/plank_side",
+    "texture": "indrev:block/plank_side",
+    "top": "block/oak_planks"
+  },
+  "elements": [
+    {
+      "from": [ 0, 0, 0 ],
+      "to": [ 16, 8, 16 ],
+      "faces": {
+        "down":  { "uv": [ 0, 0, 16, 16 ], "texture": "#top", "cullface": "down" },
+        "up":    { "uv": [ 0, 0, 16, 16 ], "texture": "#top" },
+        "north": { "uv": [ 0, 8, 16, 16 ], "texture": "#texture", "cullface": "north" },
+        "south": { "uv": [ 0, 8, 16, 16 ], "texture": "#texture", "cullface": "south" },
+        "west":  { "uv": [ 0, 8, 16, 16 ], "texture": "#texture", "cullface": "west" },
+        "east":  { "uv": [ 0, 8, 16, 16 ], "texture": "#texture", "cullface": "east" }
+      }
+    }
+  ]
 }
