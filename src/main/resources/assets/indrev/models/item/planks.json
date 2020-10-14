@@ -1,3 +1,6 @@
 {
-  "parent": "indrev:block/planks_height2"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "indrev:item/planks_item"
+  }
 }
