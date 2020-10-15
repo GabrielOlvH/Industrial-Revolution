@@ -58,7 +58,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     )
                 }
                 if (blockEntity.inventoryComponent != null && blockEntity.fluidComponent != null)
-                    root.add(toggle, 2.2, 0.9)
+                    root.add(toggle, 1.7, 0.9)
                 toggle.setSize(30, 20)
                 val titleWidget = WText(
                     TranslatableText("item.indrev.wrench.title")
@@ -142,7 +142,6 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     }
 
     companion object {
-        private val TIER_REGEX = Regex("_mk[0-9]")
         val SCREEN_ID = identifier("wrench_item_io_screen")
         val SAVE_PACKET_ID = identifier("save_packet_id")
     }
