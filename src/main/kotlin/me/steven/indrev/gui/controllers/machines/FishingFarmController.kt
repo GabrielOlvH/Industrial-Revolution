@@ -6,7 +6,6 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -28,11 +27,7 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
         setRootPanel(root)
         configure("block.indrev.fishing_farm", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 2, 2),
-            3.95,
-            0.7
-        )
+        root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.95, 0.7)
 
         val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod"))
         fishingRodSlot.setIcon(ctx, blockInventory, 1, FISHING_ROD_ICON)

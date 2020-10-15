@@ -11,7 +11,6 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -43,12 +42,12 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         outputFrame.setSize(58, 62)
 
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3),
+            WItemSlot.of(blockInventory, 6, 3, 3),
             5.2,
             1.0
         )
         root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2),
+            WItemSlot.of(blockInventory, 2, 2, 2),
             2.0,
             1.0
         )

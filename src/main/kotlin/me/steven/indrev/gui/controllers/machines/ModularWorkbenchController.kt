@@ -35,11 +35,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.modular_armor_slot_type"))
         root.add(armorSlot, 1.5, 3.5)
 
-        val moduleSlot = WTooltipedItemSlot.of(
-            blockInventory,
-            1,
-            TranslatableText("gui.indrev.module_slot_type")
-        )
+        val moduleSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.module_slot_type"))
         root.add(moduleSlot, 1.5, 1.0)
 
         val process = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 2, 3)

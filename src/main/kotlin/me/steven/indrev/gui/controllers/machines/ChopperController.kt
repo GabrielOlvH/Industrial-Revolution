@@ -11,7 +11,6 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -43,7 +42,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         root.add(outputFrame, 5.1, 0.7)
         outputFrame.setSize(58, 62)
 
-        val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
+        val outputSlot = WTooltipedItemSlot.of(blockInventory, 6, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.2, 1.0)
         

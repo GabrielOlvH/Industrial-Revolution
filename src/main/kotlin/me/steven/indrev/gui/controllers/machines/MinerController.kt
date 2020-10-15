@@ -7,7 +7,6 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -29,7 +28,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         setRootPanel(root)
         configure("block.indrev.miner", ctx, playerInventory, blockInventory, propertyDelegate)
 
-        val outputSlots = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
+        val outputSlots = WTooltipedItemSlot.of(blockInventory, 1, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlots.isInsertingAllowed = false
         root.add(outputSlots, 5.0, 1.0)
 
