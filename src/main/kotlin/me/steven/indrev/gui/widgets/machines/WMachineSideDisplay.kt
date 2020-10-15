@@ -7,12 +7,17 @@ import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.draw2Colors
 import net.minecraft.client.gui.DrawableHelper
+import net.minecraft.client.render.BufferBuilderStorage
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
-class WMachineSideDisplay(private val identifier: Identifier, private val side: WrenchController.MachineSide, var mode: TransferMode) : WButton() {
+class WMachineSideDisplay(
+    private val identifier: Identifier,
+    private val side: WrenchController.MachineSide,
+    var mode: TransferMode
+) : WButton() {
     init {
         this.setSize(16, 16)
     }
@@ -41,5 +46,9 @@ class WMachineSideDisplay(private val identifier: Identifier, private val side: 
                 .formatted(Formatting.BLUE)
         )
         super.addTooltip(tooltip)
+    }
+
+    companion object {
+        val STUFF = BufferBuilderStorage()
     }
 }
