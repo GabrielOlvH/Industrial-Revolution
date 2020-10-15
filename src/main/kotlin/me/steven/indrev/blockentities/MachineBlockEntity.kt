@@ -13,6 +13,7 @@ import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.MultiblockComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.energy.EnergyMovement
 import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*

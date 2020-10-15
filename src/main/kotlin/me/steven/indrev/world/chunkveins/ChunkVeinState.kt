@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.PersistentState
 
-class WorldChunkVeinData(key: String) : PersistentState(key) {
+class ChunkVeinState(key: String) : PersistentState(key) {
 
     val veins: MutableMap<ChunkPos, ChunkVeinData> = mutableMapOf()
 

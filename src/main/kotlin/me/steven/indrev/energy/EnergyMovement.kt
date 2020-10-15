@@ -1,8 +1,11 @@
-package me.steven.indrev.utils
+package me.steven.indrev.energy
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
+import me.steven.indrev.utils.holder
+import me.steven.indrev.utils.opposite
+import me.steven.indrev.utils.side
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -10,6 +13,7 @@ import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyStorage
 
+// This is used for machines connecting side to side.
 @Suppress("CAST_NEVER_SUCCEEDS")
 object EnergyMovement {
     fun spreadNeighbors(source: BlockEntity, pos: BlockPos) {

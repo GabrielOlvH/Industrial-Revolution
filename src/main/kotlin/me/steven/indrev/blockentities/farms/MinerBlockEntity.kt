@@ -9,8 +9,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getChunkPos
+import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
@@ -46,8 +46,8 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val state =
                 (world as ServerWorld).persistentStateManager.getOrCreate(
-                    { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                    WorldChunkVeinData.STATE_OVERWORLD_KEY
+                    { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                    ChunkVeinState.STATE_OVERWORLD_KEY
                 )
             val data = state.veins[chunkPos] ?: return
             this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
@@ -71,8 +71,8 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             if (mining >= config.processSpeed) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                        WorldChunkVeinData.STATE_OVERWORLD_KEY
+                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                        ChunkVeinState.STATE_OVERWORLD_KEY
                     )
                 val data = state.veins[scanChunkPos]
                 if (data == null) {

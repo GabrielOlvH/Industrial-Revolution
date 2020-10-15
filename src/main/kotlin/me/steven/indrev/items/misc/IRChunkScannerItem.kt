@@ -2,10 +2,10 @@ package me.steven.indrev.items.misc
 
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.asString
+import me.steven.indrev.world.chunkveins.BiomeVeins
 import me.steven.indrev.world.chunkveins.ChunkVeinData
-import me.steven.indrev.world.chunkveins.Picker
+import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -37,8 +37,8 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
             if (chunkPos != null) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                        WorldChunkVeinData.STATE_OVERWORLD_KEY
+                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                        ChunkVeinState.STATE_OVERWORLD_KEY
                     )
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
@@ -46,7 +46,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val biomeKey = world.registryManager.get(Registry.BIOME_KEY)
                     .getKey(world.getBiome(user?.blockPos))
                     .orElse(default)
-                val picker = Picker.PICKERS.getOrDefault(biomeKey, Picker.PICKERS[default])
+                val picker = BiomeVeins.BIOME_VEINS.getOrDefault(biomeKey, BiomeVeins.BIOME_VEINS[default])
                 val identifier = info?.veinIdentifier ?: picker?.veins?.pickRandom(world.random)!!
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
