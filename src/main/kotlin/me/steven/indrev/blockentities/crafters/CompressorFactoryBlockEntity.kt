@@ -32,5 +32,5 @@ class CompressorFactoryBlockEntity(tier: Tier) :
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

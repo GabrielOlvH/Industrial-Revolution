@@ -54,7 +54,7 @@ class InfuserFactoryBlockEntity(tier: Tier) :
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     companion object {
         val FACTORY_STATE_X = IRRegistry.FACTORY_PART.defaultState.with(FactoryPartBlock.CONNECTED_X, true)
