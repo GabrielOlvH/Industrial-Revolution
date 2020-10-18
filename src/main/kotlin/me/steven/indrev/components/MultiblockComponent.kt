@@ -3,53 +3,40 @@ package me.steven.indrev.components
 import com.google.common.collect.ImmutableMap
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
-import net.minecraft.world.chunk.ChunkSection
 
-class MultiblockComponent(val blockEntity: MachineBlockEntity<*>, val structure: Map<BlockPos, BlockState>) {
+class MultiblockComponent constructor(val blockEntity: MachineBlockEntity<*>, val structure: Map<BlockPos, BlockState>)
+    : AbstractMultiblockComponent() {
 
-    var isBuilt = false
-
-    fun tick() {
+    override fun tick() {
         val world = blockEntity.world!!
         var currentChunk: Chunk = world.getChunk(blockEntity.pos)
-        val yOffset = blockEntity.pos.y shr 4
-        if (blockEntity.pos.y < 0 || yOffset > currentChunk.sectionArray.size) {
+        if (blockEntity.pos.y < 0) {
             isBuilt = false
             return
         }
-        var currentSection: ChunkSection = currentChunk.sectionArray[yOffset]
+        val rotation = rotateBlock(blockEntity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
         isBuilt = structure.all { (offset, state) ->
-            val rotation = rotateBlock(blockEntity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
             val statePos = blockEntity.pos.subtract(offset.rotate(rotation))
             if (currentChunk.pos.startX < statePos.x || currentChunk.pos.endX > statePos.x || currentChunk.pos.startZ < statePos.z || currentChunk.pos.endZ > statePos.z) {
                 currentChunk = world.getChunk(statePos)
             }
-            if (statePos.z shr 4 shl 4 != currentSection.yOffset && statePos.y >= 0 && statePos.y shr 4 < currentChunk.sectionArray.size) {
-                currentSection = currentChunk.sectionArray[statePos.y shr 4]
-            }
-            !ChunkSection.isEmpty(currentSection) && currentSection.getBlockState(statePos.x and 15, statePos.y and 15, statePos.z and 15).rotate(rotation) == state
+            currentChunk.getBlockState(statePos).rotate(rotation) == state
         }
     }
+
+    @Environment(EnvType.CLIENT)
+    override fun getRenderingStructure(): Map<BlockPos, BlockState> = structure
 
     fun test(): Boolean {
         val rotation = rotateBlock(blockEntity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
         return structure.all { (offset, state) ->
             blockEntity.world!!.getBlockState(blockEntity.pos.subtract(offset.rotate(rotation))) == state
-        }
-    }
-
-    fun rotateBlock(direction: Direction): BlockRotation {
-        return when (direction) {
-            Direction.NORTH -> BlockRotation.NONE
-            Direction.SOUTH -> BlockRotation.CLOCKWISE_180
-            Direction.WEST -> BlockRotation.COUNTERCLOCKWISE_90
-            Direction.EAST -> BlockRotation.CLOCKWISE_90
-            else -> return BlockRotation.NONE
         }
     }
 
@@ -64,6 +51,14 @@ class MultiblockComponent(val blockEntity: MachineBlockEntity<*>, val structure:
             add(center.add(-radius, radius, 0).rotate(rotation), state)
             add(center.add(radius, -radius, 0).rotate(rotation), state)
             add(center.add(-radius, -radius, 0).rotate(rotation), state)
+            return this
+        }
+
+        fun horizontalCorners(center: BlockPos, radius: Int, state: BlockState, rotation: BlockRotation = BlockRotation.NONE): Builder {
+            add(center.add(radius, 0, radius).rotate(rotation), state)
+            add(center.add(-radius, 0, radius).rotate(rotation), state)
+            add(center.add(radius, 0, -radius).rotate(rotation), state)
+            add(center.add(-radius, 0, -radius).rotate(rotation), state)
             return this
         }
 
@@ -84,6 +79,10 @@ class MultiblockComponent(val blockEntity: MachineBlockEntity<*>, val structure:
                 }
             }
             return this
+        }
+
+        fun remove(pos: BlockPos) {
+            test.remove(pos)
         }
 
         fun build(blockEntity: MachineBlockEntity<*>) = MultiblockComponent(blockEntity, ImmutableMap.copyOf(test))

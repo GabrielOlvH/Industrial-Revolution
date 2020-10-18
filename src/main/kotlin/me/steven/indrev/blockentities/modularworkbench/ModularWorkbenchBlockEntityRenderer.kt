@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.armor.ModuleFeatureRenderer
+import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
@@ -10,7 +11,6 @@ import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
-import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.entity.model.BipedEntityModel
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
-    BlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
+    MultiblockBlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
 
     private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(0.5f)
     private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(1.0f)
@@ -32,14 +32,15 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     }
 
     override fun render(
-        entity: ModularWorkbenchBlockEntity?,
+        entity: ModularWorkbenchBlockEntity,
         tickDelta: Float,
         matrices: MatrixStack,
         vertexConsumers: VertexConsumerProvider,
         light: Int,
         overlay: Int
     ) {
-        val itemStack = entity?.inventoryComponent?.inventory?.getStack(2)
+        super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay)
+        val itemStack = entity.inventoryComponent?.inventory?.getStack(2)
         if (itemStack?.isEmpty == false) {
             matrices.run {
                 push()

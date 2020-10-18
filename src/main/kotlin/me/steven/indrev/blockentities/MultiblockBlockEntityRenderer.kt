@@ -7,7 +7,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
-class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<T>(dispatcher) {
+open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<T>(dispatcher) {
     override fun render(
         entity: T,
         tickDelta: Float,
@@ -18,7 +18,7 @@ class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: Block
     ) {
         val multiblock = entity.multiblockComponent ?: return
         val rotation = multiblock.rotateBlock(entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
-        multiblock.structure.forEach { (offset, state) ->
+        multiblock.getRenderingStructure().forEach { (offset, state) ->
             matrices.push()
             val rotated = offset.rotate(rotation)
             val blockPos = entity.pos.subtract(rotated)
