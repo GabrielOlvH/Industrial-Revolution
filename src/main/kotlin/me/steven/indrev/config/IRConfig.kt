@@ -110,16 +110,16 @@ class Machines : ConfigData {
     val sawmillMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk1: MachineConfig = MachineConfig(4.0, 1.5, 1000.0, Tier.MK1.io)
+    val infuserMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk2: MachineConfig = MachineConfig(8.0, 2.5, 5000.0, Tier.MK2.io)
+    val infuserMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0,5000.0, Tier.MK2.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk3: MachineConfig = MachineConfig(16.0, 3.5, 10000.0, Tier.MK3.io)
+    val infuserMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0,10000.0, Tier.MK3.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val infuserMk4: MachineConfig = MachineConfig(64.0, 4.5, 100000.0, Tier.MK4.io)
+    val infuserMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0,100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val recycler: MachineConfig = MachineConfig(8.0, 2.5, 50000.0, Tier.MK2.io)
@@ -176,7 +176,7 @@ class Machines : ConfigData {
     val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val smelter: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
+    val smelter: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0,50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
     val condenser: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
