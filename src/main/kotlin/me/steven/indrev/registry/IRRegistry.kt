@@ -272,7 +272,7 @@ object IRRegistry {
     val MINING_DRILL_MK3 =
         IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().maxDamage(32000).customDamage(EnergyDamageHandler)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
