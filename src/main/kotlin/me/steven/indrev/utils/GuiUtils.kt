@@ -13,6 +13,7 @@ import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WEnergy
+import me.steven.indrev.gui.widgets.machines.WProcessBar
 import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
@@ -249,4 +250,4 @@ val PROCESS_VERTICAL_FULL =
     identifier("textures/gui/widget_processing_full_vertical.png")
 
 fun createProcessBar(direction: WBar.Direction = WBar.Direction.RIGHT, bg: Identifier = PROCESS_EMPTY, bar: Identifier = PROCESS_FULL, value: Int = 4, maxValue: Int = 5)
-        = WBar(bg, bar, value, maxValue, direction)
+        = WProcessBar(direction, bg, bar, value, maxValue)
