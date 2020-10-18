@@ -5,6 +5,7 @@
   "mixins": [
     "AccessorEnergyHandler",
     "AccessorRecipeManager",
+    "AccessorScreenHandler",
     "AccessorWeightedList",
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",

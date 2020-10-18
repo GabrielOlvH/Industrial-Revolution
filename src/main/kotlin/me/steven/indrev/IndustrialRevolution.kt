@@ -222,6 +222,7 @@ object IndustrialRevolution : ModInitializer {
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
+    val SYNC_PROPERTY = identifier("sync_property")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())

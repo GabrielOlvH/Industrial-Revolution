@@ -14,6 +14,7 @@ import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.modular.ModularController
 import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
@@ -99,45 +100,75 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
 
         MachineRegistry.CABLE_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>, ::CableBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<CableBlockEntity>,
+                ::CableBlockEntityRenderer
+            )
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
+                ::AOEMachineBlockEntityRenderer
+            )
         }
 
         MachineRegistry.RANCHER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
+                ::AOEMachineBlockEntityRenderer
+            )
         }
 
         MachineRegistry.FARMER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
+                ::AOEMachineBlockEntityRenderer
+            )
         }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>, ::ModularWorkbenchBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>,
+                ::ModularWorkbenchBlockEntityRenderer
+            )
         }
 
         MachineRegistry.CHARGE_PAD_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, ::ChargePadBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<ChargePadBlockEntity>,
+                ::ChargePadBlockEntityRenderer
+            )
         }
 
         MachineRegistry.CONDENSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CondenserBlockEntity>, ::CondenserBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<CondenserBlockEntity>,
+                ::CondenserBlockEntityRenderer
+            )
         }
 
         MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<FluidInfuserBlockEntity>,
+                ::FluidInfuserBlockEntityRenderer
+            )
         }
 
         MachineRegistry.INFUSER_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<InfuserFactoryBlockEntity>, ::MultiblockBlockEntityRenderer)
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<InfuserFactoryBlockEntity>,
+                ::MultiblockBlockEntityRenderer
+            )
         }
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4), RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(
+            MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4),
+            RenderLayer.getTranslucent()
+        )
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.forEachBlock { _, block ->
@@ -150,7 +181,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 if(modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
                     return@ModelVariantProvider object : UnbakedModel {
                         override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-                        override fun bake(loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, rotationScreenHandler: ModelBakeSettings, modelId: Identifier) = IRTankItemBakedModel
+                        override fun bake(
+                            loader: ModelLoader,
+                            textureGetter: Function<SpriteIdentifier, Sprite>,
+                            rotationScreenHandler: ModelBakeSettings,
+                            modelId: Identifier
+                        ) = IRTankItemBakedModel
                         override fun getTextureDependencies(
                             unbakedModelGetter: Function<Identifier, UnbakedModel>?,
                             unresolvedTextureReferences: MutableSet<com.mojang.datafixers.util.Pair<String, String>>?
@@ -185,6 +221,17 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.SYNC_PROPERTY) { ctx, buf ->
+            val syncId = buf.readInt()
+            val property = buf.readInt()
+            val value = buf.readInt()
+            ctx.taskQueue.execute {
+                val handler = ctx.player.currentScreenHandler
+                if (handler.syncId == syncId)
+                    (handler as? IRGuiController)?.propertyDelegate?.set(property, value)
+            }
+        }
+
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
                 MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
@@ -192,10 +239,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
     }
 
-    val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(KeyBinding(
-        "key.indrev.modular",
-        InputUtil.Type.KEYSYM,
-        GLFW.GLFW_KEY_M,
-        "category.indrev"
-    ))
+    val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(
+        KeyBinding(
+            "key.indrev.modular",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_M,
+            "category.indrev"
+        )
+    )
 }

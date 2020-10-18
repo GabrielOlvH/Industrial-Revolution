@@ -39,7 +39,7 @@ class ElectricFurnaceFactoryController(
             }
 
             for (i in 0 until slotsAmount) {
-                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
+                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
                 root.add(processWidget, offset + (i * 1.2), 2.2)
             }
 

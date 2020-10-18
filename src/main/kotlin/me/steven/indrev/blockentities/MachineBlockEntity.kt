@@ -43,7 +43,7 @@ import kotlin.math.roundToInt
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
     : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     var explode = false
-    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
+    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0
 

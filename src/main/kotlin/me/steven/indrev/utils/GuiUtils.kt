@@ -42,6 +42,11 @@ fun WGridPanel.add(w: WWidget, x: Double, y: Double) {
     w.setLocation((x * 18).toInt(), (y * 18).toInt())
 }
 
+val ENERGY_EMPTY =
+    identifier("textures/gui/widget_energy_empty.png")
+val ENERGY_FULL =
+    identifier("textures/gui/widget_energy_full.png")
+
 val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
 val SPLIT_ON_ICON = identifier("textures/gui/split_on.png")
 val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
@@ -59,7 +64,7 @@ fun SyncedGuiDescription.configure(
         val title = WText(TranslatableText(titleId), HorizontalAlignment.CENTER,0x404040)
         var titlePos = 5.0
 
-        val energyWidget = WEnergy(screenHandlerContext)
+        val energyWidget = WEnergy()
         panel.add(energyWidget, 0.1, 0.0)
 
         val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
@@ -89,7 +94,7 @@ fun SyncedGuiDescription.configure(
             if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
                 titlePos += 0.5
                 val controller = blockEntity.temperatureComponent!!
-                panel.add(WTemperature(propertyDelegate, controller), 1.1, 0.0)
+                panel.add(WTemperature(controller), 1.1, 0.0)
                 val coolerSlot =
                     WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
                 if (world.isClient)
@@ -243,5 +248,5 @@ val PROCESS_VERTICAL_EMPTY =
 val PROCESS_VERTICAL_FULL =
     identifier("textures/gui/widget_processing_full_vertical.png")
 
-fun createProcessBar(direction: WBar.Direction = WBar.Direction.RIGHT, bg: Identifier = PROCESS_EMPTY, bar: Identifier = PROCESS_FULL, value: Int = 3, maxValue: Int = 4)
+fun createProcessBar(direction: WBar.Direction = WBar.Direction.RIGHT, bg: Identifier = PROCESS_EMPTY, bar: Identifier = PROCESS_FULL, value: Int = 4, maxValue: Int = 5)
         = WBar(bg, bar, value, maxValue, direction)

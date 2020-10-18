@@ -30,7 +30,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(6)
     }
 
     private var currentRecipe: T? = null

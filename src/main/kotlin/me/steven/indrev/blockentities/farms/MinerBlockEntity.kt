@@ -23,7 +23,7 @@ import team.reborn.energy.EnergySide
 class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(4)
+        this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 14

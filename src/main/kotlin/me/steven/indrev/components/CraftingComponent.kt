@@ -18,8 +18,8 @@ import team.reborn.energy.Energy
 import kotlin.math.ceil
 
 class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
-    var processTime: Int by Property(3 + (index * 2), 0)
-    var totalProcessTime: Int by Property(4 + (index * 2), 0)
+    var processTime: Int by Property(4 + (index * 2), 0)
+    var totalProcessTime: Int by Property(5 + (index * 2), 0)
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
     val inventoryComponent: InventoryComponent get() = machine.inventoryComponent!!
     val temperatureComponent: TemperatureComponent? get() = machine.temperatureComponent
