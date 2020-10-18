@@ -75,8 +75,10 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
     }
 
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        tooltip?.add(TranslatableText("item.indrev.wrench.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
-        super.appendTooltip(stack, world, tooltip, context)
+        tooltip?.add(TranslatableText("item.indrev.wrench.tooltip1",
+            TranslatableText("item.indrev.wrench.tooltip1.${getMode(stack).toString().toLowerCase()}").formatted(Formatting.WHITE)
+        ).formatted(Formatting.GOLD))
+        tooltip?.add(TranslatableText("item.indrev.wrench.tooltip").formatted(Formatting.DARK_GRAY))
     }
 
     private fun getMode(stack: ItemStack?): Mode {
