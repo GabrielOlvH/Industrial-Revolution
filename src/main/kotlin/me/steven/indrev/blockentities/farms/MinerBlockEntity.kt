@@ -88,7 +88,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 data.explored++
                 state.markDirty()
                 mining = 0.0
-                inventory.addStack(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
+                inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
                 setWorkingState(true)
             }
         } else setWorkingState(false)

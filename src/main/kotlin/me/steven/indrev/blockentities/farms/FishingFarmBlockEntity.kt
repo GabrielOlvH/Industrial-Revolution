@@ -53,7 +53,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
                     .parameter(LootContextParameters.TOOL, rodStack)
                     .build(LootContextTypes.FISHING)
                 val loot = lootTable.generateLoot(ctx)
-                loot.forEach { stack -> inventoryComponent?.inventory?.addStack(stack) }
+                loot.forEach { stack -> inventoryComponent?.inventory?.output(stack) }
                 rodStack?.apply {
                     damage++
                     if (damage >= maxDamage) decrement(1)

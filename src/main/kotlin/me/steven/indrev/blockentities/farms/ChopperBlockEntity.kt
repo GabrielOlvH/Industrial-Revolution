@@ -134,8 +134,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
                 .parameter(LootContextParameters.TOOL, axeStack)
         )
-        droppedStacks.map { inventory.addStack(it) }.filterNot(ItemStack::isEmpty).forEach {
-            ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
+        droppedStacks.forEach {
+            if (!inventory.output(it))
+                ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
     }

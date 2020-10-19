@@ -90,7 +90,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         .parameter(LootContextParameters.BLOCK_STATE, state)
                         .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
                         .build(LootContextTypes.BLOCK)
-                    lootTable.generateLoot(lootContext).forEach { inventory.addStack(it) }
+                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
                     true
                 }
                 block == Blocks.AIR && isValidSeed && stack.count > 1 -> {
