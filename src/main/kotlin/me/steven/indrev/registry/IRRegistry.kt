@@ -25,19 +25,18 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.Block
-import net.minecraft.block.FluidBlock
-import net.minecraft.block.Material
-import net.minecraft.block.MaterialColor
+import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.state.StateManager
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
+import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
@@ -231,6 +230,11 @@ object IRRegistry {
         identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
         identifier("factory_part").block(FACTORY_PART).item(BlockItem(FACTORY_PART, itemSettings()))
+        identifier("machine_controller").block(MACHINE_CONTROLLER).item(BlockItem(MACHINE_CONTROLLER, itemSettings()))
+        identifier("frame").block(FRAME).item(BlockItem(FRAME, itemSettings()))
+        identifier("pipe").block(PIPE).item(BlockItem(PIPE, itemSettings()))
+        identifier("pipes").block(PIPES).item(BlockItem(PIPES, itemSettings()))
+        identifier("grills").block(GRILLS).item(BlockItem(GRILLS, itemSettings()))
 
         WorldGeneration.init()
 
@@ -357,6 +361,33 @@ object IRRegistry {
     )
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+    )
+    val MACHINE_CONTROLLER = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val PIPE = object : HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    ) {
+        init {
+            this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
+        }
+        
+        override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
+            return defaultState.with(FACING, ctx?.playerFacing?.opposite)
+        }
+
+        override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
+            builder?.add(FACING)
+        }
+    }
+    val PIPES = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val GRILLS = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val FRAME = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
