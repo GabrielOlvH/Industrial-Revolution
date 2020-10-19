@@ -75,13 +75,13 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                 if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
                     Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
-                val res = inventory.addStack(fakePlayer.inventory.getStack(0))
+                val inserted = inventory.output(fakePlayer.inventory.getStack(0))
                 val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
                 if (!handStack.isEmpty && handStack.item != stack.item) {
-                    inventory.addStack(handStack)
+                    inventory.output(handStack)
                     fakePlayer.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
                 }
-                if (res.isEmpty)
+                if (inserted)
                     inventory.setStack(slot, stack)
                 fakePlayer.inventory.clear()
             }

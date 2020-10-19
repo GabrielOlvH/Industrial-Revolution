@@ -36,4 +36,13 @@ class IRInventory(
             return true
         return false
     }
+
+    fun output(itemStack: ItemStack): Boolean =
+        outputSlots.any { slot ->
+            val existing = getStack(slot)
+            if (existing.isEmpty || (existing.item == itemStack.item && existing.count + itemStack.count < maxCountPerStack)) {
+                setStack(slot, ItemStack(itemStack.item, existing.count + itemStack.count))
+                true
+            } else false
+        }
 }

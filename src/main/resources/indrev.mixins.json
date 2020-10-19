@@ -17,7 +17,8 @@
     "MixinPlayerEntity",
     "MixinPlayerManager",
     "MixinRecipeType",
-    "MixinServerPlayerEntity"
+    "MixinServerPlayerEntity",
+    "MixinSheepEntity"
   ],
   "client": [
     "MixinClientRecipeBook",
