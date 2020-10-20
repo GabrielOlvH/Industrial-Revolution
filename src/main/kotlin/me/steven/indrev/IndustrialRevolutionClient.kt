@@ -20,6 +20,7 @@ import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.VeinType
@@ -234,7 +235,13 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
-                MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+                val playerInventory = MinecraftClient.getInstance().player?.inventory ?: break
+                val hasModularItem = (0 until playerInventory.size())
+                    .associateWith { slot -> playerInventory.getStack(slot) }
+                    .filter { (_, stack) -> stack.item is IRModularItem<*> }
+                    .isNotEmpty()
+                if (hasModularItem)
+                    MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
             }
         }
     }

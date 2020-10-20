@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
 
@@ -36,14 +37,16 @@ open class IRGuiController(
     }
 
     override fun sendContentUpdates() {
-        for (i in properties.indices) {
-            val property = properties[i]
-            if (property.hasChanged()) {
-                val buf = PacketByteBuf(Unpooled.buffer())
-                buf.writeInt(syncId)
-                buf.writeInt(i)
-                buf.writeInt(property.get())
-                ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.SYNC_PROPERTY, buf)
+        if (playerInventory.player is ServerPlayerEntity) {
+            for (i in properties.indices) {
+                val property = properties[i]
+                if (property.hasChanged()) {
+                    val buf = PacketByteBuf(Unpooled.buffer())
+                    buf.writeInt(syncId)
+                    buf.writeInt(i)
+                    buf.writeInt(property.get())
+                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.SYNC_PROPERTY, buf)
+                }
             }
         }
         super.sendContentUpdates()
