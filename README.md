@@ -1,4 +1,4 @@
-<p align="center"><img src="https://i.imgur.com/jWfZM51.png" width="128" height="128"></p>
+<p align="center"><img src="https://i.imgur.com/1ZwHaAt.png"></p>
 <h3 align="center">Industrial Revolution</h3>
 <p align="center">An Industrial mod made for Fabric.</p>
 <p align="center">
