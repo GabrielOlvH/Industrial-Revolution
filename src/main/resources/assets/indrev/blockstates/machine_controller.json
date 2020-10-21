@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "": {
-      "model": "indrev:block/machine_controller"
-    }
-  }
-}
