@@ -7,10 +7,7 @@ import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.items.energy.IRBatteryItem
-import me.steven.indrev.items.energy.IRGamerAxeItem
-import me.steven.indrev.items.energy.IRMiningDrill
-import me.steven.indrev.items.energy.IRPortableChargerItem
+import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
@@ -272,13 +269,13 @@ object IRRegistry {
     }
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
-    val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
+    val MINING_DRILL_MK4 = IRModularDrill(
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())

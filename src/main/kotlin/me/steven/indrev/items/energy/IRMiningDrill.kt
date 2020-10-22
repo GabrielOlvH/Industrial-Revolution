@@ -1,20 +1,13 @@
 package me.steven.indrev.items.energy
 
-import draylar.magna.item.HammerItem
-import me.steven.indrev.api.CustomEnchantmentProvider
-import me.steven.indrev.tools.modular.DrillModule
-import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.tools.modular.MiningToolModule
-import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
-import net.minecraft.enchantment.Enchantment
-import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.world.World
@@ -23,19 +16,21 @@ import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
-class IRMiningDrill(
+open class IRMiningDrill(
     toolMaterial: ToolMaterial,
     private val tier: Tier,
     private val maxStored: Double,
+    val baseMiningSpeed: Float,
     settings: Settings
-) : HammerItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem, IRModularItem<Module>, CustomEnchantmentProvider {
+) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
-        val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
-        return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) 8 * speedMultiplier.toFloat()
-        else if (!hasEnergy) 0F
-        else super.getMiningSpeedMultiplier(stack, state)
+        return when {
+            SUPPORTED_MATERIALS.contains(material) && hasEnergy -> baseMiningSpeed
+            !hasEnergy -> 0F
+            else -> super.getMiningSpeedMultiplier(stack, state)
+        }
     }
 
     override fun appendTooltip(
@@ -44,7 +39,6 @@ class IRMiningDrill(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        getInstalledTooltip(getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
 
@@ -63,29 +57,8 @@ class IRMiningDrill(
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
 
-    override fun getSlotLimit(): Int = when (tier) {
-        Tier.MK1 -> 2
-        Tier.MK2 -> 6
-        Tier.MK3 -> 10
-        else -> 14
-    }
-
-    override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
-
-    override fun getRadius(stack: ItemStack): Int = DrillModule.RANGE.getLevel(stack)
-
-    override fun getLevel(enchantment: Enchantment, itemStack: ItemStack): Int {
-        val module =
-            when {
-                Enchantments.FORTUNE == enchantment -> DrillModule.FORTUNE
-                Enchantments.SILK_TOUCH == enchantment -> DrillModule.SILK_TOUCH
-                else -> return -1
-            }
-        return module.getLevel(itemStack)
-    }
-
     companion object {
-        private val SUPPORTED_MATERIALS = arrayOf(
+        val SUPPORTED_MATERIALS = arrayOf(
             Material.METAL,
             Material.STONE,
             Material.WOOD,
