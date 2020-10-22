@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorEnchantmentPredicate",
     "AccessorEnergyHandler",
     "AccessorRecipeManager",
     "AccessorScreenHandler",
@@ -11,6 +12,7 @@
     "MixinAbstractCookingRecipe",
     "MixinEnchantmentHelper",
     "MixinGenerationSettings",
+    "MixinItemPredicate",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",
