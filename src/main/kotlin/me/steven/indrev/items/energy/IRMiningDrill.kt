@@ -79,7 +79,7 @@ class IRMiningDrill(
             when {
                 Enchantments.FORTUNE == enchantment -> DrillModule.FORTUNE
                 Enchantments.SILK_TOUCH == enchantment -> DrillModule.SILK_TOUCH
-                else -> return 0
+                else -> return -1
             }
         return module.getLevel(itemStack)
     }
