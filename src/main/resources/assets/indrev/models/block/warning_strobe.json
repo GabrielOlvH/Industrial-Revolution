@@ -2,13 +2,14 @@
 	"parent": "block/block",
 	"textures": {
 		"0": "indrev:block/strobe-light",
-		"1": "indrev:block/strobe-base"
+		"1": "indrev:block/strobe-base",
+		"particle": "indrev:block/strobe-light"
 	},
 	"elements": [
 		{
-			"from": [5, 0, 4],
-			"to": [11, 1, 10],
-			"rotation": {"angle": 0, "axis": "y", "origin": [12, 8, 11]},
+			"from": [5, 0, 5],
+			"to": [11, 1, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [12, 8, 12]},
 			"faces": {
 				"north": {"uv": [8, 0, 16, 1], "texture": "#1"},
 				"east": {"uv": [8, 0, 16, 1], "texture": "#1"},
@@ -19,9 +20,9 @@
 			}
 		},
 		{
-			"from": [6, 1, 5],
-			"to": [10, 6, 9],
-			"rotation": {"angle": 0, "axis": "y", "origin": [13, 9, 12]},
+			"from": [6, 1, 6],
+			"to": [10, 6, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [13, 9, 13]},
 			"faces": {
 				"north": {"uv": [0, 0, 8, 10], "texture": "#0"},
 				"east": {"uv": [0, 0, 8, 10], "texture": "#0"},
