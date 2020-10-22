@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.TieredMultiblockComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -15,11 +14,9 @@ import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.util.math.BlockPos
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -32,6 +29,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
         }
+        /*
         this.multiblockComponent = TieredMultiblockComponent.Builder(Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .configure(Tier.MK1) { 
                 cube(BlockPos(-2, 2, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
@@ -74,7 +72,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 cube(BlockPos(-2, -3, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
                 remove(BlockPos(0, -3, 0))
             }
-            .build(this)
+            .build(this)*/
     }
 
     private var processTime: Int by Property(2, 0)
