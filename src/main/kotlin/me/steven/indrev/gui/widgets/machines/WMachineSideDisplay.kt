@@ -7,7 +7,6 @@ import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.draw2Colors
 import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.render.BufferBuilderStorage
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -46,9 +45,5 @@ class WMachineSideDisplay(
                 .formatted(Formatting.BLUE)
         )
         super.addTooltip(tooltip)
-    }
-
-    companion object {
-        val STUFF = BufferBuilderStorage()
     }
 }
