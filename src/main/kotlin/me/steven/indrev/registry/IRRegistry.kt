@@ -22,18 +22,19 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.*
+import net.minecraft.block.Block
+import net.minecraft.block.FluidBlock
+import net.minecraft.block.Material
+import net.minecraft.block.MaterialColor
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.state.StateManager
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
-import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
@@ -226,7 +227,6 @@ object IRRegistry {
 
         identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
-        identifier("factory_part").block(FACTORY_PART).item(BlockItem(FACTORY_PART, itemSettings()))
         identifier("controller").block(CONTROLLER).item(BlockItem(CONTROLLER, itemSettings()))
         identifier("frame").block(FRAME).item(BlockItem(FRAME, itemSettings()))
         identifier("duct").block(DUCT).item(BlockItem(DUCT, itemSettings()))
@@ -352,84 +352,34 @@ object IRRegistry {
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val FACTORY_PART = FactoryPartBlock(
-        FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
-    )
     val PLANKS = PlankBlock(
         FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
     )
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
     )
-    val CONTROLLER = object : HorizontalFacingBlock(
+
+    val CONTROLLER =  HorizontalFacingBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
-    ) {
-        init {
-            this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
-        }
-
-        override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-            return defaultState.with(FACING, ctx?.playerFacing?.opposite)
-        }
-
-        override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-            builder?.add(FACING)
-        }
-    }
-    val DUCT = object : HorizontalFacingBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
-    ) {
-        init {
-            this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
-        }
-        
-        override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-            return defaultState.with(FACING, ctx?.playerFacing?.opposite)
-        }
-
-        override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-            builder?.add(FACING)
-        }
-    }
+    )
+    val DUCT =  HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
     val FRAME = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val SILO = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val WARNING_STROBE = Block(
+    val WARNING_STROBE = WarningStrobeBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val INTAKE = object : HorizontalFacingBlock(
+    val INTAKE =  HorizontalFacingBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
-    ) {
-        init {
-            this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
-        }
-
-        override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-            return defaultState.with(FACING, ctx?.playerFacing?.opposite)
-        }
-
-        override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-            builder?.add(FACING)
-        }
-    }
-    val CABINET = object : HorizontalFacingBlock(
+    )
+    val CABINET = HorizontalFacingBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
-    ) {
-        init {
-            this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
-        }
-
-        override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-            return defaultState.with(FACING, ctx?.playerFacing?.opposite)
-        }
-
-        override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-            builder?.add(FACING)
-        }
-    }
+    )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)

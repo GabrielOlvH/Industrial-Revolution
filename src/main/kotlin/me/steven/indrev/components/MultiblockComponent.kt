@@ -26,7 +26,7 @@ class MultiblockComponent constructor(val blockEntity: MachineBlockEntity<*>, va
             if (currentChunk.pos.startX < statePos.x || currentChunk.pos.endX > statePos.x || currentChunk.pos.startZ < statePos.z || currentChunk.pos.endZ > statePos.z) {
                 currentChunk = world.getChunk(statePos)
             }
-            currentChunk.getBlockState(statePos).rotate(rotation) == state
+            currentChunk.getBlockState(statePos) == state.rotate(rotation.rotate(BlockRotation.CLOCKWISE_180))
         }
     }
 

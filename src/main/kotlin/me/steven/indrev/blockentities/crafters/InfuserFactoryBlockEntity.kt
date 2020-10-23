@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.blocks.FactoryPartBlock
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.MultiblockComponent
 import me.steven.indrev.components.TemperatureComponent
@@ -11,11 +10,10 @@ import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.identifier
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.util.BlockRotation
+import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
+import net.minecraft.util.math.Direction
 
 class InfuserFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_FACTORY_REGISTRY) {
@@ -34,14 +32,13 @@ class InfuserFactoryBlockEntity(tier: Tier) :
             }
         }
         this.multiblockComponent = MultiblockComponent.Builder()
-            .corners(BlockPos(0, 0, 1), 1, IRRegistry.FACTORY_PART.defaultState)
-            .corners(BlockPos(0, 0, 3), 1, IRRegistry.FACTORY_PART.defaultState)
-            .add(BlockPos(0, 0, 2), IRRegistry.MACHINE_BLOCK.defaultState)
-            .diamond(BlockPos(0, 0, 2), 1, STEEL_BLOCK)
-            .add(BlockPos(0, 0, 3), STEEL_BLOCK)
-            .add(BlockPos(0, 0, 1), STEEL_BLOCK)
-            .corners(BlockPos(-2, 0, 0), 1, FACTORY_STATE_Z, BlockRotation.COUNTERCLOCKWISE_90)
-            .corners(BlockPos(0, 0, 2), 1, FACTORY_STATE_X)
+            .cube(BlockPos(-1, 1, 1), 3, 3, 1, IRRegistry.FRAME.defaultState)
+            .cube(BlockPos(0, 0, 1), 2, 3, 1, IRRegistry.SILO.defaultState)
+            .cube(BlockPos(1, -1, 1), 1, 3, 1, INTAKE_STATE)
+            .cube(BlockPos(0, -1, 1), 1, 3, 1, DUCT_STATE)
+            .cube(BlockPos(-1, 0, 2), 1, 2, 1, CABINE_STATE)
+            .add(BlockPos(-1, 0, 1), CONTROLLER_STATE)
+            .add(BlockPos(-1, -1, 1), IRRegistry.WARNING_STROBE.defaultState)
             .build(this)
     }
 
@@ -57,9 +54,9 @@ class InfuserFactoryBlockEntity(tier: Tier) :
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     companion object {
-        val FACTORY_STATE_X = IRRegistry.FACTORY_PART.defaultState.with(FactoryPartBlock.CONNECTED_X, true)
-        val FACTORY_STATE_Y = IRRegistry.FACTORY_PART.defaultState.with(FactoryPartBlock.CONNECTED_Y, true)
-        val FACTORY_STATE_Z = IRRegistry.FACTORY_PART.defaultState.with(FactoryPartBlock.CONNECTED_Z, true)
-        val STEEL_BLOCK = Registry.BLOCK.get(identifier("steel_block")).defaultState
+        private val CONTROLLER_STATE = IRRegistry.CONTROLLER.defaultState.with(Properties.HORIZONTAL_FACING, Direction.NORTH)
+        private val DUCT_STATE = IRRegistry.DUCT.defaultState.with(Properties.HORIZONTAL_FACING, Direction.WEST)
+        private val CABINE_STATE = IRRegistry.CABINET.defaultState.with(Properties.HORIZONTAL_FACING, Direction.WEST)
+        private val INTAKE_STATE = IRRegistry.INTAKE.defaultState.with(Properties.HORIZONTAL_FACING, Direction.WEST)
     }
 }
