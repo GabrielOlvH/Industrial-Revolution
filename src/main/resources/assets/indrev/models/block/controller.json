@@ -1,8 +1,10 @@
 {
+	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "indrev:block/controller"
+		"0": "indrev:block/controller",
+		"particle": "indrev:block/controller"
 	},
 	"elements": [
 		{
