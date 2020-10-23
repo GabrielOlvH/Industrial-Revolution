@@ -56,6 +56,7 @@ repositories {
         content {
             //includeGroup "com.github.KubeJS-Mods"
             includeGroup "com.github.Draylar"
+            includeGroup "com.github.GabrielOlvH"
         }
     }
     maven {
@@ -78,10 +79,10 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi("teamreborn:energy:${project.energy_api_version}") {
+    modApi("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("teamreborn:energy:${project.energy_api_version}") {
+    include("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
@@ -132,7 +133,9 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
     //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
-    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.9"
+    modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
+        exclude group: "teamreborn", module: "energy"
+    }
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
 
