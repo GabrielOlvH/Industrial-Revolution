@@ -11,6 +11,7 @@
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",
     "MixinEnchantmentHelper",
+    "MixinEntity",
     "MixinGenerationSettings",
     "MixinItemPredicate",
     "MixinItemStack",
@@ -24,6 +25,7 @@
   ],
   "client": [
     "MixinClientRecipeBook",
+    "MixinLightmapTextureManager",
     "MixinPlayerEntityRenderer",
     "MixinWItemSlot"
   ],
