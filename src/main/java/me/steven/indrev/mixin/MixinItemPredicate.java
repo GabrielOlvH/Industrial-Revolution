@@ -22,7 +22,7 @@ public class MixinItemPredicate {
                 AccessorEnchantmentPredicate accessor = (AccessorEnchantmentPredicate) predicate;
                 if (accessor.getLevels() != null && accessor.getLevels() != null) {
                     int level = ((CustomEnchantmentProvider) stack.getItem()).getLevel(accessor.getEnchantment(), stack);
-                    if (accessor.getLevels().test(level)) cir.setReturnValue(true);
+                    if (level > -1 && accessor.getLevels().test(level)) cir.setReturnValue(true);
                 }
             }
         }
