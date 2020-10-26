@@ -13,7 +13,9 @@ class WarningStrobeBlock(settings: Settings) : Block(settings) {
         world: BlockView?,
         pos: BlockPos?,
         context: ShapeContext?
-    ): VoxelShape {
-        return createCuboidShape(5.0, 0.0, 5.0, 11.0, 6.0, 11.0)
+    ): VoxelShape = SHAPE
+
+    companion object {
+        private val SHAPE = createCuboidShape(5.0, 0.0, 5.0, 11.0, 6.0, 11.0)
     }
 }
