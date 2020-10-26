@@ -17,7 +17,7 @@ public abstract class MixinLightmapTextureManager {
             at = @At(
                     value = "INVOKE_ASSIGN"
             ), ordinal = 2)
-    private float a(float amount) {
+    private float indrev_nightVisionModule(float amount) {
         for (ItemStack stack : MinecraftClient.getInstance().player.getArmorItems()) {
             if (stack.getItem() instanceof IRModularArmor && ArmorModule.NIGHT_VISION.getLevel(stack) > 0) {
                 return 1.0f;

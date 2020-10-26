@@ -23,7 +23,7 @@ public class MixinItemPredicate {
             ),
             at = @At(value = "RETURN"),
             cancellable = true)
-    private void a(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    private void indrev_customEnchantProvider(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.getItem() instanceof CustomEnchantmentProvider && enchantments.length > 0) {
             for (EnchantmentPredicate predicate : enchantments) {
                 AccessorEnchantmentPredicate accessor = (AccessorEnchantmentPredicate) predicate;

@@ -18,7 +18,7 @@ public abstract class MixinEntity {
     @Shadow public abstract Iterable<ItemStack> getArmorItems();
 
     @Inject(method = "setAir", at = @At("INVOKE"), cancellable = true)
-    private void oof(CallbackInfo ci) {
+    private void indrev_breathingModule(CallbackInfo ci) {
         if ((Object) this instanceof LivingEntity) {
             ((LivingEntity) (Object) (this)).getArmorItems().forEach(itemStack -> {
                 Item item = itemStack.getItem();
@@ -30,7 +30,7 @@ public abstract class MixinEntity {
     }
 
     @Inject(method = "getJumpVelocityMultiplier", at = @At(value = "RETURN"), cancellable = true)
-    private void v(CallbackInfoReturnable<Float> cir) {
+    private void indrev_jumpBoostModule(CallbackInfoReturnable<Float> cir) {
         if ((Object) this instanceof LivingEntity) {
             ((LivingEntity) (Object) (this)).getArmorItems().forEach(itemStack -> {
                 Item item = itemStack.getItem();
