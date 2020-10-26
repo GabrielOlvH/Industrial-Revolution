@@ -9,13 +9,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemPredicate.class)
 public class MixinItemPredicate {
     @Shadow @Final private EnchantmentPredicate[] enchantments;
 
-    @Inject(method = "test", at = @At("RETURN"), cancellable = true)
+    @Inject(
+            method = "test",
+            slice = @Slice(
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/predicate/item/EnchantmentPredicate;test(Ljava/util/Map;)Z")
+            ),
+            at = @At(value = "RETURN"),
+            cancellable = true)
     private void a(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.getItem() instanceof CustomEnchantmentProvider && enchantments.length > 0) {
             for (EnchantmentPredicate predicate : enchantments) {
