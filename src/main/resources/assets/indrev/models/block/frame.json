@@ -2,7 +2,8 @@
 	"parent": "minecraft:block/block",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "indrev:block/frame"
+		"0": "indrev:block/frame",
+		"particle": "indrev:block/frame"
 	},
 	"elements": [
 		{
