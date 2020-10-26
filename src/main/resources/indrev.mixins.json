@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorAnimalEntity",
     "AccessorEnchantmentPredicate",
     "AccessorEnergyHandler",
     "AccessorRecipeManager",

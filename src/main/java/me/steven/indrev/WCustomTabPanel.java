@@ -84,6 +84,11 @@ public class WCustomTabPanel extends WPanel {
                 ));
     }
 
+    // dont bother it's just bad code ik
+    public WPanel setForceBackgroundPainter(BackgroundPainter painter) {
+        return super.setBackgroundPainter(painter);
+    }
+
     /**
      * Adds a tab to this panel.
      *

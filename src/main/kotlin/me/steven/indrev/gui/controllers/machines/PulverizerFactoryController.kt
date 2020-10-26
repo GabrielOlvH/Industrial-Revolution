@@ -27,7 +27,7 @@ class PulverizerFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.pulverizer_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.pulverizer_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? PulverizerFactoryBlockEntity ?: return@run
             val slotsAmount = 5

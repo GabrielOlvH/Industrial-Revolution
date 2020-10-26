@@ -25,7 +25,7 @@ class SmelterController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.smelter", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.smelter", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 3.5, 2.5)

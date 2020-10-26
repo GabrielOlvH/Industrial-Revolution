@@ -27,7 +27,7 @@ class CompressorFactoryController (
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.compressor_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.compressor_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? CompressorFactoryBlockEntity ?: return@run
             val slotsAmount = 5

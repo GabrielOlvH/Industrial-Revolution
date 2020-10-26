@@ -33,7 +33,7 @@ class ChopperController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.chopper", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.chopper", ctx, playerInventory, blockInventory)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         root.add(inputFrame, 1.9, 0.7)

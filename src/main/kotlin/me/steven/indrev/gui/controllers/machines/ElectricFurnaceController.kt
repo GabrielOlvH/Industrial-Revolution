@@ -29,7 +29,7 @@ class ElectricFurnaceController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.electric_furnace", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.electric_furnace", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 3.5, 2.0)

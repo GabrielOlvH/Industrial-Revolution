@@ -24,7 +24,7 @@ class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.infuser", ctx, playerInventory, blockInventory)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 3.0, 1.8)

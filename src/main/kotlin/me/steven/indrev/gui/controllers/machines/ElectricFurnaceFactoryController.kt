@@ -27,7 +27,7 @@ class ElectricFurnaceFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.electric_furnace_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.electric_furnace_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? ElectricFurnaceFactoryBlockEntity ?: return@run
             val slotsAmount = 5

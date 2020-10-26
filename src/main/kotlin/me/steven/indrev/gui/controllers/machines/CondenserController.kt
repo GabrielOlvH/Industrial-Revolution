@@ -25,7 +25,7 @@ class CondenserController(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.condenser", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.condenser", ctx, playerInventory, blockInventory)
 
         val fluid = WFluid(ctx, 0)
         root.add(fluid, 2.8, 0.7)
