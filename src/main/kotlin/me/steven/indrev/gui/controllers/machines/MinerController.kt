@@ -26,7 +26,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.miner", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.miner", ctx, playerInventory, blockInventory)
 
         val outputSlots = WTooltipedItemSlot.of(blockInventory, 1, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlots.isInsertingAllowed = false

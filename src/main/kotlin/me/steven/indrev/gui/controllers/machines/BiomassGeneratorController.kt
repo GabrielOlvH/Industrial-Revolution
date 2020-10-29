@@ -27,7 +27,7 @@ class BiomassGeneratorController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.biomass_generator", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.biomass_generator", ctx, playerInventory, blockInventory)
 
         // Fuel input
         root.add(WItemSlot.of(blockInventory, 2), 4, 2)

@@ -9,20 +9,27 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemPredicate.class)
 public class MixinItemPredicate {
     @Shadow @Final private EnchantmentPredicate[] enchantments;
 
-    @Inject(method = "test", at = @At("RETURN"), cancellable = true)
-    private void a(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(
+            method = "test",
+            slice = @Slice(
+                    from = @At(value = "INVOKE", target = "Lnet/minecraft/predicate/item/EnchantmentPredicate;test(Ljava/util/Map;)Z")
+            ),
+            at = @At(value = "RETURN"),
+            cancellable = true)
+    private void indrev_customEnchantProvider(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.getItem() instanceof CustomEnchantmentProvider && enchantments.length > 0) {
             for (EnchantmentPredicate predicate : enchantments) {
                 AccessorEnchantmentPredicate accessor = (AccessorEnchantmentPredicate) predicate;
                 if (accessor.getLevels() != null && accessor.getLevels() != null) {
                     int level = ((CustomEnchantmentProvider) stack.getItem()).getLevel(accessor.getEnchantment(), stack);
-                    if (accessor.getLevels().test(level)) cir.setReturnValue(true);
+                    if (level > -1 && accessor.getLevels().test(level)) cir.setReturnValue(true);
                 }
             }
         }

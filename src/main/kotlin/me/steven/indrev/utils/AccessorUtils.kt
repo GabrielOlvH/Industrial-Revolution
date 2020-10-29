@@ -2,6 +2,9 @@ package me.steven.indrev.utils
 
 import me.steven.indrev.mixin.*
 import me.steven.indrev.recipes.machines.IRRecipe
+import net.minecraft.entity.passive.AnimalEntity
+import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipeManager
 import net.minecraft.recipe.RecipeType
 import net.minecraft.screen.Property
@@ -29,3 +32,5 @@ fun <T : IRRecipe> RecipeManager.getAllOfType(type: RecipeType<T>): Map<Identifi
 
 val ScreenHandler.properties: List<Property>
     get() = (this as AccessorScreenHandler).properties
+
+fun AnimalEntity.eat(player: PlayerEntity, stack: ItemStack) = (this as AccessorAnimalEntity).callEat(player, stack)

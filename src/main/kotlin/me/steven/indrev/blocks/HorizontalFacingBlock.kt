@@ -7,7 +7,7 @@ import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.util.math.Direction
 
-class HorizontalFacingBlock(settings: Settings) : HorizontalFacingBlock(settings) {
+open class HorizontalFacingBlock(settings: Settings) : HorizontalFacingBlock(settings) {
     init {
         this.defaultState = stateManager.defaultState.with(FACING, Direction.NORTH)
     }

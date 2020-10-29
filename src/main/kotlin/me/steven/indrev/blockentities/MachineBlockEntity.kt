@@ -55,8 +55,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var itemTransferCooldown = 0
 
-    val config: T
-        get() = registry.config(tier) as T
+    val config: T by lazy { registry.config(tier) as T }
 
     protected open fun machineTick() {}
 

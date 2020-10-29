@@ -36,7 +36,7 @@ class FarmerController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.farmer", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.farmer", ctx, playerInventory, blockInventory)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         root.add(inputFrame, 1.9, 0.7)

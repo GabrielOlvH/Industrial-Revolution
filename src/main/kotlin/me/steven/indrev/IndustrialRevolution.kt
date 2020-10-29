@@ -9,6 +9,7 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
@@ -152,6 +153,26 @@ object IndustrialRevolution : ModInitializer {
                     val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@execute
                     blockEntity.isSplitOn = !blockEntity.isSplitOn
                     if (blockEntity.isSplitOn) blockEntity.splitStacks()
+                }
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(RancherController.SYNC_RANCHER_CONFIG) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val feedBabies = buf.readBoolean()
+            val mateAdults = buf.readBoolean()
+            val matingLimit = buf.readInt()
+            val killAfter = buf.readInt()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? RancherBlockEntity ?: return@execute
+                    blockEntity.feedBabies = feedBabies
+                    blockEntity.mateAdults = mateAdults
+                    blockEntity.matingLimit = matingLimit
+                    blockEntity.killAfter = killAfter
+                    blockEntity.markDirty()
+                    blockEntity.sync()
                 }
             }
         }

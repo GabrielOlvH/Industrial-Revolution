@@ -27,7 +27,7 @@ class InfuserFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? InfuserFactoryBlockEntity ?: return@run
             val offset = 2.6

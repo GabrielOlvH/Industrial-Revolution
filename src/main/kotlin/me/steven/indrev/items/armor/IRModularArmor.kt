@@ -133,6 +133,11 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
                     armorModifier
                 )
             }
+            val speedLevel = ArmorModule.SPEED.getLevel(itemStack) * 0.9
+            if (speedLevel > 0)
+                attr.put(
+                    EntityAttributes.GENERIC_MOVEMENT_SPEED,
+                    EntityAttributeModifier(UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635"), "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
             return attr.build()
         }
         return getAttributeModifiers(equipmentSlot)

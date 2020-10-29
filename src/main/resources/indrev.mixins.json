@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorAnimalEntity",
     "AccessorEnchantmentPredicate",
     "AccessorEnergyHandler",
     "AccessorRecipeManager",
@@ -11,6 +12,7 @@
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",
     "MixinEnchantmentHelper",
+    "MixinEntity",
     "MixinGenerationSettings",
     "MixinItemPredicate",
     "MixinItemStack",
@@ -24,6 +26,7 @@
   ],
   "client": [
     "MixinClientRecipeBook",
+    "MixinLightmapTextureManager",
     "MixinPlayerEntityRenderer",
     "MixinWItemSlot"
   ],

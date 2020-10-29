@@ -25,7 +25,7 @@ class FluidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx:
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.fluid_infuser", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.fluid_infuser", ctx, playerInventory, blockInventory)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 3.7, 2.2)

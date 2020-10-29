@@ -2,7 +2,8 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
 	"textures": {
-		"0": "indrev:block/silo"
+		"0": "indrev:block/silo",
+		"particle": "indrev:block/silo"
 	},
 	"elements": [
 		{

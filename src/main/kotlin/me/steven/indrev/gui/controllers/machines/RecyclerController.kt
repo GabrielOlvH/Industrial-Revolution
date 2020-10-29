@@ -24,7 +24,7 @@ class RecyclerController(syncId: Int, playerInventory: PlayerInventory, ctx: Scr
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.recycler", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.recycler", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 3.0, 2.0)

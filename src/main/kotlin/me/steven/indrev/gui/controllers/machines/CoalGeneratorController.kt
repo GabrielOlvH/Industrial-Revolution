@@ -27,7 +27,7 @@ class CoalGeneratorController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.coal_generator", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.coal_generator", ctx, playerInventory, blockInventory)
 
         val itemSlot = WItemSlot.of(blockInventory, 2)
         root.add(itemSlot, 4, 2)
