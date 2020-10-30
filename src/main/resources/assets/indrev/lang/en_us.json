@@ -373,7 +373,7 @@
   "item.indrev.module_fortune": "Fortune Module",
   "item.indrev.module_fortune.tooltip": "Behaves like a Fortune enchantment.",
   "item.indrev.module_silk_touch": "Silk Touch Module",
-  "item.indrev.module_silk_touch.tooltip": "Behaves like a Fortune enchantment.",
+  "item.indrev.module_silk_touch.tooltip": "Behaves like a Silk Touch enchantment.",
   "item.indrev.module_reach": "Reach Module",
   "item.indrev.module_reach.tooltip": "Damage multiple mobs at once.",
   "item.indrev.module_looting": "Looting Module",
