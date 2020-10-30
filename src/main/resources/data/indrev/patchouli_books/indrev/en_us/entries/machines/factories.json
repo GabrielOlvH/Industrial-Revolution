@@ -10,7 +10,7 @@
     },
     {
       "type": "text",
-      "text": "$(l)Required blocks$()$(br2)$(li)$(l)9x$() Frames$(br)$(li)$(l)6x$() Silos$(br)$(li)$(l)3x$() Intakes$(br)$(li)$(l)3x$() Ducts$(br)$(li)$(l)2x$() Cabinets$(br)$(li)$(l)1x$() Warning Strobe$(br)$(li)$(l)1x$() Controller$()$(br2)You'll be able to visualize the block positions a Hologram Visualizer Goggles and looking at a Factory."
+      "text": "$(l)Required blocks$()$(br2)$(li)$(l)9x$() Frames$(br)$(li)$(l)6x$() Silos$(br)$(li)$(l)3x$() Intakes$(br)$(li)$(l)3x$() Ducts$(br)$(li)$(l)2x$() Cabinets$(br)$(li)$(l)1x$() Warning Strobe$(br)$(li)$(l)1x$() Controller$()$(br2)You'll be able to visualize the block positions by right clicking a factory."
     },
     {
       "type": "crafting",
