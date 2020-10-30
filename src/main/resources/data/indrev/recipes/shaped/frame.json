@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "tag": "c:steel_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:frame"
+  }
+}
