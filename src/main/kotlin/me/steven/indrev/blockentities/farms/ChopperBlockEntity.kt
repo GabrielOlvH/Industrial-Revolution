@@ -144,7 +144,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block is SaplingBlock && itemStack.count > 1) || (item is BlockItem && item.block is SaplingBlock)
+        val isSaplingOrBoneMeal = (item.isIn(ItemTags.SAPLINGS) && itemStack.count > 1) || (item is BlockItem && item.block is SaplingBlock)
         if (!isSaplingOrBoneMeal) return false
         val useResult = itemStack.useOnBlock(
             ItemUsageContext(
