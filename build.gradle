@@ -61,7 +61,7 @@ repositories {
     }
     maven {
         name "Modmaven"
-        url "https://modmaven.k-4u.nl/"
+        url "https://modmaven.dev/"
         content {
             includeGroup 'appeng'
         }
