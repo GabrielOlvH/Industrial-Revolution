@@ -163,6 +163,27 @@ object IndustrialRevolutionClient : ClientModInitializer {
             )
         }
 
+        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<CompressorFactoryBlockEntity>,
+                ::MultiblockBlockEntityRenderer
+            )
+        }
+
+        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<PulverizerFactoryBlockEntity>,
+                ::MultiblockBlockEntityRenderer
+            )
+        }
+
+        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
+            BlockEntityRendererRegistry.INSTANCE.register(
+                blockEntity as BlockEntityType<ElectricFurnaceFactoryBlockEntity>,
+                ::MultiblockBlockEntityRenderer
+            )
+        }
+
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
 
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
