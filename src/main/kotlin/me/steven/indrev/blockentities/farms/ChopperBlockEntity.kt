@@ -10,8 +10,10 @@ import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
-import net.minecraft.block.SaplingBlock
-import net.minecraft.item.*
+import net.minecraft.item.AxeItem
+import net.minecraft.item.BoneMealItem
+import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
@@ -144,7 +146,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isSaplingOrBoneMeal = (item.isIn(ItemTags.SAPLINGS) && itemStack.count > 1) || (item is BlockItem && item.block is SaplingBlock)
+        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block.isIn(BlockTags.SAPLINGS) && itemStack.count > 1) || (item.isIn(ItemTags.SAPLINGS))
         if (!isSaplingOrBoneMeal) return false
         val useResult = itemStack.useOnBlock(
             ItemUsageContext(
