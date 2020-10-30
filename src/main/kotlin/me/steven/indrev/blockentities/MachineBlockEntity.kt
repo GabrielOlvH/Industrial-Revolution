@@ -218,7 +218,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
     private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
-        if (itemTransferCooldown > 0) return
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
