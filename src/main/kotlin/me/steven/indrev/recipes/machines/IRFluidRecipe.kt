@@ -7,7 +7,7 @@ import com.google.gson.JsonObject
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.getFluidFromJson
-import net.minecraft.inventory.Inventory
+import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
@@ -18,7 +18,7 @@ abstract class IRFluidRecipe : IRRecipe {
     abstract val fluidInput: FluidVolume?
     abstract val fluidOutput: FluidVolume?
 
-    override fun matches(inv: Inventory, fluidVolume: FluidVolume?): Boolean {
+    override fun matches(inv: Array<ItemStack>, fluidVolume: FluidVolume?): Boolean {
         return when {
             fluidVolume == null -> false
             fluidInput != null -> fluidVolume.fluidKey == fluidInput!!.fluidKey && fluidVolume.amount() >= fluidInput!!.amount() && super.matches(inv, fluidVolume)

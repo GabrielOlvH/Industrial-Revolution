@@ -1,0 +1,16 @@
+{
+  "name": "Quadrupling Ores",
+  "category": "enhanced_ore_processing",
+  "sortnum": 2,
+  "icon": "indrev:fluid_infuser_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Ore quadrupling is the last step for enhanced ore processing. For this, you'll need a $(l:machines/basic_machines#fluid_infuser)$(t:Go to Fluid Infuser)$(l)$(o)Fluid Infuser$(), a $(l:machines/basic_machines#smelter)$(t:Go to Industrial Smelter)$(l)$(o)Industrial Smelter$(), a $(l:machines/basic_machines#condenser)$(t:Go to Condenser)$(l)$(o)Condenser$(), a $(l:machines/basic_machines#pulverizer)$(t:Go to Pulverizer)$(l)$(o)Pulverizer$() and plenty of Sulfuric Acid.$(br)$(#3ead36)Sulfuric Acid$() can be found in lake forms at Swamps and can be crafted from $(#b3b332)Sulfur Dust$() + $(#88adf2)Water$() inside a Fluid Infuser."
+    },
+    {
+      "type": "text",
+      "text": "$(l)1)$() Insert your ore in a Fluid Infuser with Sulfuric Acid. It will purify them and give you the purified ore form. $(br)$(l)2)$() Insert your purified ores into an Industrial Smelter. It will smelt them into their fluid forms.$(br)2) Move your molten ore into a Condenser.$(br)$(l)3)$() Pulverize your Ore Chunk, which will then give you a dust.$(br)$(l)4)$() Smelt your dust.$(br2)Done! Now you've transformed 1 ore into 4 ingots!"
+    }
+  ]
+}

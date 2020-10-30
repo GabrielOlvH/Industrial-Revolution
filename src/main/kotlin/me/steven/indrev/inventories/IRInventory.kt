@@ -3,6 +3,7 @@ package me.steven.indrev.inventories
 import me.steven.indrev.components.InventoryComponent
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.inventory.SimpleInventory
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
@@ -29,47 +30,19 @@ class IRInventory(
 
     fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
 
-    override fun addStack(itemStack: ItemStack?): ItemStack {
-        val itemStack2 = itemStack!!.copy()
-        addToExistingSlot(itemStack2)
-        return if (itemStack2.isEmpty) {
-            ItemStack.EMPTY
-        } else {
-            addToNewSlot(itemStack2)
-            if (itemStack2.isEmpty) ItemStack.EMPTY else itemStack2
-        }
+    fun fits(stack: Item, outputSlot: Int): Boolean {
+        val outStack = getStack(outputSlot)
+        if (outStack.isEmpty || (stack == outStack.item && outStack.tag?.isEmpty != false))
+            return true
+        return false
     }
 
-    private fun addToNewSlot(stack: ItemStack) {
-        for (i in 0 until size()) {
-            val itemStack = getStack(i)
-            if (itemStack.isEmpty && isValid(i, itemStack) && outputSlots.contains(i)) {
-                setStack(i, stack.copy())
-                stack.count = 0
-                return
-            }
+    fun output(itemStack: ItemStack): Boolean =
+        outputSlots.any { slot ->
+            val existing = getStack(slot)
+            if (existing.isEmpty || (existing.item == itemStack.item && existing.count + itemStack.count < maxCountPerStack)) {
+                setStack(slot, ItemStack(itemStack.item, existing.count + itemStack.count))
+                true
+            } else false
         }
-    }
-
-    private fun addToExistingSlot(stack: ItemStack) {
-        for (i in 0 until size()) {
-            val itemStack = getStack(i)
-            if (ItemStack.areItemsEqualIgnoreDamage(itemStack, stack)) {
-                transfer(stack, itemStack)
-                if (stack.isEmpty) {
-                    return
-                }
-            }
-        }
-    }
-
-    private fun transfer(source: ItemStack, target: ItemStack) {
-        val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
-        val j = source.count.coerceAtMost(i - target.count)
-        if (j > 0) {
-            target.increment(j)
-            source.decrement(j)
-            markDirty()
-        }
-    }
 }

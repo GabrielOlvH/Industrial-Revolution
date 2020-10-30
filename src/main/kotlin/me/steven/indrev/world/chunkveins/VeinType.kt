@@ -68,7 +68,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                 }
             }
             BiomeKeys.FROZEN_RIVER
-            biomes.forEach { (biome, weight) -> Picker.PICKERS.computeIfAbsent(biome) { Picker(biome, WeightedList()) }.veins.add(id, weight) }
+            biomes.forEach { (biome, weight) -> BiomeVeins.BIOME_VEINS.computeIfAbsent(biome) { BiomeVeins(biome, WeightedList()) }.veins.add(id, weight) }
             return arrayOf(VeinType(id, weightedList, min..max))
         }
     }

@@ -2,19 +2,15 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.items.misc.IRScanOutputItem
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.inventories.inventory
+import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.getChunkPos
+import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import me.steven.indrev.world.chunkveins.WorldChunkVeinData
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
@@ -27,19 +23,14 @@ import team.reborn.energy.EnergySide
 class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(4)
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(15, EMPTY_INT_ARRAY, (1 until 10).toList().toIntArray()) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is IRCoolerItem -> slot == 1
-                    item is IRScanOutputItem -> slot == 14
-                    slot in 1 until 10 -> true
-                    else -> false
-                }
+        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.inventoryComponent = inventory(this) {
+            input {
+                slot = 14
+                filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
+            output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
+            coolerSlot = 1
         }
     }
 
@@ -55,8 +46,8 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val state =
                 (world as ServerWorld).persistentStateManager.getOrCreate(
-                    { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                    WorldChunkVeinData.STATE_OVERWORLD_KEY
+                    { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                    ChunkVeinState.STATE_OVERWORLD_KEY
                 )
             val data = state.veins[chunkPos] ?: return
             this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
@@ -80,8 +71,8 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
             if (mining >= config.processSpeed) {
                 val state =
                     (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                        WorldChunkVeinData.STATE_OVERWORLD_KEY
+                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                        ChunkVeinState.STATE_OVERWORLD_KEY
                     )
                 val data = state.veins[scanChunkPos]
                 if (data == null) {
@@ -97,10 +88,10 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 data.explored++
                 state.markDirty()
                 mining = 0.0
-                inventory.addStack(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
+                inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
                 setWorkingState(true)
             }
-        }
+        } else setWorkingState(false)
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

@@ -2,11 +2,11 @@
   "name": "Chopper",
   "category": "machines",
   "sortnum": 5,
-  "icon": "indrev:chopper_mk4",
+  "icon": "indrev:chopper_mk1",
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/chopper_mk4",
+      "recipe": "indrev:shaped/chopper_mk1",
       "text": "The $(l)Chopper$() is a machine focused in automating wood farming, and it also supports enhancement upgrades.$(br)Note that it requires certain items for it to function: (put them in the 2x2 square)"
     },
     {

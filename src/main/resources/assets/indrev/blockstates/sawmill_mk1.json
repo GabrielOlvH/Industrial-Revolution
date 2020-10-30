@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,working=false": {
+      "model": "indrev:block/sawmill_mk1"
+    },
+    "facing=south,working=false": {
+      "model": "indrev:block/sawmill_mk1",
+      "y": 180
+    },
+    "facing=west,working=false": {
+      "model": "indrev:block/sawmill_mk1",
+      "y": 270
+    },
+    "facing=east,working=false": {
+      "model": "indrev:block/sawmill_mk1",
+      "y": 90
+    },
+    "facing=north,working=true": {
+      "model": "indrev:block/sawmill_mk1_on"
+    },
+    "facing=south,working=true": {
+      "model": "indrev:block/sawmill_mk1_on",
+      "y": 180
+    },
+    "facing=west,working=true": {
+      "model": "indrev:block/sawmill_mk1_on",
+      "y": 270
+    },
+    "facing=east,working=true": {
+      "model": "indrev:block/sawmill_mk1_on",
+      "y": 90
+    }
+  }
+}

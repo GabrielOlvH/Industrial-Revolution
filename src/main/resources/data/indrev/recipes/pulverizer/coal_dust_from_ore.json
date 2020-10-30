@@ -4,7 +4,7 @@
     "item": "minecraft:coal_ore"
   },
   "output": {
-    "item": "coal_dust",
+    "item": "indrev:coal_dust",
     "count": 2
   },
   "processTime": 300

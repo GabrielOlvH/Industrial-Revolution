@@ -38,7 +38,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
             val r = (rgb and 0xFF0000 shr 16) / 255f
             val g = (rgb and 0xFF00 shr 8) / 255f
             val b = (rgb and 0xFF) / 255f
-            Module.getInstalled(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { module ->
+            item.getInstalled(itemStack).filter { it.slots.contains(equipmentSlot) }.forEach { module ->
                 if (module.hasTexture) {
                     renderArmorParts(
                         matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(equipmentSlot), r, g, b, module.key
@@ -63,7 +63,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
         secondLayer: Boolean,
         r: Float, g: Float, b: Float,
         overlay: String?) {
-        val vertexConsumer = ItemRenderer.getArmorVertexConsumer(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)), false, hasGlint)
+        val vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)), false, hasGlint)
         bipedEntityModel.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 

@@ -24,6 +24,12 @@ class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
         LOGGER.info("Loaded ${VeinType.REGISTERED.size} vein types!")
     }
 
+    fun getTranslationKeys(): String {
+        return VeinType.REGISTERED.map { (id, _) ->
+            "\"vein.${id.namespace}.${id.path}\": \"\""
+        }.joinToString(",\n")
+    }
+
     override fun getFabricId(): Identifier = identifier("veintypes")
 
     companion object {

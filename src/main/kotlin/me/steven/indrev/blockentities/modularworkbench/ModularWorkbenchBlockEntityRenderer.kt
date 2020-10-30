@@ -1,8 +1,9 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.Module
 import me.steven.indrev.armor.ModuleFeatureRenderer
+import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.client.render.OverlayTexture
@@ -10,7 +11,6 @@ import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
-import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.entity.model.BipedEntityModel
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
-    BlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
+    MultiblockBlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
 
     private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(0.5f)
     private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(1.0f)
@@ -32,30 +32,33 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     }
 
     override fun render(
-        entity: ModularWorkbenchBlockEntity?,
+        entity: ModularWorkbenchBlockEntity,
         tickDelta: Float,
         matrices: MatrixStack,
         vertexConsumers: VertexConsumerProvider,
         light: Int,
         overlay: Int
     ) {
-        val armor = entity?.inventoryComponent?.inventory?.getStack(2)
-        if (armor?.isEmpty == false) {
+        super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay)
+        val itemStack = entity.inventoryComponent?.inventory?.getStack(2)
+        if (itemStack?.isEmpty == false) {
             matrices.run {
                 push()
-                val yOffset = when ((armor.item as IRModularArmor).slotType) {
-                    EquipmentSlot.HEAD -> 1.0
-                    EquipmentSlot.CHEST -> 1.5
-                    EquipmentSlot.LEGS -> 1.7
-                    EquipmentSlot.FEET -> 2.0
-                    else -> -1.0
-                }
+                val yOffset = if (itemStack.item is IRModularArmor) {
+                    when ((itemStack.item as IRModularArmor).slotType) {
+                        EquipmentSlot.HEAD -> 1.0
+                        EquipmentSlot.CHEST -> 1.5
+                        EquipmentSlot.LEGS -> 1.7
+                        EquipmentSlot.FEET -> 2.0
+                        else -> -1.0
+                    }
+                } else 0.0
                 val time = entity.world?.time ?: 1
                 translate(0.5, yOffset, 0.5)
                 multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
                 multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
                 val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
-                renderArmor(this, vertexConsumers, armor, lightMapCoords)
+                renderArmor(this, vertexConsumers, itemStack, lightMapCoords)
                 pop()
             }
         }
@@ -78,8 +81,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         renderArmorParts(
             matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
         )
-        Module.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
-            if (module != Module.COLOR) {
+        item.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
+            if (module != ArmorModule.COLOR) {
                 renderArmorParts(
                     matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
                 )
@@ -98,7 +101,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         r: Float, g: Float, b: Float,
         overlay: String?
     ) {
-        val vertexConsumer = ItemRenderer.getArmorVertexConsumer(
+        val vertexConsumer = ItemRenderer.getArmorGlintConsumer(
             vertexConsumerProvider,
             RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)),
             false,

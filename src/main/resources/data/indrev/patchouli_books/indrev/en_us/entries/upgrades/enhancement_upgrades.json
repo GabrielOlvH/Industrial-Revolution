@@ -10,11 +10,6 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/empty_upgrade",
-      "text": "Doesn't do anything, it's only used for other upgrades."
-    },
-    {
-      "type": "crafting",
       "recipe": "indrev:shaped/speed_upgrade",
       "text": "This upgrade will increase the machine's processing speed at cost of energy."
     },
@@ -27,6 +22,16 @@
       "type": "crafting",
       "recipe": "indrev:shaped/buffer_upgrade",
       "text": "This upgrade will increase the machine's internal energy capacity."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/blast_furnace_upgrade",
+      "text": "This upgrade will make the Electric Furnace accept Blast Furnace recipes."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/smoker_upgrade",
+      "text": "This upgrade will make the Electric Furnace accept Smoker recipes."
     }
   ]
 }

@@ -1,41 +1,43 @@
 package me.steven.indrev.registry
 
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.blocks.AcidFluidBlock
-import me.steven.indrev.blocks.NikoliteOreBlock
-import me.steven.indrev.blocks.SulfurCrystalBlock
-import me.steven.indrev.blocks.TankBlock
+import me.steven.indrev.blocks.*
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.items.energy.IRBatteryItem
-import me.steven.indrev.items.energy.IRGamerAxeItem
-import me.steven.indrev.items.energy.IRMiningDrill
-import me.steven.indrev.items.energy.IRPortableChargerItem
+import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
+import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.DrillModule
+import me.steven.indrev.tools.modular.GamerAxeModule
+import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
-import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.Material
 import net.minecraft.block.MaterialColor
 import net.minecraft.block.entity.BlockEntityType
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
-import net.minecraft.world.gen.feature.DefaultFeatureConfig
+import net.minecraft.world.World
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
@@ -79,6 +81,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.STEEL)
         }.register()
         ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+        ResourceHelper("netherite_scrap") { withItems("dust", "chunk", "purified_ore") }.register()
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre { settings -> NikoliteOreBlock(settings) }
@@ -92,6 +95,10 @@ object IRRegistry {
         }.register()
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
+
+        identifier("sawdust").item(DEFAULT_ITEM())
+        identifier("planks").block(PLANKS).item(BlockItem(PLANKS, itemSettings()))
+        identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
 
         identifier("hammer").item(HAMMER)
 
@@ -111,6 +118,7 @@ object IRRegistry {
         identifier("fan").item(FAN)
         identifier("cooler_cell").item(COOLER_CELL)
         identifier("heatsink").item(HEATSINK)
+        identifier("heat_coil").item(HEAT_COIL)
 
         identifier("chunk_scanner").item(CHUNK_SCANNER_ITEM)
         identifier("scan_output").item(SCAN_OUTPUT_ITEM)
@@ -193,6 +201,14 @@ object IRRegistry {
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
+        identifier("module_range").item(RANGE_MODULE_ITEM)
+        identifier("module_efficiency").item(EFFICIENCY_MODULE_ITEM)
+        identifier("module_fortune").item(FORTUNE_MODULE_ITEM)
+        identifier("module_silk_touch").item(SILK_TOUCH_MODULE_ITEM)
+        identifier("module_looting").item(LOOTING_MODULE_ITEM)
+        identifier("module_fire_aspect").item(FIRE_ASPECT_MODULE_ITEM)
+        identifier("module_sharpness").item(SHARPNESS_MODULE_ITEM)
+        //identifier("module_reach").item(REACH_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -211,14 +227,18 @@ object IRRegistry {
 
         identifier("tank").block(TANK_BLOCK).item(TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
-        Registry.register(
-            Registry.FEATURE,
-            identifier("sulfur_crystal"),
-            SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
-        )
+        identifier("controller").block(CONTROLLER).item(BlockItem(CONTROLLER, itemSettings()))
+        identifier("frame").block(FRAME).item(BlockItem(FRAME, itemSettings()))
+        identifier("duct").block(DUCT).item(BlockItem(DUCT, itemSettings()))
+        identifier("silo").block(SILO).item(BlockItem(SILO, itemSettings()))
+        identifier("warning_strobe").block(WARNING_STROBE).item(BlockItem(WARNING_STROBE, itemSettings()))
+        identifier("intake").block(INTAKE).item(BlockItem(INTAKE, itemSettings()))
+        identifier("cabinet").block(CABINET).item(BlockItem(CABINET, itemSettings()))
+
         WorldGeneration.init()
 
-        WorldGeneration.registerCallback()
+        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
+        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register { _, _, biome -> WorldGeneration.handleBiome(biome) }
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -237,19 +257,29 @@ object IRRegistry {
     val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
     val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
     val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
+    val HEAT_COIL = object : Item(itemSettings().maxDamage(128)) {
+        override fun appendTooltip(
+            stack: ItemStack?,
+            world: World?,
+            tooltip: MutableList<Text>?,
+            context: TooltipContext?
+        ) {
+            tooltip?.add(TranslatableText("item.indrev.heat_coil.tooltip").formatted(Formatting.BLUE))
+        }
+    }
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000))
+        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000))
+        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000))
-    val MINING_DRILL_MK4 = IRMiningDrill(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 50f, itemSettings().maxDamage(32000)
+        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
+    val MINING_DRILL_MK4 = IRModularDrill(
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
-    val SCAN_OUTPUT_ITEM = IRScanOutputItem(itemSettings().maxCount(1))
+    val SCAN_OUTPUT_ITEM = IRResourceReportItem(itemSettings().maxCount(1))
 
     val ENERGY_READER = IREnergyReader(itemSettings())
 
@@ -322,6 +352,34 @@ object IRRegistry {
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
+    val PLANKS = PlankBlock(
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+    )
+    val PLANK_BLOCK = Block(
+        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+    )
+
+    val CONTROLLER =  HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val DUCT =  DuctBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val FRAME = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val SILO = Block(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val WARNING_STROBE = WarningStrobeBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().luminance(15).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val INTAKE =  HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val CABINET = HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
@@ -333,38 +391,46 @@ object IRRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC))
+    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
-    val PROTECTION_MODULE_ITEM = IRModuleItem(Module.PROTECTION, itemSettings().maxCount(1))
-    val SPEED_MODULE_ITEM = IRModuleItem(Module.SPEED, itemSettings().maxCount(1))
-    val JUMP_BOOST_MODULE_ITEM = IRModuleItem(Module.JUMP_BOOST, itemSettings().maxCount(1))
-    val BREATHING_MODULE_ITEM = IRModuleItem(Module.BREATHING, itemSettings().maxCount(1))
-    val NIGHT_VISION_MODULE_ITEM = IRModuleItem(Module.NIGHT_VISION, itemSettings().maxCount(1))
-    val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(Module.FEATHER_FALLING, itemSettings().maxCount(1))
-    val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(Module.AUTO_FEEDER, itemSettings().maxCount(1))
-    val CHARGER_MODULE_ITEM = IRModuleItem(Module.CHARGER, itemSettings().maxCount(1))
-    val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(Module.SOLAR_PANEL, itemSettings().maxCount(1))
-    val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(Module.PIGLIN_TRICKER, itemSettings().maxCount(1))
-    val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(Module.FIRE_RESISTANCE, itemSettings().maxCount(1))
+    val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
+    val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))
+    val JUMP_BOOST_MODULE_ITEM = IRModuleItem(ArmorModule.JUMP_BOOST, itemSettings().maxCount(1))
+    val BREATHING_MODULE_ITEM = IRModuleItem(ArmorModule.BREATHING, itemSettings().maxCount(1))
+    val NIGHT_VISION_MODULE_ITEM = IRModuleItem(ArmorModule.NIGHT_VISION, itemSettings().maxCount(1))
+    val FEATHER_FALLING_MODULE_ITEM = IRModuleItem(ArmorModule.FEATHER_FALLING, itemSettings().maxCount(1))
+    val AUTO_FEEDER_MODULE_ITEM = IRModuleItem(ArmorModule.AUTO_FEEDER, itemSettings().maxCount(1))
+    val CHARGER_MODULE_ITEM = IRModuleItem(ArmorModule.CHARGER, itemSettings().maxCount(1))
+    val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
+    val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
+    val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
+    val SILK_TOUCH_MODULE_ITEM = IRModuleItem(DrillModule.SILK_TOUCH, itemSettings().maxCount(1))
+    val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
+    val RANGE_MODULE_ITEM = IRModuleItem(DrillModule.RANGE, itemSettings().maxCount(1))
+    val REACH_MODULE_ITEM = IRModuleItem(GamerAxeModule.REACH, itemSettings().maxCount(1))
+    val EFFICIENCY_MODULE_ITEM = IRModuleItem(MiningToolModule.EFFICIENCY, itemSettings().maxCount(1))
+    val LOOTING_MODULE_ITEM = IRModuleItem(GamerAxeModule.LOOTING, itemSettings().maxCount(1))
+    val FIRE_ASPECT_MODULE_ITEM = IRModuleItem(GamerAxeModule.FIRE_ASPECT, itemSettings().maxCount(1))
+    val SHARPNESS_MODULE_ITEM = IRModuleItem(GamerAxeModule.SHARPNESS, itemSettings().maxCount(1))
 
-    val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings())
-    val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings())
-    val PURPLE_MODULE_ITEM = IRColorModuleItem(0xD174FF, itemSettings())
-    val BLUE_MODULE_ITEM = IRColorModuleItem(0x7974FF, itemSettings())
-    val CYAN_MODULE_ITEM = IRColorModuleItem(0x74FFFC, itemSettings())
-    val GREEN_MODULE_ITEM = IRColorModuleItem(0x7BFF74, itemSettings())
-    val YELLOW_MODULE_ITEM = IRColorModuleItem(0xF7FF74, itemSettings())
-    val ORANGE_MODULE_ITEM = IRColorModuleItem(0xFFA674, itemSettings())
-    val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings())
-    val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings())
+    val PINK_MODULE_ITEM = IRColorModuleItem(0xFF74DD, itemSettings().maxCount(1))
+    val RED_MODULE_ITEM = IRColorModuleItem(0xFF747C, itemSettings().maxCount(1))
+    val PURPLE_MODULE_ITEM = IRColorModuleItem(0xD174FF, itemSettings().maxCount(1))
+    val BLUE_MODULE_ITEM = IRColorModuleItem(0x7974FF, itemSettings().maxCount(1))
+    val CYAN_MODULE_ITEM = IRColorModuleItem(0x74FFFC, itemSettings().maxCount(1))
+    val GREEN_MODULE_ITEM = IRColorModuleItem(0x7BFF74, itemSettings().maxCount(1))
+    val YELLOW_MODULE_ITEM = IRColorModuleItem(0xF7FF74, itemSettings().maxCount(1))
+    val ORANGE_MODULE_ITEM = IRColorModuleItem(0xFFA674, itemSettings().maxCount(1))
+    val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings().maxCount(1))
+    val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings().maxCount(1))
 
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
 
     val GAMER_AXE_ITEM =
-        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 15f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC))
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f))
 

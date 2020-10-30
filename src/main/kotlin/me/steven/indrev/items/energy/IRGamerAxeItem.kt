@@ -1,25 +1,42 @@
 package me.steven.indrev.items.energy
 
+import com.google.common.collect.ImmutableMultimap
+import com.google.common.collect.Multimap
+import me.steven.indrev.api.AttributeModifierProvider
+import me.steven.indrev.api.CustomEnchantmentProvider
+import me.steven.indrev.tools.modular.GamerAxeModule
+import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.tools.modular.MiningToolModule
+import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.enchantment.Enchantment
+import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
+import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.attribute.EntityAttribute
+import net.minecraft.entity.attribute.EntityAttributeModifier
+import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import team.reborn.energy.*
+import java.util.*
 
 class IRGamerAxeItem(
     material: ToolMaterial,
@@ -28,17 +45,17 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem {
+) : AxeItem(material, attackDamage, attackSpeed, settings), EnergyHolder, IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider {
 
     override fun appendTooltip(
-        stack: ItemStack?,
+        stack: ItemStack,
         world: World?,
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
+        getInstalledTooltip(getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
     }
-
 
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {
@@ -63,9 +80,9 @@ class IRGamerAxeItem(
     }
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
-        val tag = stack.orCreateTag
-        return if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(stack).energy <= 0) 0f
-        else super.getMiningSpeedMultiplier(stack, state)
+        val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
+        return if (!isActive(stack) || Energy.of(stack).energy <= 0) 0f
+        else 8f * speedMultiplier
     }
 
     override fun hasGlint(stack: ItemStack?): Boolean {
@@ -79,9 +96,7 @@ class IRGamerAxeItem(
         pos: BlockPos,
         miner: LivingEntity
     ): Boolean {
-        val tag = stack.orCreateTag
-        val isActive = tag.contains("Active") && tag.getBoolean("Active")
-        if (!isActive) return false
+        if (!isActive(stack)) return false
         val energyHandler = Energy.of(stack)
         val canStart = energyHandler.use(1.0)
         if (canStart && !miner.isSneaking && state.block.isIn(BlockTags.LOGS)) {
@@ -107,7 +122,19 @@ class IRGamerAxeItem(
         }
     }
 
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean = Energy.of(stack).use(2.0)
+    override fun postHit(stack: ItemStack, target: LivingEntity?, attacker: LivingEntity?): Boolean {
+        val level = GamerAxeModule.REACH.getLevel(stack)
+        val handler = Energy.of(stack)
+        if (attacker is PlayerEntity && isActive(stack) && level > 0) {
+            target?.world?.getEntitiesByClass(LivingEntity::class.java, Box(target.blockPos).expand(level.toDouble())) { true }?.forEach { entity ->
+                if (handler.use(1.0)) {
+                    attacker.resetLastAttackedTicks()
+                    attacker.attack(entity)
+                }
+            }
+        }
+        return handler.use(1.0)
+    }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
@@ -118,6 +145,16 @@ class IRGamerAxeItem(
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun getTier(): EnergyTier = EnergyTier.HIGH
+
+    override fun getSlotLimit(): Int = -1
+
+    override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = GamerAxeModule.COMPATIBLE
+
+    fun isActive(stack: ItemStack): Boolean {
+        val tag = stack.orCreateTag ?: return false
+        if (!tag.contains("Active")) return false
+        return tag.getBoolean("Active")
+    }
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateTag ?: return
@@ -138,4 +175,52 @@ class IRGamerAxeItem(
         val handler = Energy.of(stack)
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
+
+    override fun getAttributeModifiers(
+        itemStack: ItemStack,
+        equipmentSlot: EquipmentSlot
+    ): Multimap<EntityAttribute, EntityAttributeModifier> {
+        val tag: CompoundTag = itemStack.orCreateTag
+        if (!tag.contains("Active") || !tag.getBoolean("Active") || Energy.of(itemStack).energy <= 0)
+            return ImmutableMultimap.of()
+        else if (equipmentSlot == EquipmentSlot.MAINHAND) {
+            val builder = ImmutableMultimap.builder<EntityAttribute, EntityAttributeModifier>()
+            builder.put(
+                EntityAttributes.GENERIC_ATTACK_DAMAGE,
+                EntityAttributeModifier(
+                    ATTACK_DAMAGE_MODIFIER_ID,
+                    "Tool modifier",
+                    (itemStack.item as IRGamerAxeItem).attackDamage * (GamerAxeModule.SHARPNESS.getLevel(itemStack) / 2.0 + 1),
+                    EntityAttributeModifier.Operation.ADDITION
+                )
+            )
+            builder.put(
+                EntityAttributes.GENERIC_ATTACK_SPEED,
+                EntityAttributeModifier(
+                    ATTACK_SPEED_MODIFIER_ID,
+                    "Tool modifier",
+                    -2.0,
+                    EntityAttributeModifier.Operation.ADDITION
+                )
+            )
+            return builder.build()
+        }
+        return getAttributeModifiers(equipmentSlot)
+    }
+
+    override fun getLevel(enchantment: Enchantment, itemStack: ItemStack): Int {
+        val module =
+            when {
+                Enchantments.LOOTING == enchantment -> GamerAxeModule.LOOTING
+                Enchantments.FIRE_ASPECT == enchantment -> GamerAxeModule.FIRE_ASPECT
+                else -> return 0
+            }
+        return module.getLevel(itemStack)
+    }
+
+    companion object {
+        private val ATTACK_DAMAGE_MODIFIER_ID = UUID.fromString("CB3F55D3-645C-4F38-A497-9C13A33DB5CF")
+        private val ATTACK_SPEED_MODIFIER_ID = UUID.fromString("FA233E1C-4180-4865-B01B-BCCE9785ACA3")
+    }
+
 }

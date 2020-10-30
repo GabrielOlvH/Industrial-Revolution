@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "tag": "c:netherite_scrap_dusts"
+  },
+  "result": "minecraft:netherite_scrap",
+  "cookingTime": 200
+}

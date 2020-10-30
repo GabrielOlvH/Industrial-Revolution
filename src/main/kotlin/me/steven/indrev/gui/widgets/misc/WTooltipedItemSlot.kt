@@ -6,7 +6,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.inventory.Inventory
 import net.minecraft.text.Text
 
-class WTooltipedItemSlot private constructor(
+open class WTooltipedItemSlot private constructor(
     private val emptyTooltip: MutableList<Text>,
     private val inventory: Inventory,
     private val startIndex: Int = 0,

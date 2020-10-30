@@ -4,7 +4,6 @@ import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.identifier
 import net.minecraft.recipe.RecipeSerializer
-import net.minecraft.recipe.RecipeType
 import net.minecraft.util.Identifier
 
 class RecyclerRecipe(
@@ -14,14 +13,14 @@ class RecyclerRecipe(
     override val ticks: Int
 ) : IRRecipe {
 
-    override fun getType(): RecipeType<*> = TYPE
+    override fun getType(): IRRecipeType<*> = TYPE
 
     override fun fits(width: Int, height: Int): Boolean = true
 
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = object : RecipeType<RecyclerRecipe> {}
+        val TYPE = IRRecipeType<RecyclerRecipe>()
         val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("recycle")
 

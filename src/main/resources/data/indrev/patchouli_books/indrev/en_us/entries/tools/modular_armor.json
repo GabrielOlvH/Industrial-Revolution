@@ -45,7 +45,12 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/module_auto_feeder"
+      "recipe": "indrev:shaped/module_auto_feeder",
+      "recipe2": "indrev:shaped/module_fire_resistance"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/module_piglin_tricker"
     }
   ]
 }

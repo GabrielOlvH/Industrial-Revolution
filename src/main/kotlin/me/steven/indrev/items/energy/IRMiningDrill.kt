@@ -6,53 +6,35 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
-import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergyHolder
 import team.reborn.energy.EnergySide
 import team.reborn.energy.EnergyTier
 
-class IRMiningDrill(
+open class IRMiningDrill(
     toolMaterial: ToolMaterial,
     private val tier: Tier,
     private val maxStored: Double,
-    private val miningSpeedMultiplier: Float,
+    val baseMiningSpeed: Float,
     settings: Settings
 ) : PickaxeItem(toolMaterial, 0, 0F, settings), EnergyHolder, IREnergyItem {
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
         val hasEnergy = Energy.of(stack).energy > 0
-        return if (SUPPORTED_MATERIALS.contains(material) && hasEnergy) miningSpeedMultiplier
-        else if (!hasEnergy) 0F
-        else super.getMiningSpeedMultiplier(stack, state)
-    }
-
-    override fun postMine(
-        stack: ItemStack,
-        world: World?,
-        state: BlockState?,
-        pos: BlockPos?,
-        miner: LivingEntity?
-    ): Boolean {
-        if (world?.isClient == false)
-            Energy.of(stack).use(1.0)
-        return true
-    }
-
-    override fun postHit(stack: ItemStack?, target: LivingEntity?, attacker: LivingEntity?): Boolean {
-        if (target?.world?.isClient == false)
-            Energy.of(stack).use(2.0)
-        return true
+        return when {
+            SUPPORTED_MATERIALS.contains(material) && hasEnergy -> baseMiningSpeed
+            !hasEnergy -> 0F
+            else -> super.getMiningSpeedMultiplier(stack, state)
+        }
     }
 
     override fun appendTooltip(
-        stack: ItemStack?,
+        stack: ItemStack,
         world: World?,
         tooltip: MutableList<Text>?,
         context: TooltipContext?
@@ -76,7 +58,7 @@ class IRMiningDrill(
     }
 
     companion object {
-        private val SUPPORTED_MATERIALS = arrayOf(
+        val SUPPORTED_MATERIALS = arrayOf(
             Material.METAL,
             Material.STONE,
             Material.WOOD,

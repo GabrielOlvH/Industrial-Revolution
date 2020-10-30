@@ -21,7 +21,7 @@ class ModularWorkbenchBlock(
     config: IConfig?,
     screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
     blockEntityProvider: () -> MachineBlockEntity<*>
-) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
+) : HorizontalFacingMachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
 
     override fun getOutlineShape(
         state: BlockState?,

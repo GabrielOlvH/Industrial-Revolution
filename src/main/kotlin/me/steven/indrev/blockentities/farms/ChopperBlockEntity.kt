@@ -1,17 +1,12 @@
 package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.FakePlayerEntity
-import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.toIntArray
-import me.steven.indrev.utils.toVec3d
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
@@ -21,6 +16,7 @@ import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
+import net.minecraft.tag.ItemTags
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -34,18 +30,15 @@ import team.reborn.energy.EnergySide
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(19, (2..5).toIntArray(), (6 until 15).toIntArray()) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    item is IRCoolerItem -> slot == 1
-                    slot in 2..5 -> item?.isIn(FabricToolTags.AXES) == true || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock)
-                    slot in 6 until 15 -> true
-                    else -> false
-                }
+        this.inventoryComponent = inventory(this) {
+            input {
+                slots = intArrayOf(2, 3, 4, 5)
+                2 filter { (_, item) -> item.isIn(FabricToolTags.AXES) }
+                3 filter { (_, item) -> item is BoneMealItem }
+                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS) }
             }
+            output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
+            coolerSlot = 1
         }
     }
 
@@ -141,8 +134,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
                 .parameter(LootContextParameters.TOOL, axeStack)
         )
-        droppedStacks.map { inventory.addStack(it) }.filterNot(ItemStack::isEmpty).forEach {
-            ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
+        droppedStacks.forEach {
+            if (!inventory.output(it))
+                ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
     }

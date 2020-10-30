@@ -3,16 +3,19 @@ package me.steven.indrev.components
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.misc.IRCoolerItem
+import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.utils.Property
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
+import team.reborn.energy.Energy
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
     private val heatingSpeed: Double,
     private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
-    val explosionLimit: Double
+    explosionLimit: Double
 ) : PropertyDelegateHolder {
 
     constructor(
@@ -27,6 +30,11 @@ class TemperatureComponent(
     var coolingModifier = heatingSpeed
     var explosionPower = 2f
     var inputOverflow = false
+    val explosionLimit: Double = explosionLimit
+        get() {
+            propertyDelegate[3] = field.toInt()
+            return field
+        }
 
     fun fromTag(tag: CompoundTag?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -41,12 +49,12 @@ class TemperatureComponent(
 
     fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
-    fun tick(isHeatingUp: Boolean) {
-        val previous = temperature
+    fun tick(shouldHeatUp: Boolean) {
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val overflowModifier = if (inputOverflow) 20 else 0
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && Energy.of(machine).use(5.0))
+        val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier
         else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {
@@ -69,7 +77,7 @@ class TemperatureComponent(
         //machine.markForUpdate { floor(previous) != floor(temperature) }
     }
 
-    private fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
+    fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()

@@ -10,6 +10,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 

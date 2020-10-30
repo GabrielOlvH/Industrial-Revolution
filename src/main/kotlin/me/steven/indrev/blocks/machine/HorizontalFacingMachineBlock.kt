@@ -1,9 +1,9 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.TransferMode
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
@@ -15,7 +15,9 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 open class HorizontalFacingMachineBlock(
@@ -48,7 +50,18 @@ open class HorizontalFacingMachineBlock(
         super.onPlaced(world, pos, state, placer, itemStack)
     }
 
+    override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
+        return state.with(HORIZONTAL_FACING, getRotated(state[HORIZONTAL_FACING], rotation))
+    }
+
     companion object {
         val HORIZONTAL_FACING: DirectionProperty = Properties.HORIZONTAL_FACING
+
+        fun getRotated(direction: Direction, rotation: BlockRotation): Direction = when (rotation) {
+            BlockRotation.NONE -> direction
+            BlockRotation.CLOCKWISE_90 -> direction.rotateYClockwise()
+            BlockRotation.CLOCKWISE_180 -> direction.opposite
+            BlockRotation.COUNTERCLOCKWISE_90 -> direction.rotateYCounterclockwise()
+        }
     }
 }

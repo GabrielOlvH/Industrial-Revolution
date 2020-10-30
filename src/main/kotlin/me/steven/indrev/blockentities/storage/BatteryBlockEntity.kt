@@ -2,11 +2,9 @@ package me.steven.indrev.blockentities.storage
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.Tier
 import net.minecraft.screen.ArrayPropertyDelegate
 import team.reborn.energy.Energy
@@ -17,8 +15,8 @@ class BatteryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(1, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { _, stack -> Energy.valid(stack) }
+        this.inventoryComponent = inventory(this) {
+            0 filter { stack -> Energy.valid(stack) }
         }
     }
 

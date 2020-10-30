@@ -5,11 +5,11 @@
   },
   "output": [
     {
-      "item": "sulfur_dust",
+      "item": "indrev:sulfur_dust",
       "count": 2
     },
     {
-      "item": "sulfur_dust",
+      "item": "indrev:sulfur_dust",
       "count": 1,
       "chance": 0.8
     }

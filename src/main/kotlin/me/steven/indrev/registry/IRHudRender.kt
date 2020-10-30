@@ -2,8 +2,8 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.armor.Module
 import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -31,19 +31,22 @@ object IRHudRender : HudRenderCallback {
                 else -> return@forEach
             }
             if (shouldRenderShield(item.slotType)) {
-                val totalShield = item.getMaxShield(Module.getLevel(itemStack, Module.PROTECTION))
-                val currentShield = item.getShield(itemStack)
-                var percent = currentShield.toFloat() / totalShield.toFloat()
-                val color = if (percent < 0.35) 0xff0000 else -1
-                val height = 16
-                val width = 16
-                percent = (percent * height).toInt() / height.toFloat()
-                val barSize = (height * percent).toInt()
-                ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, color, 0.5f)
-                if (barSize > 0)
-                    ScreenDrawing.texturedRect(
-                        x + 18, y + yOffset + height - barSize + 1, width, barSize,
-                        SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, color)
+                val totalShield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack))
+                if (totalShield > 0) {
+                    val currentShield = item.getShield(itemStack)
+                    var percent = currentShield.toFloat() / totalShield.toFloat()
+                    val color = if (percent < 0.35) 0xff0000 else -1
+                    val height = 16
+                    val width = 16
+                    percent = (percent * height).toInt() / height.toFloat()
+                    val barSize = (height * percent).toInt()
+                    ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, color, 0.5f)
+                    if (barSize > 0)
+                        ScreenDrawing.texturedRect(
+                            x + 18, y + yOffset + height - barSize + 1, width, barSize,
+                            SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, color
+                        )
+                }
             }
             if (shouldRenderArmor(item.slotType)) {
                 val armorIcon = when (item.slotType) {

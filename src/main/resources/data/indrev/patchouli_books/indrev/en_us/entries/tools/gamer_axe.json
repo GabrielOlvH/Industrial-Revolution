@@ -1,0 +1,16 @@
+{
+  "name": "Gamer Axe",
+  "category": "tools",
+  "sortnum": 5,
+  "icon": "indrev:gamer_axe",
+  "pages": [
+    {
+      "type": "text",
+      "text": "The Gamer Axe is the final gaming tool. It can break full trees by breaking one block and also deals a lot of damage.$(br)It may seem like just a stick, but wait until you activate it..."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/gamer_axe"
+    }
+  ]
+}

@@ -1,15 +1,12 @@
 package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
-import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.forEach
-import me.steven.indrev.utils.toIntArray
 import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.*
 import net.minecraft.item.BlockItem
@@ -26,16 +23,9 @@ import team.reborn.energy.Energy
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(18, (1..4).toIntArray(), (5 until 14).toIntArray()) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRUpgradeItem -> getUpgradeSlots().contains(slot)
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    slot in 1 until 14 -> true
-                    else -> false
-                }
-            }
+        this.inventoryComponent = inventory(this) {
+            input { slots = intArrayOf(1, 2, 3, 4) }
+            output { slots = intArrayOf(5, 6, 7, 8, 9, 10, 11, 12, 13) }
         }
     }
 
@@ -100,13 +90,14 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         .parameter(LootContextParameters.BLOCK_STATE, state)
                         .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
                         .build(LootContextTypes.BLOCK)
-                    lootTable.generateLoot(lootContext).forEach { inventory.addStack(it) }
+                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
                     true
                 }
-                block == Blocks.AIR && isValidSeed -> {
+                block == Blocks.AIR && isValidSeed && stack.count > 1 -> {
                     val cropState = (item as BlockItem).block.defaultState
                     if (cropState.canPlaceAt(world, pos)) {
                         world.setBlockState(pos, cropState)
+                        stack.count--
                         true
                     } else false
                 }

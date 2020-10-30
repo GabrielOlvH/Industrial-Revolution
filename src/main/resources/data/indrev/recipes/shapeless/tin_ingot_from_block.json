@@ -1,12 +1,12 @@
 {
-  "type": "indrev:crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "tag": "c:tin_blocks"
     }
   ],
   "result": {
-    "item": "tin_ingot",
+    "item": "indrev:tin_ingot",
     "count": 9
   }
 }

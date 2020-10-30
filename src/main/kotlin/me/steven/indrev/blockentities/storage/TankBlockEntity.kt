@@ -13,7 +13,7 @@ import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
 
 class TankBlockEntity : IRSyncableBlockEntity(IRRegistry.TANK_BLOCK_ENTITY), Tickable {
-    val fluidComponent = FluidComponent({ this }, FluidAmount(8))
+    val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
 
     override fun tick() {
         if (world?.isClient == true) return

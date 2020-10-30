@@ -1,12 +1,12 @@
 {
-  "type": "indrev:crafting_shapeless",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "tag": "c:steel_ingots"
     }
   ],
   "result": {
-    "item": "steel_nugget",
+    "item": "indrev:steel_nugget",
     "count": 9
   }
 }

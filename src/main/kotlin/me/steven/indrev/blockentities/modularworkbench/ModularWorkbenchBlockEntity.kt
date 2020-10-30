@@ -1,17 +1,18 @@
 package me.steven.indrev.blockentities.modularworkbench
 
-import me.steven.indrev.armor.Module
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.Property
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
+import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EMPTY_INT_ARRAY
+import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
@@ -22,66 +23,125 @@ import team.reborn.energy.EnergySide
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.inventoryComponent = InventoryComponent({ this }) {
-            IRInventory(3, EMPTY_INT_ARRAY, EMPTY_INT_ARRAY) { slot, stack ->
-                val item = stack?.item
-                when {
-                    item is IRModularArmor -> slot == 2
-                    Energy.valid(stack) && Energy.of(stack).maxOutput > 0 -> slot == 0
-                    slot == 1 -> item is IRModuleItem
-                    else -> false
-                }
-            }
+        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.inventoryComponent = inventory(this) {
+            0 filter { (stack, item) -> item !is IRModularItem<*> && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
+            1 filter { stack -> stack.item is IRModuleItem }
+            2 filter { stack -> stack.item is IRModularItem<*> }
         }
-        this.propertyDelegate = ArrayPropertyDelegate(3)
+        /*
+        this.multiblockComponent = TieredMultiblockComponent.Builder(Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
+            .configure(Tier.MK1) {
+                cube(BlockPos(-2, 2, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
+                add(BlockPos(0, 1, 0), Blocks.IRON_BLOCK.defaultState)
+            }
+            .configure(Tier.MK2) {
+                cube(BlockPos(-2, 1, 2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(-2, 1, -2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(-2, 1, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(2, 1, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
+            }
+            .configure(Tier.MK3) {
+                horizontalCorners(BlockPos(0, 0, 0), 2, Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-2, 0, -1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-2, 0, 1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(2, 0, -1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(2, 0, 1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(1, 0, -2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(1, 0, 2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-1, 0, -2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-1, 0, 2), Blocks.REDSTONE_BLOCK.defaultState)
+                horizontalCorners(BlockPos(0, -1, 0), 2, Blocks.REDSTONE_BLOCK.defaultState)
+            }
+            .configure(Tier.MK4) {
+                add(BlockPos(-2, -1, -1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-2, -1, 1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(2, -1, -1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(2, -1, 1), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(1, -1, -2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(1, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-1, -1, -2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-1, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(-2, -1, 0), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(2, -1, 0), Blocks.REDSTONE_BLOCK.defaultState)
+                add(BlockPos(0, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
+                cube(BlockPos(-2, -2, 2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(-2, -2, -2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(-2, -2, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(2, -2, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
+                cube(BlockPos(-2, -3, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
+                remove(BlockPos(0, -3, 0))
+            }
+            .build(this)*/
     }
 
     private var processTime: Int by Property(2, 0)
+    private var maxProcessTime: Int by Property(3, 0)
+    private var state: State = State.IDLE
+        set(value) {
+            field = value
+            propertyDelegate[4] = value.ordinal
+        }
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
-        val armorStack = inventory.getStack(2)
+        val targetStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
-        if (armorStack.item !is IRModularArmor || moduleStack.item !is IRModuleItem) {
+        if (moduleStack.item !is IRModuleItem || targetStack.item !is IRModularItem<*>) {
             processTime = 0
+            state = State.IDLE
             return
         }
-        val armorItem = armorStack.item as IRModularArmor
+        //val armorItem = armorStack.item as IRModularArmor
+        val targetItem = targetStack.item as IRModularItem<*>
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
+        val compatible = targetItem.getCompatibleModules(targetStack)
         if (inventory.isEmpty) {
             processTime = 0
             setWorkingState(false)
-        } else if (isProcessing()
-            && module.slots.contains(armorItem.slotType)
-            && Energy.of(this).use(config.energyCost)) {
-            setWorkingState(true)
-            processTime += config.processSpeed.toInt()
-            if (processTime >= 1200) {
-                inventory.setStack(1, ItemStack.EMPTY)
-                val tag = armorStack.orCreateTag
-                when {
-                    module == Module.COLOR -> {
-                        val colorModuleItem = moduleItem as IRColorModuleItem
-                        armorItem.setColor(armorStack, colorModuleItem.color)
+            state = State.IDLE
+        } else {
+            if (isProcessing()
+                && compatible.contains(module)
+                && Energy.of(this).use(config.energyCost)) {
+                setWorkingState(true)
+                processTime += config.processSpeed.toInt()
+                if (processTime >= maxProcessTime) {
+                    inventory.setStack(1, ItemStack.EMPTY)
+                    val tag = targetStack.orCreateTag
+                    when {
+                        module == ArmorModule.COLOR -> {
+                            if (targetItem !is IRModularArmor) return
+                            val colorModuleItem = moduleItem as IRColorModuleItem
+                            targetItem.setColor(targetStack, colorModuleItem.color)
+                        }
+                        tag.contains(module.key) -> {
+                            val level = tag.getInt(module.key) + 1
+                            tag.putInt(module.key, level.coerceAtMost(module.maxLevel))
+                        }
+                        else -> tag.putInt(module.key, 1)
                     }
-                    tag.contains(module.key) -> {
-                        val level = tag.getInt(module.key) + 1
-                        tag.putInt(module.key, level.coerceAtMost(module.maxLevel))
-                    }
-                    else -> tag.putInt(module.key, 1)
+                    processTime = 0
+                    state = State.IDLE
                 }
-                processTime = 0
+            } else if (energy > 0 && !targetStack.isEmpty && !moduleStack.isEmpty && compatible.contains(module)) {
+                val tag = targetStack.orCreateTag
+                if (tag.contains(module.key)) {
+                    val level = module.getMaxInstalledLevel(targetStack)
+                    if (module != ArmorModule.COLOR && level >= module.maxLevel) {
+                        state = State.MAX_LEVEL
+                        return
+                    }
+                }
+                processTime = 1
+                maxProcessTime = 1200
+                setWorkingState(true)
+                state = State.INSTALLING
+            } else {
+                state = State.INCOMPATIBLE
             }
-        } else if (energy > 0 && !armorStack.isEmpty && !moduleStack.isEmpty && module.slots.contains(armorItem.slotType)) {
-            val tag = armorStack.orCreateTag
-            if (tag.contains(module.key)) {
-                val level = tag.getInt(module.key)
-                if (module != Module.COLOR && level >= module.maxLevel) return
-            }
-            processTime = 1
-            setWorkingState(true)
-        } else processTime = -1
+        }
     }
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
@@ -106,5 +166,12 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         return super.toClientTag(tag)
+    }
+
+    enum class State {
+        IDLE,
+        INSTALLING,
+        INCOMPATIBLE,
+        MAX_LEVEL;
     }
 }

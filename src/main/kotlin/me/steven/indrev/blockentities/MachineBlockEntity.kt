@@ -8,14 +8,15 @@ import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.components.*
+import me.steven.indrev.components.AbstractMultiblockComponent
+import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.InventoryComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.energy.EnergyMovement
 import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.EnergyMovement
-import me.steven.indrev.utils.NUGGET_AMOUNT
-import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.toIntArray
+import me.steven.indrev.utils.*
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
@@ -42,7 +43,7 @@ import kotlin.math.roundToInt
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
     : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
     var explode = false
-    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(3)
+    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0
 
@@ -50,16 +51,18 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
     var fluidComponent: FluidComponent? = null
+    var multiblockComponent: AbstractMultiblockComponent? = null
 
     var itemTransferCooldown = 0
 
-    val config: T
-        get() = registry.config(tier) as T
+    val config: T by lazy { registry.config(tier) as T }
 
     protected open fun machineTick() {}
 
     override fun tick() {
         if (world?.isClient == false) {
+            multiblockComponent?.tick()
+            if (multiblockComponent?.isBuilt == false) return
             EnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureComponent!!.explosionPower
@@ -91,7 +94,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    protected fun setWorkingState(value: Boolean) {
+    fun setWorkingState(value: Boolean) {
         if (world?.isClient == false && this.cachedState.contains(MachineBlock.WORKING_PROPERTY) && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
             val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
             world!!.setBlockState(pos, state)
@@ -139,6 +142,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
+        multiblockComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -148,6 +152,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             inventoryComponent?.toTag(tag)
             temperatureComponent?.toTag(tag)
             fluidComponent?.toTag(tag)
+            multiblockComponent?.toTag(tag)
         }
         return super.toTag(tag)
     }
@@ -156,6 +161,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
+        multiblockComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -164,6 +170,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.toTag(tag)
         temperatureComponent?.toTag(tag)
         fluidComponent?.toTag(tag)
+        multiblockComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }
@@ -211,7 +218,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
     private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
-        if (itemTransferCooldown > 0) return
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->

@@ -4,7 +4,7 @@
     "item": "minecraft:iron_ingot"
   },
   "output": {
-    "item": "iron_dust",
+    "item": "indrev:iron_dust",
     "count": 1
   },
   "processTime": 200

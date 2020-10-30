@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine_factory",
+  "textures": {
+    "texture": "indrev:block/infuser"
+  }
+}

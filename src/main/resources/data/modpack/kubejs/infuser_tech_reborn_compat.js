@@ -255,7 +255,7 @@ processTime: 200
 event.recipes.indrev.infuse({
 ingredients: [
 {
-c: 'c:iron_dusts',
+tag: 'c:iron_dusts',
 count: 2
 },
 {

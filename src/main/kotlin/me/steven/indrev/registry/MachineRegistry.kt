@@ -13,7 +13,7 @@ import me.steven.indrev.blockentities.storage.BatteryBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blocks.machine.*
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.gui.controllers.*
+import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
@@ -36,7 +36,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.world.BlockView
 import java.util.function.Supplier
 
-class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, private vararg val tiers: Tier = Tier.values()) {
+class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, vararg val tiers: Tier = Tier.values()) {
 
     private val configs: MutableMap<Tier, IConfig> = mutableMapOf()
     private val blocks: MutableMap<Tier, Block> = mutableMapOf()
@@ -83,7 +83,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .requiresTool()
                 .breakByTool(FabricToolTags.PICKAXES, 2)
                 .strength(5.0f, 6.0f)
-                .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
+                .luminance { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
 
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
@@ -200,6 +200,21 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             { tier -> { SolidInfuserBlockEntity(tier) } }
         )
 
+        val SAWMILL_REGISTRY = MachineRegistry(identifier("sawmill")).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.sawmillMk1
+                        Tier.MK2 -> CONFIG.machines.sawmillMk2
+                        Tier.MK3 -> CONFIG.machines.sawmillMk3
+                        else -> CONFIG.machines.sawmillMk4
+                    }, ::SawmillController
+                ) { SawmillBlockEntity(tier) }
+            },
+            { tier -> { SawmillBlockEntity(tier) } }
+        )
+
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
                 HorizontalFacingMachineBlock(
@@ -229,6 +244,66 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::CondenserController) { CondenserBlockEntity(tier) }
             },
             { tier -> { CondenserBlockEntity(tier) } }
+        )
+
+        val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry(identifier("electric_furnace_factory"), false, Tier.MK4).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.electricFurnaceMk1
+                        Tier.MK2 -> CONFIG.machines.electricFurnaceMk2
+                        Tier.MK3 -> CONFIG.machines.electricFurnaceMk3
+                        else -> CONFIG.machines.electricFurnaceMk4
+                    }, ::ElectricFurnaceFactoryController
+                ) { ElectricFurnaceFactoryBlockEntity(tier) }
+            },
+            { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
+        )
+
+        val PULVERIZER_FACTORY_REGISTRY = MachineRegistry(identifier("pulverizer_factory"), false, Tier.MK4).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.pulverizerMk1
+                        Tier.MK2 -> CONFIG.machines.pulverizerMk2
+                        Tier.MK3 -> CONFIG.machines.pulverizerMk3
+                        else -> CONFIG.machines.pulverizerMk4
+                    }, ::PulverizerFactoryController
+                ) { PulverizerFactoryBlockEntity(tier) }
+            },
+            { tier -> { PulverizerFactoryBlockEntity(tier) } }
+        )
+
+        val COMPRESSOR_FACTORY_REGISTRY = MachineRegistry(identifier("compressor_factory"), false, Tier.MK4).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.compressorMk1
+                        Tier.MK2 -> CONFIG.machines.compressorMk2
+                        Tier.MK3 -> CONFIG.machines.compressorMk3
+                        else -> CONFIG.machines.compressorMk4
+                    }, ::CompressorFactoryController
+                ) { CompressorFactoryBlockEntity(tier) }
+            },
+            { tier -> { CompressorFactoryBlockEntity(tier) } }
+        )
+
+        val INFUSER_FACTORY_REGISTRY = MachineRegistry(identifier("infuser_factory"), false, Tier.MK4).register(
+            { tier ->
+                HorizontalFacingMachineBlock(
+                    MACHINE_BLOCK_SETTINGS(), tier,
+                    when (tier) {
+                        Tier.MK1 -> CONFIG.machines.infuserMk1
+                        Tier.MK2 -> CONFIG.machines.infuserMk2
+                        Tier.MK3 -> CONFIG.machines.infuserMk3
+                        else -> CONFIG.machines.infuserMk4
+                    }, ::InfuserFactoryController
+                ) { InfuserFactoryBlockEntity(tier) }
+            },
+            { tier -> { InfuserFactoryBlockEntity(tier) } }
         )
 
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
@@ -356,7 +431,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
+                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().luminance(0), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             )
     }

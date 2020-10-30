@@ -2,29 +2,32 @@ package me.steven.indrev
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
+import io.netty.buffer.Unpooled
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.components.TransferMode
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
-import me.steven.indrev.gui.controllers.*
+import me.steven.indrev.gui.controllers.IRGuiController
+import me.steven.indrev.gui.controllers.machines.*
+import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.recipes.CopyNBTShapedRecipe
 import me.steven.indrev.recipes.PatchouliBookRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
-import me.steven.indrev.recipes.compatibility.IRBlastingRecipe
-import me.steven.indrev.recipes.compatibility.IRShapelessRecipe
-import me.steven.indrev.recipes.compatibility.IRSmeltingRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.registerScreenHandler
+import me.steven.indrev.utils.*
+import me.steven.indrev.world.chunkveins.ChunkVeinData
+import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -32,9 +35,13 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
+import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceType
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
@@ -60,7 +67,7 @@ object IndustrialRevolution : ModInitializer {
             IRRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }
         IRLootTables.register()
-        MachineRegistry.COAL_GENERATOR_REGISTRY
+        MachineRegistry
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
@@ -74,18 +81,16 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, IRSmeltingRecipe.IDENTIFIER, IRSmeltingRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, IRBlastingRecipe.IDENTIFIER, IRBlastingRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, IRBlastingRecipe.IDENTIFIER, IRBlastingRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, IRShapelessRecipe.IDENTIFIER, IRShapelessRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CondenserRecipe.IDENTIFIER, CondenserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, SawmillRecipe.IDENTIFIER, SawmillRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, SawmillRecipe.IDENTIFIER, SawmillRecipe.TYPE)
+
+        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
             val isItemConfig = buf.readBoolean()
@@ -111,6 +116,7 @@ object IndustrialRevolution : ModInitializer {
                     val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@execute
                     blockEntity.range = value
                     blockEntity.markDirty()
+                    blockEntity.sync()
                 }
             }
         }
@@ -124,6 +130,49 @@ object IndustrialRevolution : ModInitializer {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
                     FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player)
+                }
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(UPDATE_MODULAR_TOOL_LEVEL) { ctx, buf ->
+            val key = buf.readString(32767)
+            val value = buf.readInt()
+            val slot = buf.readInt()
+            ctx.taskQueue.execute {
+                val stack = ctx.player.inventory.getStack(slot)
+                val tag = stack.getOrCreateSubTag("selected")
+                tag.putInt(key, value)
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(SPLIT_STACKS_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@execute
+                    blockEntity.isSplitOn = !blockEntity.isSplitOn
+                    if (blockEntity.isSplitOn) blockEntity.splitStacks()
+                }
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(RancherController.SYNC_RANCHER_CONFIG) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val feedBabies = buf.readBoolean()
+            val mateAdults = buf.readBoolean()
+            val matingLimit = buf.readInt()
+            val killAfter = buf.readInt()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? RancherBlockEntity ?: return@execute
+                    blockEntity.feedBabies = feedBabies
+                    blockEntity.mateAdults = mateAdults
+                    blockEntity.matingLimit = matingLimit
+                    blockEntity.killAfter = killAfter
+                    blockEntity.markDirty()
+                    blockEntity.sync()
                 }
             }
         }
@@ -172,8 +221,47 @@ object IndustrialRevolution : ModInitializer {
     val CONDENSER_HANDLER = CondenserController.SCREEN_ID.registerScreenHandler(::CondenserController)
     val FLUID_INFUSER_HANDLER = FluidInfuserController.SCREEN_ID.registerScreenHandler(::FluidInfuserController)
     val FARMER_HANDLER = FarmerController.SCREEN_ID.registerScreenHandler(::FarmerController)
+    val SAWMILL_HANDLER = SawmillController.SCREEN_ID.registerScreenHandler(::SawmillController)
+
+    val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryController)
+    val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryController.SCREEN_ID.registerScreenHandler(::PulverizerFactoryController)
+    val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
+    val INFUSER_FACTORY_HANDLER = InfuserFactoryController.SCREEN_ID.registerScreenHandler(::InfuserFactoryController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
+    val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportController.SCREEN_ID) { syncId, inv, buf ->
+        val pos = buf.readBlockPos()
+        val id = buf.readIdentifier()
+        val explored = buf.readInt()
+        val size = buf.readInt()
+        val veinData = ChunkVeinData(id, size, explored)
+        ResourceReportController(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
+    } as ExtendedScreenHandlerType<ResourceReportController>
+
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
+
+    val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
+    val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
+    val SYNC_PROPERTY = identifier("sync_property")
+
+    fun syncVeinData(playerEntity: ServerPlayerEntity) {
+        val buf = PacketByteBuf(Unpooled.buffer())
+        buf.writeInt(VeinType.REGISTERED.size)
+        VeinType.REGISTERED.forEach { (identifier, veinType) ->
+            buf.writeIdentifier(identifier)
+            val entries = veinType.outputs.entries
+            buf.writeInt(entries.size)
+            entries.forEach { entry ->
+                val block = entry.element
+                val weight = entry.weight
+                val rawId = Registry.BLOCK.getRawId(block)
+                buf.writeInt(rawId)
+                buf.writeInt(weight)
+            }
+            buf.writeInt(veinType.sizeRange.first)
+            buf.writeInt(veinType.sizeRange.last)
+        }
+        ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, SYNC_VEINS_PACKET, buf)
+    }
 }

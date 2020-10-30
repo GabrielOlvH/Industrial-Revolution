@@ -2,10 +2,10 @@ package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
 import me.steven.indrev.armor.IRArmorMaterial;
-import me.steven.indrev.armor.Module;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
+import me.steven.indrev.tools.modular.ArmorModule;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
@@ -20,6 +20,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -27,13 +28,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import team.reborn.energy.Energy;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity extends PlayerEntity {
+    @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
+
     private int ticks = 0;
     private int lastDamageTick = 0;
-    private final Set<Module> appliedEffects = new HashSet<>();
+    private final Set<ArmorModule> appliedEffects = new HashSet<>();
 
     public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -42,6 +46,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     @Inject(method = "tick", at = @At("TAIL"))
     private void indrev_applyEffects(CallbackInfo ci) {
         ticks++;
+
         if (ticks % 40 == 0) {
             applyArmorEffects();
             useActiveAxeEnergy();
@@ -49,7 +54,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
-    private float indrev_absorbExplosionDamage(float amount, DamageSource source) {
+    private float indrev_absorbDamage(float amount, DamageSource source) {
+        if (isInvulnerableTo(source)) return amount;
         lastDamageTick = ticks;
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
@@ -57,14 +63,16 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
         for (ItemStack itemStack : inventory.armor) {
             Item item = itemStack.getItem();
             if (!(item instanceof IRModularArmor)) continue;
-            int level = Module.Companion.getLevel(itemStack, Module.PROTECTION);
+            int level = ArmorModule.PROTECTION.getLevel(itemStack);
             double absorb = amount * (0.25 * (level / 3f));
             if (level > 0
                     && ((IRModularArmor) item).getShield(itemStack) > absorb
                     && canUseShield(itemStack, source)
             ) {
-                if (source.equals(DamageSource.FALL) || source.isFire())
+                if (source.equals(DamageSource.FALL))
                     damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, amount);
+                else if (source.isFire())
+                    damageAbsorbed += (((IRModularArmor) item).useShield(itemStack, amount * 0.1)) / 0.1;
                 else
                     damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, absorb);
             }
@@ -73,8 +81,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     }
 
     private boolean canUseShield(ItemStack itemStack, DamageSource source) {
-        if (source.equals(DamageSource.FALL)) return Module.Companion.isInstalled(itemStack, Module.FEATHER_FALLING);
-        else if (source.isFire()) return Module.Companion.isInstalled(itemStack, Module.FIRE_RESISTANCE);
+        if (source.equals(DamageSource.FALL)) return ArmorModule.FEATHER_FALLING.isInstalled(itemStack);
+        else if (source.isFire()) return ArmorModule.FIRE_RESISTANCE.isInstalled(itemStack);
         else return !source.bypassesArmor();
     }
 
@@ -94,26 +102,21 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private void applyArmorEffects() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
-        Set<Module> effectsToRemove = new HashSet<>(appliedEffects);
+        Set<ArmorModule> effectsToRemove = new HashSet<>(appliedEffects);
         appliedEffects.clear();
         for (ItemStack itemStack : inventory.armor) {
-            if (itemStack.getItem() instanceof ArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
-                Module[] modules = Module.Companion.getInstalled(itemStack);
-                for (Module module : modules) {
-                    int level = Module.Companion.getLevel(itemStack, module);
+            if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
+                List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);
+                for (ArmorModule module : modules) {
+                    int level = module.getLevel(itemStack);
+                    if (level <= 0) continue;
                     switch (module) {
-                        case NIGHT_VISION:
                         case SPEED:
-                        case JUMP_BOOST:
                         case BREATHING:
+                        case JUMP_BOOST:
+                        case NIGHT_VISION:
                         case FIRE_RESISTANCE:
-                            StatusEffectInstance effect = module.getApply().invoke(player, level);
-                            if (effect != null && Energy.of(itemStack).use(20.0)) {
-                                if (!player.hasStatusEffect(effect.getEffectType()))
-                                    player.addStatusEffect(effect);
-                                appliedEffects.add(module);
-                                effectsToRemove.remove(module);
-                            }
+                            Energy.of(itemStack).use(20.0);
                             break;
                         case AUTO_FEEDER:
                             HungerManager hunger = player.getHungerManager();
@@ -149,7 +152,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
             }
         }
-        for (Module module : effectsToRemove) {
+        for (ArmorModule module : effectsToRemove) {
             StatusEffectInstance effect = module.getApply().invoke(player, 1);
             if (effect != null)
                 player.removeStatusEffect(effect.getEffectType());

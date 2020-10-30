@@ -17,7 +17,6 @@ import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 
-
 open class IRMachineRecipeCategory(
     private val identifier: Identifier,
     private val logo: EntryStack,
@@ -83,9 +82,9 @@ open class IRMachineRecipeCategory(
 
     override fun getDisplayHeight(): Int = 66
 
-    override fun getIdentifier(): Identifier? = identifier
+    override fun getIdentifier(): Identifier = identifier
 
-    override fun getLogo(): EntryStack? = logo
+    override fun getLogo(): EntryStack = logo
 
-    override fun getCategoryName(): String? = I18n.translate(categoryName)
+    override fun getCategoryName(): String = I18n.translate(categoryName)
 }

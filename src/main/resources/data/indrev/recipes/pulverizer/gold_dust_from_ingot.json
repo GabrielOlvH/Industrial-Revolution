@@ -4,7 +4,7 @@
     "item": "minecraft:gold_ingot"
   },
   "output": {
-    "item": "gold_dust",
+    "item": "indrev:gold_dust",
     "count": 1
   },
   "processTime": 200

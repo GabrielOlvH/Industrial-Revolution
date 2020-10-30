@@ -4,7 +4,7 @@
     "item": "minecraft:diamond_ore"
   },
   "output": {
-    "item": "diamond_dust",
+    "item": "indrev:diamond_dust",
     "count": 2
   },
   "processTime": 200

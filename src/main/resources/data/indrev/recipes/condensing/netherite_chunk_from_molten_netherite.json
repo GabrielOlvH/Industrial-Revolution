@@ -1,0 +1,13 @@
+{
+  "type": "indrev:condenser",
+  "output": {
+    "item": "indrev:netherite_scrap_chunk",
+    "count": 1
+  },
+  "fluidInput": {
+    "fluid": "indrev:molten_netherite_still",
+    "type": "scrap",
+    "count": 1
+  },
+  "processTime": 600
+}

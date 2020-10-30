@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "item": "minecraft:ancient_debris"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_netherite_still",
+    "type": "scrap",
+    "count": 3
+  },
+  "processTime": 600
+}

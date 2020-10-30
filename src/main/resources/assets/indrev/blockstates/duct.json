@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/duct"
+    },
+    "facing=south": {
+      "model": "indrev:block/duct",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/duct",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/duct",
+      "y": 90
+    }
+  }
+}
