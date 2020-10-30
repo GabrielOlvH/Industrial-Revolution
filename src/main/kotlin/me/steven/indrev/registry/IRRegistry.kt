@@ -208,7 +208,7 @@ object IRRegistry {
         identifier("module_looting").item(LOOTING_MODULE_ITEM)
         identifier("module_fire_aspect").item(FIRE_ASPECT_MODULE_ITEM)
         identifier("module_sharpness").item(SHARPNESS_MODULE_ITEM)
-        identifier("module_reach").item(REACH_MODULE_ITEM)
+        //identifier("module_reach").item(REACH_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
