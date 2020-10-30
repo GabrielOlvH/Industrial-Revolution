@@ -659,6 +659,7 @@
   "text.autoconfig.indrev.option.hud.renderLeggingsShield": "Render Leggings Shield",
   "text.autoconfig.indrev.option.hud.renderBootsArmor": "Render Boots Armor",
   "text.autoconfig.indrev.option.hud.renderBootsShield": "Render Boots Shield",
+  "text.multiblock.not_built": "Structure not built!",
   "advancements.indrev.nikolite": "The beginning",
   "advancements.indrev.nikolite.description": "Find nikolite",
   "advancements.indrev.machine_block": "Foundations",

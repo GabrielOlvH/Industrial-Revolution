@@ -18,6 +18,7 @@ open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: 
         overlay: Int
     ) {
         val multiblock = entity.multiblockComponent ?: return
+        if (!multiblock.shouldRenderHologram) return
         val rotation = multiblock.rotateBlock(entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
         multiblock.getRenderingStructure().forEach { (offset, state) ->
             matrices.push()
