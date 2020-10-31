@@ -767,7 +767,7 @@
   "gui.indrev.shield": "Защита: ",
   "gui.indrev.installing": "Установка",
   "gui.indrev.incompatible": "Несовместимый модуль",
-  "gui.indrev.max_level": "Макс. уровень улучшения",
+  "gui.indrev.max_level": "Макс. уровень модуля",
   "gui.indrev.progress": "Прогресс: ",
   "death.attack.acid": "%s был растворен в серной кислоте",
   "death.attack.acid.player": "%s растворился в серной кислоте при попытке убежать от %s",
