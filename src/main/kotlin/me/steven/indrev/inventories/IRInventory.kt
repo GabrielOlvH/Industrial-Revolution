@@ -45,4 +45,36 @@ class IRInventory(
                 true
             } else false
         }
+
+    private fun addToExistingSlot(stack: ItemStack) {
+        for (i in 0 until size()) {
+            val itemStack = getStack(i)
+            if (canCombine(itemStack, stack)) {
+                transfer(stack, itemStack)
+                if (stack.isEmpty) {
+                    return
+                }
+            }
+        }
+    }
+
+    private fun canCombine(one: ItemStack, two: ItemStack): Boolean {
+        return one.item === two.item && ItemStack.areTagsEqual(one, two)
+    }
+
+    private fun transfer(source: ItemStack, target: ItemStack) {
+        val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
+        val j = source.count.coerceAtMost(i - target.count)
+        if (j > 0) {
+            target.increment(j)
+            source.decrement(j)
+            markDirty()
+        }
+    }
+
+    fun smartOutput(stack: ItemStack): Boolean {
+        val itemStack = stack.copy()
+        addToExistingSlot(itemStack)
+        return if (itemStack.isEmpty) true else output(stack)
+    }
 }

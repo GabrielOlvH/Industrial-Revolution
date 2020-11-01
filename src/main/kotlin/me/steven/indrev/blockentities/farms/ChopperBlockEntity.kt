@@ -137,7 +137,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 .parameter(LootContextParameters.TOOL, axeStack)
         )
         droppedStacks.forEach {
-            if (!inventory.output(it))
+            if (!inventory.smartOutput(it))
                 ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
