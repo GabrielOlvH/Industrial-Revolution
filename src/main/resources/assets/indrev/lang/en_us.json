@@ -771,6 +771,8 @@
   "gui.indrev.progress": "Progress: ",
   "death.attack.acid": "%s was dissolved in sulfuric acid",
   "death.attack.acid.player": "%s was dissolved in sulfuric acid while trying to escape %s",
+  "vein.indrev.bauxite": "Bauxite",
+  "vein.indrev.certus_quartz": "Certus Quartz",
   "vein.indrev.peat": "Peat",
   "vein.indrev.lignite": "Lignite",
   "vein.indrev.bituminous": "Bituminous",
@@ -778,6 +780,7 @@
   "vein.indrev.cuprite": "Cuprite",
   "vein.indrev.calaverite": "Calaverite",
   "vein.indrev.calaverite_nether": "Calaverite (Nether)",
+  "vein.indrev.iridium": "Iridium",
   "vein.indrev.siderite": "Siderite",
   "vein.indrev.limonite": "Limonite",
   "vein.indrev.hematite": "Hematite",
@@ -785,6 +788,12 @@
   "vein.indrev.chalcopryte": "Chalcopryte",
   "vein.indrev.nikolite": "Nikolite",
   "vein.indrev.quartz": "Quartz",
+  "vein.indrev.argentite": "Argentite",
+  "vein.indrev.chlorargyrite": "Chlorargyrite",
   "vein.indrev.cassiterite": "Cassiterite",
-  "vein.indrev.stannite": "Stannite"
+  "vein.indrev.stannite": "Stannite",
+  "vein.indrev.scheelite": "Scheelite",
+  "vein.indrev.wolframite": "Wolframite",
+  "vein.indrev.ferberite": "Ferberite",
+  "vein.indrev.galena": "Galena"
 }
