@@ -1,6 +1,6 @@
 {
   "name": "温度",
   "sortnum": 2,
-  "description": "一些机器会有温度这一特性，可在其界面内查看。本节将详细介绍。",
+  "description": "一些机器会有温度属性，可在其界面内查看。本节将详细介绍。",
   "icon": "indrev:fan"
 }

@@ -1,17 +1,17 @@
 {
-  "name": "放牧机",
-  "category": "machines",
-  "sortnum": 6,
-  "icon": "indrev:rancher_mk4",
-  "pages": [
-    {
-      "type": "crafting",
-      "recipe": "indrev:rancher_mk4",
-      "text": "$(l)放牧机$()可自动放牧，可强化升级。$(br)请注意这个机器需要一些物品才能生效：(放在2x2方格内)"
-    },
-    {
-      "type": "text",
-      "text": "$(l)剑:$()放在机器内时会在范围内动物多于7只时自动杀死多余动物。$(br2)$(l)小麦/种子/胡萝卜：$()放在机器内时会喂养范围内的动物。$(br2)$(l)桶：$()放在机器内时会自动给奶牛挤奶。"
-    }
-  ]
-}
+    "name": "放牧机",
+    "category": "machines",
+    "sortnum": 6,
+    "icon": "indrev:rancher_mk1",
+    "pages": [
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/rancher_mk1",
+        "text": "$(l)放牧机$()可用于自动化放养动物，同样支持机器升级。$(br)机器本身需要一些物品才能运行，请将它们放在所示的2x2方格中。"
+      },
+      {
+        "type": "text",
+        "text": "$(l)剑:$()放在机器内时会在范围内动物多于7只时自动杀死多余动物。$(br2)$(l)小麦/种子/胡萝卜：$()放在机器内时会喂养范围内的动物。$(br2)$(l)桶：$()放在机器内时会自动给牛挤奶。"
+      }
+    ]
+  }

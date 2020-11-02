@@ -1,36 +1,36 @@
 {
-  "name": "发电机",
-  "category": "machines",
-  "sortnum": 0,
-  "icon": "indrev:coal_generator_mk1",
-  "pages": [
-    {
-      "type": "text",
-      "text": "$(l)$(o)发电机$()使用其它资源来创造出为机器功能的青金石通量"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:coal_generator_mk1",
-      "text": "$(l)$(o)煤炭发电机 $()可以使用熔炉燃料提供能量。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:solar_generator_mk1",
-      "recipe2": "indrev:solar_generator_mk3"
-    },
-    {
-      "type": "text",
-      "text": "$(l)$(o)太阳能发电机$()在有阳光直射时产生能量。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:biomass_generator_mk3",
-      "text": "$(l)$(o)生物能发电机$()会燃烧$(#00ff00)生物能$()来产生能量。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:heat_generator",
-      "text": "$(l)$(o)热力发电机$()会吸收$(#ff0000)岩浆$()或$(#ff0000)融化的下界合金$()的能量来产生能量。"
-    }
-  ]
-}
+    "name": "发电机",
+    "category": "machines",
+    "sortnum": 0,
+    "icon": "indrev:coal_generator_mk1",
+    "pages": [
+      {
+        "type": "text",
+        "text": "$(l)$(o)发电机$()通过产生名为青金石通量的能量来为你的机器供能。"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/coal_generator_mk1",
+        "text": "$(l)$(o)煤炭发电机$()并不只能用煤炭，任何熔炉里的能源都可以。"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/solar_generator_mk1",
+        "recipe2": "indrev:shaped/solar_generator_mk3"
+      },
+      {
+        "type": "text",
+        "text": "$(l)$(o)太阳能发电机$()会在阳光的照射下产生能量。"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/biomass_generator_mk3",
+        "text": "$(l)$(o)生物质发电机$()通过燃烧$(#00ff00)生物质$()来产能。"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/heat_generator",
+        "text": "$(l)$(o)热能发电机$()通过吸收与其接触的$(#ff0000)熔岩$()或$(#ff0000)熔融下界合金$()来产能。"
+      }
+    ]
+  }
