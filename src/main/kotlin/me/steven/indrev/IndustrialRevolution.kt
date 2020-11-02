@@ -192,6 +192,10 @@ object IndustrialRevolution : ModInitializer {
                 }
             }
         }
+
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
+            s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
+        }
     }
 
     val LOGGER = LogManager.getLogger("Industrial Revolution")

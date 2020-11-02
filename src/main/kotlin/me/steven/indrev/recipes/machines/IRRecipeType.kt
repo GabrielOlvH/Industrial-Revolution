@@ -27,4 +27,9 @@ class IRRecipeType<T : IRRecipe> : IRecipeGetter<T>, RecipeType<T> {
         recipeCache[item.item] = matches
         return matches
     }
+
+    fun clearCache() {
+        recipeCache.clear()
+        fluidOnlyRecipeCache.clear()
+    }
 }
