@@ -46,12 +46,17 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
     }
 
     override fun getOutlineShape(
-        state: BlockState?,
+        state: BlockState,
         view: BlockView?,
         pos: BlockPos?,
         context: ShapeContext?
     ): VoxelShape {
-        return if (state != null && state[COVERED]) VoxelShapes.fullCube() else CENTER_SHAPE
+        if (state[COVERED]) return VoxelShapes.fullCube()
+        var shape = CENTER_SHAPE
+        Direction.values().forEach { direction ->
+            if (state[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
+        }
+        return shape
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
@@ -162,7 +167,13 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
 
     companion object {
 
-        val CENTER_SHAPE: VoxelShape = VoxelShapes.cuboid(0.33, 0.33, 0.33, 0.67, 0.67, 0.67)
+        val CENTER_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 10.5)
+        val DOWN_SHAPE: VoxelShape = createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
+        val UP_SHAPE: VoxelShape = createCuboidShape(6.0, 10.5, 6.0, 10.0, 16.0, 10.0)
+        val SOUTH_SHAPE: VoxelShape = createCuboidShape(6.0, 6.0, 10.5, 10.0, 10.0, 16.0)
+        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.0, 6.0, 5.5, 10.0, 10.0, 0.0)
+        val EAST_SHAPE: VoxelShape = createCuboidShape(10.5, 6.0, 6.0, 16.0, 10.0, 10.0)
+        val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 6.0, 6.0, 5.5, 10.0, 10.0)
 
         val NORTH: BooleanProperty = BooleanProperty.of("north")
         val SOUTH: BooleanProperty = BooleanProperty.of("south")
@@ -172,6 +183,17 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         val DOWN: BooleanProperty = BooleanProperty.of("down")
 
         val COVERED: BooleanProperty = BooleanProperty.of("covered")
+
+        fun getShape(direction: Direction): VoxelShape {
+            var shape = VoxelShapes.empty()
+            if (direction == Direction.NORTH) shape = NORTH_SHAPE
+            if (direction == Direction.SOUTH) shape = SOUTH_SHAPE
+            if (direction == Direction.EAST) shape = EAST_SHAPE
+            if (direction == Direction.WEST) shape = WEST_SHAPE
+            if (direction == Direction.UP) shape = UP_SHAPE
+            if (direction == Direction.DOWN) shape = DOWN_SHAPE
+            return shape
+        }
 
         fun getProperty(facing: Direction): Property<Boolean> {
             return when (facing) {
