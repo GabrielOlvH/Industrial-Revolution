@@ -12,7 +12,7 @@ enum class GamerAxeModule(
     LOOTING("looting", 3),
     FIRE_ASPECT("fire_aspect", 1),
     SHARPNESS("sharpness", 5),
-    REACH("reach", 4);
+    REACH("reach", 4); // NOT IMPLEMENTED
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)

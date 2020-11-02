@@ -142,6 +142,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
+        multiblockComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -151,6 +152,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             inventoryComponent?.toTag(tag)
             temperatureComponent?.toTag(tag)
             fluidComponent?.toTag(tag)
+            multiblockComponent?.toTag(tag)
         }
         return super.toTag(tag)
     }
@@ -159,6 +161,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.fromTag(tag)
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
+        multiblockComponent?.fromTag(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -167,6 +170,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         inventoryComponent?.toTag(tag)
         temperatureComponent?.toTag(tag)
         fluidComponent?.toTag(tag)
+        multiblockComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
         return tag
     }
@@ -214,7 +218,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
     private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
-        if (itemTransferCooldown > 0) return
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->

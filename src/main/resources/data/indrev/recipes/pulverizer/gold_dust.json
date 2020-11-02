@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:gold_ore"
+    "tag": "c:gold_ores"
   },
   "output":
     {

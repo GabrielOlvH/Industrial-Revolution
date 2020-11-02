@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BB ",
+    " B ",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "tag": "c:iron_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:duct"
+  }
+}

@@ -63,7 +63,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
         secondLayer: Boolean,
         r: Float, g: Float, b: Float,
         overlay: String?) {
-        val vertexConsumer = ItemRenderer.getArmorVertexConsumer(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)), false, hasGlint)
+        val vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumerProvider, RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)), false, hasGlint)
         bipedEntityModel.render(matrixStack, vertexConsumer, light, OverlayTexture.DEFAULT_UV, r, g, b, 1.0f)
     }
 

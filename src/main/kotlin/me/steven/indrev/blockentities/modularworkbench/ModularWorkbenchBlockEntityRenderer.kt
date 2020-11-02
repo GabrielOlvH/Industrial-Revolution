@@ -101,7 +101,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         r: Float, g: Float, b: Float,
         overlay: String?
     ) {
-        val vertexConsumer = ItemRenderer.getArmorVertexConsumer(
+        val vertexConsumer = ItemRenderer.getArmorGlintConsumer(
             vertexConsumerProvider,
             RenderLayer.getArmorCutoutNoCull(getArmorTexture(armorItem, secondLayer, overlay)),
             false,

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " B ",
+    "BDB",
+    " B "
+  ],
+  "key": {
+    "B": {
+      "tag": "c:iron_plates"
+    },
+    "D": {
+      "item": "minecraft:barrel"
+    }
+  },
+  "result": {
+    "item": "indrev:cabinet"
+  }
+}

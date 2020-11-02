@@ -29,50 +29,6 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
         }
-        /*
-        this.multiblockComponent = TieredMultiblockComponent.Builder(Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
-            .configure(Tier.MK1) {
-                cube(BlockPos(-2, 2, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
-                add(BlockPos(0, 1, 0), Blocks.IRON_BLOCK.defaultState)
-            }
-            .configure(Tier.MK2) {
-                cube(BlockPos(-2, 1, 2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(-2, 1, -2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(-2, 1, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(2, 1, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
-            }
-            .configure(Tier.MK3) {
-                horizontalCorners(BlockPos(0, 0, 0), 2, Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-2, 0, -1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-2, 0, 1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(2, 0, -1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(2, 0, 1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(1, 0, -2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(1, 0, 2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-1, 0, -2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-1, 0, 2), Blocks.REDSTONE_BLOCK.defaultState)
-                horizontalCorners(BlockPos(0, -1, 0), 2, Blocks.REDSTONE_BLOCK.defaultState)
-            }
-            .configure(Tier.MK4) {
-                add(BlockPos(-2, -1, -1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-2, -1, 1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(2, -1, -1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(2, -1, 1), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(1, -1, -2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(1, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-1, -1, -2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-1, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(-2, -1, 0), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(2, -1, 0), Blocks.REDSTONE_BLOCK.defaultState)
-                add(BlockPos(0, -1, 2), Blocks.REDSTONE_BLOCK.defaultState)
-                cube(BlockPos(-2, -2, 2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(-2, -2, -2), 5, 1, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(-2, -2, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(2, -2, -1), 1, 3, 1, Blocks.DIAMOND_BLOCK.defaultState)
-                cube(BlockPos(-2, -3, -2), 5, 5, 1, Blocks.IRON_BLOCK.defaultState)
-                remove(BlockPos(0, -3, 0))
-            }
-            .build(this)*/
     }
 
     private var processTime: Int by Property(2, 0)

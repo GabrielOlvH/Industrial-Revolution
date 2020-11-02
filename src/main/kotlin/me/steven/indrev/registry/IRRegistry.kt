@@ -208,7 +208,7 @@ object IRRegistry {
         identifier("module_looting").item(LOOTING_MODULE_ITEM)
         identifier("module_fire_aspect").item(FIRE_ASPECT_MODULE_ITEM)
         identifier("module_sharpness").item(SHARPNESS_MODULE_ITEM)
-        identifier("module_reach").item(REACH_MODULE_ITEM)
+        //identifier("module_reach").item(REACH_MODULE_ITEM)
 
         identifier("module_color_pink").item(PINK_MODULE_ITEM)
         identifier("module_color_red").item(RED_MODULE_ITEM)
@@ -372,7 +372,7 @@ object IRRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val WARNING_STROBE = WarningStrobeBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().lightLevel(15).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().luminance(15).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val INTAKE =  HorizontalFacingBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)

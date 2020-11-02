@@ -27,7 +27,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             tag.putString("TransferMode", mode.toString())
             stack.tag = tag
             user.sendMessage(TranslatableText("item.indrev.wrench.switch_mode", mode), true)
-            return TypedActionResult.method_29237(stack, world.isClient)
+            return TypedActionResult.success(stack, world.isClient)
         }
         return TypedActionResult.pass(user?.getStackInHand(hand))
     }

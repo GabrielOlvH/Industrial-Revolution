@@ -62,6 +62,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             if (kill.isNotEmpty()) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
+                if (swordStack.damage <= 0) swordStack.decrement(1)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
                 animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
                 if (animal.isDead) {
