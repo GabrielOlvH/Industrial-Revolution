@@ -66,6 +66,13 @@ repositories {
             includeGroup 'appeng'
         }
     }
+    maven {
+        name = "dblsaiko"
+        url = "https://maven.dblsaiko.net/"
+        content {
+            includeGroup 'grondag'
+        }
+    }
 }
 
 dependencies {
@@ -132,6 +139,9 @@ dependencies {
     include("com.github.Draylar:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+
+
+    modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
     //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
     modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
         exclude group: "teamreborn", module: "energy"
