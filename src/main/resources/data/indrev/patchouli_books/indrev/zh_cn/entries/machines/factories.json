@@ -1,0 +1,35 @@
+{
+  "name": "工厂",
+  "category": "machines",
+  "sortnum": 9,
+  "icon": "indrev:electric_furnace_factory_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "$(l)工厂$()是机器的升级版，一次性可以处理5个物品。它们也可以智能平分物品到其各个槽位，悉听尊便。$(br2)这般的强力自然无法塞进一个方块里，因此你需要构建多方块结构。"
+    },
+    {
+      "type": "text",
+      "text": "$(l)方块：$()$(br2)$(li)$(l)9x$()机器框架$(br)$(li)$(l)6x$()筒仓$(br)$(li)$(l)3x$()进风口$(br)$(li)$(l)3x$()机器导管$(br)$(l i)$(l)2x$()柜子$(br)$(li)$(l)1x$()警示灯$(br)$(li)$(l)1x$()控制器$()$(br2)右击工厂方块本身可以查看多方块结构的构造。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/frame",
+      "recipe2": "indrev:shaped/silo"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/intake",
+      "recipe2": "indrev:shaped/duct"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cabinet",
+      "recipe2": "indrev:shaped/warning_strobe"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/controller"
+    }
+  ]
+}

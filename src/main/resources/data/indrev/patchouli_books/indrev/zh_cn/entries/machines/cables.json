@@ -1,22 +1,22 @@
 {
-  "name": "电缆",
-  "category": "machines",
-  "sortnum": 2,
-  "icon": "indrev:cable_mk1",
-  "pages": [
-    {
-      "type": "text",
-      "text": "这些机器用于远距离运输青金石通量。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:cable_mk1",
-      "recipe2": "indrev:cable_mk2"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:cable_mk3",
-      "recipe2": "indrev:cable_mk4"
-    }
-  ]
-}
+    "name": "电缆",
+    "category": "machines",
+    "sortnum": 2,
+    "icon": "indrev:cable_mk1",
+    "pages": [
+      {
+        "type": "text",
+        "text": "这些线缆可用于远距离运输青金石通量。"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/cable_mk1",
+        "recipe2": "indrev:shaped/cable_mk2"
+      },
+      {
+        "type": "crafting",
+        "recipe": "indrev:shaped/cable_mk3",
+        "recipe2": "indrev:shaped/cable_mk4"
+      }
+    ]
+  }

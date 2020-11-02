@@ -1,27 +1,27 @@
 {
-  "name": "保持低温！",
+  "name": "时刻保持高“冷”~",
   "category": "temperature",
   "sortnum": 1,
   "icon": "indrev:cooler_cell",
   "pages": [
     {
       "type": "text",
-      "text": "冷却液和风扇降低机器的温度来时机器在特定的温度范围内高效运行。"
+      "text": "制冷液和风扇可降低机器的温度以使机器在特定的最适高效温度范围运行。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:fan",
-      "text": "$(o)先生，我可以要你的签名吗？签个名吧baaaaaaa$()"
+      "recipe": "indrev:shaped/fan",
+      "text": "$(o)先生，我是你的死忠“饭”！我可以要你的签名吗？签个名吧啊啊啊——$()"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:cooler_cell",
-      "text": "$(o)哎... 我太酷了，用不了这个$()"
+      "recipe": "indrev:shaped/cooler_cell",
+      "text": "$(o)冷酷无情就是我——$()"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:heatsink",
-      "text": "$(o)什么？你以为这是个双关？抱歉，这里禁止使用双关语。$()"
+      "recipe": "indrev:shaped/heatsink",
+      "text": "$(o)还想着双关呢？两个就够冷了！$()"
     }
   ]
 }
