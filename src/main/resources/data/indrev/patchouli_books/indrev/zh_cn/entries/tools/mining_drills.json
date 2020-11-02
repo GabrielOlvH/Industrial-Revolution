@@ -1,18 +1,18 @@
 {
-  "name": "挖矿钻头",
+  "name": "采矿钻头",
   "category": "tools",
   "sortnum": 2,
   "icon": "indrev:mining_drill_mk1",
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:mining_drill_mk1",
-      "recipe2": "indrev:mining_drill_mk2"
+      "recipe": "indrev:shaped/mining_drill_mk1",
+      "recipe2": "indrev:shaped/mining_drill_mk2"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:mining_drill_mk3",
-      "recipe2": "indrev:mining_drill_mk4"
+      "recipe": "indrev:shaped/mining_drill_mk3",
+      "recipe2": "indrev:shaped/mining_drill_mk4"
     }
   ]
 }

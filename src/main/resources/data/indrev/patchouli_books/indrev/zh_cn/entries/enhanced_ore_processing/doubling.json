@@ -1,0 +1,12 @@
+{
+  "name": "双倍产矿",
+  "category": "enhanced_ore_processing",
+  "sortnum": 0,
+  "icon": "indrev:pulverizer_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "双倍产矿是高级矿物处理的第一步。$(br)首先，你需要$(l:machines/basic_machines#pulverizer)$(t:跳转到“粉碎机”页面)$(l)$(o)粉碎机$()。$(br)粉碎机可以粉碎一个原矿并产出对应的两个矿粉，每个矿粉都可以被烧炼为一个锭。"
+    }
+  ]
+}

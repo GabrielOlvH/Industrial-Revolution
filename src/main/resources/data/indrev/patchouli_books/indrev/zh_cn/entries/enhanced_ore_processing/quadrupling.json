@@ -1,0 +1,16 @@
+{
+  "name": "四倍产矿",
+  "category": "enhanced_ore_processing",
+  "sortnum": 2,
+  "icon": "indrev:fluid_infuser_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "高级矿物处理的最后一步！为此，你需要$(l:machines/basic_machines#fluid_infuser)$(t:跳转到“液体注入机”)$(l)$(o)液体注入机$()，三倍产矿所需的所有机器，还有一些硫酸。$(br)$(#3ead36)硫酸$()可以在沼泽地的天然硫酸湖中获取，也可以在液体注入机中通过混合$(#b3b332)硫粉$()和$(#88adf2)水$()得到。"
+    },
+    {
+      "type": "text",
+      "text": "$(l)1)$()将矿物塞入液体注入机以获取精炼的矿石。$(br)$(l)2)$()接下来按照三倍产矿的操作即可获得四倍的产出啦！"
+    }
+  ]
+}

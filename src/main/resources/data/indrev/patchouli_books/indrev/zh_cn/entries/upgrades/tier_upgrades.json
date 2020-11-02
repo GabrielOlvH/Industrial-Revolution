@@ -1,26 +1,26 @@
 {
-  "name": "升级",
+  "name": "等级升级",
   "category": "upgrades",
   "sortnum": 1,
   "icon": "indrev:tier_upgrade_mk2",
   "pages": [
     {
       "type": "text",
-      "text": "这些升级会提升机器的输入和输出能力和其他方面。$(br2)手持机器升级部件右击机器即可升级。"
+      "text": "等级升级可提升机器的输入输出能力等等。$(br2)手持等级升级部件右击机器即可升级。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk2",
+      "recipe": "indrev:shaped/tier_upgrade_mk2",
       "text": "将MK1机器升为MK2。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk3",
+      "recipe": "indrev:shaped/tier_upgrade_mk3",
       "text": "将MK2机器升为MK3。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:tier_upgrade_mk4",
+      "recipe": "indrev:shaped/tier_upgrade_mk4",
       "text": "将MK3机器升为MK4。"
     }
   ]

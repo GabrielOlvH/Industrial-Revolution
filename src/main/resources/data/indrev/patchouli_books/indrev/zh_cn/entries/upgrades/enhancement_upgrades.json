@@ -1,32 +1,42 @@
 {
-  "name": "强化升级",
+  "name": "机器升级",
   "category": "upgrades",
   "sortnum": 0,
   "icon": "indrev:speed_upgrade",
   "pages": [
     {
       "type": "text",
-      "text": "这些升级可提升机器的特定方面，比如速度和能效。$(br2)机器会使用其界面右侧4个格子内的升级部件。"
+      "text": "机器升级可提升机器的速度和能效等等。$(br2)在机器界面右侧4个方格放入升级部件。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:empty_upgrade",
+      "recipe": "indrev:shaped/empty_upgrade",
       "text": "没有任何用处，只用于合成其他升级。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:speed_upgrade",
-      "text": "这个升级会以能耗为代价增加机器的运行速度。"
+      "recipe": "indrev:shaped/speed_upgrade",
+      "text": "这个升级以能耗为代价增加机器的运行速率。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:energy_upgrade",
-      "text": "这个升级会降低机器的能耗。"
+      "recipe": "indrev:shaped/energy_upgrade",
+      "text": "这个升级可降低机器的能耗。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:buffer_upgrade",
-      "text": "这个升级会增加机器的内部能量容量。"
+      "recipe": "indrev:shaped/buffer_upgrade",
+      "text": "这个升级可增加机器的能量容量。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/blast_furnace_upgrade",
+      "text": "这个升级允许电炉处理高炉配方。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/smoker_upgrade",
+      "text": "这个升级允许电炉处理烟熏炉配方。"
     }
   ]
 }
