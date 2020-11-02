@@ -2,6 +2,13 @@
   "parent": "indrev:block/cable_side",
   "textures": {
     "texture": "indrev:block/cable_wire_emissive_mk1",
-    "particle": "indrev:block/cable_side_mk1"
+    "particle": "indrev:block/cable_wire_emissive_mk1"
+  },
+  "jmx": {
+    "textures": {
+      "1": "indrev:block/cable_wrap",
+      "texture": "indrev:block/cable_wire_emissive_mk1",
+      "particle": "indrev:block/cable_wire_emissive_mk1"
+    }
   }
 }

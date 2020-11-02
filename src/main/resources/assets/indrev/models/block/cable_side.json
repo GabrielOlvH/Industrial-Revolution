@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
 	"textures": {
 		"1": "indrev:block/cable_wrap"
 	},
@@ -61,13 +62,23 @@
 			"to": [9.5, 6, 9.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [17.3, 8, 16.2]},
 			"faces": {
-				"north": {"uv": [0, 3, 3, 9], "texture": "#texture"},
-				"east": {"uv": [0, 3, 3, 9], "texture": "#texture"},
-				"south": {"uv": [0, 3, 3, 9], "texture": "#texture"},
-				"west": {"uv": [0, 3, 3, 9], "texture": "#texture"},
-				"up": {"uv": [3, 3, 0, 0], "texture": "#texture"},
-				"down": {"uv": [3, 6, 0, 9], "texture": "#texture"}
+				"north": {"uv": [0, 3, 3, 9], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
+				"east": {"uv": [0, 3, 3, 9], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
+				"south": {"uv": [0, 3, 3, 9], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
+				"west": {"uv": [0, 3, 3, 9], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
+				"up": {"uv": [3, 3, 0, 0], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
+				"down": {"uv": [3, 6, 0, 9], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"}
 			}
 		}
-	]
+	],
+	"jmx": {
+		"materials": {
+			"jmx_0": {
+				"layer0": "cutout",
+				"emissive0": true,
+				"ambient_occlusion0": false,
+				"diffuse0": false
+			}
+		}
+	}
 }
