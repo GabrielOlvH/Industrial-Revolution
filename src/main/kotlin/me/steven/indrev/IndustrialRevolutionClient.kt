@@ -281,7 +281,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         KeyBinding(
             "key.indrev.modular",
             InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_M,
+            GLFW.GLFW_KEY_UNKNOWN,
             "category.indrev"
         )
     )
