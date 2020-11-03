@@ -411,6 +411,8 @@
   "item.indrev.tin_chestplate": "Tin Chestplate",
   "item.indrev.tin_leggings": "Tin Leggings",
   "item.indrev.tin_boots": "Tin Boots",
+  "category.indrev": "Industrial Revolution",
+  "key.indrev.modular": "Modular item configuration",
   "text.autoconfig.indrev.title": "Industrial Revolution",
   "text.autoconfig.indrev.category.generators": "Generators",
   "text.autoconfig.indrev.option.generators.coalGenerator": "Coal Generator",
