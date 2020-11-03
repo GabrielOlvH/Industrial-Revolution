@@ -431,7 +431,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().luminance(0), tier) },
+                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().luminance(0).nonOpaque(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             )
     }

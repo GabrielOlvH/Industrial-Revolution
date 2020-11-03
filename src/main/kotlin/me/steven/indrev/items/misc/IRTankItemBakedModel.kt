@@ -97,7 +97,8 @@ object IRTankItemBakedModel : BakedModel, FabricBakedModel {
         p2: BlockPos?,
         p3: Supplier<Random>?,
         p4: RenderContext?
-    ) {}
+    ) {
+    }
 
     @Throws(IOException::class)
     private fun getReaderForResource(location: Identifier): Reader {

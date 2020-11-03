@@ -1,8 +1,6 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
-import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
@@ -11,6 +9,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
+import me.steven.indrev.blocks.CableModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
@@ -98,13 +97,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.INFUSER_FACTORY_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
-        }
-
-        MachineRegistry.CABLE_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<CableBlockEntity>,
-                ::CableBlockEntityRenderer
-            )
         }
 
         MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
@@ -196,11 +188,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.FISHING_FARM_REGISTRY.forEachBlock { _, block ->
             BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
         }
+        MachineRegistry.CABLE_REGISTRY.forEachBlock { _, block ->
+            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
+        }
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
             ModelVariantProvider { modelIdentifier, _ ->
-                if(modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
+                if (modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
                     return@ModelVariantProvider object : UnbakedModel {
                         override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
                         override fun bake(
@@ -209,6 +204,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                             rotationScreenHandler: ModelBakeSettings,
                             modelId: Identifier
                         ) = IRTankItemBakedModel
+
                         override fun getTextureDependencies(
                             unbakedModelGetter: Function<Identifier, UnbakedModel>?,
                             unresolvedTextureReferences: MutableSet<com.mojang.datafixers.util.Pair<String, String>>?
@@ -219,7 +215,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
-        FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
+        FabricModelPredicateProviderRegistry.register(
+            IRRegistry.GAMER_AXE_ITEM,
+            identifier("activate")
+        ) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f
             return@predicate tag.getFloat("Progress")
         }
@@ -262,7 +261,18 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     .filter { (_, stack) -> stack.item is IRModularItem<*> }
                     .isNotEmpty()
                 if (hasModularItem)
-                    MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+                    MinecraftClient.getInstance()
+                        .openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+            }
+        }
+        val models = arrayOf(
+            CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)
+        )
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider {
+            ModelVariantProvider { modelIdentifier, _ ->
+                if (modelIdentifier.namespace == "indrev" && modelIdentifier.path.contains("cable_mk"))
+                    return@ModelVariantProvider models[modelIdentifier.path.last().toString().toInt() - 1]
+                return@ModelVariantProvider null
             }
         }
     }
