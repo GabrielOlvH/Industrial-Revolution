@@ -100,44 +100,18 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
         if (state[CableBlock.COVERED]) {
             val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity
             if (blockEntity?.cover != null) {
-                var emitter = context.emitter
                 val coverState = Registry.BLOCK.get(blockEntity.cover).defaultState
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
-                Direction.values().forEach { dir ->
-                    model.getQuads(null, dir, randSupplier.get()).forEach { quad ->
-                        if (!quad.hasColor()) {
-                            emitter.fromVanilla(quad.vertexData, 0, false)
-                            emitter.emit()
-                        }
-                    }
-                }
-                model.getQuads(null, null, randSupplier.get()).forEach { quad ->
-                    if (!quad.hasColor()) {
-                        emitter.fromVanilla(quad.vertexData, 0, false)
-                        emitter.emit()
-                    }
-                }
+                model.emitFromVanilla(context, randSupplier) { quad -> !quad.hasColor() }
+
                 context.pushTransform { q ->
                     val rawColor = ColorProviderRegistry.BLOCK[coverState.block]!!.getColor(coverState, world, pos, 0)
                     val color = 255 shl 24 or rawColor
                     q.spriteColor(0, color, color, color, color)
                     true
                 }
-                emitter = context.emitter
-                Direction.values().forEach { dir ->
-                    model.getQuads(null, dir, randSupplier.get()).forEach { quad ->
-                        if (quad.hasColor()) {
-                            emitter.fromVanilla(quad.vertexData, 0, false)
-                            emitter.emit()
-                        }
-                    }
-                }
-                model.getQuads(null, null, randSupplier.get()).forEach { quad ->
-                    if (quad.hasColor()) {
-                        emitter.fromVanilla(quad.vertexData, 0, false)
-                        emitter.emit()
-                    }
-                }
+
+                model.emitFromVanilla(context, randSupplier) { quad -> quad.hasColor() }
                 context.popTransform()
                 if (coverState.isOpaque) return
             }
@@ -149,6 +123,24 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
         if (state[CableBlock.WEST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[4])
         if (state[CableBlock.UP]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[5])
         if (state[CableBlock.DOWN]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[6])
+    }
+
+    private fun BakedModel.emitFromVanilla(context: RenderContext, randSupplier: Supplier<Random>, shouldEmit: (BakedQuad) -> Boolean) {
+        val emitter = context.emitter
+        Direction.values().forEach { dir ->
+            getQuads(null, dir, randSupplier.get()).forEach { quad ->
+                if (shouldEmit(quad)) {
+                    emitter.fromVanilla(quad.vertexData, 0, false)
+                    emitter.emit()
+                }
+            }
+        }
+        getQuads(null, null, randSupplier.get()).forEach { quad ->
+            if (shouldEmit(quad)) {
+                emitter.fromVanilla(quad.vertexData, 0, false)
+                emitter.emit()
+            }
+        }
     }
 
     private fun handleBakedModel(
