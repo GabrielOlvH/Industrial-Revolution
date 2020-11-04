@@ -140,6 +140,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
                     }
                 }
                 context.popTransform()
+                if (coverState.isOpaque) return
             }
         }
         handleBakedModel(world, state, pos, randSupplier, context, modelArray[0])
