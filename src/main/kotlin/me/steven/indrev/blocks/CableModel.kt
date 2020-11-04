@@ -15,7 +15,6 @@ import net.minecraft.client.render.model.*
 import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.texture.Sprite
-import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.PlayerScreenHandler
@@ -42,6 +41,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
     )
     private val spriteArray = arrayOfNulls<Sprite>(4)
     private val modelArray = arrayOfNulls<BakedModel>(7)
+    private lateinit var transformation: ModelTransformation
 
     override fun bake(
         loader: ModelLoader,
@@ -50,6 +50,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
         modelId: Identifier?
     ): BakedModel? {
         modelArray[0] = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)
+        transformation = modelArray[0]!!.transformation
         val sideModel = loader.getOrLoadModel(modelIdCollection[1])
         modelArray[1] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId) // NORTH
         modelArray[2] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId) // EAST
@@ -83,9 +84,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
 
     override fun getSprite(): Sprite = spriteArray[0]!!
 
-    override fun getTransformation(): ModelTransformation {
-        return MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(Identifier("stone"), "")).transformation
-    }
+    override fun getTransformation(): ModelTransformation = transformation
 
     override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
 
