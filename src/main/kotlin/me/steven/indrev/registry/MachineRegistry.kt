@@ -17,8 +17,10 @@ import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
@@ -27,6 +29,8 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
+import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
@@ -74,6 +78,20 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
     fun block(tier: Tier) = blocks[tier]
         ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
+
+    @Environment(EnvType.CLIENT)
+    fun <T : BlockEntity> registerBlockEntityRenderer(renderer: (BlockEntityRenderDispatcher) -> BlockEntityRenderer<T>) {
+        blockEntities.forEach { (_, type) ->
+            BlockEntityRendererRegistry.INSTANCE.register(
+                type as BlockEntityType<T>
+            ) { dispatcher -> renderer(dispatcher) }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    fun setRenderLayer(layer: RenderLayer) {
+        blocks.forEach { (_, block) -> BlockRenderLayerMap.INSTANCE.putBlock(block, layer) }
+    }
 
     companion object {
 

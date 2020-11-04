@@ -132,8 +132,6 @@ object IRRegistry {
 
         identifier("energy_reader").item(ENERGY_READER)
 
-        identifier("area_indicator").block(AREA_INDICATOR)
-
         identifier("tier_upgrade_mk2").item(IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2))
         identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
         identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
@@ -285,8 +283,6 @@ object IRRegistry {
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
-
-    val AREA_INDICATOR = Block(FabricBlockSettings.of(Material.WOOL))
 
     val COOLANT_IDENTIFIER = identifier("coolant")
     val COOLANT_STILL: BaseFluid.Still =

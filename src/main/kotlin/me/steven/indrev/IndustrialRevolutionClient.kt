@@ -1,12 +1,10 @@
 package me.steven.indrev
 
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.*
-import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
+import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
-import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
-import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
@@ -34,7 +32,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.Block
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.RenderLayer
@@ -99,98 +96,25 @@ object IndustrialRevolutionClient : ClientModInitializer {
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
 
-        MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
-                ::AOEMachineBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.RANCHER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
-                ::AOEMachineBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.FARMER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>,
-                ::AOEMachineBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>,
-                ::ModularWorkbenchBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.CHARGE_PAD_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<ChargePadBlockEntity>,
-                ::ChargePadBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.CONDENSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<CondenserBlockEntity>,
-                ::CondenserBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<FluidInfuserBlockEntity>,
-                ::FluidInfuserBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.INFUSER_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<InfuserFactoryBlockEntity>,
-                ::MultiblockBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<CompressorFactoryBlockEntity>,
-                ::MultiblockBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<PulverizerFactoryBlockEntity>,
-                ::MultiblockBlockEntityRenderer
-            )
-        }
-
-        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(
-                blockEntity as BlockEntityType<ElectricFurnaceFactoryBlockEntity>,
-                ::MultiblockBlockEntityRenderer
-            )
-        }
+        MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.FARMER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.registerBlockEntityRenderer(::ModularWorkbenchBlockEntityRenderer)
+        MachineRegistry.CHARGE_PAD_REGISTRY.registerBlockEntityRenderer(::ChargePadBlockEntityRenderer)
+        MachineRegistry.CONDENSER_REGISTRY.registerBlockEntityRenderer(::CondenserBlockEntityRenderer)
+        MachineRegistry.FLUID_INFUSER_REGISTRY.registerBlockEntityRenderer(::FluidInfuserBlockEntityRenderer)
+        MachineRegistry.INFUSER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
 
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(
-            MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4),
-            RenderLayer.getTranslucent()
-        )
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
-        MachineRegistry.FISHING_FARM_REGISTRY.forEachBlock { _, block ->
-            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
-        }
-        MachineRegistry.CABLE_REGISTRY.forEachBlock { _, block ->
-            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
-        }
+        MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
