@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.NinePatch
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.utils.properties
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
@@ -23,6 +22,9 @@ open class IRGuiController(
     playerInventory: PlayerInventory,
     val ctx: ScreenHandlerContext
 ) : SyncedGuiDescription(type, syncId, playerInventory, getBlockInventory(ctx), getBlockPropertyDelegate(ctx)) {
+
+    private val values = Array(propertyDelegate.size()) { -1 }
+
     @Environment(EnvType.CLIENT)
     override fun addPainters() {
         super.addPainters()
@@ -38,13 +40,13 @@ open class IRGuiController(
 
     override fun sendContentUpdates() {
         if (playerInventory.player is ServerPlayerEntity) {
-            for (i in properties.indices) {
-                val property = properties[i]
-                if (property.hasChanged()) {
+            for (i in 0 until propertyDelegate.size()) {
+                if (values[i] != propertyDelegate[i]) {
+                    values[i] = propertyDelegate[i]
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeInt(syncId)
                     buf.writeInt(i)
-                    buf.writeInt(property.get())
+                    buf.writeInt(values[i])
                     ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.SYNC_PROPERTY, buf)
                 }
             }

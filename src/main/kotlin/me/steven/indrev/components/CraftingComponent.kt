@@ -25,6 +25,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     val temperatureComponent: TemperatureComponent? get() = machine.temperatureComponent
     val type: IRecipeGetter<T> get() = machine.type
     val world: World? get() = machine.world
+    var isCrafting: Boolean = false
 
     var inputSlots: IntArray? = null
         get() = if (field == null) inventoryComponent.inventory.inputSlots else field
@@ -36,24 +37,32 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     fun tick() {
         val inventory = inventoryComponent.inventory
         val inputInventory = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
-        if (isProcessing()) {
-            val recipe = currentRecipe
-            val upgrades = machine.getUpgrades(inventory)
-            if (recipe?.matches(inputInventory, fluidComponent?.tanks?.get(0)?.volume) != true)
-                tryStartRecipe(inventory) ?: reset()
-            else if (Energy.of(machine).use(Upgrade.getEnergyCost(upgrades, machine))) {
-                machine.setWorkingState(true)
-                processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
-                if (processTime >= totalProcessTime) {
-                    handleInventories(inventory, inputInventory, recipe)
-                    machine.usedRecipes[recipe.id] = machine.usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
-                    machine.onCraft()
-                    reset()
-                }
-            } else machine.setWorkingState(false)
-        } else if (machine.energy > 0 && processTime <= 0) {
-            reset()
-            if (tryStartRecipe(inventory) == null) machine.setWorkingState(false)
+        when {
+            inputInventory.isEmpty() -> return
+            isProcessing() -> {
+                val recipe = currentRecipe
+                val upgrades = machine.getUpgrades(inventory)
+                if (recipe?.matches(inputInventory, fluidComponent?.tanks?.get(0)?.volume) != true)
+                    tryStartRecipe(inventory) ?: reset()
+                else if (Energy.of(machine).use(Upgrade.getEnergyCost(upgrades, machine))) {
+                    isCrafting = true
+                    processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
+                    if (processTime >= totalProcessTime) {
+                        handleInventories(inventory, inputInventory, recipe)
+                        machine.usedRecipes[recipe.id] = machine.usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
+                        machine.onCraft()
+                        reset()
+                    }
+                } else isCrafting = false
+            }
+            machine.energy > 0 -> {
+                reset()
+                if (tryStartRecipe(inventory) == null) isCrafting = false
+            }
+            else -> {
+                reset()
+                isCrafting = false
+            }
         }
         temperatureComponent?.tick(isProcessing())
     }
@@ -139,10 +148,8 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         }
         if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !fits(it.stack) })
             return null
-        if (!isProcessing()) {
-            processTime = 0
-            totalProcessTime = recipe.ticks
-        }
+        processTime = 0
+        totalProcessTime = recipe.ticks
         this.currentRecipe = recipe
         return recipe
     }
@@ -152,7 +159,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         totalProcessTime = 0
     }
 
-    fun isProcessing() = totalProcessTime > 0 && processTime < totalProcessTime && machine.energy > 0
+    private fun isProcessing() = totalProcessTime > 0 && processTime < totalProcessTime
 
     override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
 
