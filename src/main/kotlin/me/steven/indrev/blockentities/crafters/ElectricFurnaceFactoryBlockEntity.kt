@@ -35,9 +35,9 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
             { state, world ->
                 val rotation = AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
                 val ductState = world.getBlockState(pos.subtract(BlockPos(0, -1, 1).rotate(rotation)))
+                if (!ductState.isOf(IRRegistry.DUCT)) return@MultiblockComponent 0
                 val ductFacing = ductState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
-                if (ductState.isOf(IRRegistry.DUCT)
-                    && ductFacing == state.rotate(rotation)[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) 1 else 0
+                if (ductFacing == state.rotate(rotation)[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) 1 else 0
             },
             MultiblockMatcher.Builder()
                 .cube(BlockPos(-1, 1, 1), 3, 3, 1, IRRegistry.FRAME.defaultState)
