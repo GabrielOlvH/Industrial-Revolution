@@ -8,10 +8,10 @@ import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 
-class TieredMultiblockComponent private constructor(val blockEntity: MachineBlockEntity<*>, val structures: Array<Map<BlockPos, BlockState>>)
-    : AbstractMultiblockComponent() {
+class TieredMultiblockMatcher private constructor(val blockEntity: MachineBlockEntity<*>, val structures: Array<Map<BlockPos, BlockState>>)
+    : AbstractMultiblockMatcher() {
 
-    val components: Array<MultiblockComponent> = structures.map { map -> MultiblockComponent(blockEntity, map) }.toTypedArray()
+    val components: Array<MultiblockMatcher> = structures.map { map -> MultiblockMatcher(blockEntity, map) }.toTypedArray()
 
     var currentTier: Tier? = null
 
@@ -40,13 +40,13 @@ class TieredMultiblockComponent private constructor(val blockEntity: MachineBloc
 
         private val structures: Array<Map<BlockPos, BlockState>> = Array(tiers.size) { mapProvider() }
 
-        fun configure(tier: Tier, builder: MultiblockComponent.Builder.() -> Unit): Builder {
-            val b = MultiblockComponent.Builder()
+        fun configure(tier: Tier, builder: MultiblockMatcher.Builder.() -> Unit): Builder {
+            val b = MultiblockMatcher.Builder()
             builder(b)
             structures[tier.ordinal] = b.test
             return this
         }
 
-        fun build(blockEntity: MachineBlockEntity<*>) = TieredMultiblockComponent(blockEntity, structures.map { ImmutableMap.copyOf(it) }.toTypedArray())
+        fun build(blockEntity: MachineBlockEntity<*>) = TieredMultiblockMatcher(blockEntity, structures.map { ImmutableMap.copyOf(it) }.toTypedArray())
     }
 }
