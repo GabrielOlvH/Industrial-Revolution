@@ -1,5 +1,5 @@
 {
-  "item.patchouli.industrial_revolution_book.name": "Руководство IR",
+  "item.patchouli.industrial_revolution_book.name": "Руководство Industrial Revolution",
   "item.patchouli.industrial_revolution_book.landing": "Эта книга поможет вам разобраться в некоторых важных аспектах мода.$(br2)Если вы обнаружите какие-либо проблемы, вопросы или предложения, откройте проблему в $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() или присоединяйтесь к нашему $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Спасибо за игру!",
   "itemGroup.indrev.indrev_group": "Industrial Revolution",
   "block.machines.tooltip.io": "I/O: %s",
@@ -411,6 +411,8 @@
   "item.indrev.tin_chestplate": "Оловянный нагрудник",
   "item.indrev.tin_leggings": "Оловянные штаны",
   "item.indrev.tin_boots": "Оловянные сапоги",
+  "category.indrev": "Industrial Revolution",
+  "key.indrev.modular": "Настройка модульных предметов",
   "text.autoconfig.indrev.title": "Industrial Revolution",
   "text.autoconfig.indrev.category.generators": "Генераторы",
   "text.autoconfig.indrev.option.generators.coalGenerator": "Угольный генератор",
