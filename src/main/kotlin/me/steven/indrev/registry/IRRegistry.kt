@@ -3,6 +3,7 @@ package me.steven.indrev.registry
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.*
+import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmor
@@ -233,6 +234,8 @@ object IRRegistry {
         identifier("intake").block(INTAKE).item(BlockItem(INTAKE, itemSettings()))
         identifier("cabinet").block(CABINET).item(BlockItem(CABINET, itemSettings()))
 
+        identifier("drill").block(DRILL).item(BlockItem(DRILL, itemSettings()))
+
         WorldGeneration.init()
 
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
@@ -374,6 +377,10 @@ object IRRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val CABINET = HorizontalFacingBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+
+    val DRILL = DrillBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
 
