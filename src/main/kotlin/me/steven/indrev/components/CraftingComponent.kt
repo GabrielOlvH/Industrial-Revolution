@@ -38,7 +38,6 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         val inventory = inventoryComponent.inventory
         val inputInventory = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
         when {
-            inputInventory.isEmpty() -> return
             isProcessing() -> {
                 val recipe = currentRecipe
                 val upgrades = machine.getUpgrades(inventory)
