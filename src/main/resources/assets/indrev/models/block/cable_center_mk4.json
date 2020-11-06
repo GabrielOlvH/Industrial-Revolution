@@ -17,8 +17,8 @@
       }
     },
     {
-      "from": [5.49, 5.49, 5.49],
-      "to": [10.51, 10.51, 10.51],
+      "from": [5.4, 5.4, 5.4],
+      "to": [10.6, 10.6, 10.6],
       "faces": {
         "north": {"uv": [3, 3, 13, 13], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
         "east": {"uv": [3, 3, 13, 13], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"},
