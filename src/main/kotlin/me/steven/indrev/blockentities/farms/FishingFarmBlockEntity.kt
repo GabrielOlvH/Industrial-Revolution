@@ -38,7 +38,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
         val upgrades = getUpgrades(inventoryComponent!!.inventory)
         if (!Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
-        if (rodStack.isEmpty) return
+        if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         cooldown = 0.0

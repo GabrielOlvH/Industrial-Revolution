@@ -22,7 +22,7 @@ class IRInventory(
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true
+        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 
@@ -37,30 +37,22 @@ class IRInventory(
         return false
     }
 
-    fun output(itemStack: ItemStack): Boolean =
-        outputSlots.any { slot ->
-            val existing = getStack(slot)
-            if (existing.isEmpty || (existing.item == itemStack.item && existing.count + itemStack.count < maxCountPerStack)) {
-                setStack(slot, ItemStack(itemStack.item, existing.count + itemStack.count))
-                true
-            } else false
-        }
-
-    private fun addToExistingSlot(stack: ItemStack) {
-        for (i in 0 until size()) {
+    fun output(stack: ItemStack): Boolean {
+        for (i in outputSlots) {
             val itemStack = getStack(i)
             if (canCombine(itemStack, stack)) {
                 transfer(stack, itemStack)
                 if (stack.isEmpty) {
-                    return
+                    return true
                 }
             }
         }
+        addToNewSlot(stack)
+        return true
     }
 
-    private fun canCombine(one: ItemStack, two: ItemStack): Boolean {
-        return one.item === two.item && ItemStack.areTagsEqual(one, two)
-    }
+    private fun canCombine(one: ItemStack, two: ItemStack): Boolean
+            = one.item === two.item && ItemStack.areTagsEqual(one, two)
 
     private fun transfer(source: ItemStack, target: ItemStack) {
         val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
@@ -72,9 +64,14 @@ class IRInventory(
         }
     }
 
-    fun smartOutput(stack: ItemStack): Boolean {
-        val itemStack = stack.copy()
-        addToExistingSlot(itemStack)
-        return if (itemStack.isEmpty) true else output(stack)
+    private fun addToNewSlot(stack: ItemStack) {
+        for (i in outputSlots) {
+            val itemStack = getStack(i)
+            if (itemStack.isEmpty) {
+                setStack(i, stack.copy())
+                stack.count = 0
+                return
+            }
+        }
     }
 }

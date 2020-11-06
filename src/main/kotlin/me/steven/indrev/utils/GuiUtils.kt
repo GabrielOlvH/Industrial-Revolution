@@ -17,7 +17,6 @@ import me.steven.indrev.gui.widgets.machines.WProcessBar
 import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.gui.widgets.misc.WTip
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.entity.player.PlayerInventory
@@ -72,7 +71,6 @@ fun SyncedGuiDescription.configure(
         if (world.isClient)
             batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
         panel.add(batterySlot, 0.0, 3.7)
-        panel.add(WTip(world.random), -1, -1)
         val blockEntity = world.getBlockEntity(blockPos)
         if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
             val slotPanel = WGridPanel()
