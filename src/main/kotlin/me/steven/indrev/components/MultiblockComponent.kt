@@ -6,8 +6,11 @@ import net.minecraft.world.World
 
 class MultiblockComponent(val stateDecider: (BlockState, World) -> Int, vararg val states: AbstractMultiblockMatcher) {
     var shouldRenderHologram = false
+    private var ticks = 0
 
     fun tick(blockState: BlockState, world: World) {
+        ticks++
+        if (ticks % 15 != 0) return
         val select = stateDecider(blockState, world)
         states[select].tick()
     }
