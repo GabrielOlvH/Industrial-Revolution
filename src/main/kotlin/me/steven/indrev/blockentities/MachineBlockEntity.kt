@@ -222,7 +222,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         while (!toTransfer.isEmpty) {
             val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
-                    && (to !is SidedInventory || to.canInsert(firstSlot, firstStack, direction.opposite))
+                    && (to !is SidedInventory || to.canInsert(firstSlot, toTransfer, direction.opposite))
             } ?: break
             val targetStack = to.getStack(firstSlot)
             if (from is SidedInventory && !from.canExtract(slot, toTransfer, direction))
