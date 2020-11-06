@@ -54,7 +54,7 @@ repositories {
     maven {
         url = "https://jitpack.io"
         content {
-            //includeGroup "com.github.KubeJS-Mods"
+            includeGroup "com.github.Technici4n"
             includeGroup "com.github.Draylar"
             includeGroup "com.github.GabrielOlvH"
         }
@@ -142,7 +142,7 @@ dependencies {
 
 
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
-    //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
+    include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
     modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
         exclude group: "teamreborn", module: "energy"
     }
