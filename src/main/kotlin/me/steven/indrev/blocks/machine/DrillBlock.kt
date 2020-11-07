@@ -49,20 +49,26 @@ class DrillBlock(settings: Settings) : Block(settings) {
     enum class DrillPart : StringIdentifiable {
         TOP {
             override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.down(), Blocks.AIR.defaultState)
-                world.setBlockState(pos.down().down(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == MIDDLE })
+                    world.setBlockState(pos.down(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == BOTTOM })
+                    world.setBlockState(pos.down().down(), Blocks.AIR.defaultState)
             }
         },
         MIDDLE {
             override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.up(),  Blocks.AIR.defaultState)
-                world.setBlockState(pos.down(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == TOP })
+                    world.setBlockState(pos.up(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == BOTTOM })
+                    world.setBlockState(pos.down(), Blocks.AIR.defaultState)
             }
         },
         BOTTOM {
             override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.up(), Blocks.AIR.defaultState)
-                world.setBlockState(pos.up().up(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == MIDDLE })
+                    world.setBlockState(pos.up(), Blocks.AIR.defaultState)
+                if (world.testBlockState(pos) { state -> state[PART] == TOP })
+                    world.setBlockState(pos.up().up(), Blocks.AIR.defaultState)
             }
         };
 
