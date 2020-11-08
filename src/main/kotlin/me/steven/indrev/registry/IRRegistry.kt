@@ -242,7 +242,7 @@ object IRRegistry {
         identifier("drill_middle").block(DRILL_MIDDLE)
         identifier("drill_bottom").block(DRILL_BOTTOM).item(BlockItem(DRILL_BOTTOM, itemSettings()))
         identifier("drill").blockEntityType(DRILL_BLOCK_ENTITY_TYPE)
-
+        identifier("drill_head").block(Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)))
         WorldGeneration.init()
 
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
