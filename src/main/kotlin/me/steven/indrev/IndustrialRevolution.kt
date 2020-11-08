@@ -18,7 +18,6 @@ import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
-import me.steven.indrev.recipes.PatchouliBookRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
@@ -79,8 +78,6 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)

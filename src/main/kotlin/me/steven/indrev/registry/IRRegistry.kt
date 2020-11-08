@@ -43,6 +43,9 @@ import net.minecraft.world.World
 @Suppress("MemberVisibilityCanBePrivate")
 object IRRegistry {
     fun registerAll() {
+
+        identifier("guide_book").item(IRGuideBookItem(itemSettings()))
+
         ResourceHelper("tin") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()

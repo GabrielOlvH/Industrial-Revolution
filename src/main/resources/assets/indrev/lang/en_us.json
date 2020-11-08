@@ -1,5 +1,6 @@
 {
   "item.patchouli.industrial_revolution_book.name": "Revolutionary Guide",
+  "item.indrev.guide_book": "Revolutionary Guide",
   "item.patchouli.industrial_revolution_book.landing": "This book will help you go through some of the important aspects of the mod.$(br2)If you find any issues, questions or suggestions, open an issue on $(l:https://github.com/GabrielOlvH/Industrial-Revolution/issues)GitHub$() or join our $(l:https://discord.com/invite/G4PjhEf)Discord!$()$(br2)Thank you for playing!",
   "itemGroup.indrev.indrev_group": "Industrial Revolution",
   "block.machines.tooltip.io": "I/O: %s",
