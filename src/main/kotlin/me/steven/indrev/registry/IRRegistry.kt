@@ -237,7 +237,9 @@ object IRRegistry {
         identifier("intake").block(INTAKE).item(BlockItem(INTAKE, itemSettings()))
         identifier("cabinet").block(CABINET).item(BlockItem(CABINET, itemSettings()))
 
-        identifier("drill").block(DRILL).item(BlockItem(DRILL, itemSettings()))
+        identifier("drill_top").block(DRILL_TOP)
+        identifier("drill_middle").block(DRILL_MIDDLE)
+        identifier("drill_bottom").block(DRILL_BOTTOM).item(BlockItem(DRILL_BOTTOM, itemSettings()))
 
         WorldGeneration.init()
 
@@ -383,8 +385,14 @@ object IRRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
 
-    val DRILL = DrillBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    val DRILL_TOP = DrillBlock.TopDrillBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val DRILL_MIDDLE = DrillBlock.MiddleDrillBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val DRILL_BOTTOM = DrillBlock.BottomDrillBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)

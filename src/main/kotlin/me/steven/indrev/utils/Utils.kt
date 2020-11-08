@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
@@ -43,6 +44,7 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -353,4 +355,9 @@ inline fun <M : MutableMap<Item, Int>> IntArray.associateToStacks(destination: M
             destination.merge(stack.item, stack.count) { old, new -> old + new }
     }
     return destination
+}
+
+fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState) -> Boolean) {
+    val blockState = getBlockState(pos)
+    if (condition(blockState)) setBlockState(pos, state)
 }
