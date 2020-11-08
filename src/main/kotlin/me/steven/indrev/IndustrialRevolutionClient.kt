@@ -111,10 +111,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL, RenderLayer.getTranslucent())
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
