@@ -3,6 +3,7 @@ package me.steven.indrev
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
+import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
@@ -109,13 +110,16 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_TOP, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getTranslucent())
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
