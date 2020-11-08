@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
+import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
@@ -28,6 +29,7 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
+import net.fabricmc.fabric.api.client.model.ModelResourceProvider
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
@@ -141,6 +143,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     }
                 }
                 return@ModelVariantProvider null
+            }
+        }
+
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider {
+            ModelResourceProvider { identifier, _ ->
+                if (identifier.namespace == "indrev" && identifier.path == "drill_head")
+                return@ModelResourceProvider DrillHeadModel
+                else return@ModelResourceProvider null
             }
         }
 
