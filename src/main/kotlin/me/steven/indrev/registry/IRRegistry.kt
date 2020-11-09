@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.*
 import me.steven.indrev.blocks.machine.DrillBlock
@@ -236,7 +237,7 @@ object IRRegistry {
         identifier("silo").block(SILO).item(BlockItem(SILO, itemSettings()))
         identifier("warning_strobe").block(WARNING_STROBE).item(BlockItem(WARNING_STROBE, itemSettings()))
         identifier("intake").block(INTAKE).item(BlockItem(INTAKE, itemSettings()))
-        identifier("cabinet").block(CABINET).item(BlockItem(CABINET, itemSettings()))
+        identifier("cabinet").block(CABINET).item(BlockItem(CABINET, itemSettings())).blockEntityType(CABINET_BLOCK_ENTITY_TYPE)
 
         identifier("drill_top").block(DRILL_TOP)
         identifier("drill_middle").block(DRILL_MIDDLE)
@@ -383,9 +384,10 @@ object IRRegistry {
     val INTAKE =  HorizontalFacingBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val CABINET = HorizontalFacingBlock(
+    val CABINET = CabinetBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
+    val CABINET_BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create({ CabinetBlockEntity() }, CABINET).build(null)
 
     val DRILL_TOP = DrillBlock.TopDrillBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)

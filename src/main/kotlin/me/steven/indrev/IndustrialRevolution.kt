@@ -15,6 +15,7 @@ import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
+import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
@@ -239,6 +240,8 @@ object IndustrialRevolution : ModInitializer {
         val veinData = ChunkVeinData(id, size, explored)
         ResourceReportController(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
     } as ExtendedScreenHandlerType<ResourceReportController>
+
+    val CABINET_HANDLER = CabinetController.SCREEN_ID.registerScreenHandler(::CabinetController)
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 
