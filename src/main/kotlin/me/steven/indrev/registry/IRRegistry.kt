@@ -108,6 +108,11 @@ object IRRegistry {
 
         identifier("hammer").item(HAMMER)
 
+        identifier("stone_drill_head").item(STONE_DRILL_HEAD)
+        identifier("iron_drill_head").item(IRON_DRILL_HEAD)
+        identifier("diamond_drill_head").item(DIAMOND_DRILL_HEAD)
+        identifier("netherite_drill_head").item(NETHERITE_DRILL_HEAD)
+
         identifier("mining_drill").tierBasedItem { tier ->
             when (tier) {
                 Tier.MK1 -> MINING_DRILL_MK1
@@ -244,6 +249,7 @@ object IRRegistry {
         identifier("drill_bottom").block(DRILL_BOTTOM).item(BlockItem(DRILL_BOTTOM, itemSettings()))
         identifier("drill").blockEntityType(DRILL_BLOCK_ENTITY_TYPE)
         identifier("drill_head").block(Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)))
+        
         WorldGeneration.init()
 
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
@@ -399,6 +405,11 @@ object IRRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val DRILL_BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create({ DrillBlockEntity() }, DRILL_BOTTOM).build(null)
+    
+    val STONE_DRILL_HEAD = Item(itemSettings().maxDamage(256))
+    val IRON_DRILL_HEAD = Item(itemSettings().maxDamage(1024))
+    val DIAMOND_DRILL_HEAD = Item(itemSettings().maxDamage(2048))
+    val NETHERITE_DRILL_HEAD = Item(itemSettings().maxDamage(4096))
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
