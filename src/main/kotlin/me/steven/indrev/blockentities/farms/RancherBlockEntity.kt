@@ -73,7 +73,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                         .parameter(LootContextParameters.DAMAGE_SOURCE, DamageSource.player(fakePlayer))
                         .parameter(LootContextParameters.THIS_ENTITY, animal)
                         .build(LootContextTypes.ENTITY)
-                    lootTable.generateLoot(lootContext).forEach { inventory.addStack(it) }
+                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
                 }
             }
         }
@@ -103,7 +103,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     private fun tryFeed(size: Int, animalEntity: AnimalEntity, stack: ItemStack): ActionResult {
         if (animalEntity.isBreedingItem(stack)) {
             val breedingAge: Int = animalEntity.breedingAge
-            if (!world!!.isClient && breedingAge == 0 && animalEntity.canEat() && size < matingLimit && mateAdults) {
+            if (!world!!.isClient && breedingAge == 0 && animalEntity.canEat() && size <= matingLimit && mateAdults) {
                 animalEntity.eat(fakePlayer, stack)
                 animalEntity.lovePlayer(fakePlayer)
             }
@@ -121,7 +121,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val types = adults.map { it.type }.associateWith { mutableListOf<AnimalEntity>() }
         adults.forEach { types[it.type]?.add(it) }
         return types.values.let { values ->
-            values.map { animals -> animals.dropLast((adults.size - killAfter).coerceAtLeast(0)) }
+            values.map { animals -> animals.dropLast((adults.size - killAfter).coerceAtLeast(killAfter)) }
         }.flatten()
     }
 
