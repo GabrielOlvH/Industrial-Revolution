@@ -24,25 +24,40 @@
 			"from": [-0.1, 7.9, -0.1],
 			"to": [16.1, 9.1, 16.1],
 			"faces": {
-				"north": {"uv": [0, 7, 16, 8], "texture": "#2"},
-				"east": {"uv": [0, 7, 16, 8], "texture": "#2"},
-				"south": {"uv": [0, 7, 16, 8], "texture": "#2"},
-				"west": {"uv": [0, 7, 16, 8], "texture": "#2"},
-				"up": {"uv": [0, 0, 2, 2], "texture": "#2"},
-				"down": {"uv": [0, 0, 2, 2], "texture": "#2"}
+				"north": {"uv": [0, 7, 16, 8], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"},
+				"east": {"uv": [0, 7, 16, 8], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"},
+				"south": {"uv": [0, 7, 16, 8], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"},
+				"west": {"uv": [0, 7, 16, 8], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#2", "jmx_tex0": "#2", "jmx_material": "#jmx_0"}
 			}
 		},
 		{
 			"from": [-0.1, 12.9, -0.1],
 			"to": [16.1, 16.1, 16.1],
 			"faces": {
-				"north": {"uv": [4, 4, 8, 4.75], "texture": "#1"},
-				"east": {"uv": [0, 4, 4, 4.75], "texture": "#1"},
-				"south": {"uv": [12, 4, 16, 4.75], "texture": "#1"},
-				"west": {"uv": [8, 4, 12, 4.75], "texture": "#1"},
-				"up": {"uv": [8, 4, 4, 0], "texture": "#1"},
-				"down": {"uv": [4, 12, 0, 16], "texture": "#1"}
+				"north": {"uv": [4, 4, 8, 4.75], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"},
+				"east": {"uv": [0, 4, 4, 4.75], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"},
+				"south": {"uv": [12, 4, 16, 4.75], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"},
+				"west": {"uv": [8, 4, 12, 4.75], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"},
+				"up": {"uv": [8, 4, 4, 0], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"},
+				"down": {"uv": [4, 12, 0, 16], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"}
 			}
 		}
-	]
+	],
+	"jmx": {
+		"textures": {
+			"0": "indrev:block/drill_top",
+			"1": "indrev:block/drill_top_tracer_emissive_on",
+			"2": "indrev:block/drill_top_emissive_on"
+		},
+		"materials": {
+			"jmx_0": {
+				"layer0": "cutout",
+				"emissive0": true,
+				"ambient_occlusion0": false,
+				"diffuse0": false
+			}
+		}
+	}
 }

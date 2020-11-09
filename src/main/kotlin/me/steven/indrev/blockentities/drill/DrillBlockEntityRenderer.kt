@@ -29,7 +29,7 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
                 push()
                 val entry = peek()
                 translate(0.5, 0.0, 0.5)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.world!!.time + tickDelta) * 4))
+                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.world!!.time + tickDelta) * 6))
                 translate(-0.5, 0.0, -0.5)
                 MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(
                     entry,

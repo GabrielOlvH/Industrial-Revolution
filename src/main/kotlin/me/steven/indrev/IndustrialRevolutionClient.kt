@@ -118,9 +118,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_TOP, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_TOP, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getCutout())
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
