@@ -75,6 +75,8 @@
   "block.indrev.drill.faster": "%sx faster",
   "block.indrev.drill.no_drills": "Empty.",
   "block.indrev.drill.active": "Active drills",
+  "block.indrev.drill.not_enough_power": "Insufficient power",
+  "block.indrev.drill.power_required": "Requires at least %sLF to operate",
   "block.indrev.recycler": "Recycler",
   "block.indrev.recycler_mk2": "Recycler",
   "block.indrev.cable": "Cable",

@@ -41,18 +41,22 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
     private var finished = false
+    var requiredPower = 0.0
 
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         cacheVeinType()
+        val upgrades = getUpgrades(inventory)
+        val activeDrills = getActiveDrills()
+        requiredPower = Upgrade.getEnergyCost(upgrades, this) * activeDrills.size
         if (!finished) {
             val scanOutput = inventory.getStack(14).tag ?: return
             val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
             val chunkPos = world?.getChunk(pos)?.pos ?: return
-            val upgrades = getUpgrades(inventory)
-            if ((chunkPos == scanChunkPos) && Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) {
-                val multiplier = getActiveDrills().sumByDouble { blockEntity ->
+            if (chunkPos == scanChunkPos
+                && Energy.of(this).use(requiredPower)) {
+                val multiplier = activeDrills.sumByDouble { blockEntity ->
                     val itemStack = blockEntity.inventory[0]
                     if (!itemStack.isEmpty) DrillBlockEntity.getSpeedMultiplier(itemStack.item) else 0.0
                 }
@@ -83,7 +87,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 state.markDirty()
                 mining = 0.0
                 inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
-                getActiveDrills().random().also { drillBlockEntity ->
+                activeDrills.random().also { drillBlockEntity ->
                     val itemStack = drillBlockEntity.inventory[0]
                     if (!itemStack.isEmpty) {
                         val speed = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
@@ -170,6 +174,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
+        tag?.putDouble("RequiredPower", requiredPower)
         return super.toClientTag(tag)
     }
 
@@ -177,6 +182,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
+        requiredPower = tag?.getDouble("RequiredPower") ?: 0.0
         super.fromClientTag(tag)
     }
 }

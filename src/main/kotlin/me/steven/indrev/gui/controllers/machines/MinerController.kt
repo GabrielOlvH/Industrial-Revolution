@@ -3,6 +3,7 @@ package me.steven.indrev.gui.controllers.machines
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItem
+import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
@@ -19,7 +20,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import team.reborn.energy.Energy
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
@@ -46,21 +49,39 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             val bg = WStaticTooltip()
             root.add(bg, 1.5, 1.0)
             bg.setSize(70, 60)
-            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x4040), 3.45, 1.0)
-            if (activeDrills.isEmpty()) {
-                root.add(WText(TranslatableText("block.indrev.drill.no_drills"), HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
-            } else {
-                activeDrills.forEachIndexed { index, drill ->
-                    val panel = getDrillInfo(drill)
-                    root.add(panel, 1.5 + index, 1.6)
+            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
+            when {
+                !Energy.of(blockEntity).simulate().use(blockEntity.requiredPower) -> {
+                    val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
+                        override fun addTooltip(tooltip: TooltipBuilder?) {
+                            tooltip?.add(TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED))
+                            tooltip?.add(
+                                TranslatableText(
+                                    "block.indrev.drill.power_required",
+                                    blockEntity.requiredPower
+                                ).formatted(Formatting.DARK_RED)
+                            )
+                        }
+                    }
+                    root.add(sprite, 3.1, 1.6)
+                    sprite.setSize(16, 16)
+                }
+                activeDrills.isEmpty() -> {
+                    root.add(WText(TranslatableText("block.indrev.drill.no_drills"), HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
+                }
+                else -> {
+                    activeDrills.forEachIndexed { index, drill ->
+                        val panel = getDrillInfo(drill)
+                        root.add(panel, 1.5 + index, 1.6)
+                    }
                 }
             }
             val totalMultiplier = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) })
-            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x4040), 3.45, 2.8)
+            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x8080), 3.45, 2.8)
         }
         root.add(WText({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        }, HorizontalAlignment.CENTER, 0x4040), 3.45, 3.8)
+        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
 
         root.validate(this)
     }
