@@ -43,19 +43,17 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MinerBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
-            if (activeDrills.isEmpty()) {
-                val wText = io.github.cottonmc.cotton.gui.widget.WText(TranslatableText("block.indrev.drill.no_drills"))
-                root.add(wText, 1, 1)
-                wText.setSize(85, 18)
-                return@run
-            }
             val bg = WStaticTooltip()
             root.add(bg, 1.5, 1.0)
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x4040), 3.45, 1.0)
-            activeDrills.forEachIndexed { index, drill ->
-                val panel = getDrillInfo(drill)
-                root.add(panel, 1.5 + index, 1.6)
+            if (activeDrills.isEmpty()) {
+                root.add(WText(TranslatableText("block.indrev.drill.no_drills"), HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
+            } else {
+                activeDrills.forEachIndexed { index, drill ->
+                    val panel = getDrillInfo(drill)
+                    root.add(panel, 1.5 + index, 1.6)
+                }
             }
             val totalMultiplier = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) })
             root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x4040), 3.45, 2.8)

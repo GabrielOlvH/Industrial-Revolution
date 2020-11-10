@@ -73,7 +73,7 @@
   "block.indrev.drill": "Drill",
   "block.indrev.drill_bottom": "Drill",
   "block.indrev.drill.faster": "%sx faster",
-  "block.indrev.drill.no_drills": "No active drills detected",
+  "block.indrev.drill.no_drills": "Empty.",
   "block.indrev.drill.active": "Active drills",
   "block.indrev.recycler": "Recycler",
   "block.indrev.recycler_mk2": "Recycler",
