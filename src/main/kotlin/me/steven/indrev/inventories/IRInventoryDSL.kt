@@ -56,7 +56,7 @@ open class IRInventoryDSL : Filterable() {
                         slot == batterySlot -> Energy.valid(stack) && Energy.of(stack).maxOutput > 0
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
-                        blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.getUpgradeSlots() && !blockEntity.isLocked(slot, blockEntity.tier)
+                        blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.getUpgradeSlots() && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.getAvailableUpgrades().contains(item.upgrade)
                         else -> false
                     }
                 }
