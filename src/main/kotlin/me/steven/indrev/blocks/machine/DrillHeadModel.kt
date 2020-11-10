@@ -13,6 +13,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -21,17 +22,23 @@ import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
-object DrillHeadModel : UnbakedModel, BakedModel, FabricBakedModel {
+class DrillHeadModel(val variant: String) : UnbakedModel, BakedModel, FabricBakedModel {
 
-    private val modelIdentifier = ModelIdentifier(identifier("drill_head"), "")
+    private val spriteIdCollection = mutableListOf(
+        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/${variant}_drill_head"))
+    )
+
+    private val modelIdentifier = identifier("block/${variant}_drill_head")
+    private var bakedModel: BakedModel? = null
 
     override fun bake(
         loader: ModelLoader,
-        textureGetter: Function<SpriteIdentifier, Sprite>?,
+        textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
     ): BakedModel? {
-        return this
+        bakedModel = loader.getOrLoadModel(modelIdentifier).bake(loader, textureGetter, rotationContainer, modelId)
+        return bakedModel
     }
 
     override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
@@ -39,7 +46,9 @@ object DrillHeadModel : UnbakedModel, BakedModel, FabricBakedModel {
     override fun getTextureDependencies(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> = mutableListOf()
+    ): MutableCollection<SpriteIdentifier> {
+        return spriteIdCollection
+    }
 
     override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> = mutableListOf()
 
@@ -51,7 +60,7 @@ object DrillHeadModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun isBuiltin(): Boolean = false
 
-    override fun getSprite(): Sprite? = null
+    override fun getSprite(): Sprite? =  null
 
     override fun getTransformation(): ModelTransformation = MinecraftClient.getInstance().bakedModelManager.getModel(
         ModelIdentifier(Identifier("stone"), "")
@@ -68,8 +77,7 @@ object DrillHeadModel : UnbakedModel, BakedModel, FabricBakedModel {
         p3: Supplier<Random>?,
         ctx: RenderContext
     ) {
-        val model = MinecraftClient.getInstance().bakedModelManager.getModel(modelIdentifier)
-        ctx.fallbackConsumer().accept(model)
+        ctx.fallbackConsumer().accept(bakedModel)
     }
 
     override fun emitItemQuads(p0: ItemStack?, p1: Supplier<Random>?, p2: RenderContext?) {

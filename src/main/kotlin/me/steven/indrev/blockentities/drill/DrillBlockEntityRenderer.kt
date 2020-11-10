@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.drill
 
-import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -22,30 +22,34 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
         light: Int,
         overlay: Int
     ) {
-        if (entity.cachedState[DrillBlock.WORKING]) {
-            val model =
-                MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(identifier("drill_head"), ""))
-            matrices?.run {
-                push()
-                val entry = peek()
-                translate(0.5, 0.0, 0.5)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.world!!.time + tickDelta) * 6))
-                translate(-0.5, 0.0, -0.5)
-                MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(
-                    entry,
-                    vertexConsumers.getBuffer(RenderLayers.getBlockLayer(entity.cachedState)),
-                    null,
-                    model,
-                    -1f,
-                    -1f,
-                    -1f,
-                    WorldRenderer.getLightmapCoordinates(entity.world, entity.pos),
-                    OverlayTexture.DEFAULT_UV
-                )
-                pop()
-            }
+        val variant = when (entity.inventory[0].item) {
+            IRRegistry.STONE_DRILL_HEAD -> "stone"
+            IRRegistry.IRON_DRILL_HEAD -> "iron"
+            IRRegistry.DIAMOND_DRILL_HEAD -> "diamond"
+            IRRegistry.NETHERITE_DRILL_HEAD -> "netherite"
+            else -> return
         }
-
+        val model =
+            MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(identifier("drill_head"), variant))
+        matrices?.run {
+            push()
+            val entry = peek()
+            translate(0.5, 0.0, 0.5)
+            multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.world!!.time + tickDelta) * 6))
+            translate(-0.5, 0.0, -0.5)
+            MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(
+                entry,
+                vertexConsumers.getBuffer(RenderLayers.getBlockLayer(entity.cachedState)),
+                null,
+                model,
+                -1f,
+                -1f,
+                -1f,
+                WorldRenderer.getLightmapCoordinates(entity.world, entity.pos),
+                OverlayTexture.DEFAULT_UV
+            )
+            pop()
+        }
     }
 
     override fun rendersOutsideBoundingBox(blockEntity: DrillBlockEntity?): Boolean = true

@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
+import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
@@ -41,6 +42,7 @@ import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.InputUtil
+import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
@@ -93,7 +95,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
             IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
             IndustrialRevolution.INFUSER_FACTORY_HANDLER,
-            IndustrialRevolution.CABINET_HANDLER
+            IndustrialRevolution.CABINET_HANDLER,
+            IndustrialRevolution.DRILL_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
@@ -145,13 +148,20 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
-        //ModelLoadingRegistry.INSTANCE.registerResourceProvider {
-            //ModelResourceProvider { identifier, _ ->
-                //if (identifier.namespace == "indrev" && identifier.path == "drill_head")
-                //return@ModelResourceProvider DrillHeadModel
-                //else return@ModelResourceProvider null
-            //}
-        //}
+        ModelLoadingRegistry.INSTANCE.registerAppender { manager, out ->
+            out.accept(ModelIdentifier(identifier("drill_head"), "stone"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "iron"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
+        }
+
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
+            ModelVariantProvider { resourceId, context ->
+                if (resourceId.namespace == "indrev" && resourceId.path == "drill_head")
+                    DrillHeadModel(resourceId.variant)
+                else null
+            }
+        }
 
         FabricModelPredicateProviderRegistry.register(
             IRRegistry.GAMER_AXE_ITEM,

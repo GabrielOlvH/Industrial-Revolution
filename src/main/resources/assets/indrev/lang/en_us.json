@@ -70,6 +70,8 @@
   "block.indrev.ender_miner_mk4": "Ender Miner",
   "block.indrev.miner.tooltip": "You must use a Chunk Scanner in this chunk before using the miner",
   "block.indrev.miner.mined": "Mined: %d",
+  "block.indrev.drill": "Drill",
+  "block.indrev.drill_bottom": "Drill",
   "block.indrev.recycler": "Recycler",
   "block.indrev.recycler_mk2": "Recycler",
   "block.indrev.cable": "Cable",

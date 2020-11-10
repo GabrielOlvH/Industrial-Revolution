@@ -2,8 +2,7 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "indrev:block/drill_head",
-		"particle": "indrev:block/drill_head"
+		"0": "indrev:block/stone_drill_head"
 	},
 	"elements": [
 		{

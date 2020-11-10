@@ -59,8 +59,10 @@ open class DrillBlock private constructor(settings: Settings, private val part: 
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult {
-        if (hand == Hand.MAIN_HAND)
-            world.setBlockState(pos, state.with(WORKING, !state[WORKING]))
+        if (!world.isClient) {
+            val blockEntity = world.getBlockEntity(part.getBlockEntityPos(pos)) as? DrillBlockEntity ?: return ActionResult.PASS
+            player?.openHandledScreen(blockEntity)
+        }
         return ActionResult.PASS
     }
 

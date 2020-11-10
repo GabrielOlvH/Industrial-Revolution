@@ -176,7 +176,6 @@ object IndustrialRevolution : ModInitializer {
         }
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
-        LOGGER.info("Industrial Revolution has initialized.")
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
@@ -194,6 +193,8 @@ object IndustrialRevolution : ModInitializer {
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
             s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
         }
+
+        LOGGER.info("Industrial Revolution has initialized.")
     }
 
     val LOGGER = LogManager.getLogger("Industrial Revolution")
@@ -229,6 +230,8 @@ object IndustrialRevolution : ModInitializer {
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryController.SCREEN_ID.registerScreenHandler(::PulverizerFactoryController)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
     val INFUSER_FACTORY_HANDLER = InfuserFactoryController.SCREEN_ID.registerScreenHandler(::InfuserFactoryController)
+
+    val DRILL_HANDLER = DrillController.SCREEN_ID.registerScreenHandler(::DrillController)
 
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
