@@ -69,7 +69,7 @@
   "block.indrev.miner_mk4": "Miner",
   "block.indrev.ender_miner_mk4": "Ender Miner",
   "block.indrev.miner.tooltip": "You must use a Chunk Scanner in this chunk before using the miner",
-  "block.indrev.miner.mined": "Mined: %d",
+  "block.indrev.miner.mined": "%s mined",
   "block.indrev.drill": "Drill",
   "block.indrev.drill_bottom": "Drill",
   "block.indrev.drill.faster": "%sx faster",

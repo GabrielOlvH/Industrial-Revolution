@@ -37,10 +37,6 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         outputSlots.isInsertingAllowed = false
         root.add(outputSlots, 6.0, 0.85)
 
-        //root.add(WText({
-            //TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        //}, HorizontalAlignment.CENTER), 3.0, 3.2)
-
         val scanSlot = WTooltipedItemSlot.of(blockInventory, 14, TranslatableText("gui.indrev.scan_output_slot_type"))
         root.add(scanSlot, 7.0, 4.3)
 
@@ -55,15 +51,18 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             }
             val bg = WStaticTooltip()
             root.add(bg, 1.5, 1.0)
-            bg.setSize(70, 55)
+            bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x4040), 3.45, 1.0)
             activeDrills.forEachIndexed { index, drill ->
                 val panel = getDrillInfo(drill)
-                root.add(panel, 1.5 + index, 2.0)
+                root.add(panel, 1.5 + index, 1.6)
             }
             val totalMultiplier = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) })
-            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x4040), 3.45, 3.5)
+            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x4040), 3.45, 2.8)
         }
+        root.add(WText({
+            TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
+        }, HorizontalAlignment.CENTER, 0x4040), 3.45, 3.8)
 
         root.validate(this)
     }
