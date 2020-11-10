@@ -139,7 +139,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
+    override fun getAvailableUpgrades(): Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> config.energyCost
