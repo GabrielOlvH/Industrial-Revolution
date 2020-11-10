@@ -18,7 +18,7 @@ import net.minecraft.world.World
 
 class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private val to: Tier) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        tooltip?.add(TranslatableText("item.indrev.tier_upgrade_${to.toString().toLowerCase()}.tooltip").formatted(Formatting.ITALIC, Formatting.BLUE))
+        tooltip?.add(TranslatableText("item.indrev.tier_upgrade_${to.toString().toLowerCase()}.tooltip").formatted(Formatting.GREEN))
         super.appendTooltip(stack, world, tooltip, context)
     }
 
