@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
@@ -30,7 +31,6 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENT
         buf.writeBlockPos(pos)
         return IndustrialRevolution.DRILL_HANDLER.create(syncId, playerInventory, buf)
     }
-
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory
 
@@ -70,5 +70,22 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENT
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {
         buf.writeBlockPos(pos)
+    }
+
+    companion object {
+        fun isValidDrill(item: Item) =
+            item == IRRegistry.STONE_DRILL_HEAD
+                    || item == IRRegistry.IRON_DRILL_HEAD
+                    || item == IRRegistry.DIAMOND_DRILL_HEAD
+                    || item == IRRegistry.NETHERITE_DRILL_HEAD
+
+        fun getSpeedMultiplier(item: Item) =
+            when (item) {
+                IRRegistry.STONE_DRILL_HEAD -> 0.5
+                IRRegistry.IRON_DRILL_HEAD -> 2.0
+                IRRegistry.DIAMOND_DRILL_HEAD -> 5.0
+                IRRegistry.NETHERITE_DRILL_HEAD -> 10.0
+                else -> 0.0
+            }
     }
 }

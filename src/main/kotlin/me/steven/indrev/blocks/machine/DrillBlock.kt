@@ -23,7 +23,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
-open class DrillBlock private constructor(settings: Settings, private val part: DrillPart) : Block(settings) {
+open class DrillBlock private constructor(settings: Settings, val part: DrillPart) : Block(settings) {
 
     init {
         this.defaultState = stateManager.defaultState.with(WORKING, false)

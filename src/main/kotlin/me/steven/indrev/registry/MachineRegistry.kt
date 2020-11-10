@@ -405,7 +405,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     MACHINE_BLOCK_SETTINGS(),
                     tier, CONFIG.machines.miner,
                     ::MinerController,
-                    { MinerBlockEntity(tier, true) }
+                    { MinerBlockEntity(tier) }
                 ) {
                     override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
                         super.appendTooltip(stack, view, tooltip, options)
@@ -413,7 +413,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     }
                 }
             },
-            { tier -> { MinerBlockEntity(tier, true) } }
+            { tier -> { MinerBlockEntity(tier) } }
         )
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
