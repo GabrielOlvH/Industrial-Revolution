@@ -18,7 +18,6 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
@@ -49,7 +48,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             val blockEntity = world.getBlockEntity(pos) as? MinerBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
             if (activeDrills.isEmpty()) {
-                val wText = io.github.cottonmc.cotton.gui.widget.WText(LiteralText("No active drills detected..."))
+                val wText = io.github.cottonmc.cotton.gui.widget.WText(TranslatableText("block.indrev.drill.no_drills"))
                 root.add(wText, 1, 1)
                 wText.setSize(85, 18)
                 return@run
@@ -57,13 +56,13 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             val bg = WStaticTooltip()
             root.add(bg, 1.5, 1.0)
             bg.setSize(70, 55)
-            root.add(WText(LiteralText("Active drills"), HorizontalAlignment.CENTER, 0x4040), 3.45, 1.0)
+            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x4040), 3.45, 1.0)
             activeDrills.forEachIndexed { index, drill ->
                 val panel = getDrillInfo(drill)
                 root.add(panel, 1.5 + index, 2.0)
             }
             val totalMultiplier = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) })
-            root.add(WText(LiteralText("${totalMultiplier}x faster"), HorizontalAlignment.CENTER, 0x4040), 3.45, 3.5)
+            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x4040), 3.45, 3.5)
         }
 
         root.validate(this)
@@ -76,7 +75,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(itemStack.name)
                 val seconds = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / DrillBlockEntity.getSpeedMultiplier(itemStack.item))
-                tooltip?.add(LiteralText("${seconds}x faster"))
+                tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds))
             }
         }, 0, 0)
 
