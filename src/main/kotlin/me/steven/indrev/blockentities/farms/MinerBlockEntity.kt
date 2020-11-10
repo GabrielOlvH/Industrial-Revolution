@@ -54,15 +54,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             if ((chunkPos == scanChunkPos) && Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) {
                 val multiplier = getActiveDrills().sumByDouble { blockEntity ->
                     val itemStack = blockEntity.inventory[0]
-                    if (!itemStack.isEmpty) {
-                        val speed = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
-                        if (speed > 0) {
-                            itemStack.damage++
-                            if (itemStack.damage >= itemStack.maxDamage) itemStack.decrement(1)
-                        }
-                        speed
-                    }
-                    else 0.0
+                    if (!itemStack.isEmpty) DrillBlockEntity.getSpeedMultiplier(itemStack.item) else 0.0
                 }
                 mining += Upgrade.getSpeed(upgrades, this) * multiplier
                 temperatureComponent?.tick(true)
@@ -91,6 +83,16 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 state.markDirty()
                 mining = 0.0
                 inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
+                getActiveDrills().random().also { drillBlockEntity ->
+                    val itemStack = drillBlockEntity.inventory[0]
+                    if (!itemStack.isEmpty) {
+                        val speed = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
+                        if (speed > 0) {
+                            itemStack.damage++
+                            if (itemStack.damage >= itemStack.maxDamage) itemStack.decrement(1)
+                        }
+                    }
+                }
                 setWorkingState(true)
             }
         } else setWorkingState(false)
