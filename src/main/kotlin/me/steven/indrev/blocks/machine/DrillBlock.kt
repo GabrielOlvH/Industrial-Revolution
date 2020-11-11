@@ -63,7 +63,7 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
             val blockEntity = world.getBlockEntity(part.getBlockEntityPos(pos)) as? DrillBlockEntity ?: return ActionResult.PASS
             player?.openHandledScreen(blockEntity)
         }
-        return ActionResult.PASS
+        return ActionResult.CONSUME
     }
 
     override fun getStateForNeighborUpdate(
@@ -77,6 +77,9 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         return if (newState.block is DrillBlock) state.with(WORKING, newState[WORKING])
         else state
     }
+
+    override fun getPickStack(world: BlockView?, pos: BlockPos?, state: BlockState?): ItemStack
+            = ItemStack(DRILL_BOTTOM)
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         builder?.add(WORKING)

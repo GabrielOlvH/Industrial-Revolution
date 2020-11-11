@@ -361,3 +361,7 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
     val blockState = getBlockState(pos)
     if (condition(blockState)) setBlockState(pos, state)
 }
+
+operator fun BlockPos.component1() = x
+operator fun BlockPos.component2() = y
+operator fun BlockPos.component3() = z

@@ -54,12 +54,10 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
                 !Energy.of(blockEntity).simulate().use(blockEntity.requiredPower) -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
-                            tooltip?.add(TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED))
                             tooltip?.add(
-                                TranslatableText(
-                                    "block.indrev.drill.power_required",
-                                    blockEntity.requiredPower
-                                ).formatted(Formatting.DARK_RED)
+                                TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED),
+                                TranslatableText("block.indrev.drill.power_required", blockEntity.requiredPower)
+                                    .formatted(Formatting.DARK_RED)
                             )
                         }
                     }
@@ -67,7 +65,8 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
                     sprite.setSize(16, 16)
                 }
                 activeDrills.isEmpty() -> {
-                    root.add(WText(TranslatableText("block.indrev.drill.no_drills"), HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
+                    val noDrillsText = TranslatableText("block.indrev.drill.no_drills")
+                    root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
                 }
                 else -> {
                     activeDrills.forEachIndexed { index, drill ->
@@ -76,8 +75,10 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
                     }
                 }
             }
-            val totalMultiplier = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) })
-            root.add(WText(TranslatableText("block.indrev.drill.faster", totalMultiplier), HorizontalAlignment.CENTER, 0x8080), 3.45, 2.8)
+            root.add(WText({
+                val totalMultiplier = activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) }
+                TranslatableText("block.indrev.drill.faster", totalMultiplier)
+            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 2.8)
         }
         root.add(WText({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
@@ -92,7 +93,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         panel.add(object : WItem(itemStack)  {
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(itemStack.name)
-                val seconds = IndustrialRevolution.CONFIG.machines.miner.processSpeed / (IndustrialRevolution.CONFIG.machines.miner.processSpeed / DrillBlockEntity.getSpeedMultiplier(itemStack.item))
+                val seconds = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
                 tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds))
             }
         }, 0, 0)

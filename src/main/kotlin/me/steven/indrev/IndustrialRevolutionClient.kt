@@ -5,6 +5,7 @@ import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
@@ -44,6 +45,8 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.registry.Registry
@@ -198,6 +201,24 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 val handler = ctx.player.currentScreenHandler
                 if (handler.syncId == syncId)
                     (handler as? IRGuiController)?.propertyDelegate?.set(property, value)
+            }
+        }
+
+        ClientSidePacketRegistry.INSTANCE.register(MinerBlockEntity.BLOCK_BREAK_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos().down()
+            val blockRawId = buf.readInt()
+            val block = Registry.BLOCK.get(blockRawId)
+            ctx.taskQueue.execute {
+                MinecraftClient.getInstance().particleManager.addBlockBreakParticles(pos, block.defaultState)
+                val blockSoundGroup = block.getSoundGroup(block.defaultState)
+                (ctx.player.world as ClientWorld).playSound(
+                    pos,
+                    blockSoundGroup.breakSound,
+                    SoundCategory.BLOCKS,
+                    (blockSoundGroup.getVolume() + 1.0f) / 4.0f,
+                    blockSoundGroup.getPitch() * 0.8f,
+                    false
+                )
             }
         }
 

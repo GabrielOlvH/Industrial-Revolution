@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
+import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
@@ -9,18 +10,21 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.getChunkPos
+import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.registry.Registry
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -48,34 +52,22 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val inventory = inventoryComponent?.inventory ?: return
         cacheVeinType()
         val upgrades = getUpgrades(inventory)
-        val activeDrills = getActiveDrills()
-        requiredPower = Upgrade.getEnergyCost(upgrades, this) * activeDrills.size
-        if (!finished) {
-            val scanOutput = inventory.getStack(14).tag ?: return
-            val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
-            val chunkPos = world?.getChunk(pos)?.pos ?: return
-            if (chunkPos == scanChunkPos
-                && Energy.of(this).use(requiredPower)) {
-                val multiplier = activeDrills.sumByDouble { blockEntity ->
-                    val itemStack = blockEntity.inventory[0]
-                    if (!itemStack.isEmpty) DrillBlockEntity.getSpeedMultiplier(itemStack.item) else 0.0
-                }
-                mining += Upgrade.getSpeed(upgrades, this) * multiplier
-                temperatureComponent?.tick(true)
-            } else {
-                setWorkingState(false)
-                temperatureComponent?.tick(false)
-            }
-            if (mining >= config.processSpeed) {
-                val state =
-                    (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                        ChunkVeinState.STATE_OVERWORLD_KEY
-                    )
-                val data = state.veins[scanChunkPos]
+        requiredPower = Upgrade.getEnergyCost(upgrades, this)
+        if (finished) {
+            setWorkingState(false)
+            return
+        } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
+            mining += Upgrade.getSpeed(upgrades, this)
+            temperatureComponent?.tick(true)
+        } else {
+            setWorkingState(false)
+            temperatureComponent?.tick(false)
+        }
+        if (mining >= config.processSpeed) {
+            updateData { data ->
                 if (data == null) {
                     chunkVeinType = null
-                    return
+                    return@updateData false
                 }
                 val (_, size, explored) = data
                 propertyDelegate[3] = explored * 100 / size
@@ -84,50 +76,87 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                     return
                 }
                 data.explored++
-                state.markDirty()
                 mining = 0.0
-                inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
-                activeDrills.random().also { drillBlockEntity ->
+                val generatedOre = chunkVeinType!!.outputs.pickRandom(world?.random)
+                inventory.output(ItemStack(generatedOre))
+                getActiveDrills().random().also { drillBlockEntity ->
                     val itemStack = drillBlockEntity.inventory[0]
                     if (!itemStack.isEmpty) {
                         val speed = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
                         if (speed > 0) {
                             itemStack.damage++
-                            if (itemStack.damage >= itemStack.maxDamage) itemStack.decrement(1)
+                            if (itemStack.damage >= itemStack.maxDamage) {
+                                itemStack.decrement(1)
+                            }
+                            drillBlockEntity.markDirty()
+                            if (itemStack.isEmpty)
+                                drillBlockEntity.sync()
                         }
                     }
+
+                    sendBlockBreakPacket(drillBlockEntity.pos, generatedOre)
                 }
                 setWorkingState(true)
-            }
-        } else setWorkingState(false)
-    }
-
-    private fun cacheVeinType() {
-        if (chunkVeinType == null) {
-            val data = getVeinData() ?: return
-            this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
-            propertyDelegate[3] = data.explored * 100 / data.size
-            if (data.explored >= data.size) {
-                finished = true
-                return
+                return@updateData true
             }
         }
     }
 
-    private fun getVeinData(): ChunkVeinData? {
-        val inventory = inventoryComponent?.inventory ?: return null
-        val scanOutput = inventory.getStack(14).tag ?: return null
+    private fun sendBlockBreakPacket(pos: BlockPos, block: Block) {
+        val (x, y, z) = pos
+        val players = (world as ServerWorld).server.playerManager.playerList
+        for (i in players.indices) {
+            val serverPlayerEntity = players[i]
+            if (serverPlayerEntity.world.registryKey === world!!.registryKey) {
+                val xOffset = x - serverPlayerEntity.x
+                val yOffset = y - serverPlayerEntity.y
+                val zOffset = z - serverPlayerEntity.z
+                if (xOffset * xOffset + yOffset * yOffset + zOffset * zOffset < 64 * 64) {
+                    val buf = PacketByteBuf(Unpooled.buffer())
+                    buf.writeBlockPos(pos)
+                    buf.writeInt(Registry.BLOCK.getRawId(block))
+                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
+                }
+            }
+        }
+    }
+
+    private fun isLocationCorrect(): Boolean {
+        val inventory = inventoryComponent?.inventory ?: return false
+        val scanOutput = inventory.getStack(14).tag ?: return false
+        val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
+        val chunkPos = world?.getChunk(pos)?.pos ?: return false
+        return chunkPos == scanChunkPos
+    }
+
+    private fun cacheVeinType() {
+        if (chunkVeinType == null) {
+            updateData { data ->
+                if (data == null) return@updateData false
+                this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
+                propertyDelegate[3] = data.explored * 100 / data.size
+                if (data.explored >= data.size) {
+                    finished = true
+                }
+                return@updateData false
+            }
+        }
+    }
+
+    private inline fun updateData(action: (ChunkVeinData?) -> Boolean) {
+        val inventory = inventoryComponent?.inventory ?: return
+        val scanOutput = inventory.getStack(14).tag ?: return
         val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
         val state =
             (world as ServerWorld).persistentStateManager.getOrCreate(
                 { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
                 ChunkVeinState.STATE_OVERWORLD_KEY
             )
-        return state.veins[chunkPos]
+        if (action(state.veins[chunkPos])) state.markDirty()
     }
 
     fun getActiveDrills(): List<DrillBlockEntity> {
-        val offsets = arrayOf(BlockPos(-1, 0, -1), BlockPos(-1, 0, 1), BlockPos(1, 0 ,1), BlockPos(1, 0, -1))
+        val offsets = arrayOf(BlockPos(-1, 0, -1), BlockPos(-1, 0, 1), BlockPos(1, 0, 1), BlockPos(1, 0, -1))
         return offsets.map { pos.add(it) }.mapNotNull { pos ->
             val blockState = world?.getBlockState(pos)
             val block = blockState?.block
@@ -147,11 +176,17 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
 
     override fun getAvailableUpgrades(): Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
 
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> config.energyCost
-        Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> getBaseBuffer()
-        else -> 0.0
+    override fun getBaseValue(upgrade: Upgrade): Double {
+        val activeDrills = getActiveDrills()
+        return when (upgrade) {
+            Upgrade.ENERGY -> config.energyCost * activeDrills.size
+            Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
+                val itemStack = blockEntity.inventory[0]
+                DrillBlockEntity.getSpeedMultiplier(itemStack.item)
+            }
+            Upgrade.BUFFER -> getBaseBuffer()
+            else -> 0.0
+        }
     }
 
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
@@ -184,5 +219,9 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         requiredPower = tag?.getDouble("RequiredPower") ?: 0.0
         super.fromClientTag(tag)
+    }
+
+    companion object {
+        val BLOCK_BREAK_PACKET = identifier("miner_block_break_packet")
     }
 }
