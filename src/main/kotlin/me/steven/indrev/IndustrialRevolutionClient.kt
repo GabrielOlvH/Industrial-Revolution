@@ -165,6 +165,17 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 else null
             }
         }
+        
+        val models = arrayOf(
+            CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)
+        )
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider {
+            ModelVariantProvider { modelIdentifier, _ ->
+                if (modelIdentifier.namespace == "indrev" && modelIdentifier.path.contains("cable_mk"))
+                    return@ModelVariantProvider models[modelIdentifier.path.last().toString().toInt() - 1]
+                return@ModelVariantProvider null
+            }
+        }
 
         FabricModelPredicateProviderRegistry.register(
             IRRegistry.GAMER_AXE_ITEM,
@@ -232,16 +243,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 if (hasModularItem)
                     MinecraftClient.getInstance()
                         .openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
-            }
-        }
-        val models = arrayOf(
-            CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)
-        )
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider {
-            ModelVariantProvider { modelIdentifier, _ ->
-                if (modelIdentifier.namespace == "indrev" && modelIdentifier.path.contains("cable_mk"))
-                    return@ModelVariantProvider models[modelIdentifier.path.last().toString().toInt() - 1]
-                return@ModelVariantProvider null
             }
         }
     }
