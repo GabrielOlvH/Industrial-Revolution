@@ -163,6 +163,8 @@ class Machines : ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     val miner: MachineConfig = MachineConfig(64.0, 100.0, 50000.0, Tier.MK4.io)
 
+    val drill: Double = 256.0
+
     @ConfigEntry.Gui.CollapsibleObject
     val fishingMk2: MachineConfig = MachineConfig(8.0, 400.0, 50000.0, Tier.MK2.io)
 
