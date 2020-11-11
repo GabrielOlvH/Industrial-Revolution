@@ -51,7 +51,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
         getShield(stack)
     }
 
