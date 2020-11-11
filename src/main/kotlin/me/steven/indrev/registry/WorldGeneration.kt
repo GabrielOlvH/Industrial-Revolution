@@ -63,7 +63,7 @@ object WorldGeneration {
                 10
             )
         )
-            .method_30377(64)
+            .rangeOf(64)
             .spreadHorizontally()
             .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
@@ -74,7 +74,7 @@ object WorldGeneration {
           Feature.ORE.configure(
               OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
           )
-              .method_30377(48)
+              .rangeOf(48)
               .spreadHorizontally()
               .repeat(14),
           IRConfiguredFeature.IS_OVERWORLD
@@ -91,7 +91,7 @@ object WorldGeneration {
                     7
                 )
             )
-                .method_30377(16)
+                .rangeOf(16)
                 .spreadHorizontally()
                 .repeat(8),
             IRConfiguredFeature.IS_OVERWORLD
@@ -107,7 +107,7 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_overworld"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).method_30377(16).repeat(10),
+            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).rangeOf(16).repeat(10),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
@@ -115,7 +115,7 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_nether"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).method_30377(100).repeat(20),
+            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).rangeOf(100).repeat(20),
             IRConfiguredFeature.IS_NETHER
         )
 
