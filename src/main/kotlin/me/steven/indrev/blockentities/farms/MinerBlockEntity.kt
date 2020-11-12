@@ -56,8 +56,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         requiredPower = Upgrade.getEnergyCost(upgrades, this)
         if (finished) {
             setWorkingState(false)
+            getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             return
         } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
+            getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Upgrade.getSpeed(upgrades, this)
             temperatureComponent?.tick(true)
         } else {
@@ -83,7 +85,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 getActiveDrills().random().also { drillBlockEntity ->
                     val itemStack = drillBlockEntity.inventory[0]
                     if (!itemStack.isEmpty) {
-                        val speed = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
+                        val speed = drillBlockEntity.getSpeedMultiplier(itemStack.item)
                         if (speed > 0) {
                             itemStack.damage++
                             if (itemStack.damage >= itemStack.maxDamage) {
@@ -164,9 +166,13 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             if (block is DrillBlock) {
                 val blockEntity = world?.getBlockEntity(block.part.getBlockEntityPos(pos)) as? DrillBlockEntity ?: return@mapNotNull null
                 val itemStack = blockEntity.inventory[0]
-                if (!itemStack.isEmpty && DrillBlockEntity.isValidDrill(itemStack.item))
+                if (!itemStack.isEmpty && DrillBlockEntity.isValidDrill(itemStack.item)) {
                     blockEntity
-                else null
+                }
+                else {
+                    blockEntity.setWorkingState(false)
+                    null
+                }
             } else null
         }
     }
@@ -183,7 +189,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
                 val itemStack = blockEntity.inventory[0]
-                DrillBlockEntity.getSpeedMultiplier(itemStack.item)
+                blockEntity.getSpeedMultiplier(itemStack.item)
             }
             Upgrade.BUFFER -> getBaseBuffer()
             else -> 0.0

@@ -35,8 +35,10 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
             push()
             val entry = peek()
             translate(0.5, 0.0, 0.5)
-            multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.world!!.time + tickDelta) * 6))
-            translate(-0.5, 0.0, -0.5)
+            if (entity.position <= 0.0) {
+                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion( (entity.world!!.time + tickDelta) * 12))
+            }
+            translate(-0.5, entity.position, -0.5)
             MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(
                 entry,
                 vertexConsumers.getBuffer(RenderLayers.getBlockLayer(entity.cachedState)),

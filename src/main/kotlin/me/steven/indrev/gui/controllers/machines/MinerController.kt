@@ -76,7 +76,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
                 }
             }
             root.add(WText({
-                val totalMultiplier = activeDrills.sumByDouble { DrillBlockEntity.getSpeedMultiplier(it.inventory[0].item) }
+                val totalMultiplier = activeDrills.sumByDouble { it.getSpeedMultiplier(it.inventory[0].item) }
                 TranslatableText("block.indrev.drill.faster", totalMultiplier)
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 2.8)
         }
@@ -93,8 +93,10 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
         panel.add(object : WItem(itemStack)  {
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(itemStack.name)
-                val seconds = DrillBlockEntity.getSpeedMultiplier(itemStack.item)
-                tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds))
+                val seconds = blockEntity.getSpeedMultiplier(itemStack.item)
+                tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds).formatted(Formatting.DARK_GRAY))
+                if (blockEntity.position > 0)
+                    tooltip?.add(TranslatableText("block.indrev.drill.activating").formatted(Formatting.DARK_GRAY))
             }
         }, 0, 0)
 
