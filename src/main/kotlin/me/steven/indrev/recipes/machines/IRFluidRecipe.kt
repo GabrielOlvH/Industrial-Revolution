@@ -68,7 +68,7 @@ abstract class IRFluidRecipe : IRRecipe {
             val fluidInput = if (fluidInputJson == null) null else getFluidFromJson(fluidInputJson)
 
             val fluidOutputJson = json.getAsJsonObject("fluidOutput")
-            val fluidOutput = if (fluidOutputJson == null) null else getFluidFromJson(fluidOutputJson)
+            val fluidOutput = if (fluidOutputJson == null) FluidKeys.EMPTY.withAmount(FluidAmount.ZERO) else getFluidFromJson(fluidOutputJson)
 
             return factory(id, ingredients, output, fluidInput, fluidOutput, ticks)
         }

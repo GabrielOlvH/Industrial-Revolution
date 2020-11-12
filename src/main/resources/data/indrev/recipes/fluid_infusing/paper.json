@@ -1,0 +1,19 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": [
+    {
+      "item": "indrev:sawdust",
+      "count": 3
+    }
+  ],
+  "fluidInput": {
+    "fluid": "minecraft:water",
+    "type": "bottle",
+    "count": 1
+  },
+  "output": {
+    "item": "minecraft:paper",
+    "count": 3
+  },
+  "processTime": 200
+}
