@@ -26,7 +26,8 @@
   ],
   "client": [
     "MixinClientRecipeBook",
-    "MixinLightmapTextureManager",
+    "MixinGameRenderer",
+    "MixinLivingEntityClient",
     "MixinPlayerEntityRenderer",
     "MixinWItemSlot"
   ],
