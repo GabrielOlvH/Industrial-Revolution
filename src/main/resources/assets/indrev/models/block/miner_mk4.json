@@ -1,7 +1,9 @@
 {
 	"credit": "Made with Blockbench",
-	"parent": "indrev:block/machine_mk4",
+	"parent": "minecraft:block/block",
 	"textures": {
+		"1": "indrev:block/miner_screen_emissive",
+		"particle": "indrev:block/miner",
 		"texture": "indrev:block/miner"
 	},
 	"elements": [
@@ -15,6 +17,13 @@
 				"west": {"uv": [10.66667, 5.33333, 16, 10.66667], "texture": "#texture"},
 				"up": {"uv": [5.33333, 0, 10.66667, 5.33333], "texture": "#texture"},
 				"down": {"uv": [5.33333, 10.66667, 10.66667, 16], "texture": "#texture"}
+			}
+		},
+		{
+			"from": [-0.1, -0.1, -0.1],
+			"to": [16.1, 16.1, 16.1],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1"}
 			}
 		}
 	]
