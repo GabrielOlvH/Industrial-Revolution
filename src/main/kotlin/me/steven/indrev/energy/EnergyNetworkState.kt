@@ -8,8 +8,8 @@ import net.minecraft.world.PersistentState
 import java.util.*
 
 class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indrev_networks") {
-    var networks = mutableSetOf<EnergyNetwork>()
-    val networksByPos = mutableMapOf<BlockPos, EnergyNetwork>()
+    var networks = hashSetOf<EnergyNetwork>()
+    val networksByPos = hashMapOf<BlockPos, EnergyNetwork>()
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         val list = ListTag()
@@ -26,7 +26,7 @@ class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indr
         val list = tag.getList("networks", 10)
         networks = list.map { networkTag ->
             EnergyNetwork.fromTag(world, networkTag as CompoundTag)
-        }.toMutableSet()
+        }.toHashSet()
         networks.forEach { network ->
             network.cables.forEach { pos -> networksByPos[pos] = network }
         }
