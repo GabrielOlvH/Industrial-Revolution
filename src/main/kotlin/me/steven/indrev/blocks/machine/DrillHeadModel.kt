@@ -25,7 +25,7 @@ import java.util.function.Supplier
 class DrillHeadModel(val variant: String) : UnbakedModel, BakedModel, FabricBakedModel {
 
     private val spriteIdCollection = mutableListOf(
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/${variant}_drill_head"))
+        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("item/${variant}_drill_head"))
     )
 
     private val modelIdentifier = identifier("block/${variant}_drill_head")

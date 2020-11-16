@@ -23,8 +23,23 @@
 			"from": [-0.1, -0.1, -0.1],
 			"to": [16.1, 16.1, 16.1],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#1"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "jmx_tex0": "#1", "jmx_material": "#jmx_0"}
 			}
 		}
-	]
+	],
+	"jmx": {
+		"textures": {
+			"1": "indrev:block/miner_screen_emissive",
+			"particle": "indrev:block/miner",
+			"texture": "indrev:block/miner"
+		},
+		"materials": {
+			"jmx_0": {
+				"layer0": "cutout",
+				"emissive0": true,
+				"ambient_occlusion0": false,
+				"diffuse0": false
+			}
+		}
+	}
 }
