@@ -122,7 +122,10 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
-            EnergyNetwork.handleBreak(world as ServerWorld, pos)
+            if (state.isOf(newState.block))
+                EnergyNetwork.handleUpdate(world as ServerWorld, pos)
+            else
+                EnergyNetwork.handleBreak(world as ServerWorld, pos)
         }
     }
 
