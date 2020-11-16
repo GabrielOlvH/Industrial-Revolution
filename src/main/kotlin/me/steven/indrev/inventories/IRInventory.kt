@@ -38,7 +38,7 @@ class IRInventory(
     }
 
     fun output(stack: ItemStack): Boolean {
-        for (i in outputSlots) {
+        for (i in 0 until size()) {
             val itemStack = getStack(i)
             if (canCombine(itemStack, stack)) {
                 transfer(stack, itemStack)
@@ -47,7 +47,7 @@ class IRInventory(
                 }
             }
         }
-        addToNewSlot(stack)
+        addToOutputSlot(stack)
         return true
     }
 
@@ -64,7 +64,7 @@ class IRInventory(
         }
     }
 
-    private fun addToNewSlot(stack: ItemStack) {
+    private fun addToOutputSlot(stack: ItemStack) {
         for (i in outputSlots) {
             val itemStack = getStack(i)
             if (itemStack.isEmpty) {

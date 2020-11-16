@@ -68,10 +68,10 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
 
     private fun handleInventories(inventory: IRInventory, inputInventory: Array<ItemStack>, recipe: IRRecipe) {
         val output = recipe.craft(machine.world!!.random)
-        recipe.input.forEach { (ingredient, count) ->
-            inputSlots!!.forEachIndexed { index, slot ->
+        inputSlots!!.forEachIndexed { index, slot ->
+            recipe.input.forEach { (ingredient, count) ->
                 val stack = inputInventory[index]
-                if (!ingredient.test(stack)) return@forEachIndexed
+                if (!ingredient.test(stack)) return@forEach
                 val item = stack.item
                 if (item.hasRecipeRemainder())
                     inventory.setStack(slot, ItemStack(item.recipeRemainder))
@@ -79,7 +79,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                     stack.decrement(count)
                     inventory.setStack(slot, stack)
                 }
-                return@forEach
+                return@forEachIndexed
             }
         }
 
