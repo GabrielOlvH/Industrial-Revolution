@@ -46,6 +46,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
     private var finished = false
+    var lastMinedItem = ItemStack.EMPTY
     var requiredPower = 0.0
 
     override fun machineTick() {
@@ -81,7 +82,9 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 data.explored++
                 mining = 0.0
                 val generatedOre = chunkVeinType!!.outputs.pickRandom(world?.random)
-                inventory.output(ItemStack(generatedOre))
+                lastMinedItem = ItemStack(generatedOre)
+                inventory.output(lastMinedItem.copy())
+                sync()
                 getActiveDrills().random().also { drillBlockEntity ->
                     val itemStack = drillBlockEntity.inventory[0]
                     if (!itemStack.isEmpty) {
@@ -202,6 +205,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
+        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
         return super.toTag(tag)
     }
 
@@ -209,6 +213,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
+        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
         super.fromTag(state, tag)
     }
 
@@ -217,6 +222,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
         tag?.putDouble("RequiredPower", requiredPower)
+        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
         return super.toClientTag(tag)
     }
 
@@ -225,6 +231,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         requiredPower = tag?.getDouble("RequiredPower") ?: 0.0
+        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
         super.fromClientTag(tag)
     }
 

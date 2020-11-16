@@ -6,6 +6,7 @@ import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
@@ -115,6 +116,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
