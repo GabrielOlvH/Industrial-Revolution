@@ -121,7 +121,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val types = adults.map { it.type }.associateWith { mutableListOf<AnimalEntity>() }
         adults.forEach { types[it.type]?.add(it) }
         return types.values.let { values ->
-            values.map { animals -> animals.dropLast((adults.size - killAfter).coerceAtLeast(killAfter)) }
+            values.map { animals -> animals.dropLast((animals.size - killAfter).coerceAtLeast(killAfter)) }
         }.flatten()
     }
 
