@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
+    "working=false": {
       "model": "indrev:block/drill_top"
+    },
+    "working=true": {
+      "model": "indrev:block/drill_top_on"
     }
   }
 }

@@ -65,6 +65,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             temperatureComponent?.tick(true)
         } else {
             setWorkingState(false)
+            getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             temperatureComponent?.tick(false)
         }
         if (mining >= config.processSpeed) {

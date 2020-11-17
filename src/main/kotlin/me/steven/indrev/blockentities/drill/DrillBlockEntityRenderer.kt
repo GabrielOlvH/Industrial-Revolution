@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.drill
 
+import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
@@ -35,7 +36,7 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
             push()
             val entry = peek()
             translate(0.5, 0.0, 0.5)
-            if (entity.position <= 0.0) {
+            if (entity.position <= 0.0 && entity.cachedState[DrillBlock.WORKING]) {
                 multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion( (entity.world!!.time + tickDelta) * 12))
             }
             translate(-0.5, entity.position, -0.5)
