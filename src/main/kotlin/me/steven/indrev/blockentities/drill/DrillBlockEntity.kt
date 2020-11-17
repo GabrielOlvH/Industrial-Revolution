@@ -100,7 +100,8 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENT
         buf.writeBlockPos(pos)
     }
 
-    fun getSpeedMultiplier(item: Item): Double {
+    fun getSpeedMultiplier(): Double {
+        val item = inventory[0].item
         return if (position > 0) 0.0 else when (item) {
             IRRegistry.STONE_DRILL_HEAD -> 0.5
             IRRegistry.IRON_DRILL_HEAD -> 2.0

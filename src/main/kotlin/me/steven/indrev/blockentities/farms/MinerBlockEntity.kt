@@ -85,10 +85,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 lastMinedItem = ItemStack(generatedOre)
                 inventory.output(lastMinedItem.copy())
                 sync()
-                getActiveDrills().random().also { drillBlockEntity ->
+                getActiveDrills().filter { d -> d.getSpeedMultiplier() > 0 }.random().also { drillBlockEntity ->
                     val itemStack = drillBlockEntity.inventory[0]
                     if (!itemStack.isEmpty) {
-                        val speed = drillBlockEntity.getSpeedMultiplier(itemStack.item)
+                        val speed = drillBlockEntity.getSpeedMultiplier()
                         if (speed > 0) {
                             itemStack.damage++
                             if (itemStack.damage >= itemStack.maxDamage) {
@@ -192,7 +192,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
                 val itemStack = blockEntity.inventory[0]
-                blockEntity.getSpeedMultiplier(itemStack.item)
+                blockEntity.getSpeedMultiplier()
             }
             Upgrade.BUFFER -> getBaseBuffer()
             else -> 0.0
