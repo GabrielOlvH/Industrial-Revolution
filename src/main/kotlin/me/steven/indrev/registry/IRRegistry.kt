@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.*
@@ -248,7 +249,12 @@ object IRRegistry {
         identifier("drill_middle").block(DRILL_MIDDLE)
         identifier("drill_bottom").block(DRILL_BOTTOM).item(BlockItem(DRILL_BOTTOM, itemSettings()))
         identifier("drill").blockEntityType(DRILL_BLOCK_ENTITY_TYPE)
-        
+
+        identifier("solar_reflector")
+            .block(SOLAR_REFLECTOR_BLOCK)
+            .item(SOLAR_REFLECTOR_ITEM)
+            .blockEntityType(SOLAR_REFLECTOR_BLOCK_ENTITY)
+
         WorldGeneration.init()
 
         BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
@@ -404,7 +410,7 @@ object IRRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val DRILL_BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create({ DrillBlockEntity() }, DRILL_BOTTOM).build(null)
-    
+
     val STONE_DRILL_HEAD = Item(itemSettings().maxDamage(256))
     val IRON_DRILL_HEAD = Item(itemSettings().maxDamage(1024))
     val DIAMOND_DRILL_HEAD = Item(itemSettings().maxDamage(2048))
@@ -466,4 +472,10 @@ object IRRegistry {
     val TANK_BLOCK_ITEM = BlockItem(TANK_BLOCK, itemSettings())
 
     val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, TANK_BLOCK).build(null)
+
+    val SOLAR_REFLECTOR_BLOCK = SolarReflectorBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val SOLAR_REFLECTOR_ITEM = BlockItem(SOLAR_REFLECTOR_BLOCK, itemSettings())
+    val SOLAR_REFLECTOR_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarReflectorBlockEntity() }, SOLAR_REFLECTOR_BLOCK).build(null)
 }

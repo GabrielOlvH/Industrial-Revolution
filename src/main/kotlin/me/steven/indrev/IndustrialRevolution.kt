@@ -10,6 +10,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
+import me.steven.indrev.blocks.SolarReflectorBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
@@ -169,6 +171,22 @@ object IndustrialRevolution : ModInitializer {
                     blockEntity.mateAdults = mateAdults
                     blockEntity.matingLimit = matingLimit
                     blockEntity.killAfter = killAfter
+                    blockEntity.markDirty()
+                    blockEntity.sync()
+                }
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(SolarReflectorBlock.SET_ANGLES_PACKET) { ctx, buf ->
+            val yaw = buf.readFloat()
+            val pitch = buf.readFloat()
+            val pos = buf.readBlockPos()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? SolarReflectorBlockEntity ?: return@execute
+                    blockEntity.pitch = pitch
+                    blockEntity.yaw = yaw
                     blockEntity.markDirty()
                     blockEntity.sync()
                 }
