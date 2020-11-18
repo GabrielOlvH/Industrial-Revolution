@@ -48,7 +48,7 @@ class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProv
     private fun getYaw(origin: BlockPos, target: BlockPos): Float {
         val xOffset = target.x - origin.x.toDouble()
         val zOffset = target.z - origin.z.toDouble()
-        return MathHelper.wrapDegrees((MathHelper.atan2(zOffset, xOffset) * 57.2957763671875).toFloat() - 90.0f)
+        return MathHelper.wrapDegrees((MathHelper.atan2(zOffset, xOffset) * RAD2DEG).toFloat() - 90.0f)
     }
 
     private fun getPitch(origin: BlockPos, target: BlockPos): Float {
@@ -56,10 +56,11 @@ class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProv
         val yOffset = target.y - origin.y.toDouble()
         val zOffset = target.z - origin.z.toDouble()
         val g = MathHelper.sqrt(xOffset * xOffset + zOffset * zOffset).toDouble()
-        return MathHelper.wrapDegrees((-(MathHelper.atan2(yOffset, g) * 57.2957763671875)).toFloat())
+        return MathHelper.wrapDegrees((-(MathHelper.atan2(yOffset, g) * RAD2DEG)).toFloat())
     }
 
     companion object {
         val SET_ANGLES_PACKET = identifier("reflector_set_angles")
+        private const val RAD2DEG = 57.2957763671875
     }
 }
