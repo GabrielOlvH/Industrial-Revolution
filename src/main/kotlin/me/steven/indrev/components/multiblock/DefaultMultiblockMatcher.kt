@@ -1,12 +1,10 @@
 package me.steven.indrev.components.multiblock
 
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class DefaultMultiblockMatcher<T : StructureDefinition>(private val definitions: Array<T>) : AbstractMultiblockMatcher() {
+class DefaultMultiblockMatcher(override val definitions: Array<StructureDefinition>) : AbstractMultiblockMatcher() {
 
     override fun tick(world: World, pos: BlockPos, state: BlockState) {
         for (definition in definitions) {
@@ -17,9 +15,4 @@ class DefaultMultiblockMatcher<T : StructureDefinition>(private val definitions:
         }
         isBuilt = true
     }
-
-
-    //TODO reimplement this
-    @Environment(EnvType.CLIENT)
-    override fun getRenderingStructure(): Map<BlockPos, BlockState> = emptyMap()
 }

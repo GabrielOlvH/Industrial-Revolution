@@ -5,9 +5,9 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 
-class StructureHelper(private val structure: MutableMap<BlockPos, (BlockState) -> Boolean> = HashMap()) {
+class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilter> = HashMap()) {
     fun add(blockPos: BlockPos, blockState: (BlockState) -> Boolean): StructureHelper {
-        structure[blockPos] = blockState
+        structure[blockPos] = BlockStateFilter(blockState)
         return this
     }
 
@@ -47,7 +47,7 @@ class StructureHelper(private val structure: MutableMap<BlockPos, (BlockState) -
     }
 
     fun add(blockPos: BlockPos, blockState: BlockState): StructureHelper {
-        structure[blockPos] = { b -> b == blockState }
+        structure[blockPos] = BlockStateFilter(blockState)
         return this
     }
 
@@ -91,5 +91,5 @@ class StructureHelper(private val structure: MutableMap<BlockPos, (BlockState) -
         structure.remove(pos)
     }
 
-    fun create(): Map<BlockPos, (BlockState) -> Boolean> = ImmutableMap.copyOf(structure)
+    fun create(): Map<BlockPos, BlockStateFilter> = ImmutableMap.copyOf(structure)
 }

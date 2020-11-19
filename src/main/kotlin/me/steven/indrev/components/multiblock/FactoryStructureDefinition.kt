@@ -17,7 +17,7 @@ object FactoryStructureDefinition : StructureDefinition {
 
     override val identifier: String = "factory"
     override val isOptional: Boolean = false
-    override val structure: Map<BlockPos, (BlockState) -> Boolean> =
+    override val structure: Map<BlockPos, BlockStateFilter> =
         StructureHelper()
             .cube(BlockPos(-1, 1, 1), 3, 3, 1, IRRegistry.FRAME.defaultState)
             .cube(BlockPos(0, 0, 1), 2, 3, 1, IRRegistry.SILO.defaultState)
@@ -36,7 +36,7 @@ object FactoryStructureDefinition : StructureDefinition {
 
         override val identifier: String = "factory_inverted"
         override val isOptional: Boolean = false
-        override val structure: Map<BlockPos, (BlockState) -> Boolean> =
+        override val structure: Map<BlockPos, BlockStateFilter> =
             StructureHelper()
                 .cube(BlockPos(-1, 1, 1), 3, 3, 1, IRRegistry.FRAME.defaultState)
                 .cube(BlockPos(-1, 0, 1), 2, 3, 1, IRRegistry.SILO.defaultState)
