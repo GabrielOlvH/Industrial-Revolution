@@ -1,4 +1,4 @@
-package me.steven.indrev.components
+package me.steven.indrev.components.multiblock
 
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
@@ -6,12 +6,13 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.World
 
 abstract class AbstractMultiblockMatcher {
 
     var isBuilt = false
 
-    abstract fun tick()
+    abstract fun tick(world: World, pos: BlockPos, state: BlockState)
 
     @Environment(EnvType.CLIENT)
     abstract fun getRenderingStructure(): Map<BlockPos, BlockState>

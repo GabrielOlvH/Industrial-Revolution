@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.components.AbstractMultiblockMatcher
+import me.steven.indrev.components.multiblock.AbstractMultiblockMatcher
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
@@ -21,7 +21,7 @@ open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: 
         val multiblock = entity.multiblockComponent ?: return
         if (!multiblock.shouldRenderHologram) return
         val rotation = AbstractMultiblockMatcher.rotateBlock(entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
-        multiblock.getSelectedMatcher(entity.cachedState, entity.world!!).getRenderingStructure().forEach { (offset, state) ->
+        multiblock.getSelectedMatcher(entity.world!!, entity.pos, entity.cachedState).getRenderingStructure().forEach { (offset, state) ->
             matrices.push()
             val rotated = offset.rotate(rotation)
             val blockPos = entity.pos.subtract(rotated)
