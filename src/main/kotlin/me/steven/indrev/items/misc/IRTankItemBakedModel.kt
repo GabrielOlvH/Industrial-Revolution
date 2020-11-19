@@ -1,7 +1,7 @@
 package me.steven.indrev.items.misc
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView

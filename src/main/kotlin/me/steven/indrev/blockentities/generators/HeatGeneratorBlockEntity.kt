@@ -2,8 +2,8 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
