@@ -59,7 +59,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     protected open fun machineTick() {}
 
-    override fun tick() {
+    final override fun tick() {
         if (world?.isClient == false) {
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.getSelectedMatcher(world!!, pos, cachedState)?.isBuilt == false) return
