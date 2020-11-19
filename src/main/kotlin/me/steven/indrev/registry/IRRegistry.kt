@@ -474,7 +474,7 @@ object IRRegistry {
     val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create({ TankBlockEntity() }, TANK_BLOCK).build(null)
 
     val SOLAR_REFLECTOR_BLOCK = SolarReflectorBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val SOLAR_REFLECTOR_ITEM = BlockItem(SOLAR_REFLECTOR_BLOCK, itemSettings())
     val SOLAR_REFLECTOR_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarReflectorBlockEntity() }, SOLAR_REFLECTOR_BLOCK).build(null)

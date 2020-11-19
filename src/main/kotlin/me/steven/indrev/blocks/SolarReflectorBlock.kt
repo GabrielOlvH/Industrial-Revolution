@@ -17,6 +17,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProvider {
+
     override fun getRenderType(state: BlockState?): BlockRenderType = BlockRenderType.ENTITYBLOCK_ANIMATED
 
     override fun onPlaced(
@@ -28,7 +29,7 @@ class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProv
     ) {
         if (world.isClient) {
             val target = pos.mutableCopy()
-            Box(pos).expand(5.0).forEach { x, y, z ->
+            Box(pos).expand(7.0).forEach { x, y, z ->
                 target.set(x, y, z)
                 if (world.testBlockState(target) { it.isOf(Blocks.OBSIDIAN) }) {
                     val yaw = getYaw(pos, target)
@@ -38,6 +39,7 @@ class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProv
                     buf.writeFloat(pitch)
                     buf.writeBlockPos(pos)
                     ClientSidePacketRegistry.INSTANCE.sendToServer(SET_ANGLES_PACKET, buf)
+                    return
                 }
             }
         }
