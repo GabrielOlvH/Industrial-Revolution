@@ -7,12 +7,9 @@ import net.minecraft.world.World
 class DefaultMultiblockMatcher(override val definitions: Array<StructureDefinition>) : AbstractMultiblockMatcher() {
 
     override fun tick(world: World, pos: BlockPos, state: BlockState) {
+        structureIds.clear()
         for (definition in definitions) {
-            if (!definition.isBuilt(world, pos, state)) {
-                isBuilt = definition.isOptional
-                return
-            }
+            structureIds.addAll(definition.getBuiltStructureId(world, pos, state))
         }
-        isBuilt = true
     }
 }

@@ -28,7 +28,7 @@ class CompressorFactoryBlockEntity(tier: Tier) :
                 outputSlots = intArrayOf(6 + (index * 2) + 1)
             }
         }
-        this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
     }
 
     override val type: IRRecipeType<CompressorRecipe> = CompressorRecipe.TYPE

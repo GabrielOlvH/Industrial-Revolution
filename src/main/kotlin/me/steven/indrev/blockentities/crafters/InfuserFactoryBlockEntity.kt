@@ -28,7 +28,7 @@ class InfuserFactoryBlockEntity(tier: Tier) :
                 outputSlots = intArrayOf(6 + (index * 3) + 2)
             }
         }
-        this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
     }
 
     override fun splitStacks() {

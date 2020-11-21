@@ -22,7 +22,7 @@ open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: 
         if (!multiblock.shouldRenderHologram) return
         val rotation = AbstractMultiblockMatcher.rotateBlock(entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
         multiblock.getSelectedMatcher(entity.world!!, entity.pos, entity.cachedState).definitions.forEach { def ->
-            def.structure.forEach { (offset, state) ->
+            def.holder.variants.values.first().forEach { (offset, state) ->
                 matrices.push()
                 val rotated = offset.rotate(rotation)
                 val blockPos = entity.pos.subtract(rotated)

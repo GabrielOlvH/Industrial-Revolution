@@ -323,6 +323,15 @@ inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
                 f(x, y, z)
 }
 
+inline fun <T> Box.map(f: (Int, Int, Int) -> T): MutableList<T> {
+    val list = mutableListOf<T>()
+    for (x in minX.toInt() until maxX.toInt())
+        for (y in minY.toInt() until maxY.toInt())
+            for (z in minZ.toInt() until maxZ.toInt())
+                list.add(f(x, y, z))
+    return list
+}
+
 
 inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
     for (x in minX.toInt()..maxX.toInt())
@@ -331,6 +340,8 @@ inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
                 if (f(x, y, z)) return BlockPos(x, y, z)
     return null
 }
+
+fun Box.containsExcluding(x: Double, y: Double, z: Double) = x >= this.minX && x < this.maxX && y >= this.minY && y < this.maxY && z >= this.minZ && z < this.maxZ
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
     widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))

@@ -5,7 +5,10 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class MultiBlockComponent(val structureDecider: (BlockState, World, BlockPos) -> StructureDefinition) {
+class MultiBlockComponent(
+    private val isBuilt: (StructureIdentifier) -> Boolean,
+    val structureDecider: (BlockState, World, BlockPos) -> StructureDefinition
+) {
     var shouldRenderHologram = false
     private var ticks = 0
     private var cachedMatchers: MutableMap<String, AbstractMultiblockMatcher> = hashMapOf()
@@ -20,6 +23,8 @@ class MultiBlockComponent(val structureDecider: (BlockState, World, BlockPos) ->
         val selected = structureDecider(blockState, world, pos)
         return cachedMatchers.computeIfAbsent(selected.identifier) { selected.toMatcher() }
     }
+
+    fun isBuilt(world: World, pos: BlockPos, blockState: BlockState) = getSelectedMatcher(world, pos, blockState).structureIds.any(isBuilt)
 
     fun toggleRender() {
         shouldRenderHologram = !shouldRenderHologram

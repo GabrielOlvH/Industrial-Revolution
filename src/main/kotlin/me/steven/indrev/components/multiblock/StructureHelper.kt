@@ -5,13 +5,21 @@ import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 
-class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilter> = HashMap()) {
+class StructureHelper(private val definition: StructureDefinition, private val structure: MutableMap<BlockPos, BlockStateFilter> = HashMap()) {
+
+    private val createdStructures: MutableMap<StructureIdentifier, Map<BlockPos, BlockStateFilter>> = hashMapOf()
+
     fun add(blockPos: BlockPos, blockState: (BlockState) -> Boolean): StructureHelper {
         structure[blockPos] = BlockStateFilter(blockState)
         return this
     }
 
-    fun corners(center: BlockPos, radius: Int, state: (BlockState) -> Boolean, rotation: BlockRotation = BlockRotation.NONE): StructureHelper {
+    fun corners(
+        center: BlockPos,
+        radius: Int,
+        state: (BlockState) -> Boolean,
+        rotation: BlockRotation = BlockRotation.NONE
+    ): StructureHelper {
         add(center.add(radius, radius, 0).rotate(rotation), state)
         add(center.add(-radius, radius, 0).rotate(rotation), state)
         add(center.add(radius, -radius, 0).rotate(rotation), state)
@@ -19,7 +27,12 @@ class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilt
         return this
     }
 
-    fun horizontalCorners(center: BlockPos, radius: Int, state: (BlockState) -> Boolean, rotation: BlockRotation = BlockRotation.NONE): StructureHelper {
+    fun horizontalCorners(
+        center: BlockPos,
+        radius: Int,
+        state: (BlockState) -> Boolean,
+        rotation: BlockRotation = BlockRotation.NONE
+    ): StructureHelper {
         add(center.add(radius, 0, radius).rotate(rotation), state)
         add(center.add(-radius, 0, radius).rotate(rotation), state)
         add(center.add(radius, 0, -radius).rotate(rotation), state)
@@ -51,7 +64,12 @@ class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilt
         return this
     }
 
-    fun corners(center: BlockPos, radius: Int, state: BlockState, rotation: BlockRotation = BlockRotation.NONE): StructureHelper {
+    fun corners(
+        center: BlockPos,
+        radius: Int,
+        state: BlockState,
+        rotation: BlockRotation = BlockRotation.NONE
+    ): StructureHelper {
         add(center.add(radius, radius, 0).rotate(rotation), state)
         add(center.add(-radius, radius, 0).rotate(rotation), state)
         add(center.add(radius, -radius, 0).rotate(rotation), state)
@@ -59,7 +77,12 @@ class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilt
         return this
     }
 
-    fun horizontalCorners(center: BlockPos, radius: Int, state: BlockState, rotation: BlockRotation = BlockRotation.NONE): StructureHelper {
+    fun horizontalCorners(
+        center: BlockPos,
+        radius: Int,
+        state: BlockState,
+        rotation: BlockRotation = BlockRotation.NONE
+    ): StructureHelper {
         add(center.add(radius, 0, radius).rotate(rotation), state)
         add(center.add(-radius, 0, radius).rotate(rotation), state)
         add(center.add(radius, 0, -radius).rotate(rotation), state)
@@ -91,5 +114,11 @@ class StructureHelper(private val structure: MutableMap<BlockPos, BlockStateFilt
         structure.remove(pos)
     }
 
-    fun create(): Map<BlockPos, BlockStateFilter> = ImmutableMap.copyOf(structure)
+    fun create(variant: String): StructureHelper {
+        createdStructures[StructureIdentifier("indrev", definition.identifier, variant)] = ImmutableMap.copyOf(structure)
+        structure.clear()
+        return this
+    }
+
+    fun build(): StructureHolder = StructureHolder(ImmutableMap.copyOf(createdStructures))
 }

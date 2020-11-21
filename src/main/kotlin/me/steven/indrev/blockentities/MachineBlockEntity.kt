@@ -62,7 +62,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     final override fun tick() {
         if (world?.isClient == false) {
             multiblockComponent?.tick(world!!, pos, cachedState)
-            if (multiblockComponent?.getSelectedMatcher(world!!, pos, cachedState)?.isBuilt == false) return
+            if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             EnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureComponent!!.explosionPower

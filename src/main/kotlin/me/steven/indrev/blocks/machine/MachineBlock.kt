@@ -86,7 +86,7 @@ open class MachineBlock(
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
         else if (blockEntity.multiblockComponent != null
-            && !blockEntity.multiblockComponent!!.getSelectedMatcher(world, pos!!, blockEntity.cachedState).isBuilt) {
+            && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
             player?.sendMessage(TranslatableText("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender()
             blockEntity.markDirty()

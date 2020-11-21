@@ -10,7 +10,7 @@ abstract class AbstractMultiblockMatcher {
 
     abstract val definitions: Array<StructureDefinition>
 
-    var isBuilt = false
+    var structureIds: MutableSet<StructureIdentifier> = hashSetOf()
 
     abstract fun tick(world: World, pos: BlockPos, state: BlockState)
 
