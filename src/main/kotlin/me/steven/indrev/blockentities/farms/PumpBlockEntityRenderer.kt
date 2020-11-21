@@ -7,6 +7,7 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
+import kotlin.math.floor
 
 class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<PumpBlockEntity>(dispatcher) {
     override fun render(
@@ -18,7 +19,8 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         overlay: Int
     ) {
         val state = Blocks.TORCH.defaultState
-        for (y in 1 until entity.currentLevel) {
+        val currentY = floor(entity.movingTicks).toInt()
+        for (y in 1..currentY) {
             matrices.push()
             matrices.translate(0.0, -y.toDouble(), 0.0)
             MinecraftClient.getInstance().blockRenderManager.renderBlock(
@@ -32,18 +34,19 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
             )
             matrices.pop()
         }
-        matrices.push()
-        matrices.scale(0.99f, 0.99f, 0.99f)
-        matrices.translate(0.0, -entity.movingTicks, 0.0)
-        MinecraftClient.getInstance().blockRenderManager.renderBlock(
-            state,
-            entity.pos,
-            entity.world,
-            matrices,
-            vertexConsumers.getBuffer(RenderLayers.getBlockLayer(state)),
-            false,
-            entity.world!!.random
-        )
-        matrices.pop()
+        if (currentY.toDouble() != entity.movingTicks) {
+            matrices.push()
+            matrices.translate(0.0, -entity.movingTicks, 0.0)
+            MinecraftClient.getInstance().blockRenderManager.renderBlock(
+                state,
+                entity.pos,
+                entity.world,
+                matrices,
+                vertexConsumers.getBuffer(RenderLayers.getBlockLayer(state)),
+                false,
+                entity.world!!.random
+            )
+            matrices.pop()
+        }
     }
 }

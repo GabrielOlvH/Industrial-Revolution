@@ -17,6 +17,8 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY), BlockEntityClientSerializable {
 
@@ -24,31 +26,27 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
     }
 
-    var currentLevel = 1
     var movingTicks = 0.0
 
     var ticks = 0
 
     override fun machineTick() {
         ticks++
+        val currentLevel = floor(movingTicks).toInt()
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        if (movingTicks < currentLevel) {
-            movingTicks = (movingTicks + 0.01).coerceAtMost(currentLevel.toDouble())
-        } else if (world?.getFluidState(lookLevel)?.isEmpty == true && world!!.isAir(lookLevel.down())) {
-            currentLevel++
+        if (world?.getFluidState(lookLevel)?.isEmpty == true && world!!.isAir(lookLevel.down())) {
+            movingTicks += 0.01
         } else if (ticks % 20 == 0) {
+            movingTicks = movingTicks.roundToInt().toDouble()
             val fluidComponent = fluidComponent ?: return
             val range = getWorkingArea(lookLevel.down())
             val y = lookLevel.down().y
             if (Energy.of(this).simulate().use(config.energyCost)) {
                 val mutablePos = lookLevel.mutableCopy()
-                var currentChunk = world!!.getChunk(lookLevel)
                 for (x in range.minX.toInt()..range.maxX.toInt()) {
                     for (z in range.minZ.toInt()..range.maxZ.toInt()) {
                         mutablePos.set(x, y, z)
-                        if (currentChunk.pos.x != x shr 4 && currentChunk.pos.z != z shr 4)
-                            currentChunk = world!!.getChunk(mutablePos)
-                        val blockState = currentChunk.getBlockState(mutablePos)
+                        val blockState = world?.getBlockState(mutablePos)
                         val block = blockState?.block
                         if (block is FluidDrainable && block is FluidBlock) {
                             val toInsert = FluidKeys.get(blockState.fluidState.fluid).withAmount(FluidAmount.BUCKET)
@@ -67,7 +65,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         sync()
     }
 
-    fun getWorkingArea(center: BlockPos): Box = Box(center).expand(8.0, 0.0, 8.0).stretch(0.0, 1.0, 0.0)
+    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(8.0, 0.0, 8.0).stretch(0.0, 1.0, 0.0)
 
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
@@ -75,13 +73,11 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     override fun fromClientTag(tag: CompoundTag?) {
         movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        currentLevel = tag?.getInt("CurrentLevel") ?: currentLevel
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("MovingTicks", movingTicks)
-        tag?.putInt("CurrentLevel", currentLevel)
         return super.toClientTag(tag)
     }
 }
