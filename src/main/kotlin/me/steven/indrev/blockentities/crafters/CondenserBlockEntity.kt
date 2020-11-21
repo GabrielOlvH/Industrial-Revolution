@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CondenserRecipe

@@ -1,4 +1,4 @@
-package me.steven.indrev.components
+package me.steven.indrev.components.fluid
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil

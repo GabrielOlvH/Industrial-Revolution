@@ -8,10 +8,10 @@ import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.MultiblockComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.energy.EnergyMovement
 import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
@@ -51,7 +51,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
     var fluidComponent: FluidComponent? = null
-    var multiblockComponent: MultiblockComponent? = null
+    var multiblockComponent: MultiBlockComponent? = null
 
     var itemTransferCooldown = 0
 
@@ -59,10 +59,10 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     protected open fun machineTick() {}
 
-    override fun tick() {
+    final override fun tick() {
         if (world?.isClient == false) {
-            multiblockComponent?.tick(cachedState, world!!)
-            if (multiblockComponent?.getSelectedMatcher(cachedState, world!!)?.isBuilt == false) return
+            multiblockComponent?.tick(world!!, pos, cachedState)
+            if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             EnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureComponent!!.explosionPower

@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
-import me.steven.indrev.components.FluidInfuserFluidComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.fluid.FluidInfuserFluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe

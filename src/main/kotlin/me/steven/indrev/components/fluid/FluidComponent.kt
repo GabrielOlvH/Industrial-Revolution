@@ -1,4 +1,4 @@
-package me.steven.indrev.components
+package me.steven.indrev.components.fluid
 
 import alexiil.mc.lib.attributes.ListenerRemovalToken
 import alexiil.mc.lib.attributes.ListenerToken

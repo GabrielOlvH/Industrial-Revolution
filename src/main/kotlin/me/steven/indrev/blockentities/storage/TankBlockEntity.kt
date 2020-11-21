@@ -5,7 +5,7 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.blocks.TankBlock
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.registry.IRRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
