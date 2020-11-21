@@ -79,10 +79,6 @@ fun Identifier.tierBasedItem(vararg tiers: Tier = Tier.VALUES, itemSupplier: (Ti
     }
 }
 
-operator fun BlockPos.component1() = this.x
-operator fun BlockPos.component2() = this.y
-operator fun BlockPos.component3() = this.z
-
 operator fun Vec3d.component1() = this.x
 operator fun Vec3d.component2() = this.y
 operator fun Vec3d.component3() = this.z
