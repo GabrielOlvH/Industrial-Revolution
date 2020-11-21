@@ -1,6 +1,7 @@
 {
-  "parent": "indrev:block/machine_mk3",
+  "parent": "indrev:block/machine_emissive_mk3",
   "textures": {
-    "texture": "indrev:block/infuser_on"
+    "texture": "indrev:block/infuser",
+    "emissive": "indrev:block/infuser_on"
   }
 }

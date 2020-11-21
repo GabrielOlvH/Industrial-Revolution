@@ -10,12 +10,15 @@ import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
 import net.minecraft.block.LeavesBlock
-import net.minecraft.block.SaplingBlock
-import net.minecraft.item.*
+import net.minecraft.item.AxeItem
+import net.minecraft.item.BoneMealItem
+import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
+import net.minecraft.tag.ItemTags
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -32,7 +35,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3, 4, 5)
-                filter { (_, item), _ -> item.isIn(FabricToolTags.AXES) || item is BoneMealItem || (item is BlockItem && item.block is SaplingBlock) }
+                2 filter { (_, item) -> item.isIn(FabricToolTags.AXES) }
+                3 filter { (_, item) -> item is BoneMealItem }
+                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS) }
             }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
             coolerSlot = 1
@@ -131,8 +136,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
                 .parameter(LootContextParameters.TOOL, axeStack)
         )
-        droppedStacks.map { inventory.addStack(it) }.filterNot(ItemStack::isEmpty).forEach {
-            ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
+        droppedStacks.forEach {
+            if (!inventory.output(it))
+                ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
     }
@@ -140,7 +146,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
         fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block is SaplingBlock && itemStack.count > 1) || (item is BlockItem && item.block is SaplingBlock)
+        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block.isIn(BlockTags.SAPLINGS) && itemStack.count > 1) || (item.isIn(ItemTags.SAPLINGS))
         if (!isSaplingOrBoneMeal) return false
         val useResult = itemStack.useOnBlock(
             ItemUsageContext(

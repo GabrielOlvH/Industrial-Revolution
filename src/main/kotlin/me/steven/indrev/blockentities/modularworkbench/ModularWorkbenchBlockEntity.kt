@@ -23,7 +23,7 @@ import team.reborn.energy.EnergySide
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(4)
+        this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
             0 filter { (stack, item) -> item !is IRModularItem<*> && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
             1 filter { stack -> stack.item is IRModuleItem }
@@ -33,6 +33,11 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
 
     private var processTime: Int by Property(2, 0)
     private var maxProcessTime: Int by Property(3, 0)
+    private var state: State = State.IDLE
+        set(value) {
+            field = value
+            propertyDelegate[4] = value.ordinal
+        }
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
@@ -40,6 +45,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
         val moduleStack = inventory.getStack(1)
         if (moduleStack.item !is IRModuleItem || targetStack.item !is IRModularItem<*>) {
             processTime = 0
+            state = State.IDLE
             return
         }
         //val armorItem = armorStack.item as IRModularArmor
@@ -50,6 +56,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
         if (inventory.isEmpty) {
             processTime = 0
             setWorkingState(false)
+            state = State.IDLE
         } else {
             if (isProcessing()
                 && compatible.contains(module)
@@ -72,17 +79,24 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                         else -> tag.putInt(module.key, 1)
                     }
                     processTime = 0
+                    state = State.IDLE
                 }
             } else if (energy > 0 && !targetStack.isEmpty && !moduleStack.isEmpty && compatible.contains(module)) {
                 val tag = targetStack.orCreateTag
                 if (tag.contains(module.key)) {
                     val level = module.getMaxInstalledLevel(targetStack)
-                    if (module != ArmorModule.COLOR && level >= module.maxLevel) return
+                    if (module != ArmorModule.COLOR && level >= module.maxLevel) {
+                        state = State.MAX_LEVEL
+                        return
+                    }
                 }
                 processTime = 1
                 maxProcessTime = 1200
                 setWorkingState(true)
-            } else processTime = -1
+                state = State.INSTALLING
+            } else {
+                state = State.INCOMPATIBLE
+            }
         }
     }
 
@@ -108,5 +122,12 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
         return super.toClientTag(tag)
+    }
+
+    enum class State {
+        IDLE,
+        INSTALLING,
+        INCOMPATIBLE,
+        MAX_LEVEL;
     }
 }

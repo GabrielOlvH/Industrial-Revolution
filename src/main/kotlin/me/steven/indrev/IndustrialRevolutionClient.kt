@@ -1,28 +1,30 @@
 package me.steven.indrev
 
-import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blockentities.cables.CableBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.CondenserBlockEntity
+import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.PumpBlockEntity
 import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
-import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
+import me.steven.indrev.blocks.CableModel
+import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
+import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.modular.ModularController
 import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.VeinType
@@ -37,7 +39,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.Block
-import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.RenderLayer
@@ -46,7 +47,10 @@ import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.InputUtil
+import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
+import net.minecraft.client.world.ClientWorld
+import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.registry.Registry
@@ -97,64 +101,52 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
             IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
             IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
-            IndustrialRevolution.INFUSER_FACTORY_HANDLER
+            IndustrialRevolution.INFUSER_FACTORY_HANDLER,
+            IndustrialRevolution.CABINET_HANDLER,
+            IndustrialRevolution.DRILL_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
 
-        MachineRegistry.CABLE_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CableBlockEntity>, ::CableBlockEntityRenderer)
-        }
-
-        MachineRegistry.CHOPPER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
-        }
-
-        MachineRegistry.RANCHER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
-        }
-
-        MachineRegistry.FARMER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<AOEMachineBlockEntity<*>>, ::AOEMachineBlockEntityRenderer)
-        }
-
-        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ModularWorkbenchBlockEntity>, ::ModularWorkbenchBlockEntityRenderer)
-        }
-
-        MachineRegistry.CHARGE_PAD_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<ChargePadBlockEntity>, ::ChargePadBlockEntityRenderer)
-        }
-
-        MachineRegistry.CONDENSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<CondenserBlockEntity>, ::CondenserBlockEntityRenderer)
-        }
-
-        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<FluidInfuserBlockEntity>, ::FluidInfuserBlockEntityRenderer)
-        }
-
-        MachineRegistry.PUMP_REGISTRY.forEachBlockEntity { _, blockEntity ->
-            BlockEntityRendererRegistry.INSTANCE.register(blockEntity as BlockEntityType<PumpBlockEntity>, ::PumpBlockEntityRenderer)
-        }
+        MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.FARMER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.registerBlockEntityRenderer(::ModularWorkbenchBlockEntityRenderer)
+        MachineRegistry.CHARGE_PAD_REGISTRY.registerBlockEntityRenderer(::ChargePadBlockEntityRenderer)
+        MachineRegistry.CONDENSER_REGISTRY.registerBlockEntityRenderer(::CondenserBlockEntityRenderer)
+        MachineRegistry.FLUID_INFUSER_REGISTRY.registerBlockEntityRenderer(::FluidInfuserBlockEntityRenderer)
+        MachineRegistry.INFUSER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
+        MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
 
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.AREA_INDICATOR, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4), RenderLayer.getTranslucent())
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
-        MachineRegistry.FISHING_FARM_REGISTRY.forEachBlock { _, block ->
-            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent())
-        }
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_TOP, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getCutout())
 
         val identifier = identifier("tank")
         ModelLoadingRegistry.INSTANCE.registerVariantProvider {
             ModelVariantProvider { modelIdentifier, _ ->
-                if(modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
+                if (modelIdentifier.namespace == identifier.namespace && modelIdentifier.path == identifier.path && modelIdentifier.variant == "inventory") {
                     return@ModelVariantProvider object : UnbakedModel {
                         override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-                        override fun bake(loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, rotationScreenHandler: ModelBakeSettings, modelId: Identifier) = IRTankItemBakedModel
+                        override fun bake(
+                            loader: ModelLoader,
+                            textureGetter: Function<SpriteIdentifier, Sprite>,
+                            rotationScreenHandler: ModelBakeSettings,
+                            modelId: Identifier
+                        ) = IRTankItemBakedModel
+
                         override fun getTextureDependencies(
                             unbakedModelGetter: Function<Identifier, UnbakedModel>?,
                             unresolvedTextureReferences: MutableSet<com.mojang.datafixers.util.Pair<String, String>>?
@@ -165,7 +157,36 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
-        FabricModelPredicateProviderRegistry.register(IRRegistry.GAMER_AXE_ITEM, identifier("activate")) predicate@{ stack, _, _ ->
+        ModelLoadingRegistry.INSTANCE.registerAppender { manager, out ->
+            out.accept(ModelIdentifier(identifier("drill_head"), "stone"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "iron"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
+            out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
+        }
+
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
+            ModelVariantProvider { resourceId, context ->
+                if (resourceId.namespace == "indrev" && resourceId.path == "drill_head")
+                    DrillHeadModel(resourceId.variant)
+                else null
+            }
+        }
+
+        val models = arrayOf(
+            CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)
+        )
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider {
+            ModelVariantProvider { modelIdentifier, _ ->
+                if (modelIdentifier.namespace == "indrev" && modelIdentifier.path.contains("cable_mk"))
+                    return@ModelVariantProvider models[modelIdentifier.path.last().toString().toInt() - 1]
+                return@ModelVariantProvider null
+            }
+        }
+
+        FabricModelPredicateProviderRegistry.register(
+            IRRegistry.GAMER_AXE_ITEM,
+            identifier("activate")
+        ) predicate@{ stack, _, _ ->
             val tag = stack?.orCreateTag ?: return@predicate 0f
             return@predicate tag.getFloat("Progress")
         }
@@ -189,17 +210,55 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.SYNC_PROPERTY) { ctx, buf ->
+            val syncId = buf.readInt()
+            val property = buf.readInt()
+            val value = buf.readInt()
+            ctx.taskQueue.execute {
+                val handler = ctx.player.currentScreenHandler
+                if (handler.syncId == syncId)
+                    (handler as? IRGuiController)?.propertyDelegate?.set(property, value)
+            }
+        }
+
+        ClientSidePacketRegistry.INSTANCE.register(MinerBlockEntity.BLOCK_BREAK_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos().down()
+            val blockRawId = buf.readInt()
+            val block = Registry.BLOCK.get(blockRawId)
+            ctx.taskQueue.execute {
+                MinecraftClient.getInstance().particleManager.addBlockBreakParticles(pos, block.defaultState)
+                val blockSoundGroup = block.getSoundGroup(block.defaultState)
+                (ctx.player.world as ClientWorld).playSound(
+                    pos,
+                    blockSoundGroup.breakSound,
+                    SoundCategory.BLOCKS,
+                    (blockSoundGroup.getVolume() + 1.0f) / 4.0f,
+                    blockSoundGroup.getPitch() * 0.8f,
+                    false
+                )
+            }
+        }
+
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
-                MinecraftClient.getInstance().openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+                val playerInventory = MinecraftClient.getInstance().player?.inventory ?: break
+                val hasModularItem = (0 until playerInventory.size())
+                    .associateWith { slot -> playerInventory.getStack(slot) }
+                    .filter { (_, stack) -> stack.item is IRModularItem<*> }
+                    .isNotEmpty()
+                if (hasModularItem)
+                    MinecraftClient.getInstance()
+                        .openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
             }
         }
     }
 
-    val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(KeyBinding(
-        "key.indrev.modular",
-        InputUtil.Type.KEYSYM,
-        GLFW.GLFW_KEY_M,
-        "category.indrev"
-    ))
+    val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(
+        KeyBinding(
+            "key.indrev.modular",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_UNKNOWN,
+            "category.indrev"
+        )
+    )
 }

@@ -2,6 +2,8 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.multiblock.FactoryStructureDefinition
+import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.mixin.MixinAbstractCookingRecipe
@@ -27,6 +29,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
                 outputSlots = intArrayOf(6 + (index * 2) + 1)
             }
         }
+        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
     }
 
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>

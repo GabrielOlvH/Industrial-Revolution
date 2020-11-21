@@ -1,0 +1,6 @@
+{
+  "parent": "indrev:block/machine_emissive_mk2",
+  "textures": {
+    "overlay": "indrev:block/mk3_overlay"
+  }
+}

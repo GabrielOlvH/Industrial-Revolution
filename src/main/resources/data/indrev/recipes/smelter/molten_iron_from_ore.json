@@ -1,7 +1,7 @@
 {
   "type": "indrev:smelter",
   "ingredients": {
-    "item": "minecraft:iron_ore"
+    "tag": "c:iron_ores"
   },
   "fluidOutput": {
     "fluid": "indrev:molten_iron_still",

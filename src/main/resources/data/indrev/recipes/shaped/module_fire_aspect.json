@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ICI",
+    "NIN"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "I": {
+      "item": "minecraft:blaze_powder"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  },
+  "result": {
+    "item": "indrev:module_fire_aspect"
+  }
+}

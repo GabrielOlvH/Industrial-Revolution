@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.farms
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
@@ -22,7 +22,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     }
 
     override fun machineTick() {
-        if ((world?.time ?: return) % 20 == 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
+        if ((world?.time ?: return) % 20 != 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
         val fluidComponent = fluidComponent ?: return
         val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()

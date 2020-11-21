@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/cabinet",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "indrev:block/cabinet",
+      "y": 270
+    },
+    "facing=west": {
+      "model": "indrev:block/cabinet",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "indrev:block/cabinet"
+    }
+  }
+}

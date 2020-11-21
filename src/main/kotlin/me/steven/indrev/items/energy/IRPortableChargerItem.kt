@@ -40,7 +40,7 @@ class IRPortableChargerItem(
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
 
         val player = entity as? PlayerEntity ?: return
-        if (player.inventory.offHand[0] != stack) return
+        if (player.offHandStack != stack && player.mainHandStack != stack) return
         val items = (0 until player.inventory.size())
             .map { s -> player.inventory.getStack(s) }
             .filter { s -> s.item !is IRPortableChargerItem && Energy.valid(s) }

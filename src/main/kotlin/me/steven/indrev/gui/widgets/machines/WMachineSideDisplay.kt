@@ -12,7 +12,11 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
-class WMachineSideDisplay(private val identifier: Identifier, private val side: WrenchController.MachineSide, var mode: TransferMode) : WButton() {
+class WMachineSideDisplay(
+    private val identifier: Identifier,
+    private val side: WrenchController.MachineSide,
+    var mode: TransferMode
+) : WButton() {
     init {
         this.setSize(16, 16)
     }

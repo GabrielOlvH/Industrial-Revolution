@@ -6,6 +6,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WFuel
+import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
@@ -27,12 +28,14 @@ class CoalGeneratorController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.coal_generator", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.coal_generator", ctx, playerInventory, blockInventory)
 
         val itemSlot = WItemSlot.of(blockInventory, 2)
         root.add(itemSlot, 4, 2)
 
-        root.add(WFuel(propertyDelegate), 4, 1)
+        val wFuel = WFuel()
+        root.add(wFuel, 4.1, 1.1)
+        wFuel.setSize(14, 14)
 
         root.validate(this)
     }

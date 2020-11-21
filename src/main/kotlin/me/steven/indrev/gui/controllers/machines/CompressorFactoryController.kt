@@ -27,7 +27,7 @@ class CompressorFactoryController (
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.compressor_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.compressor_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? CompressorFactoryBlockEntity ?: return@run
             val slotsAmount = 5
@@ -39,7 +39,7 @@ class CompressorFactoryController (
             }
 
             for (i in 0 until slotsAmount) {
-                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
+                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
                 root.add(processWidget, offset + (i * 1.2), 2.2)
             }
 

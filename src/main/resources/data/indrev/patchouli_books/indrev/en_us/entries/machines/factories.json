@@ -1,0 +1,35 @@
+{
+  "name": "Factories",
+  "category": "machines",
+  "sortnum": 9,
+  "icon": "indrev:electric_furnace_factory_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "$(l)Factories$() are improved versions of machines and they can process 5 items at once. They are also smart enough to split your items if you'd like.$(br2)Given their powerful state, it's not possible to insert this much power into a single block, which means you'll need to build a structure."
+    },
+    {
+      "type": "text",
+      "text": "$(l)Required blocks$()$(br2)$(li)$(l)9x$() Frames$(br)$(li)$(l)6x$() Silos$(br)$(li)$(l)3x$() Intakes$(br)$(li)$(l)3x$() Ducts$(br)$(li)$(l)2x$() Cabinets$(br)$(li)$(l)1x$() Warning Strobe$(br)$(li)$(l)1x$() Controller$()$(br2)You'll be able to visualize the block positions by right clicking a factory."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/frame",
+      "recipe2": "indrev:shaped/silo"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/intake",
+      "recipe2": "indrev:shaped/duct"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cabinet",
+      "recipe2": "indrev:shaped/warning_strobe"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/controller"
+    }
+  ]
+}

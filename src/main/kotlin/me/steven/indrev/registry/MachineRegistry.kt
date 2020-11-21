@@ -17,8 +17,10 @@ import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
@@ -27,6 +29,8 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
+import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.item.ItemStack
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.text.Text
@@ -75,6 +79,20 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     fun block(tier: Tier) = blocks[tier]
         ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
 
+    @Environment(EnvType.CLIENT)
+    fun <T : BlockEntity> registerBlockEntityRenderer(renderer: (BlockEntityRenderDispatcher) -> BlockEntityRenderer<T>) {
+        blockEntities.forEach { (_, type) ->
+            BlockEntityRendererRegistry.INSTANCE.register(
+                type as BlockEntityType<T>
+            ) { dispatcher -> renderer(dispatcher) }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    fun setRenderLayer(layer: RenderLayer) {
+        blocks.forEach { (_, block) -> BlockRenderLayerMap.INSTANCE.putBlock(block, layer) }
+    }
+
     companion object {
 
         private val MACHINE_BLOCK_SETTINGS = {
@@ -83,7 +101,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 .requiresTool()
                 .breakByTool(FabricToolTags.PICKAXES, 2)
                 .strength(5.0f, 6.0f)
-                .lightLevel { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
+                .luminance { state -> if (state[MachineBlock.WORKING_PROPERTY]) 7 else 0 }
         }
 
         val COAL_GENERATOR_REGISTRY = MachineRegistry(identifier("coal_generator"), false, Tier.MK1).register(
@@ -398,7 +416,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     MACHINE_BLOCK_SETTINGS(),
                     tier, CONFIG.machines.miner,
                     ::MinerController,
-                    { MinerBlockEntity(tier, true) }
+                    { MinerBlockEntity(tier) }
                 ) {
                     override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
                         super.appendTooltip(stack, view, tooltip, options)
@@ -406,7 +424,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     }
                 }
             },
-            { tier -> { MinerBlockEntity(tier, true) } }
+            { tier -> { MinerBlockEntity(tier) } }
         )
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
@@ -442,7 +460,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(
-                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().lightLevel(0), tier) },
+                { tier -> CableBlock(MACHINE_BLOCK_SETTINGS().luminance(0).nonOpaque(), tier) },
                 { tier -> { CableBlockEntity(tier) } }
             )
     }

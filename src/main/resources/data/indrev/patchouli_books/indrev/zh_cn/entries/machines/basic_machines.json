@@ -1,37 +1,60 @@
 {
-  "name": "基础机器",
-  "category": "machines",
-  "sortnum": 1,
-  "icon": "indrev:electric_furnace_mk1",
-  "pages": [
-    {
-      "type": "text",
-      "text": "这些机器用于将资源转化为更复杂的资源。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:electric_furnace_mk1",
-      "text": "$(l)$(o)电炉 $()的作用和普通熔炉一样但它使用青金石通量作为燃料。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:pulverizer_mk1",
-      "text": "The $(l)$(o)粉碎机 $()主要用于将矿物磨成粉。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:compressor_mk1",
-      "text": "The $(l)$(o)压缩机 $()主要用于将锭压缩成板。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:infuser_mk1",
-      "text": "The $(l)$(o)注入器 $()可将两种原料糅合为一种更强大的材料。"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:recycler_mk2",
-      "text": "The $(l)$(o)回收机 $()可以将有机资源转化为用于发电的生物质。"
-    }
-  ]
-}
+    "name": "基础机器",
+    "category": "machines",
+    "sortnum": 1,
+    "icon": "indrev:electric_furnace_mk1",
+    "pages": [
+      {
+        "type": "text",
+        "text": "这些机器可以将资源加工为更复杂的资源。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "electric_furnace",
+        "recipe": "indrev:shaped/electric_furnace_mk1",
+        "text": "$(l)$(o)电炉$()就是普通的熔炉，不过用青金石通量运作而已。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "pulverizer",
+        "recipe": "indrev:shaped/pulverizer_mk1",
+        "text": "$(l)$(o)粉碎机$()常用于矿物打粉。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "compressor",
+        "recipe": "indrev:shaped/compressor_mk1",
+        "text": "$(l)$(o)压缩机$()常用于将锭压成板。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "infuser",
+        "recipe": "indrev:shaped/infuser_mk1",
+        "text": "$(l)$(o)固体注入机$()可以将两种材料合为一种新材料。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "fluid_infuser",
+        "recipe": "indrev:shaped/fluid_infuser_mk1",
+        "text": "$(l)$(o)液体注入机$()用于液体方面的制作和融合，目前的主要用途是四倍产矿。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "condenser",
+        "recipe": "indrev:shaped/condenser_mk4",
+        "text": "$(l)$(o)聚合机$()用于将熔融的矿物聚合为矿物碎块，然后送去磨粉，重炼成锭。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "smelter",
+        "recipe": "indrev:shaped/smelter_mk4",
+        "text": "$(l)$(o)工业熔炉$()主要用于熔化矿物，目前用于高级矿物处理。"
+      },
+      {
+        "type": "crafting",
+        "anchor": "recycler",
+        "recipe": "indrev:shaped/recycler_mk2",
+        "text": "$(l)$(o)回收机$()将有机物回收为生物质，其可用于发电。"
+      }
+    ]
+  }

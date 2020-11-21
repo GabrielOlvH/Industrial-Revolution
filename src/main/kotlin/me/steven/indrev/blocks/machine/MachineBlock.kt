@@ -6,7 +6,6 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.energy.EnergyNetworkState
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
@@ -33,12 +32,12 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -77,16 +76,22 @@ open class MachineBlock(
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult? {
+        if (world.isClient) return ActionResult.CONSUME
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
-        if (blockEntity.fluidComponent != null && !world.isClient) {
+        if (blockEntity.fluidComponent != null) {
             val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
         }
         val stack = player?.mainHandStack
         val item = stack?.item
         if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
-        else if (screenHandler != null
-            && blockEntity.inventoryComponent != null) {
+        else if (blockEntity.multiblockComponent != null
+            && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
+            player?.sendMessage(TranslatableText("text.multiblock.not_built"), true)
+            blockEntity.multiblockComponent?.toggleRender()
+            blockEntity.markDirty()
+            blockEntity.sync()
+        } else if (screenHandler != null && blockEntity.inventoryComponent != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         }
         return ActionResult.SUCCESS
@@ -99,17 +104,6 @@ open class MachineBlock(
             if (blockEntity?.inventoryComponent != null) {
                 ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
                 world.updateComparators(pos, this)
-            }
-            val newBlockEntity = world.getBlockEntity(pos)
-            val isRemoved = newBlockEntity == null || !Energy.valid(newBlockEntity)
-            val networkState = EnergyNetworkState.getNetworkState(world as ServerWorld)
-            Direction.values().forEach { dir ->
-                val offset = pos.offset(dir)
-                val network = networkState.networksByPos[offset] ?: return@forEach
-                if (isRemoved)
-                    network.machines.remove(pos)
-                else
-                    network.machines.computeIfAbsent(pos) { mutableSetOf() }.add(dir.opposite)
             }
         }
     }
@@ -141,14 +135,7 @@ open class MachineBlock(
     override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (world?.isClient == true) return
-        val networkState = EnergyNetworkState.getNetworkState(world as ServerWorld)
-        Direction.values().forEach { dir ->
-            val offset = pos.offset(dir)
-            val network = networkState.networksByPos[offset] ?: return@forEach
-            network.machines.computeIfAbsent(pos) { mutableSetOf() }.add(dir.opposite)
-        }
-        //EnergyNetwork.updateBlock(world as ServerWorld, pos, false)
-        val blockEntity = world.getBlockEntity(pos)
+        val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity<*>) {
             val tag = itemStack?.getSubTag("MachineInfo") ?: return
             val temperatureController = blockEntity.temperatureComponent

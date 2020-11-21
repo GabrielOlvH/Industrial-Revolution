@@ -22,7 +22,7 @@ class IRInventory(
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true
+        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 
@@ -35,5 +35,43 @@ class IRInventory(
         if (outStack.isEmpty || (stack == outStack.item && outStack.tag?.isEmpty != false))
             return true
         return false
+    }
+
+    fun output(stack: ItemStack): Boolean {
+        for (i in 0 until size()) {
+            val itemStack = getStack(i)
+            if (canCombine(itemStack, stack)) {
+                transfer(stack, itemStack)
+                if (stack.isEmpty) {
+                    return true
+                }
+            }
+        }
+        addToOutputSlot(stack)
+        return true
+    }
+
+    private fun canCombine(one: ItemStack, two: ItemStack): Boolean
+            = one.item === two.item && ItemStack.areTagsEqual(one, two)
+
+    private fun transfer(source: ItemStack, target: ItemStack) {
+        val i = this.maxCountPerStack.coerceAtMost(target.maxCount)
+        val j = source.count.coerceAtMost(i - target.count)
+        if (j > 0) {
+            target.increment(j)
+            source.decrement(j)
+            markDirty()
+        }
+    }
+
+    private fun addToOutputSlot(stack: ItemStack) {
+        for (i in outputSlots) {
+            val itemStack = getStack(i)
+            if (itemStack.isEmpty) {
+                setStack(i, stack.copy())
+                stack.count = 0
+                return
+            }
+        }
     }
 }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:plank_block"
+    }
+  ],
+  "result": {
+    "item": "indrev:planks",
+    "count": 8
+  }
+}

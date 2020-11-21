@@ -37,10 +37,11 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     override fun machineTick() {
         val upgrades = getUpgrades(inventoryComponent!!.inventory)
         if (!Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) return
+        val rodStack = inventoryComponent!!.inventory.getStack(1)
+        if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         cooldown = 0.0
-        val rodStack = inventoryComponent?.inventory?.getStack(1)
         Direction.values().forEach { direction ->
             val pos = pos.offset(direction)
             if (world?.isWater(pos) == true) {
@@ -52,7 +53,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
                     .parameter(LootContextParameters.TOOL, rodStack)
                     .build(LootContextTypes.FISHING)
                 val loot = lootTable.generateLoot(ctx)
-                loot.forEach { stack -> inventoryComponent?.inventory?.addStack(stack) }
+                loot.forEach { stack -> inventoryComponent?.inventory?.output(stack) }
                 rodStack?.apply {
                     damage++
                     if (damage >= maxDamage) decrement(1)
@@ -63,8 +64,8 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
 
     private fun getIdentifiers(tier: Tier) = when (tier) {
         Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
-        Tier.MK3 -> arrayOf(FISH_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
-        else -> arrayOf(FISH_IDENTIFIER, TREASURE_IDENTIFIER)
+        Tier.MK3 -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, JUNK_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
+        else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput

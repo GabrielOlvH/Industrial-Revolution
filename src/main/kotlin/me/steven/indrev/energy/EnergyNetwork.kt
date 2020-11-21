@@ -19,16 +19,16 @@ import team.reborn.energy.EnergyHandler
 @Suppress("CAST_NEVER_SUCCEEDS")
 class EnergyNetwork(
     val world: ServerWorld,
-    val cables: MutableSet<BlockPos> = mutableSetOf(),
-    val machines: MutableMap<BlockPos, MutableSet<Direction>> = mutableMapOf()
+    val cables: MutableSet<BlockPos> = hashSetOf(),
+    val machines: MutableMap<BlockPos, MutableSet<Direction>> = hashMapOf()
 ) {
-    var tier =  Tier.MK1
+    var tier = Tier.MK1
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
-        val receiversHandlers = mutableSetOf<EnergyHandler>()
-        val senderHandlers = mutableSetOf<EnergyHandler>()
-        val cachedChunks = mutableMapOf<ChunkPos, Chunk>()
+        val receiversHandlers = hashSetOf<EnergyHandler>()
+        val senderHandlers = hashSetOf<EnergyHandler>()
+        val cachedChunks = hashMapOf<ChunkPos, Chunk>()
         machines.forEach { (pos, directions) ->
             if (!world.isChunkLoaded(pos)) return@forEach
             val chunk = cachedChunks.computeIfAbsent(ChunkPos(pos)) { world.getChunk(pos) }
@@ -90,6 +90,16 @@ class EnergyNetwork(
         cables.forEach { state.networksByPos.remove(it) }
     }
 
+    fun appendCable(state: EnergyNetworkState, blockEntity: CableBlockEntity, blockPos: BlockPos) {
+        tier = blockEntity.tier
+        cables.add(blockPos)
+        state.networksByPos[blockPos] = this
+    }
+
+    fun appendMachine(blockPos: BlockPos, direction: Direction) {
+        machines.computeIfAbsent(blockPos) { hashSetOf() }.add(direction)
+    }
+
     fun toTag(tag: CompoundTag) {
         val cablesList = ListTag()
         cables.forEach { pos ->
@@ -112,64 +122,59 @@ class EnergyNetwork(
     }
 
     companion object {
-
-        fun updateBlock(world: ServerWorld, pos: BlockPos, isRemoved: Boolean, tier: Tier) {
-            world.profiler.push("indrev_networkUpdate")
+        fun handleBreak(world: ServerWorld, pos: BlockPos) {
             val state = EnergyNetworkState.getNetworkState(world)
             if (state.networksByPos.containsKey(pos))
                 state.networksByPos[pos]?.remove()
-            if (isRemoved) {
-                Direction.values().forEach {
-                    val offset = pos.offset(it)
-                    updateBlock(world, offset, false, tier)
-                }
-            } else {
-                val network = EnergyNetwork(world)
-                state.networks.add(network)
-                val scanned = mutableSetOf<BlockPos>()
-                Direction.values().forEach { dir ->
-                    //val offset = pos.offset(dir)
-                    //search(scanned, state, network, world.getChunk(offset), world, offset, dir)
-                    search(scanned, state, network, world.getChunk(pos), world, pos, pos, dir)
-                }
-                if (network.machines.isEmpty() || network.cables.isEmpty())
-                    network.remove()
+            Direction.values().forEach {
+                val offset = pos.offset(it)
+                handleUpdate(world, offset)
             }
-            state.markDirty()
-            world.profiler.pop()
         }
 
-        private fun search(scanned: MutableSet<BlockPos>, state: EnergyNetworkState, network: EnergyNetwork, chunk: Chunk, world: ServerWorld, blockPos: BlockPos, source: BlockPos, direction: Direction) {
+        fun handleUpdate(world: ServerWorld, pos: BlockPos) {
+            val state = EnergyNetworkState.getNetworkState(world)
+            if (state.networksByPos.containsKey(pos))
+                state.networksByPos[pos]?.remove()
+            val network = EnergyNetwork(world)
+            state.networks.add(network)
+            val scanned = hashSetOf<BlockPos>()
+            Direction.values().forEach { dir ->
+                buildNetwork(scanned, state, network, world.getChunk(pos), world, pos, pos, dir)
+            }
+            if (network.machines.isEmpty() || network.cables.isEmpty())
+                network.remove()
+            state.markDirty()
+        }
+
+        private fun buildNetwork(scanned: MutableSet<BlockPos>, state: EnergyNetworkState, network: EnergyNetwork, chunk: Chunk, world: ServerWorld, blockPos: BlockPos, source: BlockPos, direction: Direction) {
             if (network.machines.containsKey(blockPos)) {
-                network.machines.computeIfAbsent(blockPos) { mutableSetOf() }.add(direction.opposite)
+                network.appendMachine(blockPos, direction.opposite)
                 return
             }
             if (blockPos != source && !scanned.add(blockPos)) return
             val blockEntity = chunk.getBlockEntity(blockPos) ?: return
-            if (Energy.valid(blockEntity) || blockEntity is CableBlockEntity) {
+            if (blockEntity is CableBlockEntity) {
                 if (state.networksByPos.containsKey(blockPos)) {
                     val oldNetwork = state.networksByPos[blockPos]
                     if (state.networks.contains(oldNetwork) && oldNetwork != network) {
                         oldNetwork?.remove()
                     }
                 }
-                if (blockEntity is CableBlockEntity) {
-                    val blockState = chunk.getBlockState(blockPos)
-                    if (blockState[CableBlock.getProperty(direction.opposite)]) {
-                        Direction.values().forEach { dir ->
-                            val nPos = blockPos.offset(dir)
-                            if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
-                                search(scanned, state, network, chunk, world, nPos, source, dir)
-                            else
-                                search(scanned, state, network, world.getChunk(nPos), world, nPos, source, dir)
-                        }
-                        network.tier = blockEntity.tier
-                        network.cables.add(blockPos)
-                        state.networksByPos[blockPos] = network
+                val blockState = chunk.getBlockState(blockPos)
+                Direction.values().forEach { dir ->
+                    if (blockState[CableBlock.getProperty(dir)]) {
+                        val nPos = blockPos.offset(dir)
+                        if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
+                            buildNetwork(scanned, state, network, chunk, world, nPos, source, dir)
+                        else
+                            buildNetwork(scanned, state, network, world.getChunk(nPos), world, nPos, source, dir)
                     }
-                } else {
-                    network.machines.computeIfAbsent(blockPos) { mutableSetOf() }.add(direction.opposite)
                 }
+                if (blockState[CableBlock.getProperty(direction)])
+                    network.appendCable(state, blockEntity, blockPos.toImmutable())
+            } else if (Energy.valid(blockEntity)) {
+                network.appendMachine(blockPos, direction.opposite)
             }
         }
 
@@ -179,14 +184,14 @@ class EnergyNetwork(
             val network = EnergyNetwork(world)
             cablesList.forEach { cableTag ->
                 cableTag as LongTag
-                network.cables.add(BlockPos.fromLong(cableTag.long))
+                network.cables.add(BlockPos.fromLong(cableTag.long).toImmutable())
             }
             machinesList.forEach { machineTag ->
                 machineTag as CompoundTag
                 val posLong = machineTag.getLong("pos")
                 val pos = BlockPos.fromLong(posLong)
                 val dirList = machineTag.getList("dir", 8)
-                val directions = mutableSetOf<Direction>()
+                val directions = hashSetOf<Direction>()
                 dirList.forEach { dirTag ->
                     dirTag as StringTag
                     val dir = Direction.valueOf(dirTag.asString().toUpperCase())

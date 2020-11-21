@@ -27,7 +27,7 @@ class InfuserFactoryController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? InfuserFactoryBlockEntity ?: return@run
             val offset = 2.6
@@ -39,7 +39,7 @@ class InfuserFactoryController(
             }
 
             for (i in 0 until 5) {
-                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 3 + (i * 2), 4 + (i * 2))
+                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
                 root.add(processWidget, offset + (i * 1.2), 2.7)
             }
 

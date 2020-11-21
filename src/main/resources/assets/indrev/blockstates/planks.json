@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "layers=1": {
+      "model": "indrev:block/planks_height2"
+    },
+    "layers=2": {
+      "model": "indrev:block/planks_height4"
+    },
+    "layers=3": {
+      "model": "indrev:block/planks_height6"
+    },
+    "layers=4": {
+      "model": "indrev:block/planks_height8"
+    },
+    "layers=5": {
+      "model": "indrev:block/planks_height10"
+    },
+    "layers=6": {
+      "model": "indrev:block/planks_height12"
+    },
+    "layers=7": {
+      "model": "indrev:block/planks_height14"
+    },
+    "layers=8": {
+      "model": "indrev:block/plank_block"
+    }
+  }
+}

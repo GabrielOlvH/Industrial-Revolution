@@ -1,6 +1,7 @@
 {
-  "parent": "indrev:block/machine_mk4",
+  "parent": "indrev:block/machine_factory",
   "textures": {
-    "texture": "indrev:block/compressor_factory"
+    "texture": "indrev:block/compressor",
+    "overlay": "indrev:block/factory_overlay_compressor"
   }
 }

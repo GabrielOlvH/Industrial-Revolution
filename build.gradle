@@ -54,15 +54,23 @@ repositories {
     maven {
         url = "https://jitpack.io"
         content {
-            //includeGroup "com.github.KubeJS-Mods"
+            includeGroup "com.github.Technici4n"
             includeGroup "com.github.Draylar"
+            includeGroup "com.github.GabrielOlvH"
         }
     }
     maven {
         name "Modmaven"
-        url "https://modmaven.k-4u.nl/"
+        url "https://modmaven.dev/"
         content {
             includeGroup 'appeng'
+        }
+    }
+    maven {
+        name = "dblsaiko"
+        url = "https://maven.dblsaiko.net/"
+        content {
+            includeGroup 'grondag'
         }
     }
 }
@@ -78,10 +86,10 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi("teamreborn:energy:${project.energy_api_version}") {
+    modApi("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("teamreborn:energy:${project.energy_api_version}") {
+    include("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
@@ -131,8 +139,13 @@ dependencies {
     include("com.github.Draylar:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    //modRuntime "com.github.KubeJS-Mods:KubeJS-Fabric:${project.kubejs_version}"
-    modRuntime "appeng:appliedenergistics2-fabric:8.1.0-alpha.9"
+
+
+    modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
+    include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
+    modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
+        exclude group: "teamreborn", module: "energy"
+    }
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
 

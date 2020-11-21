@@ -30,7 +30,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(6)
     }
 
     private var currentRecipe: T? = null
@@ -43,6 +43,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     override fun machineTick() {
         ticks++
         craftingComponents.forEach { it.tick() }
+        setWorkingState(craftingComponents.any { it.isCrafting })
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 

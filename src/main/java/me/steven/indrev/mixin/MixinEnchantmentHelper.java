@@ -14,7 +14,9 @@ public class MixinEnchantmentHelper {
     @Inject(method = "getLevel", at = @At("HEAD"), cancellable = true)
     private static void indrev_customEnchantProvider(Enchantment enchantment, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getItem() instanceof CustomEnchantmentProvider) {
-            cir.setReturnValue(((CustomEnchantmentProvider) stack.getItem()).getLevel(enchantment, stack));
+            int level = ((CustomEnchantmentProvider) stack.getItem()).getLevel(enchantment, stack);
+            if (level > -1)
+                cir.setReturnValue(level);
         }
     }
 }

@@ -3,7 +3,7 @@ package me.steven.indrev.items.misc
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.resreport.ResourceReportScreenHandlerFactory
 import me.steven.indrev.utils.getChunkPos
-import me.steven.indrev.world.chunkveins.WorldChunkVeinData
+import me.steven.indrev.world.chunkveins.ChunkVeinState
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
@@ -37,8 +37,8 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
         if (world !is ServerWorld) return super.use(world, user, hand)
         val state =
             world.persistentStateManager.getOrCreate(
-                { WorldChunkVeinData(WorldChunkVeinData.STATE_OVERWORLD_KEY) },
-                WorldChunkVeinData.STATE_OVERWORLD_KEY
+                { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
+                ChunkVeinState.STATE_OVERWORLD_KEY
             )
         val tag = user.getStackInHand(hand).tag ?: return super.use(world, user, hand)
         val chunkPos = getChunkPos(tag.getString("ChunkPos")) ?: return super.use(world, user, hand)

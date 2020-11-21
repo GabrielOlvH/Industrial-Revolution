@@ -1,6 +1,6 @@
 {
-  "parent": "indrev:block/machine_mk4",
+  "parent": "indrev:block/machine_factory",
   "textures": {
-    "texture": "indrev:block/pulverizer_factory_on"
+    "texture": "indrev:block/pulverizer_on"
   }
 }

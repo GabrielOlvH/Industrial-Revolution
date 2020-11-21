@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
@@ -43,6 +44,7 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -134,100 +136,112 @@ fun getShortEnergyDisplay(energy: Double): String =
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     val handler = Energy.of(stack)
     if (handler.energy > 0) {
-        tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} LF").formatted(Formatting.GOLD))
+        val percentage = handler.energy * 100 / handler.maxStored
+        tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
     }
 }
 
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
     if (Screen.hasShiftDown()) {
+        tooltip?.add(LiteralText.EMPTY)
         when (config) {
             is BasicMachineConfig -> {
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GRAY))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lf", config.energyCost).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.energyCost).formatted(Formatting.GRAY))
                 )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                        .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
-                )
+                val speed = config.processSpeed * 100
+                if (speed >= 1000)
+                    tooltip?.add(
+                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
+                            .append(LiteralText("${config.processSpeed / 20} seconds").formatted(Formatting.GRAY))
+                    )
+                else
+                    tooltip?.add(
+                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
+                            .append(LiteralText("${speed.toInt()}%").formatted(Formatting.GRAY))
+                    )
             }
             is HeatMachineConfig -> {
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lf", getShortEnergyDisplay(config.maxEnergyStored)).formatted(Formatting.GRAY))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lf", config.energyCost).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.energyCost).formatted(Formatting.GRAY))
                 )
+                val speed = config.processSpeed * 100
+                if (speed >= 1000)
+                    tooltip?.add(
+                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
+                            .append(LiteralText("${config.processSpeed / 20} seconds").formatted(Formatting.GRAY))
+                    )
+                else
+                    tooltip?.add(
+                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
+                            .append(LiteralText("${speed.toInt()}%").formatted(Formatting.GRAY))
+                    )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.BLUE)
-                        .append(LiteralText(config.processSpeed.toString()).formatted(Formatting.GOLD))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.processTemperatureBoost).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.processTemperatureBoost).formatted(Formatting.GRAY))
                 )
             }
             is GeneratorConfig -> {
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.BLUE)
+                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
                         .append(
                             TranslatableText(
                                 "gui.indrev.tooltip.lftick",
                                 config.maxOutput
-                            ).formatted(Formatting.GOLD)
+                            ).formatted(Formatting.GRAY)
                         )
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.BLUE)
+                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
                         .append(
                             TranslatableText(
                                 "gui.indrev.tooltip.lf",
                                 getShortEnergyDisplay(config.maxEnergyStored)
-                            ).formatted(Formatting.GOLD)
+                            ).formatted(Formatting.GRAY)
                         )
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.ratio").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.ratio).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.ratio").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.ratio).formatted(Formatting.GRAY))
                 )
                 if (config.temperatureBoost > 0)
                     tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.BLUE)
-                            .append(TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(Formatting.GOLD))
+                        TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.AQUA)
+                            .append(TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(Formatting.GRAY))
                     )
             }
             is CableConfig -> {
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
                 )
                 tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.BLUE)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxOutput).formatted(Formatting.GOLD))
+                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
+                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxOutput).formatted(Formatting.GRAY))
                 )
             }
         }
     } else {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.press_shift").formatted(
-                Formatting.BLUE,
-                Formatting.ITALIC
-            )
+            TranslatableText("gui.indrev.tooltip.press_shift").formatted(Formatting.DARK_GRAY)
         )
     }
 }
@@ -296,6 +310,7 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
         "block" -> BLOCK_AMOUNT
         "bucket" -> FluidAmount.BUCKET
         "scrap" -> SCRAP_AMOUNT
+        "bottle" -> FluidAmount.BOTTLE
         else -> throw IllegalArgumentException("unknown amount type $type")
     }.mul(amount)
     return fluidKey.withAmount(fluidAmount)
@@ -316,6 +331,15 @@ inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
                 f(x, y, z)
 }
 
+inline fun <T> Box.map(f: (Int, Int, Int) -> T): MutableList<T> {
+    val list = mutableListOf<T>()
+    for (x in minX.toInt() until maxX.toInt())
+        for (y in minY.toInt() until maxY.toInt())
+            for (z in minZ.toInt() until maxZ.toInt())
+                list.add(f(x, y, z))
+    return list
+}
+
 
 inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
     for (x in minX.toInt()..maxX.toInt())
@@ -324,6 +348,8 @@ inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
                 if (f(x, y, z)) return BlockPos(x, y, z)
     return null
 }
+
+fun Box.containsExcluding(x: Double, y: Double, z: Double) = x >= this.minX && x < this.maxX && y >= this.minY && y < this.maxY && z >= this.minZ && z < this.maxZ
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
     widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
@@ -350,3 +376,12 @@ inline fun <M : MutableMap<Item, Int>> IntArray.associateToStacks(destination: M
     }
     return destination
 }
+
+fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState) -> Boolean) {
+    val blockState = getBlockState(pos)
+    if (condition(blockState)) setBlockState(pos, state)
+}
+
+operator fun BlockPos.component1() = x
+operator fun BlockPos.component2() = y
+operator fun BlockPos.component3() = z

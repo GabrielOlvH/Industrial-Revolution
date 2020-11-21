@@ -12,15 +12,15 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.BIOMASS_GENERATOR_REGISTRY) {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(6)
         this.temperatureComponent = TemperatureComponent({ this }, 0.08, 900..2000, 2500.0)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
     }
 
-    private var burnTime: Int by Property(3, 0)
-    private var maxBurnTime: Int by Property(4, 0)
+    private var burnTime: Int by Property(4, 0)
+    private var maxBurnTime: Int by Property(5, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--

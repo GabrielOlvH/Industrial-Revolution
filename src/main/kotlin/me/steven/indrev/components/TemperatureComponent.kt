@@ -15,7 +15,7 @@ class TemperatureComponent(
     private val heatingSpeed: Double,
     private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
-    val explosionLimit: Double
+    explosionLimit: Double
 ) : PropertyDelegateHolder {
 
     constructor(
@@ -30,6 +30,11 @@ class TemperatureComponent(
     var coolingModifier = heatingSpeed
     var explosionPower = 2f
     var inputOverflow = false
+    val explosionLimit: Double = explosionLimit
+        get() {
+            propertyDelegate[3] = field.toInt()
+            return field
+        }
 
     fun fromTag(tag: CompoundTag?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -45,12 +50,11 @@ class TemperatureComponent(
     fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
     fun tick(shouldHeatUp: Boolean) {
-        val previous = temperature
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
         val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && Energy.of(machine).use(5.0))
-        val overflowModifier = if (inputOverflow) 20 else 0
+        val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier
         else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {

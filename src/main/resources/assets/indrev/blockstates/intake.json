@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "indrev:block/intake"
+    },
+    "facing=south": {
+      "model": "indrev:block/intake",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "indrev:block/intake",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "indrev:block/intake",
+      "y": 90
+    }
+  }
+}

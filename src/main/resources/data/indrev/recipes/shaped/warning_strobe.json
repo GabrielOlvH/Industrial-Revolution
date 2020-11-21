@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "N",
+    "B"
+  ],
+  "key": {
+    "B": {
+      "tag": "c:iron_plates"
+    },
+    "N": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "indrev:warning_strobe"
+  }
+}

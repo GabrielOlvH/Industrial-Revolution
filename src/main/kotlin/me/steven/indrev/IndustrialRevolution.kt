@@ -9,15 +9,16 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
+import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
-import me.steven.indrev.recipes.PatchouliBookRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
@@ -78,8 +79,6 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, PatchouliBookRecipe.IDENTIFIER, PatchouliBookRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)
@@ -156,8 +155,27 @@ object IndustrialRevolution : ModInitializer {
             }
         }
 
+        ServerSidePacketRegistry.INSTANCE.register(RancherController.SYNC_RANCHER_CONFIG) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val feedBabies = buf.readBoolean()
+            val mateAdults = buf.readBoolean()
+            val matingLimit = buf.readInt()
+            val killAfter = buf.readInt()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                if (world.isChunkLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? RancherBlockEntity ?: return@execute
+                    blockEntity.feedBabies = feedBabies
+                    blockEntity.mateAdults = mateAdults
+                    blockEntity.matingLimit = matingLimit
+                    blockEntity.killAfter = killAfter
+                    blockEntity.markDirty()
+                    blockEntity.sync()
+                }
+            }
+        }
+
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
-        LOGGER.info("Industrial Revolution has initialized.")
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
@@ -171,6 +189,12 @@ object IndustrialRevolution : ModInitializer {
                 }
             }
         }
+
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
+            s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
+        }
+
+        LOGGER.info("Industrial Revolution has initialized.")
     }
 
     val LOGGER = LogManager.getLogger("Industrial Revolution")
@@ -207,6 +231,8 @@ object IndustrialRevolution : ModInitializer {
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
     val INFUSER_FACTORY_HANDLER = InfuserFactoryController.SCREEN_ID.registerScreenHandler(::InfuserFactoryController)
 
+    val DRILL_HANDLER = DrillController.SCREEN_ID.registerScreenHandler(::DrillController)
+
     val WRENCH_HANDLER = WrenchController.SCREEN_ID.registerScreenHandler(::WrenchController)
 
     val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportController.SCREEN_ID) { syncId, inv, buf ->
@@ -218,10 +244,13 @@ object IndustrialRevolution : ModInitializer {
         ResourceReportController(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
     } as ExtendedScreenHandlerType<ResourceReportController>
 
+    val CABINET_HANDLER = CabinetController.SCREEN_ID.registerScreenHandler(::CabinetController)
+
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
+    val SYNC_PROPERTY = identifier("sync_property")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())

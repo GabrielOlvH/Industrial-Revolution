@@ -1,5 +1,6 @@
 package me.steven.indrev.gui.controllers.wrench
 
+import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
@@ -23,7 +24,6 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 
 class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
@@ -58,7 +58,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     )
                 }
                 if (blockEntity.inventoryComponent != null && blockEntity.fluidComponent != null)
-                    root.add(toggle, 2.2, 0.9)
+                    root.add(toggle, 1.7, 0.9)
                 toggle.setSize(30, 20)
                 val titleWidget = WText(
                     TranslatableText("item.indrev.wrench.title")
@@ -69,7 +69,6 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                 val inventoryComponent = blockEntity.inventoryComponent
                 val fluidComponent = blockEntity.fluidComponent
                 val initConfig = inventoryComponent?.itemConfig ?: fluidComponent?.transferConfig ?: return@run
-                val id = Registry.BLOCK.getId(blockState.block).path.replace(TIER_REGEX, "")
                 MachineSide.values().forEach { side ->
                     val facing =
                         when {
@@ -82,7 +81,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                         }
                     val direction = offset(facing, side.direction)
                     val mode = getMode(initConfig, direction)
-                    val widget = WMachineSideDisplay(identifier("textures/block/${id}.png"), side, mode)
+                    val widget = WMachineSideDisplay(identifier("textures/block/machine_block.png"), side, mode)
                     widget.setOnClick {
                         widget.mode = widget.mode.next()
                         if (isItemConfig)
@@ -97,7 +96,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                         ClientSidePacketRegistry.INSTANCE.sendToServer(SAVE_PACKET_ID, buf)
                     }
                     displays[direction] = widget
-                    root.add(widget, side.x + 0.5, side.y + 1.6)
+                    root.add(widget, (side.x - 0.3) * 1.2, (side.y + 1.0) * 1.2)
                 }
             }
             addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
@@ -114,6 +113,11 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     override fun getEntry(): Identifier = identifier("tools/wrench")
 
     override fun getPage(): Int = 0
+
+    override fun addPainters() {
+        super.addPainters()
+        rootPanel.backgroundPainter = BackgroundPainter.VANILLA
+    }
 
     private fun offset(facing: Direction, side: Direction): Direction =
         when {
@@ -138,7 +142,6 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     }
 
     companion object {
-        private val TIER_REGEX = Regex("_mk[0-9]")
         val SCREEN_ID = identifier("wrench_item_io_screen")
         val SAVE_PACKET_ID = identifier("save_packet_id")
     }

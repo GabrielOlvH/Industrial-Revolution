@@ -51,7 +51,7 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
         getShield(stack)
     }
 
@@ -133,6 +133,11 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
                     armorModifier
                 )
             }
+            val speedLevel = ArmorModule.SPEED.getLevel(itemStack) * 0.9
+            if (speedLevel > 0)
+                attr.put(
+                    EntityAttributes.GENERIC_MOVEMENT_SPEED,
+                    EntityAttributeModifier(UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635"), "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
             return attr.build()
         }
         return getAttributeModifiers(equipmentSlot)

@@ -2,6 +2,8 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.multiblock.FactoryStructureDefinition
+import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -26,11 +28,12 @@ class PulverizerFactoryBlockEntity(tier: Tier) :
                 outputSlots = intArrayOf(6 + (index * 2) + 1)
             }
         }
+        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
     }
 
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
 
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
+    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

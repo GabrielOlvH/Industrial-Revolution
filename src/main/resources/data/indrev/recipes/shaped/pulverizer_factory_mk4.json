@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "IFI",
+    "IBI"
+  ],
+  "key": {
+    "F": {
+      "item": "indrev:pulverizer_mk4"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "I": {
+      "tag": "c:steel_plates"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:pulverizer_factory_mk4"
+  }
+}

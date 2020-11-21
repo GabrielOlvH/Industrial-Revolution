@@ -2,8 +2,8 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -17,7 +17,7 @@ import net.minecraft.screen.ArrayPropertyDelegate
 
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(6)
+        this.propertyDelegate = ArrayPropertyDelegate(7)
         this.temperatureComponent = TemperatureComponent(
             { this },
             2.3,
@@ -32,8 +32,8 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
     }
 
     private var stableTemperature: Int = 0
-    private var burnTime: Int by Property(3, 0)
-    private var maxBurnTime: Int by Property(4, 0)
+    private var burnTime: Int by Property(4, 0)
+    private var maxBurnTime: Int by Property(5, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
@@ -55,7 +55,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
 
     override fun getGenerationRatio(): Double {
         val ratio = 64.0 * (if (temperatureComponent?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
-        propertyDelegate[5] = ratio.toInt()
+        propertyDelegate[6] = ratio.toInt()
         return ratio
     }
 

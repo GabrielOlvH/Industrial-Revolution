@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.crafters
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -18,7 +18,7 @@ class SmelterBlockEntity(tier: Tier) :
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
-        this.fluidComponent = FluidComponent({ this }, FluidAmount(8))
+        this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
     }
 
     override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE

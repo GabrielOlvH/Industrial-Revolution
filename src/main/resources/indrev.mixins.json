@@ -3,23 +3,31 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AccessorAnimalEntity",
+    "AccessorEnchantmentPredicate",
     "AccessorEnergyHandler",
     "AccessorRecipeManager",
+    "AccessorScreenHandler",
     "AccessorWeightedList",
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",
     "MixinEnchantmentHelper",
+    "MixinEntity",
     "MixinGenerationSettings",
+    "MixinItemPredicate",
     "MixinItemStack",
     "MixinLivingEntity",
     "MixinPiglinBrain",
     "MixinPlayerEntity",
     "MixinPlayerManager",
     "MixinRecipeType",
-    "MixinServerPlayerEntity"
+    "MixinServerPlayerEntity",
+    "MixinSheepEntity"
   ],
   "client": [
     "MixinClientRecipeBook",
+    "MixinGameRenderer",
+    "MixinLivingEntityClient",
     "MixinPlayerEntityRenderer",
     "MixinWItemSlot"
   ],

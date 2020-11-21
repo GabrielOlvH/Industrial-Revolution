@@ -1,6 +1,6 @@
 {
-  "parent": "indrev:block/machine_mk4",
+  "parent": "indrev:block/machine_factory",
   "textures": {
-    "texture": "indrev:block/electric_furnace_factory"
+    "texture": "indrev:block/electric_furnace"
   }
 }

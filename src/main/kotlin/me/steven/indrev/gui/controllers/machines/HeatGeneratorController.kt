@@ -32,7 +32,7 @@ class HeatGeneratorController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.heat_generator", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.heat_generator", ctx, playerInventory, blockInventory)
 
         val info = WStaticTooltip()
         root.add(info, 3, 1)

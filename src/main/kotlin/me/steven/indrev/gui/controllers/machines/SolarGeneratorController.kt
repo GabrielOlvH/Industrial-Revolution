@@ -31,7 +31,7 @@ class SolarGeneratorController(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.solar_generator", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.solar_generator", ctx, playerInventory, blockInventory)
 
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? SolarGeneratorBlockEntity ?: return@run

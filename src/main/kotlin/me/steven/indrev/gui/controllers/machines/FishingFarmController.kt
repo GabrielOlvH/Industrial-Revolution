@@ -6,10 +6,10 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.setIcon
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
@@ -25,15 +25,13 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.fishing_farm", ctx, playerInventory, blockInventory, propertyDelegate)
+        configure("block.indrev.fishing_farm", ctx, playerInventory, blockInventory)
 
-        root.add(
-            WItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 2, 2),
-            3.95,
-            0.7
-        )
+        root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.95, 0.7)
 
-        root.add(WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod")), 4.45, 3.5)
+        val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod"))
+        fishingRodSlot.setIcon(ctx, blockInventory, 1, FISHING_ROD_ICON)
+        root.add(fishingRodSlot, 4.45, 3.5)
 
         root.validate(this)
     }
@@ -44,5 +42,6 @@ class FishingFarmController(syncId: Int, playerInventory: PlayerInventory, ctx: 
 
     companion object {
         val SCREEN_ID = identifier("fishing_farm_screen")
+        val FISHING_ROD_ICON = identifier("textures/gui/fishing_rod_icon.png")
     }
 }

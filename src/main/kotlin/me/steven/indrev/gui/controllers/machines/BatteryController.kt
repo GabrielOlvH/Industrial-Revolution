@@ -55,7 +55,7 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
             0.7
         )
 
-        val wEnergy = WEnergy(ctx)
+        val wEnergy = WEnergy()
         root.add(wEnergy, 8.0, 0.5)
 
         ctx.run { world, _ ->
