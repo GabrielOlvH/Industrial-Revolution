@@ -8,8 +8,8 @@ import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.map
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
-import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
@@ -27,45 +27,52 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     }
 
     var movingTicks = 0.0
+    var isDescending = false
+    var lastYPos = 0
 
     var ticks = 0
 
     override fun machineTick() {
         ticks++
-        val currentLevel = floor(movingTicks).toInt()
+        val currentLevel = floor(movingTicks).toInt().coerceAtLeast(1)
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        if (world?.getFluidState(lookLevel)?.isEmpty == true && world!!.isAir(lookLevel.down())) {
-            movingTicks += 0.01
-        } else if (ticks % 20 == 0) {
+        if (isDescending) {
+            if (world?.getFluidState(lookLevel)?.isEmpty == false && lookLevel.y < lastYPos) isDescending = false
+            else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false)
+                movingTicks += 0.01
+        } else if (ticks % 20 == 0 && Energy.of(this).simulate().use(config.energyCost)) {
+            if (world?.getFluidState(lookLevel)?.isEmpty == true) {
+                lastYPos = lookLevel.y
+                isDescending = true
+                return
+            }
             movingTicks = movingTicks.roundToInt().toDouble()
             val fluidComponent = fluidComponent ?: return
-            val range = getWorkingArea(lookLevel.down())
-            val y = lookLevel.down().y
-            if (Energy.of(this).simulate().use(config.energyCost)) {
-                val mutablePos = lookLevel.mutableCopy()
-                for (x in range.minX.toInt()..range.maxX.toInt()) {
-                    for (z in range.minZ.toInt()..range.maxZ.toInt()) {
-                        mutablePos.set(x, y, z)
-                        val blockState = world?.getBlockState(mutablePos)
-                        val block = blockState?.block
-                        if (block is FluidDrainable && block is FluidBlock) {
-                            val toInsert = FluidKeys.get(blockState.fluidState.fluid).withAmount(FluidAmount.BUCKET)
-                            if (fluidComponent.insertable.attemptInsertion(toInsert, Simulation.SIMULATE).isEmpty) {
-                                block.tryDrainFluid(world, mutablePos, blockState)
-                                fluidComponent.insertable.insert(toInsert)
-                                Energy.of(this).use(2.0)
-                                return
-                            }
-                        }
+            val areaBox = getWorkingArea(lookLevel)
+            val areaIterator = areaBox.map(::BlockPos).sortedWith(compareBy { it.getSquaredDistance(pos) }).iterator()
+            while (areaIterator.hasNext()) {
+                val fluidPos = areaIterator.next()
+                val fluidState = world?.getFluidState(fluidPos)
+                val fluid = fluidState?.fluid
+                val block = fluidState?.blockState?.block
+                if (block is FluidDrainable && !fluidState.isEmpty && fluidState.isStill) {
+                    val toInsert = FluidKeys.get(fluid).withAmount(FluidAmount.BUCKET)
+                    if (fluidComponent.insertable.attemptInsertion(toInsert, Simulation.SIMULATE).isEmpty) {
+                        block.tryDrainFluid(world, fluidPos, fluidState.blockState)
+                        //fluidComponent.insertable.insert(toInsert)
+                        Energy.of(this).use(2.0)
                     }
+                    return
                 }
             }
+            lastYPos = lookLevel.y
+            isDescending = true
             return
         }
         sync()
     }
 
-    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(8.0, 0.0, 8.0).stretch(0.0, 1.0, 0.0)
+    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(9.0, 0.0, 9.0)
 
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
