@@ -36,11 +36,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         ticks++
         val currentLevel = floor(movingTicks).toInt().coerceAtLeast(1)
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        if (isDescending) {
-            if (world?.getFluidState(lookLevel)?.isEmpty == false && lookLevel.y < lastYPos) isDescending = false
-            else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false)
-                movingTicks += 0.01
-        } else if (ticks % 20 == 0 && Energy.of(this).simulate().use(config.energyCost)) {
+        if (!isDescending && ticks % 20 == 0 && Energy.of(this).simulate().use(config.energyCost)) {
             if (world?.getFluidState(lookLevel)?.isEmpty == true) {
                 lastYPos = lookLevel.y
                 isDescending = true
@@ -69,6 +65,10 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             isDescending = true
             return
         }
+        else if (world?.getFluidState(lookLevel)?.isEmpty == false && lookLevel.y < lastYPos)
+            isDescending = false
+        else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false)
+            movingTicks += 0.01
         sync()
     }
 
