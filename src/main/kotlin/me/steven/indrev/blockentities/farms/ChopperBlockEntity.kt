@@ -6,24 +6,25 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.toVec3d
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
+import net.minecraft.block.Fertilizable
 import net.minecraft.block.LeavesBlock
 import net.minecraft.item.AxeItem
+import net.minecraft.item.BlockItem
 import net.minecraft.item.BoneMealItem
 import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemUsageContext
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.tag.BlockTags
 import net.minecraft.tag.ItemTags
-import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
-import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
 import net.minecraft.world.chunk.ChunkSection
 import net.minecraft.world.chunk.WorldChunk
@@ -45,7 +46,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     }
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
-    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
     override var range = 5
     var cooldown = 0.0
 
@@ -144,19 +144,23 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     }
 
     private fun tryUse(blockState: BlockState, itemStack: ItemStack, pos: BlockPos): Boolean {
-        fakePlayer.setStackInHand(Hand.MAIN_HAND, itemStack)
         val item = itemStack.item
-        val isSaplingOrBoneMeal = (item is BoneMealItem && blockState.block.isIn(BlockTags.SAPLINGS) && itemStack.count > 1) || (item.isIn(ItemTags.SAPLINGS))
-        if (!isSaplingOrBoneMeal) return false
-        val useResult = itemStack.useOnBlock(
-            ItemUsageContext(
-                fakePlayer,
-                Hand.MAIN_HAND,
-                BlockHitResult(pos.toVec3d(), Direction.UP, pos, false)
-            )
-        )
-        fakePlayer.inventory.clear()
-        return useResult.isAccepted
+        val block = blockState.block
+        when {
+            item is BoneMealItem && itemStack.count > 1
+                    && block.isIn(BlockTags.SAPLINGS)
+                    && block is Fertilizable
+                    && block.isFertilizable(world, pos, blockState, false)
+                    && block.canGrow(world, world?.random, pos, blockState) -> {
+                block.grow(world as ServerWorld, world?.random, pos, blockState)
+                world?.syncWorldEvent(2005, pos, 0)
+            }
+            item.isIn(ItemTags.SAPLINGS) && item is BlockItem && item.block.defaultState.canPlaceAt(world, pos) -> {
+                world?.setBlockState(pos, item.block.defaultState, 3)
+            }
+            else -> return false
+        }
+        return true
     }
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
