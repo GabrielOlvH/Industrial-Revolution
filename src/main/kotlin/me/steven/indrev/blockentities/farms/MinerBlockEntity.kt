@@ -65,7 +65,7 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 mining += Upgrade.getSpeed(upgrades, this)
                 temperatureComponent?.tick(true)
             } else {
-                setWorkingState(false)
+                workingState = false
                 temperatureComponent?.tick(false)
             }
             if (mining >= config.processSpeed) {
@@ -89,9 +89,9 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 state.markDirty()
                 mining = 0.0
                 inventory.output(ItemStack(chunkVeinType!!.outputs.pickRandom(world?.random)))
-                setWorkingState(true)
+                workingState = true
             }
-        } else setWorkingState(false)
+        } else workingState = false
     }
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0

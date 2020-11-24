@@ -103,7 +103,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             }
             if (performedAction) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
             temperatureComponent?.tick(performedAction)
-            setWorkingState(performedAction)
+            workingState = performedAction
         }
         cooldown = 0.0
     }
