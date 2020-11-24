@@ -11,6 +11,7 @@
     "AccessorWeightedList",
     "AccessorWeightedListEntry",
     "MixinAbstractCookingRecipe",
+    "MixinBlockBreaker",
     "MixinEnchantmentHelper",
     "MixinEntity",
     "MixinGenerationSettings",
