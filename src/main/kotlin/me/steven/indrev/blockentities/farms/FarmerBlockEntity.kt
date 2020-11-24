@@ -95,7 +95,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                 }
                 block == Blocks.AIR && isValidSeed && stack.count > 1 -> {
                     val cropState = (item as BlockItem).block.defaultState
-                    if (cropState.canPlaceAt(world, pos)) {
+                    if (cropState.canPlaceAt(world, pos) && world.isAir(pos)) {
                         world.setBlockState(pos, cropState)
                         stack.count--
                         true

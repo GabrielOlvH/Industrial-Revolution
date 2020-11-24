@@ -155,8 +155,11 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 block.grow(world as ServerWorld, world?.random, pos, blockState)
                 world?.syncWorldEvent(2005, pos, 0)
             }
-            item.isIn(ItemTags.SAPLINGS) && item is BlockItem && item.block.defaultState.canPlaceAt(world, pos) -> {
-                world?.setBlockState(pos, item.block.defaultState, 3)
+            item.isIn(ItemTags.SAPLINGS) && item is BlockItem && item.block.defaultState.canPlaceAt(world, pos) && itemStack.count > 1-> {
+                if (world?.isAir(pos) == true) {
+                    world?.setBlockState(pos, item.block.defaultState, 3)
+                    itemStack.decrement(1)
+                }
             }
             else -> return false
         }
