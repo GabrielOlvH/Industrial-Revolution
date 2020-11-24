@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack
 import team.reborn.energy.Energy
 
 open class Filterable {
-    var filters: MutableMap<Int, (ItemStack) -> Boolean> = mutableMapOf()
+    var filters: MutableMap<Int, (ItemStack) -> Boolean> = hashMapOf()
 
     infix fun Int.filter(filter: (ItemStack) -> Boolean) {
         filters[this] = filter

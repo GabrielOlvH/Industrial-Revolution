@@ -52,7 +52,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
             val block = blockProvider(tier)
             if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)
                 BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout())
-            val blockItem = 
+            val blockItem =
                 if (block is MachineBlock) MachineBlockItem(block, itemSettings())
                 else BlockItem(block, itemSettings())
             val blockEntityType = BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block).build(null)
