@@ -47,7 +47,7 @@ open class IRInventoryDSL : Filterable() {
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
         if (blockEntity is UpgradeProvider) size += blockEntity.getUpgradeSlots().size
-        return IRInventory(size, input.slots, output.slots) { slot, stack ->
+        return IRInventory(this, size, input.slots, output.slots) { slot, stack ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) { slot ->
                 { (stack, item) ->

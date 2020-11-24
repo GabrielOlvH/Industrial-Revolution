@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
 class IRInventory(
+    dsl: IRInventoryDSL,
     size: Int,
     val inputSlots: IntArray,
     val outputSlots: IntArray,
@@ -16,7 +17,13 @@ class IRInventory(
 
     var component: InventoryComponent? = null
 
-    override fun getAvailableSlots(var1: Direction?): IntArray? = IntArray(size()) { i -> i }
+    private var availableSlots = inputSlots.plus(outputSlots)
+
+    init {
+        if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(dsl.coolerSlot!!)
+    }
+
+    override fun getAvailableSlots(var1: Direction?): IntArray? = availableSlots
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
