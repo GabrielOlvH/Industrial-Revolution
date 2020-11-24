@@ -29,7 +29,9 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
+import team.reborn.energy.Energy
 import vazkii.patchouli.client.book.ClientBookRegistry
+import java.util.function.Predicate
 
 fun WGridPanel.add(w: WWidget, x: Double, y: Double, width: Double, height: Double) {
     this.add(w, x.toInt(), y.toInt(), width.toInt(), height.toInt())
@@ -66,6 +68,7 @@ fun SyncedGuiDescription.configure(
     panel.add(energyWidget, 0.1, 0.0)
 
     val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
+    batterySlot.filter = Predicate { stack -> Energy.valid(stack) }
 
     screenHandlerContext.run { world, blockPos ->
         if (world.isClient)
