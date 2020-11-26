@@ -21,6 +21,7 @@ class IRInventory(
 
     init {
         if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(dsl.coolerSlot!!)
+        availableSlots = availableSlots.distinct().toIntArray()
     }
 
     override fun getAvailableSlots(var1: Direction?): IntArray? = availableSlots
