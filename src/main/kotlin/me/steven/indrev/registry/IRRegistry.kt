@@ -410,9 +410,9 @@ object IRRegistry {
     val DIAMOND_DRILL_HEAD = Item(itemSettings().maxDamage(2048))
     val NETHERITE_DRILL_HEAD = Item(itemSettings().maxDamage(4096))
 
-    val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BUFFER)
-    val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SPEED)
-    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
+    val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(4), Upgrade.BUFFER)
+    val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(4), Upgrade.SPEED)
+    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(4), Upgrade.ENERGY)
     val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 

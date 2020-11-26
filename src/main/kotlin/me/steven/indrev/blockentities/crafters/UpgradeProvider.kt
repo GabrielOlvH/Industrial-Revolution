@@ -14,10 +14,12 @@ interface UpgradeProvider {
     fun getBaseValue(upgrade: Upgrade): Double
 
     fun getUpgrades(inventory: Inventory): Map<Upgrade, Int> {
-        val map = mutableMapOf<Upgrade, Int>()
+        val map = hashMapOf<Upgrade, Int>()
         getUpgradeSlots()
-            .map { (inventory.getStack(it).item as? IRUpgradeItem)?.upgrade }.filterNotNull().forEach { upgrade ->
-                map[upgrade] = map.getOrDefault(upgrade, 0) + 1
+            .map { slot -> inventory.getStack(slot) }
+            .filter { stack -> stack.item is IRUpgradeItem }
+            .forEach { stack ->
+                map.merge((stack.item as IRUpgradeItem).upgrade, stack.count) { i, j -> i + j }
             }
         return map
     }
