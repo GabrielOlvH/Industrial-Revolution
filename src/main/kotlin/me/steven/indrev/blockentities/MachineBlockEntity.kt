@@ -55,12 +55,17 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var itemTransferCooldown = 0
 
+    var workingState: Boolean = false
+
+    var ticks = 0
+
     val config: T by lazy { registry.config(tier) as T }
 
     protected open fun machineTick() {}
 
     final override fun tick() {
         if (world?.isClient == false) {
+            ticks++
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             EnergyMovement.spreadNeighbors(this, pos)
@@ -91,13 +96,13 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 sync()
                 isMarkedForUpdate = false
             }
-        }
-    }
-
-    fun setWorkingState(value: Boolean) {
-        if (world?.isClient == false && this.cachedState.contains(MachineBlock.WORKING_PROPERTY) && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
-            val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
-            world!!.setBlockState(pos, state)
+            if (ticks % 20 == 0
+                && this.cachedState.contains(MachineBlock.WORKING_PROPERTY)
+                && this.cachedState[MachineBlock.WORKING_PROPERTY] != workingState
+            ) {
+                    val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, workingState)
+                    world!!.setBlockState(pos, state)
+            }
         }
     }
 

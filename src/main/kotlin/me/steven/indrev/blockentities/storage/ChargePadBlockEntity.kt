@@ -16,9 +16,7 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
-        if (Energy.valid(stack) && Energy.of(this).into(Energy.of(stack)).move() > 0) {
-            setWorkingState(true)
-        } else setWorkingState(false)
+        workingState = Energy.valid(stack) && Energy.of(this).into(Energy.of(stack)).move() > 0
     }
 
     override fun getBaseBuffer(): Double = tier.io * 2
