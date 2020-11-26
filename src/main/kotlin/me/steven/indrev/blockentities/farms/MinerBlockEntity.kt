@@ -39,7 +39,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
-            coolerSlot = 1
         }
     }
 
@@ -192,7 +191,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         return when (upgrade) {
             Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
-                val itemStack = blockEntity.inventory[0]
+                blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
             Upgrade.BUFFER -> getBaseBuffer()
@@ -228,5 +227,9 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
         super.fromClientTag(tag)
+    }
+
+    companion object {
+        val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
     }
 }
