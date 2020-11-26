@@ -30,7 +30,6 @@ class MinerBlockEntity(tier: Tier, private val matchScanOutput: Boolean) : Machi
                 filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
-            coolerSlot = 1
         }
     }
 
