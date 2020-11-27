@@ -4,11 +4,13 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.buildMachineTooltip
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
@@ -17,6 +19,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
+import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
@@ -44,6 +47,16 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
             .with(DOWN, false)
             .with(COVERED, false)
     }
+
+    override fun appendTooltip(
+        stack: ItemStack?,
+        world: World?,
+        tooltip: MutableList<Text>?,
+        options: TooltipContext?
+    ) {
+        buildMachineTooltip(getConfig(), tooltip)
+    }
+
 
     override fun getOutlineShape(
         state: BlockState,
