@@ -31,6 +31,7 @@ open class FacingMachineBlock(
         super.appendProperties(builder)
         builder?.add(FACING)
     }
+
     override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
         return state.with(FACING, HorizontalFacingMachineBlock.getRotated(state[FACING], rotation))
     }

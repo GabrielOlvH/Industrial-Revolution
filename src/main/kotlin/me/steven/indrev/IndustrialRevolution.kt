@@ -91,17 +91,14 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
-            val isItemConfig = buf.readBoolean()
+            val type = buf.readEnumConstant(WrenchConfigurationType::class.java)
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
             val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                if (isItemConfig && blockEntity.inventoryComponent != null) {
-                    blockEntity.inventoryComponent!!.itemConfig[dir] = mode
-                } else if (blockEntity.fluidComponent != null)
-                    blockEntity.fluidComponent!!.transferConfig[dir] = mode
+                type.getConfig(blockEntity)[dir] = mode
             }
         }
 

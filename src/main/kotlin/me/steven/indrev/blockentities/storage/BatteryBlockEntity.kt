@@ -1,12 +1,13 @@
 package me.steven.indrev.blockentities.storage
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -18,6 +19,10 @@ class BatteryBlockEntity(tier: Tier) :
         this.inventoryComponent = inventory(this) {
             0 filter { stack -> Energy.valid(stack) }
         }
+    }
+
+    val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
+        Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
     }
 
     override fun machineTick() {
@@ -32,13 +37,11 @@ class BatteryBlockEntity(tier: Tier) :
     }
 
     override fun getMaxOutput(side: EnergySide?): Double {
-        val state = this.cachedState
-        return if (side != EnergySide.fromMinecraft(state[FacingMachineBlock.FACING])) super.getMaxOutput(side) else 0.0
+        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.OUTPUT) super.getMaxOutput(side) else 0.0
     }
 
     override fun getMaxInput(side: EnergySide?): Double {
-        val state = this.cachedState
-        return if (side == EnergySide.fromMinecraft(state[FacingMachineBlock.FACING])) super.getMaxInput(side) else 0.0
+        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.INPUT) super.getMaxInput(side) else 0.0
     }
 
     override fun getBaseBuffer(): Double = when (tier) {

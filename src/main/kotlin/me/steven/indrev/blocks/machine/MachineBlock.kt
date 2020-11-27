@@ -10,6 +10,7 @@ import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -38,6 +39,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -132,20 +134,32 @@ open class MachineBlock(
         }
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (world?.isClient == true) return
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity<*>) {
-            val tag = itemStack?.getSubTag("MachineInfo") ?: return
+            val tag = itemStack?.getSubTag("MachineInfo")
             val temperatureController = blockEntity.temperatureComponent
             if (Energy.valid(itemStack))
                 Energy.of(blockEntity).set(Energy.of(itemStack).energy)
             if (temperatureController != null) {
-                val temperature = tag.getDouble("Temperature")
-                temperatureController.temperature = temperature
+                val temperature = tag?.getDouble("Temperature")
+                if (temperature != null) temperatureController.temperature = temperature
             }
+            val invComponent = blockEntity.inventoryComponent
+            val fluidComponent = blockEntity.fluidComponent
+            if (invComponent != null)
+                applyInitialItemConfiguration(state, invComponent.itemConfig)
+            if (fluidComponent != null)
+                applyInitialFluidConfiguration(state, fluidComponent.transferConfig)
         }
+    }
+
+    open fun applyInitialItemConfiguration(state: BlockState, itemConfig: MutableMap<Direction, TransferMode>) {
+    }
+
+    open fun applyInitialFluidConfiguration(state: BlockState, fluidConfig: MutableMap<Direction, TransferMode>) {
     }
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
