@@ -4,7 +4,6 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.buildMachineTooltip
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -20,7 +19,9 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
 import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.collection.DefaultedList
@@ -54,7 +55,14 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        buildMachineTooltip(getConfig(), tooltip)
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
+        )
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
+        )
     }
 
     override fun getOutlineShape(
