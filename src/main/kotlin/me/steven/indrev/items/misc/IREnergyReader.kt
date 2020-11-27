@@ -30,13 +30,13 @@ class IREnergyReader(settings: Settings) : Item(settings) {
                         else -> -1.0
                     }
                 if (energyCost > 0.0) {
+                    val energyCostText = TranslatableText(
+                        "item.indrev.energy_reader.use1",
+                        LiteralText(energyCost.toString()).formatted(Formatting.WHITE)
+                    ).formatted(Formatting.BLUE)
                     text
                         .append(LiteralText(" | ").formatted(Formatting.BLACK, Formatting.BOLD))
-                        .append(
-                            TranslatableText("item.indrev.energy_reader.use1",
-                                LiteralText(energyCost.toString()).formatted(Formatting.WHITE)
-                            ).formatted(Formatting.BLUE)
-                        )
+                        .append(energyCostText)
                 }
             }
             context.player?.sendMessage(text, true)
