@@ -50,7 +50,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
 
     override fun appendTooltip(
         stack: ItemStack?,
-        world: World?,
+        world: BlockView?,
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
