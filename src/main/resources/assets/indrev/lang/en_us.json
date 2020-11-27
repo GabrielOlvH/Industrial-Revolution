@@ -217,6 +217,7 @@
   "item.indrev.mining_drill_mk4": "Modular Mining Drill",
   "item.indrev.energy_reader": "Energy Reader",
   "item.indrev.energy_reader.use": "Energy stored:",
+  "item.indrev.energy_reader.use1": "%s LF/tick",
   "item.indrev.enriched_nikolite_dust": "Enriched Nikolite Dust",
   "item.indrev.enriched_nikolite_ingot": "Enriched Nikolite Ingot",
   "item.indrev.battery": "Battery",
