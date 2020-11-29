@@ -26,9 +26,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.first
-import kotlin.collections.forEach
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -62,7 +59,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                 updateMachineDisplays(blockEntity)
                 configTypeButton.label = currentType.title
             }
-            //if (availableTypes.size > 1)
+            if (availableTypes.size > 1)
                 root.add(configTypeButton, 1.3, 0.9)
             configTypeButton.setSize(45, 20)
 
