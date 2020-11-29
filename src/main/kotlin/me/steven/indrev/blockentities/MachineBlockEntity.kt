@@ -6,6 +6,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
+import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.InventoryComponent
@@ -14,7 +15,6 @@ import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.energy.EnergyMovement
-import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import net.minecraft.block.BlockState
@@ -197,7 +197,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                     }
                     val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
                     if (insertable != null) {
-                        val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
+                        val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
                         ItemInvUtil.move(extractable, insertable, 64)
                     }
                 }
@@ -211,7 +211,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                     }
                     val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
                     if (extractable != null) {
-                        val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
+                        val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
                         ItemInvUtil.move(extractable, insertable, 64)
                     }
                 }
