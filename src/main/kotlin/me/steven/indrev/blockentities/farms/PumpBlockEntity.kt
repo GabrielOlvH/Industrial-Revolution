@@ -52,7 +52,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                     val toInsert = FluidKeys.get(fluid).withAmount(FluidAmount.BUCKET)
                     if (fluidComponent.insertable.attemptInsertion(toInsert, Simulation.SIMULATE).isEmpty) {
                         block.tryDrainFluid(world, fluidPos, fluidState.blockState)
-                        //fluidComponent.insertable.insert(toInsert)
+                        fluidComponent.insertable.insert(toInsert)
                         Energy.of(this).use(2.0)
                     }
                     return
