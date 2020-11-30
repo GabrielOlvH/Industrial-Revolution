@@ -50,9 +50,12 @@ class WMachineSideDisplay(
             .append(LiteralText(" (")
                 .append(TranslatableText("item.indrev.wrench.side.${direction.toString().toLowerCase()}"))
                 .append(LiteralText(")"))).formatted(Formatting.WHITE)
-        val neighbor = TranslatableText("item.indrev.wrench.connected",
-            world.getBlockState(blockPos.offset(direction)).block.name)
-        tooltip?.add(modeText, side, neighbor)
+        tooltip?.add(modeText, side)
+        val blockState = world.getBlockState(blockPos.offset(direction))
+        if (!blockState.isAir) {
+            val neighbor = TranslatableText("item.indrev.wrench.connected", blockState.block.name)
+            tooltip?.add(neighbor)
+        }
     }
 
     companion object {
