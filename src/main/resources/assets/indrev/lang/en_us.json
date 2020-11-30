@@ -904,5 +904,6 @@
   "vein.indrev.scheelite": "Scheelite",
   "vein.indrev.wolframite": "Wolframite",
   "vein.indrev.ferberite": "Ferberite",
-  "vein.indrev.galena": "Galena"
+  "vein.indrev.galena": "Galena",
+  "attribute.indrev.shield": "Shield"
 }

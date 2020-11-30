@@ -1,21 +1,26 @@
 package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
+import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import me.steven.indrev.IndustrialRevolution;
+import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.items.armor.IRModularArmor;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -27,17 +32,17 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import team.reborn.energy.Energy;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class MixinServerPlayerEntity extends PlayerEntity {
+public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     private int ticks = 0;
     private int lastDamageTick = 0;
-    private final Set<ArmorModule> appliedEffects = new HashSet<>();
+    private double lastShield = 0.0;
+    private final Object2IntMap<ArmorModule> oldAppliedModules = new Object2IntOpenHashMap<>();
 
     public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);
@@ -47,7 +52,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private void indrev_applyEffects(CallbackInfo ci) {
         ticks++;
 
-        if (ticks % 40 == 0) {
+        if (ticks % 15 == 0) {
+            setShieldDurability(Math.min(getShieldDurability(), getMaxShieldDurability()));
             applyArmorEffects();
             useActiveAxeEnergy();
         }
@@ -57,33 +63,16 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private float indrev_absorbDamage(float amount, DamageSource source) {
         if (isInvulnerableTo(source)) return amount;
         lastDamageTick = ticks;
-        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        PlayerInventory inventory = player.inventory;
-        float damageAbsorbed = 0;
-        for (ItemStack itemStack : inventory.armor) {
-            Item item = itemStack.getItem();
-            if (!(item instanceof IRModularArmor)) continue;
-            int level = ArmorModule.PROTECTION.getLevel(itemStack);
-            double absorb = amount * (0.25 * (level / 3f));
-            if (level > 0
-                    && ((IRModularArmor) item).getShield(itemStack) > absorb
-                    && canUseShield(itemStack, source)
-            ) {
-                if (source.equals(DamageSource.FALL))
-                    damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, amount);
-                else if (source.isFire())
-                    damageAbsorbed += (((IRModularArmor) item).useShield(itemStack, amount * 0.1)) / 0.1;
-                else
-                    damageAbsorbed += ((IRModularArmor) item).useShield(itemStack, absorb);
-            }
-        }
-        return Math.max(amount - damageAbsorbed, 0);
+        if (shouldApplyToShield(source))
+            return (float) applyDamageToShield(amount);
+        else
+            return amount;
     }
 
-    private boolean canUseShield(ItemStack itemStack, DamageSource source) {
-        if (source.equals(DamageSource.FALL)) return ArmorModule.FEATHER_FALLING.isInstalled(itemStack);
-        else if (source.isFire()) return ArmorModule.FIRE_RESISTANCE.isInstalled(itemStack);
-        else return !source.bypassesArmor();
+    private boolean shouldApplyToShield(DamageSource source) {
+        return (source.equals(DamageSource.FALL) && isApplied(ArmorModule.FEATHER_FALLING))
+                || (source.isFire() && isApplied(ArmorModule.FIRE_RESISTANCE))
+                && !source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN);
     }
 
     private void useActiveAxeEnergy() {
@@ -102,8 +91,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
     private void applyArmorEffects() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
-        Set<ArmorModule> effectsToRemove = new HashSet<>(appliedEffects);
-        appliedEffects.clear();
+        oldAppliedModules.clear();
+        oldAppliedModules.putAll(getAppliedModules());
+        getAppliedModules().clear();
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
                 List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);
@@ -116,7 +106,10 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                         case JUMP_BOOST:
                         case NIGHT_VISION:
                         case FIRE_RESISTANCE:
-                            Energy.of(itemStack).use(20.0);
+                        case PIGLIN_TRICKER:
+                        case FEATHER_FALLING:
+                            if (Energy.of(itemStack).use(20.0))
+                                applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
                             HungerManager hunger = player.getHungerManager();
@@ -142,8 +135,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick) {
-                                ((IRModularArmor) itemStack.getItem()).regenShield(itemStack, level);
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && Energy.of(itemStack).use(30.0)) {
+                                regenerateShield();
                             }
                             break;
                         default:
@@ -152,10 +145,36 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity {
                 }
             }
         }
-        for (ArmorModule module : effectsToRemove) {
-            StatusEffectInstance effect = module.getApply().invoke(player, 1);
-            if (effect != null)
-                player.removeStatusEffect(effect.getEffectType());
-        }
+    }
+
+    @Override
+    public void regenerateShield() {
+        setShieldDurability(Math.min(getShieldDurability() + 0.5, getMaxShieldDurability()));
+    }
+
+    @Override
+    public double applyDamageToShield(double damage) {
+        double absorbed = Math.min(damage, getShieldDurability());
+        setShieldDurability(getShieldDurability() - absorbed);
+        return damage - absorbed;
+    }
+
+    @Override
+    public boolean shouldSync() {
+        return !oldAppliedModules.equals(getAppliedModules()) || lastShield != getShieldDurability();
+    }
+
+    @Override
+    public void sync() {
+        lastShield = getShieldDurability();
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        Map<ArmorModule, Integer> appliedModules = getAppliedModules();
+        buf.writeInt(appliedModules.size());
+        appliedModules.forEach((module, level) -> {
+            buf.writeInt(module.ordinal());
+            buf.writeInt(level);
+        });
+        buf.writeDouble(getShieldDurability());
+        ServerSidePacketRegistry.INSTANCE.sendToPlayer(this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
     }
 }

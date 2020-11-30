@@ -6,6 +6,7 @@ import io.netty.buffer.Unpooled
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
+import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -179,6 +180,11 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
+
+                if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
+                    player.sync()
+                }
+
                 val handler = player.currentScreenHandler as? IRGuiController ?: return@forEach
                 handler.ctx.run { world, pos ->
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
@@ -248,6 +254,7 @@ object IndustrialRevolution : ModInitializer {
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
     val SYNC_PROPERTY = identifier("sync_property")
+    val SYNC_MODULE_PACKET = identifier("sync_module")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())
