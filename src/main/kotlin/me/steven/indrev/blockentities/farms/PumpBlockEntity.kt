@@ -30,10 +30,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     var isDescending = false
     var lastYPos = 0
 
-    var ticks = 0
-
     override fun machineTick() {
-        ticks++
         val currentLevel = floor(movingTicks).toInt().coerceAtLeast(1)
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
         if (!isDescending && ticks % 20 == 0 && Energy.of(this).simulate().use(config.energyCost)) {
