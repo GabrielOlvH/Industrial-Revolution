@@ -41,7 +41,7 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
+    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable, Configurable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
@@ -141,6 +141,45 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? = inventoryComponent?.inventory
+
+    override fun isConfigurable(type: ConfigurationType): Boolean {
+        return when (type) {
+            ConfigurationType.ITEM -> inventoryComponent != null
+                    && inventoryComponent?.inventory?.inputSlots?.isNotEmpty() == true
+                    && inventoryComponent?.inventory?.outputSlots?.isNotEmpty() == true
+            ConfigurationType.FLUID -> fluidComponent != null
+            ConfigurationType.ENERGY -> false
+        }
+    }
+
+    override fun applyDefault(state: BlockState, type: ConfigurationType, configuration: MutableMap<Direction, TransferMode>) {
+        val direction = (state.block as MachineBlock).getFacing(state)
+        when (type) {
+            ConfigurationType.ITEM -> {
+                configuration[direction.rotateYClockwise()] = TransferMode.INPUT
+                configuration[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
+            }
+            ConfigurationType.ENERGY -> throw IllegalArgumentException("cannot apply energy configuration to $this")
+            else -> return
+        }
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> TransferMode.values()
+            ConfigurationType.FLUID, ConfigurationType.ENERGY -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT)
+        }
+    }
+
+    override fun getCurrentConfiguration(type: ConfigurationType): MutableMap<Direction, TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> inventoryComponent!!.itemConfig
+            ConfigurationType.FLUID -> fluidComponent!!.transferConfig
+            ConfigurationType.ENERGY -> hashMapOf()
+        }
+    }
+
+    override fun isFixed(type: ConfigurationType): Boolean = false
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)

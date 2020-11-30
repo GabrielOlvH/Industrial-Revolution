@@ -3,7 +3,6 @@ package me.steven.indrev.blocks.machine
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.TransferMode
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
@@ -34,15 +33,11 @@ open class HorizontalFacingMachineBlock(
         builder?.add(HORIZONTAL_FACING)
     }
 
-    override fun applyInitialItemConfiguration(state: BlockState, itemConfig: MutableMap<Direction, TransferMode>) {
-        val direction = state[HORIZONTAL_FACING] ?: return
-        itemConfig[direction.rotateYClockwise()] = TransferMode.INPUT
-        itemConfig[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
-    }
-
     override fun rotate(state: BlockState, rotation: BlockRotation): BlockState {
         return state.with(HORIZONTAL_FACING, getRotated(state[HORIZONTAL_FACING], rotation))
     }
+
+    override fun getFacing(state: BlockState): Direction = state[HORIZONTAL_FACING]
 
     companion object {
         val HORIZONTAL_FACING: DirectionProperty = Properties.HORIZONTAL_FACING

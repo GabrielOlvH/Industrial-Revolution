@@ -1,6 +1,6 @@
 package me.steven.indrev.components
 
-import me.steven.indrev.blockentities.IRSyncableBlockEntity
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.TransferMode
 import net.minecraft.inventory.Inventory
@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.util.math.Direction
 
-class InventoryComponent(val syncable: IRSyncableBlockEntity, supplier: InventoryComponent.() -> IRInventory) : InventoryChangedListener {
+class InventoryComponent(val syncable: MachineBlockEntity<*>, supplier: InventoryComponent.() -> IRInventory) : InventoryChangedListener {
     val inventory: IRInventory = supplier()
 
     init {

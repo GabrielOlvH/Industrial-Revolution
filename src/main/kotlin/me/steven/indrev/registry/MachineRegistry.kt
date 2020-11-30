@@ -24,7 +24,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
-import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
@@ -39,7 +38,6 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import java.util.function.Supplier
 
@@ -331,18 +329,11 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
 
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
-                object : MachineBlock(
+                MachineBlock(
                     MACHINE_BLOCK_SETTINGS(),
                     tier,
                     CONFIG.machines.drain,
-                    null, { DrainBlockEntity(tier) }) {
-                    override fun applyInitialFluidConfiguration(
-                        state: BlockState,
-                        fluidConfig: MutableMap<Direction, TransferMode>
-                    ) {
-                        Direction.values().forEach { dir -> fluidConfig[dir] = TransferMode.OUTPUT }
-                    }
-                }
+                    null) { DrainBlockEntity(tier) }
             },
             { tier -> { DrainBlockEntity(tier) } }
         )

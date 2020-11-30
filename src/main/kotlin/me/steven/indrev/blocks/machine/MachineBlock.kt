@@ -9,8 +9,8 @@ import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
+import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.TransferMode
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -147,20 +147,14 @@ open class MachineBlock(
                 val temperature = tag?.getDouble("Temperature")
                 if (temperature != null) temperatureController.temperature = temperature
             }
-            val invComponent = blockEntity.inventoryComponent
-            val fluidComponent = blockEntity.fluidComponent
-            if (invComponent != null)
-                applyInitialItemConfiguration(state, invComponent.itemConfig)
-            if (fluidComponent != null)
-                applyInitialFluidConfiguration(state, fluidComponent.transferConfig)
+            ConfigurationType.values().forEach { type ->
+                if (blockEntity.isConfigurable(type))
+                    blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
+            }
         }
     }
 
-    open fun applyInitialItemConfiguration(state: BlockState, itemConfig: MutableMap<Direction, TransferMode>) {
-    }
-
-    open fun applyInitialFluidConfiguration(state: BlockState, fluidConfig: MutableMap<Direction, TransferMode>) {
-    }
+    open fun getFacing(state: BlockState): Direction = Direction.UP
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider

@@ -13,6 +13,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.BlockRotation
+import net.minecraft.util.math.Direction
 
 open class FacingMachineBlock(
     settings: Settings,
@@ -36,6 +37,7 @@ open class FacingMachineBlock(
         return state.with(FACING, HorizontalFacingMachineBlock.getRotated(state[FACING], rotation))
     }
 
+    override fun getFacing(state: BlockState): Direction = state[FACING]
 
     companion object {
         val FACING: DirectionProperty = Properties.FACING

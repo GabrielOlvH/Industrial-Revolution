@@ -13,7 +13,7 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.utils.WrenchConfigurationType
+import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
@@ -36,7 +36,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         ctx
     ), PatchouliEntryShortcut {
 
-    private lateinit var currentType: WrenchConfigurationType
+    private lateinit var currentType: ConfigurationType
     private val displays = mutableMapOf<Direction, WMachineSideDisplay>()
 
     init {
@@ -51,7 +51,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
             val blockState = world.getBlockState(pos)
 
-            val availableTypes = WrenchConfigurationType.getTypes(blockEntity)
+            val availableTypes = ConfigurationType.getTypes(blockEntity)
             currentType = availableTypes.first()
             val configTypeButton = WButton(currentType.title)
             configTypeButton.setOnClick {
@@ -77,11 +77,12 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     facing = playerInventory.player.horizontalFacing.opposite
                 }
                 val direction = offset(facing, side.direction)
-                val mode = currentType.getConfig(blockEntity)[direction]!!
+                val configuration = blockEntity.getCurrentConfiguration(currentType)
+                val mode = configuration[direction]!!
                 val widget = WMachineSideDisplay(side, direction, mode, world, pos)
                 widget.setOnClick {
                     widget.mode = widget.mode.next(currentType.validModes)
-                    currentType.getConfig(blockEntity)[direction] = widget.mode
+                    configuration[direction] = widget.mode
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeEnumConstant(currentType)
                     buf.writeBlockPos(pos)
@@ -98,7 +99,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     }
 
     private fun updateMachineDisplays(blockEntity: MachineBlockEntity<*>) {
-        val config = currentType.getConfig(blockEntity)
+        val config = blockEntity.getCurrentConfiguration(currentType)
         displays.forEach { (direction, display) ->
             display.mode = config[direction]!!
         }
