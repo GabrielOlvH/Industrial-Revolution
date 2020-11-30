@@ -1,6 +1,7 @@
-package me.steven.indrev.utils
+package me.steven.indrev.api.sideconfigs
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.utils.TransferMode
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 

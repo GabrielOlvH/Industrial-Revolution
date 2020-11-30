@@ -8,6 +8,8 @@ import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.api.sideconfigs.Configurable
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
@@ -41,7 +43,8 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable, Configurable {
+    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable,
+    Configurable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 

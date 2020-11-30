@@ -1,10 +1,10 @@
 package me.steven.indrev.items.misc
 
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.controllers.wrench.WrenchController
-import me.steven.indrev.utils.ConfigurationType
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext

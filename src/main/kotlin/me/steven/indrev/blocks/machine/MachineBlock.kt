@@ -4,12 +4,12 @@ import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
-import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.Tier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment

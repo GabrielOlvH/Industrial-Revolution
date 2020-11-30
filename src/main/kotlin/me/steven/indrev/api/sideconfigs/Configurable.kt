@@ -1,6 +1,5 @@
-package me.steven.indrev.blockentities
+package me.steven.indrev.api.sideconfigs
 
-import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.TransferMode
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.Direction

@@ -1,11 +1,12 @@
 package me.steven.indrev.blockentities.storage
 
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.TransferMode
 import net.minecraft.block.BlockState
@@ -25,10 +26,7 @@ class BatteryBlockEntity(tier: Tier) :
         }
     }
 
-    val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
-        Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
-    }
-
+    private val transferConfig: SideConfiguration = SideConfiguration()
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
@@ -65,49 +63,23 @@ class BatteryBlockEntity(tier: Tier) :
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
-        val icTag = CompoundTag()
-        transferConfig.forEach { (dir, mode) ->
-            icTag.putString(dir.toString(), mode.toString())
-        }
-        tag?.put("TransferConfig", icTag)
+        transferConfig.toTag(tag)
         return super.toTag(tag)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
-        if (tag?.contains("TransferConfig") == true) {
-            val icTag = tag.getCompound("TransferConfig")
-            Direction.values().forEach { dir ->
-                val value = icTag.getString(dir.toString()).toUpperCase()
-                if (value.isNotEmpty()) {
-                    val mode = TransferMode.valueOf(value)
-                    transferConfig[dir] = mode
-                }
-            }
-        }
+        transferConfig.fromTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        val icTag = CompoundTag()
-        transferConfig.forEach { (dir, mode) ->
-            icTag.putString(dir.toString(), mode.toString())
-        }
-        tag?.put("TransferConfig", icTag)
+        transferConfig.toTag(tag)
         return super.toClientTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
-        if (tag?.contains("TransferConfig") == true) {
-            val icTag = tag.getCompound("TransferConfig")
-            Direction.values().forEach { dir ->
-                val value = icTag.getString(dir.toString()).toUpperCase()
-                if (value.isNotEmpty()) {
-                    val mode = TransferMode.valueOf(value)
-                    transferConfig[dir] = mode
-                }
-            }
-        }
+        transferConfig.fromTag(tag)
     }
 
     override fun getBaseBuffer(): Double = when (tier) {

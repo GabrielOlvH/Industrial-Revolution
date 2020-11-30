@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
@@ -13,7 +14,6 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.utils.ConfigurationType
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
