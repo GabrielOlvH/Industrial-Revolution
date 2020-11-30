@@ -21,16 +21,12 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
             if (!invStack.isEmpty && getFuelMap().containsKey(invStack.item)) {
                 burnTime = getFuelMap()[invStack.item] ?: return false
                 maxBurnTime = burnTime
-                invStack.count--
-                if (!invStack.isEmpty)
-                    inventory.setStack(2, invStack)
-                else if (item.hasRecipeRemainder())
+                invStack.decrement(1)
+                if (item.hasRecipeRemainder())
                     inventory.setStack(2, ItemStack(item.recipeRemainder))
-                else
-                    inventory.setStack(2, ItemStack.EMPTY)
             }
+            markDirty()
         }
-        markDirty()
         return burnTime > 0 && energy < maxStoredPower
     }
 
