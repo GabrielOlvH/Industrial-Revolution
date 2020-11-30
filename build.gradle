@@ -56,11 +56,9 @@ repositories {
         content {
             includeGroup "com.github.Technici4n"
             includeGroup "com.github.Draylar"
-            includeGroup "com.github.GabrielOlvH"
         }
     }
     maven {
-        name "Modmaven"
         url "https://modmaven.dev/"
         content {
             includeGroup 'appeng'
@@ -86,10 +84,10 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
+    modApi("teamreborn:energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
+    include("teamreborn:energy:${project.energy_api_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 

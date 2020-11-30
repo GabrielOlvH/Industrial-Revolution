@@ -4,12 +4,11 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Property
 import me.steven.indrev.utils.Tier
-import net.minecraft.item.ItemStack
+import net.minecraft.item.Item
 import net.minecraft.screen.ArrayPropertyDelegate
 
-class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.BIOMASS_GENERATOR_REGISTRY) {
+class BiomassGeneratorBlockEntity(tier: Tier) : SolidFuelGeneratorBlockEntity(tier, MachineRegistry.BIOMASS_GENERATOR_REGISTRY) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
@@ -19,23 +18,13 @@ class BiomassGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, Machi
         }
     }
 
-    private var burnTime: Int by Property(4, 0)
-    private var maxBurnTime: Int by Property(5, 0)
+    override fun getFuelMap(): Map<Item, Int> = BURN_TIME_MAP
 
-    override fun shouldGenerate(): Boolean {
-        if (burnTime > 0) burnTime--
-        else if (maxStoredPower > energy) {
-            val inventory = inventoryComponent?.inventory ?: return false
-            val invStack = inventory.getStack(2)
-            if (!invStack.isEmpty && invStack.item == IRRegistry.BIOMASS) {
-                burnTime = 300
-                maxBurnTime = burnTime
-                invStack.count--
-                if (invStack.isEmpty) inventory.setStack(2, ItemStack.EMPTY)
-                else inventory.setStack(2, invStack)
-            }
+    companion object {
+        private val BURN_TIME_MAP = hashMapOf<Item, Int>()
+
+        init {
+            BURN_TIME_MAP[IRRegistry.BIOMASS] = 150
         }
-        markDirty()
-        return burnTime > 0 && energy < maxStoredPower
     }
 }

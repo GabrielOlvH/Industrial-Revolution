@@ -39,7 +39,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
-            coolerSlot = 1
         }
     }
 
@@ -56,7 +55,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val upgrades = getUpgrades(inventory)
         requiredPower = Upgrade.getEnergyCost(upgrades, this)
         if (finished) {
-            setWorkingState(false)
+            workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             return
         } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
@@ -64,7 +63,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             mining += Upgrade.getSpeed(upgrades, this)
             temperatureComponent?.tick(true)
         } else {
-            setWorkingState(false)
+            workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             temperatureComponent?.tick(false)
         }
@@ -103,10 +102,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
 
                     sendBlockBreakPacket(drillBlockEntity.pos, generatedOre)
                 }
-                setWorkingState(true)
+                workingState = true
                 return@updateData true
             }
-        }
+        } else workingState = false
     }
 
     private fun sendBlockBreakPacket(pos: BlockPos, block: Block) {
@@ -192,7 +191,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         return when (upgrade) {
             Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
-                val itemStack = blockEntity.inventory[0]
+                blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
             Upgrade.BUFFER -> getBaseBuffer()
@@ -206,7 +205,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
         return super.toTag(tag)
     }
 
@@ -214,7 +212,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
         super.fromTag(state, tag)
     }
 
@@ -222,8 +219,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.putDouble("RequiredPower", requiredPower)
-        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
         return super.toClientTag(tag)
     }
 
@@ -231,12 +226,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        requiredPower = tag?.getDouble("RequiredPower") ?: 0.0
-        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
         super.fromClientTag(tag)
     }
 
     companion object {
-        val BLOCK_BREAK_PACKET = identifier("miner_block_break_packet")
+        val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
     }
 }

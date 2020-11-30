@@ -10,10 +10,9 @@ import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.item.ItemStack
-import team.reborn.energy.Energy
 
 open class Filterable {
-    var filters: MutableMap<Int, (ItemStack) -> Boolean> = mutableMapOf()
+    var filters: MutableMap<Int, (ItemStack) -> Boolean> = hashMapOf()
 
     infix fun Int.filter(filter: (ItemStack) -> Boolean) {
         filters[this] = filter
@@ -48,12 +47,12 @@ open class IRInventoryDSL : Filterable() {
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
         if (blockEntity is UpgradeProvider) size += blockEntity.getUpgradeSlots().size
-        return IRInventory(size, input.slots, output.slots) { slot, stack ->
+        return IRInventory(this, size, input.slots, output.slots) { slot, stack ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) { slot ->
                 { (stack, item) ->
                     when {
-                        slot == batterySlot -> Energy.valid(stack) && Energy.of(stack).maxOutput > 0
+                        slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
                         blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.getUpgradeSlots() && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.getAvailableUpgrades().contains(item.upgrade)

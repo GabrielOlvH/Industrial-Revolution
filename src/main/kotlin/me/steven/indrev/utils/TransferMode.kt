@@ -12,4 +12,17 @@ enum class TransferMode(val rgb: Long, val input: Boolean, val output: Boolean) 
         INPUT_OUTPUT -> NONE
         NONE -> INPUT
     }
+
+
+    fun next(available: Array<out TransferMode>): TransferMode {
+        var current = this
+        for (i in values().indices) {
+            val possible = current.next()
+            if (available.contains(possible)) {
+                return possible
+            }
+            current = possible
+        }
+        return this
+    }
 }

@@ -9,6 +9,7 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
@@ -17,7 +18,10 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.collection.DefaultedList
@@ -45,18 +49,30 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
             .with(COVERED, false)
     }
 
+    override fun appendTooltip(
+        stack: ItemStack?,
+        world: BlockView?,
+        tooltip: MutableList<Text>?,
+        options: TooltipContext?
+    ) {
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
+        )
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
+        )
+    }
+
     override fun getOutlineShape(
         state: BlockState,
         view: BlockView?,
         pos: BlockPos?,
         context: ShapeContext?
     ): VoxelShape {
-        if (state[COVERED]) return VoxelShapes.fullCube()
-        var shape = CENTER_SHAPE
-        Direction.values().forEach { direction ->
-            if (state[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
-        }
-        return shape
+        return if (state[COVERED]) VoxelShapes.fullCube()
+        else getShape(state)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
@@ -166,6 +182,26 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         else -> IndustrialRevolution.CONFIG.cables.cableMk4
     }
 
+    data class CableShape(val directions: Array<Direction>, val shape: VoxelShape) {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as CableShape
+
+            if (!directions.contentEquals(other.directions)) return false
+            if (shape != other.shape) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = directions.contentHashCode()
+            result = 31 * result + shape.hashCode()
+            return result
+        }
+    }
+
     companion object {
 
         val CENTER_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 10.5)
@@ -206,6 +242,21 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
                 Direction.DOWN -> DOWN
                 else -> EAST
             }
+        }
+
+        private val SHAPE_CACHE = hashSetOf<CableShape>()
+        private fun getShape(state: BlockState): VoxelShape {
+            val directions = Direction.values().filter { dir -> state[getProperty(dir)] }.toTypedArray()
+            var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
+            if (cableShapeCache == null) {
+                var shape = CENTER_SHAPE
+                Direction.values().forEach { direction ->
+                    if (state[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
+                }
+                cableShapeCache = CableShape(directions, shape)
+                SHAPE_CACHE.add(cableShapeCache)
+            }
+            return cableShapeCache.shape
         }
     }
 }

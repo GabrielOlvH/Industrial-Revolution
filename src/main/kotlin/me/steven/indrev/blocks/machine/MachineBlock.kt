@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
@@ -38,6 +39,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -132,21 +134,27 @@ open class MachineBlock(
         }
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (world?.isClient == true) return
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity<*>) {
-            val tag = itemStack?.getSubTag("MachineInfo") ?: return
+            val tag = itemStack?.getSubTag("MachineInfo")
             val temperatureController = blockEntity.temperatureComponent
             if (Energy.valid(itemStack))
                 Energy.of(blockEntity).set(Energy.of(itemStack).energy)
             if (temperatureController != null) {
-                val temperature = tag.getDouble("Temperature")
-                temperatureController.temperature = temperature
+                val temperature = tag?.getDouble("Temperature")
+                if (temperature != null) temperatureController.temperature = temperature
+            }
+            ConfigurationType.values().forEach { type ->
+                if (blockEntity.isConfigurable(type))
+                    blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
             }
         }
     }
+
+    open fun getFacing(state: BlockState): Direction = Direction.UP
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider

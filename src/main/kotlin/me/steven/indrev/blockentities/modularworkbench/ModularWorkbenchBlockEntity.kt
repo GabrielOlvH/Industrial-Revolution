@@ -55,13 +55,13 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
         val compatible = targetItem.getCompatibleModules(targetStack)
         if (inventory.isEmpty) {
             processTime = 0
-            setWorkingState(false)
+            workingState = false
             state = State.IDLE
         } else {
             if (isProcessing()
                 && compatible.contains(module)
                 && Energy.of(this).use(config.energyCost)) {
-                setWorkingState(true)
+                workingState = true
                 processTime += config.processSpeed.toInt()
                 if (processTime >= maxProcessTime) {
                     inventory.setStack(1, ItemStack.EMPTY)
@@ -92,7 +92,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 }
                 processTime = 1
                 maxProcessTime = 1200
-                setWorkingState(true)
+                workingState = true
                 state = State.INSTALLING
             } else {
                 state = State.INCOMPATIBLE

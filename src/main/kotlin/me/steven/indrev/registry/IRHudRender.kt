@@ -2,6 +2,7 @@ package me.steven.indrev.registry
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.EquipmentSlot
+import net.minecraft.text.LiteralText
 
 object IRHudRender : HudRenderCallback {
 
@@ -20,7 +22,8 @@ object IRHudRender : HudRenderCallback {
         val client = MinecraftClient.getInstance()
         val x = IndustrialRevolution.CONFIG.hud.renderPosX
         val y = IndustrialRevolution.CONFIG.hud.renderPosY
-        val armor = MinecraftClient.getInstance().player?.inventory?.armor?.filter { it.item is IRModularArmor }
+        val player = MinecraftClient.getInstance().player
+        val armor = player?.inventory?.armor?.filter { it.item is IRModularArmor }
         armor?.forEach { itemStack ->
             val item = itemStack.item as IRModularArmor
             val yOffset = when (item.slotType) {
@@ -33,7 +36,8 @@ object IRHudRender : HudRenderCallback {
             if (shouldRenderShield(item.slotType)) {
                 val totalShield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack))
                 if (totalShield > 0) {
-                    val currentShield = item.getShield(itemStack)
+                    // TODO fix this hud
+                    val currentShield = 0.0//item.getShield(itemStack)
                     var percent = currentShield.toFloat() / totalShield.toFloat()
                     val color = if (percent < 0.35) 0xff0000 else -1
                     val height = 16
@@ -59,6 +63,10 @@ object IRHudRender : HudRenderCallback {
                 ScreenDrawing.texturedRect(x, y + yOffset, 16, 16, armorIcon, 0f, 0f, 1f, 1f, -1, 0.8f)
                 client.itemRenderer.renderGuiItemOverlay(client.textRenderer, itemStack, x, y + yOffset)
             }
+        }
+        if (player is IRPlayerEntityExtension) {
+            val literalText = LiteralText("Shield: ${player.shieldDurability} / ${player.getMaxShieldDurability()}")
+            client.textRenderer.draw(matrixStack, literalText, x.toFloat(), y.toFloat(), 0xFFFFFFFF.toInt())
         }
     }
 

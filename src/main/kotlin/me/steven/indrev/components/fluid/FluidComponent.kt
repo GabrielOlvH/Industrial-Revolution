@@ -9,19 +9,16 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
-import me.steven.indrev.utils.TransferMode
 import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.math.Direction
 
 open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit: FluidAmount, private val tankCount: Int = 1) : FixedFluidInv {
 
     val tanks = Array(tankCount) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
-    val transferConfig: MutableMap<Direction, TransferMode> = mutableMapOf<Direction, TransferMode>().also { map ->
-        Direction.values().forEach { dir -> map[dir] = TransferMode.NONE }
-    }
-
+    val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.FLUID)
     override fun getTankCount(): Int = tankCount
 
     override fun addListener(
@@ -57,11 +54,7 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
             tanksTag.put(index.toString(), tankTag)
         }
         tag.put("tanks", tanksTag)
-        val icTag = CompoundTag()
-        transferConfig.forEach { (dir, mode) ->
-            icTag.putString(dir.toString(), mode.toString())
-        }
-        tag.put("TransferConfig", icTag)
+        transferConfig.toTag(tag)
     }
 
     fun fromTag(tag: CompoundTag?) {
@@ -73,16 +66,8 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
             val tank = tanks[index]
             tank.volume = volume
         }
-        if (tag?.contains("TransferConfig") == true) {
-            val icTag = tag.getCompound("TransferConfig")
-            Direction.values().forEach { dir ->
-                val value = icTag.getString(dir.toString()).toUpperCase()
-                if (value.isNotEmpty()) {
-                    val mode = TransferMode.valueOf(value)
-                    transferConfig[dir] = mode
-                }
-            }
-        }
+
+        transferConfig.fromTag(tag)
     }
 
     class IRTank(var volume: FluidVolume)

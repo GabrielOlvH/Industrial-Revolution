@@ -14,9 +14,9 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
             if (shouldGenerate() && maxStoredPower > energy) {
                 this.energy += getGenerationRatio()
                 this.temperatureComponent?.tick(true)
-                setWorkingState(true)
+                workingState = true
             } else {
-                setWorkingState(false)
+                workingState = false
                 this.temperatureComponent?.tick(false)
             }
         }

@@ -1,5 +1,6 @@
 package me.steven.indrev
 
+import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
@@ -24,6 +25,7 @@ import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
@@ -236,6 +238,21 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     blockSoundGroup.getPitch() * 0.8f,
                     false
                 )
+            }
+        }
+
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.SYNC_MODULE_PACKET) { ctx, buf ->
+            val player = ctx.player
+            val size = buf.readInt()
+            if (player is IRPlayerEntityExtension) {
+                (player.getAppliedModules() as MutableMap<*, *>).clear()
+                for (index in 0 until size) {
+                    val ordinal = buf.readInt()
+                    val module = ArmorModule.values()[ordinal]
+                    val level = buf.readInt()
+                    player.applyModule(module, level)
+                }
+                player.shieldDurability = buf.readDouble()
             }
         }
 

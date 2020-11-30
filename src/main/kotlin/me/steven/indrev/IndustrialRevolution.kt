@@ -6,6 +6,8 @@ import io.netty.buffer.Unpooled
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
+import me.steven.indrev.api.IRServerPlayerEntityExtension
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -91,17 +93,14 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
         ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
-            val isItemConfig = buf.readBoolean()
+            val type = buf.readEnumConstant(ConfigurationType::class.java)
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
             val mode = TransferMode.values()[buf.readInt()]
             ctx.taskQueue.execute {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                if (isItemConfig && blockEntity.inventoryComponent != null) {
-                    blockEntity.inventoryComponent!!.itemConfig[dir] = mode
-                } else if (blockEntity.fluidComponent != null)
-                    blockEntity.fluidComponent!!.transferConfig[dir] = mode
+                blockEntity.getCurrentConfiguration(type)[dir] = mode
             }
         }
 
@@ -182,6 +181,11 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
+
+                if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
+                    player.sync()
+                }
+
                 val handler = player.currentScreenHandler as? IRGuiController ?: return@forEach
                 handler.ctx.run { world, pos ->
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
@@ -251,6 +255,7 @@ object IndustrialRevolution : ModInitializer {
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
     val SYNC_PROPERTY = identifier("sync_property")
+    val SYNC_MODULE_PACKET = identifier("sync_module")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())

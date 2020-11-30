@@ -52,42 +52,9 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = Energy.of(stack)
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
-        getShield(stack)
-    }
-
-    fun regenShield(itemStack: ItemStack, protectionLevel: Int) {
-        val tag = itemStack.tag
-        if (tag?.contains("shield") == false) {
-            tag.putDouble("shield", 0.0)
-        }
-        val maxShield = getMaxShield(protectionLevel)
-        val currentShield = tag?.getDouble("shield")!!
-        if (currentShield >= maxShield || !Energy.of(itemStack).use(50.0)) return
-        tag.putDouble("shield", currentShield + SHIELD_REGEN_RATE)
-    }
-
-    fun useShield(itemStack: ItemStack, amount: Double): Double {
-        val tag = itemStack.tag
-        if (tag?.contains("shield") == false) {
-            return amount
-        }
-        val shield = getShield(itemStack)
-        val used = amount.coerceAtMost(shield)
-        tag?.putDouble("shield", shield - used)
-        return used
     }
 
     fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0
-
-    fun getShield(itemStack: ItemStack): Double {
-        val tag = itemStack.tag
-        return if (tag?.contains("shield") == false) return 0.0
-        else {
-            val shield = tag!!.getDouble("shield").coerceAtMost(getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack)))
-            tag.putDouble("shield", shield)
-            shield
-        }
-    }
 
     override fun getSlotLimit(): Int = -1
 
@@ -137,19 +104,19 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
             if (speedLevel > 0)
                 attr.put(
                     EntityAttributes.GENERIC_MOVEMENT_SPEED,
-                    EntityAttributeModifier(UUID.fromString("91AEAA56-376B-4498-935B-2F7F68070635"), "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                    EntityAttributeModifier(SPEED_MODIFIER, "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
             return attr.build()
         }
         return getAttributeModifiers(equipmentSlot)
     }
 
     companion object {
-        const val SHIELD_REGEN_RATE = 10
         private val MODIFIERS = arrayOf(
             UUID.fromString("845DB27C-C624-495F-8C9F-6020A9A58B6B"),
             UUID.fromString("D8499B04-0E66-4726-AB29-64469D734E0D"),
             UUID.fromString("9F3D476D-C118-4544-8365-64846904B48E"),
             UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
         )
+        private val SPEED_MODIFIER = UUID.randomUUID()
     }
 }

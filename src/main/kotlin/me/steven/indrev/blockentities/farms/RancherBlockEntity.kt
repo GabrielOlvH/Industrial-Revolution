@@ -51,9 +51,9 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
         if (animals.isEmpty() || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this))) {
-            setWorkingState(false)
+            workingState = false
             return
-        } else setWorkingState(true)
+        } else workingState = true
         val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
@@ -62,7 +62,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             if (kill.isNotEmpty()) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
-                if (swordStack.damage <= 0) swordStack.decrement(1)
+                if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
                 animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
                 if (animal.isDead) {

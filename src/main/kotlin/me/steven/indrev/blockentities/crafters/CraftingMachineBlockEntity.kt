@@ -38,12 +38,11 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
     var isSplitOn = false
-    var ticks = 0
 
     override fun machineTick() {
         ticks++
         craftingComponents.forEach { it.tick() }
-        setWorkingState(craftingComponents.any { it.isCrafting })
+        workingState = craftingComponents.any { it.isCrafting }
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 

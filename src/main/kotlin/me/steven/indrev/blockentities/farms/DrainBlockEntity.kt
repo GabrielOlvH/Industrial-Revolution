@@ -2,16 +2,20 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
+import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.Direction
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -58,4 +62,14 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun applyDefault(
+        state: BlockState,
+        type: ConfigurationType,
+        configuration: MutableMap<Direction, TransferMode>
+    ) {
+        Direction.values().forEach { dir -> configuration[dir] = TransferMode.OUTPUT }
+    }
+
+    override fun isFixed(type: ConfigurationType): Boolean = true
 }
