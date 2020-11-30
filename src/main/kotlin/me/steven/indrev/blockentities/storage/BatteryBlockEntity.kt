@@ -39,11 +39,18 @@ class BatteryBlockEntity(tier: Tier) :
     }
 
     override fun getMaxOutput(side: EnergySide?): Double {
-        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.OUTPUT) super.getMaxOutput(side) else 0.0
+        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.OUTPUT) getTransferRate() else 0.0
     }
 
     override fun getMaxInput(side: EnergySide?): Double {
-        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.INPUT) super.getMaxInput(side) else 0.0
+        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.INPUT) getTransferRate() else 0.0
+    }
+
+    private fun getTransferRate() = when (tier) {
+        Tier.MK1 -> 128.0
+        Tier.MK2 -> 512.0
+        Tier.MK3 -> 4096.0
+        else -> 16384.0
     }
 
     override fun isConfigurable(type: ConfigurationType): Boolean {

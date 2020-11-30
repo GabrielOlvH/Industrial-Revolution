@@ -243,16 +243,16 @@ interface IConfig {
 @Config(name = "cables")
 class Cables : ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
-    val cableMk1 = CableConfig(Tier.MK1.io, Tier.MK1.io)
+    val cableMk1 = CableConfig(128.0, 128.0)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val cableMk2 = CableConfig(Tier.MK2.io, Tier.MK2.io)
+    val cableMk2 = CableConfig(512.0, 512.0)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val cableMk3 = CableConfig(Tier.MK3.io, Tier.MK3.io)
+    val cableMk3 = CableConfig(4096.0, 4096.0)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val cableMk4 = CableConfig(Tier.MK4.io, Tier.MK4.io)
+    val cableMk4 = CableConfig(16384.0, 16384.0)
 }
 
 class CableConfig(val maxOutput: Double, val maxInput: Double)
