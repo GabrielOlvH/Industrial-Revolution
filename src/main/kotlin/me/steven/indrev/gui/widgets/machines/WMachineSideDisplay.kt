@@ -12,12 +12,16 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.World
 
 class WMachineSideDisplay(
     private val side: WrenchController.MachineSide,
     private val direction: Direction,
-    var mode: TransferMode
+    var mode: TransferMode,
+    private val world: World,
+    private val blockPos: BlockPos
 ) : WButton() {
     init {
         this.setSize(16, 16)
@@ -46,8 +50,9 @@ class WMachineSideDisplay(
             .append(LiteralText(" (")
                 .append(TranslatableText("item.indrev.wrench.side.${direction.toString().toLowerCase()}"))
                 .append(LiteralText(")"))).formatted(Formatting.WHITE)
-        tooltip?.add(modeText, side)
-        super.addTooltip(tooltip)
+        val neighbor = TranslatableText("item.indrev.wrench.connected",
+            world.getBlockState(blockPos.offset(direction)).block.name)
+        tooltip?.add(modeText, side, neighbor)
     }
 
     companion object {

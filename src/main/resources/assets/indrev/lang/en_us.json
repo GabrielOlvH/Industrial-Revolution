@@ -266,6 +266,7 @@
   "item.indrev.wrench.side.right": "Right",
   "item.indrev.wrench.side.front": "Front",
   "item.indrev.wrench.side.back": "Back",
+  "item.indrev.wrench.connected": "Connected to %s",
   "item.indrev.tech_soup": "Tech Soup",
   "item.indrev.scan_output": "Resource Report",
   "item.indrev.portable_charger": "Portable Charger",

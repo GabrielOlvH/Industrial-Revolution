@@ -78,7 +78,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                 }
                 val direction = offset(facing, side.direction)
                 val mode = currentType.getConfig(blockEntity)[direction]!!
-                val widget = WMachineSideDisplay(side, direction, mode)
+                val widget = WMachineSideDisplay(side, direction, mode, world, pos)
                 widget.setOnClick {
                     widget.mode = widget.mode.next(currentType.validModes)
                     currentType.getConfig(blockEntity)[direction] = widget.mode
