@@ -22,12 +22,14 @@ class EnergyNetwork(
     val cables: MutableSet<BlockPos> = hashSetOf(),
     val machines: MutableMap<BlockPos, MutableSet<Direction>> = hashMapOf()
 ) {
+    var lastSenderSize = 0
+    var lastReceiverSize = 0
     var tier = Tier.MK1
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
-        val receiversHandlers = hashSetOf<EnergyHandler>()
-        val senderHandlers = hashSetOf<EnergyHandler>()
+        val receiversHandlers = ArrayList<EnergyHandler>(lastReceiverSize)
+        val senderHandlers = ArrayList<EnergyHandler>(lastSenderSize)
         val cachedChunks = hashMapOf<ChunkPos, Chunk>()
         machines.forEach { (pos, directions) ->
             if (!world.isChunkLoaded(pos)) return@forEach
@@ -43,6 +45,9 @@ class EnergyNetwork(
                 }
             }
         }
+
+        lastReceiverSize = receiversHandlers.size
+        lastSenderSize = senderHandlers.size
 
         if (senderHandlers.isEmpty() || receiversHandlers.isEmpty()) return
 
