@@ -9,6 +9,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import net.minecraft.nbt.CompoundTag
@@ -17,7 +18,7 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
 
     val tanks = Array(tankCount) { IRTank(FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)) }
 
-    val transferConfig: SideConfiguration = SideConfiguration()
+    val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.FLUID)
     override fun getTankCount(): Int = tankCount
 
     override fun addListener(

@@ -1,5 +1,6 @@
 package me.steven.indrev.components
 
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.inventories.IRInventory
@@ -17,7 +18,7 @@ class InventoryComponent(val syncable: MachineBlockEntity<*>, supplier: Inventor
         inventory.component = this
     }
 
-    val itemConfig: SideConfiguration = SideConfiguration()
+    val itemConfig: SideConfiguration = SideConfiguration(ConfigurationType.ITEM)
 
     override fun onInventoryChanged(sender: Inventory?) {
         syncable.markForUpdate()

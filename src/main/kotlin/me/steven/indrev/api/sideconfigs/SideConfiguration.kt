@@ -5,25 +5,31 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 import java.util.*
 
-data class SideConfiguration(private val transferConfig: EnumMap<Direction, TransferMode> = EnumMap(Direction::class.java))
+data class SideConfiguration(val type: ConfigurationType, private val transferConfig: EnumMap<Direction, TransferMode> = EnumMap(Direction::class.java))
     : MutableMap<Direction, TransferMode> by transferConfig {
     init {
         Direction.values().forEach { dir -> this[dir] = TransferMode.NONE }
     }
 
     fun toTag(tag: CompoundTag?) {
-        val icTag = CompoundTag()
-        forEach { (dir, mode) ->
-            icTag.putString(dir.toString(), mode.toString())
+        var transferConfigTag = tag?.getCompound("TransferConfig")
+        if (tag?.contains("TransferConfig") == false) {
+            transferConfigTag = CompoundTag()
+            tag.put("TransferConfig", transferConfigTag)
         }
-        tag?.put("TransferConfig", icTag)
+        val configTag = CompoundTag()
+        forEach { (dir, mode) ->
+            configTag.putString(dir.toString(), mode.toString())
+        }
+        transferConfigTag?.put(type.toString().toLowerCase(), configTag)
     }
 
     fun fromTag(tag: CompoundTag?) {
         if (tag?.contains("TransferConfig") == true) {
-            val icTag = tag.getCompound("TransferConfig")
+            val transferConfigTag = tag.getCompound("TransferConfig")
+            val configTag = transferConfigTag.getCompound(type.toString().toLowerCase())
             Direction.values().forEach { dir ->
-                val value = icTag.getString(dir.toString()).toUpperCase()
+                val value = configTag.getString(dir.toString()).toUpperCase()
                 if (value.isNotEmpty()) {
                     val mode = TransferMode.valueOf(value)
                     this[dir] = mode

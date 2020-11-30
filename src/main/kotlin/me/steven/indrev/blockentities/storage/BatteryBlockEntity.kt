@@ -26,7 +26,8 @@ class BatteryBlockEntity(tier: Tier) :
         }
     }
 
-    private val transferConfig: SideConfiguration = SideConfiguration()
+    private val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
+
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
