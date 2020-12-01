@@ -8,13 +8,12 @@ import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.PumpBlockEntity
 import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
-import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
+import me.steven.indrev.blocks.PumpPipeBakedModel
 import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
@@ -164,12 +163,15 @@ object IndustrialRevolutionClient : ClientModInitializer {
             out.accept(ModelIdentifier(identifier("drill_head"), "iron"))
             out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
             out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
+            out.accept(ModelIdentifier(identifier("pump_pipe"), ""))
         }
 
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
             ModelVariantProvider { resourceId, context ->
                 if (resourceId.namespace == "indrev" && resourceId.path == "drill_head")
                     DrillHeadModel(resourceId.variant)
+                else if (resourceId.namespace == "indrev" && resourceId.path == "pump_pipe")
+                    PumpPipeBakedModel()
                 else null
             }
         }

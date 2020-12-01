@@ -3,13 +3,17 @@ package me.steven.indrev.blockentities.farms
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.map
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.minecraft.block.BlockState
 import net.minecraft.block.FluidDrainable
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
@@ -68,6 +72,18 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             movingTicks += 0.01
         sync()
     }
+
+    override fun applyDefault(
+        state: BlockState,
+        type: ConfigurationType,
+        configuration: MutableMap<Direction, TransferMode>
+    ) {
+        assert(type == ConfigurationType.FLUID)
+        val facing = state[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
+        configuration[facing] = TransferMode.OUTPUT
+    }
+
+    override fun isFixed(type: ConfigurationType): Boolean = true
 
     private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(9.0, 0.0, 9.0)
 
