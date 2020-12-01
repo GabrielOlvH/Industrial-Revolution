@@ -1,0 +1,24 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/block",
+	"texture_size": [8, 8],
+	"textures": {
+		"particle": "indrev:block/pump_pipe",
+		"texture": "indrev:block/pump_pipe"
+	},
+	"elements": [
+		{
+			"from": [7, 0, 7],
+			"to": [9, 16, 9],
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 12, 14]},
+			"faces": {
+				"north": {"uv": [2, 0, 4, 16], "texture": "#texture"},
+				"east": {"uv": [0, 0, 2, 16], "texture": "#texture"},
+				"south": {"uv": [2, 0, 4, 16], "texture": "#texture"},
+				"west": {"uv": [0, 0, 2, 16], "texture": "#texture"},
+				"up": {"uv": [2, 11, 0, 9], "texture": "#texture"},
+				"down": {"uv": [2, 9, 0, 11], "texture": "#texture"}
+			}
+		}
+	]
+}
