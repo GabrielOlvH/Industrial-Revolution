@@ -180,7 +180,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentPos = pos?.down()
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock && currentState[DOWN]) {
-                        val extractable = FluidAttributes.EXTRACTABLE.get(world, currentPos)
+                        val extractable = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent.extractable
                         if (extractable !is EmptyFluidExtractable) {
                             to?.offer(extractable)
                             break
@@ -197,7 +197,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentPos = pos?.up()
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock) {
-                        val insertable = FluidAttributes.INSERTABLE.get(world, currentPos)
+                        val insertable = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent.insertable
                         if (insertable !is RejectingFluidInsertable) {
                             to?.offer(insertable)
                             break
