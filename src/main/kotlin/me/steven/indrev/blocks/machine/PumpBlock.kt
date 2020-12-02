@@ -15,7 +15,7 @@ import net.minecraft.world.BlockView
 class PumpBlock(settings: Settings) : HorizontalFacingMachineBlock(
     settings,
     Tier.MK1,
-    IndustrialRevolution.CONFIG.machines.drain,
+    IndustrialRevolution.CONFIG.machines.pump,
     null,
     { PumpBlockEntity(Tier.MK1) }) {
 

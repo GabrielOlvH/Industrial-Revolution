@@ -193,6 +193,9 @@ class Machines : ConfigData {
     val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
+    val pump: MachineConfig = MachineConfig(4.0, 20.0, 50.0, Tier.MK1.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
     val smelter: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0,50000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
