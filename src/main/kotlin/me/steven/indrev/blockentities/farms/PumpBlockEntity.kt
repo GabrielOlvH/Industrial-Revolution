@@ -50,7 +50,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             val fluidComponent = fluidComponent ?: return
             val areaBox = getWorkingArea(lookLevel)
             if (!areaIterator.hasNext())
-                areaIterator = areaBox.map(::BlockPos).sortedWith(compareBy { it.getSquaredDistance(pos) }).iterator()
+                areaIterator = areaBox.map(::BlockPos).sortedWith(compareByDescending { it.getSquaredDistance(pos) }).iterator()
             while (areaIterator.hasNext()) {
                 val fluidPos = areaIterator.next()
                 if (!scannedBlocks.add(fluidPos)) continue

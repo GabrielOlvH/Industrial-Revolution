@@ -339,7 +339,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         )
 
         val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
-            { tier -> PumpBlock(MACHINE_BLOCK_SETTINGS()) },
+            { tier -> PumpBlock(MACHINE_BLOCK_SETTINGS().nonOpaque()) },
             { tier -> { PumpBlockEntity(tier) } }
         )
 

@@ -92,8 +92,9 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
     }
 
     private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
+        val yMax = 0.15 + (0.16 * (8 / inputVolume.amount().asInexactDouble()))
         val face =
-            listOf(FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.315, 0.556, 0.31, 0.315, 2.0, false, false))
+            listOf(FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, 0.31, yMax, 2.0, false, false))
         inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
         translate(0.3715, 0.3, 0.37)
         multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(90f))
@@ -109,14 +110,5 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
     }
 
-    companion object {
-        private val NORTH_FACE =
-            listOf(FluidRenderFace.createFlatFace(0.815, 0.690, -1.005, 0.19, 0.815, -0.005, 2.0, Direction.NORTH, false))
-        private val INPUT_SOUTH_FACE =
-            listOf(FluidRenderFace.createFlatFaceZ(0.185, 0.690, 1.005, 0.81, 0.815, 1.005, 2.0, true, false))
-        private val INPUT_WEST_FACE =
-            listOf(FluidRenderFace.createFlatFaceX(-0.005, 0.690, 0.185, -0.005, 0.815, 0.81, 2.0, false, false))
-        private val INPUT_EAST_FACE =
-            listOf(FluidRenderFace.createFlatFaceX(1.005, 0.690, 0.815, 1.005, 0.815, 0.19, 2.0, false, false))
-    }
+    override fun rendersOutsideBoundingBox(blockEntity: PumpBlockEntity?): Boolean = true
 }
