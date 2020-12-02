@@ -4,8 +4,6 @@ import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import net.minecraft.block.Block
@@ -180,9 +178,9 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentPos = pos?.down()
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock && currentState[DOWN]) {
-                        val extractable = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent.extractable
-                        if (extractable !is EmptyFluidExtractable) {
-                            to?.offer(extractable)
+                        val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
+                        if (component.tanks[0].volume.amount() < component.limit) {
+                            to?.offer(component.extractable)
                             break
                         }
                         if (!currentState[DOWN]) break
@@ -197,9 +195,9 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentPos = pos?.up()
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock) {
-                        val insertable = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent.insertable
-                        if (insertable !is RejectingFluidInsertable) {
-                            to?.offer(insertable)
+                        val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
+                        if (component.tanks[0].volume.amount() < component.limit) {
+                            to?.offer(component.insertable)
                             break
                         }
                         if (!currentState[UP]) break

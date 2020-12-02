@@ -34,6 +34,9 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     var isDescending = false
     var lastYPos = 0
 
+    val scannedBlocks = hashSetOf<BlockPos>()
+    var areaIterator = emptySet<BlockPos>().iterator()
+
     override fun machineTick() {
         val currentLevel = floor(movingTicks).toInt().coerceAtLeast(1)
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
@@ -46,9 +49,11 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             movingTicks = movingTicks.roundToInt().toDouble()
             val fluidComponent = fluidComponent ?: return
             val areaBox = getWorkingArea(lookLevel)
-            val areaIterator = areaBox.map(::BlockPos).sortedWith(compareBy { it.getSquaredDistance(pos) }).iterator()
+            if (!areaIterator.hasNext())
+                areaIterator = areaBox.map(::BlockPos).sortedWith(compareBy { it.getSquaredDistance(pos) }).iterator()
             while (areaIterator.hasNext()) {
                 val fluidPos = areaIterator.next()
+                if (!scannedBlocks.add(fluidPos)) continue
                 val fluidState = world?.getFluidState(fluidPos)
                 val fluid = fluidState?.fluid
                 val block = fluidState?.blockState?.block
@@ -66,11 +71,14 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             isDescending = true
             return
         }
-        else if (world?.getFluidState(lookLevel)?.isEmpty == false && lookLevel.y < lastYPos)
+        else if (world?.getFluidState(lookLevel)?.isEmpty == false && lookLevel.y < lastYPos) {
             isDescending = false
-        else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false)
+            areaIterator = getWorkingArea(lookLevel).map(::BlockPos).sortedWith(compareBy { it.getSquaredDistance(pos) }).iterator()
+        }
+        else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false) {
             movingTicks += 0.01
-        sync()
+            sync()
+        }
     }
 
     override fun applyDefault(
@@ -90,6 +98,16 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
+
+    override fun toTag(tag: CompoundTag?): CompoundTag {
+        tag?.putDouble("MovingTicks", movingTicks)
+        return super.toTag(tag)
+    }
+
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+        movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
+        super.fromTag(state, tag)
+    }
 
     override fun fromClientTag(tag: CompoundTag?) {
         movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
