@@ -75,7 +75,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             isDescending = false
             areaIterator = getWorkingArea(lookLevel).map(::BlockPos).sortedWith(compareByDescending { it.getSquaredDistance(pos) }).iterator()
         }
-        else if (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false) {
+        else if (Energy.of(this).use(2.0) && (world?.isAir(lookLevel) == true || world?.getFluidState(lookLevel)?.isEmpty == false)) {
             movingTicks += 0.01
             sync()
         }
