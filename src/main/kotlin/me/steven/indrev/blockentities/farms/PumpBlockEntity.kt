@@ -93,7 +93,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     override fun isFixed(type: ConfigurationType): Boolean = true
 
-    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(9.0, 0.0, 9.0)
+    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(7.0, 0.0, 7.0)
 
     override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
