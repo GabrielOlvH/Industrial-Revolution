@@ -29,12 +29,12 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
                     val id = Registry.ITEM.getId(item)
                     val obj = JsonObject()
                     if (item is BlockItem) {
+                        obj.addProperty("parent", "${id.namespace}:block/${id.path}")
+                    } else {
                         obj.addProperty("parent", "item/generated")
                         val texturesObj = JsonObject()
                         texturesObj.addProperty("layer0", "${id.namespace}:item/${id.path}")
                         obj.add("textures", texturesObj)
-                    } else {
-                        obj.addProperty("parent", "${id.namespace}:block/${id.path}")
                     }
                     return obj
                 }

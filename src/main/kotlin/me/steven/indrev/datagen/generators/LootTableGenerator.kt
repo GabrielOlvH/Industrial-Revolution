@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import me.steven.indrev.datagen.DataGenerator
 import me.steven.indrev.datagen.JsonFactory
 import net.minecraft.block.Block
+import net.minecraft.item.Items
 import net.minecraft.loot.LootManager
 import net.minecraft.loot.LootPool
 import net.minecraft.loot.LootTable
@@ -21,7 +22,7 @@ class LootTableGenerator(val root: File, namespace: String, fallback: (Block) ->
         var count = 0
         Registry.BLOCK.ids.filter { id -> id.namespace == namespace }.forEach {
             val block = Registry.BLOCK.get(it)
-            if (block.asItem() != null && generate(it, block)) {
+            if (block.asItem() != null && block.asItem() != Items.AIR && generate(it, block)) {
                 count++
             }
         }
