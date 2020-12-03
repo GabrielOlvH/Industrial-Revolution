@@ -13,6 +13,7 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.config.IRConfig
+import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
@@ -39,6 +40,7 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
@@ -70,6 +72,9 @@ object IndustrialRevolution : ModInitializer {
         ).forEach { it.registerFluidKey() }
         IRLootTables.register()
         MachineRegistry
+        if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
+             DataGeneratorManager("indrev").generate()
+        }
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
