@@ -42,7 +42,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        root.setSize(96, 120)
+        root.setSize(100, 128)
 
         val titleText = WText(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
         root.add(titleText, 0.0, 0.2)
@@ -60,9 +60,10 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                 configTypeButton.label = currentType.title
             }
             if (availableTypes.size > 1)
-                root.add(configTypeButton, 1.3, 0.9)
+                root.add(configTypeButton, 1.6, 0.9)
             configTypeButton.setSize(45, 20)
 
+            val machineVisualizerPanel = WGridPanel()
             MachineSide.values().forEach { side ->
                 var facing =
                     when {
@@ -91,9 +92,10 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
                     ClientSidePacketRegistry.INSTANCE.sendToServer(SAVE_PACKET_ID, buf)
                 }
                 displays[direction] = widget
-                root.add(widget, (side.x - 0.3) * 1.2, (side.y + 1.0) * 1.2)
+                machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
             }
-            addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
+            root.add(machineVisualizerPanel, 1, 3)
+            addBookEntryShortcut(playerInventory, root, -1.8, -0.47)
         }
         root.validate(this)
     }
@@ -125,12 +127,12 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         }
     }
     enum class MachineSide(val x: Int, val y: Int, val direction: Direction, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {
-        FRONT(2, 2, Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),
-        LEFT(1, 2, Direction.EAST, 0.0f, 5.333f, 5.332f, 10.666f),
-        BACK(3, 3, Direction.SOUTH, 10.667f, 10.667f, 16.0f, 16f),
-        RIGHT(3, 2, Direction.WEST, 10.667f, 5.333f, 16.0f, 10.665f),
-        TOP(2, 1, Direction.UP, 5.333f, 0.0f, 10.666f, 5.333f),
-        BOTTOM(2, 3, Direction.DOWN, 5.333f, 10.667f, 10.666f, 15.998f)
+        FRONT(1, 1, Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),
+        LEFT(0, 1, Direction.EAST, 0.0f, 5.333f, 5.332f, 10.666f),
+        BACK(2, 2, Direction.SOUTH, 10.667f, 10.667f, 16.0f, 16f),
+        RIGHT(2, 1, Direction.WEST, 10.667f, 5.333f, 16.0f, 10.665f),
+        TOP(1, 0, Direction.UP, 5.333f, 0.0f, 10.666f, 5.333f),
+        BOTTOM(1, 2, Direction.DOWN, 5.333f, 10.667f, 10.666f, 15.998f)
     }
 
     companion object {

@@ -115,7 +115,7 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         val playerWidget = WPlayerRender()
         root.add(playerWidget, 2.4, 3.5)
 
-        addBookEntryShortcut(playerInventory, root, -1.4, -0.47)
+        addBookEntryShortcut(playerInventory, root, -1.8, -0.47)
 
         root.validate(this)
     }

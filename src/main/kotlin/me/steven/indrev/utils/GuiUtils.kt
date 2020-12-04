@@ -148,7 +148,7 @@ fun SyncedGuiDescription.configure(
         }
     }
     if (this is PatchouliEntryShortcut) {
-        addBookEntryShortcut(playerInventory, panel, -1.4, -0.47)
+        addBookEntryShortcut(playerInventory, panel, -1.8, -0.47)
     }
     panel.add(title, titlePos, 0.0)
 }
