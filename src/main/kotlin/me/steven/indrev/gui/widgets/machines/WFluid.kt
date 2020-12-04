@@ -62,6 +62,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         super.onClick(x, y, button)
         val packet = PacketByteBuf(Unpooled.buffer())
         ctx.run { _, pos -> packet.writeBlockPos(pos) }
+        packet.writeInt(tank)
         ClientSidePacketRegistry.INSTANCE.sendToServer(FLUID_CLICK_PACKET, packet)
     }
 

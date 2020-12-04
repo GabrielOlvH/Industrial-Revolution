@@ -125,13 +125,14 @@ object IndustrialRevolution : ModInitializer {
 
         ServerSidePacketRegistry.INSTANCE.register(WFluid.FLUID_CLICK_PACKET) { ctx, buf ->
             val pos = buf.readBlockPos()
+            val tank = buf.readInt()
             val player = ctx.player as ServerPlayerEntity
             val world = player.world
             ctx.taskQueue.execute {
                 if (world.isChunkLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player)
+                    FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player, fluidComponent.getFilterForTank(tank))
                 }
             }
         }
