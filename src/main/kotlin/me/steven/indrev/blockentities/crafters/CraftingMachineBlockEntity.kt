@@ -50,15 +50,20 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> config.energyCost
-        Upgrade.SPEED ->
-            if (temperatureComponent?.isFullEfficiency() == true)
-                ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
-            else
-                config.processSpeed
-        Upgrade.BUFFER -> getBaseBuffer()
-        else -> 0.0
+    override fun getBaseValue(upgrade: Upgrade): Double {
+        val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
+        return when (upgrade) {
+            Upgrade.ENERGY ->
+                if (isFullEfficiency) config.energyCost * 1.5
+                else config.energyCost
+            Upgrade.SPEED ->
+                if (isFullEfficiency)
+                    ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
+                else
+                    config.processSpeed
+            Upgrade.BUFFER -> getBaseBuffer()
+            else -> 0.0
+        }
     }
 
     open fun splitStacks() {
