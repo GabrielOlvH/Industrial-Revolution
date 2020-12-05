@@ -4,7 +4,9 @@ import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.items.armor.IRModularArmor
 import me.steven.indrev.tools.modular.ArmorModule
+import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
@@ -13,6 +15,7 @@ import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.entity.model.BipedEntityModel
 import net.minecraft.client.render.item.ItemRenderer
+import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.client.util.math.Vector3f
 import net.minecraft.entity.EquipmentSlot
@@ -41,7 +44,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
     ) {
         super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay)
         val itemStack = entity.inventoryComponent?.inventory?.getStack(2)
-        if (itemStack?.isEmpty == false) {
+        if (itemStack?.item is IRModularArmor) {
             matrices.run {
                 push()
                 val yOffset = if (itemStack.item is IRModularArmor) {
@@ -57,8 +60,18 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                 translate(0.5, yOffset, 0.5)
                 multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
                 multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
-                val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
+                val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos)
                 renderArmor(this, vertexConsumers, itemStack, lightMapCoords)
+                pop()
+            }
+        } else if (itemStack?.item is IRModularItem<*>) {
+            val lightCoord = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos)
+            matrices.run {
+                push()
+                val time = entity.world?.time ?: 1
+                translate(0.5, 0.35, 0.5)
+                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
+                MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, lightCoord, overlay, matrices, vertexConsumers)
                 pop()
             }
         }
