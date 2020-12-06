@@ -26,8 +26,6 @@ import net.minecraft.tag.ItemTags
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
-import net.minecraft.world.chunk.ChunkSection
-import net.minecraft.world.chunk.WorldChunk
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
 
@@ -69,20 +67,14 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             scheduledBlocks = list.iterator()
         } else {
             var currentChunk: Chunk? = null
-            var currentSection: ChunkSection? = null
             var performedAction = false
             val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
             outer@ while (scheduledBlocks.hasNext()) {
                 val pos = scheduledBlocks.next()
                 if (pos.x shr 4 != currentChunk?.pos?.x || pos.z shr 4 != currentChunk.pos.z) {
                     currentChunk = world?.getChunk(pos)
-                    currentSection = currentChunk!!.sectionArray[pos.y shr 4]
-                    if (currentSection == WorldChunk.EMPTY_SECTION) {
-                        currentSection = ChunkSection(pos.y shr 4 shl 4)
-                        currentChunk.sectionArray[pos.y shr 4] = currentSection
-                    }
                 }
-                val blockState = currentSection?.getBlockState(pos.x and 15, pos.y and 15, pos.z and 15) ?: continue
+                val blockState = currentChunk?.getBlockState(pos) ?: continue
                 if (axeStack != null
                     && !axeStack.isEmpty
                     && tryChop(axeStack, pos, blockState, inventory)
