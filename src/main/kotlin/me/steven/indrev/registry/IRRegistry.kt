@@ -53,11 +53,11 @@ object IRRegistry {
             withBlock()
             withOre()
             withTools(
-                IRBasicPickaxe(IRToolMaterial.TIN, 1, -2.8f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.TIN, 6f, -3.1f, itemSettings()),
-                IRBasicShovel(IRToolMaterial.TIN, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.TIN, 3, -2.5f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.TIN, 2, -3.0f, itemSettings())
+                IRBasicPickaxe(IRToolMaterial.TIN, 1, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.TIN, 4.5f, -2.0f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.TIN, 1.5f, -0.7f, itemSettings()),
+                IRBasicSword(IRToolMaterial.TIN, 3, -1.5f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.TIN, 2, -0.5f, itemSettings())
             )
             withArmor(IRArmorMaterial.TIN)
         }.register()
@@ -66,11 +66,11 @@ object IRRegistry {
             withBlock()
             withOre()
             withTools(
-                IRBasicPickaxe(IRToolMaterial.COPPER, 1, -2.8f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.COPPER, 6f, -3.1f, itemSettings()),
-                IRBasicShovel(IRToolMaterial.COPPER, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.COPPER, 4, -2.6f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.COPPER, 2, -3.0f, itemSettings())
+                IRBasicPickaxe(IRToolMaterial.COPPER, 1, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.COPPER, 4.5f, -2.0f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.COPPER, 1.5f, -0.7f, itemSettings()),
+                IRBasicSword(IRToolMaterial.COPPER, 3, -1.5f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.COPPER, 2, -0.5f, itemSettings())
             )
             withArmor(IRArmorMaterial.COPPER)
         }.register()
@@ -78,11 +78,11 @@ object IRRegistry {
             withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withTools(
-                IRBasicPickaxe(IRToolMaterial.STEEL, 1, -2.8f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.STEEL, 7f, -5.0f, itemSettings()),
-                IRBasicShovel(IRToolMaterial.STEEL, 1.5f, -3f, itemSettings()),
-                IRBasicSword(IRToolMaterial.STEEL, 5, -2.8f, itemSettings()),
-                IRBasicHoe(IRToolMaterial.STEEL, 2, -3.0f, itemSettings())
+                IRBasicPickaxe(IRToolMaterial.STEEL, 2, -1.8f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.STEEL, 7f, -3.1f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.STEEL, 1.0f, -1.0f, itemSettings()),
+                IRBasicSword(IRToolMaterial.STEEL, 5, -2.0f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.STEEL, 3, -1.5f, itemSettings())
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
