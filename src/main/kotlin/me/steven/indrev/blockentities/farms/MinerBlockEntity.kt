@@ -59,6 +59,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             return
         } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
+            workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Upgrade.getSpeed(upgrades, this)
             temperatureComponent?.tick(true)
@@ -105,7 +106,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 workingState = true
                 return@updateData true
             }
-        } else workingState = false
+        }
     }
 
     private fun sendBlockBreakPacket(pos: BlockPos, block: Block) {
@@ -219,6 +220,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
+        tag?.put("LastMinedBlock", lastMinedItem.toTag(CompoundTag()))
         return super.toClientTag(tag)
     }
 
@@ -226,6 +228,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
+        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMinedBlock"))
         super.fromClientTag(tag)
     }
 
