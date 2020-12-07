@@ -214,7 +214,7 @@ class Machines : ConfigData {
     val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.5, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val modularWorkbench: MachineConfig = MachineConfig(16.0, 1.0, 500000.0, Tier.MK4.io)
+    val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 }
 
 // this is so auto config actually generates the config properly
