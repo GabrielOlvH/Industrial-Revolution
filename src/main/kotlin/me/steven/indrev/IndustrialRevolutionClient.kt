@@ -11,6 +11,7 @@ import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
+import me.steven.indrev.blockentities.storage.BatteryBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
@@ -41,6 +42,7 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
+import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.minecraft.block.Block
 import net.minecraft.client.MinecraftClient
@@ -54,6 +56,7 @@ import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
@@ -126,6 +129,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
+        MachineRegistry.CONTAINER_REGISTRY.registerBlockEntityRenderer(::BatteryBlockEntityRenderer)
 
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
@@ -309,6 +313,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
                         .openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
             }
         }
+
+        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
+            ClientSpriteRegistryCallback { f , a->
+                a.register(identifier("block/lazuli_flux_container_lf_level"))
+            })
     }
 
     private val positionsToRerender = Reference2IntOpenHashMap<BlockPos>()
