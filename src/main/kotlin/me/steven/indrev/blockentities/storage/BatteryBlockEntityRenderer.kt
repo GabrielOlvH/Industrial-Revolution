@@ -25,10 +25,6 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
         overlay: Int
     ) {
         entity ?: return
-        /**
-         * 100 - 10
-         * 0.8125 - 0.1875
-         */
         val height = ((entity.energy.toFloat() / entity.maxStoredPower.toFloat()) * 0.5f) + 0.25f
         val sprite = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(identifier("block/lazuli_flux_container_lf_level"))
         val color: Long = (255 shl 24 or when (entity.tier) {
@@ -37,13 +33,12 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
             Tier.MK3 -> 0xfd47ff
             else -> 0xff4070
         }).toLong()
+        val maxY = floor((height * 16)) / 16f
         matrices?.run {
-
             val offset = 0.001
             push()
 
             translate(-0.0, 0.0, -offset)
-            val maxY = floor((height * 16)) / 16f
             drawOverlay(this, 0f, 0.25f, 1f, maxY, color, sprite, vertexConsumers, Direction.NORTH, height)
             translate(0.0, 0.0, offset)
 
@@ -71,7 +66,7 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
         }
     }
 
-    fun drawOverlay(matrices: MatrixStack, x1: Float, y1: Float, x2: Float, y2: Float, color1: Long, sprite: Sprite, vertexConsumers: VertexConsumerProvider?, direction: Direction, height: Float) {
+    private fun drawOverlay(matrices: MatrixStack, x1: Float, y1: Float, x2: Float, y2: Float, color: Long, sprite: Sprite, vertexConsumers: VertexConsumerProvider?, direction: Direction, height: Float) {
         val matrix = matrices.peek().model
 
         var j: Float
@@ -92,10 +87,10 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
             yy2 = j
         }
 
-        val f1 = (color1 shr 24 and 255) / 255.0f
-        val g1 = (color1 shr 16 and 255) / 255.0f
-        val h1 = (color1 shr 8 and 255) / 255.0f
-        val k1 = (color1 and 255) / 255.0f
+        val f1 = (color shr 24 and 255) / 255.0f
+        val g1 = (color shr 16 and 255) / 255.0f
+        val h1 = (color shr 8 and 255) / 255.0f
+        val k1 = (color and 255) / 255.0f
 
         val vec = direction.unitVector
         val v = sprite.getFrameV(4.0)
