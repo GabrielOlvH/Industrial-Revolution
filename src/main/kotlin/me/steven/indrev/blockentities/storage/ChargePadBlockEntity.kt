@@ -6,6 +6,7 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.Tier
 import team.reborn.energy.Energy
+import team.reborn.energy.EnergySide
 
 class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY) {
     init {
@@ -19,5 +20,13 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(
         workingState = Energy.valid(stack) && Energy.of(this).into(Energy.of(stack)).move() > 0
     }
 
-    override fun getBaseBuffer(): Double = tier.io * 2
+    override fun getBaseBuffer(): Double = 1000000.0
+
+    override fun getMaxOutput(side: EnergySide?): Double {
+        return 16384.0
+    }
+
+    override fun getMaxInput(side: EnergySide?): Double {
+        return 16384.0
+    }
 }
