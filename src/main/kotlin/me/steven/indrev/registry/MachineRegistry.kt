@@ -153,11 +153,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
         )
 
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
-            { tier ->
-                FacingMachineBlock(
-                    MACHINE_BLOCK_SETTINGS(), tier, null, ::BatteryController
-                ) { BatteryBlockEntity(tier) }
-            },
+            { tier -> BatteryBlock(MACHINE_BLOCK_SETTINGS(), tier) },
             { tier -> { BatteryBlockEntity(tier) } }
         )
 

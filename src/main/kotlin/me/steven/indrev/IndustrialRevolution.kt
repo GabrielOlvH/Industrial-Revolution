@@ -262,6 +262,8 @@ object IndustrialRevolution : ModInitializer {
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
     val SYNC_PROPERTY = identifier("sync_property")
     val SYNC_MODULE_PACKET = identifier("sync_module")
+    val RERENDER_CHUNK_PACKET = identifier("rerender_chunk")
+    val SCHEDULE_RERENDER_CHUNK_PACKET = identifier("scheduled_rerender_chunk")
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
         val buf = PacketByteBuf(Unpooled.buffer())

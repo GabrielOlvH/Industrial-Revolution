@@ -47,6 +47,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import team.reborn.energy.Energy
 import team.reborn.energy.EnergySide
+import java.util.*
 
 val EMPTY_INT_ARRAY = intArrayOf()
 

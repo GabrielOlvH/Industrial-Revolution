@@ -1,5 +1,6 @@
 package me.steven.indrev
 
+import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap
 import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -14,6 +15,8 @@ import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
 import me.steven.indrev.blocks.PumpPipeBakedModel
+import me.steven.indrev.blocks.containers.LazuliFluxContainerBakedModel
+import me.steven.indrev.blocks.containers.LazuliFluxOverlayBakedModel
 import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
@@ -54,6 +57,7 @@ import net.minecraft.client.world.ClientWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 import org.lwjgl.glfw.GLFW
 import java.util.function.Function
@@ -165,6 +169,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
             out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
             out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
             out.accept(ModelIdentifier(identifier("pump_pipe"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_input"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_output"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_item_lf_level"), ""))
         }
 
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
@@ -173,6 +180,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     DrillHeadModel(resourceId.variant)
                 else if (resourceId.namespace == "indrev" && resourceId.path == "pump_pipe")
                     PumpPipeBakedModel()
+                else if (resourceId.namespace == "indrev" && resourceId.path == "lazuli_flux_container_input")
+                    LazuliFluxOverlayBakedModel("lazuli_flux_container_input")
+                else if (resourceId.namespace == "indrev" && resourceId.path =="lazuli_flux_container_output")
+                    LazuliFluxOverlayBakedModel("lazuli_flux_container_output")
+                else if (resourceId.namespace == "indrev" && resourceId.path =="lazuli_flux_container_item_lf_level")
+                    LazuliFluxOverlayBakedModel("lazuli_flux_container_item_lf_level")
+                else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container"))
+                    LazuliFluxContainerBakedModel(resourceId.path)
                 else null
             }
         }
@@ -259,7 +274,30 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.RERENDER_CHUNK_PACKET) { ctx, buf ->
+            val pos = buf.readBlockPos()
+            val world = ctx.player.world
+            ctx.taskQueue.execute {
+                val blockState = world.getBlockState(pos)
+                MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, blockState, blockState, 8)
+            }
+        }
+
+        ClientSidePacketRegistry.INSTANCE.register(IndustrialRevolution.SCHEDULE_RERENDER_CHUNK_PACKET) { ctx, buf ->
+            val time = buf.readInt()
+            val pos = buf.readBlockPos()
+            positionsToRerender[pos] = time
+        }
+
         ClientTickEvents.END_CLIENT_TICK.register { client ->
+            positionsToRerender.keys.forEach { pos ->
+                positionsToRerender.addTo(pos, -1)
+                if (positionsToRerender.getInt(pos) <= 0) {
+                    positionsToRerender.removeInt(pos)
+                    val blockState = client.world?.getBlockState(pos)
+                    client.worldRenderer.updateBlock(client.world, pos, blockState, blockState, 8)
+                }
+            }
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
                 val playerInventory = MinecraftClient.getInstance().player?.inventory ?: break
                 val hasModularItem = (0 until playerInventory.size())
@@ -272,6 +310,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
     }
+
+    private val positionsToRerender = Reference2IntOpenHashMap<BlockPos>()
 
     val MODULAR_CONTROLLER_KEYBINDING = KeyBindingHelper.registerKeyBinding(
         KeyBinding(

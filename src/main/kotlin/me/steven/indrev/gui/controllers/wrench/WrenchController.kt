@@ -18,9 +18,12 @@ import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
@@ -110,6 +113,15 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     override fun getEntry(): Identifier = identifier("tools/wrench")
 
     override fun getPage(): Int = 0
+
+    override fun close(player: PlayerEntity?) {
+        super.close(player)
+        if (player is ServerPlayerEntity) {
+            val buf = PacketByteBuf(Unpooled.buffer())
+            ctx.run { _, pos -> buf.writeBlockPos(pos) }
+            ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.RERENDER_CHUNK_PACKET, buf)
+        }
+    }
 
     override fun addPainters() {
         super.addPainters()
