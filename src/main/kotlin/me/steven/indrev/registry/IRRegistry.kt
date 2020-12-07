@@ -412,7 +412,7 @@ object IRRegistry {
 
     val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(4), Upgrade.BUFFER)
     val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(4), Upgrade.SPEED)
-    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(2), Upgrade.ENERGY)
+    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.ENERGY)
     val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 
