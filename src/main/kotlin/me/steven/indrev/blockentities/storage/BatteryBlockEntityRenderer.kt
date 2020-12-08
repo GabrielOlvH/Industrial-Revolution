@@ -70,23 +70,20 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
 
     private fun drawOverlay(matrices: MatrixStack, x1: Float, y1: Float, x2: Float, y2: Float, color: Long, sprite: Sprite, vertexConsumers: VertexConsumerProvider?, direction: Direction, width: Float, tickDelta: Float, time: Long) {
         val matrix = matrices.peek().model
-
-        var j: Float
+        
         var xx1 = x1
         var xx2 = x2
         var yy1 = x1
         var yy2 = x2
 
         if (x1 < x2) {
-            j = x1
             xx1 = x2
-            xx2 = j
+            xx2 = x1
         }
 
         if (y1 < y2) {
-            j = y1
             yy1 = y2
-            yy2 = j
+            yy2 = y1
         }
 
         val a = (color shr 24 and 255) / 255.0f
@@ -96,39 +93,43 @@ class BatteryBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
 
         val vec = direction.unitVector
         var maxU = sprite.getFrameU(4.0)
-        var minU = sprite.getFrameU(floor((width.toDouble()) * 16))
+        var minU = sprite.getFrameU(floor(width.toDouble() * 16))
 
         val normal = matrices.peek().normal
         vertexConsumers?.getBuffer(RenderLayer.getEntityTranslucent(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE))?.run {
-            vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, a).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx1, yy2, 0.0f).color(r, g, b, a).texture(minU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx2, yy2, 0.0f).color(r, g, b, a).texture(maxU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, a).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, a).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx2, yy2, 0.0f).color(r, g, b, a).texture(maxU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx2, yy1, 0.0f).color(r, g, b, a).texture(maxU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-            vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, a).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
+
+            fun vertex(x: Float, y: Float, u: Float, v: Float, alpha: Float = a) {
+                this@run.vertex(matrix, x, y, 0.0f).color(r, g, b, alpha).texture(u, v).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
+            }
+
+            vertex(xx1, yy1, minU, sprite.minV)
+            vertex(xx1, yy2, minU, sprite.maxV)
+            vertex(xx2, yy2, maxU, sprite.maxV)
+            vertex(xx1, yy1, minU, sprite.minV)
+            vertex(xx1, yy1, minU, sprite.minV)
+            vertex(xx2, yy2, maxU, sprite.maxV)
+            vertex(xx2, yy1, maxU, sprite.minV)
+            vertex(xx1, yy1, minU, sprite.minV)
 
             if (width < 0.75 && width > 0.25) {
                 xx2 = xx1
-                xx1 = (floor((width * 16)) + 1) / 16f
+                xx1 = (floor(width * 16) + 1) / 16f
                 val opacity = sin((time + tickDelta) / 8).absoluteValue
                 maxU = minU
                 minU = sprite.getFrameU(floor(width.toDouble() * 16) + 1)
-                vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, opacity).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx1, yy2, 0.0f).color(r, g, b, opacity).texture(minU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx2, yy2, 0.0f).color(r, g, b, opacity).texture(maxU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, opacity).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, opacity).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx2, yy2, 0.0f).color(r, g, b, opacity).texture(maxU, sprite.maxV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx2, yy1, 0.0f).color(r, g, b, opacity).texture(maxU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(
-                    EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
-                vertex(matrix, xx1, yy1, 0.0f).color(r, g, b, opacity).texture(minU, sprite.minV).overlay(OverlayTexture.DEFAULT_UV).light(EMISSIVE_LIGHT).normal(normal, vec.x, vec.y, vec.z).next()
+                vertex(xx1, yy1, minU, sprite.minV, opacity)
+                vertex(xx1, yy2, minU, sprite.maxV, opacity)
+                vertex(xx2, yy2, maxU, sprite.maxV, opacity)
+                vertex(xx1, yy1, minU, sprite.minV, opacity)
+                vertex(xx1, yy1, minU, sprite.minV, opacity)
+                vertex(xx2, yy2, maxU, sprite.maxV, opacity)
+                vertex(xx2, yy1, maxU, sprite.minV, opacity)
+                vertex(xx1, yy1, minU, sprite.minV, opacity)
             }
         }
     }
 
     companion object {
-        const val EMISSIVE_LIGHT = 15728880
+        private const val EMISSIVE_LIGHT = 15728880
     }
 }
