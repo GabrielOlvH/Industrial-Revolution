@@ -176,6 +176,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
             out.accept(ModelIdentifier(identifier("lazuli_flux_container_input"), ""))
             out.accept(ModelIdentifier(identifier("lazuli_flux_container_output"), ""))
             out.accept(ModelIdentifier(identifier("lazuli_flux_container_item_lf_level"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk1_overlay"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk2_overlay"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk3_overlay"), ""))
+            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk4_overlay"), ""))
         }
 
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
@@ -190,6 +194,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     LazuliFluxOverlayBakedModel("lazuli_flux_container_output")
                 else if (resourceId.namespace == "indrev" && resourceId.path =="lazuli_flux_container_item_lf_level")
                     LazuliFluxOverlayBakedModel("lazuli_flux_container_item_lf_level")
+                else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container") && resourceId.path.endsWith("overlay"))
+                    LazuliFluxOverlayBakedModel(resourceId.path)
                 else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container"))
                     LazuliFluxContainerBakedModel(resourceId.path)
                 else null

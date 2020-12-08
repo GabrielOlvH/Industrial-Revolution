@@ -27,6 +27,7 @@ class BatteryBlockEntity(tier: Tier) :
     }
 
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
+    private var lastWidth = 0f
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -36,6 +37,16 @@ class BatteryBlockEntity(tier: Tier) :
             val handler = Energy.of(stack)
             Energy.of(this).into(handler).move()
             stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        }
+    }
+
+    override fun setStored(amount: Double) {
+        super.setStored(amount)
+        //update the energy display on the block
+        val width = ((energy.toFloat() / maxStoredPower.toFloat()) * 0.5f) + 0.25f
+        if (width != lastWidth) {
+            sync()
+            lastWidth = width
         }
     }
 

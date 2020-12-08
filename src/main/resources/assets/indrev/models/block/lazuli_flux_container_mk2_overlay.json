@@ -1,0 +1,30 @@
+{
+  "credit": "Made with Blockbench",
+  "parent": "block/block",
+  "textures": {
+    "texture": "indrev:block/lazuli_flux_container_mk2_overlay"
+  },
+  "elements": [
+    {
+      "from": [0, 0, -0.01],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#texture", "jmx_tex0": "#texture", "jmx_material": "#jmx_0"}
+      }
+    }
+  ],
+
+  "jmx": {
+    "textures": {
+      "texture": "indrev:block/lazuli_flux_container_mk2_overlay"
+    },
+    "materials": {
+      "jmx_0": {
+        "layer0": "cutout",
+        "emissive0": true,
+        "ambient_occlusion0": false,
+        "diffuse0": false
+      }
+    }
+  }
+}
