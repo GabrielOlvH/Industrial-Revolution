@@ -13,17 +13,9 @@ import team.reborn.energy.Energy
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
     private val heatingSpeed: Double,
-    private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
     explosionLimit: Double
 ) : PropertyDelegateHolder {
-
-    constructor(
-        machineProvider: () -> MachineBlockEntity<*>,
-        heatingSpeed: Double,
-        optimalRange: IntRange,
-        explosionLimit: Double
-    ) : this(machineProvider, heatingSpeed, { explosionLimit }, optimalRange, explosionLimit)
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
@@ -57,7 +49,7 @@ class TemperatureComponent(
         val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier
-        else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {
+        else if (cooling <= 0 && (temperature > optimalRange.last - 10)) {
             cooling = 70
             coolingModifier = heatingSpeed
             if (coolerStack != null && coolerItem is IRCoolerItem) {

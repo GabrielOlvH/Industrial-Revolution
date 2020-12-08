@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidExtractable
 import alexiil.mc.lib.attributes.fluid.FluidInsertable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
@@ -184,6 +185,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     override fun isFixed(type: ConfigurationType): Boolean = false
 
+    open fun getFluidTransferRate(): FluidAmount = when (tier) {
+        Tier.MK1 -> FluidAmount.BOTTLE
+        Tier.MK2 -> FluidAmount.BOTTLE.mul(2)
+        else -> FluidAmount.BUCKET
+    }
+
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
         inventoryComponent?.fromTag(tag)
@@ -329,7 +336,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
                 }
                 if (extractable != null && insertable != null)
-                    FluidVolumeUtil.move(extractable, insertable, NUGGET_AMOUNT)
+                    FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
             }
         }
     }

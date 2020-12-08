@@ -3,6 +3,7 @@ package me.steven.indrev.gui.controllers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.machines.WFluid
@@ -35,25 +36,29 @@ class HeatGeneratorController(
         configure("block.indrev.heat_generator", ctx, playerInventory, blockInventory)
 
         val info = WStaticTooltip()
-        root.add(info, 3, 1)
-        info.setSize(70, 40)
+        root.add(info, 2.5, 1.25)
+        info.setSize(90, 55)
 
-        val generatingText = WText({
-            val burnTime = propertyDelegate[3]
-            if (burnTime > 0) TranslatableText("gui.indrev.heatgen.title").formatted(Formatting.RED)
-            else TranslatableText("gui.indrev.heatgen.idle").formatted(Formatting.GRAY, Formatting.ITALIC)
-        }, HorizontalAlignment.LEFT)
-        root.add(generatingText, 3.0, 1.4)
+        ctx.run { world, pos ->
+            val blockEntity = world.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return@run
+            val generatingText = WText({
+                val consumptionRate = blockEntity.getConsumptionRate(propertyDelegate[2].toDouble()).div(10).asInt(1000).toString()
+                TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
+            }, HorizontalAlignment.LEFT)
+            root.add(generatingText, 2.5, 1.4)
+        }
+        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 2.0)
+
         val amount = WText({
-            val burnTime = propertyDelegate[3]
-            val ratio = propertyDelegate[5]
-            if (burnTime > 0 && ratio > 0) TranslatableText("gui.indrev.heatgen.lftick", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
-            else LiteralText.EMPTY
+            val ratio = propertyDelegate[6]
+            TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
-        root.add(amount, 3.0, 2.4)
+        root.add(amount, 2.5, 3.0)
+
+        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.6)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 8, 0)
+        root.add(fluid, 8, 1)
 
         root.validate(this)
     }
