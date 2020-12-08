@@ -2,7 +2,7 @@
   "credit": "Made with Blockbench",
   "parent": "block/block",
   "textures": {
-    "texture": "indrev:block/lazuli_flux_container_item_lf_level"
+    "texture": "indrev:block/lazuli_flux_container_mk2"
   },
   "elements": [
     {
