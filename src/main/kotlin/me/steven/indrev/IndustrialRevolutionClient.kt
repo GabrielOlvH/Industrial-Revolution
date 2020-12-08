@@ -197,7 +197,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container") && resourceId.path.endsWith("overlay"))
                     LazuliFluxOverlayBakedModel(resourceId.path)
                 else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container"))
-                    LazuliFluxContainerBakedModel(resourceId.path)
+                    LazuliFluxContainerBakedModel(resourceId.path.replace("creative", "mk4"))
                 else null
             }
         }

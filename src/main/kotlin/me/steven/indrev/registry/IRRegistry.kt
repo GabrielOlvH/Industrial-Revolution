@@ -61,6 +61,7 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.TIN)
         }.register()
+
         ResourceHelper("copper") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
@@ -74,6 +75,7 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.COPPER)
         }.register()
+
         ResourceHelper("steel") {
             withItems("dust", "ingot", "plate", "nugget")
             withBlock()
@@ -86,18 +88,78 @@ object IRRegistry {
             )
             withArmor(IRArmorMaterial.STEEL)
         }.register()
+
         ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+
         ResourceHelper("netherite_scrap") { withItems("dust", "chunk", "purified_ore") }.register()
+
         ResourceHelper("nikolite") {
             withItems("dust", "ingot")
             withOre { settings -> NikoliteOreBlock(settings) }
         }.register()
+
         ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
+
         ResourceHelper("diamond") { withItems("dust") }.register()
+
         ResourceHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+
         ResourceHelper("coal") { withItems("dust") }.register()
+
         ResourceHelper("sulfur") {
             withItems("dust")
+        }.register()
+
+        ResourceHelper("lead") {
+            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
+            withBlock()
+            withOre()
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.LEAD, 1, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.LEAD, 4.5f, -2.0f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.LEAD, 1.5f, -0.7f, itemSettings()),
+                IRBasicSword(IRToolMaterial.LEAD, 3, -1.5f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.LEAD, 2, -0.5f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.LEAD)
+        }.register()
+
+        ResourceHelper("bronze") {
+            withItems("dust", "ingot", "plate", "nugget")
+            withBlock()
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.BRONZE, 1, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.BRONZE, 4.5f, -2.0f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.BRONZE, 1.5f, -0.7f, itemSettings()),
+                IRBasicSword(IRToolMaterial.BRONZE, 3, -1.5f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.BRONZE, 2, -0.5f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.BRONZE)
+        }.register()
+
+        ResourceHelper("silver") {
+            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
+            withBlock()
+            withOre()
+            withTools(
+                IRBasicPickaxe(IRToolMaterial.SILVER, 1, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.SILVER, 4.5f, -2.0f, itemSettings()),
+                IRBasicShovel(IRToolMaterial.SILVER, 1.5f, -0.7f, itemSettings()),
+                IRBasicSword(IRToolMaterial.SILVER, 3, -1.5f, itemSettings()),
+                IRBasicHoe(IRToolMaterial.SILVER, 2, -0.5f, itemSettings())
+            )
+            withArmor(IRArmorMaterial.SILVER)
+        }.register()
+
+        ResourceHelper("tungsten") {
+            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
+            withBlock()
+            withOre()
+        }.register()
+
+        ResourceHelper("electrum") {
+            withItems("dust", "ingot", "plate", "nugget")
+            withBlock()
         }.register()
 
         identifier("sulfur_crystal").block(SULFUR_CRYSTAL_CLUSTER).item(SULFUR_CRYSTAL_ITEM)
