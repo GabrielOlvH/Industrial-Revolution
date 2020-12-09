@@ -3,9 +3,7 @@ package me.steven.indrev.mixin;
 import me.steven.indrev.api.IRPlayerEntityExtension;
 import me.steven.indrev.tools.modular.ArmorModule;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -13,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class MixinEntity {
-    @Shadow public abstract Iterable<ItemStack> getArmorItems();
 
     @Inject(method = "setAir", at = @At("INVOKE"), cancellable = true)
     private void indrev_breathingModule(CallbackInfo ci) {

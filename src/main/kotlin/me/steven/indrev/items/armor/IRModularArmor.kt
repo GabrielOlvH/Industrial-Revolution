@@ -2,6 +2,7 @@ package me.steven.indrev.items.armor
 
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
+import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.items.energy.IREnergyItem
@@ -101,10 +102,17 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
                 )
             }
             val speedLevel = ArmorModule.SPEED.getLevel(itemStack) * 0.9
-            if (speedLevel > 0)
+            if (speedLevel > 0) {
                 attr.put(
                     EntityAttributes.GENERIC_MOVEMENT_SPEED,
-                    EntityAttributeModifier(SPEED_MODIFIER, "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL))
+                    EntityAttributeModifier(SPEED_MODIFIER, "Speed", speedLevel, EntityAttributeModifier.Operation.MULTIPLY_TOTAL)
+                )
+
+                attr.put(
+                    StepHeightEntityAttributeMain.STEP_HEIGHT,
+                    EntityAttributeModifier(SPEED_MODIFIER, "Step-Height", 1.0, EntityAttributeModifier.Operation.ADDITION)
+                )
+            }
             return attr.build()
         }
         return getAttributeModifiers(equipmentSlot)
@@ -118,5 +126,6 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
             UUID.fromString("2AD3F246-FEE1-4E67-B886-69FD380BB150")
         )
         private val SPEED_MODIFIER = UUID.randomUUID()
+        private val STEP_HEIGHT_MODIFIER = UUID.randomUUID()
     }
 }

@@ -91,8 +91,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     private void applyArmorEffects() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.inventory;
-        oldAppliedModules.clear();
-        oldAppliedModules.putAll(getAppliedModules());
         getAppliedModules().clear();
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
@@ -167,6 +165,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     @Override
     public void sync() {
         lastShield = getShieldDurability();
+        oldAppliedModules.clear();
+        oldAppliedModules.putAll(getAppliedModules());
         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
         Map<ArmorModule, Integer> appliedModules = getAppliedModules();
         buf.writeInt(appliedModules.size());
