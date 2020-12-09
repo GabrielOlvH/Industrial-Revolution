@@ -7,5 +7,5 @@ import net.minecraft.recipe.Recipe
 import net.minecraft.server.world.ServerWorld
 
 interface IRecipeGetter<T : Recipe<Inventory>>  {
-    fun getMatchingRecipe(world: ServerWorld, item: ItemStack, fluidInput: FluidKey?): Set<T>
+    fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack, fluidInput: FluidKey?): Collection<T>
 }

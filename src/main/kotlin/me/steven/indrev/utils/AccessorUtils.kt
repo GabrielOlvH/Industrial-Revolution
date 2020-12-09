@@ -1,9 +1,9 @@
 package me.steven.indrev.utils
 
 import me.steven.indrev.mixin.*
-import me.steven.indrev.recipes.machines.IRRecipe
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeManager
@@ -28,7 +28,7 @@ val EnergyHandler.holder: EnergyHolder
 val EnergyHandler.side: EnergySide
     get() = (this as AccessorEnergyHandler).side
 
-fun <T : IRRecipe> RecipeManager.getAllOfType(type: RecipeType<T>): Map<Identifier, T>
+fun <T : Recipe<Inventory>> RecipeManager.getAllOfType(type: RecipeType<T>): Map<Identifier, T>
         = (this as AccessorRecipeManager).indrev_getAllOfType(type) as Map<Identifier, T>
 
 fun RecipeManager.getRecipes(): Map<RecipeType<*>, Map<Identifier, Recipe<*>>> = (this as AccessorRecipeManager).recipes
