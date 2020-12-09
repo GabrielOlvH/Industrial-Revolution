@@ -3,6 +3,8 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
 import net.minecraft.inventory.Inventory
 
 interface UpgradeProvider {
@@ -16,10 +18,10 @@ interface UpgradeProvider {
     fun getUpgrades(inventory: Inventory): Map<Upgrade, Int> {
         val map = hashMapOf<Upgrade, Int>()
         getUpgradeSlots()
-            .map { slot -> inventory.getStack(slot) }
-            .filter { stack -> stack.item is IRUpgradeItem }
-            .forEach { stack ->
-                map.merge((stack.item as IRUpgradeItem).upgrade, stack.count) { i, j -> i + j }
+            .forEach { slot ->
+                val (stack, item) = inventory.getStack(slot)
+                if (item is IRUpgradeItem)
+                    map.merge(item.upgrade, stack.count) { i, j -> i + j }
             }
         return map
     }
