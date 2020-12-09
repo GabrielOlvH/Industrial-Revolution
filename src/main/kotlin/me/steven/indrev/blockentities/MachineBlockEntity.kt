@@ -244,11 +244,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                         }
                         return@forEach
                     }
-                    val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
-                    if (insertable != null) {
-                        val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
-                        ItemInvUtil.move(extractable, insertable, 64)
-                    }
+                    val insertable = ItemAttributes.INSERTABLE.getFromNeighbour(this, direction)
+                    val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
+                    ItemInvUtil.move(extractable, insertable, 64)
                 }
                 if (mode.input) {
                     val neighborInv = getInventory(pos)
@@ -258,11 +256,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                         }
                         return@forEach
                     }
-                    val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
-                    if (extractable != null) {
-                        val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
-                        ItemInvUtil.move(extractable, insertable, 64)
-                    }
+                    val extractable = ItemAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
+                    val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
+                    ItemInvUtil.move(extractable, insertable, 64)
                 }
             }
         }
