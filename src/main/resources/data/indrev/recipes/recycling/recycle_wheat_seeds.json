@@ -1,0 +1,14 @@
+{
+  "type": "indrev:recycle",
+  "ingredients": [
+    {
+      "item": "minecraft:what_seeds",
+      "count": 2
+    }
+  ],
+  "output": {
+    "item": "indrev:biomass",
+    "count": 1
+  },
+  "processTime": 150
+}

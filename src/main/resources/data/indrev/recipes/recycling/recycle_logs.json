@@ -1,11 +1,11 @@
 {
   "type": "indrev:recycle",
   "ingredients": {
-    "tag": "indrev:triple_biomass"
+    "tag": "minecraft:logs"
   },
   "output": {
     "item": "indrev:biomass",
-    "count": 3
+    "count": 4
   },
-  "processTime": 300
+  "processTime": 500
 }
