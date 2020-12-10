@@ -30,7 +30,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/heat_generator",
-      "text": "The $(l)$(o)Heat Generator $()will absorb $(#ff0000)lava $()or $(#ff0000)molten netherite $()touching it to generate energy."
+      "text": "The $(l)$(o)Heat Generator $()will consume lava inside it to generate energy. Pairs up well with the pump."
     }
   ]
 }
