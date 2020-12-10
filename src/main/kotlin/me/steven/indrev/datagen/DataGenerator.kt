@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import net.minecraft.util.Identifier
 import java.io.File
+import java.util.*
 
 abstract class DataGenerator<T>(val dir: File, val namespace: String, val fallback: (T) -> JsonFactory<T>) {
 
