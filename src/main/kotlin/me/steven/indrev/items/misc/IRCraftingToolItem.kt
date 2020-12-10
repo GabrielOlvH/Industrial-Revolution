@@ -5,11 +5,12 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.server.network.ServerPlayerEntity
 
 class IRCraftingToolItem(settings: Settings) : Item(settings), FabricRecipeRemainder {
     override fun getRemainder(stack: ItemStack?, craftingInventory: CraftingInventory?, playerEntity: PlayerEntity?): ItemStack? {
         return if (stack != null && stack.isDamageable) {
-            val stackCopy = stack.copy().apply { damage++ }
+            val stackCopy = stack.copy().also { it.damage(1, playerEntity?.random, playerEntity as? ServerPlayerEntity) }
             if (stackCopy.damage >= stackCopy.maxDamage) ItemStack.EMPTY
             else stackCopy
         } else stack
