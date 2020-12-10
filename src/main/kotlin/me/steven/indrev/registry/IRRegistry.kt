@@ -478,7 +478,7 @@ object IRRegistry {
     val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 
-    val WRENCH = IRWrenchItem(itemSettings().maxDamage(64))
+    val WRENCH = IRWrenchItem(itemSettings())
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
