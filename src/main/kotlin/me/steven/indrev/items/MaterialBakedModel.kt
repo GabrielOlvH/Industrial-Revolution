@@ -21,7 +21,7 @@ import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
-class MaterialBakedModel private constructor(private val bakedModels: Array<ModelWithColor>) : UnbakedModel, BakedModel, FabricBakedModel {
+class MaterialBakedModel private constructor(private val bakedModels: Array<ModelWithColor>, private val type: TransformationType) : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun bake(
         loader: ModelLoader,
@@ -54,9 +54,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
 
     override fun getSprite(): Sprite? = null
 
-    override fun getTransformation(): ModelTransformation = MinecraftClient.getInstance().bakedModelManager.getModel(
-        ModelIdentifier(Identifier("iron_ingot"), "inventory")
-    ).transformation
+    override fun getTransformation(): ModelTransformation = type.transformation()
 
     override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
 
@@ -88,6 +86,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
     class Builder {
 
         private val bakedModels: MutableList<ModelWithColor> = mutableListOf()
+        private var transformationType: TransformationType = TransformationType.AUTO
 
         fun with(id: Identifier, color: Long): Builder {
             bakedModels.add(ModelWithColor(id, color.toInt()))
@@ -106,6 +105,28 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("ingot_highlight"), color)
         }
 
-        fun build() = MaterialBakedModel(bakedModels.toTypedArray())
+        fun stick(): Builder {
+            transformationType = TransformationType.HANDHELD
+            return with(Identifier("stick"), -1)
+        }
+
+        fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
+    }
+
+    enum class TransformationType(val transformation: () -> ModelTransformation) {
+        AUTO(
+            {
+                MinecraftClient.getInstance().bakedModelManager.getModel(
+                    ModelIdentifier(Identifier("iron_ingot"), "inventory")
+                ).transformation
+            }
+        ),
+        HANDHELD(
+            {
+                MinecraftClient.getInstance().bakedModelManager.getModel(
+                    ModelIdentifier(Identifier("stick"), "inventory")
+                ).transformation
+            }
+        )
     }
 }

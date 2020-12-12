@@ -68,6 +68,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         init {
             put("lead_ingot", MaterialBakedModel.Builder().ingotBase(0xFFFF0000).ingotHighlight(0xFF00FF00).ingotShadow(0xFF0000FF).build())
             put("silver_ingot", MaterialBakedModel.Builder().ingotBase(0xFFFFFF00).ingotHighlight(0xFF000000).ingotShadow(0xFF00FFFF).build())
+            put("silver_sword", MaterialBakedModel.Builder().stick().build())
         }
 
         private fun put(id: String, model: UnbakedModel) {
