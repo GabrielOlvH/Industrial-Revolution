@@ -163,7 +163,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
-        ModelLoadingRegistry.INSTANCE.registerAppender { _, _ -> IRModelManagers }
+        ModelLoadingRegistry.INSTANCE.registerAppender(IRModelManagers)
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }
 
         val models = arrayOf(

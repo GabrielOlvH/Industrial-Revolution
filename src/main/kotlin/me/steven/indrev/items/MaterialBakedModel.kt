@@ -21,7 +21,7 @@ import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
-class MaterialBakedModel private constructor(private val bakedModels: Map<Identifier, ModelWithColor>) : UnbakedModel, BakedModel, FabricBakedModel {
+class MaterialBakedModel private constructor(private val bakedModels: Array<ModelWithColor>) : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun bake(
         loader: ModelLoader,
@@ -72,7 +72,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Map<Identi
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
-        bakedModels.forEach { (key, holder) ->
+        bakedModels.forEach { holder ->
             val color = holder.color
             ctx.pushTransform { quad ->
                 quad.spriteColor(0, color, color, color, color)
@@ -87,10 +87,10 @@ class MaterialBakedModel private constructor(private val bakedModels: Map<Identi
 
     class Builder {
 
-        private val bakedModels: MutableMap<Identifier, ModelWithColor> = mutableMapOf()
+        private val bakedModels: MutableList<ModelWithColor> = mutableListOf()
 
         fun with(id: Identifier, color: Long): Builder {
-            bakedModels[id] = ModelWithColor(id, color.toInt())
+            bakedModels.add(ModelWithColor(id, color.toInt()))
             return this
         }
 
@@ -106,6 +106,6 @@ class MaterialBakedModel private constructor(private val bakedModels: Map<Identi
             return with(identifier("ingot_highlight"), color)
         }
 
-        fun build() = MaterialBakedModel(bakedModels)
+        fun build() = MaterialBakedModel(bakedModels.toTypedArray())
     }
 }
