@@ -15,10 +15,6 @@ import me.steven.indrev.blockentities.storage.BatteryBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.blocks.CableModel
-import me.steven.indrev.blocks.PumpPipeBakedModel
-import me.steven.indrev.blocks.containers.LazuliFluxContainerBakedModel
-import me.steven.indrev.blocks.containers.LazuliFluxOverlayBakedModel
-import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
@@ -26,6 +22,7 @@ import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.modular.ModularController
 import me.steven.indrev.items.misc.IRTankItemBakedModel
 import me.steven.indrev.registry.IRHudRender
+import me.steven.indrev.registry.IRModelManagers
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.tools.modular.ArmorModule
@@ -53,7 +50,6 @@ import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.InputUtil
-import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.client.world.ClientWorld
 import net.minecraft.screen.PlayerScreenHandler
@@ -167,40 +163,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             }
         }
 
-        ModelLoadingRegistry.INSTANCE.registerAppender { manager, out ->
-            out.accept(ModelIdentifier(identifier("drill_head"), "stone"))
-            out.accept(ModelIdentifier(identifier("drill_head"), "iron"))
-            out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
-            out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
-            out.accept(ModelIdentifier(identifier("pump_pipe"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_input"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_output"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_item_lf_level"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk1_overlay"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk2_overlay"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk3_overlay"), ""))
-            out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk4_overlay"), ""))
-        }
-
-        ModelLoadingRegistry.INSTANCE.registerVariantProvider { m ->
-            ModelVariantProvider { resourceId, context ->
-                if (resourceId.namespace == "indrev" && resourceId.path == "drill_head")
-                    DrillHeadModel(resourceId.variant)
-                else if (resourceId.namespace == "indrev" && resourceId.path == "pump_pipe")
-                    PumpPipeBakedModel()
-                else if (resourceId.namespace == "indrev" && resourceId.path == "lazuli_flux_container_input")
-                    LazuliFluxOverlayBakedModel("lazuli_flux_container_input")
-                else if (resourceId.namespace == "indrev" && resourceId.path =="lazuli_flux_container_output")
-                    LazuliFluxOverlayBakedModel("lazuli_flux_container_output")
-                else if (resourceId.namespace == "indrev" && resourceId.path =="lazuli_flux_container_item_lf_level")
-                    LazuliFluxOverlayBakedModel("lazuli_flux_container_item_lf_level")
-                else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container") && resourceId.path.endsWith("overlay"))
-                    LazuliFluxOverlayBakedModel(resourceId.path)
-                else if (resourceId.namespace == "indrev" && resourceId.path.startsWith("lazuli_flux_container"))
-                    LazuliFluxContainerBakedModel(resourceId.path.replace("creative", "mk4"))
-                else null
-            }
-        }
+        ModelLoadingRegistry.INSTANCE.registerAppender { _, _ -> IRModelManagers }
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }
 
         val models = arrayOf(
             CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)

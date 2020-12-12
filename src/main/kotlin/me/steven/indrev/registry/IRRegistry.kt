@@ -48,7 +48,7 @@ object IRRegistry {
 
         identifier("guide_book").item(IRGuideBookItem(itemSettings()))
 
-        ResourceHelper("tin") {
+        MaterialHelper("tin") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
@@ -62,7 +62,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.TIN)
         }.register()
 
-        ResourceHelper("copper") {
+        MaterialHelper("copper") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
@@ -76,7 +76,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.COPPER)
         }.register()
 
-        ResourceHelper("steel") {
+        MaterialHelper("steel") {
             withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withTools(
@@ -89,28 +89,28 @@ object IRRegistry {
             withArmor(IRArmorMaterial.STEEL)
         }.register()
 
-        ResourceHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+        MaterialHelper("iron") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
 
-        ResourceHelper("netherite_scrap") { withItems("dust", "chunk", "purified_ore") }.register()
+        MaterialHelper("netherite_scrap") { withItems("dust", "chunk", "purified_ore") }.register()
 
-        ResourceHelper("nikolite") {
+        MaterialHelper("nikolite") {
             withItems("dust", "ingot")
             withOre { settings -> NikoliteOreBlock(settings) }
         }.register()
 
-        ResourceHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
+        MaterialHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
 
-        ResourceHelper("diamond") { withItems("dust") }.register()
+        MaterialHelper("diamond") { withItems("dust") }.register()
 
-        ResourceHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
+        MaterialHelper("gold") { withItems("dust", "plate", "chunk", "purified_ore") }.register()
 
-        ResourceHelper("coal") { withItems("dust") }.register()
+        MaterialHelper("coal") { withItems("dust") }.register()
 
-        ResourceHelper("sulfur") {
+        MaterialHelper("sulfur") {
             withItems("dust")
         }.register()
 
-        ResourceHelper("lead") {
+        MaterialHelper("lead") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
@@ -124,7 +124,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.LEAD)
         }.register()
 
-        ResourceHelper("bronze") {
+        MaterialHelper("bronze") {
             withItems("dust", "ingot", "plate", "nugget")
             withBlock()
             withTools(
@@ -137,7 +137,7 @@ object IRRegistry {
             withArmor(IRArmorMaterial.BRONZE)
         }.register()
 
-        ResourceHelper("silver") {
+        MaterialHelper("silver") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
@@ -151,13 +151,13 @@ object IRRegistry {
             withArmor(IRArmorMaterial.SILVER)
         }.register()
 
-        ResourceHelper("tungsten") {
+        MaterialHelper("tungsten") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
             withBlock()
             withOre()
         }.register()
 
-        ResourceHelper("electrum") {
+        MaterialHelper("electrum") {
             withItems("dust", "ingot", "plate", "nugget")
             withBlock()
         }.register()

@@ -1,7 +1,6 @@
-package me.steven.indrev.blocks.containers
+package me.steven.indrev.utils
 
 import com.mojang.datafixers.util.Pair
-import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.model.BakedModel
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
@@ -12,13 +11,13 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import java.util.function.Function
 
-class LazuliFluxOverlayBakedModel(val texture: String) : UnbakedModel {
+class SimpleItemModel(val texture: String) : UnbakedModel {
 
     private val spriteIdCollection = mutableListOf(
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/$texture"))
+        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("item/$texture"))
     )
 
-    private val modelIdentifier = identifier("block/$texture")
+    private val modelIdentifier = identifier("item/$texture")
 
     private var bakedModel: BakedModel? = null
 
