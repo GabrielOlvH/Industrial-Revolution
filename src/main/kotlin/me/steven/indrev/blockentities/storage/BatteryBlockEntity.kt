@@ -69,7 +69,7 @@ class BatteryBlockEntity(tier: Tier) :
         return type == ConfigurationType.ENERGY
     }
 
-    override fun getCurrentConfiguration(type: ConfigurationType): MutableMap<Direction, TransferMode> {
+    override fun getCurrentConfiguration(type: ConfigurationType): SideConfiguration {
         return transferConfig
     }
 

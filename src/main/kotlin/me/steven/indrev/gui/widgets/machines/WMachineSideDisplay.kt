@@ -3,7 +3,7 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
-import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.draw2Colors
 import me.steven.indrev.utils.identifier
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class WMachineSideDisplay(
-    private val side: WrenchController.MachineSide,
+    private val side: Configurable.MachineSide,
     private val direction: Direction,
     var mode: TransferMode,
     private val world: World,

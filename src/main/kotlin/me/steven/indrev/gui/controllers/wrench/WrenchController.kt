@@ -8,16 +8,12 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blocks.machine.FacingMachineBlock
-import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -26,10 +22,6 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.Direction
-import kotlin.collections.component1
-import kotlin.collections.component2
-import kotlin.collections.set
 
 class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
@@ -40,7 +32,6 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     ), PatchouliEntryShortcut {
 
     private lateinit var currentType: ConfigurationType
-    private val displays = mutableMapOf<Direction, WMachineSideDisplay>()
 
     init {
         val root = WGridPanel()
@@ -48,66 +39,30 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         root.setSize(100, 128)
 
         val titleText = WText(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
-        root.add(titleText, 0.0, 0.2)
-
+        root.add(titleText, 0.2, 0.2)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
-            val blockState = world.getBlockState(pos)
 
             val availableTypes = ConfigurationType.getTypes(blockEntity)
             currentType = availableTypes.first()
+            var widget = blockEntity.getWrenchConfigurationPanel(world, pos, playerInventory, currentType) ?: return@run
+            root.add(widget, 0, 2)
             val configTypeButton = WButton(currentType.title)
             configTypeButton.setOnClick {
                 currentType = currentType.next(availableTypes)
-                updateMachineDisplays(blockEntity)
                 configTypeButton.label = currentType.title
+                root.remove(widget)
+                widget = blockEntity.getWrenchConfigurationPanel(world, pos, playerInventory, currentType) ?: return@setOnClick
+                root.add(widget, 0, 2)
+                root.validate(this)
             }
             if (availableTypes.size > 1)
-                root.add(configTypeButton, 1.6, 0.9)
+                root.add(configTypeButton, 1.6, 1.0)
             configTypeButton.setSize(45, 20)
-
-            val machineVisualizerPanel = WGridPanel()
-            MachineSide.values().forEach { side ->
-                var facing =
-                    when {
-                        blockState.contains(HorizontalFacingMachineBlock.HORIZONTAL_FACING) ->
-                            blockState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
-                        blockState.contains(FacingMachineBlock.FACING) ->
-                            blockState[FacingMachineBlock.FACING]
-                        else ->
-                            Direction.UP
-                    }
-                if (facing.axis.isVertical) {
-                    facing = playerInventory.player.horizontalFacing.opposite
-                }
-                val direction = offset(facing, side.direction)
-                val configuration = blockEntity.getCurrentConfiguration(currentType)
-                val mode = configuration[direction]!!
-                val widget = WMachineSideDisplay(side, direction, mode, world, pos)
-                widget.setOnClick {
-                    widget.mode = widget.mode.next(currentType.validModes)
-                    configuration[direction] = widget.mode
-                    val buf = PacketByteBuf(Unpooled.buffer())
-                    buf.writeEnumConstant(currentType)
-                    buf.writeBlockPos(pos)
-                    buf.writeInt(direction.id)
-                    buf.writeInt(widget.mode.ordinal)
-                    ClientSidePacketRegistry.INSTANCE.sendToServer(SAVE_PACKET_ID, buf)
-                }
-                displays[direction] = widget
-                machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
-            }
-            root.add(machineVisualizerPanel, 1, 3)
+            
             addBookEntryShortcut(playerInventory, root, -1.8, -0.47)
         }
         root.validate(this)
-    }
-
-    private fun updateMachineDisplays(blockEntity: MachineBlockEntity<*>) {
-        val config = blockEntity.getCurrentConfiguration(currentType)
-        displays.forEach { (direction, display) ->
-            display.mode = config[direction]!!
-        }
     }
 
     override fun getEntry(): Identifier = identifier("tools/wrench")
@@ -128,27 +83,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         rootPanel.backgroundPainter = BackgroundPainter.VANILLA
     }
 
-    private fun offset(facing: Direction, side: Direction): Direction {
-        return if (side.axis.isVertical) side
-        else when (facing) {
-            Direction.NORTH -> side
-            Direction.SOUTH -> side.opposite
-            Direction.WEST -> side.rotateYCounterclockwise()
-            Direction.EAST -> side.rotateYClockwise()
-            else -> side
-        }
-    }
-    enum class MachineSide(val x: Int, val y: Int, val direction: Direction, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {
-        FRONT(1, 1, Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),
-        LEFT(0, 1, Direction.EAST, 0.0f, 5.333f, 5.332f, 10.666f),
-        BACK(2, 2, Direction.SOUTH, 10.667f, 10.667f, 16.0f, 16f),
-        RIGHT(2, 1, Direction.WEST, 10.667f, 5.333f, 16.0f, 10.665f),
-        TOP(1, 0, Direction.UP, 5.333f, 0.0f, 10.666f, 5.333f),
-        BOTTOM(1, 2, Direction.DOWN, 5.333f, 10.667f, 10.666f, 15.998f)
-    }
-
     companion object {
         val SCREEN_ID = identifier("wrench_item_io_screen")
-        val SAVE_PACKET_ID = identifier("save_packet_id")
     }
 }

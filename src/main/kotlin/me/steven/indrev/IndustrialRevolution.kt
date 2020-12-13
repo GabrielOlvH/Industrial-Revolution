@@ -7,6 +7,7 @@ import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.api.IRServerPlayerEntityExtension
+import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
@@ -97,7 +98,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
-        ServerSidePacketRegistry.INSTANCE.register(WrenchController.SAVE_PACKET_ID) { ctx, buf ->
+        ServerSidePacketRegistry.INSTANCE.register(Configurable.UPDATE_MACHINE_SIDE_PACKET_ID) { ctx, buf ->
             val type = buf.readEnumConstant(ConfigurationType::class.java)
             val pos = buf.readBlockPos()
             val dir = Direction.byId(buf.readInt())
@@ -106,6 +107,23 @@ object IndustrialRevolution : ModInitializer {
                 val world = ctx.player.world
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                 blockEntity.getCurrentConfiguration(type)[dir] = mode
+                blockEntity.markDirty()
+            }
+        }
+
+        ServerSidePacketRegistry.INSTANCE.register(Configurable.UPDATE_AUTO_OPERATION_PACKET_ID) { ctx, buf ->
+            val type = buf.readEnumConstant(ConfigurationType::class.java)
+            val opType = buf.readByte()
+            val pos = buf.readBlockPos()
+            val value = buf.readBoolean()
+            ctx.taskQueue.execute {
+                val world = ctx.player.world
+                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
+                if (opType.toInt() == 0)
+                    blockEntity.getCurrentConfiguration(type).autoPush = value
+                else
+                    blockEntity.getCurrentConfiguration(type).autoPull = value
+                blockEntity.markDirty()
             }
         }
 

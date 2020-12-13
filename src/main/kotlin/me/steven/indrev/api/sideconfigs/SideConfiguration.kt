@@ -7,6 +7,10 @@ import java.util.*
 
 data class SideConfiguration(val type: ConfigurationType, private val transferConfig: EnumMap<Direction, TransferMode> = EnumMap(Direction::class.java))
     : MutableMap<Direction, TransferMode> by transferConfig {
+
+    var autoPush = true
+    var autoPull = true
+
     init {
         Direction.values().forEach { dir -> this[dir] = TransferMode.NONE }
     }
@@ -22,6 +26,8 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
             configTag.putString(dir.toString(), mode.toString())
         }
         transferConfigTag?.put(type.toString().toLowerCase(), configTag)
+        configTag.putBoolean("AutoPush", autoPush)
+        configTag.putBoolean("AutoPull", autoPull)
     }
 
     fun fromTag(tag: CompoundTag?) {
@@ -35,6 +41,10 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
                     this[dir] = mode
                 }
             }
+            if (configTag.contains("AutoPush"))
+            autoPush = configTag.getBoolean("AutoPush")
+            if (configTag.contains("AutoPull"))
+            autoPull = configTag.getBoolean("AutoPull")
         }
     }
 }
