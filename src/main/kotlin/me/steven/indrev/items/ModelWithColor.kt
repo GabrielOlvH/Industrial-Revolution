@@ -6,5 +6,6 @@ import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.util.Identifier
 
 class ModelWithColor(id: Identifier, val color: Int) {
-    val bakedModel: BakedModel by lazy { MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(id, "inventory")) }
+    val itemBakedModel: BakedModel by lazy { MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(id, "inventory")) }
+    val blockBakedModel: BakedModel by lazy { MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(id, "")) }
 }
