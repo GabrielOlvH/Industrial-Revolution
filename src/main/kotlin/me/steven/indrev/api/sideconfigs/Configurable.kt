@@ -45,7 +45,7 @@ interface Configurable {
                 buf.writeBoolean(v)
                 ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
-            root.add(autoPushBtn, 0, 5)
+            root.add(autoPushBtn, 0, 4)
             val autoPullBtn = WToggleButton(TranslatableText("item.indrev.wrench.autopull"))
             autoPullBtn.toggle = configuration.autoPull
             autoPullBtn.onToggle = Consumer { v ->
@@ -57,7 +57,7 @@ interface Configurable {
                 buf.writeBoolean(v)
                 ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
-            root.add(autoPullBtn, 0, 6)
+            root.add(autoPullBtn, 0, 5)
         }
 
         val blockState = world.getBlockState(pos)
@@ -91,7 +91,7 @@ interface Configurable {
             }
             machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
         }
-        root.add(machineVisualizerPanel, 1.0, 1.0)
+        root.add(machineVisualizerPanel, 1.0, 0.5)
         return root
     }
 

@@ -46,14 +46,15 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
             val availableTypes = ConfigurationType.getTypes(blockEntity)
             currentType = availableTypes.first()
             var widget = blockEntity.getWrenchConfigurationPanel(world, pos, playerInventory, currentType) ?: return@run
-            root.add(widget, 0, 2)
+            val configY = if (availableTypes.size > 1) 2 else 1
+            root.add(widget, 0, configY)
             val configTypeButton = WButton(currentType.title)
             configTypeButton.setOnClick {
                 currentType = currentType.next(availableTypes)
                 configTypeButton.label = currentType.title
                 root.remove(widget)
                 widget = blockEntity.getWrenchConfigurationPanel(world, pos, playerInventory, currentType) ?: return@setOnClick
-                root.add(widget, 0, 2)
+                root.add(widget, 0, configY)
                 root.validate(this)
             }
             if (availableTypes.size > 1)
