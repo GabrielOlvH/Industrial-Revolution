@@ -42,9 +42,9 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
                 }
             }
             if (configTag.contains("AutoPush"))
-            autoPush = configTag.getBoolean("AutoPush")
+                autoPush = configTag.getBoolean("AutoPush")
             if (configTag.contains("AutoPull"))
-            autoPull = configTag.getBoolean("AutoPull")
+                autoPull = configTag.getBoolean("AutoPull")
         }
     }
 }
