@@ -105,9 +105,185 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("ingot_highlight"), color)
         }
 
-        fun stick(): Builder {
+        fun pickaxeBase(color: Long): Builder {
+            return with(identifier("pickaxe_base"), color)
+        }
+
+        fun pickaxeShadow(color: Long): Builder {
+            return with(identifier("pickaxe_shadow"), color)
+        }
+
+        fun pickaxeHighlight(color: Long): Builder {
+            return with(identifier("pickaxe_highlight"), color)
+        }
+
+        fun axeBase(color: Long): Builder {
+            return with(identifier("axe_base"), color)
+        }
+
+        fun axeShadow(color: Long): Builder {
+            return with(identifier("axe_shadow"), color)
+        }
+
+        fun axeHighlight(color: Long): Builder {
+            return with(identifier("axe_highlight"), color)
+        }
+
+        fun helmetBase(color: Long): Builder {
+            return with(identifier("helmet_base"), color)
+        }
+
+        fun helmetShadow(color: Long): Builder {
+            return with(identifier("helmet_shadow"), color)
+        }
+
+        fun helmetHighlight(color: Long): Builder {
+            return with(identifier("helmet_highlight"), color)
+        }
+
+        fun dustBase(color: Long): Builder {
+            return with(identifier("dust_base"), color)
+        }
+
+        fun dustShadow(color: Long): Builder {
+            return with(identifier("dust_shadow"), color)
+        }
+
+        fun dustHighlight(color: Long): Builder {
+            return with(identifier("dust_highlight"), color)
+        }
+
+        fun chestplateBase(color: Long): Builder {
+            return with(identifier("chestplate_base"), color)
+        }
+
+        fun chestplateShadow(color: Long): Builder {
+            return with(identifier("chestplate_shadow"), color)
+        }
+
+        fun chestplateHighlight(color: Long): Builder {
+            return with(identifier("chestplate_highlight"), color)
+        }
+
+        fun bootsBase(color: Long): Builder {
+            return with(identifier("boots_base"), color)
+        }
+
+        fun bootsShadow(color: Long): Builder {
+            return with(identifier("boots_shadow"), color)
+        }
+
+        fun bootsHighlight(color: Long): Builder {
+            return with(identifier("boots_highlight"), color)
+        }
+
+        fun hoeBase(color: Long): Builder {
+            return with(identifier("hoe_base"), color)
+        }
+
+        fun hoeShadow(color: Long): Builder {
+            return with(identifier("hoe_shadow"), color)
+        }
+
+        fun hoeHighlight(color: Long): Builder {
+            return with(identifier("hoe_highlight"), color)
+        }
+
+        fun leggingsBase(color: Long): Builder {
+            return with(identifier("leggings_base"), color)
+        }
+
+        fun leggingsShadow(color: Long): Builder {
+            return with(identifier("leggings_shadow"), color)
+        }
+
+        fun leggingsHighlight(color: Long): Builder {
+            return with(identifier("leggings_highlight"), color)
+        }
+
+        fun nuggetBase(color: Long): Builder {
+            return with(identifier("nugget_base"), color)
+        }
+
+        fun nuggetShadow(color: Long): Builder {
+            return with(identifier("nugget_shadow"), color)
+        }
+
+        fun nuggetHighlight(color: Long): Builder {
+            return with(identifier("nugget_highlight"), color)
+        }
+
+        fun oreBase(color: Long): Builder {
+            return with(identifier("ore_base"), color)
+        }
+
+        fun oreHighlight(color: Long): Builder {
+            return with(identifier("ore_highlight"), color)
+        }
+
+        fun blockBase(color: Long): Builder {
+            return with(identifier("block_base"), color)
+        }
+
+        fun blockShadow(color: Long): Builder {
+            return with(identifier("block_shadow"), color)
+        }
+
+        fun blockHighlight(color: Long): Builder {
+            return with(identifier("block_highlight"), color)
+        }
+
+        fun purifiedOreBase(color: Long): Builder {
+            return with(identifier("purified_ore_base"), color)
+        }
+
+        fun purifiedOreShadow(color: Long): Builder {
+            return with(identifier("purified_ore_shadow"), color)
+        }
+
+        fun purifiedOreHighlight(color: Long): Builder {
+            return with(identifier("purified_ore_highlight"), color)
+        }
+
+        fun chunkBase(color: Long): Builder {
+            return with(identifier("chunk_base"), color)
+        }
+
+        fun chunkShadow(color: Long): Builder {
+            return with(identifier("chunk_shadow"), color)
+        }
+
+        fun chunkHighlight(color: Long): Builder {
+            return with(identifier("chunk_highlight"), color)
+        }
+
+        fun shovelBase(color: Long): Builder {
+            return with(identifier("shovel_base"), color)
+        }
+
+        fun shovelShadow(color: Long): Builder {
+            return with(identifier("shovel_shadow"), color)
+        }
+
+        fun shovelHighlight(color: Long): Builder {
+            return with(identifier("shovel_highlight"), color)
+        }
+
+        fun swordBase(color: Long): Builder {
+            return with(identifier("sword_base"), color)
+        }
+
+        fun swordShadow(color: Long): Builder {
+            return with(identifier("sword_shadow"), color)
+        }
+
+        fun swordHighlight(color: Long): Builder {
+            return with(identifier("sword_highlight"), color)
+        }
+
+        fun toolStick(): Builder {
             transformationType = TransformationType.HANDHELD
-            return with(Identifier("stick"), -1)
+            return with(identifier("tool_stick"), -1)
         }
 
         fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
@@ -124,7 +300,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
         HANDHELD(
             {
                 MinecraftClient.getInstance().bakedModelManager.getModel(
-                    ModelIdentifier(Identifier("stick"), "inventory")
+                    ModelIdentifier(identifier("tool_stick"), "inventory")
                 ).transformation
             }
         )
