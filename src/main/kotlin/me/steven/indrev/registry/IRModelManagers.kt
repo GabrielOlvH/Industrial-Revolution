@@ -84,12 +84,12 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         out.accept(ModelIdentifier(identifier("nugget_shadow"), "inventory"))
         out.accept(ModelIdentifier(identifier("nugget_highlight"), "inventory"))
 
-        out.accept(ModelIdentifier(identifier("ore_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("ore_highlight"), "inventory"))
+        out.accept(ModelIdentifier(identifier("ore_base"), ""))
+        out.accept(ModelIdentifier(identifier("ore_highlight"), ""))
 
-        out.accept(ModelIdentifier(identifier("block_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("block_shadow"), "inventory"))
-        out.accept(ModelIdentifier(identifier("block_highlight"), "inventory"))
+        out.accept(ModelIdentifier(identifier("block_base"), ""))
+        out.accept(ModelIdentifier(identifier("block_shadow"), ""))
+        out.accept(ModelIdentifier(identifier("block_highlight"), ""))
 
         out.accept(ModelIdentifier(identifier("purified_ore_base"), "inventory"))
         out.accept(ModelIdentifier(identifier("purified_ore_shadow"), "inventory"))
