@@ -3,10 +3,14 @@ package me.steven.indrev.registry
 import me.steven.indrev.items.MaterialBakedModel
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.itemSettings
+import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.Material
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.entity.EquipmentSlot
@@ -34,6 +38,9 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         val identifier = identifier("${id}_ore")
         Registry.register(Registry.BLOCK, identifier, ore)
         Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
+            BlockRenderLayerMap.INSTANCE.putBlock(ore, RenderLayer.getCutout())
+        }
         return this
     }
 
@@ -58,6 +65,9 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         val id = identifier("${id}_block")
         Registry.register(Registry.BLOCK, id, block)
         Registry.register(Registry.ITEM, id, BlockItem(block, itemSettings()))
+        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
+            BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout())
+        }
         return this
     }
 
