@@ -48,7 +48,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
 
     override fun hasDepth(): Boolean = false
 
-    override fun isSideLit(): Boolean = false
+    override fun isSideLit(): Boolean = type == TransformationType.BLOCK
 
     override fun isBuiltin(): Boolean = false
 
@@ -67,6 +67,17 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
         randomSupplier: Supplier<Random>,
         ctx: RenderContext
     ) {
+        if (type == TransformationType.BLOCK) {
+            bakedModels.forEach { holder ->
+                val color = holder.color
+                ctx.pushTransform { quad ->
+                    quad.spriteColor(0, color, color, color, color)
+                    true
+                }
+                ctx.fallbackConsumer().accept(holder.blockBakedModel)
+                ctx.popTransform()
+            }
+        }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
@@ -76,7 +87,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
                 quad.spriteColor(0, color, color, color, color)
                 true
             }
-            ctx.fallbackConsumer().accept(holder.bakedModel)
+            ctx.fallbackConsumer().accept(holder.itemBakedModel)
             ctx.popTransform()
         }
 
@@ -286,6 +297,11 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("tool_stick"), -1)
         }
 
+        fun block(): Builder {
+            transformationType = TransformationType.BLOCK
+            return this
+        }
+
         fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
     }
 
@@ -301,6 +317,13 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             {
                 MinecraftClient.getInstance().bakedModelManager.getModel(
                     ModelIdentifier(identifier("tool_stick"), "inventory")
+                ).transformation
+            }
+        ),
+        BLOCK(
+            {
+                MinecraftClient.getInstance().bakedModelManager.getModel(
+                    ModelIdentifier(Identifier("stone"), "")
                 ).transformation
             }
         )

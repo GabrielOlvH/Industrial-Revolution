@@ -11,6 +11,7 @@ import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
@@ -175,11 +176,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    override fun getCurrentConfiguration(type: ConfigurationType): MutableMap<Direction, TransferMode> {
+    override fun getCurrentConfiguration(type: ConfigurationType): SideConfiguration {
         return when (type) {
             ConfigurationType.ITEM -> inventoryComponent!!.itemConfig
             ConfigurationType.FLUID -> fluidComponent!!.transferConfig
-            ConfigurationType.ENERGY -> hashMapOf()
+            ConfigurationType.ENERGY -> error("nope")
         }
     }
 
@@ -236,7 +237,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
                 val inventory = inventoryComponent?.inventory ?: return@forEach
-                if (mode.output) {
+                if (mode.output && inventoryComponent!!.itemConfig.autoPush) {
                     val neighborInv = getInventory(pos)
                     if (neighborInv != null) {
                         inventory.outputSlots.forEach { slot ->
@@ -248,7 +249,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                     val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
                     ItemInvUtil.move(extractable, insertable, 64)
                 }
-                if (mode.input) {
+                if (mode.input && inventoryComponent!!.itemConfig.autoPull) {
                     val neighborInv = getInventory(pos)
                     if (neighborInv != null) {
                         getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->

@@ -1,6 +1,5 @@
 package me.steven.indrev.api.sideconfigs
 
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.TransferMode
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -31,6 +30,6 @@ enum class ConfigurationType(val title: Text, vararg val validModes: TransferMod
     }
 
     companion object {
-        fun getTypes(blockEntity: MachineBlockEntity<*>) = values().filter { type -> blockEntity.isConfigurable(type) && !blockEntity.isFixed(type) }.toTypedArray()
+        fun getTypes(blockEntity: Configurable) = values().filter { type -> blockEntity.isConfigurable(type) && !blockEntity.isFixed(type) }.toTypedArray()
     }
 }
