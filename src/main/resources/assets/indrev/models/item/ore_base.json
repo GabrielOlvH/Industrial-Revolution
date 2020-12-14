@@ -1,6 +1,4 @@
 {
-    "parent": "item/generated",
-    "textures": {
-      "layer0": "indrev:item/ore_base"
-    }
+    "parent": "indrev:block/ore_base"
+
   }

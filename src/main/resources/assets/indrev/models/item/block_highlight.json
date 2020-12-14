@@ -1,6 +1,4 @@
 {
-    "parent": "item/generated",
-    "textures": {
-      "layer0": "indrev:item/block_highlight"
-    }
+    "parent": "indrev:block/block_highlight"
+
   }
