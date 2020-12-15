@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
@@ -12,6 +11,7 @@ import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.toVec3d
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.block.Fertilizable
 import net.minecraft.block.LeavesBlock
 import net.minecraft.item.AxeItem
@@ -27,6 +27,7 @@ import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
 import team.reborn.energy.Energy
+import team.reborn.energy.EnergyHandler
 import team.reborn.energy.EnergySide
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
@@ -52,7 +53,8 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val inventory = inventoryComponent?.inventory ?: return
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
-        if (cooldown < config.processSpeed || !Energy.of(this).simulate().use(Upgrade.getEnergyCost(upgrades, this)))
+        val energyCost = Upgrade.getEnergyCost(upgrades, this)
+        if (cooldown < config.processSpeed || ticks % 15 != 0 || !Energy.of(this).simulate().use(energyCost))
             return
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
@@ -67,9 +69,12 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             scheduledBlocks = list.iterator()
         } else {
             var currentChunk: Chunk? = null
-            var performedAction = false
+            var performedActions = 0
             val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
-            outer@ while (scheduledBlocks.hasNext()) {
+            val axeStackHandler = if (axeStack != null && Energy.valid(axeStack)) Energy.of(axeStack) else null
+            val handler = Energy.of(this)
+            val brokenBlocks = hashMapOf<BlockPos, BlockState>()
+            outer@ while (scheduledBlocks.hasNext() && cooldown > config.processSpeed) {
                 val pos = scheduledBlocks.next()
                 if (pos.x shr 4 != currentChunk?.pos?.x || pos.z shr 4 != currentChunk.pos.z) {
                     currentChunk = world?.getChunk(pos)
@@ -77,60 +82,67 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 val blockState = currentChunk?.getBlockState(pos) ?: continue
                 if (axeStack != null
                     && !axeStack.isEmpty
-                    && tryChop(axeStack, pos, blockState, inventory)
+                    && tryChop(axeStack, axeStackHandler, pos, blockState)
                 ) {
-                    performedAction = true
-                    break
+                    cooldown -= config.processSpeed
+                    if (!handler.use(energyCost)) break
+                    brokenBlocks[pos] = blockState
+                    performedActions++
                 }
-                for (slot in inventory.inputSlots) {
-                    val stack = inventory.getStack(slot)
-                    if (
-                        (axeStack != null && stack.isItemEqual(axeStack))
-                        || stack.isEmpty
-                        || !tryUse(blockState, stack, pos)
-                    ) continue
-                    performedAction = true
-                    break@outer
+                if (pos.y == this.pos.y) {
+                    for (slot in inventory.inputSlots) {
+                        val stack = inventory.getStack(slot)
+                        if (
+                            (axeStack != null && stack.isItemEqual(axeStack))
+                            || stack.isEmpty
+                            || !tryUse(blockState, stack, pos)
+                        ) continue
+                        cooldown -= config.processSpeed
+                        if (!handler.use(energyCost)) break
+                        brokenBlocks[pos] = blockState
+                        performedActions++
+                    }
                 }
             }
-            if (performedAction) Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))
-            temperatureComponent?.tick(performedAction)
-            workingState = performedAction
+            brokenBlocks.forEach { (blockPos, blockState) ->
+                val droppedStacks = blockState.getDroppedStacks(
+                    LootContext.Builder(world as ServerWorld).random(world?.random)
+                        .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
+                        .parameter(LootContextParameters.TOOL, axeStack)
+                )
+                droppedStacks.forEach {
+                    if (!inventory.output(it))
+                        ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
+                }
+            }
+            temperatureComponent?.tick(performedActions > 0)
+            workingState = performedActions > 0
         }
         cooldown = 0.0
     }
 
     private fun tryChop(
         axeStack: ItemStack,
+        axeEnergyHandler: EnergyHandler?,
         blockPos: BlockPos,
         blockState: BlockState,
-        inventory: IRInventory
     ): Boolean {
         val block = blockState.block
         when {
             block.isIn(BlockTags.LOGS) -> {
-                if (Energy.valid(axeStack) && !Energy.of(axeStack).use(1.0))
+                if (axeEnergyHandler != null && !axeEnergyHandler.use(1.0))
                     return false
                 else {
                     axeStack.damage(1, world?.random, null)
                     if (axeStack.damage >= axeStack.maxDamage)
                         axeStack.decrement(1)
                 }
-                world?.breakBlock(blockPos, false)
+                world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
             block is LeavesBlock -> {
-                world?.breakBlock(blockPos, false)
+                world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
             else -> return false
-        }
-        val droppedStacks = blockState.getDroppedStacks(
-            LootContext.Builder(world as ServerWorld).random(world?.random)
-                .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
-                .parameter(LootContextParameters.TOOL, axeStack)
-        )
-        droppedStacks.forEach {
-            if (!inventory.output(it))
-                ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)
         }
         return true
     }

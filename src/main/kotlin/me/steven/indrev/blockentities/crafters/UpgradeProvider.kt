@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.Tier
@@ -16,12 +17,13 @@ interface UpgradeProvider {
     fun getBaseValue(upgrade: Upgrade): Double
 
     fun getUpgrades(inventory: Inventory): Map<Upgrade, Int> {
-        val map = hashMapOf<Upgrade, Int>()
+        val map = Object2IntOpenHashMap<Upgrade>(4)
+        map.defaultReturnValue(0)
         getUpgradeSlots()
             .forEach { slot ->
                 val (stack, item) = inventory.getStack(slot)
                 if (item is IRUpgradeItem)
-                    map.merge(item.upgrade, stack.count) { i, j -> i + j }
+                    map.addTo(item.upgrade, stack.count)
             }
         return map
     }

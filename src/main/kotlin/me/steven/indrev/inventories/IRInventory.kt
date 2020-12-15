@@ -55,8 +55,7 @@ class IRInventory(
                 }
             }
         }
-        addToOutputSlot(stack)
-        return true
+        return addToOutputSlot(stack)
     }
 
     private fun canCombine(one: ItemStack, two: ItemStack): Boolean
@@ -72,14 +71,15 @@ class IRInventory(
         }
     }
 
-    private fun addToOutputSlot(stack: ItemStack) {
+    private fun addToOutputSlot(stack: ItemStack): Boolean {
         for (i in outputSlots) {
             val itemStack = getStack(i)
             if (itemStack.isEmpty) {
                 setStack(i, stack.copy())
                 stack.count = 0
-                return
+                return true
             }
         }
+        return false
     }
 }
