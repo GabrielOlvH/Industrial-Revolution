@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap
 import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
+import java.util.*
 
 class StructureHelper(private val definition: StructureDefinition, private val structure: MutableMap<BlockPos, BlockStateFilter> = HashMap()) {
 
