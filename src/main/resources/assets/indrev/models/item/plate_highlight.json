@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/steel_pickaxe"
+    "layer0": "indrev:item/plate_highlight"
   }
 }

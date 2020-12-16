@@ -48,6 +48,9 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         out.accept(ModelIdentifier(identifier("ingot_shadow"), "inventory"))
         out.accept(ModelIdentifier(identifier("ingot_highlight"), "inventory"))
 
+        out.accept(ModelIdentifier(identifier("plate_base"), "inventory"))
+        out.accept(ModelIdentifier(identifier("plate_highlight"), "inventory"))
+
         out.accept(ModelIdentifier(identifier("pickaxe_base"), "inventory"))
         out.accept(ModelIdentifier(identifier("pickaxe_shadow"), "inventory"))
         out.accept(ModelIdentifier(identifier("pickaxe_highlight"), "inventory"))

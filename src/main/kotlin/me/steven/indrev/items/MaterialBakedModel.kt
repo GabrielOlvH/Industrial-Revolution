@@ -116,6 +116,14 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("ingot_highlight"), color)
         }
 
+        fun plateBase(color: Long): Builder {
+            return with(identifier("plate_base"), color)
+        }
+
+        fun plateHighlight(color: Long): Builder {
+            return with(identifier("plate_highlight"), color)
+        }
+
         fun pickaxeBase(color: Long): Builder {
             return with(identifier("pickaxe_base"), color)
         }
@@ -299,7 +307,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
 
         fun block(): Builder {
             transformationType = TransformationType.BLOCK
-            return this
+            return with(Identifier("stone"), -1)
         }
 
         fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
