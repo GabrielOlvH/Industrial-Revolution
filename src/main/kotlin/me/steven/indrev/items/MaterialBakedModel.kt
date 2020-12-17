@@ -108,8 +108,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("ingot_base"), color)
         }
 
-        fun ingotShadow(color: Long): Builder {
-            return with(identifier("ingot_shadow"), color)
+        fun ingotOutline(color: Long): Builder {
+            return with(identifier("ingot_outline"), color)
         }
 
         fun ingotHighlight(color: Long): Builder {
@@ -120,6 +120,10 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("plate_base"), color)
         }
 
+        fun plateOutline(color: Long): Builder {
+            return with(identifier("plate_outline"), color)
+        }
+
         fun plateHighlight(color: Long): Builder {
             return with(identifier("plate_highlight"), color)
         }
@@ -128,8 +132,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("pickaxe_base"), color)
         }
 
-        fun pickaxeShadow(color: Long): Builder {
-            return with(identifier("pickaxe_shadow"), color)
+        fun pickaxeOutline(color: Long): Builder {
+            return with(identifier("pickaxe_outline"), color)
         }
 
         fun pickaxeHighlight(color: Long): Builder {
@@ -140,8 +144,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("axe_base"), color)
         }
 
-        fun axeShadow(color: Long): Builder {
-            return with(identifier("axe_shadow"), color)
+        fun axeOutline(color: Long): Builder {
+            return with(identifier("axe_outline"), color)
         }
 
         fun axeHighlight(color: Long): Builder {
@@ -152,8 +156,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("helmet_base"), color)
         }
 
-        fun helmetShadow(color: Long): Builder {
-            return with(identifier("helmet_shadow"), color)
+        fun helmetOutline(color: Long): Builder {
+            return with(identifier("helmet_outline"), color)
         }
 
         fun helmetHighlight(color: Long): Builder {
@@ -164,8 +168,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("dust_base"), color)
         }
 
-        fun dustShadow(color: Long): Builder {
-            return with(identifier("dust_shadow"), color)
+        fun dustOutline(color: Long): Builder {
+            return with(identifier("dust_outline"), color)
         }
 
         fun dustHighlight(color: Long): Builder {
@@ -176,8 +180,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("chestplate_base"), color)
         }
 
-        fun chestplateShadow(color: Long): Builder {
-            return with(identifier("chestplate_shadow"), color)
+        fun chestplateOutline(color: Long): Builder {
+            return with(identifier("chestplate_outline"), color)
         }
 
         fun chestplateHighlight(color: Long): Builder {
@@ -188,8 +192,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("boots_base"), color)
         }
 
-        fun bootsShadow(color: Long): Builder {
-            return with(identifier("boots_shadow"), color)
+        fun bootsOutline(color: Long): Builder {
+            return with(identifier("boots_outline"), color)
         }
 
         fun bootsHighlight(color: Long): Builder {
@@ -200,8 +204,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("hoe_base"), color)
         }
 
-        fun hoeShadow(color: Long): Builder {
-            return with(identifier("hoe_shadow"), color)
+        fun hoeOutline(color: Long): Builder {
+            return with(identifier("hoe_outline"), color)
         }
 
         fun hoeHighlight(color: Long): Builder {
@@ -212,8 +216,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("leggings_base"), color)
         }
 
-        fun leggingsShadow(color: Long): Builder {
-            return with(identifier("leggings_shadow"), color)
+        fun leggingsOutline(color: Long): Builder {
+            return with(identifier("leggings_outline"), color)
         }
 
         fun leggingsHighlight(color: Long): Builder {
@@ -224,8 +228,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("nugget_base"), color)
         }
 
-        fun nuggetShadow(color: Long): Builder {
-            return with(identifier("nugget_shadow"), color)
+        fun nuggetOutline(color: Long): Builder {
+            return with(identifier("nugget_outline"), color)
         }
 
         fun nuggetHighlight(color: Long): Builder {
@@ -244,8 +248,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("block_base"), color)
         }
 
-        fun blockShadow(color: Long): Builder {
-            return with(identifier("block_shadow"), color)
+        fun blockOutline(color: Long): Builder {
+            return with(identifier("block_outline"), color)
         }
 
         fun blockHighlight(color: Long): Builder {
@@ -256,8 +260,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("purified_ore_base"), color)
         }
 
-        fun purifiedOreShadow(color: Long): Builder {
-            return with(identifier("purified_ore_shadow"), color)
+        fun purifiedOreOutline(color: Long): Builder {
+            return with(identifier("purified_ore_outline"), color)
         }
 
         fun purifiedOreHighlight(color: Long): Builder {
@@ -268,8 +272,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("chunk_base"), color)
         }
 
-        fun chunkShadow(color: Long): Builder {
-            return with(identifier("chunk_shadow"), color)
+        fun chunkOutline(color: Long): Builder {
+            return with(identifier("chunk_outline"), color)
         }
 
         fun chunkHighlight(color: Long): Builder {
@@ -280,8 +284,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("shovel_base"), color)
         }
 
-        fun shovelShadow(color: Long): Builder {
-            return with(identifier("shovel_shadow"), color)
+        fun shovelOutline(color: Long): Builder {
+            return with(identifier("shovel_outline"), color)
         }
 
         fun shovelHighlight(color: Long): Builder {
@@ -292,8 +296,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("sword_base"), color)
         }
 
-        fun swordShadow(color: Long): Builder {
-            return with(identifier("sword_shadow"), color)
+        fun swordOutline(color: Long): Builder {
+            return with(identifier("sword_outline"), color)
         }
 
         fun swordHighlight(color: Long): Builder {

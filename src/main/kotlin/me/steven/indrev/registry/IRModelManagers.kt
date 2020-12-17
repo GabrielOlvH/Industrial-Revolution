@@ -45,69 +45,70 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk4_overlay"), ""))
 
         out.accept(ModelIdentifier(identifier("ingot_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("ingot_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("ingot_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("ingot_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("plate_base"), "inventory"))
+        out.accept(ModelIdentifier(identifier("plate_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("plate_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("pickaxe_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("pickaxe_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("pickaxe_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("pickaxe_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("axe_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("axe_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("axe_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("axe_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("helmet_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("helmet_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("helmet_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("helmet_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("dust_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("dust_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("dust_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("dust_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("chestplate_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("chestplate_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("chestplate_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("chestplate_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("boots_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("boots_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("boots_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("boots_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("hoe_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("hoe_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("hoe_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("hoe_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("leggings_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("leggings_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("leggings_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("leggings_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("nugget_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("nugget_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("nugget_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("nugget_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("ore_base"), ""))
         out.accept(ModelIdentifier(identifier("ore_highlight"), ""))
 
         out.accept(ModelIdentifier(identifier("block_base"), ""))
-        out.accept(ModelIdentifier(identifier("block_shadow"), ""))
+        out.accept(ModelIdentifier(identifier("block_outline"), ""))
         out.accept(ModelIdentifier(identifier("block_highlight"), ""))
 
         out.accept(ModelIdentifier(identifier("purified_ore_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("purified_ore_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("purified_ore_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("purified_ore_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("chunk_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("chunk_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("chunk_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("chunk_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("shovel_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("shovel_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("shovel_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("shovel_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("sword_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("sword_shadow"), "inventory"))
+        out.accept(ModelIdentifier(identifier("sword_outline"), "inventory"))
         out.accept(ModelIdentifier(identifier("sword_highlight"), "inventory"))
 
         out.accept(ModelIdentifier(identifier("tool_stick"), "inventory"))
