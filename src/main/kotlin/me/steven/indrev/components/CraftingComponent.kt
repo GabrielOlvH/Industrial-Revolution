@@ -15,7 +15,6 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
-import team.reborn.energy.Energy
 import kotlin.math.ceil
 
 class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
@@ -44,7 +43,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                 val upgrades = machine.getUpgrades(inventory)
                 if (recipe?.matches(inputInventory, fluidComponent?.tanks?.get(0)?.volume) != true)
                     tryStartRecipe(inventory) ?: reset()
-                else if (Energy.of(machine).use(Upgrade.getEnergyCost(upgrades, machine))) {
+                else if (machine.use(Upgrade.getEnergyCost(upgrades, machine))) {
                     isCrafting = true
                     processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
                     if (processTime >= totalProcessTime) {

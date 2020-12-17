@@ -22,13 +22,14 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             input { slot = 2 }
         }
         this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(4))
+
     }
     private var burnTime: Int by Property(4, 0)
     private var maxBurnTime: Int by Property(5, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (maxStoredPower > energy) {
+        else if (energyCapacity > energy) {
             val fluidComponent = fluidComponent!!
             val volume = fluidComponent.tanks[0].volume
             val extractable = fluidComponent.extractable
@@ -42,7 +43,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
             }
             markDirty()
         }
-        return burnTime > 0 && energy < maxStoredPower
+        return burnTime > 0 && energy < energyCapacity
     }
 
     override fun getGenerationRatio(): Double {

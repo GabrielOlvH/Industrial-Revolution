@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import dev.technici4n.fasttransferlib.api.Simulation
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
@@ -16,8 +17,6 @@ import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY) {
 
@@ -25,12 +24,14 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
     }
 
+    override val maxInput: Double = config.maxInput
+
     override fun machineTick() {
         if ((world?.time ?: return) % 20 != 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
         val fluidComponent = fluidComponent ?: return
         val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()
-        if (hasFluid && Energy.of(this).simulate().use(config.energyCost)) {
+        if (hasFluid && extract(config.energyCost, Simulation.SIMULATE) == config.energyCost) {
             val mutablePos = pos.mutableCopy()
             var currentChunk = world!!.getChunk(pos)
             for (x in range.minX.toInt()..range.maxX.toInt())
@@ -48,7 +49,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                                 val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                                 currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
                                 fluidComponent.insertable.insert(toInsert)
-                                Energy.of(this).use(2.0)
+                                extract(config.energyCost, Simulation.ACT)
                                 break
                             }
                         }
@@ -58,10 +59,6 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     }
 
     fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
-
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun applyDefault(
         state: BlockState,

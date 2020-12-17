@@ -1,5 +1,8 @@
 package me.steven.indrev.utils
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
@@ -29,7 +32,6 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import team.reborn.energy.Energy
 import vazkii.patchouli.client.book.ClientBookRegistry
 import java.util.function.Predicate
 
@@ -68,7 +70,7 @@ fun SyncedGuiDescription.configure(
     panel.add(energyWidget, 0.1, 0.0)
 
     val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
-    batterySlot.filter = Predicate { stack -> Energy.valid(stack) }
+    batterySlot.filter = Predicate { stack -> EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] != null }
 
     screenHandlerContext.run { world, blockPos ->
         if (world.isClient)

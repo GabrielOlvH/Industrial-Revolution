@@ -3,6 +3,10 @@ package me.steven.indrev.items.armor
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.items.energy.IREnergyItem
@@ -21,14 +25,14 @@ import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHolder
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyTier
 import java.util.*
 
 class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), EnergyHolder, IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem {
+
+    init {
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
+    }
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         getInstalledTooltip(getInstalled(stack), stack, tooltip)
@@ -42,16 +46,8 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         return if (compoundTag != null && compoundTag.contains("color", 99)) compoundTag.getInt("color") else -1
     }
 
-    override fun getMaxStoredPower(): Double = maxStored
-
-    override fun getMaxInput(side: EnergySide?): Double = Tier.MK4.io
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun getTier(): EnergyTier = EnergyTier.HIGH
-
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = Energy.of(stack)
+        val handler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
     }
 
@@ -83,7 +79,8 @@ class IRModularArmor(slot: EquipmentSlot, private val maxStored: Double, setting
         equipmentSlot: EquipmentSlot
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
         val item = itemStack.item as IRModularArmor
-        if (Energy.of(itemStack).energy <= 0) {
+        val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
+        if (itemIo == null || itemIo.energy <= 0) {
             return ImmutableMultimap.of()
         } else if (equipmentSlot == item.slotType) {
             val level = ArmorModule.PROTECTION.getLevel(itemStack).toDouble()

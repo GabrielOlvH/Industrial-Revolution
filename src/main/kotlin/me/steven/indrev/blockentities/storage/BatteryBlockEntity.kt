@@ -1,5 +1,11 @@
 package me.steven.indrev.blockentities.storage
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -13,8 +19,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class BatteryBlockEntity(tier: Tier) :
     MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CONTAINER_REGISTRY) {
@@ -22,40 +26,43 @@ class BatteryBlockEntity(tier: Tier) :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryComponent = inventory(this) {
-            0 filter { stack -> Energy.valid(stack) }
+            0 filter { stack -> true }
         }
     }
 
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
     private var lastWidth = 0f
 
+    override val maxOutput: Double = getTransferRate()
+    override val maxInput: Double = getTransferRate()
+
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
-        if (Energy.valid(stack)) {
-            val handler = Energy.of(stack)
-            Energy.of(this).into(handler).move()
-            stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
-        }
+        val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+        if (itemIo != null)
+            EnergyMovement.move(this, itemIo, maxOutput)
     }
 
-    override fun setStored(amount: Double) {
-        super.setStored(amount)
-        //update the energy display on the block
-        val width = ((energy.toFloat() / maxStoredPower.toFloat()) * 0.5f) + 0.25f
+    override fun insert(amount: Double, simulation: Simulation?): Double {
+        val insert = super.insert(amount, simulation)
+        update()
+        return insert
+    }
+
+    override fun extract(maxAmount: Double, simulation: Simulation?): Double {
+        val extract = super.extract(maxAmount, simulation)
+        update()
+        return extract
+    }
+
+    private fun update() {
+        val width = ((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f
         if (width != lastWidth) {
             sync()
             lastWidth = width
         }
-    }
-
-    override fun getMaxOutput(side: EnergySide?): Double {
-        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.OUTPUT) getTransferRate() else 0.0
-    }
-
-    override fun getMaxInput(side: EnergySide?): Double {
-        return if (transferConfig[Direction.values()[side!!.ordinal]] == TransferMode.INPUT) getTransferRate() else 0.0
     }
 
     private fun getTransferRate() = when (tier) {
@@ -101,11 +108,46 @@ class BatteryBlockEntity(tier: Tier) :
         transferConfig.fromTag(tag)
     }
 
-    override fun getBaseBuffer(): Double = when (tier) {
+    override fun getEnergyCapacity(): Double = when (tier) {
         Tier.MK1 -> 10000.0
         Tier.MK2 -> 100000.0
         Tier.MK3 -> 1000000.0
         Tier.MK4 -> 10000000.0
         Tier.CREATIVE -> Double.MAX_VALUE
+    }
+
+    class LFCEnergyIo(val blockEntity: BatteryBlockEntity, val direction: Direction) : EnergyIo {
+        override fun getEnergy(): Double = blockEntity.energy
+
+        override fun getEnergyCapacity(): Double = blockEntity.energyCapacity
+
+        override fun extract(maxAmount: Double, simulation: Simulation?): Double {
+            if (!supportsExtraction()) return 0.0
+            var extracted = maxAmount.coerceAtMost(blockEntity.maxOutput)
+            val overflow = energy - extracted
+            if (overflow < 0)
+                extracted += overflow
+
+            if (simulation == Simulation.ACT)
+                blockEntity.energy -= extracted
+
+            return extracted
+        }
+
+        override fun insert(amount: Double, simulation: Simulation?): Double {
+            if (!supportsInsertion()) return amount
+            var inserted = amount.coerceAtMost(blockEntity.maxInput)
+            val overflow = energy + inserted
+            if (overflow > energyCapacity)
+                inserted -= overflow - energyCapacity
+
+            if (simulation == Simulation.ACT)
+                blockEntity.energy += inserted
+            return amount - inserted
+        }
+
+        override fun supportsExtraction(): Boolean = blockEntity.transferConfig[direction]?.output == true
+
+        override fun supportsInsertion(): Boolean = blockEntity.transferConfig[direction]?.input == true
     }
 }

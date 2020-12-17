@@ -8,7 +8,6 @@ import me.steven.indrev.utils.Property
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
-import team.reborn.energy.Energy
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
@@ -45,7 +44,7 @@ class TemperatureComponent(
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && Energy.of(machine).use(5.0))
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && machine.use(16.0))
         val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier

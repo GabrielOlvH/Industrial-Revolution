@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
+import dev.technici4n.fasttransferlib.api.Simulation
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
@@ -18,7 +19,6 @@ import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
-import team.reborn.energy.Energy
 
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
@@ -40,7 +40,8 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
-        if (!Energy.of(this).simulate().use(config.energyCost)) return
+        val energyCost = Upgrade.getEnergyCost(upgrades, this)
+        if (extract(energyCost, Simulation.SIMULATE) != energyCost) return
         if (nextBlocks.hasNext()) {
             var pos = nextBlocks.next()
             var state = world.getBlockState(pos)
@@ -105,7 +106,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
             }
         } ?: false
         if (performedAction)
-            Energy.of(this).use(config.energyCost)
+            extract(Upgrade.getEnergyCost(getUpgrades(inventory!!), this), Simulation.ACT)
         return performedAction
     }
 
@@ -118,7 +119,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> getBaseBuffer()
+        Upgrade.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
 }

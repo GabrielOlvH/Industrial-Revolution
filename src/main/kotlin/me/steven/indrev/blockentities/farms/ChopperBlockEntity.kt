@@ -1,14 +1,16 @@
 package me.steven.indrev.blockentities.farms
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.component1
-import me.steven.indrev.utils.component2
-import me.steven.indrev.utils.toVec3d
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -26,9 +28,6 @@ import net.minecraft.tag.ItemTags
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHandler
-import team.reborn.energy.EnergySide
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
     init {
@@ -44,6 +43,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         }
     }
 
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
+
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
     override var range = 5
     var cooldown = 0.0
@@ -54,7 +56,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (cooldown < config.processSpeed || ticks % 15 != 0 || !Energy.of(this).simulate().use(energyCost))
+        if (cooldown < config.processSpeed || ticks % 15 != 0 || this.extract(energyCost, Simulation.ACT) != energyCost)
             return
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()
@@ -71,8 +73,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             var currentChunk: Chunk? = null
             var performedActions = 0
             val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
-            val axeStackHandler = if (axeStack != null && Energy.valid(axeStack)) Energy.of(axeStack) else null
-            val handler = Energy.of(this)
+            val axeStackHandler = if (axeStack != null) EnergyApi.ITEM[ItemKey.of(axeStack), ContainerItemContext.ofStack(axeStack)] else null
             val brokenBlocks = hashMapOf<BlockPos, BlockState>()
             outer@ while (scheduledBlocks.hasNext() && cooldown > config.processSpeed) {
                 val pos = scheduledBlocks.next()
@@ -85,7 +86,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                     && tryChop(axeStack, axeStackHandler, pos, blockState)
                 ) {
                     cooldown -= config.processSpeed
-                    if (!handler.use(energyCost)) break
+                    if (!use(energyCost)) break
                     brokenBlocks[pos] = blockState
                     performedActions++
                 }
@@ -98,7 +99,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                             || !tryUse(blockState, stack, pos)
                         ) continue
                         cooldown -= config.processSpeed
-                        if (!handler.use(energyCost)) break
+                        if (!use(energyCost)) break
                         brokenBlocks[pos] = blockState
                         performedActions++
                     }
@@ -123,7 +124,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
 
     private fun tryChop(
         axeStack: ItemStack,
-        axeEnergyHandler: EnergyHandler?,
+        axeEnergyHandler: EnergyIo?,
         blockPos: BlockPos,
         blockState: BlockState,
     ): Boolean {
@@ -179,13 +180,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         when (upgrade) {
             Upgrade.ENERGY -> config.energyCost
             Upgrade.SPEED -> 1.0
-            Upgrade.BUFFER -> getBaseBuffer()
+            Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
 
-    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
-
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
 }

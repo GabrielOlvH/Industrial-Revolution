@@ -1,5 +1,9 @@
 package me.steven.indrev.mixin;
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext;
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi;
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
+import dev.technici4n.fasttransferlib.api.item.ItemKey;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.api.IRPlayerEntityExtension;
@@ -21,8 +25,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHandler;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -43,8 +45,8 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         PlayerInventory inventory = player.inventory;
         ItemStack itemStack = inventory.main.get(inventory.selectedSlot);
         Item item = itemStack.getItem();
-        if (Energy.valid(itemStack) && item instanceof IREnergyItem) {
-            EnergyHandler handler = Energy.of(itemStack);
+        EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
+        if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
                 CompoundTag tag = itemStack.getOrCreateTag();
                 if (tag.contains("Active") && !tag.getBoolean("Active")) {
@@ -52,7 +54,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
                     return;
                 }
             }
-            if (handler.getEnergy() < 1) cir.setReturnValue(0.2F);
+            if (itemIo.getEnergy() < 1) cir.setReturnValue(0.2F);
         }
     }
 

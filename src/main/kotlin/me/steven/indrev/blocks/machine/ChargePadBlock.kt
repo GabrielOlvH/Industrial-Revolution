@@ -1,6 +1,10 @@
 package me.steven.indrev.blocks.machine
 
 import com.google.common.collect.Iterables
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.utils.Tier
 import net.fabricmc.api.EnvType
@@ -26,7 +30,6 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import team.reborn.energy.Energy
 import java.util.*
 import java.util.stream.Stream
 
@@ -56,7 +59,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
             return ActionResult.SUCCESS
         }
         val handStack = player?.mainHandStack
-        if (Energy.valid(handStack)) {
+        if (EnergyApi.ITEM[ItemKey.of(handStack), ContainerItemContext.ofStack(handStack)] != null) {
             inventory.setStack(0, handStack)
             player?.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
             return ActionResult.SUCCESS
@@ -76,12 +79,11 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
                 Iterables.concat(entity.inventory.armor, mutableListOf(entity.mainHandStack, entity.offHandStack))
             is ArmorStandEntity -> entity.itemsEquipped
             else -> return
-        }.filter { stack -> Energy.valid(stack) }.map { stack -> Energy.of(stack) }
-        val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
-        val amount = sum / items.size.toDouble()
-        val chargePadHandler = Energy.of(blockEntity)
+        }.mapNotNull { stack -> EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] }
+        var rem = blockEntity.maxOutput
         items.forEach { handler ->
-            chargePadHandler.into(handler).move(amount)
+            if (rem > 0)
+                rem -= EnergyMovement.move(blockEntity, handler, rem)
         }
     }
 

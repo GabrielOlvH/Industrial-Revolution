@@ -5,6 +5,11 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import com.mojang.blaze3d.systems.RenderSystem
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.shedaniel.math.Point
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
@@ -45,8 +50,6 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 import java.util.*
 
 val EMPTY_INT_ARRAY = intArrayOf()
@@ -112,17 +115,6 @@ fun getChunkPos(s: String): ChunkPos? {
     return ChunkPos(x, z)
 }
 
-fun EnergySide.opposite(): EnergySide =
-    when (this) {
-        EnergySide.DOWN -> EnergySide.UP
-        EnergySide.UP -> EnergySide.DOWN
-        EnergySide.NORTH -> EnergySide.SOUTH
-        EnergySide.SOUTH -> EnergySide.NORTH
-        EnergySide.WEST -> EnergySide.EAST
-        EnergySide.EAST -> EnergySide.WEST
-        EnergySide.UNKNOWN -> EnergySide.UNKNOWN
-    }
-
 fun getShortEnergyDisplay(energy: Double): String =
     when {
         energy > 1000000 -> "${"%.1f".format(energy / 1000000)}M"
@@ -131,9 +123,9 @@ fun getShortEnergyDisplay(energy: Double): String =
     }
 
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
-    val handler = Energy.of(stack)
+    val handler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
     if (handler.energy > 0) {
-        val percentage = handler.energy * 100 / handler.maxStored
+        val percentage = handler.energy * 100 / handler.energyCapacity
         tooltip?.add(LiteralText("${getShortEnergyDisplay(handler.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
     }
 }
@@ -382,3 +374,11 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
 operator fun BlockPos.component1() = x
 operator fun BlockPos.component2() = y
 operator fun BlockPos.component3() = z
+
+fun EnergyIo.use(amount: Double): Boolean {
+    if (extract(amount, Simulation.SIMULATE) == amount) {
+        extract(amount, Simulation.ACT)
+        return true
+    }
+    return false
+}

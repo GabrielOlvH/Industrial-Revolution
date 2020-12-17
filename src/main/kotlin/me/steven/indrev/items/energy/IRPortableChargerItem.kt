@@ -1,6 +1,11 @@
 package me.steven.indrev.items.energy
 
-import me.steven.indrev.utils.Tier
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
@@ -10,13 +15,15 @@ import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.World
-import team.reborn.energy.*
 
 class IRPortableChargerItem(
     settings: Settings,
-    private val tier: Tier,
-    private val maxStored: Double
-) : Item(settings), EnergyHolder, IREnergyItem {
+    maxStored: Double
+) : Item(settings), IREnergyItem {
+
+    init {
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, 16384.0, 16384.0), this)
+    }
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -27,41 +34,31 @@ class IRPortableChargerItem(
         buildEnergyTooltip(stack, tooltip)
     }
 
-    override fun getMaxStoredPower(): Double = maxStored
-
-    override fun getMaxInput(side: EnergySide?): Double = tier.io
-
-    override fun getMaxOutput(side: EnergySide?): Double = tier.io
-
-    override fun getTier(): EnergyTier = EnergyTier.HIGH
-
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = Energy.of(stack)
+        val handler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
 
         val player = entity as? PlayerEntity ?: return
         if (player.offHandStack != stack && player.mainHandStack != stack) return
         val items = (0 until player.inventory.size())
             .map { s -> player.inventory.getStack(s) }
-            .filter { s -> s.item !is IRPortableChargerItem && Energy.valid(s) }
-            .map { s -> Energy.of(s) }
-        val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
-        val amount = sum / items.size.toDouble()
+            .filter { s -> s.item !is IRPortableChargerItem }
+            .mapNotNull { s -> EnergyApi.ITEM[ItemKey.of(s), ContainerItemContext.ofStack(s)]}
+        var rem = 16384.0
         items.forEach { h ->
-            handler.into(h).move(amount)
+            rem -= EnergyMovement.move(handler, h, rem)
         }
     }
 
     companion object {
-        fun chargeItemsInInv(handler: EnergyHandler, inventory: DefaultedList<ItemStack>) {
+        fun chargeItemsInInv(handler: EnergyIo, inventory: DefaultedList<ItemStack>) {
             val items = (0 until inventory.size)
                 .map { s -> inventory[s] }
-                .filter { s -> s.item !is IRPortableChargerItem && Energy.valid(s) }
-                .map { s -> Energy.of(s) }
-            val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
-            val amount = sum / items.size.toDouble()
+                .filter { s -> s.item !is IRPortableChargerItem }
+                .mapNotNull { s -> EnergyApi.ITEM[ItemKey.of(s), ContainerItemContext.ofStack(s)]}
+            var rem = 16384.0
             items.forEach { h ->
-                handler.into(h).move(amount)
+                rem -= EnergyMovement.move(handler, h, rem)
             }
         }
     }

@@ -72,6 +72,14 @@ repositories {
             includeGroup 'grondag'
         }
     }
+    maven {
+        name = "Technici4n"
+        url = "https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/"
+        content {
+            includeGroup "net.fabricmc.fabric-api" // FTL needs this too
+            includeGroup "dev.technici4n"
+        }
+    }
 }
 
 dependencies {
@@ -85,11 +93,11 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi("teamreborn:energy:${project.energy_api_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
+        //exclude group: "teamreborn", module: "energy"
     }
-    include("teamreborn:energy:${project.energy_api_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    include ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
+        //exclude group: "teamreborn", module: "energy"
     }
 
     modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {

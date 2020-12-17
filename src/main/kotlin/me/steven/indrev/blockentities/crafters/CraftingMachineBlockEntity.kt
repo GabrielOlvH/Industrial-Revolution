@@ -23,7 +23,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import team.reborn.energy.EnergySide
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry) :
@@ -32,6 +31,8 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
     }
+
+    override val maxOutput: Double = 0.0
 
     private var currentRecipe: T? = null
     val usedRecipes = mutableMapOf<Identifier, Int>()
@@ -46,9 +47,9 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
+    override fun getEnergyCapacity(): Double {
+        return Upgrade.getBuffer(this)
+    }
 
     override fun getBaseValue(upgrade: Upgrade): Double {
         val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
@@ -61,7 +62,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                     ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
                 else
                     config.processSpeed
-            Upgrade.BUFFER -> getBaseBuffer()
+            Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }

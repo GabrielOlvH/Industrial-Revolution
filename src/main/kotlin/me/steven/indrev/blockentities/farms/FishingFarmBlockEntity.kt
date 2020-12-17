@@ -17,8 +17,6 @@ import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
 
@@ -33,10 +31,12 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     }
 
     private var cooldown = config.processSpeed
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
 
     override fun machineTick() {
         val upgrades = getUpgrades(inventoryComponent!!.inventory)
-        if (!Energy.of(this).use(Upgrade.getEnergyCost(upgrades, this))) return
+        if (!use(Upgrade.getEnergyCost(upgrades, this))) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
         if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
         cooldown += Upgrade.getSpeed(upgrades, this)
@@ -68,11 +68,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
         else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
 
     override fun getUpgradeSlots(): IntArray = intArrayOf(6, 7, 8, 9)
 
@@ -81,7 +77,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> getBaseBuffer()
+        Upgrade.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
 

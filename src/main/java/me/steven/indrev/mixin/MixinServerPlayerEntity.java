@@ -1,6 +1,11 @@
 package me.steven.indrev.mixin;
 
 import com.mojang.authlib.GameProfile;
+import dev.technici4n.fasttransferlib.api.ContainerItemContext;
+import dev.technici4n.fasttransferlib.api.Simulation;
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi;
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
+import dev.technici4n.fasttransferlib.api.item.ItemKey;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -30,7 +35,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import team.reborn.energy.Energy;
 
 import java.util.List;
 import java.util.Map;
@@ -81,7 +85,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         for (ItemStack itemStack : inventory.main) {
             if (itemStack.getItem() instanceof IRGamerAxeItem) {
                 CompoundTag tag = itemStack.getOrCreateTag();
-                if (tag.contains("Active") && tag.getBoolean("Active") && !Energy.of(itemStack).use(5.0)) {
+                EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
+                if (tag.contains("Active") && tag.getBoolean("Active") && itemIo != null && itemIo.extract(5.0, Simulation.ACT) != 5.0) {
                     tag.putBoolean("Active", false);
                 }
             }
@@ -95,6 +100,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
                 List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);
+                EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
                 for (ArmorModule module : modules) {
                     int level = module.getLevel(itemStack);
                     if (level <= 0) continue;
@@ -106,7 +112,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case FIRE_RESISTANCE:
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
-                            if (Energy.of(itemStack).use(20.0))
+                            if (itemIo != null && itemIo.extract(20.0, Simulation.ACT) == 20.0)
                                 applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
@@ -115,25 +121,26 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && Energy.of(itemStack).use(30.0))
+                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && itemIo != null && itemIo.extract(30.0, Simulation.ACT) == 30.0)
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
                                 }
                             }
                             break;
                         case CHARGER:
-                            IRPortableChargerItem.Companion.chargeItemsInInv(Energy.of(itemStack), player.inventory.main);
+                            if (itemIo != null)
+                                IRPortableChargerItem.Companion.chargeItemsInInv(itemIo, player.inventory.main);
                             break;
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up())) {
                                 for (ItemStack stackToCharge : inventory.armor) {
-                                    if (Energy.valid(stackToCharge))
-                                        Energy.of(stackToCharge).insert(75.0 * level);
+                                    if (itemIo != null)
+                                        itemIo.insert(75.0 * level, Simulation.ACT);
                                 }
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && Energy.of(itemStack).use(30.0)) {
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && itemIo != null && itemIo.extract(30.0, Simulation.ACT) == 30.0) {
                                 regenerateShield();
                             }
                             break;

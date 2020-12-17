@@ -1,5 +1,7 @@
 package me.steven.indrev.registry
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
@@ -183,7 +185,11 @@ object IRRegistry {
                 Tier.MK4, Tier.CREATIVE -> MINING_DRILL_MK4
             }
         }
-        identifier("battery").item(IRBatteryItem(itemSettings().maxDamage(4096), 4096.0, true))
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
+        identifier("battery").item(IRBatteryItem(itemSettings().maxDamage(4096), 4096.0))
         identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
 
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
@@ -518,7 +524,7 @@ object IRRegistry {
     val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings().maxCount(1))
     val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings().maxCount(1))
 
-    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), Tier.MK3, 250000.0)
+    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), 250000.0)
 
     val GAMER_AXE_ITEM =
         IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))

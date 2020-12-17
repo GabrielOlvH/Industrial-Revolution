@@ -26,8 +26,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
@@ -41,6 +39,9 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
         }
     }
+
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
 
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
@@ -58,7 +59,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             return
-        } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
+        } else if (isLocationCorrect() && use(requiredPower)) {
             workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Upgrade.getSpeed(upgrades, this)
@@ -181,8 +182,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         }
     }
 
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
     override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
@@ -195,12 +194,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
-            Upgrade.BUFFER -> getBaseBuffer()
+            Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }
-
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)

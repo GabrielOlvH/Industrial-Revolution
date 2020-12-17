@@ -4,6 +4,9 @@ import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
@@ -43,7 +46,6 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import team.reborn.energy.Energy
 import java.util.*
 
 open class MachineBlock(
@@ -121,8 +123,10 @@ open class MachineBlock(
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item
                 if (blockEntity is MachineBlockEntity<*> && item is BlockItem && item.block is MachineBlock) {
-                    if (Energy.valid(stack))
-                        Energy.of(stack).set(blockEntity.energy)
+                    val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+                    if (itemIo != null) {
+                        //TODO no way to set energy
+                    }
                     val tag = stack.getOrCreateSubTag("MachineInfo")
                     val temperatureController = blockEntity.temperatureComponent
                     if (temperatureController != null)
@@ -141,8 +145,10 @@ open class MachineBlock(
         if (blockEntity is MachineBlockEntity<*>) {
             val tag = itemStack?.getSubTag("MachineInfo")
             val temperatureController = blockEntity.temperatureComponent
-            if (Energy.valid(itemStack))
-                Energy.of(blockEntity).set(Energy.of(itemStack).energy)
+            val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
+            if (itemIo != null) {
+                //TODO no way to set energy
+            }
             if (temperatureController != null) {
                 val temperature = tag?.getDouble("Temperature")
                 if (temperature != null) temperatureController.temperature = temperature

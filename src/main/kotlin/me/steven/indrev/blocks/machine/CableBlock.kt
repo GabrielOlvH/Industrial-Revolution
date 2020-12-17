@@ -1,9 +1,13 @@
 package me.steven.indrev.blocks.machine
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.component3
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -34,7 +38,6 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import team.reborn.energy.Energy
 
 class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), BlockEntityProvider {
 
@@ -124,7 +127,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         val blockPos = ctx?.blockPos ?: return state
         for (direction in Direction.values()) {
             val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            state = state.with(getProperty(direction), isConnectable(neighbor))
+            state = state.with(getProperty(direction), isConnectable(neighbor, direction.opposite))
         }
         return state
     }
@@ -145,8 +148,8 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         }
     }
 
-    private fun isConnectable(blockEntity: BlockEntity?) =
-        blockEntity != null && Energy.valid(blockEntity) || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
+    private fun isConnectable(blockEntity: BlockEntity?, dir: Direction) =
+        blockEntity != null && EnergyApi.SIDED[blockEntity.world, blockEntity.pos, dir] != null || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
 
     override fun onPlaced(
         world: World,
@@ -166,11 +169,12 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         facing: Direction,
         neighborState: BlockState?,
         world: WorldAccess?,
-        pos: BlockPos?,
-        neighborPos: BlockPos?
+        pos: BlockPos,
+        neighborPos: BlockPos
     ): BlockState {
         val neighborBlockEntity = world?.getBlockEntity(neighborPos)
-        return state.with(getProperty(facing), isConnectable(neighborBlockEntity))
+        val (x, y, z) = pos.subtract(neighborPos)
+        return state.with(getProperty(facing), isConnectable(neighborBlockEntity, Direction.fromVector(x, y, z)!!))
     }
 
     override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)

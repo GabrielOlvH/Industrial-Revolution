@@ -1,8 +1,11 @@
 package me.steven.indrev.energy
 
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
-import me.steven.indrev.mixin.AccessorEnergyHandler
 import me.steven.indrev.utils.Tier
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -10,11 +13,9 @@ import net.minecraft.nbt.LongTag
 import net.minecraft.nbt.StringTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHandler
+import java.util.*
 
 @Suppress("CAST_NEVER_SUCCEEDS")
 class EnergyNetwork(
@@ -28,21 +29,16 @@ class EnergyNetwork(
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
-        val receiversHandlers = ArrayList<EnergyHandler>(lastReceiverSize)
-        val senderHandlers = ArrayList<EnergyHandler>(lastSenderSize)
-        val cachedChunks = hashMapOf<ChunkPos, Chunk>()
+        val receiversHandlers = ArrayList<EnergyIo>(lastReceiverSize)
+        val senderHandlers = ArrayList<EnergyIo>(lastSenderSize)
         machines.forEach { (pos, directions) ->
             if (!world.isChunkLoaded(pos)) return@forEach
-            val chunk = cachedChunks.computeIfAbsent(ChunkPos(pos)) { world.getChunk(pos) }
-            val blockEntity = chunk.getBlockEntity(pos) ?: return@forEach
-            if (Energy.valid(blockEntity)) {
-                directions.forEach { dir ->
-                    val handler = Energy.of(blockEntity).side(dir)
-                    if (handler.maxInput > 0)
-                        receiversHandlers.add(handler)
-                    if (handler.maxOutput > 0)
-                        senderHandlers.add(handler)
-                }
+            directions.forEach inner@{ dir ->
+                val energyIo = EnergyApi.SIDED[world, pos, dir] ?: return@inner
+                if (energyIo.supportsInsertion() && energyIo.maxInput > 0)
+                    receiversHandlers.add(energyIo)
+                if (energyIo.supportsExtraction() && energyIo.maxOutput > 0)
+                    senderHandlers.add(energyIo)
             }
         }
 
@@ -51,10 +47,8 @@ class EnergyNetwork(
 
         if (senderHandlers.isEmpty() || receiversHandlers.isEmpty()) return
 
-        val totalInput = receiversHandlers.sumByDouble { handler ->
-            (handler.maxStored - handler.energy).coerceAtMost(handler.maxInput)
-        }
-        val totalEnergy = senderHandlers.sumByDouble { handler -> handler.energy.coerceAtMost(handler.maxOutput) }
+        val totalInput = receiversHandlers.sumByDouble { handler -> handler.maxInput }
+        val totalEnergy = senderHandlers.sumByDouble { handler -> handler.maxOutput }
         val senderIt = senderHandlers.iterator()
         val receiverIt = receiversHandlers.iterator()
 
@@ -64,7 +58,7 @@ class EnergyNetwork(
         var receivedThisTick = 0.0
 
         while (true) {
-            if ((sender as AccessorEnergyHandler).holder == (receiver as AccessorEnergyHandler).holder) {
+            if (sender == receiver) {
                 if (senderIt.hasNext())
                     sender = senderIt.next()
                 else if (receiverIt.hasNext())
@@ -72,16 +66,18 @@ class EnergyNetwork(
                 else break
                 continue
             }
-            val amount = ((receiver.maxInput / totalInput) * totalEnergy).coerceAtMost(tier.io)
-            val moved = sender.into(receiver).move(amount)
+
+            val amount = ((receiver.maxInput / totalInput) * totalEnergy).coerceIn(1.0, tier.io)
+            val moved = EnergyMovement.move(sender, receiver, amount)
             sentThisTick += moved
             receivedThisTick += moved
-            if (sentThisTick >= sender.maxOutput) {
+
+            if (sentThisTick >= sender.maxOutput || sentThisTick.isNaN()) {
                 if (!senderIt.hasNext()) break
                 sentThisTick = 0.0
                 sender = senderIt.next()
             }
-            if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount) {
+            if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount || receivedThisTick.isNaN()) {
                 if (!receiverIt.hasNext()) break
                 sentThisTick = 0.0
                 receiver = receiverIt.next()
@@ -127,6 +123,13 @@ class EnergyNetwork(
     }
 
     companion object {
+        private const val MAX_VALUE = (Integer.MAX_VALUE - 1).toDouble()
+
+        private val EnergyIo.maxInput: Double
+            get() = MAX_VALUE - insert(MAX_VALUE, Simulation.SIMULATE)
+        private val EnergyIo.maxOutput: Double
+            get() = extract(MAX_VALUE, Simulation.SIMULATE)
+
         fun handleBreak(world: ServerWorld, pos: BlockPos) {
             val state = EnergyNetworkState.getNetworkState(world)
             if (state.networksByPos.containsKey(pos))
@@ -178,7 +181,7 @@ class EnergyNetwork(
                 }
                 if (blockState[CableBlock.getProperty(direction)])
                     network.appendCable(state, blockEntity, blockPos.toImmutable())
-            } else if (Energy.valid(blockEntity)) {
+            } else if (EnergyApi.SIDED[world, blockPos, direction.opposite] != null) {
                 network.appendMachine(blockPos, direction.opposite)
             }
         }

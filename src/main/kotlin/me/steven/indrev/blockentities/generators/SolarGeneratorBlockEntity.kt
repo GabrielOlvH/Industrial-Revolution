@@ -11,7 +11,8 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 500..700, 1000.0)
         this.inventoryComponent = inventory(this) {}
+
     }
 
-    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < maxStoredPower
+    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < energyCapacity
 }

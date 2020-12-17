@@ -8,6 +8,12 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -18,7 +24,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.energy.EnergyMovement
+import me.steven.indrev.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import net.minecraft.block.BlockState
@@ -37,22 +43,20 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import org.apache.logging.log4j.LogManager
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyStorage
-import team.reborn.energy.EnergyTier
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable,
+    : IRSyncableBlockEntity(registry.blockEntityType(tier)), PropertyDelegateHolder, InventoryProvider, Tickable, EnergyIo,
     Configurable {
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0
 
-    var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, maxStoredPower) }
+    internal var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, energyCapacity) }
+    open val maxInput: Double = tier.io
+    open val maxOutput: Double = tier.io
+
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
     var fluidComponent: FluidComponent? = null
@@ -73,7 +77,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             ticks++
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
-            EnergyMovement.spreadNeighbors(this, pos)
+            IREnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureComponent!!.explosionPower
                 world?.createExplosion(
@@ -89,8 +93,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             val inventory = inventoryComponent?.inventory
             if (inventoryComponent != null && inventory!!.size() > 0) {
                 val stack = inventory.getStack(0)
-                if (Energy.valid(stack))
-                    Energy.of(stack).into(Energy.of(this)).move()
+                val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+                if (itemIo != null)
+                    EnergyMovement.move(itemIo, this, maxInput)
             }
             transferItems()
             transferFluids()
@@ -111,9 +116,13 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
+    override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy
+
+    override fun getEnergyCapacity(): Double = config.maxEnergyStored
+
     override fun getPropertyDelegate(): PropertyDelegate {
         val delegate = this.propertyDelegate
-        delegate[1] = maxStoredPower.toInt()
+        delegate[1] = energyCapacity.toInt()
         return delegate
     }
 
@@ -121,29 +130,31 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         this.propertyDelegate = propertyDelegate
     }
 
-    override fun setStored(amount: Double) {
-        markForUpdate {
-            val abs = abs(lastEnergyUpdate - amount)
-            val max = (0.01 * maxStoredPower).coerceAtLeast(1.0)
-            this.tier != Tier.CREATIVE && abs > max
-        }
-        this.energy = amount
+    override fun insert(amount: Double, simulation: Simulation?): Double {
+        val inserted = amount.coerceAtMost(this.maxInput).coerceAtMost(this.energyCapacity - energy)
+        if (simulation?.isActing == true) this.energy += inserted
+        return amount - inserted
     }
 
-    open fun getBaseBuffer(): Double = config.maxEnergyStored
+    override fun extract(maxAmount: Double, simulation: Simulation?): Double {
+        val extracted = maxAmount.coerceAtMost(this.maxOutput).coerceAtMost(energy)
+        if (simulation?.isActing == true) this.energy -= extracted
+        return extracted
+    }
 
-    override fun getMaxStoredPower(): Double = getBaseBuffer()
+    override fun supportsExtraction(): Boolean = maxOutput > 0
 
-    @Deprecated("unsupported", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("this.tier"))
-    override fun getTier(): EnergyTier = throw UnsupportedOperationException()
+    override fun supportsInsertion(): Boolean = maxInput > 0
 
-    override fun getMaxOutput(side: EnergySide?): Double = tier.io
-
-    override fun getMaxInput(side: EnergySide?): Double = tier.io
-
-    fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
-
-    override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
+    // internal consumption
+    fun use(amount: Double): Boolean {
+        val extracted = amount.coerceAtMost(energy)
+        if (extracted == amount) {
+            this.energy -= extracted
+            return true
+        }
+        return false
+    }
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? = inventoryComponent?.inventory
 

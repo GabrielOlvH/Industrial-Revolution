@@ -51,7 +51,6 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
-import team.reborn.energy.Energy
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
@@ -59,7 +58,6 @@ object IndustrialRevolution : ModInitializer {
             IRConfig::class.java,
             PartitioningSerializer.wrap(::GsonConfigSerializer)
         )
-        Energy.registerHolder(MachineBlockEntity::class.java) { obj -> obj as MachineBlockEntity<*> }
         IRRegistry.registerAll()
         arrayOf(
             IRRegistry.COOLANT_STILL,

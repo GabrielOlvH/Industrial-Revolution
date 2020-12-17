@@ -1,6 +1,10 @@
 package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.CraftingInventory
 import net.minecraft.item.ItemStack
@@ -12,16 +16,17 @@ import net.minecraft.recipe.ShapedRecipe
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
-import team.reborn.energy.Energy
 
 class RechargeableRecipe(id: Identifier, group: String, width: Int, height: Int, ingredients: DefaultedList<Ingredient>, output: ItemStack) : ShapedRecipe(id, group, width, height, ingredients, output) {
     override fun craft(craftingInventory: CraftingInventory?): ItemStack {
         val result: ItemStack = super.craft(craftingInventory)
-        if (Energy.valid(result) && craftingInventory != null) {
-            val handler = Energy.of(result)
+        val resultItemIo = EnergyApi.ITEM[ItemKey.of(result), ContainerItemContext.ofStack(result)]
+        if (resultItemIo != null && craftingInventory != null) {
             for (i in 0 until craftingInventory.size()) {
                 val stack = craftingInventory.getStack(i)
-                if (Energy.valid(stack)) Energy.of(stack).into(handler).move()
+                val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+                if (itemIo != null)
+                    EnergyMovement.move(itemIo, resultItemIo, Double.MAX_VALUE)
             }
         }
         return result

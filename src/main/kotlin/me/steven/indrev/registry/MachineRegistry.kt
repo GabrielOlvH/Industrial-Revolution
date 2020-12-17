@@ -1,6 +1,9 @@
 package me.steven.indrev.registry
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import me.steven.indrev.IndustrialRevolution.CONFIG
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
@@ -38,14 +41,16 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
+import java.util.*
 import java.util.function.Supplier
 
 class MachineRegistry(private val identifier: Identifier, val upgradeable: Boolean = true, vararg val tiers: Tier = Tier.values()) {
 
-    private val configs: MutableMap<Tier, IConfig> = mutableMapOf()
-    private val blocks: MutableMap<Tier, Block> = mutableMapOf()
-    private val blockEntities: MutableMap<Tier, BlockEntityType<*>> = mutableMapOf()
+    private val configs: MutableMap<Tier, IConfig> = EnumMap(Tier::class.java)
+    private val blocks: MutableMap<Tier, Block> =  EnumMap(Tier::class.java)
+    val blockEntities: MutableMap<Tier, BlockEntityType<*>> =  EnumMap(Tier::class.java)
 
     fun register(blockProvider: (Tier) -> Block, entityProvider: (Tier) -> () -> BlockEntity): MachineRegistry {
         tiers.forEach { tier ->
@@ -82,6 +87,13 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
     fun block(tier: Tier) = blocks[tier]
         ?: throw java.lang.IllegalStateException("invalid tier for machine $identifier")
 
+    fun withApiProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyIo?): MachineRegistry {
+        blockEntities.forEach { (tier, type) ->
+            EnergyApi.SIDED.registerForBlockEntities(provider(tier), type)
+        }
+        return this
+    }
+
     @Environment(EnvType.CLIENT)
     fun <T : BlockEntity> registerBlockEntityRenderer(renderer: (BlockEntityRenderDispatcher) -> BlockEntityRenderer<T>) {
         blockEntities.forEach { (_, type) ->
@@ -114,7 +126,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { CoalGeneratorBlockEntity() }
             },
             { { CoalGeneratorBlockEntity() } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val SOLAR_GENERATOR_REGISTRY = MachineRegistry(
             identifier("solar_generator"),
@@ -132,7 +144,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { SolarGeneratorBlockEntity(tier) }
             },
             { tier -> { SolarGeneratorBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry(identifier("biomass_generator"), false, Tier.MK3).register(
             { tier ->
@@ -141,7 +153,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { BiomassGeneratorBlockEntity(tier) }
             },
             { tier -> { BiomassGeneratorBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry(identifier("heat_generator"), false, Tier.MK4).register(
             { tier ->
@@ -150,12 +162,17 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 )  { HeatGeneratorBlockEntity(tier) }
             },
             { tier -> { HeatGeneratorBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val CONTAINER_REGISTRY = MachineRegistry(identifier("lazuli_flux_container"), false).register(
             { tier -> BatteryBlock(MACHINE_BLOCK_SETTINGS(), tier) },
             { tier -> { BatteryBlockEntity(tier) } }
-        )
+        ).withApiProvider {
+            { be, dir ->
+                val blockEntity = be as? BatteryBlockEntity
+                if (blockEntity != null) BatteryBlockEntity.LFCEnergyIo(blockEntity, dir) else null
+            }
+        }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry(identifier("electric_furnace")).register(
             { tier ->
@@ -170,7 +187,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { ElectricFurnaceBlockEntity(tier) }
             },
             { tier -> { ElectricFurnaceBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val PULVERIZER_REGISTRY = MachineRegistry(identifier("pulverizer")).register(
             { tier ->
@@ -185,7 +202,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { PulverizerBlockEntity(tier) }
             },
             { tier -> { PulverizerBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val COMPRESSOR_REGISTRY = MachineRegistry(identifier("compressor")).register(
             { tier ->
@@ -200,7 +217,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { CompressorBlockEntity(tier) }
             },
             { tier -> { CompressorBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val INFUSER_REGISTRY = MachineRegistry(identifier("infuser")).register(
             { tier ->
@@ -215,7 +232,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { SolidInfuserBlockEntity(tier) }
             },
             { tier -> { SolidInfuserBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val SAWMILL_REGISTRY = MachineRegistry(identifier("sawmill")).register(
             { tier ->
@@ -230,7 +247,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { SawmillBlockEntity(tier) }
             },
             { tier -> { SawmillBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val RECYCLER_REGISTRY = MachineRegistry(identifier("recycler"), false, Tier.MK2).register(
             { tier ->
@@ -239,7 +256,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { RecyclerBlockEntity(tier) }
             },
             { tier -> { RecyclerBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val SMELTER_REGISTRY = MachineRegistry(identifier("smelter"), false, Tier.MK4).register(
             { tier ->
@@ -250,7 +267,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::SmelterController) { SmelterBlockEntity(tier) }
             },
             { tier -> { SmelterBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val CONDENSER_REGISTRY = MachineRegistry(identifier("condenser"), false, Tier.MK4).register(
             { tier ->
@@ -261,7 +278,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::CondenserController) { CondenserBlockEntity(tier) }
             },
             { tier -> { CondenserBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry(identifier("electric_furnace_factory"), false, Tier.MK4).register(
             { tier ->
@@ -276,7 +293,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { ElectricFurnaceFactoryBlockEntity(tier) }
             },
             { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val PULVERIZER_FACTORY_REGISTRY = MachineRegistry(identifier("pulverizer_factory"), false, Tier.MK4).register(
             { tier ->
@@ -291,7 +308,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { PulverizerFactoryBlockEntity(tier) }
             },
             { tier -> { PulverizerFactoryBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val COMPRESSOR_FACTORY_REGISTRY = MachineRegistry(identifier("compressor_factory"), false, Tier.MK4).register(
             { tier ->
@@ -306,7 +323,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { CompressorFactoryBlockEntity(tier) }
             },
             { tier -> { CompressorFactoryBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val INFUSER_FACTORY_REGISTRY = MachineRegistry(identifier("infuser_factory"), false, Tier.MK4).register(
             { tier ->
@@ -321,7 +338,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { InfuserFactoryBlockEntity(tier) }
             },
             { tier -> { InfuserFactoryBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val DRAIN_REGISTRY = MachineRegistry(identifier("drain"), false, Tier.MK1).register(
             { tier ->
@@ -332,12 +349,12 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     null) { DrainBlockEntity(tier) }
             },
             { tier -> { DrainBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val PUMP_REGISTRY = MachineRegistry(identifier("pump"), false, Tier.MK1).register(
             { tier -> PumpBlock(MACHINE_BLOCK_SETTINGS().nonOpaque()) },
             { tier -> { PumpBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, dir ->  if (dir == Direction.UP) be as? MachineBlockEntity<*> else null } }
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry(identifier("fluid_infuser"), true).register(
             { tier ->
@@ -353,7 +370,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                     ::FluidInfuserController) { FluidInfuserBlockEntity(tier) }
             },
             { tier -> { FluidInfuserBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val CHOPPER_REGISTRY = MachineRegistry(identifier("chopper"), true).register(
             { tier ->
@@ -369,7 +386,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { ChopperBlockEntity(tier) }
             },
             { tier -> { ChopperBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val FARMER_REGISTRY = MachineRegistry(identifier("farmer"), true).register(
             { tier ->
@@ -385,7 +402,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { FarmerBlockEntity(tier) }
             },
             { tier -> { FarmerBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val RANCHER_REGISTRY = MachineRegistry(identifier("rancher"), true).register(
             { tier ->
@@ -401,7 +418,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { RancherBlockEntity(tier) }
             },
             { tier -> { RancherBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val MINER_REGISTRY = MachineRegistry(identifier("miner"), false, Tier.MK4).register(
             { tier ->
@@ -418,7 +435,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 }
             },
             { tier -> { MinerBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val FISHING_FARM_REGISTRY = MachineRegistry(identifier("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4).register(
             { tier ->
@@ -432,7 +449,7 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { FishingFarmBlockEntity(tier) }
             },
             { tier -> { FishingFarmBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry(identifier("modular_workbench"), false, Tier.MK4).register(
             { tier ->
@@ -444,12 +461,12 @@ class MachineRegistry(private val identifier: Identifier, val upgradeable: Boole
                 ) { ModularWorkbenchBlockEntity(tier) }
             },
             { tier -> { ModularWorkbenchBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, _ -> be as? MachineBlockEntity<*> } }
 
         val CHARGE_PAD_REGISTRY = MachineRegistry(identifier("charge_pad"), false, Tier.MK4).register(
             { tier -> ChargePadBlock(MACHINE_BLOCK_SETTINGS(), tier) },
             { tier -> { ChargePadBlockEntity(tier) } }
-        )
+        ).withApiProvider { { be, dir ->  if (dir == Direction.DOWN) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
 
         val CABLE_REGISTRY = MachineRegistry(identifier("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .register(

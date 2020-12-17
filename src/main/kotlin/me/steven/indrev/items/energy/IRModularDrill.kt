@@ -1,5 +1,8 @@
 package me.steven.indrev.items.energy
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import draylar.magna.api.MagnaTool
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.tools.modular.DrillModule
@@ -15,7 +18,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
 import net.minecraft.world.World
-import team.reborn.energy.Energy
 
 class IRModularDrill(
     toolMaterial: ToolMaterial,
@@ -27,7 +29,7 @@ class IRModularDrill(
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
-        val hasEnergy = Energy.of(stack).energy > 0
+        val hasEnergy = (EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]?.energy ?: 0.0) > 0
         val level = MiningToolModule.EFFICIENCY.getLevel(stack)
         var speedMultiplier = (level + 1) * 2
         if (level == 5) speedMultiplier *= 50

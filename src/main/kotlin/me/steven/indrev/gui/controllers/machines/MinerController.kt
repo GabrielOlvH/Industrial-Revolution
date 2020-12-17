@@ -1,5 +1,6 @@
 package me.steven.indrev.gui.controllers.machines
 
+import dev.technici4n.fasttransferlib.api.Simulation
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItem
@@ -22,7 +23,6 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import team.reborn.energy.Energy
 
 class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
@@ -51,7 +51,7 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
             when {
-                !Energy.of(blockEntity).simulate().use(blockEntity.requiredPower) -> {
+                blockEntity.extract(blockEntity.requiredPower, Simulation.SIMULATE) != blockEntity.requiredPower -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(

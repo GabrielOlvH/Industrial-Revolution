@@ -17,19 +17,19 @@ import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
-            0 filter { (stack, item) -> item !is IRModularItem<*> && Energy.valid(stack) && Energy.of(stack).maxOutput > 0 }
+            0 filter { (stack, item) -> item !is IRModularItem<*> }
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
         }
     }
+
+    override val maxOutput: Double = 0.0
 
     private var processTime: Int by Property(2, 0)
     private var maxProcessTime: Int by Property(3, 0)
@@ -60,7 +60,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
         } else {
             if (isProcessing()
                 && compatible.contains(module)
-                && Energy.of(this).use(config.energyCost)) {
+                && use(config.energyCost)) {
                 workingState = true
                 processTime += config.processSpeed.toInt()
                 if (processTime >= maxProcessTime) {
@@ -101,8 +101,6 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     }
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0

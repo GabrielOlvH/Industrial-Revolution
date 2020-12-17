@@ -1,10 +1,15 @@
 package me.steven.indrev.items.energy
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.buildMachineTooltip
 import net.minecraft.block.Block
@@ -13,19 +18,17 @@ import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHolder
-import team.reborn.energy.EnergyTier
 
-class MachineBlockItem(private val machineBlock: Block, settings: Settings) : BlockItem(machineBlock, settings), EnergyHolder {
+class MachineBlockItem(private val machineBlock: Block, settings: Settings) : BlockItem(machineBlock, settings) {
 
-    override fun getMaxStoredPower(): Double {
-        return when (val config = (machineBlock as? MachineBlock)?.config) {
+    init {
+        val capacity = when (val config = (machineBlock as? MachineBlock)?.config) {
             is IConfig -> config.maxEnergyStored
             is HeatMachineConfig -> config.maxEnergyStored
             is GeneratorConfig -> config.maxEnergyStored
             else -> Double.MAX_VALUE
         }
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(capacity, Tier.MK4.io, 0.0), this)
     }
 
     override fun appendTooltip(
@@ -34,11 +37,10 @@ class MachineBlockItem(private val machineBlock: Block, settings: Settings) : Bl
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        if (machineBlock !is CableBlock && Energy.valid(stack))
+        val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+        if (machineBlock !is CableBlock && itemIo != null)
             buildEnergyTooltip(stack, tooltip)
         val config = (machineBlock as? MachineBlock)?.config ?: (machineBlock as? CableBlock)?.getConfig()
         buildMachineTooltip(config ?: return, tooltip)
     }
-
-    override fun getTier(): EnergyTier = EnergyTier.HIGH
 }

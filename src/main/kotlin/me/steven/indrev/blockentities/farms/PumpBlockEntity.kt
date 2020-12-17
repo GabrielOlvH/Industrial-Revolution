@@ -19,16 +19,18 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 import kotlin.math.floor
 import kotlin.math.roundToInt
+import dev.technici4n.fasttransferlib.api.Simulation as FTLSimulation
 
 class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY), BlockEntityClientSerializable {
 
     init {
         this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
     }
+
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
 
     var movingTicks = 0.0
     var isDescending = false
@@ -40,7 +42,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     override fun machineTick() {
         val currentLevel = floor(movingTicks).toInt()
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && Energy.of(this).simulate().use(config.energyCost)) {
+        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && extract(config.energyCost, FTLSimulation.SIMULATE) == config.energyCost) {
             if (world?.getFluidState(lookLevel)?.isEmpty == true) {
                 lastYPos = lookLevel.y
                 isDescending = true
@@ -62,7 +64,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                     if (fluidComponent.insertable.attemptInsertion(toInsert, Simulation.SIMULATE).isEmpty) {
                         block.tryDrainFluid(world, fluidPos, fluidState.blockState)
                         fluidComponent.insertable.insert(toInsert)
-                        Energy.of(this).use(2.0)
+                        extract(config.energyCost, FTLSimulation.ACT)
                     }
                     return
                 }
@@ -75,7 +77,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             isDescending = false
             areaIterator = getWorkingArea(lookLevel).map(::BlockPos).sortedWith(compareByDescending { it.getSquaredDistance(pos) }).iterator()
         }
-        else if (Energy.of(this).use(2.0) && (lookLevel == pos || (world?.isAir(lookLevel) == true && world?.getFluidState(lookLevel)?.isEmpty != false))) {
+        else if (extract(2.0, FTLSimulation.ACT) == 2.0 && (lookLevel == pos || (world?.isAir(lookLevel) == true && world?.getFluidState(lookLevel)?.isEmpty != false))) {
             movingTicks += 0.01
             sync()
         }
@@ -94,10 +96,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     override fun isFixed(type: ConfigurationType): Boolean = true
 
     private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(7.0, 0.0, 7.0)
-
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
-
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("MovingTicks", movingTicks)

@@ -1,5 +1,9 @@
 package me.steven.indrev.items.energy
 
+import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import net.minecraft.client.item.TooltipContext
@@ -8,13 +12,13 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergyHolder
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyTier
 
-open class IRBatteryItem(settings: Settings, private val maxStored: Double, val canOutput: Boolean = false) :
-    Item(settings), EnergyHolder, IREnergyItem {
+class IRBatteryItem(settings: Settings, maxStored: Double) :
+    Item(settings), IREnergyItem {
+
+    init {
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK1.io, Tier.MK1.io), this)
+    }
 
     override fun appendTooltip(
         stack: ItemStack?,
@@ -27,18 +31,10 @@ open class IRBatteryItem(settings: Settings, private val maxStored: Double, val 
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
-    override fun getMaxStoredPower(): Double = maxStored
-
-    override fun getMaxInput(side: EnergySide?): Double = Tier.MK1.io
-
-    override fun getMaxOutput(side: EnergySide?): Double = Tier.MK1.io
-
-    override fun getTier(): EnergyTier = EnergyTier.LOW
-
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = Energy.of(stack)
-        if (handler.energy > 0) {
-            stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
+        val energyIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
+        if (energyIo.energy > 0) {
+            stack.damage = (stack.maxDamage - energyIo.energy.toInt()).coerceAtLeast(1)
         } else stack.damage = 0
     }
 
