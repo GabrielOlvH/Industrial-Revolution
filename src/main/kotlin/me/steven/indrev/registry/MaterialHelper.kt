@@ -233,6 +233,14 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
                 IRON_HIGHLIGHT).build())
             put("iron_chunk", MaterialBakedModel.Builder().chunkBase(IRON_BASE).chunkHighlight(IRON_HIGHLIGHT).build())
 
+            put("diamond_dust", MaterialBakedModel.Builder().dustBase(DIAMOND_BASE).dustHighlight(DIAMOND_HIGHLIGHT).dustOutline(DIAMOND_OUTLINE).build())
+            put("sulfur_dust", MaterialBakedModel.Builder().dustBase(SULFUR_BASE).dustHighlight(SULFUR_HIGHLIGHT).dustOutline(SULFUR_OUTLINE).build())
+            put("coal_dust", MaterialBakedModel.Builder().dustBase(COAL_BASE).dustHighlight(COAL_HIGHLIGHT).build())
+
+            put("netherite_scrap_dust", MaterialBakedModel.Builder().dustBase(NETHERITE_SCRAP_BASE).dustHighlight(NETHERITE_SCRAP_HIGHLIGHT).dustOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("ancient_debris_chunk", MaterialBakedModel.Builder().chunkBase(NETHERITE_SCRAP_BASE).chunkHighlight(NETHERITE_SCRAP_HIGHLIGHT).chunkOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("purified_ancient_debris", MaterialBakedModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(NETHERITE_SCRAP_HIGHLIGHT).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
+
         }
 
         private fun put(id: String, model: UnbakedModel) {
