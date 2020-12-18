@@ -7,6 +7,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.energyOf
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.LongTag
@@ -34,7 +35,7 @@ class EnergyNetwork(
         machines.forEach { (pos, directions) ->
             if (!world.isChunkLoaded(pos)) return@forEach
             directions.forEach inner@{ dir ->
-                val energyIo = EnergyApi.SIDED[world, pos, dir] ?: return@inner
+                val energyIo = energyOf(world, pos, dir) ?: return@inner
                 if (energyIo.supportsInsertion() && energyIo.maxInput > 0)
                     receiversHandlers.add(energyIo)
                 if (energyIo.supportsExtraction() && energyIo.maxOutput > 0)
@@ -123,6 +124,7 @@ class EnergyNetwork(
     }
 
     companion object {
+
         private const val MAX_VALUE = (Integer.MAX_VALUE - 1).toDouble()
 
         private val EnergyIo.maxInput: Double

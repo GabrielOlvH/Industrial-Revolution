@@ -162,6 +162,18 @@ open class MachineBlock(
         }
     }
 
+    override fun neighborUpdate(
+        state: BlockState?,
+        world: World?,
+        pos: BlockPos?,
+        block: Block?,
+        fromPos: BlockPos?,
+        notify: Boolean
+    ) {
+        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        blockEntity.validConnections.addAll(Direction.values())
+    }
+
     open fun getFacing(state: BlockState): Direction = Direction.UP
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
