@@ -218,14 +218,11 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("tin_nugget", MaterialBakedModel.Builder().nuggetBase(TIN_BASE).nuggetHighlight(TIN_HIGHLIGHT).nuggetOutline(TIN_OUTLINE).build())
             putBlock("tin_ore", MaterialBakedModel.Builder().block().oreBase(TIN_BASE).oreHighlight(TIN_HIGHLIGHT).build())
             putBlock("tin_block", MaterialBakedModel.Builder().block().blockBase(TIN_BASE).build())
-            put("tin_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).build())
+            put("tin_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).purifiedOreOutline(TIN_OUTLINE).build())
             put("tin_chunk", MaterialBakedModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).chunkOutline(TIN_OUTLINE).build())
 
             put("nikolite_ingot", MaterialBakedModel.Builder().ingotBase(NIKOLITE_BASE).ingotHighlight(NIKOLITE_HIGHLIGHT).build())
             put("nikolite_dust", MaterialBakedModel.Builder().dustBase(NIKOLITE_BASE).dustHighlight(NIKOLITE_HIGHLIGHT).build())
-
-            put("enriched_nikolite_ingot", MaterialBakedModel.Builder().ingotBase(ENRICHED_NIKOLITE_BASE).ingotHighlight(ENRICHED_NIKOLITE_HIGHLIGHT).build())
-            put("enriched_nikolite_dust", MaterialBakedModel.Builder().dustBase(ENRICHED_NIKOLITE_BASE).dustHighlight(ENRICHED_NIKOLITE_HIGHLIGHT).build())
 
             put("iron_plate", MaterialBakedModel.Builder().plateBase(IRON_BASE).plateHighlight(IRON_HIGHLIGHT).build())
             put("iron_dust", MaterialBakedModel.Builder().dustBase(IRON_BASE).dustHighlight(IRON_HIGHLIGHT).build())
@@ -238,8 +235,8 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("coal_dust", MaterialBakedModel.Builder().dustBase(COAL_BASE).dustHighlight(COAL_HIGHLIGHT).build())
 
             put("netherite_scrap_dust", MaterialBakedModel.Builder().dustBase(NETHERITE_SCRAP_BASE).dustHighlight(NETHERITE_SCRAP_HIGHLIGHT).dustOutline(NETHERITE_SCRAP_OUTLINE).build())
-            put("ancient_debris_chunk", MaterialBakedModel.Builder().chunkBase(NETHERITE_SCRAP_BASE).chunkHighlight(NETHERITE_SCRAP_HIGHLIGHT).chunkOutline(NETHERITE_SCRAP_OUTLINE).build())
-            put("purified_ancient_debris", MaterialBakedModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(NETHERITE_SCRAP_HIGHLIGHT).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("netherite_scrap_chunk", MaterialBakedModel.Builder().chunkBase(NETHERITE_SCRAP_BASE).chunkHighlight(NETHERITE_SCRAP_HIGHLIGHT).chunkOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("netherite_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(NETHERITE_SCRAP_HIGHLIGHT).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
 
         }
 
