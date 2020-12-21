@@ -15,7 +15,6 @@ import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
-import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import java.util.*
 
@@ -90,7 +89,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("lead_boots", MaterialBakedModel.Builder().bootsBase(LEAD_BASE).bootsHighlight(LEAD_HIGHLIGHT).build())
             put("lead_leggings", MaterialBakedModel.Builder().leggingsBase(LEAD_BASE).leggingsHighlight(LEAD_HIGHLIGHT).build())
             put("lead_nugget", MaterialBakedModel.Builder().nuggetBase(LEAD_BASE).nuggetHighlight(LEAD_HIGHLIGHT).build())
-            putBlock("lead_ore", MaterialBakedModel.Builder().block().oreBase(LEAD_BASE).oreHighlight(LEAD_HIGHLIGHT).build())
+            putBlock("lead_ore", MaterialBakedModel.Builder().ore().oreBase(LEAD_BASE).oreHighlight(LEAD_HIGHLIGHT).build())
             putBlock("lead_block", MaterialBakedModel.Builder().block().blockBase(LEAD_BASE).build())
             put("lead_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(LEAD_BASE).purifiedOreHighlight(LEAD_HIGHLIGHT).build())
             put("lead_chunk", MaterialBakedModel.Builder().chunkBase(LEAD_BASE).chunkHighlight(LEAD_HIGHLIGHT).build())
@@ -108,7 +107,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("silver_boots", MaterialBakedModel.Builder().bootsBase(SILVER_BASE).bootsHighlight(SILVER_HIGHLIGHT).build())
             put("silver_leggings", MaterialBakedModel.Builder().leggingsBase(SILVER_BASE).leggingsHighlight(SILVER_HIGHLIGHT).build())
             put("silver_nugget", MaterialBakedModel.Builder().nuggetBase(SILVER_BASE).nuggetHighlight(SILVER_HIGHLIGHT).build())
-            putBlock("silver_ore", MaterialBakedModel.Builder().block().oreBase(SILVER_BASE).oreHighlight(SILVER_HIGHLIGHT).build())
+            putBlock("silver_ore", MaterialBakedModel.Builder().ore().oreBase(SILVER_BASE).oreHighlight(SILVER_HIGHLIGHT).build())
             putBlock("silver_block", MaterialBakedModel.Builder().block().blockBase(SILVER_BASE).build())
             put("silver_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(SILVER_BASE).purifiedOreHighlight(SILVER_HIGHLIGHT).build())
             put("silver_chunk", MaterialBakedModel.Builder().chunkBase(SILVER_BASE).chunkHighlight(SILVER_HIGHLIGHT).build())
@@ -126,7 +125,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("copper_boots", MaterialBakedModel.Builder().bootsBase(COPPER_BASE).bootsHighlight(COPPER_HIGHLIGHT).build())
             put("copper_leggings", MaterialBakedModel.Builder().leggingsBase(COPPER_BASE).leggingsHighlight(COPPER_HIGHLIGHT).build())
             put("copper_nugget", MaterialBakedModel.Builder().nuggetBase(COPPER_BASE).nuggetHighlight(COPPER_HIGHLIGHT).build())
-            putBlock("copper_ore", MaterialBakedModel.Builder().block().oreBase(COPPER_BASE).oreHighlight(COPPER_HIGHLIGHT).build())
+            putBlock("copper_ore", MaterialBakedModel.Builder().ore().oreBase(COPPER_BASE).oreHighlight(COPPER_HIGHLIGHT).build())
             putBlock("copper_block", MaterialBakedModel.Builder().block().blockBase(COPPER_BASE).build())
             put("copper_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(COPPER_BASE).purifiedOreHighlight(COPPER_HIGHLIGHT).build())
             put("copper_chunk", MaterialBakedModel.Builder().chunkBase(COPPER_BASE).chunkHighlight(COPPER_HIGHLIGHT).build())
@@ -144,7 +143,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("tungsten_boots", MaterialBakedModel.Builder().bootsBase(TUNGSTEN_BASE).bootsHighlight(TUNGSTEN_HIGHLIGHT).build())
             put("tungsten_leggings", MaterialBakedModel.Builder().leggingsBase(TUNGSTEN_BASE).leggingsHighlight(TUNGSTEN_HIGHLIGHT).build())
             put("tungsten_nugget", MaterialBakedModel.Builder().nuggetBase(TUNGSTEN_BASE).nuggetHighlight(TUNGSTEN_HIGHLIGHT).build())
-            putBlock("tungsten_ore", MaterialBakedModel.Builder().block().oreBase(TUNGSTEN_BASE).oreHighlight(TUNGSTEN_HIGHLIGHT).build())
+            putBlock("tungsten_ore", MaterialBakedModel.Builder().ore().oreBase(TUNGSTEN_BASE).oreHighlight(TUNGSTEN_HIGHLIGHT).build())
             putBlock("tungsten_block", MaterialBakedModel.Builder().block().blockBase(TUNGSTEN_BASE).build())
             put("tungsten_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(TUNGSTEN_BASE).purifiedOreHighlight(TUNGSTEN_HIGHLIGHT).build())
             put("tungsten_chunk", MaterialBakedModel.Builder().chunkBase(TUNGSTEN_BASE).chunkHighlight(TUNGSTEN_HIGHLIGHT).build())
@@ -162,7 +161,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("bronze_boots", MaterialBakedModel.Builder().bootsBase(BRONZE_BASE).bootsHighlight(BRONZE_HIGHLIGHT).build())
             put("bronze_leggings", MaterialBakedModel.Builder().leggingsBase(BRONZE_BASE).leggingsHighlight(BRONZE_HIGHLIGHT).build())
             put("bronze_nugget", MaterialBakedModel.Builder().nuggetBase(BRONZE_BASE).nuggetHighlight(BRONZE_HIGHLIGHT).build())
-            putBlock("bronze_ore", MaterialBakedModel.Builder().block().oreBase(BRONZE_BASE).oreHighlight(BRONZE_HIGHLIGHT).build())
+            putBlock("bronze_ore", MaterialBakedModel.Builder().ore().oreBase(BRONZE_BASE).oreHighlight(BRONZE_HIGHLIGHT).build())
             putBlock("bronze_block", MaterialBakedModel.Builder().block().blockBase(BRONZE_BASE).build())
             put("bronze_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(BRONZE_BASE).purifiedOreHighlight(BRONZE_HIGHLIGHT).build())
             put("bronze_chunk", MaterialBakedModel.Builder().chunkBase(BRONZE_BASE).chunkHighlight(BRONZE_HIGHLIGHT).build())
@@ -180,7 +179,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("electrum_boots", MaterialBakedModel.Builder().bootsBase(ELECTRUM_BASE).bootsHighlight(ELECTRUM_HIGHLIGHT).build())
             put("electrum_leggings", MaterialBakedModel.Builder().leggingsBase(ELECTRUM_BASE).leggingsHighlight(ELECTRUM_HIGHLIGHT).build())
             put("electrum_nugget", MaterialBakedModel.Builder().nuggetBase(ELECTRUM_BASE).nuggetHighlight(ELECTRUM_HIGHLIGHT).build())
-            putBlock("electrum_ore", MaterialBakedModel.Builder().block().oreBase(ELECTRUM_BASE).oreHighlight(ELECTRUM_HIGHLIGHT).build())
+            putBlock("electrum_ore", MaterialBakedModel.Builder().ore().oreBase(ELECTRUM_BASE).oreHighlight(ELECTRUM_HIGHLIGHT).build())
             putBlock("electrum_block", MaterialBakedModel.Builder().block().blockBase(ELECTRUM_BASE).build())
             put("electrum_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(ELECTRUM_BASE).purifiedOreHighlight(ELECTRUM_HIGHLIGHT).build())
             put("electrum_chunk", MaterialBakedModel.Builder().chunkBase(ELECTRUM_BASE).chunkHighlight(ELECTRUM_HIGHLIGHT).build())
@@ -198,7 +197,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("steel_boots", MaterialBakedModel.Builder().bootsBase(STEEL_BASE).bootsHighlight(STEEL_HIGHLIGHT).build())
             put("steel_leggings", MaterialBakedModel.Builder().leggingsBase(STEEL_BASE).leggingsHighlight(STEEL_HIGHLIGHT).build())
             put("steel_nugget", MaterialBakedModel.Builder().nuggetBase(STEEL_BASE).nuggetHighlight(STEEL_HIGHLIGHT).build())
-            putBlock("steel_ore", MaterialBakedModel.Builder().block().oreBase(STEEL_BASE).oreHighlight(STEEL_HIGHLIGHT).build())
+            putBlock("steel_ore", MaterialBakedModel.Builder().ore().oreBase(STEEL_BASE).oreHighlight(STEEL_HIGHLIGHT).build())
             putBlock("steel_block", MaterialBakedModel.Builder().block().blockBase(STEEL_BASE).build())
             put("steel_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(STEEL_BASE).purifiedOreHighlight(STEEL_HIGHLIGHT).build())
             put("steel_chunk", MaterialBakedModel.Builder().chunkBase(STEEL_BASE).chunkHighlight(STEEL_HIGHLIGHT).build())
@@ -216,7 +215,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             put("tin_boots", MaterialBakedModel.Builder().bootsBase(TIN_BASE).bootsHighlight(TIN_HIGHLIGHT).bootsOutline(TIN_OUTLINE).build())
             put("tin_leggings", MaterialBakedModel.Builder().leggingsBase(TIN_BASE).leggingsHighlight(TIN_HIGHLIGHT).leggingsOutline(TIN_OUTLINE).build())
             put("tin_nugget", MaterialBakedModel.Builder().nuggetBase(TIN_BASE).nuggetHighlight(TIN_HIGHLIGHT).nuggetOutline(TIN_OUTLINE).build())
-            putBlock("tin_ore", MaterialBakedModel.Builder().block().oreBase(TIN_BASE).oreHighlight(TIN_HIGHLIGHT).build())
+            putBlock("tin_ore", MaterialBakedModel.Builder().ore().oreBase(TIN_BASE).oreHighlight(TIN_HIGHLIGHT).build())
             putBlock("tin_block", MaterialBakedModel.Builder().block().blockBase(TIN_BASE).build())
             put("tin_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).purifiedOreOutline(TIN_OUTLINE).build())
             put("tin_chunk", MaterialBakedModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).chunkOutline(TIN_OUTLINE).build())
@@ -236,7 +235,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
 
             put("netherite_scrap_dust", MaterialBakedModel.Builder().dustBase(NETHERITE_SCRAP_BASE).dustHighlight(NETHERITE_SCRAP_HIGHLIGHT).dustOutline(NETHERITE_SCRAP_OUTLINE).build())
             put("netherite_scrap_chunk", MaterialBakedModel.Builder().chunkBase(NETHERITE_SCRAP_BASE).chunkHighlight(NETHERITE_SCRAP_HIGHLIGHT).chunkOutline(NETHERITE_SCRAP_OUTLINE).build())
-            put("netherite_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(NETHERITE_SCRAP_HIGHLIGHT).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("netherite_scrap_purified_ore", MaterialBakedModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(NETHERITE_SCRAP_HIGHLIGHT).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
 
         }
 

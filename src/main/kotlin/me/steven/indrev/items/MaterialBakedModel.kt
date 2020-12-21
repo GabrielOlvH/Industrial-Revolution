@@ -13,6 +13,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -23,12 +24,15 @@ import java.util.function.Supplier
 
 class MaterialBakedModel private constructor(private val bakedModels: Array<ModelWithColor>, private val type: TransformationType) : UnbakedModel, BakedModel, FabricBakedModel {
 
+    private var sprite: Sprite? = null
+
     override fun bake(
         loader: ModelLoader,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
-        modelId: Identifier?
+        modelId: Identifier
     ): BakedModel {
+        sprite = textureGetter.apply(SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, modelId))
         return this
     }
 
@@ -52,7 +56,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
 
     override fun isBuiltin(): Boolean = false
 
-    override fun getSprite(): Sprite? = null
+    override fun getSprite(): Sprite? = sprite
 
     override fun getTransformation(): ModelTransformation = type.transformation()
 
@@ -74,7 +78,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
                     quad.spriteColor(0, color, color, color, color)
                     true
                 }
-                ctx.fallbackConsumer().accept(holder.blockBakedModel)
+                ctx.fallbackConsumer().accept(holder.bakedModel)
                 ctx.popTransform()
             }
         }
@@ -87,7 +91,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
                 quad.spriteColor(0, color, color, color, color)
                 true
             }
-            ctx.fallbackConsumer().accept(holder.itemBakedModel)
+            ctx.fallbackConsumer().accept(holder.bakedModel)
             ctx.popTransform()
         }
 
@@ -100,7 +104,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
         private var transformationType: TransformationType = TransformationType.AUTO
 
         fun with(id: Identifier, color: Long): Builder {
-            bakedModels.add(ModelWithColor(id, color.toInt()))
+            bakedModels.add(ModelWithColor(id, color.toInt(), transformationType))
             return this
         }
 
@@ -309,9 +313,14 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return with(identifier("tool_stick"), -1)
         }
 
-        fun block(): Builder {
+        fun ore(): Builder {
             transformationType = TransformationType.BLOCK
             return with(Identifier("stone"), -1)
+        }
+
+        fun block(): Builder {
+            transformationType = TransformationType.BLOCK
+            return this
         }
 
         fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
@@ -338,6 +347,8 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
                     ModelIdentifier(Identifier("stone"), "")
                 ).transformation
             }
-        )
+        );
+
+        val variant = if (this.toString() == "BLOCK") "" else "inventory"
     }
 }
