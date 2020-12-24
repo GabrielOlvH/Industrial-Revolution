@@ -5,7 +5,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap
-import net.fabricmc.fabric.api.provider.v1.block.BlockApiCache
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
