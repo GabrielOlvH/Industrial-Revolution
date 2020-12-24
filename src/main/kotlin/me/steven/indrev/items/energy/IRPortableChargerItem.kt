@@ -7,6 +7,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.buildEnergyTooltip
+import me.steven.indrev.utils.energyOf
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
@@ -35,7 +36,7 @@ class IRPortableChargerItem(
     }
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
+        val handler = energyOf(stack) ?: return
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
 
         val player = entity as? PlayerEntity ?: return

@@ -1,8 +1,5 @@
 package me.steven.indrev.utils
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
@@ -21,7 +18,7 @@ import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -45,11 +42,6 @@ fun WGridPanel.add(w: WWidget, x: Double, y: Double) {
     w.setLocation((x * 18).toInt(), (y * 18).toInt())
 }
 
-val ENERGY_EMPTY =
-    identifier("textures/gui/widget_energy_empty.png")
-val ENERGY_FULL =
-    identifier("textures/gui/widget_energy_full.png")
-
 val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
 val SPLIT_ON_ICON = identifier("textures/gui/split_on.png")
 val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
@@ -70,7 +62,7 @@ fun SyncedGuiDescription.configure(
     panel.add(energyWidget, 0.1, 0.0)
 
     val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
-    batterySlot.filter = Predicate { stack -> EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] != null }
+    batterySlot.filter = Predicate { stack -> energyOf(stack) != null }
 
     screenHandlerContext.run { world, blockPos ->
         if (world.isClient)
@@ -140,7 +132,7 @@ fun SyncedGuiDescription.configure(
                 blockEntity.isSplitOn = !blockEntity.isSplitOn
                 val buf = PacketByteBuf(Unpooled.buffer())
                 buf.writeBlockPos(blockPos)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(SPLIT_STACKS_PACKET, buf)
+                ClientPlayNetworking.send(SPLIT_STACKS_PACKET, buf)
             }
             if (world.isClient)
                 buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER

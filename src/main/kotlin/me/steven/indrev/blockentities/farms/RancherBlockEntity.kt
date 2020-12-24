@@ -1,6 +1,9 @@
 package me.steven.indrev.blockentities.farms
 
 import dev.technici4n.fasttransferlib.api.Simulation
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.properties.BooleanProperty
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory

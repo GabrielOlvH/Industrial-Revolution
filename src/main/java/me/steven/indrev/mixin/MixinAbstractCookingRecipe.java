@@ -8,7 +8,6 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,8 +19,6 @@ import java.util.Random;
 
 @Mixin(AbstractCookingRecipe.class)
 public abstract class MixinAbstractCookingRecipe implements IRRecipe {
-    @Shadow @Final protected RecipeType<?> type;
-
     @Shadow @Final protected Identifier id;
 
     @Shadow @Final protected int cookTime;

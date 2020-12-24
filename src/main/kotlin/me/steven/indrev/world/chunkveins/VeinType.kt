@@ -10,11 +10,11 @@ import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.BiomeKeys
 
 data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val sizeRange: IntRange) {
     companion object {
-        val REGISTERED = mutableMapOf<Identifier, VeinType>()
+        val REGISTERED = hashMapOf<Identifier, VeinType>()
+        val BIOME_VEINS = hashMapOf<RegistryKey<Biome>, WeightedList<Identifier>>()
         fun fromJson(json: JsonObject): Array<VeinType>? {
             if (json.getBoolean("containsMultiple", false))
                 return json.get(JsonArray::class.java, "veins")!!.flatMap { fromJson(it as JsonObject)!!.toList() }.toTypedArray()
@@ -61,14 +61,13 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val si
                     element.get(JsonArray::class.java, "ids")?.forEach { s ->
                         val biomeId = Identifier(s.toString())
                         if (!BuiltinRegistries.BIOME.containsId(biomeId)) {
-                            VeinTypeResourceListener.LOGGER.error("Expected biome but received unkown string $biomeId when loading vein type $id")
+                            VeinTypeResourceListener.LOGGER.error("Expected biome but received unkonwn string $biomeId when loading vein type $id")
                         }
                         biomes[RegistryKey.of(Registry.BIOME_KEY, biomeId)] = weight
                     }
                 }
             }
-            BiomeKeys.FROZEN_RIVER
-            biomes.forEach { (biome, weight) -> BiomeVeins.BIOME_VEINS.computeIfAbsent(biome) { BiomeVeins(biome, WeightedList()) }.veins.add(id, weight) }
+            biomes.forEach { (biome, weight) -> BIOME_VEINS.computeIfAbsent(biome) { WeightedList() }.add(id, weight) }
             return arrayOf(VeinType(id, weightedList, min..max))
         }
     }

@@ -1,17 +1,16 @@
 package me.steven.indrev.items.energy
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.buildMachineTooltip
+import me.steven.indrev.utils.energyOf
 import net.minecraft.block.Block
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.BlockItem
@@ -37,7 +36,7 @@ class MachineBlockItem(private val machineBlock: Block, settings: Settings) : Bl
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+        val itemIo = energyOf(stack)
         if (machineBlock !is CableBlock && itemIo != null)
             buildEnergyTooltip(stack, tooltip)
         val config = (machineBlock as? MachineBlock)?.config ?: (machineBlock as? CableBlock)?.getConfig()

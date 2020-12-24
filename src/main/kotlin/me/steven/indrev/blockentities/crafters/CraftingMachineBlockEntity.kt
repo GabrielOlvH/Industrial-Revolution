@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
@@ -9,7 +11,6 @@ import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.associateStacks
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
@@ -35,7 +36,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     override val maxOutput: Double = 0.0
 
     private var currentRecipe: T? = null
-    val usedRecipes = mutableMapOf<Identifier, Int>()
+    val usedRecipes = Object2IntOpenHashMap<Identifier>()
     abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
     var isSplitOn = false
@@ -145,6 +146,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     fun dropExperience(player: PlayerEntity) {
+        //TODO wtf bro
         val list = mutableListOf<T>()
         usedRecipes.forEach { (id, amount) ->
             world!!.recipeManager[id].ifPresent { recipe ->

@@ -24,6 +24,7 @@ class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
         LOGGER.info("Loaded ${VeinType.REGISTERED.size} vein types!")
     }
 
+    // used to make my life less hell
     fun getTranslationKeys(): String {
         return VeinType.REGISTERED.map { (id, _) ->
             "\"vein.${id.namespace}.${id.path}\": \"\""

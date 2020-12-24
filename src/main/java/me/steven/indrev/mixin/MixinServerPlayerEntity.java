@@ -12,11 +12,11 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.IndustrialRevolution;
 import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.armor.IRArmorMaterial;
-import me.steven.indrev.items.armor.IRModularArmor;
+import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,6 +26,7 @@ import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,6 +44,7 @@ import java.util.Map;
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
+    @Shadow public ServerPlayNetworkHandler networkHandler;
     private int ticks = 0;
     private int lastDamageTick = 0;
     private double lastShield = 0.0;
@@ -98,8 +100,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         PlayerInventory inventory = player.inventory;
         getAppliedModules().clear();
         for (ItemStack itemStack : inventory.armor) {
-            if (itemStack.getItem() instanceof IRModularArmor && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
-                List<ArmorModule> modules = ((IRModularArmor) itemStack.getItem()).getInstalled(itemStack);
+            if (itemStack.getItem() instanceof IRModularArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
+                List<ArmorModule> modules = ((IRModularArmorItem) itemStack.getItem()).getInstalled(itemStack);
                 EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
                 for (ArmorModule module : modules) {
                     int level = module.getLevel(itemStack);
@@ -182,6 +184,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
             buf.writeInt(level);
         });
         buf.writeDouble(getShieldDurability());
-        ServerSidePacketRegistry.INSTANCE.sendToPlayer(this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
     }
 }

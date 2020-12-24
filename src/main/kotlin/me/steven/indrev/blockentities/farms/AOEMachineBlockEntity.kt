@@ -1,12 +1,12 @@
 package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
@@ -47,7 +47,7 @@ abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineR
                 val packet = PacketByteBuf(Unpooled.buffer())
                 packet.writeInt(value)
                 ctx.run { _, pos -> packet.writeBlockPos(pos) }
-                ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_VALUE_PACKET_ID, packet)
+                ClientPlayNetworking.send(UPDATE_VALUE_PACKET_ID, packet)
             }
         }
 

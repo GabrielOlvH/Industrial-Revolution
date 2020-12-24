@@ -6,7 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
@@ -63,7 +63,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         val packet = PacketByteBuf(Unpooled.buffer())
         ctx.run { _, pos -> packet.writeBlockPos(pos) }
         packet.writeInt(tank)
-        ClientSidePacketRegistry.INSTANCE.sendToServer(FLUID_CLICK_PACKET, packet)
+        ClientPlayNetworking.send(FLUID_CLICK_PACKET, packet)
     }
 
     override fun canResize(): Boolean = false

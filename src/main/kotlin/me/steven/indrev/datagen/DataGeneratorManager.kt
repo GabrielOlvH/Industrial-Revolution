@@ -109,7 +109,7 @@ class DataGeneratorManager(namespace: String) {
 
     private fun pulverizeTagged(inputId: String, outputId: String, count: Int, time: Int, fileSuffix: String) : JsonFactory<String> {
         return object : JsonFactory<String> {
-            override fun generate(): JsonObject? {
+            override fun generate(): JsonObject {
                 val json = JsonObject()
                 json.addProperty("type", "indrev:pulverize")
                 val ingredients = JsonObject()
@@ -129,7 +129,7 @@ class DataGeneratorManager(namespace: String) {
 
     private fun pulverizeItem(inputId: String, outputId: String, count: Int, time: Int, fileSuffix: String) : JsonFactory<String> {
         return object : JsonFactory<String> {
-            override fun generate(): JsonObject? {
+            override fun generate(): JsonObject {
                 val json = JsonObject()
                 json.addProperty("type", "indrev:pulverize")
                 val ingredients = JsonObject()
@@ -157,7 +157,7 @@ class DataGeneratorManager(namespace: String) {
 
     private fun createTag(item: String): JsonFactory<String> {
         return object : JsonFactory<String> {
-            override fun generate(): JsonObject? {
+            override fun generate(): JsonObject {
                 val obj = JsonObject()
                 obj.addProperty("replace", false)
                 val values = JsonArray()

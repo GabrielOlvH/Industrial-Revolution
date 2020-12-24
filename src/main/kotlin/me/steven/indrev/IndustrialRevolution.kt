@@ -1,18 +1,10 @@
 package me.steven.indrev
 
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
-import io.netty.buffer.Unpooled
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.api.IRServerPlayerEntityExtension
-import me.steven.indrev.api.sideconfigs.Configurable
-import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.energy.NetworkEvents
@@ -21,7 +13,6 @@ import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
-import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
@@ -29,29 +20,26 @@ import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRLootTables
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.PacketRegistry
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
-import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
@@ -73,7 +61,7 @@ object IndustrialRevolution : ModInitializer {
         IRLootTables.register()
         MachineRegistry
         if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
-             ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted { client ->
+             ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted { _ ->
                  DataGeneratorManager("indrev").generate()
              })
         }
@@ -99,105 +87,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
-        ServerSidePacketRegistry.INSTANCE.register(Configurable.UPDATE_MACHINE_SIDE_PACKET_ID) { ctx, buf ->
-            val type = buf.readEnumConstant(ConfigurationType::class.java)
-            val pos = buf.readBlockPos()
-            val dir = Direction.byId(buf.readInt())
-            val mode = TransferMode.values()[buf.readInt()]
-            ctx.taskQueue.execute {
-                val world = ctx.player.world
-                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                blockEntity.getCurrentConfiguration(type)[dir] = mode
-                blockEntity.markDirty()
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(Configurable.UPDATE_AUTO_OPERATION_PACKET_ID) { ctx, buf ->
-            val type = buf.readEnumConstant(ConfigurationType::class.java)
-            val opType = buf.readByte()
-            val pos = buf.readBlockPos()
-            val value = buf.readBoolean()
-            ctx.taskQueue.execute {
-                val world = ctx.player.world
-                val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                if (opType.toInt() == 0)
-                    blockEntity.getCurrentConfiguration(type).autoPush = value
-                else
-                    blockEntity.getCurrentConfiguration(type).autoPull = value
-                blockEntity.markDirty()
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(AOEMachineBlockEntity.UPDATE_VALUE_PACKET_ID) { ctx, buf ->
-            val value = buf.readInt()
-            val pos = buf.readBlockPos()
-            val world = ctx.player.world
-            ctx.taskQueue.execute {
-                if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@execute
-                    blockEntity.range = value
-                    blockEntity.markDirty()
-                    blockEntity.sync()
-                }
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(WFluid.FLUID_CLICK_PACKET) { ctx, buf ->
-            val pos = buf.readBlockPos()
-            val tank = buf.readInt()
-            val player = ctx.player as ServerPlayerEntity
-            val world = player.world
-            ctx.taskQueue.execute {
-                if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                    val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player, fluidComponent.getFilterForTank(tank))
-                }
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(UPDATE_MODULAR_TOOL_LEVEL) { ctx, buf ->
-            val key = buf.readString(32767)
-            val value = buf.readInt()
-            val slot = buf.readInt()
-            ctx.taskQueue.execute {
-                val stack = ctx.player.inventory.getStack(slot)
-                val tag = stack.getOrCreateSubTag("selected")
-                tag.putInt(key, value)
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(SPLIT_STACKS_PACKET) { ctx, buf ->
-            val pos = buf.readBlockPos()
-            ctx.taskQueue.execute {
-                val world = ctx.player.world
-                if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? CraftingMachineBlockEntity<*> ?: return@execute
-                    blockEntity.isSplitOn = !blockEntity.isSplitOn
-                    if (blockEntity.isSplitOn) blockEntity.splitStacks()
-                }
-            }
-        }
-
-        ServerSidePacketRegistry.INSTANCE.register(RancherController.SYNC_RANCHER_CONFIG) { ctx, buf ->
-            val pos = buf.readBlockPos()
-            val feedBabies = buf.readBoolean()
-            val mateAdults = buf.readBoolean()
-            val matingLimit = buf.readInt()
-            val killAfter = buf.readInt()
-            ctx.taskQueue.execute {
-                val world = ctx.player.world
-                if (world.isChunkLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? RancherBlockEntity ?: return@execute
-                    blockEntity.feedBabies = feedBabies
-                    blockEntity.mateAdults = mateAdults
-                    blockEntity.matingLimit = matingLimit
-                    blockEntity.killAfter = killAfter
-                    blockEntity.markDirty()
-                    blockEntity.sync()
-                }
-            }
-        }
+        PacketRegistry.registerServer()
 
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
 
@@ -226,7 +116,7 @@ object IndustrialRevolution : ModInitializer {
         LOGGER.info("Industrial Revolution has initialized.")
     }
 
-    val LOGGER = LogManager.getLogger("Industrial Revolution")
+    val LOGGER: Logger = LogManager.getLogger("Industrial Revolution")
 
     const val MOD_ID = "indrev"
 
@@ -283,24 +173,4 @@ object IndustrialRevolution : ModInitializer {
     val SYNC_MODULE_PACKET = identifier("sync_module")
     val RERENDER_CHUNK_PACKET = identifier("rerender_chunk")
     val SCHEDULE_RERENDER_CHUNK_PACKET = identifier("scheduled_rerender_chunk")
-
-    fun syncVeinData(playerEntity: ServerPlayerEntity) {
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeInt(VeinType.REGISTERED.size)
-        VeinType.REGISTERED.forEach { (identifier, veinType) ->
-            buf.writeIdentifier(identifier)
-            val entries = veinType.outputs.entries
-            buf.writeInt(entries.size)
-            entries.forEach { entry ->
-                val block = entry.element
-                val weight = entry.weight
-                val rawId = Registry.BLOCK.getRawId(block)
-                buf.writeInt(rawId)
-                buf.writeInt(weight)
-            }
-            buf.writeInt(veinType.sizeRange.first)
-            buf.writeInt(veinType.sizeRange.last)
-        }
-        ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, SYNC_VEINS_PACKET, buf)
-    }
 }

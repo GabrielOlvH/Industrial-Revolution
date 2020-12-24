@@ -8,17 +8,17 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.Simulation
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
-import me.steven.indrev.blockentities.storage.BatteryBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
@@ -72,6 +72,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var ticks = 0
 
+    @Suppress("UNCHECKED_CAST")
     val config: T by lazy { registry.config(tier) as T }
 
     protected open fun machineTick() {}
@@ -95,9 +96,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 return
             }
             val inventory = inventoryComponent?.inventory
-            if (inventoryComponent != null && inventory!!.size() > 0 && this !is BatteryBlockEntity) {
+            if (inventoryComponent != null && inventory!!.size() > 0 && this !is LazuliFluxContainerBlockEntity) {
                 val stack = inventory.getStack(0)
-                val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+                val itemIo = energyOf(stack)
                 if (itemIo != null)
                     EnergyMovement.move(itemIo, this, maxInput)
             }
@@ -308,7 +309,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
         if (inventory is SidedInventory) inventory.getAvailableSlots(side)
-        else (0 until inventory.size()).toIntArray()
+        else (0 until inventory.size()).map { it }.toIntArray()
 
     private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
         first.item == second.item
@@ -332,7 +333,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     private fun transferFluids() {
-        fluidComponent?.tanks?.forEach { tank ->
+        fluidComponent?.tanks?.forEach { _ ->
             fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
                 if (mode == TransferMode.NONE) return@innerForEach
                 var extractable: FluidExtractable? = null

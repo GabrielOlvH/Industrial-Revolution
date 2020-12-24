@@ -22,7 +22,7 @@ class MaterialTagGenerator(val root: File, namespace: String, fallback: (String)
     companion object {
         val DEFAULT_ITEM: (String) -> JsonFactory<String> = { tag ->
             object : JsonFactory<String> {
-                override fun generate(): JsonObject? {
+                override fun generate(): JsonObject {
                     val obj = JsonObject()
                     obj.addProperty("replace", false)
                     val values = JsonArray()

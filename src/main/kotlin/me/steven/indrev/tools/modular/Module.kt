@@ -1,6 +1,7 @@
 package me.steven.indrev.tools.modular
 
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
@@ -10,6 +11,7 @@ import net.minecraft.util.Formatting
 interface Module {
     val key: String
     val maxLevel: Int
+    val item: ItemConvertible
 
     fun isInstalled(itemStack: ItemStack): Boolean {
         return itemStack.orCreateTag.contains(key)

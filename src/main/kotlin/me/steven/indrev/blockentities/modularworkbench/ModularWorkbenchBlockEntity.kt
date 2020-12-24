@@ -1,16 +1,16 @@
 package me.steven.indrev.blockentities.modularworkbench
 
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.Property
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.block.BlockState
@@ -23,7 +23,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
-            0 filter { (stack, item) -> item !is IRModularItem<*> }
+            0 filter { (_, item) -> item !is IRModularItem<*> }
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
         }
@@ -68,7 +68,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                     val tag = targetStack.orCreateTag
                     when {
                         module == ArmorModule.COLOR -> {
-                            if (targetItem !is IRModularArmor) return
+                            if (targetItem !is IRModularArmorItem) return
                             val colorModuleItem = moduleItem as IRColorModuleItem
                             targetItem.setColor(targetStack, colorModuleItem.color)
                         }

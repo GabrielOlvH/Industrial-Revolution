@@ -5,8 +5,10 @@ import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import dev.technici4n.fasttransferlib.api.item.ItemKey
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -33,8 +35,8 @@ import net.minecraft.world.World
 import java.util.*
 import java.util.stream.Stream
 
-class ChargePadBlock(settings: Settings, tier: Tier) :
-    HorizontalFacingMachineBlock(settings, tier, null, null, { ChargePadBlockEntity(tier) }) {
+class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) :
+    HorizontalFacingMachineBlock(registry, settings, tier, null, null) {
 
     override fun getOutlineShape(
         state: BlockState,
@@ -50,7 +52,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
             else -> FACING_NORTH
         }
 
-    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
+    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         val blockEntity = world.getBlockEntity(pos) as? ChargePadBlockEntity ?: return ActionResult.PASS
         val inventory = blockEntity.inventoryComponent?.inventory ?: return ActionResult.PASS
         val machineStack = inventory.getStack(0)
@@ -79,7 +81,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
                 Iterables.concat(entity.inventory.armor, mutableListOf(entity.mainHandStack, entity.offHandStack))
             is ArmorStandEntity -> entity.itemsEquipped
             else -> return
-        }.mapNotNull { stack -> EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] }
+        }.mapNotNull { stack -> energyOf(stack) }
         var rem = blockEntity.maxOutput
         items.forEach { handler ->
             if (rem > 0)

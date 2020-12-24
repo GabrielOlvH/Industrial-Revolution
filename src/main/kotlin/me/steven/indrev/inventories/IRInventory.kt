@@ -24,7 +24,7 @@ class IRInventory(
         availableSlots = availableSlots.distinct().toIntArray()
     }
 
-    override fun getAvailableSlots(var1: Direction?): IntArray? = availableSlots
+    override fun getAvailableSlots(var1: Direction?): IntArray = availableSlots
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true

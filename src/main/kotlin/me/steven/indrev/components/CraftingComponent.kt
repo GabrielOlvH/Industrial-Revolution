@@ -2,6 +2,7 @@ package me.steven.indrev.components
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.IRInventory
@@ -9,7 +10,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
-import me.steven.indrev.utils.Property
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
@@ -48,7 +48,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                     processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
-                        machine.usedRecipes[recipe.id] = machine.usedRecipes.computeIfAbsent(recipe.id) { 0 } + 1
+                        machine.usedRecipes.addTo(recipe.id, 1)
                         machine.onCraft()
                         reset()
                     }

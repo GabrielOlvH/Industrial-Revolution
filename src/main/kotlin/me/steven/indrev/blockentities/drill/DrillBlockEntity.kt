@@ -22,13 +22,14 @@ import net.minecraft.util.Tickable
 import net.minecraft.util.collection.DefaultedList
 
 class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENTITY_TYPE), BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable {
-    var inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
+    var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
     var position: Double = 1.0
 
     override fun tick() {
         if (world?.isClient == true) return
-        else if (inventory[0].isEmpty) {
+
+        if (inventory[0].isEmpty) {
             position = 1.0
             markDirty()
             sync()

@@ -17,6 +17,6 @@ fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Ener
     return ENERGY_IO_CACHE.computeIfAbsent(blockPos.asLong()) { BlockApiCache.create(EnergyApi.SIDED, world, blockPos) }[direction]
 }
 
-fun energyOf(itemStack: ItemStack): EnergyIo? {
+fun energyOf(itemStack: ItemStack?): EnergyIo? {
     return EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack))
 }

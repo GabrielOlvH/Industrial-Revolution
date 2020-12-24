@@ -8,7 +8,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.properties
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
@@ -44,7 +44,8 @@ open class IRGuiController(
     }
 
     override fun sendContentUpdates() {
-        if (playerInventory.player is ServerPlayerEntity) {
+        val player = playerInventory.player
+        if (player is ServerPlayerEntity) {
             for (i in 0 until propertyDelegate.size()) {
                 if (values[i] != propertyDelegate[i]) {
                     values[i] = propertyDelegate[i]
@@ -52,7 +53,7 @@ open class IRGuiController(
                     buf.writeInt(syncId)
                     buf.writeInt(i)
                     buf.writeInt(values[i])
-                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.SYNC_PROPERTY, buf)
+                    ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_PROPERTY, buf)
                 }
             }
         }

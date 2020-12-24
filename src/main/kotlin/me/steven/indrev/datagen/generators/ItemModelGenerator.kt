@@ -25,7 +25,7 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
     companion object {
         val DEFAULT_ITEM: (Item) -> JsonFactory<Item> = { item ->
             object : JsonFactory<Item> {
-                override fun generate(): JsonObject? {
+                override fun generate(): JsonObject {
                     val id = Registry.ITEM.getId(item)
                     val obj = JsonObject()
                     if (item is BlockItem) {
@@ -43,7 +43,7 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
         }
         val HANDHELD: (Item) -> JsonFactory<Item> = { item ->
             object : JsonFactory<Item> {
-                override fun generate(): JsonObject? {
+                override fun generate(): JsonObject {
                     val id = Registry.ITEM.getId(item)
                     val obj = JsonObject()
                     obj.addProperty("parent", "item/handheld")

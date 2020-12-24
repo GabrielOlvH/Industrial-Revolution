@@ -2,7 +2,6 @@ package me.steven.indrev.items.misc
 
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.asString
-import me.steven.indrev.world.chunkveins.BiomeVeins
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
@@ -46,8 +45,8 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val biomeKey = world.registryManager.get(Registry.BIOME_KEY)
                     .getKey(world.getBiome(user?.blockPos))
                     .orElse(default)
-                val picker = BiomeVeins.BIOME_VEINS.getOrDefault(biomeKey, BiomeVeins.BIOME_VEINS[default])
-                val identifier = info?.veinIdentifier ?: picker?.veins?.pickRandom(world.random)!!
+                val picker = VeinType.BIOME_VEINS.getOrDefault(biomeKey, VeinType.BIOME_VEINS[default])
+                val identifier = info?.veinIdentifier ?: picker?.pickRandom(world.random)!!
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
                     val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))

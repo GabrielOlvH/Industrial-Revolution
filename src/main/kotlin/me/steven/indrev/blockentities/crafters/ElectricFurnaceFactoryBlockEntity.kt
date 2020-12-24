@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
@@ -10,7 +11,6 @@ import me.steven.indrev.mixin.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import net.minecraft.screen.ArrayPropertyDelegate
 
 class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
@@ -32,6 +32,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {
             val upgrades = getUpgrades(inventoryComponent!!.inventory)

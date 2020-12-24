@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
@@ -7,7 +8,6 @@ import me.steven.indrev.mixin.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
@@ -20,6 +20,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {
             val upgrades = getUpgrades(inventoryComponent!!.inventory)

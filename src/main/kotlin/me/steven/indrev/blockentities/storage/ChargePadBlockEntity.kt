@@ -1,16 +1,14 @@
 package me.steven.indrev.blockentities.storage
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.Simulation
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import dev.technici4n.fasttransferlib.api.item.ItemKey
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.energyOf
 
 class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY) {
     init {
@@ -24,7 +22,7 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
-        val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+        val itemIo = energyOf(stack)
         workingState = itemIo != null && EnergyMovement.move(this, itemIo, maxOutput) == maxOutput
     }
 

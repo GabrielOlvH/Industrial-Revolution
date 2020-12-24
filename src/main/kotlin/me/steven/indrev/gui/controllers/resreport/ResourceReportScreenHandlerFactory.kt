@@ -16,7 +16,7 @@ class ResourceReportScreenHandlerFactory(
     private val pos: BlockPos,
     private val veinData: ChunkVeinData
 ) : ExtendedScreenHandlerFactory {
-    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler? =
+    override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler =
         handlerFactory(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos))
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity?, buf: PacketByteBuf) {

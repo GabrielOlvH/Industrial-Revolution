@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 
 abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity<GeneratorConfig>(tier, registry) {

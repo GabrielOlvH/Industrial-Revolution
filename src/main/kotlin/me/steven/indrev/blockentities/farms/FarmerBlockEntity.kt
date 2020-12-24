@@ -1,12 +1,12 @@
 package me.steven.indrev.blockentities.farms
 
 import dev.technici4n.fasttransferlib.api.Simulation
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.forEach
 import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.*

@@ -9,19 +9,19 @@ import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
@@ -160,7 +160,7 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
                 buf.writeBoolean(mateAdults)
                 buf.writeInt(matingLimitText.text.toIntOrNull() ?: matingLimit)
                 buf.writeInt(killAfterText.text.toIntOrNull() ?: killAfter)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(SYNC_RANCHER_CONFIG, buf)
+                ClientPlayNetworking.send(SYNC_RANCHER_CONFIG, buf)
             }
         }
     }

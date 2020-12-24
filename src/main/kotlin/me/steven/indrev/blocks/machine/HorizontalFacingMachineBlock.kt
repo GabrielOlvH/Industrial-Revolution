@@ -1,8 +1,8 @@
 package me.steven.indrev.blocks.machine
 
-import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
@@ -16,12 +16,12 @@ import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.Direction
 
 open class HorizontalFacingMachineBlock(
+    registry: MachineRegistry,
     settings: Settings,
     tier: Tier,
     config: IConfig?,
-    screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    blockEntityProvider: () -> MachineBlockEntity<*>
-) : MachineBlock(settings, tier, config, screenHandler, blockEntityProvider) {
+    screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?
+) : MachineBlock(registry, settings, tier, config, screenHandler) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)

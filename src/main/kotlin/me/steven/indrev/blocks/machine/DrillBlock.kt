@@ -121,7 +121,7 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
     class MiddleDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.MIDDLE)
 
     class BottomDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.BOTTOM), BlockEntityProvider {
-        override fun createBlockEntity(world: BlockView?): BlockEntity? = DrillBlockEntity()
+        override fun createBlockEntity(world: BlockView?): BlockEntity = DrillBlockEntity()
     }
 
     companion object {

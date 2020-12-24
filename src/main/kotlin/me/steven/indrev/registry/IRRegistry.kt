@@ -2,19 +2,19 @@ package me.steven.indrev.registry
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.blocks.*
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.fluids.BaseFluid
 import me.steven.indrev.items.armor.IRColorModuleItem
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
-import me.steven.indrev.items.tools.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.tools.IRToolMaterial
@@ -177,20 +177,22 @@ object IRRegistry {
         identifier("diamond_drill_head").item(DIAMOND_DRILL_HEAD)
         identifier("netherite_drill_head").item(NETHERITE_DRILL_HEAD)
 
-        identifier("mining_drill").tierBasedItem { tier ->
-            when (tier) {
-                Tier.MK1 -> MINING_DRILL_MK1
-                Tier.MK2 -> MINING_DRILL_MK2
-                Tier.MK3 -> MINING_DRILL_MK3
-                Tier.MK4, Tier.CREATIVE -> MINING_DRILL_MK4
-            }
-        }
+        identifier("mining_drill_mk1").item(MINING_DRILL_MK1)
+        identifier("mining_drill_mk2").item(MINING_DRILL_MK2)
+        identifier("mining_drill_mk3").item(MINING_DRILL_MK3)
+        identifier("mining_drill_mk4").item(MINING_DRILL_MK4)
+
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
+
         identifier("battery").item(IRBatteryItem(itemSettings().maxDamage(4096), 4096.0))
-        identifier("circuit").tierBasedItem { DEFAULT_ITEM() }
+
+        identifier("circuit_mk1").item(DEFAULT_ITEM())
+        identifier("circuit_mk2").item(DEFAULT_ITEM())
+        identifier("circuit_mk3").item(DEFAULT_ITEM())
+        identifier("circuit_mk4").item(DEFAULT_ITEM())
 
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
 
@@ -351,19 +353,19 @@ object IRRegistry {
     }
 
     val MINING_DRILL_MK1 =
-        IRMiningDrill(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK2 =
-        IRMiningDrill(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK3 =
-        IRMiningDrill(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
-    val MINING_DRILL_MK4 = IRModularDrill(
+        IRMiningDrillItem(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
+    val MINING_DRILL_MK4 = IRModularDrillItem(
         ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
     val SCAN_OUTPUT_ITEM = IRResourceReportItem(itemSettings().maxCount(1))
 
-    val ENERGY_READER = IREnergyReader(itemSettings())
+    val ENERGY_READER = IREnergyReaderItem(itemSettings())
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
@@ -460,7 +462,7 @@ object IRRegistry {
     val CABINET = CabinetBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val CABINET_BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create({ CabinetBlockEntity() }, CABINET).build(null)
+    val CABINET_BLOCK_ENTITY_TYPE: BlockEntityType<CabinetBlockEntity> = BlockEntityType.Builder.create({ CabinetBlockEntity() }, CABINET).build(null)
 
     val DRILL_TOP = DrillBlock.TopDrillBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
@@ -471,7 +473,7 @@ object IRRegistry {
     val DRILL_BOTTOM = DrillBlock.BottomDrillBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
-    val DRILL_BLOCK_ENTITY_TYPE = BlockEntityType.Builder.create({ DrillBlockEntity() }, DRILL_BOTTOM).build(null)
+    val DRILL_BLOCK_ENTITY_TYPE: BlockEntityType<DrillBlockEntity> = BlockEntityType.Builder.create({ DrillBlockEntity() }, DRILL_BOTTOM).build(null)
     
     val STONE_DRILL_HEAD = Item(itemSettings().maxDamage(256))
     val IRON_DRILL_HEAD = Item(itemSettings().maxDamage(1024))
@@ -488,10 +490,10 @@ object IRRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val MODULAR_ARMOR_HELMET = IRModularArmor(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_CHEST = IRModularArmor(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmor(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_BOOTS = IRModularArmor(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))

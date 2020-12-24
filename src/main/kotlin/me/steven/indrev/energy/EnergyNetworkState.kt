@@ -34,6 +34,6 @@ class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indr
 
     companion object {
         val NETWORK_STATES = WeakHashMap<ServerWorld, EnergyNetworkState>()
-        fun getNetworkState(world: ServerWorld) = world.persistentStateManager.getOrCreate({ EnergyNetworkState(world) }, "indrev_networks")
+        fun getNetworkState(world: ServerWorld): EnergyNetworkState = world.persistentStateManager.getOrCreate({ EnergyNetworkState(world) }, "indrev_networks")
     }
 }

@@ -1,11 +1,10 @@
 package me.steven.indrev.items.energy
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
+import me.steven.indrev.utils.energyOf
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.Entity
 import net.minecraft.item.Item
@@ -32,7 +31,7 @@ class IRBatteryItem(settings: Settings, maxStored: Double) :
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val energyIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
+        val energyIo = energyOf(stack) ?: return
         if (energyIo.energy > 0) {
             stack.damage = (stack.maxDamage - energyIo.energy.toInt()).coerceAtLeast(1)
         } else stack.damage = 0

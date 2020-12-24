@@ -3,12 +3,12 @@ package me.steven.indrev.compat.rei
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.identifier
 import net.minecraft.util.Identifier
 

@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
@@ -15,7 +16,7 @@ import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
@@ -46,7 +47,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
     private var finished = false
-    var lastMinedItem = ItemStack.EMPTY
+    var lastMinedItem: ItemStack = ItemStack.EMPTY
     var requiredPower = 0.0
 
     override fun machineTick() {
@@ -123,7 +124,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeBlockPos(pos)
                     buf.writeInt(Registry.BLOCK.getRawId(block))
-                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
+                    ServerPlayNetworking.send(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
                 }
             }
         }

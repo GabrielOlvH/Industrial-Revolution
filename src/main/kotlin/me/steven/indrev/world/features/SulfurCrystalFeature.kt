@@ -1,7 +1,7 @@
 package me.steven.indrev.world.features
 
 import com.mojang.serialization.Codec
-import me.steven.indrev.blocks.SulfurCrystalBlock
+import me.steven.indrev.blocks.misc.SulfurCrystalBlock
 import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.utils.any
 import me.steven.indrev.utils.forEach

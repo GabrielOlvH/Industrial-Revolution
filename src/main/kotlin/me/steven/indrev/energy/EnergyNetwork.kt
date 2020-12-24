@@ -4,9 +4,9 @@ import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.energyOf
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag

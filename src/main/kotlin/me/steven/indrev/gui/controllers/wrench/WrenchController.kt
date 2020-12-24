@@ -14,7 +14,7 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
@@ -75,7 +75,7 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
         if (player is ServerPlayerEntity) {
             val buf = PacketByteBuf(Unpooled.buffer())
             ctx.run { _, pos -> buf.writeBlockPos(pos) }
-            ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerInventory.player, IndustrialRevolution.RERENDER_CHUNK_PACKET, buf)
+            ServerPlayNetworking.send(player, IndustrialRevolution.RERENDER_CHUNK_PACKET, buf)
         }
     }
 

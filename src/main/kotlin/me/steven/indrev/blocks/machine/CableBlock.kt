@@ -2,9 +2,9 @@ package me.steven.indrev.blocks.machine
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.energy.EnergyNetwork
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
@@ -104,7 +104,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
     }
 
     override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
-        if (player?.isSneaking == true) return super.onUse(state, world, pos, player, hand, hit)!!
+        if (player?.isSneaking == true) return ActionResult.PASS
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
         if (state?.get(COVERED) == false && !handStack.isEmpty) {
             val blockEntity = world.getBlockEntity(pos)
@@ -177,7 +177,7 @@ class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), 
         return state.with(getProperty(facing), isConnectable(neighborBlockEntity, Direction.fromVector(x, y, z)!!))
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = CableBlockEntity(tier)
+    override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 
     fun getConfig() = when(tier) {
         Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1

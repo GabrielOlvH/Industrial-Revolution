@@ -1,8 +1,11 @@
 package me.steven.indrev.registry
 
-import me.steven.indrev.blocks.PumpPipeBakedModel
-import me.steven.indrev.blocks.containers.LazuliFluxContainerBakedModel
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.DrillHeadModel
+import me.steven.indrev.blocks.models.CableModel
+import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
+import me.steven.indrev.blocks.models.PumpPipeBakedModel
+import me.steven.indrev.items.models.TankItemBakedModel
 import me.steven.indrev.utils.SimpleBlockModel
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.model.ModelAppender
@@ -16,15 +19,21 @@ import java.util.function.Consumer
 object IRModelManagers : ModelVariantProvider, ModelAppender {
 
     private val LFC_OVERLAY_REGEX = Regex("lazuli_flux_container_(input|output|item_lf_level|mk[1-4]_overlay)")
+    private val CABLE_MODELS = arrayOf(
+        CableModel(Tier.MK1), CableModel(Tier.MK2), CableModel(Tier.MK3), CableModel(Tier.MK4)
+    )
 
     override fun loadModelVariant(resourceId: ModelIdentifier, ctx: ModelProviderContext?): UnbakedModel? {
         if (resourceId.namespace != "indrev") return null
         val path = resourceId.path
+        val variant = resourceId.variant
         return when {
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
             path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
+            path == "tank" && variant == "inventory" -> TankItemBakedModel
+            path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt()]
             else -> return null
         }
     }

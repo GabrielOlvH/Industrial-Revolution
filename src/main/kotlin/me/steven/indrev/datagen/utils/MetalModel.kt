@@ -1,9 +1,6 @@
 package me.steven.indrev.datagen.utils
 
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.model.json.ModelTransformation
-import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.util.Identifier
 
 class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val type: TransformationType) {
@@ -236,28 +233,10 @@ class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val 
         fun build() = MetalModel(holders.toTypedArray(), transformationType)
     }
 
-    enum class TransformationType(val transformation: () -> ModelTransformation) {
-        AUTO(
-            {
-                MinecraftClient.getInstance().bakedModelManager.getModel(
-                    ModelIdentifier(Identifier("iron_ingot"), "inventory")
-                ).transformation
-            }
-        ),
-        HANDHELD(
-            {
-                MinecraftClient.getInstance().bakedModelManager.getModel(
-                    ModelIdentifier(identifier("tool_stick"), "inventory")
-                ).transformation
-            }
-        ),
-        BLOCK(
-            {
-                MinecraftClient.getInstance().bakedModelManager.getModel(
-                    ModelIdentifier(Identifier("stone"), "")
-                ).transformation
-            }
-        );
+    enum class TransformationType {
+        AUTO,
+        HANDHELD,
+        BLOCK;
 
         val variant = if (this.toString() == "BLOCK") "" else "inventory"
     }

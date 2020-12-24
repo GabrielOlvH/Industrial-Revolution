@@ -7,4 +7,4 @@ val INGOT_AMOUNT: FluidAmount = NUGGET_AMOUNT.mul(9)
 val BLOCK_AMOUNT: FluidAmount = INGOT_AMOUNT.mul(9)
 val SCRAP_AMOUNT: FluidAmount = INGOT_AMOUNT.div(4)
 
-val MB = FluidAmount.BUCKET.div(1000)
+val MB: FluidAmount = FluidAmount.BUCKET.div(1000)

@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.cables
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity

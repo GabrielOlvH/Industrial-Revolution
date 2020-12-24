@@ -54,7 +54,7 @@ object WorldGeneration {
         }
     }
 
-    val copperFeature =
+    private val copperFeature =
         IRConfiguredFeature(
             identifier("copper_ore"), GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(
             OreFeatureConfig(
@@ -67,7 +67,7 @@ object WorldGeneration {
             .spreadHorizontally()
             .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
-    val tinFeature =
+    private val tinFeature =
       IRConfiguredFeature(
           identifier("tin_ore"),
           GenerationStep.Feature.UNDERGROUND_ORES,
@@ -80,7 +80,7 @@ object WorldGeneration {
           IRConfiguredFeature.IS_OVERWORLD
       )
 
-    val nikoliteFeature =
+    private val nikoliteFeature =
         IRConfiguredFeature(
             identifier("nikolite_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
@@ -97,13 +97,13 @@ object WorldGeneration {
             IRConfiguredFeature.IS_OVERWORLD
         )
 
-    val sulfurCrystalFeature = Registry.register(
+    private val sulfurCrystalFeature: SulfurCrystalFeature = Registry.register(
         Registry.FEATURE,
         identifier("sulfur_crystal"),
         SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
     )
 
-    val sulfurFeatureOverworld =
+    private val sulfurFeatureOverworld =
         IRConfiguredFeature(
             identifier("sulfur_crystal_overworld"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
@@ -111,7 +111,7 @@ object WorldGeneration {
             IRConfiguredFeature.IS_OVERWORLD
         )
 
-    val sulfurFeatureNether =
+    private val sulfurFeatureNether =
         IRConfiguredFeature(
             identifier("sulfur_crystal_nether"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
@@ -119,7 +119,7 @@ object WorldGeneration {
             IRConfiguredFeature.IS_NETHER
         )
 
-    val acidLakesFeature = IRConfiguredFeature(
+    private val acidLakesFeature = IRConfiguredFeature(
         identifier("sulfuric_acid_lake"),
         GenerationStep.Feature.LAKES,
         Feature.LAKE.configure(

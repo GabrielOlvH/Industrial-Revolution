@@ -9,7 +9,7 @@ import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
@@ -80,7 +80,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
 
         val shield = WText({
             val (stack, item) = blockInventory.getStack(2)
-            if (!stack.isEmpty && item is IRModularArmor) {
+            if (!stack.isEmpty && item is IRModularArmorItem) {
                 val shield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(stack)).toString()
                 SHIELD_TEXT().append(LiteralText(shield).formatted(Formatting.WHITE))
             } else LiteralText.EMPTY

@@ -9,12 +9,13 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.CustomEnchantmentProvider
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.tools.modular.GamerAxeModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.buildEnergyTooltip
+import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.use
 import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
@@ -45,8 +46,8 @@ import java.util.*
 
 class IRGamerAxeItem(
     material: ToolMaterial,
-    private val maxStored: Double,
-    private val tier: Tier,
+    maxStored: Double,
+    tier: Tier,
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
@@ -75,7 +76,7 @@ class IRGamerAxeItem(
                 tag.putFloat("Progress", 0f)
             } else if (tag?.contains("Active") == true) {
                 val active = !tag.getBoolean("Active")
-                if (active && EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]?.use(5.0) == false)
+                if (active && energyOf(stack)?.use(5.0) == false)
                     return TypedActionResult.pass(stack)
                 tag.putBoolean("Active", active)
             }
@@ -90,7 +91,7 @@ class IRGamerAxeItem(
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val speedMultiplier = MiningToolModule.EFFICIENCY.getLevel(stack) + 1
-        return if (!isActive(stack) || (EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]?.energy ?: 0.0) <= 0) 0f
+        return if (!isActive(stack) || (energyOf(stack)?.energy ?: 0.0) <= 0) 0f
         else 8f * speedMultiplier
     }
 
@@ -106,7 +107,7 @@ class IRGamerAxeItem(
         miner: LivingEntity
     ): Boolean {
         if (!isActive(stack)) return false
-        val energyHandler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return false
+        val energyHandler = energyOf(stack) ?: return false
         val canStart = energyHandler.use(1.0)
         if (canStart && !miner.isSneaking && state.block.isIn(BlockTags.LOGS)) {
             val scanned = mutableSetOf<BlockPos>()
@@ -133,7 +134,7 @@ class IRGamerAxeItem(
 
     override fun postHit(stack: ItemStack, target: LivingEntity?, attacker: LivingEntity?): Boolean {
         val level = GamerAxeModule.REACH.getLevel(stack)
-        val handler =EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return false
+        val handler =energyOf(stack) ?: return false
         if (attacker is PlayerEntity && isActive(stack) && level > 0) {
             target?.world?.getEntitiesByClass(LivingEntity::class.java, Box(target.blockPos).expand(level.toDouble())) { true }?.forEach { entity ->
                 if (handler.use(1.0)) {
@@ -173,7 +174,7 @@ class IRGamerAxeItem(
         }
         tag.putFloat("Progress", progress.coerceIn(0f, 1f))
 
-        val handler = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)] ?: return
+        val handler = energyOf(stack) ?: return
         stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
 

@@ -2,13 +2,13 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.MB
-import me.steven.indrev.utils.Property
-import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag

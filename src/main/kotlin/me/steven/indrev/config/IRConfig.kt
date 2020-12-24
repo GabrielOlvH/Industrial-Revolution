@@ -4,7 +4,7 @@ import me.sargunvohra.mcmods.autoconfig1u.ConfigData
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config
 import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry
 import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.machines.Tier
 
 @Config(name = "indrev")
 class IRConfig : PartitioningSerializer.GlobalData() {

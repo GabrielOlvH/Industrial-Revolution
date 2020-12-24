@@ -22,7 +22,7 @@ class BlockModelGenerator(val root: File, namespace: String, fallback: (Block) -
     companion object {
         val CUBE_ALL: (Block) -> JsonFactory<Block> = { item ->
             object : JsonFactory<Block> {
-                override fun generate(): JsonObject? {
+                override fun generate(): JsonObject {
                     val id = Registry.BLOCK.getId(item)
                     val obj = JsonObject()
                     obj.addProperty("parent", "block/cube_all")

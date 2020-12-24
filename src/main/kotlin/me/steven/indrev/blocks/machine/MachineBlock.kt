@@ -7,13 +7,15 @@ import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.item.ItemKey
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -49,11 +51,11 @@ import net.minecraft.world.WorldAccess
 import java.util.*
 
 open class MachineBlock(
+    private val registry: MachineRegistry,
     settings: Settings,
     val tier: Tier,
     val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    private val blockEntityProvider: () -> MachineBlockEntity<*>
 ) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
 
     init {
@@ -70,7 +72,7 @@ open class MachineBlock(
         return defaultState.with(WORKING_PROPERTY, false)
     }
 
-    override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
+    override fun createBlockEntity(view: BlockView?): BlockEntity? = registry.blockEntityType(tier).instantiate()
 
     override fun onUse(
         state: BlockState?,
@@ -123,9 +125,9 @@ open class MachineBlock(
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item
                 if (blockEntity is MachineBlockEntity<*> && item is BlockItem && item.block is MachineBlock) {
-                    val itemIo = EnergyApi.ITEM[ItemKey.of(stack), ContainerItemContext.ofStack(stack)]
+                    val itemIo = energyOf(stack)
                     if (itemIo != null) {
-                        //TODO no way to set energy
+                        stack.orCreateTag.putDouble("energy", blockEntity.energy)
                     }
                     val tag = stack.getOrCreateSubTag("MachineInfo")
                     val temperatureController = blockEntity.temperatureComponent
@@ -147,7 +149,7 @@ open class MachineBlock(
             val temperatureController = blockEntity.temperatureComponent
             val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
             if (itemIo != null) {
-                //TODO no way to set energy
+                blockEntity.energy = itemIo.energy
             }
             if (temperatureController != null) {
                 val temperature = tag?.getDouble("Temperature")

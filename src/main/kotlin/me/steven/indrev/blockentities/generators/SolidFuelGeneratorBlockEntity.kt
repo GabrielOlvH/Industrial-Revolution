@@ -1,8 +1,8 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Property
-import me.steven.indrev.utils.Tier
 import net.minecraft.block.BlockState
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack

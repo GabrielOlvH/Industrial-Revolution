@@ -3,7 +3,7 @@ package me.steven.indrev.registry
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.IRPlayerEntityExtension
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
@@ -23,9 +23,9 @@ object IRHudRender : HudRenderCallback {
         val x = IndustrialRevolution.CONFIG.hud.renderPosX
         val y = IndustrialRevolution.CONFIG.hud.renderPosY
         val player = MinecraftClient.getInstance().player
-        val armor = player?.inventory?.armor?.filter { it.item is IRModularArmor }
+        val armor = player?.inventory?.armor?.filter { it.item is IRModularArmorItem }
         armor?.forEach { itemStack ->
-            val item = itemStack.item as IRModularArmor
+            val item = itemStack.item as IRModularArmorItem
             val yOffset = when (item.slotType) {
                 EquipmentSlot.HEAD -> 0
                 EquipmentSlot.CHEST -> 20

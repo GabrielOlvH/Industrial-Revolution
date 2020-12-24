@@ -13,10 +13,9 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
-import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.energy.IRGamerAxeItem
 import me.steven.indrev.tools.modular.IRModularItem
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Item
@@ -51,7 +50,7 @@ class ModularController(playerInventory: PlayerInventory) : LightweightGuiDescri
                 tabPanel.spacing = 10
                 val item = stack.item as IRModularItem<*>
                 item.getInstalled(stack).forEach { module ->
-                    val moduleItem = IRModuleItem.MODULE_ITEM_MAP[module]
+                    val moduleItem = module.item.asItem()
                     val icon = iconProvider(moduleItem!!)
                     val moduleBox = WBox(Axis.VERTICAL)
                     moduleBox.add(object : WWidget() {
@@ -75,7 +74,7 @@ class ModularController(playerInventory: PlayerInventory) : LightweightGuiDescri
                         buf.writeString(module.key)
                         buf.writeInt(value)
                         buf.writeInt(slot)
-                        ClientSidePacketRegistry.INSTANCE.sendToServer(IndustrialRevolution.UPDATE_MODULAR_TOOL_LEVEL, buf)
+                        ClientPlayNetworking.send(IndustrialRevolution.UPDATE_MODULAR_TOOL_LEVEL, buf)
                     }
                     moduleBox.add(slider)
                     tabPanel.add(moduleBox)

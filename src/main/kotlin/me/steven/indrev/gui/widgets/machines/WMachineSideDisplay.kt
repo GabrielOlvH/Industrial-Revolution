@@ -3,8 +3,8 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
+import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.Configurable
-import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.draw2Colors
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawableHelper

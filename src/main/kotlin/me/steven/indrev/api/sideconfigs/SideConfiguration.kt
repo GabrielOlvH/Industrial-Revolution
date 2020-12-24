@@ -1,6 +1,6 @@
 package me.steven.indrev.api.sideconfigs
 
-import me.steven.indrev.utils.TransferMode
+import me.steven.indrev.api.machines.TransferMode
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.Direction
 import java.util.*

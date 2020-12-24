@@ -4,13 +4,13 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WToggleButton
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.netty.buffer.Unpooled
+import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
-import me.steven.indrev.utils.TransferMode
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
@@ -43,7 +43,7 @@ interface Configurable {
                 buf.writeByte(0)
                 buf.writeBlockPos(pos)
                 buf.writeBoolean(v)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
+                ClientPlayNetworking.send(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
             root.add(autoPushBtn, 0, 4)
             val autoPullBtn = WToggleButton(TranslatableText("item.indrev.wrench.autopull"))
@@ -55,7 +55,7 @@ interface Configurable {
                 buf.writeByte(1)
                 buf.writeBlockPos(pos)
                 buf.writeBoolean(v)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
+                ClientPlayNetworking.send(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
             root.add(autoPullBtn, 0, 5)
         }
@@ -87,7 +87,7 @@ interface Configurable {
                 buf.writeBlockPos(pos)
                 buf.writeInt(direction.id)
                 buf.writeInt(widget.mode.ordinal)
-                ClientSidePacketRegistry.INSTANCE.sendToServer(UPDATE_MACHINE_SIDE_PACKET_ID, buf)
+                ClientPlayNetworking.send(UPDATE_MACHINE_SIDE_PACKET_ID, buf)
             }
             machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
         }

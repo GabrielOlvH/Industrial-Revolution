@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.generators
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity
 import net.minecraft.item.Item
 import net.minecraft.screen.ArrayPropertyDelegate

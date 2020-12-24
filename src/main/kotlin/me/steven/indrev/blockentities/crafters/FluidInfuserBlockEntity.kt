@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidInfuserFluidComponent
 import me.steven.indrev.inventories.inventory
@@ -7,7 +8,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 
 class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
 
@@ -17,7 +17,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             input { slot = 2 }
             output { slot = 3 }
         }
-        this.fluidComponent = FluidInfuserFluidComponent({ this })
+        this.fluidComponent = FluidInfuserFluidComponent { this }
     }
 
     override val type: IRRecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE

@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.crafters
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.inventory.Inventory

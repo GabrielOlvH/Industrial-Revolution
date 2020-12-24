@@ -1,8 +1,8 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.farms.PumpBlockEntity
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.item.ItemPlacementContext
@@ -12,12 +12,12 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 
-class PumpBlock(settings: Settings) : HorizontalFacingMachineBlock(
+class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacingMachineBlock(
+    registry,
     settings,
     Tier.MK1,
     IndustrialRevolution.CONFIG.machines.pump,
-    null,
-    { PumpBlockEntity(Tier.MK1) }) {
+    null) {
 
     override fun getOutlineShape(
         state: BlockState?,
