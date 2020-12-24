@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier
 import java.io.File
 
 class MaterialTagGenerator(val root: File, namespace: String, fallback: (String) -> JsonFactory<String>)
-    : DataGenerator<String>(File(root, "tags/items"), namespace, fallback) {
+    : DataGenerator<String, JsonObject?>(File(root, "tags/items"), namespace, fallback) {
 
     override fun generate(): Int {
         var count = 0

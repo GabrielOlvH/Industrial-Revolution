@@ -16,7 +16,7 @@ import net.minecraft.util.registry.Registry
 import java.io.File
 
 class LootTableGenerator(val root: File, namespace: String, fallback: (Block) -> JsonFactory<Block>)
-    : DataGenerator<Block>(File(root, "loot_tables/blocks"), namespace, fallback) {
+    : DataGenerator<Block, JsonObject?>(File(root, "loot_tables/blocks"), namespace, fallback) {
 
     override fun generate(): Int {
         var count = 0

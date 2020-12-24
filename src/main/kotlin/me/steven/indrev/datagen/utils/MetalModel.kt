@@ -1,110 +1,20 @@
-package me.steven.indrev.items
+package me.steven.indrev.datagen.utils
 
-import com.mojang.datafixers.util.Pair
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
-import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.model.*
-import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
-import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.client.util.SpriteIdentifier
-import net.minecraft.item.ItemStack
-import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
-import net.minecraft.world.BlockRenderView
-import java.util.*
-import java.util.function.Function
-import java.util.function.Supplier
 
-class MaterialBakedModel private constructor(private val bakedModels: Array<ModelWithColor>, private val type: TransformationType) : UnbakedModel, BakedModel, FabricBakedModel {
-
-    private var sprite: Sprite? = null
-
-    override fun bake(
-        loader: ModelLoader,
-        textureGetter: Function<SpriteIdentifier, Sprite>,
-        rotationContainer: ModelBakeSettings?,
-        modelId: Identifier
-    ): BakedModel {
-        sprite = textureGetter.apply(SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, modelId))
-        return this
-    }
-
-    override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-
-    override fun getTextureDependencies(
-        unbakedModelGetter: Function<Identifier, UnbakedModel>?,
-        unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> {
-        return mutableListOf()
-    }
-
-    override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> =
-        mutableListOf()
-
-    override fun useAmbientOcclusion(): Boolean = true
-
-    override fun hasDepth(): Boolean = false
-
-    override fun isSideLit(): Boolean = type == TransformationType.BLOCK
-
-    override fun isBuiltin(): Boolean = false
-
-    override fun getSprite(): Sprite? = sprite
-
-    override fun getTransformation(): ModelTransformation = type.transformation()
-
-    override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
-
-    override fun isVanillaAdapter(): Boolean = false
-
-    override fun emitBlockQuads(
-        blockView: BlockRenderView?,
-        state: BlockState,
-        pos: BlockPos,
-        randomSupplier: Supplier<Random>,
-        ctx: RenderContext
-    ) {
-        if (type == TransformationType.BLOCK) {
-            bakedModels.forEach { holder ->
-                val color = holder.color
-                ctx.pushTransform { quad ->
-                    quad.spriteColor(0, color, color, color, color)
-                    true
-                }
-                ctx.fallbackConsumer().accept(holder.bakedModel)
-                ctx.popTransform()
-            }
-        }
-    }
-
-    override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
-        bakedModels.forEach { holder ->
-            val color = holder.color
-            ctx.pushTransform { quad ->
-                quad.spriteColor(0, color, color, color, color)
-                true
-            }
-            ctx.fallbackConsumer().accept(holder.bakedModel)
-            ctx.popTransform()
-        }
-
-    }
-
+class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val type: TransformationType) {
 
     class Builder {
 
-        private val bakedModels: MutableList<ModelWithColor> = mutableListOf()
+        private val holders: MutableList<SpriteColorHolder> = mutableListOf()
         private var transformationType: TransformationType = TransformationType.AUTO
 
         fun with(id: Identifier, color: Long): Builder {
-            bakedModels.add(ModelWithColor(id, color.toInt(), transformationType))
+            holders.add(SpriteColorHolder(id, color.toInt()))
             return this
         }
 
@@ -323,7 +233,7 @@ class MaterialBakedModel private constructor(private val bakedModels: Array<Mode
             return this
         }
 
-        fun build() = MaterialBakedModel(bakedModels.toTypedArray(), transformationType)
+        fun build() = MetalModel(holders.toTypedArray(), transformationType)
     }
 
     enum class TransformationType(val transformation: () -> ModelTransformation) {

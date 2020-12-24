@@ -1,5 +1,6 @@
 package me.steven.indrev.datagen.generators
 
+import com.google.gson.JsonObject
 import me.steven.indrev.datagen.DataGenerator
 import me.steven.indrev.datagen.JsonFactory
 import net.minecraft.util.Identifier
@@ -9,7 +10,7 @@ class MaterialRecipeGenerator(
     val root: File,
     namespace: String,
     fallback: (String) -> JsonFactory<String>
-) : DataGenerator<String>(File(root, "recipes"), namespace, fallback) {
+) : DataGenerator<String, JsonObject?>(File(root, "recipes"), namespace, fallback) {
 
     fun register(id: Identifier, factory: JsonFactory<String>) {
         generators[id.toString()] = factory
