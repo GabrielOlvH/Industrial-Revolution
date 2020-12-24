@@ -34,6 +34,7 @@ import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinType
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
@@ -72,7 +73,9 @@ object IndustrialRevolution : ModInitializer {
         IRLootTables.register()
         MachineRegistry
         if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
-             DataGeneratorManager("indrev").generate()
+             ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted { client ->
+                 DataGeneratorManager("indrev").generate()
+             })
         }
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)

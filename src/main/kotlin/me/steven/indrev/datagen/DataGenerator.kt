@@ -1,31 +1,21 @@
 package me.steven.indrev.datagen
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
 import net.minecraft.util.Identifier
 import java.io.File
 import java.util.*
 
-abstract class DataGenerator<T>(val dir: File, val namespace: String, val fallback: (T) -> JsonFactory<T>) {
+abstract class DataGenerator<T, P>(val dir: File, val namespace: String, val fallback: (T) -> DataFactory<T, P>) {
 
-    protected val generators = HashMap<T, JsonFactory<T>>()
+    protected val generators = HashMap<T, DataFactory<T, P>>()
 
     init {
         dir.mkdirs()
     }
 
-    operator fun get(obj: T): JsonFactory<T> = generators.getOrDefault(obj, fallback(obj))
+    operator fun get(obj: T): DataFactory<T, P> = generators.getOrDefault(obj, fallback(obj))
 
-    fun register(obj: T, factory: JsonFactory<T>) {
+    fun register(obj: T, factory: DataFactory<T, P>) {
         generators[obj] = factory
-    }
-
-    fun register(obj: T, factory: (T) -> JsonObject?) {
-        generators[obj] = object : JsonFactory<T> {
-            override fun generate(): JsonObject? {
-                return factory(obj)
-            }
-        }
     }
 
     fun generate(identifier: Identifier, obj: T): Boolean {
@@ -33,13 +23,13 @@ abstract class DataGenerator<T>(val dir: File, val namespace: String, val fallba
         return generate(identifier, obj, jsonFactory)
     }
 
-    fun generate(identifier: Identifier, obj: T, jsonFactory: JsonFactory<T>): Boolean {
-        val file = File(dir, "${jsonFactory.getFileName(obj, identifier)}.json")
+    fun generate(identifier: Identifier, obj: T, factory: DataFactory<T, P>): Boolean {
+        val file = File(dir, "${factory.getFileName(obj, identifier)}.${factory.extension}")
         file.parentFile.mkdirs()
-        val output = jsonFactory.generate()
+        val output = factory.generate()
         if (output != null) {
             file.createNewFile()
-            file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(output))
+            factory.write(file, output)
             return true
         }
         return false

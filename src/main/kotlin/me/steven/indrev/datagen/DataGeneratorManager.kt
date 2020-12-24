@@ -3,12 +3,14 @@ package me.steven.indrev.datagen
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.datagen.generators.ItemModelGenerator
-import me.steven.indrev.datagen.generators.LootTableGenerator
-import me.steven.indrev.datagen.generators.MaterialRecipeGenerator
-import me.steven.indrev.datagen.generators.MaterialTagGenerator
+import me.steven.indrev.datagen.generators.*
+import me.steven.indrev.datagen.utils.MetalModel
+import me.steven.indrev.datagen.utils.MetalSpriteRegistry
 import me.steven.indrev.registry.IRRegistry
+import net.minecraft.item.BlockItem
+import net.minecraft.item.Items
 import net.minecraft.util.Identifier
+import net.minecraft.util.registry.Registry
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -18,34 +20,69 @@ class DataGeneratorManager(namespace: String) {
 
     val lootTableGenerator = LootTableGenerator(root, namespace, LootTableGenerator.SELF_DROP)
     val itemModelGenerator = ItemModelGenerator(root, namespace, ItemModelGenerator.DEFAULT_ITEM)
+    val blockModelGenerator = BlockModelGenerator(root, namespace) { JsonFactory.nullFactory() }
     val materialRecipeGenerator = MaterialRecipeGenerator(root, namespace) { JsonFactory.nullFactory() }
     val materialTagGenerator = MaterialTagGenerator(root, namespace) { JsonFactory.nullFactory() }
+    val metalSpriteGenerator = MetalSpriteGenerator(root, namespace) { ImageFactory.nullFactory() }
 
     init {
         root.mkdir()
 
         arrayOf("copper", "tin").forEach { material ->
-            materialRecipeGenerator.register("${material}_ore", pulverizeOre("c:${material}_ores", "indrev:${material}_dust"))
-            materialRecipeGenerator.register("${material}_ingot", pulverizeIngot("c:${material}_ingots", "indrev:${material}_dust"))
+            materialRecipeGenerator.register(
+                "${material}_ore",
+                pulverizeOre("c:${material}_ores", "indrev:${material}_dust")
+            )
+            materialRecipeGenerator.register(
+                "${material}_ingot",
+                pulverizeIngot("c:${material}_ingots", "indrev:${material}_dust")
+            )
             arrayOf("ore", "plate", "dust", "ingot").forEach { suffix ->
                 materialTagGenerator.register("${material}_$suffix", createTag("indrev:${material}_$suffix"))
             }
         }
 
         arrayOf("iron", "gold").forEach { material ->
-            materialRecipeGenerator.register("${material}_ore", pulverizeOre("c:${material}_ores", "indrev:${material}_dust"))
-            materialRecipeGenerator.register("${material}_ingot", pulverizeIngot("c:${material}_ingots", "indrev:${material}_dust"))
+            materialRecipeGenerator.register(
+                "${material}_ore",
+                pulverizeOre("c:${material}_ores", "indrev:${material}_dust")
+            )
+            materialRecipeGenerator.register(
+                "${material}_ingot",
+                pulverizeIngot("c:${material}_ingots", "indrev:${material}_dust")
+            )
             materialTagGenerator.register("${material}_ore", createTag("minecraft:${material}_ore"))
         }
         arrayOf("diamond", "coal").forEach { material ->
-            materialRecipeGenerator.register("${material}_ore", pulverizeOre("c:${material}_ores", "minecraft:${material}"))
-            materialRecipeGenerator.register(material, pulverizeIngot("minecraft:$material", "indrev:${material}_dust", fileSuffix = "dust"))
+            materialRecipeGenerator.register(
+                "${material}_ore",
+                pulverizeOre("c:${material}_ores", "minecraft:${material}")
+            )
+            materialRecipeGenerator.register(
+                material,
+                pulverizeIngot("minecraft:$material", "indrev:${material}_dust", fileSuffix = "dust")
+            )
             materialTagGenerator.register("${material}_dust", createTag("indrev:${material}_dust"))
             materialTagGenerator.register("${material}_ore", createTag("minecraft:${material}_ore"))
         }
 
         itemModelGenerator.register(IRRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
         itemModelGenerator.register(IRRegistry.DRILL_BOTTOM.asItem(), JsonFactory.nullFactory())
+
+        MetalSpriteRegistry.MATERIAL_PROVIDERS.forEach { (id, model) ->
+            val itemId = Identifier(id.namespace, id.path)
+            val item = Registry.ITEM.get(itemId)
+            if (item != Items.AIR) {
+                if (item is BlockItem) {
+                    blockModelGenerator.register(item.block, BlockModelGenerator.CUBE_ALL(item.block))
+                }
+                metalSpriteGenerator.register(id, ImageFactory.simpleFactory<Identifier>()(id))
+                val factory =
+                    if (model.type == MetalModel.TransformationType.HANDHELD) ItemModelGenerator.HANDHELD
+                    else ItemModelGenerator.DEFAULT_ITEM
+                itemModelGenerator.register(item, factory(item))
+            }
+        }
     }
     
     fun generate() {
@@ -53,12 +90,16 @@ class DataGeneratorManager(namespace: String) {
         IndustrialRevolution.LOGGER.info("Generated $lootTablesGenerated loot tables.")
         val itemModelsGenerated = itemModelGenerator.generate()
         IndustrialRevolution.LOGGER.info("Generated $itemModelsGenerated item models.")
+        val blockModelsGenerated = blockModelGenerator.generate()
+        IndustrialRevolution.LOGGER.info("Generated $blockModelsGenerated block models.")
         val recipesGenerated = materialRecipeGenerator.generate()
-        IndustrialRevolution.LOGGER.info("Generated $recipesGenerated recipes")
+        IndustrialRevolution.LOGGER.info("Generated $recipesGenerated recipes.")
         val tagsGenerated = materialTagGenerator.generate()
-        IndustrialRevolution.LOGGER.info("Generated $tagsGenerated recipes")
+        IndustrialRevolution.LOGGER.info("Generated $tagsGenerated tags.")
+        val spritesGenerated = metalSpriteGenerator.generate()
+        IndustrialRevolution.LOGGER.info("Generated $spritesGenerated sprites.")
 
-        IndustrialRevolution.LOGGER.info("Generated ${lootTablesGenerated + itemModelsGenerated + recipesGenerated + tagsGenerated } jsons in total.")
+        IndustrialRevolution.LOGGER.info("Generated ${lootTablesGenerated + itemModelsGenerated + blockModelsGenerated + recipesGenerated + tagsGenerated + spritesGenerated } files in total.")
         exitProcess(0)
     }
 

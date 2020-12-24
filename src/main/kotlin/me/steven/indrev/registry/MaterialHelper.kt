@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import me.steven.indrev.items.MaterialBakedModel
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.itemSettings
 import net.fabricmc.api.EnvType
@@ -11,13 +10,9 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.Material
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.model.UnbakedModel
-import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
-import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import java.util.*
 
 class MaterialHelper(private val id: String, private val block: MaterialHelper.() -> Unit) {
 
@@ -72,23 +67,4 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
     }
 
     fun register() = block()
-
-    companion object {
-        val MATERIAL_PROVIDERS: HashMap<ModelIdentifier, UnbakedModel> = hashMapOf()
-
-        init {
-            put("lead_ingot", MaterialBakedModel.Builder().ingotBase(0xFFFF0000).ingotHighlight(0xFF00FF00).ingotShadow(0xFF0000FF).build())
-            put("silver_ingot", MaterialBakedModel.Builder().ingotBase(0xFFFFFF00).ingotHighlight(0xFF000000).ingotShadow(0xFF00FFFF).build())
-            putBlock("silver_block", MaterialBakedModel.Builder().block().with(Identifier("white_wool"), 0xFFFFFF00).build())
-        }
-
-        private fun put(id: String, model: UnbakedModel) {
-            MATERIAL_PROVIDERS[ModelIdentifier(identifier(id), "inventory")] = model
-        }
-
-        private fun putBlock(id: String, model: UnbakedModel) {
-            MATERIAL_PROVIDERS[ModelIdentifier(identifier(id), "inventory")] = model
-            MATERIAL_PROVIDERS[ModelIdentifier(identifier(id), "")] = model
-        }
-    }
 }

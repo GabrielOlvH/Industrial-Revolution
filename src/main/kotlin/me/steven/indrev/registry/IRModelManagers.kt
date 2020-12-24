@@ -25,7 +25,6 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
             path == "pump_pipe" -> PumpPipeBakedModel()
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
             path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
-            MaterialHelper.MATERIAL_PROVIDERS.containsKey(resourceId) -> MaterialHelper.MATERIAL_PROVIDERS[resourceId]
             else -> return null
         }
     }
@@ -43,8 +42,5 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk2_overlay"), ""))
         out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk3_overlay"), ""))
         out.accept(ModelIdentifier(identifier("lazuli_flux_container_mk4_overlay"), ""))
-        out.accept(ModelIdentifier(identifier("ingot_base"), "inventory"))
-        out.accept(ModelIdentifier(identifier("ingot_shadow"), "inventory"))
-        out.accept(ModelIdentifier(identifier("ingot_highlight"), "inventory"))
     }
 }

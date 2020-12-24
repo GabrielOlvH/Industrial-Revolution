@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "indrev:block/block_base"
+    }
+  }
+}

@@ -1,12 +1,16 @@
 package me.steven.indrev.datagen
 
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
-import net.minecraft.util.Identifier
+import java.io.File
 
-interface JsonFactory<T> {
-    fun generate(): JsonObject?
+interface JsonFactory<T> : DataFactory<T, JsonObject?> {
 
-    fun getFileName(t: T, id: Identifier): String = id.path
+    override val extension: String get() = "json"
+
+    override fun write(file: File, t: JsonObject?) {
+        file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(t))
+    }
 
     companion object {
         fun <T> nullFactory(): JsonFactory<T> = object : JsonFactory<T> {

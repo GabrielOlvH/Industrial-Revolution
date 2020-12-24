@@ -9,7 +9,7 @@ import net.minecraft.util.registry.Registry
 import java.io.File
 
 class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> JsonFactory<Item>)
-    : DataGenerator<Item>(File(root, "models/item"), namespace, fallback) {
+    : DataGenerator<Item, JsonObject?>(File(root, "models/item"), namespace, fallback) {
 
     override fun generate(): Int {
         var count = 0
@@ -39,6 +39,19 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
                     return obj
                 }
 
+            }
+        }
+        val HANDHELD: (Item) -> JsonFactory<Item> = { item ->
+            object : JsonFactory<Item> {
+                override fun generate(): JsonObject? {
+                    val id = Registry.ITEM.getId(item)
+                    val obj = JsonObject()
+                    obj.addProperty("parent", "item/handheld")
+                    val texturesObj = JsonObject()
+                    texturesObj.addProperty("layer0", "${id.namespace}:item/${id.path}")
+                    obj.add("textures", texturesObj)
+                    return obj
+                }
             }
         }
     }
