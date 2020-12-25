@@ -37,7 +37,6 @@ class IRPortableChargerItem(
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
         val handler = energyOf(stack) ?: return
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
 
         val player = entity as? PlayerEntity ?: return
         if (player.offHandStack != stack && player.mainHandStack != stack) return

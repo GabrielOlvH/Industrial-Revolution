@@ -154,6 +154,9 @@ dependencies {
         transitive = false
     }
 
+    modApi "me.shedaniel.cloth.api:cloth-api:${project.cloth_api_version}"
+    include "me.shedaniel.cloth.api:cloth-api:${project.cloth_api_version}"
+
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
     include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
     modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {

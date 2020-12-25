@@ -9,6 +9,7 @@ import java.util.function.Consumer
 object EnergyDamageHandler : CustomDamageHandler {
     override fun damage(stack: ItemStack, amount: Int, entity: LivingEntity?, breakCallback: Consumer<LivingEntity>?): Int {
         val itemIo = energyOf(stack)
-        return amount - (itemIo?.extract(amount.toDouble(), Simulation.ACT)?.toInt() ?: 0)
+        itemIo?.extract(amount.toDouble(), Simulation.ACT)
+        return 0
     }
 }

@@ -353,13 +353,13 @@ object IRRegistry {
     }
 
     val MINING_DRILL_MK1 =
-        IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().maxDamage(4000).customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK2 =
-        IRMiningDrillItem(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().maxDamage(8000).customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK3 =
-        IRMiningDrillItem(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().maxDamage(16000).customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK4 = IRModularDrillItem(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().maxDamage(32000).customDamage(EnergyDamageHandler)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().customDamage(EnergyDamageHandler)
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
@@ -490,10 +490,10 @@ object IRRegistry {
 
     val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
-    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 500000.0, itemSettings().maxDamage(500000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))
@@ -529,7 +529,7 @@ object IRRegistry {
     val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), 250000.0)
 
     val GAMER_AXE_ITEM =
-        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().maxDamage(10000).rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f))
 

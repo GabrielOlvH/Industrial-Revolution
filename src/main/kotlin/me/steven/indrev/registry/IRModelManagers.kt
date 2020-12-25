@@ -33,7 +33,7 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
             path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
             path == "tank" && variant == "inventory" -> TankItemBakedModel
-            path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt()]
+            path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
             else -> return null
         }
     }

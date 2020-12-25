@@ -18,7 +18,7 @@ enum class IRArmorMaterial(
     private val repairIngredient: Ingredient?) : ArmorMaterial {
 
     MODULAR(
-        "modular", 40, intArrayOf(1, 3, 2, 1), 15,
+        "modular", 0, intArrayOf(1, 3, 2, 1), 15,
         SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 1.0F, null
     ),
     STEEL(

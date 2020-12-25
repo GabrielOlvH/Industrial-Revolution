@@ -46,12 +46,12 @@ class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
 
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER, 0x404040),
-            5.4,
+            5.95,
             0.0
         )
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040),
-            5.4,
+            5.95,
             0.7
         )
 

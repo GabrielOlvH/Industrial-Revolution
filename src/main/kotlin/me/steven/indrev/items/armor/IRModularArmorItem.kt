@@ -14,9 +14,7 @@ import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.buildEnergyTooltip
-import me.steven.indrev.utils.energyOf
 import net.minecraft.client.item.TooltipContext
-import net.minecraft.entity.Entity
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.attribute.EntityAttributeModifier
@@ -45,11 +43,6 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     override fun getColor(stack: ItemStack?): Int {
         val compoundTag = stack!!.getSubTag("display")
         return if (compoundTag != null && compoundTag.contains("color", 99)) compoundTag.getInt("color") else -1
-    }
-
-    override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = energyOf(stack) ?: return
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
     }
 
     fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0

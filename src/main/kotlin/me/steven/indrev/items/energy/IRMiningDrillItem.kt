@@ -6,7 +6,6 @@ import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
-import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
@@ -19,7 +18,7 @@ open class IRMiningDrillItem(
     private val maxStored: Double,
     val baseMiningSpeed: Float,
     settings: Settings
-) : PickaxeItem(toolMaterial, 0, 0F, settings), IREnergyItem {
+) : PickaxeItem(toolMaterial, 0, 0F, settings.maxDamage(-1)), IREnergyItem {
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
@@ -41,11 +40,6 @@ open class IRMiningDrillItem(
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
-
-    override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = energyOf(stack) ?: return
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceIn(1, stack.maxDamage - 1)
-    }
 
     companion object {
         val SUPPORTED_MATERIALS = arrayOf(

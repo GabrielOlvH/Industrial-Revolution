@@ -173,9 +173,6 @@ class IRGamerAxeItem(
                 tag.putBoolean("Active", false)
         }
         tag.putFloat("Progress", progress.coerceIn(0f, 1f))
-
-        val handler = energyOf(stack) ?: return
-        stack.damage = (stack.maxDamage - handler.energy.toInt()).coerceAtLeast(1)
     }
 
     override fun getAttributeModifiers(
