@@ -171,6 +171,4 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             world.spawnEntity(ExperienceOrbEntity(world, pos.x, pos.y, pos.z, size))
         }
     }
-
-    open fun onCraft() {}
 }

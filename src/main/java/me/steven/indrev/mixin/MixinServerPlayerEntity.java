@@ -26,7 +26,6 @@ import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -44,7 +43,6 @@ import java.util.Map;
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
-    @Shadow public ServerPlayNetworkHandler networkHandler;
     private int ticks = 0;
     private int lastDamageTick = 0;
     private double lastShield = 0.0;

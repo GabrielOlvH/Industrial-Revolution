@@ -8,6 +8,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.isLoaded
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.LongTag
@@ -33,7 +34,7 @@ class EnergyNetwork(
         val receiversHandlers = ArrayList<EnergyIo>(lastReceiverSize)
         val senderHandlers = ArrayList<EnergyIo>(lastSenderSize)
         machines.forEach { (pos, directions) ->
-            if (!world.isChunkLoaded(pos)) return@forEach
+            if (!world.isLoaded(pos)) return@forEach
             directions.forEach inner@{ dir ->
                 val energyIo = energyOf(world, pos, dir) ?: return@inner
                 if (energyIo.supportsInsertion() && energyIo.maxInput > 0)

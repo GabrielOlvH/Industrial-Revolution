@@ -1,4 +1,4 @@
-package me.steven.indrev.registry
+package me.steven.indrev.datagen.utils
 
 const val LEAD_BASE = 0xFF575d61
 const val LEAD_HIGHLIGHT = 0xFF77859a

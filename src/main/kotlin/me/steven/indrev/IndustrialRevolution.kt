@@ -58,13 +58,10 @@ object IndustrialRevolution : ModInitializer {
             IRRegistry.SULFURIC_ACID_STILL,
             IRRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }
+
         IRLootTables.register()
+
         MachineRegistry
-        if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
-             ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted { _ ->
-                 DataGeneratorManager("indrev").generate()
-             })
-        }
 
         Registry.register(Registry.RECIPE_SERIALIZER, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, PulverizerRecipe.IDENTIFIER, PulverizerRecipe.TYPE)
@@ -111,6 +108,12 @@ object IndustrialRevolution : ModInitializer {
 
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
             s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
+        }
+
+        if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
+            ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted {
+                DataGeneratorManager("indrev").generate()
+            })
         }
 
         LOGGER.info("Industrial Revolution has initialized.")

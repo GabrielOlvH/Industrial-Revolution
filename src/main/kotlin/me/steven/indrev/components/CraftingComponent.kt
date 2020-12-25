@@ -49,7 +49,6 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
                         machine.usedRecipes.addTo(recipe.id, 1)
-                        machine.onCraft()
                         reset()
                     }
                 } else isCrafting = false
