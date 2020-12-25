@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.IndustrialRevolution;
 import me.steven.indrev.api.IRServerPlayerEntityExtension;
-import me.steven.indrev.armor.IRArmorMaterial;
 import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
@@ -22,7 +21,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -99,7 +97,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         PlayerInventory inventory = player.inventory;
         getAppliedModules().clear();
         for (ItemStack itemStack : inventory.armor) {
-            if (itemStack.getItem() instanceof IRModularArmorItem && ((ArmorItem) itemStack.getItem()).getMaterial() == IRArmorMaterial.MODULAR) {
+            if (itemStack.getItem() instanceof IRModularArmorItem) {
                 List<ArmorModule> modules = ((IRModularArmorItem) itemStack.getItem()).getInstalled(itemStack);
                 EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
                 for (ArmorModule module : modules) {
