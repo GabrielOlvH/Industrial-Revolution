@@ -16,6 +16,7 @@ import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
+import me.steven.indrev.utils.EnergyApiUtilsKt;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
@@ -132,10 +133,11 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 IRPortableChargerItem.Companion.chargeItemsInInv(itemIo, player.inventory.main);
                             break;
                         case SOLAR_PANEL:
-                            if (world.isDay() && world.isSkyVisible(player.getBlockPos().up())) {
+                            if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
                                 for (ItemStack stackToCharge : inventory.armor) {
-                                    if (itemIo != null)
-                                        itemIo.insert(75.0 * level, Simulation.ACT);
+                                    EnergyIo toCharge = EnergyApiUtilsKt.energyOf(stackToCharge);
+                                    if (toCharge != null)
+                                        toCharge.insert(75.0 * level, Simulation.ACT);
                                 }
                             }
                             break;
@@ -152,13 +154,11 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         }
     }
 
-    @Override
-    public void regenerateShield() {
+    private void regenerateShield() {
         setShieldDurability(Math.min(getShieldDurability() + 0.5, getMaxShieldDurability()));
     }
 
-    @Override
-    public double applyDamageToShield(double damage) {
+    private double applyDamageToShield(double damage) {
         double absorbed = Math.min(damage, getShieldDurability());
         setShieldDurability(getShieldDurability() - absorbed);
         return damage - absorbed;
