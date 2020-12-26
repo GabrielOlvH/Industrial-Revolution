@@ -3,6 +3,7 @@ package me.steven.indrev.items.energy
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
@@ -32,7 +33,6 @@ import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
@@ -78,7 +78,7 @@ class IRGamerAxeItem(
                 val active = !tag.getBoolean("Active")
                 if (active && energyOf(stack)?.use(5.0) == false)
                     return TypedActionResult.pass(stack)
-                tag.putBoolean("Active", active)
+                stack.orCreateTag.putBoolean("Active", active)
             }
             return TypedActionResult.pass(stack)
         }
@@ -154,12 +154,24 @@ class IRGamerAxeItem(
 
     fun isActive(stack: ItemStack): Boolean {
         val tag = stack.orCreateTag ?: return false
-        if (!tag.contains("Active")) return false
-        return tag.getBoolean("Active")
+        return tag.contains("Active") && tag.getBoolean("Active")
     }
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateTag ?: return
+
+        tickAnimations(stack)
+
+        val itemIo = energyOf(stack)
+        if (isActive(stack) && itemIo?.extract(5.0, Simulation.ACT) != 5.0) {
+            tag.putBoolean("Active", false)
+        }
+
+
+    }
+
+    private fun tickAnimations(stack: ItemStack) {
+        val tag = stack.orCreateTag
         if (!tag.contains("Active") || !tag.contains("Progress")) return
         val active = tag.getBoolean("Active")
         var progress = tag.getFloat("Progress")
@@ -179,9 +191,8 @@ class IRGamerAxeItem(
         itemStack: ItemStack,
         equipmentSlot: EquipmentSlot
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
-        val tag: CompoundTag = itemStack.orCreateTag
         val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
-        if (!tag.contains("Active") || !tag.getBoolean("Active") || itemIo == null || itemIo.energy <= 0)
+        if (isActive(itemStack) || itemIo == null || itemIo.energy <= 0)
             return ImmutableMultimap.of()
         else if (equipmentSlot == EquipmentSlot.MAINHAND) {
             val builder = ImmutableMultimap.builder<EntityAttribute, EntityAttributeModifier>()
@@ -199,7 +210,7 @@ class IRGamerAxeItem(
                 EntityAttributeModifier(
                     ATTACK_SPEED_MODIFIER_ID,
                     "Tool modifier",
-                    -2.0,
+                    1.0,
                     EntityAttributeModifier.Operation.ADDITION
                 )
             )

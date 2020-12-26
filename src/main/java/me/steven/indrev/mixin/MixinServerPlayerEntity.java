@@ -12,7 +12,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.IndustrialRevolution;
 import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.items.armor.IRModularArmorItem;
-import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
 import me.steven.indrev.utils.EnergyApiUtilsKt;
@@ -23,7 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +38,7 @@ import java.util.Map;
 
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
+
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     private int ticks = 0;
@@ -56,10 +55,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         ticks++;
 
         if (ticks % 15 == 0) {
-            setShieldDurability(Math.min(getShieldDurability(), getMaxShieldDurability()));
             applyArmorEffects();
-            useActiveAxeEnergy();
         }
+        setShieldDurability(Math.min(getShieldDurability(), getMaxShieldDurability()));
     }
 
     @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
@@ -75,21 +73,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     private boolean shouldApplyToShield(DamageSource source) {
         return (source.equals(DamageSource.FALL) && isApplied(ArmorModule.FEATHER_FALLING))
                 || (source.isFire() && isApplied(ArmorModule.FIRE_RESISTANCE))
-                && !source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN);
-    }
-
-    private void useActiveAxeEnergy() {
-        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        PlayerInventory inventory = player.inventory;
-        for (ItemStack itemStack : inventory.main) {
-            if (itemStack.getItem() instanceof IRGamerAxeItem) {
-                CompoundTag tag = itemStack.getOrCreateTag();
-                EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
-                if (tag.contains("Active") && tag.getBoolean("Active") && itemIo != null && itemIo.extract(5.0, Simulation.ACT) != 5.0) {
-                    tag.putBoolean("Active", false);
-                }
-            }
-        }
+                || (!source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN));
     }
 
     private void applyArmorEffects() {
