@@ -50,7 +50,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     : IRSyncableBlockEntity(registry.blockEntityType(tier)), PropertyDelegateHolder, InventoryProvider, Tickable, EnergyIo,
     Configurable {
 
-    val validConnections = mutableSetOf<Direction>()
+    val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
@@ -156,6 +156,14 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         val extracted = amount.coerceAtMost(energy)
         if (extracted == amount) {
             this.energy -= extracted
+            return true
+        }
+        return false
+    }
+
+    fun canUse(amount: Double): Boolean {
+        val extracted = amount.coerceAtMost(energy)
+        if (extracted == amount) {
             return true
         }
         return false

@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
 import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
@@ -57,7 +56,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (cooldown < config.processSpeed || ticks % 15 != 0 || this.extract(energyCost, Simulation.ACT) != energyCost)
+        if (cooldown < config.processSpeed || ticks % 15 != 0 || !canUse(energyCost))
             return
         if (!scheduledBlocks.hasNext()) {
             val list = mutableListOf<BlockPos>()

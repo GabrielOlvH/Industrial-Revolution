@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import dev.technici4n.fasttransferlib.api.Simulation
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -31,7 +30,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val fluidComponent = fluidComponent ?: return
         val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()
-        if (hasFluid && extract(config.energyCost, Simulation.SIMULATE) == config.energyCost) {
+        if (hasFluid && canUse(config.energyCost)) {
             val mutablePos = pos.mutableCopy()
             var currentChunk = world!!.getChunk(pos)
             for (x in range.minX.toInt()..range.maxX.toInt())
@@ -49,7 +48,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                                 val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                                 currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
                                 fluidComponent.insertable.insert(toInsert)
-                                extract(config.energyCost, Simulation.ACT)
+                                use(config.energyCost)
                                 break
                             }
                         }

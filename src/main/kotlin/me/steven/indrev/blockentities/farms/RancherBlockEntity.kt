@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import dev.technici4n.fasttransferlib.api.Simulation
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.properties.BooleanProperty
 import me.steven.indrev.api.machines.properties.Property
@@ -56,7 +55,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (animals.isEmpty() || extract(energyCost, Simulation.SIMULATE) != energyCost) {
+        if (animals.isEmpty() || !canUse(energyCost)) {
             workingState = false
             return
         } else workingState = true
@@ -65,7 +64,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
-            if (kill.isNotEmpty()) extract(energyCost, Simulation.ACT)
+            if (kill.isNotEmpty()) use(energyCost)
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
@@ -90,7 +89,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 fakePlayer.inventory.selectedSlot = 8
                 fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                 if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
-                    extract(energyCost, Simulation.ACT)
+                    use(energyCost)
                 val inserted = inventory.output(fakePlayer.inventory.getStack(0))
                 val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
                 if (!handStack.isEmpty && handStack.item != stack.item) {

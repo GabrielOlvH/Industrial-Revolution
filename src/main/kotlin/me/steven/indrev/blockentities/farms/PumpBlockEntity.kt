@@ -21,7 +21,6 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import kotlin.math.floor
 import kotlin.math.roundToInt
-import dev.technici4n.fasttransferlib.api.Simulation as FTLSimulation
 
 class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY), BlockEntityClientSerializable {
 
@@ -42,7 +41,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     override fun machineTick() {
         val currentLevel = floor(movingTicks).toInt()
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && extract(config.energyCost, FTLSimulation.SIMULATE) == config.energyCost) {
+        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost)) {
             if (world?.getFluidState(lookLevel)?.isEmpty == true) {
                 lastYPos = lookLevel.y
                 isDescending = true
@@ -64,7 +63,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                     if (fluidComponent.insertable.attemptInsertion(toInsert, Simulation.SIMULATE).isEmpty) {
                         block.tryDrainFluid(world, fluidPos, fluidState.blockState)
                         fluidComponent.insertable.insert(toInsert)
-                        extract(config.energyCost, FTLSimulation.ACT)
+                        use(config.energyCost)
                     }
                     return
                 }
@@ -77,7 +76,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             isDescending = false
             areaIterator = getWorkingArea(lookLevel).map(::BlockPos).sortedWith(compareByDescending { it.getSquaredDistance(pos) }).iterator()
         }
-        else if (extract(2.0, FTLSimulation.ACT) == 2.0 && (lookLevel == pos || (world?.isAir(lookLevel) == true && world?.getFluidState(lookLevel)?.isEmpty != false))) {
+        else if (use(2.0) && (lookLevel == pos || (world?.isAir(lookLevel) == true && world?.getFluidState(lookLevel)?.isEmpty != false))) {
             movingTicks += 0.01
             sync()
         }

@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import dev.technici4n.fasttransferlib.api.Simulation
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
@@ -41,7 +40,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (extract(energyCost, Simulation.SIMULATE) != energyCost) return
+        if (!canUse(energyCost)) return
         if (nextBlocks.hasNext()) {
             var pos = nextBlocks.next()
             var state = world.getBlockState(pos)
@@ -106,7 +105,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
             }
         } ?: false
         if (performedAction)
-            extract(Upgrade.getEnergyCost(getUpgrades(inventory!!), this), Simulation.ACT)
+            use(Upgrade.getEnergyCost(getUpgrades(inventory!!), this))
         return performedAction
     }
 
