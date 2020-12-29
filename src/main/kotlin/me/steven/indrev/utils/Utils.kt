@@ -105,9 +105,9 @@ inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {
 }
 
 inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
-    for (x in minX.toInt()..maxX.toInt())
-        for (y in minY.toInt()..maxY.toInt())
-            for (z in minZ.toInt()..maxZ.toInt())
+    for (x in minX.toInt() until maxX.toInt())
+        for (y in minY.toInt() until maxY.toInt())
+            for (z in minZ.toInt() until maxZ.toInt())
                 f(x, y, z)
 }
 

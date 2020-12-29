@@ -44,7 +44,18 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         if (nextBlocks.hasNext()) {
             var pos = nextBlocks.next()
             var state = world.getBlockState(pos)
-            while (!tryHarvest(state, pos, world) && nextBlocks.hasNext()) {
+            while (nextBlocks.hasNext()) {
+                if (state.block != Blocks.SUGAR_CANE)
+                    tryHarvest(state, pos, world)
+                else {
+                    for (i in 5 downTo 1) {
+                        val posToHarvest = pos.up(i)
+                        val toHarvest = world.getBlockState(posToHarvest)
+                        if (toHarvest.block == Blocks.SUGAR_CANE) {
+                            tryHarvest(state, posToHarvest, world)
+                        }
+                    }
+                }
                 pos = nextBlocks.next()
                 state = world.getBlockState(pos)
             }
@@ -65,10 +76,10 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         val performedAction = inventory?.inputSlots?.any { slot ->
             val stack = inventory.getStack(slot)
             val item = stack.item
-            val isValidSeed = item is BlockItem && (item.block is CropBlock || item.block is StemBlock)
+            val isValidSeed = item is BlockItem && (item.block is CropBlock || item.block is StemBlock || item.block == Blocks.SUGAR_CANE)
             val isCropBlock = block is CropBlock || block is StemBlock
             val shouldHarvest =
-                (block is CropBlock && block.isMature(state) && (item is BlockItem && item.block == block || slot == 4)) || block is GourdBlock
+                (block is CropBlock && block.isMature(state) && (item is BlockItem && item.block == block || slot == 4)) || block is GourdBlock || block == Blocks.SUGAR_CANE
             when {
                 item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) -> {
                     stack.decrement(1)
