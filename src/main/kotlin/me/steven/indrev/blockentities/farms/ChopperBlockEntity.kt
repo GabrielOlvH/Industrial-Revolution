@@ -12,14 +12,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
-import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
-import net.minecraft.block.Fertilizable
-import net.minecraft.block.LeavesBlock
-import net.minecraft.item.AxeItem
-import net.minecraft.item.BlockItem
-import net.minecraft.item.BoneMealItem
-import net.minecraft.item.ItemStack
+import net.minecraft.block.*
+import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
@@ -36,7 +30,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 slots = intArrayOf(2, 3, 4, 5)
                 2 filter { (_, item) -> item.isIn(FabricToolTags.AXES) }
                 3 filter { (_, item) -> item is BoneMealItem }
-                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS) }
+                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS) || (item is BlockItem && item.block is MushroomPlantBlock) }
             }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
             coolerSlot = 1
@@ -130,7 +124,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     ): Boolean {
         val block = blockState.block
         when {
-            block.isIn(BlockTags.LOGS) -> {
+            block.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM -> {
                 if (axeEnergyHandler != null && !axeEnergyHandler.use(1.0))
                     return false
                 else {
@@ -153,7 +147,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val block = blockState.block
         when {
             item is BoneMealItem && itemStack.count > 1
-                    && block.isIn(BlockTags.SAPLINGS)
+                    && (block.isIn(BlockTags.SAPLINGS) || block is MushroomPlantBlock)
                     && block is Fertilizable
                     && block.isFertilizable(world, pos, blockState, false)
                     && block.canGrow(world, world?.random, pos, blockState) -> {
@@ -161,11 +155,13 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 world?.syncWorldEvent(2005, pos, 0)
                 itemStack.decrement(1)
             }
-            item.isIn(ItemTags.SAPLINGS) && item is BlockItem && item.block.defaultState.canPlaceAt(world, pos) && itemStack.count > 1 -> {
-                if (world?.isAir(pos) == true) {
-                    world?.setBlockState(pos, item.block.defaultState, 3)
-                    itemStack.decrement(1)
-                } else return false
+            block == Blocks.AIR
+                    && item is BlockItem
+                    && (item.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock)
+                    && item.block.defaultState.canPlaceAt(world, pos)
+                    && itemStack.count > 1 -> {
+                world?.setBlockState(pos, item.block.defaultState, 3)
+                itemStack.decrement(1)
             }
             else -> return false
         }
