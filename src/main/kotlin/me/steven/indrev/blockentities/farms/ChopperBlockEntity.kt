@@ -1,9 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
@@ -52,12 +49,14 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
         if (cooldown < config.processSpeed || ticks % 15 != 0 || !canUse(energyCost))
             return
+        val area = getWorkingArea()
         if (!scheduledBlocks.hasNext()) {
-            val list = mutableListOf<BlockPos>()
-            val area = getWorkingArea()
-            for (y in area.minY.toInt() until area.maxY.toInt()) {
-                for (x in area.minX.toInt() until area.maxX.toInt()) {
-                    for (z in area.minZ.toInt() until area.maxZ.toInt()) {
+            // includes tree branches that goes outside the actual area
+            val fullArea = area.expand(4.0)
+            val list = ArrayList<BlockPos>((fullArea.xLength * fullArea.yLength * fullArea.zLength).toInt())
+            for (y in fullArea.minY.toInt() until fullArea.maxY.toInt()) {
+                for (x in fullArea.minX.toInt()  until fullArea.maxX.toInt()) {
+                    for (z in fullArea.minZ.toInt() until fullArea.maxZ.toInt()) {
                         list.add(BlockPos(x, y, z))
                     }
                 }
@@ -66,8 +65,8 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         } else {
             var currentChunk: Chunk? = null
             var performedActions = 0
-            val axeStack = inventory.inputSlots.map { slot -> inventory.getStack(slot) }.firstOrNull { stack -> stack.item is AxeItem }
-            val axeStackHandler = if (axeStack != null) EnergyApi.ITEM[ItemKey.of(axeStack), ContainerItemContext.ofStack(axeStack)] else null
+            val axeStack = inventory.getStack(2)
+            val axeStackHandler = energyOf(axeStack)
             val brokenBlocks = hashMapOf<BlockPos, BlockState>()
             outer@ while (scheduledBlocks.hasNext() && cooldown > config.processSpeed) {
                 val pos = scheduledBlocks.next()
@@ -84,14 +83,10 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                     brokenBlocks[pos] = blockState
                     performedActions++
                 }
-                if (pos.y == this.pos.y) {
-                    for (slot in inventory.inputSlots) {
+                if (pos.y == this.pos.y && pos in area) {
+                    for (slot in 3..5) {
                         val stack = inventory.getStack(slot)
-                        if (
-                            (axeStack != null && stack.isItemEqual(axeStack))
-                            || stack.isEmpty
-                            || !tryUse(blockState, stack, pos)
-                        ) continue
+                        if (stack.isEmpty || !tryUse(blockState, stack, pos)) continue
                         cooldown -= config.processSpeed
                         if (!use(energyCost)) break
                         brokenBlocks[pos] = blockState

@@ -19,5 +19,6 @@ fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Ener
 }
 
 fun energyOf(itemStack: ItemStack?): EnergyIo? {
-    return EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack))
+    return if (itemStack == null) null
+    else EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack))
 }

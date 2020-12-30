@@ -120,6 +120,9 @@ inline fun <T> Box.map(f: (Int, Int, Int) -> T): MutableList<T> {
     return list
 }
 
+operator fun Box.contains(pos: BlockPos): Boolean {
+    return contains(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
+}
 
 inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
     for (x in minX.toInt()..maxX.toInt())
