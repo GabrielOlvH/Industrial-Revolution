@@ -5,9 +5,7 @@ import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.recipe.Recipe
-import net.minecraft.recipe.RecipeManager
-import net.minecraft.recipe.RecipeType
+import net.minecraft.recipe.*
 import net.minecraft.screen.Property
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
@@ -26,5 +24,8 @@ fun RecipeManager.getRecipes(): Map<RecipeType<*>, Map<Identifier, Recipe<*>>> =
 
 val ScreenHandler.properties: List<Property>
     get() = (this as AccessorScreenHandler).properties
+
+val AbstractCookingRecipe.input: Ingredient
+    get() = (this as AccessorAbstractCookingRecipe).input
 
 fun AnimalEntity.eat(player: PlayerEntity, stack: ItemStack) = (this as AccessorAnimalEntity).callEat(player, stack)

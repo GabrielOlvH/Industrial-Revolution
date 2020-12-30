@@ -6,7 +6,7 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.mixin.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
-import me.steven.indrev.recipes.machines.VanillaRecipeCachedGetter
+import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
 
 class ElectricFurnaceBlockEntity(tier: Tier) :
@@ -25,9 +25,9 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
         get() {
             val upgrades = getUpgrades(inventoryComponent!!.inventory)
             return when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
-                Upgrade.BLAST_FURNACE -> VanillaRecipeCachedGetter.BLASTING
-                Upgrade.SMOKER -> VanillaRecipeCachedGetter.SMOKING
-                else -> VanillaRecipeCachedGetter.SMELTING
+                Upgrade.BLAST_FURNACE -> VanillaCookingRecipeCachedGetter.BLASTING
+                Upgrade.SMOKER -> VanillaCookingRecipeCachedGetter.SMOKING
+                else -> VanillaCookingRecipeCachedGetter.SMELTING
             } as IRecipeGetter<MixinAbstractCookingRecipe>
         }
 

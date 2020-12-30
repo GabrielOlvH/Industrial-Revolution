@@ -18,6 +18,7 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.util.*
+import kotlin.collections.ArrayList
 
 interface IRRecipe : Recipe<Inventory> {
     val identifier: Identifier
@@ -38,17 +39,17 @@ interface IRRecipe : Recipe<Inventory> {
 
     override fun getType(): IRRecipeType<*>
 
-    fun craft(random: Random?): Array<ItemStack> {
-        val produced = mutableListOf<ItemStack>()
+    fun craft(random: Random?): List<ItemStack> {
+        val produced = ArrayList<ItemStack>(outputs.size)
         outputs.forEach { (stack, chance) ->
             if (chance >= 1.0 || random != null && random.nextDouble() > chance) produced.add(stack.copy())
         }
-        return produced.toTypedArray()
+        return produced
     }
 
-    fun matches(inv: Array<ItemStack>, fluidVolume: FluidVolume?): Boolean {
+    fun matches(inv: List<ItemStack>, fluidVolume: FluidVolume?): Boolean {
         if (inv.isEmpty()) return true
-        val remainder = input.map { it.copy() }.toMutableList()
+        val remainder = input.map { it.copy() }.let { it as? ArrayList<InputEntry> ?: it.toMutableList() }
         for (stack in inv) {
             val result = remainder.firstOrNull { (ingredient, count) -> ingredient.test(stack) && stack.count >= count } ?: continue
             result.count -= stack.count

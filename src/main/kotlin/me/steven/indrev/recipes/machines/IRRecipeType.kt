@@ -1,7 +1,7 @@
 package me.steven.indrev.recipes.machines
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import com.google.common.collect.ArrayListMultimap
+import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.Multimap
 import me.steven.indrev.recipes.IRecipeGetter
@@ -13,8 +13,8 @@ import net.minecraft.server.world.ServerWorld
 
 class IRRecipeType<T : IRRecipe> : IRecipeGetter<T>, RecipeType<T> {
 
-    private val recipeCache: Multimap<Item, T> = ArrayListMultimap.create()
-    private val fluidOnlyRecipeCache:  Multimap<FluidKey, T> = ArrayListMultimap.create()
+    private val recipeCache: Multimap<Item, T> = HashMultimap.create()
+    private val fluidOnlyRecipeCache:  Multimap<FluidKey, T> = HashMultimap.create()
 
     override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack, fluidInput: FluidKey?): Collection<T> {
         if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!

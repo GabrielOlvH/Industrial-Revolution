@@ -36,7 +36,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
 
     fun tick() {
         val inventory = inventoryComponent.inventory
-        val inputInventory = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
+        val inputInventory = inputSlots!!.map { inventory.getStack(it) }
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
@@ -65,7 +65,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         temperatureComponent?.tick(isProcessing())
     }
 
-    private fun handleInventories(inventory: IRInventory, inputInventory: Array<ItemStack>, recipe: IRRecipe) {
+    private fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
         val output = recipe.craft(machine.world!!.random)
         inputSlots!!.forEachIndexed { index, slot ->
             recipe.input.forEach { (ingredient, count) ->
@@ -123,7 +123,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     }
 
     private fun tryStartRecipe(inventory: IRInventory): T? {
-        val inputStacks = inputSlots!!.map { inventory.getStack(it) }.toTypedArray()
+        val inputStacks = inputSlots!!.map { inventory.getStack(it) }
         val inputFluid = fluidComponent?.tanks?.get(0)?.volume
         val recipe =
             (if (inputStacks.isEmpty())

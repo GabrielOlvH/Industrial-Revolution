@@ -18,7 +18,7 @@ abstract class IRFluidRecipe : IRRecipe {
     abstract val fluidInput: FluidVolume?
     abstract val fluidOutput: FluidVolume?
 
-    override fun matches(inv: Array<ItemStack>, fluidVolume: FluidVolume?): Boolean {
+    override fun matches(inv: List<ItemStack>, fluidVolume: FluidVolume?): Boolean {
         return when {
             fluidVolume == null -> false
             fluidInput != null -> fluidVolume.fluidKey == fluidInput!!.fluidKey && fluidVolume.amount() >= fluidInput!!.amount() && super.matches(inv, fluidVolume)
