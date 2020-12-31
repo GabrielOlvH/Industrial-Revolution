@@ -6,7 +6,7 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.forEach
+import me.steven.indrev.utils.map
 import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.*
 import net.minecraft.item.BlockItem
@@ -60,11 +60,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                 state = world.getBlockState(pos)
             }
         } else {
-            val set = mutableSetOf<BlockPos>()
-            getWorkingArea().forEach { x, y, z ->
-                set.add(BlockPos(x, y, z))
-            }
-            nextBlocks = set.iterator()
+            nextBlocks = getWorkingArea().map(::BlockPos).iterator()
         }
         cooldown = 0.0
     }

@@ -236,7 +236,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> CONFIG.machines.infuserMk2
                         Tier.MK3 -> CONFIG.machines.infuserMk3
                         else -> CONFIG.machines.infuserMk4
-                    }, ::InfuserController
+                    }, ::SolidInfuserController
                 )
             }
             .blockEntityProvider { tier -> { SolidInfuserBlockEntity(tier) } }
@@ -324,17 +324,17 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { CompressorFactoryBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val INFUSER_FACTORY_REGISTRY = MachineRegistry("infuser_factory", false, Tier.MK4)
+        val SOLID_INFUSER_FACTORY_REGISTRY = MachineRegistry("infuser_factory", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
                     SETTINGS(),
                     tier,
                     CONFIG.machines.infuserFactory,
-                    ::InfuserFactoryController
+                    ::SolidInfuserFactoryController
                 )
             }
-            .blockEntityProvider { tier -> { InfuserFactoryBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { SolidInfuserFactoryBlockEntity(tier) } }
             .defaultEnergyProvider()
 
         val DRAIN_REGISTRY = MachineRegistry("drain", false, Tier.MK1)

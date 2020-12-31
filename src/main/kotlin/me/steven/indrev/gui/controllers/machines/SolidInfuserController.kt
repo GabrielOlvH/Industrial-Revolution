@@ -14,7 +14,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 
-class InfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class SolidInfuserController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
         IndustrialRevolution.INFUSER_HANDLER,
         syncId,

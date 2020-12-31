@@ -12,8 +12,8 @@ import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.screen.ArrayPropertyDelegate
 
-class InfuserFactoryBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_FACTORY_REGISTRY) {
+class SolidInfuserFactoryBlockEntity(tier: Tier) :
+    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)

@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.forEach
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
@@ -33,27 +34,24 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         if (hasFluid && canUse(config.energyCost)) {
             val mutablePos = pos.mutableCopy()
             var currentChunk = world!!.getChunk(pos)
-            for (x in range.minX.toInt()..range.maxX.toInt())
-                for (y in range.minY.toInt()..range.maxY.toInt()) {
-                    for (z in range.minZ.toInt()..range.maxZ.toInt()) {
-                        mutablePos.set(x, y, z)
-                        if (currentChunk.pos.x != x shr 4 && currentChunk.pos.z != z shr 4) {
-                            currentChunk = world!!.getChunk(mutablePos)
-                        }
-                        val blockState = currentChunk.getBlockState(mutablePos)
-                        val block = blockState?.block
-                        if (block is FluidDrainable && block is FluidBlock) {
-                            val drained = block.tryDrainFluid(world, mutablePos, blockState)
-                            if (drained != Fluids.EMPTY) {
-                                val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
-                                currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
-                                fluidComponent.insertable.insert(toInsert)
-                                use(config.energyCost)
-                                break
-                            }
-                        }
+            range.forEach { x, y, z ->
+                mutablePos.set(x, y, z)
+                if (currentChunk.pos.x != x shr 4 && currentChunk.pos.z != z shr 4) {
+                    currentChunk = world!!.getChunk(mutablePos)
+                }
+                val blockState = currentChunk.getBlockState(mutablePos)
+                val block = blockState?.block
+                if (block is FluidDrainable && block is FluidBlock) {
+                    val drained = block.tryDrainFluid(world, mutablePos, blockState)
+                    if (drained != Fluids.EMPTY) {
+                        val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
+                        currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
+                        fluidComponent.insertable.insert(toInsert)
+                        use(config.energyCost)
+                        return
                     }
                 }
+            }
         }
     }
 

@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.crafters.InfuserFactoryBlockEntity
+import me.steven.indrev.blockentities.crafters.SolidInfuserFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.utils.*
@@ -13,7 +13,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.Identifier
 
-class InfuserFactoryController(
+class SolidInfuserFactoryController(
     syncId: Int,
     playerInventory: PlayerInventory,
     ctx: ScreenHandlerContext
@@ -29,7 +29,7 @@ class InfuserFactoryController(
         setRootPanel(root)
         configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? InfuserFactoryBlockEntity ?: return@run
+            val blockEntity = world.getBlockEntity(pos) as? SolidInfuserFactoryBlockEntity ?: return@run
             val offset = 2.6
 
             for (index in blockEntity.inventoryComponent!!.inventory.inputSlots.indices step 2) {

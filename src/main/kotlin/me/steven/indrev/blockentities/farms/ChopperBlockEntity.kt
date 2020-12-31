@@ -53,15 +53,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         if (!scheduledBlocks.hasNext()) {
             // includes tree branches that goes outside the actual area
             val fullArea = area.expand(4.0)
-            val list = ArrayList<BlockPos>((fullArea.xLength * fullArea.yLength * fullArea.zLength).toInt())
-            for (y in fullArea.minY.toInt() until fullArea.maxY.toInt()) {
-                for (x in fullArea.minX.toInt()  until fullArea.maxX.toInt()) {
-                    for (z in fullArea.minZ.toInt() until fullArea.maxZ.toInt()) {
-                        list.add(BlockPos(x, y, z))
-                    }
-                }
-            }
-            scheduledBlocks = list.iterator()
+            scheduledBlocks = fullArea.map(::BlockPos).iterator()
         } else {
             var currentChunk: Chunk? = null
             var performedActions = 0

@@ -3,7 +3,7 @@ package me.steven.indrev.blocks.machine
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.gui.controllers.machines.BatteryController
+import me.steven.indrev.gui.controllers.machines.LazuliFluxContainerController
 import me.steven.indrev.registry.MachineRegistry
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.BlockState
@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class LazuliFluxContainerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : FacingMachineBlock(
-    registry, settings, tier, null, ::BatteryController
+    registry, settings, tier, null, ::LazuliFluxContainerController
 ) {
 
     override fun onPlaced(

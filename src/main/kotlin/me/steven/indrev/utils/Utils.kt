@@ -35,6 +35,7 @@ import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.util.*
+import kotlin.collections.ArrayList
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -112,7 +113,7 @@ inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
 }
 
 inline fun <T> Box.map(f: (Int, Int, Int) -> T): MutableList<T> {
-    val list = mutableListOf<T>()
+    val list = ArrayList<T>((xLength * yLength * zLength).toInt())
     for (x in minX.toInt() until maxX.toInt())
         for (y in minY.toInt() until maxY.toInt())
             for (z in minZ.toInt() until maxZ.toInt())

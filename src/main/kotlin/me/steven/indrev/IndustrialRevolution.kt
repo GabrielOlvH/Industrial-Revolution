@@ -130,11 +130,11 @@ object IndustrialRevolution : ModInitializer {
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)
     val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorController.SCREEN_ID.registerScreenHandler(::BiomassGeneratorController)
     val HEAT_GENERATOR_HANDLER = HeatGeneratorController.SCREEN_ID.registerScreenHandler(::HeatGeneratorController)
-    val BATTERY_HANDLER = BatteryController.SCREEN_ID.registerScreenHandler(::BatteryController)
+    val BATTERY_HANDLER = LazuliFluxContainerController.SCREEN_ID.registerScreenHandler(::LazuliFluxContainerController)
     val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceController)
     val PULVERIZER_HANDLER = PulverizerController.SCREEN_ID.registerScreenHandler(::PulverizerController)
     val COMPRESSOR_HANDLER = CompressorController.SCREEN_ID.registerScreenHandler(::CompressorController)
-    val INFUSER_HANDLER = InfuserController.SCREEN_ID.registerScreenHandler(::InfuserController)
+    val INFUSER_HANDLER = SolidInfuserController.SCREEN_ID.registerScreenHandler(::SolidInfuserController)
     val RECYCLER_HANDLER = RecyclerController.SCREEN_ID.registerScreenHandler(::RecyclerController)
     val CHOPPER_HANDLER = ChopperController.SCREEN_ID.registerScreenHandler(::ChopperController)
     val RANCHER_HANDLER = RancherController.SCREEN_ID.registerScreenHandler(::RancherController)
@@ -151,7 +151,7 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryController.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryController)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryController.SCREEN_ID.registerScreenHandler(::PulverizerFactoryController)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
-    val INFUSER_FACTORY_HANDLER = InfuserFactoryController.SCREEN_ID.registerScreenHandler(::InfuserFactoryController)
+    val INFUSER_FACTORY_HANDLER = SolidInfuserFactoryController.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryController)
 
     val DRILL_HANDLER = DrillController.SCREEN_ID.registerScreenHandler(::DrillController)
 

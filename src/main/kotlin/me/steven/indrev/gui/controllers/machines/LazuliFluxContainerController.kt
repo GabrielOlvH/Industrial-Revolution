@@ -25,7 +25,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import java.util.function.Predicate
 
-class BatteryController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class LazuliFluxContainerController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
         IndustrialRevolution.BATTERY_HANDLER,
         syncId,
