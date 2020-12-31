@@ -10,6 +10,8 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
+import me.steven.indrev.utils.minus
+import me.steven.indrev.utils.plus
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
@@ -86,13 +88,13 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
             val fluidInput = recipe.fluidInput
             if (fluidInput != null) {
                 val inputTank = fluidComponent!!.tanks.first()
-                val amount = inputTank.volume.amount().sub(fluidInput.amount())
+                val amount = inputTank.volume.amount() - fluidInput.amount()
                 inputTank.volume = inputTank.volume.fluidKey.withAmount(amount)
             }
             val fluidOutput = recipe.fluidOutput
             if (fluidOutput != null) {
                 val outputTank = fluidComponent!!.tanks.last()
-                val amount = outputTank.volume.amount().add(fluidOutput.amount())
+                val amount = outputTank.volume.amount() + fluidOutput.amount()
                 outputTank.volume = fluidOutput.fluidKey.withAmount(amount)
             }
         }
