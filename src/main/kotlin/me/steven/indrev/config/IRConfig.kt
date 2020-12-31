@@ -74,6 +74,9 @@ class Machines : ConfigData {
     val electricFurnaceMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
+    val electricFurnaceFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
+
+    @ConfigEntry.Gui.CollapsibleObject
     val pulverizerMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
@@ -86,6 +89,9 @@ class Machines : ConfigData {
     val pulverizerMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
+    val pulverizerFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
+
+    @ConfigEntry.Gui.CollapsibleObject
     val compressorMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
     @ConfigEntry.Gui.CollapsibleObject
@@ -96,6 +102,9 @@ class Machines : ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val compressorFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
 
     @ConfigEntry.Gui.CollapsibleObject
     val sawmillMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
@@ -120,6 +129,9 @@ class Machines : ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     val infuserMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0,100000.0, Tier.MK4.io)
+
+    @ConfigEntry.Gui.CollapsibleObject
+    val infuserFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
 
     @ConfigEntry.Gui.CollapsibleObject
     val recycler: MachineConfig = MachineConfig(8.0, 2.5, 50000.0, Tier.MK2.io)
@@ -147,7 +159,7 @@ class Machines : ConfigData {
 
     @ConfigEntry.Gui.CollapsibleObject
     val farmerMk4: MachineConfig = MachineConfig(128.0, 20.0, 50000.0, Tier.MK4.io)
-    
+
     @ConfigEntry.Gui.CollapsibleObject
     val rancherMk1: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
 

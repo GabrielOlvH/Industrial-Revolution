@@ -291,12 +291,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    when (tier) {
-                        Tier.MK1 -> CONFIG.machines.electricFurnaceMk1
-                        Tier.MK2 -> CONFIG.machines.electricFurnaceMk2
-                        Tier.MK3 -> CONFIG.machines.electricFurnaceMk3
-                        else -> CONFIG.machines.electricFurnaceMk4
-                    }, ::ElectricFurnaceFactoryController
+                    CONFIG.machines.electricFurnaceFactory,
+                    ::ElectricFurnaceFactoryController
                 )
             }
             .blockEntityProvider { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
@@ -308,12 +304,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    when (tier) {
-                        Tier.MK1 -> CONFIG.machines.pulverizerMk1
-                        Tier.MK2 -> CONFIG.machines.pulverizerMk2
-                        Tier.MK3 -> CONFIG.machines.pulverizerMk3
-                        else -> CONFIG.machines.pulverizerMk4
-                    }, ::PulverizerFactoryController
+                    CONFIG.machines.pulverizerFactory,
+                    ::PulverizerFactoryController
                 )
             }
             .blockEntityProvider { tier -> { PulverizerFactoryBlockEntity(tier) } }
@@ -325,12 +317,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    when (tier) {
-                        Tier.MK1 -> CONFIG.machines.compressorMk1
-                        Tier.MK2 -> CONFIG.machines.compressorMk2
-                        Tier.MK3 -> CONFIG.machines.compressorMk3
-                        else -> CONFIG.machines.compressorMk4
-                    }, ::CompressorFactoryController
+                    CONFIG.machines.compressorFactory,
+                    ::CompressorFactoryController
                 )
             }
             .blockEntityProvider { tier -> { CompressorFactoryBlockEntity(tier) } }
@@ -342,12 +330,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    when (tier) {
-                        Tier.MK1 -> CONFIG.machines.infuserMk1
-                        Tier.MK2 -> CONFIG.machines.infuserMk2
-                        Tier.MK3 -> CONFIG.machines.infuserMk3
-                        else -> CONFIG.machines.infuserMk4
-                    }, ::InfuserFactoryController
+                    CONFIG.machines.infuserFactory,
+                    ::InfuserFactoryController
                 )
             }
             .blockEntityProvider { tier -> { InfuserFactoryBlockEntity(tier) } }
@@ -362,12 +346,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { DrainBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val PUMP_REGISTRY = MachineRegistry(("pump"), false, Tier.MK1)
+        val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { PumpBlockEntity(tier) } }
             .energyProvider { { be, dir -> if (dir == Direction.UP) be as? MachineBlockEntity<*> else null } }
 
-        val FLUID_INFUSER_REGISTRY = MachineRegistry(("fluid_infuser"), true)
+        val FLUID_INFUSER_REGISTRY = MachineRegistry("fluid_infuser", true)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -385,7 +369,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { FluidInfuserBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val CHOPPER_REGISTRY = MachineRegistry(("chopper"), true)
+        val CHOPPER_REGISTRY = MachineRegistry("chopper", true)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -402,7 +386,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { ChopperBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val FARMER_REGISTRY = MachineRegistry(("farmer"), true)
+        val FARMER_REGISTRY = MachineRegistry("farmer", true)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -419,7 +403,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { FarmerBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val RANCHER_REGISTRY = MachineRegistry(("rancher"), true)
+        val RANCHER_REGISTRY = MachineRegistry("rancher", true)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -436,12 +420,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { RancherBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val MINER_REGISTRY = MachineRegistry(("miner"), false, Tier.MK4)
+        val MINER_REGISTRY = MachineRegistry("miner", false, Tier.MK4)
             .blockProvider { tier -> MinerBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { MinerBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val FISHING_FARM_REGISTRY = MachineRegistry(("fishing_farm"), false, Tier.MK2, Tier.MK3, Tier.MK4)
+        val FISHING_FARM_REGISTRY = MachineRegistry("fishing_farm", false, Tier.MK2, Tier.MK3, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -457,7 +441,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { FishingFarmBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val MODULAR_WORKBENCH_REGISTRY = MachineRegistry(("modular_workbench"), false, Tier.MK4)
+        val MODULAR_WORKBENCH_REGISTRY = MachineRegistry("modular_workbench", false, Tier.MK4)
             .blockProvider { tier ->
                 ModularWorkbenchBlock(
                     this,
@@ -470,12 +454,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { ModularWorkbenchBlockEntity(tier) } }
             .defaultEnergyProvider()
 
-        val CHARGE_PAD_REGISTRY = MachineRegistry(("charge_pad"), false, Tier.MK4)
+        val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { ChargePadBlockEntity(tier) } }
             .energyProvider { { be, dir -> if (dir == Direction.DOWN) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
 
-        val CABLE_REGISTRY = MachineRegistry(("cable"), false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
+        val CABLE_REGISTRY = MachineRegistry("cable", false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
             .blockProvider { tier -> CableBlock(SETTINGS().luminance(0).nonOpaque(), tier) }
             .blockEntityProvider { tier -> { CableBlockEntity(tier) } }
     }
