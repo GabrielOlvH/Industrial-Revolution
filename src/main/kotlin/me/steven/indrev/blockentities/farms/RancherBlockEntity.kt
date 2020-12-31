@@ -142,6 +142,10 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             else -> 0.0
         }
 
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    }
+
     override fun toTag(tag: CompoundTag?): CompoundTag {
         super.toTag(tag)
         tag?.putBoolean("feedBabies", feedBabies)

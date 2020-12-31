@@ -7,6 +7,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -15,6 +16,7 @@ import net.minecraft.world.World
 class IRUpgradeItem(settings: Settings, val upgrade: Upgrade) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         tooltip?.add(TranslatableText("item.indrev.${upgrade.toString().toLowerCase()}_upgrade.tooltip").formatted(Formatting.GREEN))
+        tooltip?.add(LiteralText.EMPTY)
         val currentScreen = MinecraftClient.getInstance().currentScreen
         if (currentScreen is IRInventoryScreen<*>) {
             val handler = currentScreen.screenHandler as? IRGuiController ?: return
@@ -22,6 +24,8 @@ class IRUpgradeItem(settings: Settings, val upgrade: Upgrade) : Item(settings) {
                 val blockEntity = world?.getBlockEntity(pos) as? UpgradeProvider? ?: return@run
                 if (!blockEntity.getAvailableUpgrades().contains(upgrade))
                     tooltip?.add(TranslatableText("item.indrev.upgrades.incompatible").formatted(Formatting.DARK_RED))
+                else
+                    tooltip?.add(TranslatableText("item.indrev.upgrades.count", blockEntity.getMaxUpgrade(upgrade)).formatted(Formatting.AQUA))
             }
         }
     }

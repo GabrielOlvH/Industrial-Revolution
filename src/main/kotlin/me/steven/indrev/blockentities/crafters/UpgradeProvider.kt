@@ -29,4 +29,11 @@ interface UpgradeProvider {
     }
 
     fun isLocked(slot: Int, tier: Tier) = getUpgradeSlots().indexOf(slot) > tier.ordinal
+
+    fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return when (upgrade) {
+            Upgrade.SPEED, Upgrade.BUFFER -> 4
+            else -> 1
+        }
+    }
 }

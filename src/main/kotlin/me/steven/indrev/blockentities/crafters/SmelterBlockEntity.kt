@@ -26,4 +26,8 @@ class SmelterBlockEntity(tier: Tier) :
     override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
+
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    }
 }

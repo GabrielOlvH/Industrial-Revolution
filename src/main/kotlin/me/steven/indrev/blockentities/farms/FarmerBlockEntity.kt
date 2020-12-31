@@ -122,6 +122,10 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
 
     override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    }
+
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> config.energyCost
         Upgrade.SPEED -> 1.0

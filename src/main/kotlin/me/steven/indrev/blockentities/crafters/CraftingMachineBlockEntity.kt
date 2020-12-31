@@ -102,6 +102,10 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         }
     }
 
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    }
+
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         val craftTags = tag?.getList("craftingComponents", 10)
         craftTags?.forEach { craftTag ->

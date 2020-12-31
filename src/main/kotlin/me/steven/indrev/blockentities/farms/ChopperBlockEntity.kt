@@ -167,5 +167,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             else -> 0.0
         }
 
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 12 else super.getMaxUpgrade(upgrade)
+    }
+
     override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
 }

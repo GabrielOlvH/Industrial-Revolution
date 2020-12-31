@@ -81,6 +81,10 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
         else -> 0.0
     }
 
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    }
+
     companion object {
         private val FISH_IDENTIFIER = Identifier("gameplay/fishing/fish")
         private val JUNK_IDENTIFIER = Identifier("gameplay/fishing/junk")

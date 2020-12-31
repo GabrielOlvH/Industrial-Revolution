@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
+import io.github.cottonmc.cotton.gui.ValidatedSlot
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
@@ -18,6 +19,7 @@ import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
+import me.steven.indrev.items.upgrade.IRUpgradeItem
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
@@ -73,7 +75,16 @@ fun SyncedGuiDescription.configure(
             val slotPanel = WGridPanel()
             for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
                 val s =
-                    WTooltipedItemSlot.of(blockInventory, slot, TranslatableText("gui.indrev.upgrade_slot_type"))
+                    object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
+                        override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
+                            return object : ValidatedSlot(inventory, index, x, y) {
+                                override fun getMaxItemCount(stack: ItemStack): Int {
+                                    val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
+                                    return blockEntity.getMaxUpgrade(upgrade)
+                                }
+                            }
+                        }
+                    }
                 if (world.isClient)
                     s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
                         blockInventory,
