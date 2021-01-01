@@ -51,7 +51,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRRegistry.MOLTEN_IRON_STILL,
             IRRegistry.MOLTEN_GOLD_STILL,
             IRRegistry.MOLTEN_COPPER_STILL,
-            IRRegistry.MOLTEN_TIN_STILL
+            IRRegistry.MOLTEN_TIN_STILL,
+            IRRegistry.MOLTEN_LEAD_STILL,
+            IRRegistry.MOLTEN_SILVER_STILL
         ).forEach { it.registerRender(FluidType.LAVA) }
         IRHudRender
         arrayOf(
