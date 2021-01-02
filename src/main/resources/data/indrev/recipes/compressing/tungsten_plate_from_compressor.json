@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:tungsten_ingots"
+  },
+  "output": {
+    "item": "indrev:tungsten_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

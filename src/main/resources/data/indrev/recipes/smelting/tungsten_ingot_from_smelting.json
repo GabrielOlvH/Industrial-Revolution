@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "group": "tungsten_ingots",
+  "ingredient": {
+    "tag": "c:tungsten_dusts"
+  },
+  "result": "indrev:tungsten_ingot",
+  "cookingTime": 200
+}

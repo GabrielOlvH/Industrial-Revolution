@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:tungsten_ingots"
+    }
+  ],
+  "result": {
+    "item": "indrev:tungsten_nugget",
+    "count": 9
+  }
+}

@@ -155,7 +155,7 @@ object IRRegistry {
         }.register()
 
         MaterialHelper("tungsten") {
-            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
+            withItems("dust", "ingot", "plate", "nugget", "purified_ore")
             withBlock()
             withOre()
         }.register()
@@ -398,8 +398,8 @@ object IRRegistry {
     val MOLTEN_NETHERITE = object : FluidBlock(MOLTEN_NETHERITE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val MOLTEN_IRON_IDENTIFIER = identifier("molten_iron")
-    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, IRON_BASE.toInt()) { MOLTEN_IRON_FLOWING }
-    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, IRON_BASE.toInt()) { MOLTEN_IRON_STILL }
+    val MOLTEN_IRON_STILL: BaseFluid.Still = BaseFluid.Still(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_FLOWING }
+    val MOLTEN_IRON_FLOWING = BaseFluid.Flowing(MOLTEN_IRON_IDENTIFIER, { MOLTEN_IRON }, { MOLTEN_IRON_BUCKET }, 0x7A0019) { MOLTEN_IRON_STILL }
     val MOLTEN_IRON_BUCKET = BucketItem(MOLTEN_IRON_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val MOLTEN_IRON = object : FluidBlock(MOLTEN_IRON_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 

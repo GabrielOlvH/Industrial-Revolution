@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:lead_ingots"
+  },
+  "output": {
+    "item": "indrev:lead_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:electrum_ingots"
+  },
+  "output": {
+    "item": "indrev:electrum_dust",
+    "count": 1
+  },
+  "processTime": 150
+}

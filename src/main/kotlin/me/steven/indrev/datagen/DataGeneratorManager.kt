@@ -28,7 +28,7 @@ class DataGeneratorManager(namespace: String) {
     init {
         root.mkdir()
 
-        arrayOf("copper", "tin").forEach { material ->
+        arrayOf("copper", "tin", "lead", "tungsten", "silver").forEach { material ->
             materialRecipeGenerator.register(
                 "${material}_ore",
                 pulverizeOre("c:${material}_ores", "indrev:${material}_dust")
@@ -123,7 +123,12 @@ class DataGeneratorManager(namespace: String) {
                 return json
             }
 
-            override fun getFileName(t: String, id: Identifier): String = "pulverizer/${super.getFileName(t, id)}_$fileSuffix"
+            override fun getFileName(t: String, id: Identifier): String {
+                var fileName = super.getFileName(t, id)
+                val index = fileName.indexOf("_")
+                if (index != -1) fileName = fileName.substring(0, index)
+                return "pulverizer/${fileName}_$fileSuffix"
+            }
         }
     }
 

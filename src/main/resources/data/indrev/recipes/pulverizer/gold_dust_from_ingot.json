@@ -1,11 +1,11 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:gold_ingot"
+    "tag": "c:gold_ingots"
   },
   "output": {
     "item": "indrev:gold_dust",
     "count": 1
   },
-  "processTime": 200
+  "processTime": 150
 }

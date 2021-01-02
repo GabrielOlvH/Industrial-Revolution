@@ -3,10 +3,9 @@
   "ingredients": {
     "tag": "c:iron_ores"
   },
-  "output":
-    {
-      "item": "indrev:iron_dust",
-      "count": 2
-    },
+  "output": {
+    "item": "indrev:iron_dust",
+    "count": 2
+  },
   "processTime": 200
 }

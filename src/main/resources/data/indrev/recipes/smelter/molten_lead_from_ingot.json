@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "tag": "c:lead_ingots"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_lead_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}

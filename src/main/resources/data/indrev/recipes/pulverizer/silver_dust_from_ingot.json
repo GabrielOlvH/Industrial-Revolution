@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:silver_ingots"
+  },
+  "output": {
+    "item": "indrev:silver_dust",
+    "count": 1
+  },
+  "processTime": 150
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:silver_ingots"
+    }
+  },
+  "result": {
+    "item": "indrev:silver_chestplate"
+  }
+}

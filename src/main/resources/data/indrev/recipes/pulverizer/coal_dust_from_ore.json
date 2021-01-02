@@ -4,8 +4,8 @@
     "tag": "c:coal_ores"
   },
   "output": {
-    "item": "indrev:coal_dust",
+    "item": "minecraft:coal",
     "count": 2
   },
-  "processTime": 300
+  "processTime": 200
 }

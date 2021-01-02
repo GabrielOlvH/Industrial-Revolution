@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S",
+    "I",
+    "I"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:bronze_ingots"
+    },
+    "I": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "indrev:bronze_shovel"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": [
+    {
+      "tag": "c:lead_ores"
+    }
+  ],
+  "fluidInput": {
+    "fluid": "indrev:sulfuric_acid_still",
+    "type": "bucket",
+    "count": 1
+  },
+  "fluidOutput": {
+    "fluid": "indrev:toxic_mud_still",
+    "type": "nugget",
+    "count": 1
+  },
+  "output": {
+    "item": "indrev:lead_purified_ore",
+    "count": 1
+  },
+  "processTime": 500
+}

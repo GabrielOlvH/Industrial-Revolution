@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "item": "indrev:lead_purified_ore"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_lead_still",
+    "type": "ingot",
+    "count": 4
+  },
+  "processTime": 600
+}

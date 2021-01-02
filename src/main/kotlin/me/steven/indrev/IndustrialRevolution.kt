@@ -55,6 +55,8 @@ object IndustrialRevolution : ModInitializer {
             IRRegistry.MOLTEN_GOLD_STILL,
             IRRegistry.MOLTEN_COPPER_STILL,
             IRRegistry.MOLTEN_TIN_STILL,
+            IRRegistry.MOLTEN_SILVER_STILL,
+            IRRegistry.MOLTEN_LEAD_STILL,
             IRRegistry.SULFURIC_ACID_STILL,
             IRRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }

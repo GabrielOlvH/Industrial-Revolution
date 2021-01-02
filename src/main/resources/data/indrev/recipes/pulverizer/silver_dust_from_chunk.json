@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "indrev:silver_chunk"
+  },
+  "output": {
+    "item": "indrev:silver_dust",
+    "count": 1
+  },
+  "processTime": 200
+}
