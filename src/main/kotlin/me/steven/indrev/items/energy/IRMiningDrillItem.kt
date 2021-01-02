@@ -30,6 +30,8 @@ open class IRMiningDrillItem(
         }
     }
 
+    override fun isEnchantable(stack: ItemStack?): Boolean = false
+
     override fun appendTooltip(
         stack: ItemStack,
         world: World?,

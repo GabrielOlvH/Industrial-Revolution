@@ -67,6 +67,8 @@ class IRGamerAxeItem(
         buildEnergyTooltip(stack, tooltip)
     }
 
+    override fun isEnchantable(stack: ItemStack?): Boolean = false
+
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {
             val stack = user?.getStackInHand(hand)

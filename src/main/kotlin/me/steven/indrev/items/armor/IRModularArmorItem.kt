@@ -33,6 +33,8 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
     }
 
+    override fun isEnchantable(stack: ItemStack?): Boolean = false
+
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         getInstalledTooltip(getInstalled(stack), stack, tooltip)
         buildEnergyTooltip(stack, tooltip)
