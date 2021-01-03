@@ -1,11 +1,9 @@
 package me.steven.indrev.energy
 
 import dev.technici4n.fasttransferlib.api.Simulation
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.isLoaded
@@ -93,8 +91,8 @@ class EnergyNetwork(
         cables.forEach { state.networksByPos.remove(it) }
     }
 
-    fun appendCable(state: EnergyNetworkState, blockEntity: CableBlockEntity, blockPos: BlockPos) {
-        tier = blockEntity.tier
+    fun appendCable(state: EnergyNetworkState, block: CableBlock, blockPos: BlockPos) {
+        tier = block.tier
         cables.add(blockPos)
         state.networksByPos[blockPos] = this
     }
@@ -159,20 +157,19 @@ class EnergyNetwork(
         }
 
         private fun buildNetwork(scanned: MutableSet<BlockPos>, state: EnergyNetworkState, network: EnergyNetwork, chunk: Chunk, world: ServerWorld, blockPos: BlockPos, source: BlockPos, direction: Direction) {
-            if (network.machines.containsKey(blockPos)) {
+            if (energyOf(world, blockPos, direction.opposite) != null) {
                 network.appendMachine(blockPos, direction.opposite)
-                return
             }
             if (blockPos != source && !scanned.add(blockPos)) return
-            val blockEntity = chunk.getBlockEntity(blockPos) ?: return
-            if (blockEntity is CableBlockEntity) {
+            val blockState = chunk.getBlockState(blockPos) ?: return
+            val block = blockState.block
+            if (block is CableBlock) {
                 if (state.networksByPos.containsKey(blockPos)) {
                     val oldNetwork = state.networksByPos[blockPos]
                     if (state.networks.contains(oldNetwork) && oldNetwork != network) {
                         oldNetwork?.remove()
                     }
                 }
-                val blockState = chunk.getBlockState(blockPos)
                 Direction.values().forEach { dir ->
                     if (blockState[CableBlock.getProperty(dir)]) {
                         val nPos = blockPos.offset(dir)
@@ -182,10 +179,8 @@ class EnergyNetwork(
                             buildNetwork(scanned, state, network, world.getChunk(nPos), world, nPos, source, dir)
                     }
                 }
-                if (blockState[CableBlock.getProperty(direction)])
-                    network.appendCable(state, blockEntity, blockPos.toImmutable())
-            } else if (EnergyApi.SIDED[world, blockPos, direction.opposite] != null) {
-                network.appendMachine(blockPos, direction.opposite)
+                if (blockState[CableBlock.getProperty(direction.opposite)])
+                    network.appendCable(state, block, blockPos.toImmutable())
             }
         }
 

@@ -39,7 +39,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
-class CableBlock(settings: Settings, private val tier: Tier) : Block(settings), BlockEntityProvider {
+class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState
