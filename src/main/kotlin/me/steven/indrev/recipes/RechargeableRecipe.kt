@@ -1,10 +1,7 @@
 package me.steven.indrev.recipes
 
 import com.google.gson.JsonObject
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
 import net.minecraft.inventory.CraftingInventory
@@ -21,7 +18,7 @@ import net.minecraft.util.collection.DefaultedList
 class RechargeableRecipe(id: Identifier, group: String, width: Int, height: Int, ingredients: DefaultedList<Ingredient>, output: ItemStack) : ShapedRecipe(id, group, width, height, ingredients, output) {
     override fun craft(craftingInventory: CraftingInventory?): ItemStack {
         val result: ItemStack = super.craft(craftingInventory)
-        val resultItemIo = EnergyApi.ITEM[ItemKey.of(result), ContainerItemContext.ofStack(result)]
+        val resultItemIo = energyOf(result)
         if (resultItemIo != null && craftingInventory != null) {
             for (i in 0 until craftingInventory.size()) {
                 val stack = craftingInventory.getStack(i)

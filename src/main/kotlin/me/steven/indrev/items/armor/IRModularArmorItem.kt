@@ -3,10 +3,8 @@ package me.steven.indrev.items.armor
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
@@ -14,6 +12,7 @@ import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.buildEnergyTooltip
+import me.steven.indrev.utils.energyOf
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.attribute.EntityAttribute
@@ -75,7 +74,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
         equipmentSlot: EquipmentSlot
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
         val item = itemStack.item as IRModularArmorItem
-        val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
+        val itemIo = energyOf(itemStack)
         if (itemIo == null || itemIo.energy <= 0) {
             return ImmutableMultimap.of()
         } else if (equipmentSlot == item.slotType) {

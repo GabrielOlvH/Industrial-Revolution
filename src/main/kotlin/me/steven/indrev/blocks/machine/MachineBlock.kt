@@ -4,9 +4,6 @@ import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -147,7 +144,7 @@ open class MachineBlock(
         if (blockEntity is MachineBlockEntity<*>) {
             val tag = itemStack?.getSubTag("MachineInfo")
             val temperatureController = blockEntity.temperatureComponent
-            val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
+            val itemIo = energyOf(itemStack)
             if (itemIo != null) {
                 blockEntity.energy = itemIo.energy
             }

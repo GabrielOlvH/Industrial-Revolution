@@ -2,12 +2,10 @@ package me.steven.indrev.items.energy
 
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
@@ -193,7 +191,7 @@ class IRGamerAxeItem(
         itemStack: ItemStack,
         equipmentSlot: EquipmentSlot
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
-        val itemIo = EnergyApi.ITEM[ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack)]
+        val itemIo = energyOf(itemStack)
         if (isActive(itemStack) || itemIo == null || itemIo.energy <= 0)
             return ImmutableMultimap.of()
         else if (equipmentSlot == EquipmentSlot.MAINHAND) {

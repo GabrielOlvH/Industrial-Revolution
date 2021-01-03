@@ -1,12 +1,13 @@
 package me.steven.indrev.items.misc
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.utils.energyOf
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
@@ -17,7 +18,7 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
         if (context?.world?.isClient == true) return ActionResult.SUCCESS
         val blockPos = context?.blockPos
         val blockEntity = context?.world?.getBlockEntity(blockPos)
-        val machineIo = EnergyApi.SIDED[context!!.world, blockPos, context.side]
+        val machineIo = energyOf(context!!.world as ServerWorld, blockPos!!, context.side)
         if (machineIo != null) {
             val energy = machineIo.energy.toInt()
             val text = TranslatableText("item.indrev.energy_reader.use")

@@ -1,11 +1,9 @@
 package me.steven.indrev.items.energy
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.energyOf
 import net.minecraft.client.item.TooltipContext
@@ -43,7 +41,7 @@ class IRPortableChargerItem(
         val items = (0 until player.inventory.size())
             .map { s -> player.inventory.getStack(s) }
             .filter { s -> s.item !is IRPortableChargerItem }
-            .mapNotNull { s -> EnergyApi.ITEM[ItemKey.of(s), ContainerItemContext.ofStack(s)]}
+            .mapNotNull { s -> energyOf(s) }
         var rem = 16384.0
         items.forEach { h ->
             rem -= EnergyMovement.move(handler, h, rem)
@@ -55,7 +53,7 @@ class IRPortableChargerItem(
             val items = (0 until inventory.size)
                 .map { s -> inventory[s] }
                 .filter { s -> s.item !is IRPortableChargerItem }
-                .mapNotNull { s -> EnergyApi.ITEM[ItemKey.of(s), ContainerItemContext.ofStack(s)]}
+                .mapNotNull { s -> energyOf(s) }
             var rem = 16384.0
             items.forEach { h ->
                 rem -= EnergyMovement.move(handler, h, rem)

@@ -1,10 +1,7 @@
 package me.steven.indrev.blocks.machine
 
 import com.google.common.collect.Iterables
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.registry.MachineRegistry
@@ -61,7 +58,7 @@ class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
             return ActionResult.SUCCESS
         }
         val handStack = player?.mainHandStack
-        if (EnergyApi.ITEM[ItemKey.of(handStack), ContainerItemContext.ofStack(handStack)] != null) {
+        if (energyOf(handStack) != null) {
             inventory.setStack(0, handStack)
             player?.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
             return ActionResult.SUCCESS
