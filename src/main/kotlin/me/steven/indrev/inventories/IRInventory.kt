@@ -34,10 +34,6 @@ class IRInventory(
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 
-    fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
-
-    fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
-
     fun fits(stack: Item, outputSlot: Int): Boolean {
         val outStack = getStack(outputSlot)
         if (outStack.isEmpty || (stack == outStack.item && outStack.tag?.isEmpty != false))

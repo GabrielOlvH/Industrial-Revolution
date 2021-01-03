@@ -51,7 +51,6 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
-        val input = inventory.getInputInventory()
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
@@ -59,7 +58,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             workingState = false
             return
         } else workingState = true
-        val swordStack = (0 until input.size()).map { input.getStack(it) }.firstOrNull { it.item is SwordItem }
+        val swordStack = inventory.inputSlots.map { inventory.getStack(it) }.firstOrNull { it.item is SwordItem }
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
