@@ -7,7 +7,7 @@
       "translate": "advancements.indrev.heat_generator"
     },
     "description": {
-      "translate": "advancements.indrev.heat_generator"
+      "translate": "advancements.indrev.heat_generator.description"
     }
   },
   "parent": "indrev:coal_generator",
