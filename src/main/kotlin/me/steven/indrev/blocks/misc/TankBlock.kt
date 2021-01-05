@@ -169,7 +169,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState, to: AttributeList<*>?) {
         val tankEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return
         val fluidComponent = tankEntity.fluidComponent
-        val volume = fluidComponent.tanks[0].volume
+        val volume = fluidComponent[0]
         when (to?.attribute) {
             FluidAttributes.GROUPED_INV ->
                 to?.offer(fluidComponent.groupedInv)
@@ -179,7 +179,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock && currentState[DOWN]) {
                         val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
-                        if (component.tanks[0].volume.amount() < component.limit) {
+                        if (component[0].amount() < component.limit) {
                             to?.offer(component.extractable)
                             break
                         }
@@ -196,7 +196,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
                     var currentState = world.getBlockState(currentPos)
                     while (currentState.block is TankBlock) {
                         val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
-                        if (component.tanks[0].volume.amount() < component.limit) {
+                        if (component[0].amount() < component.limit) {
                             to?.offer(component.insertable)
                             break
                         }

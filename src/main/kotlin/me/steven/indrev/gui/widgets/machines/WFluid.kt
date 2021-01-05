@@ -23,7 +23,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is MachineBlockEntity<*>) {
                 val fluid = blockEntity.fluidComponent ?: return@run
-                val energy = fluid.tanks[tank].volume.amount().asInexactDouble() * 1000
+                val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
                 val maxEnergy = fluid.limit.asInexactDouble() * 1000
                 if (energy > 0) {
                     var percent = energy.toFloat() / maxEnergy.toFloat()
@@ -31,7 +31,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
                         val offset = 2.0
-                        blockEntity.fluidComponent!!.tanks[tank].volume.renderGuiRect(
+                        blockEntity.fluidComponent!!.tanks[tank].renderGuiRect(
                             x + offset,
                             y.toDouble() + height - barSize + offset,
                             x.toDouble() + width - offset,
@@ -49,9 +49,9 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
             if (blockEntity is MachineBlockEntity<*>) {
                 val fluid = blockEntity.fluidComponent ?: return@run
                 val tank = fluid.tanks[tank]
-                val energy = tank.volume.amount_F.asInt(1000)
+                val energy = tank.amount_F.asInt(1000)
                 val maxEnergy = fluid.limit.asInt(1000)
-                information?.add(*tank.volume.fluidKey.fullTooltip.toTypedArray())
+                information?.add(*tank.fluidKey.fullTooltip.toTypedArray())
                 information?.add(LiteralText("$energy / $maxEnergy mB"))
                 super.addTooltip(information)
             }

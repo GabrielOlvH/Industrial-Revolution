@@ -31,7 +31,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         if (burnTime > 0) burnTime--
         else if (energyCapacity > energy) {
             val fluidComponent = fluidComponent!!
-            val volume = fluidComponent.tanks[0].volume
+            val volume = fluidComponent[0]
             val extractable = fluidComponent.extractable
             fluidComponent.extractable
             val consume = getConsumptionRate()

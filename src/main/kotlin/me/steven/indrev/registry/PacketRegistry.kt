@@ -1,7 +1,6 @@
 package me.steven.indrev.registry
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.IndustrialRevolutionClient
@@ -88,7 +87,7 @@ object PacketRegistry {
                 if (world.isLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(GroupedFluidInvFixedWrapper(fluidComponent), player, fluidComponent.getFilterForTank(tank))
+                    FluidInvUtil.interactCursorWithTank(fluidComponent.getTank(tank), player, fluidComponent.getFilterForTank(tank))
                 }
             }
         }

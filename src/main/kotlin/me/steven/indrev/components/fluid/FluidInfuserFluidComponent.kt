@@ -11,10 +11,9 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import java.math.RoundingMode
 
 class FluidInfuserFluidComponent(machine: () -> MachineBlockEntity<*>) : FluidComponent(machine, FluidAmount.ofWhole(8) , 2) {
+
     override fun getGroupedInv(): GroupedFluidInv {
         return object : GroupedFluidInvFixedWrapper(this) {
-
-            override fun getInsertionFilter(): FluidFilter = inv().getFilterForTank(0)
 
             override fun attemptExtraction(
                 filter: FluidFilter?,
@@ -24,31 +23,25 @@ class FluidInfuserFluidComponent(machine: () -> MachineBlockEntity<*>) : FluidCo
                 if (maxAmount.isNegative)
                     throw IllegalArgumentException("maxAmount cannot be negative! (was $maxAmount)")
 
-                    var fluid = FluidVolumeUtil.EMPTY
-                    return if (maxAmount.isZero)
-                        fluid
-                    else {
-                        val tank = 1
-                        val thisMax = maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
-                        fluid = FluidVolumeUtil.extractSingle(this.inv(), tank, filter, fluid, thisMax, simulation)
-                        if (fluid.amount_F >= maxAmount)
-                            return fluid
-                        fluid
-                    }
+                var fluid = FluidVolumeUtil.EMPTY
+                if (maxAmount.isZero)
+                    return fluid
+
+                val thisMax = maxAmount.roundedSub(fluid.amount(), RoundingMode.DOWN)
+                fluid = extractFluid(1, filter, fluid, thisMax, simulation)
+                if (fluid.amount() >= maxAmount)
+                    return fluid
+                return fluid
             }
 
-            override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
-                var fluid = fluid
-                return if (fluid.isEmpty)
-                    FluidVolumeUtil.EMPTY
-                else {
-                    fluid = fluid.copy()
-                    val tank = 0
-                    fluid = FluidVolumeUtil.insertSingle(this.inv(), tank, fluid, simulation)
-                    if (fluid.isEmpty)
-                        return FluidVolumeUtil.EMPTY
-                    fluid
-                }
+            override fun attemptInsertion(immutableFluid: FluidVolume, simulation: Simulation?): FluidVolume {
+                var fluid = immutableFluid
+                if (fluid.isEmpty)
+                    return FluidVolumeUtil.EMPTY
+                fluid = insertFluid(0, fluid.copy(), simulation)
+                if (fluid.isEmpty)
+                    return FluidVolumeUtil.EMPTY
+                return fluid
             }
         }
     }

@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.machine
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.api.machines.Tier
@@ -82,7 +83,7 @@ open class MachineBlock(
         if (world.isClient) return ActionResult.CONSUME
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
         if (blockEntity.fluidComponent != null) {
-            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
+            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent as FixedFluidInv, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
         }
         val stack = player?.mainHandStack

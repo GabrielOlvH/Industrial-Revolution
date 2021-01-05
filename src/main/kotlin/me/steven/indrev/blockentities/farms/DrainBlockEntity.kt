@@ -27,7 +27,7 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     override val maxInput: Double = config.maxInput
 
     override fun machineTick() {
-        if ((world?.time ?: return) % 20 != 0L || !fluidComponent!!.tanks[0].volume.isEmpty) return
+        if ((world?.time ?: return) % 20 != 0L || !fluidComponent!![0].isEmpty) return
         val fluidComponent = fluidComponent ?: return
         val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
         val range = getWorkingArea()

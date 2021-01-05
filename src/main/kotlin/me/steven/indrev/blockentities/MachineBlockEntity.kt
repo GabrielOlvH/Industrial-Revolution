@@ -341,24 +341,21 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     private fun transferFluids() {
-        fluidComponent?.tanks?.forEach { _ ->
-            fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
-                if (mode == TransferMode.NONE) return@innerForEach
-                var extractable: FluidExtractable? = null
-                var insertable: FluidInsertable? = null
-                if (mode.output) {
-                    insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                        ?: return@innerForEach
-                    extractable = fluidComponent?.extractable
-                }
-                if (mode.input) {
-                    extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull ?: return@innerForEach
-                    insertable = fluidComponent?.insertable
-
-                }
-                if (extractable != null && insertable != null)
-                    FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
+        fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
+            if (mode == TransferMode.NONE) return@innerForEach
+            var extractable: FluidExtractable? = null
+            var insertable: FluidInsertable? = null
+            if (mode.output) {
+                insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, direction)
+                extractable = fluidComponent?.extractable
             }
+            if (mode.input) {
+                extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
+                insertable = fluidComponent?.insertable
+
+            }
+            if (extractable != null && insertable != null)
+                FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
         }
     }
 }

@@ -23,8 +23,8 @@ class TankBlockEntity : IRSyncableBlockEntity(IRRegistry.TANK_BLOCK_ENTITY), Tic
             isMarkedForUpdate = false
         }
         if (!cachedState[TankBlock.DOWN]) return
-        val tank = fluidComponent.tanks[0]
-        val fluidAmount = tank.volume.amount()
+        val tank = fluidComponent[0]
+        val fluidAmount = tank.amount()
         val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, Direction.DOWN).firstOrNull ?: return
         val extractable = fluidComponent.extractable
         val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)

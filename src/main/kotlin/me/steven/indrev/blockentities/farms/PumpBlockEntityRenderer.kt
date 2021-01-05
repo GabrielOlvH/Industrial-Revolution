@@ -30,7 +30,7 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         matrices.run {
 
             push()
-            val inputVolume = entity.fluidComponent!!.tanks[0].volume
+            val inputVolume = entity.fluidComponent!![0]
             if (!inputVolume.isEmpty) {
 
                 translate(0.5, 0.5, 0.5)
