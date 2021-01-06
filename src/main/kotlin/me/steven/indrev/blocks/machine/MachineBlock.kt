@@ -26,7 +26,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ScreenHandler
@@ -34,8 +33,6 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.BooleanProperty
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -55,20 +52,6 @@ open class MachineBlock(
     val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
 ) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
-
-    init {
-        if (this.defaultState.contains(WORKING_PROPERTY))
-            this.defaultState = stateManager.defaultState.with(WORKING_PROPERTY, false)
-    }
-
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        super.appendProperties(builder)
-        builder?.add(WORKING_PROPERTY)
-    }
-
-    override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return defaultState.with(WORKING_PROPERTY, false)
-    }
 
     override fun createBlockEntity(view: BlockView?): BlockEntity? = registry.blockEntityType(tier).instantiate()
 
@@ -184,7 +167,8 @@ open class MachineBlock(
 
     @Environment(EnvType.CLIENT)
     override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random?) {
-        if (state?.contains(WORKING_PROPERTY) == true && state[WORKING_PROPERTY]) {
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        if (blockEntity.workingState) {
             val d = pos.x.toDouble() + 0.5
             val e = pos.y.toDouble() + 1.0
             val f = pos.z.toDouble() + 0.5
@@ -200,9 +184,5 @@ open class MachineBlock(
             to.offer(fluidComponent)
         else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
             to.offer(fluidComponent)
-    }
-
-    companion object {
-        val WORKING_PROPERTY: BooleanProperty = BooleanProperty.of("working")
     }
 }

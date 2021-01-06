@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "indrev:block/modular_workbench"
+      "model": "indrev:block/modular_workbench_mk4"
     }
   }
 }
