@@ -215,9 +215,26 @@ class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val 
             return with(identifier("sword_highlight"), color)
         }
 
+        fun moltenBucketBase(color: Long): Builder {
+            return with(identifier("molten_bucket_base"), color)
+        }
+
+        fun moltenBucketHighlight(color: Long): Builder {
+            return with(identifier("molten_bucket_highlight"), color)
+        }
+
+        fun moltenBucketOutline(color: Long): Builder {
+            return with(identifier("molten_bucket_outline"), color)
+        }
+
         fun toolStick(): Builder {
             transformationType = TransformationType.HANDHELD
             return with(identifier("tool_stick"), -1)
+        }
+
+        fun bucket(): Builder {
+            transformationType = TransformationType.HANDHELD
+            return with(Identifier("bucket"), -1)
         }
 
         fun ore(): Builder {

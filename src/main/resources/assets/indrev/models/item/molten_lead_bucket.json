@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "indrev:item/molten_tin_bucket"
+    "layer0": "indrev:item/molten_lead_bucket"
   }
 }

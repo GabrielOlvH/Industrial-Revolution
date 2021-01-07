@@ -25,6 +25,8 @@ object MetalSpriteRegistry {
             putBlock("lead_block", MetalModel.Builder().block().blockBase(LEAD_BASE).build())
             put("lead_purified_ore", MetalModel.Builder().purifiedOreBase(LEAD_BASE).purifiedOreHighlight(LEAD_HIGHLIGHT).build())
             put("lead_chunk", MetalModel.Builder().chunkBase(LEAD_BASE).chunkHighlight(LEAD_HIGHLIGHT).build())
+            put("molten_lead_bucket", MetalModel.Builder().bucket().moltenBucketBase(LEAD_BASE).moltenBucketHighlight(LEAD_HIGHLIGHT).build())
+
 
             put("silver_ingot", MetalModel.Builder().ingotBase(SILVER_BASE).ingotHighlight(SILVER_HIGHLIGHT).build())
             put("silver_plate", MetalModel.Builder().plateBase(SILVER_BASE).plateHighlight(SILVER_HIGHLIGHT).build())
@@ -59,6 +61,7 @@ object MetalSpriteRegistry {
                 SILVER_HIGHLIGHT
             ).build())
             put("silver_chunk", MetalModel.Builder().chunkBase(SILVER_BASE).chunkHighlight(SILVER_HIGHLIGHT).build())
+            put("molten_silver_bucket", MetalModel.Builder().bucket().moltenBucketBase(SILVER_BASE).moltenBucketHighlight(SILVER_HIGHLIGHT).build())
 
             put("copper_ingot", MetalModel.Builder().ingotBase(COPPER_BASE).ingotHighlight(COPPER_HIGHLIGHT).build())
             put("copper_plate", MetalModel.Builder().plateBase(COPPER_BASE).plateHighlight(COPPER_HIGHLIGHT).build())
@@ -93,6 +96,7 @@ object MetalSpriteRegistry {
                 COPPER_HIGHLIGHT
             ).build())
             put("copper_chunk", MetalModel.Builder().chunkBase(COPPER_BASE).chunkHighlight(COPPER_HIGHLIGHT).build())
+            put("molten_copper_bucket", MetalModel.Builder().bucket().moltenBucketBase(COPPER_BASE).moltenBucketHighlight(COPPER_HIGHLIGHT).build())
 
             put("tungsten_ingot", MetalModel.Builder().ingotBase(TUNGSTEN_BASE).ingotHighlight(
                 TUNGSTEN_HIGHLIGHT
@@ -281,6 +285,7 @@ object MetalSpriteRegistry {
             put("tin_chunk", MetalModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).chunkOutline(
                 TIN_OUTLINE
             ).build())
+            put("molten_tin_bucket", MetalModel.Builder().bucket().moltenBucketBase(TIN_BASE).moltenBucketHighlight(TIN_HIGHLIGHT).moltenBucketOutline(TIN_OUTLINE).build())
 
             put("nikolite_ingot", MetalModel.Builder().ingotBase(NIKOLITE_BASE).ingotHighlight(NIKOLITE_HIGHLIGHT).build())
             put("nikolite_dust", MetalModel.Builder().dustBase(NIKOLITE_BASE).dustHighlight(NIKOLITE_HIGHLIGHT).build())
@@ -308,6 +313,7 @@ object MetalSpriteRegistry {
             put("netherite_scrap_purified_ore", MetalModel.Builder().purifiedOreBase(NETHERITE_SCRAP_BASE).purifiedOreHighlight(
                 NETHERITE_SCRAP_HIGHLIGHT
             ).purifiedOreOutline(NETHERITE_SCRAP_OUTLINE).build())
+            put("molten_netherite_bucket", MetalModel.Builder().bucket().moltenBucketBase(NETHERITE_SCRAP_BASE).moltenBucketHighlight(NETHERITE_SCRAP_HIGHLIGHT).build())
 
         }
 
