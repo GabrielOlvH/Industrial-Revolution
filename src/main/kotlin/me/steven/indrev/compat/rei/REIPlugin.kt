@@ -1,5 +1,6 @@
 package me.steven.indrev.compat.rei
 
+import me.shedaniel.rei.api.EntryRegistry
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
@@ -8,12 +9,47 @@ import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
+import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
 object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
+
+    override fun registerEntries(entryRegistry: EntryRegistry?) {
+        fun registerCharged(vararg items: Item) {
+            items.forEach { item ->
+                entryRegistry?.registerEntriesAfter(EntryStack.create(item),
+                    EntryStack.create(ItemStack(item).also { it.orCreateTag.putDouble("energy", energyOf(it)!!.energyCapacity) }))
+            }
+        }
+
+        registerCharged(
+            IRRegistry.MINING_DRILL_MK1,
+            IRRegistry.MINING_DRILL_MK2,
+            IRRegistry.MINING_DRILL_MK3,
+            IRRegistry.MINING_DRILL_MK4,
+            IRRegistry.MODULAR_ARMOR_HELMET,
+            IRRegistry.MODULAR_ARMOR_CHEST,
+            IRRegistry.MODULAR_ARMOR_LEGGINGS,
+            IRRegistry.MODULAR_ARMOR_BOOTS,
+            IRRegistry.PORTABLE_CHARGER_ITEM,
+            IRRegistry.BATTERY
+        )
+
+        entryRegistry?.registerEntriesAfter(EntryStack.create(IRRegistry.GAMER_AXE_ITEM),
+            EntryStack.create(ItemStack(IRRegistry.GAMER_AXE_ITEM).also {
+                val tag = it.orCreateTag
+                tag.putDouble("energy", energyOf(it)!!.energyCapacity)
+                tag.putBoolean("Active", true)
+                tag.putFloat("Progress", 1f)
+            }))
+
+    }
 
     override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
         recipeHelper?.registerCategory(

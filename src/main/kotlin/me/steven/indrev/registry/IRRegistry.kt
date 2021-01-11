@@ -190,7 +190,7 @@ object IRRegistry {
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
 
-        identifier("battery").item(IRBatteryItem(itemSettings().maxDamage(4096), 4096.0))
+        identifier("battery").item(BATTERY)
 
         identifier("circuit_mk1").item(DEFAULT_ITEM())
         identifier("circuit_mk2").item(DEFAULT_ITEM())
@@ -339,6 +339,8 @@ object IRRegistry {
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
+
+    val BATTERY = IRBatteryItem(itemSettings().maxDamage(4096), 4096.0)
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
