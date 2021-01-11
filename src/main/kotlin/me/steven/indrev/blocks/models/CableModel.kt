@@ -4,7 +4,6 @@ import com.mojang.datafixers.util.Pair
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blocks.machine.CableBlock
-import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
@@ -102,7 +101,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
             if (blockEntity?.cover != null) {
                 val coverState = Registry.BLOCK.get(blockEntity.cover).defaultState
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
-                model.emitFromVanilla(context, randSupplier) { quad -> !quad.hasColor() }
+                model.emitFromVanilla(coverState, context, randSupplier) { quad -> !quad.hasColor() }
 
                 context.pushTransform { q ->
                     val rawColor = ColorProviderRegistry.BLOCK[coverState.block]!!.getColor(coverState, world, pos, 0)
@@ -111,7 +110,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
                     true
                 }
 
-                model.emitFromVanilla(context, randSupplier) { quad -> quad.hasColor() }
+                model.emitFromVanilla(coverState, context, randSupplier) { quad -> quad.hasColor() }
                 context.popTransform()
                 if (coverState.isOpaque) return
             }
@@ -125,17 +124,17 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
         if (state[CableBlock.DOWN]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[6])
     }
 
-    private fun BakedModel.emitFromVanilla(context: RenderContext, randSupplier: Supplier<Random>, shouldEmit: (BakedQuad) -> Boolean) {
+    private fun BakedModel.emitFromVanilla(blockState: BlockState, context: RenderContext, randSupplier: Supplier<Random>, shouldEmit: (BakedQuad) -> Boolean) {
         val emitter = context.emitter
         Direction.values().forEach { dir ->
-            getQuads(null, dir, randSupplier.get()).forEach { quad ->
+            getQuads(blockState, dir, randSupplier.get()).forEach { quad ->
                 if (shouldEmit(quad)) {
                     emitter.fromVanilla(quad.vertexData, 0, false)
                     emitter.emit()
                 }
             }
         }
-        getQuads(null, null, randSupplier.get()).forEach { quad ->
+        getQuads(blockState, null, randSupplier.get()).forEach { quad ->
             if (shouldEmit(quad)) {
                 emitter.fromVanilla(quad.vertexData, 0, false)
                 emitter.emit()
@@ -156,12 +155,5 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
 
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
         context.fallbackConsumer().accept(modelArray[0])
-        val state = MachineRegistry.CABLE_REGISTRY.block(tier).defaultState
-        if (state[CableBlock.NORTH]) context.fallbackConsumer().accept(modelArray[1])
-        if (state[CableBlock.EAST]) context.fallbackConsumer().accept(modelArray[2])
-        if (state[CableBlock.SOUTH]) context.fallbackConsumer().accept(modelArray[3])
-        if (state[CableBlock.WEST]) context.fallbackConsumer().accept(modelArray[4])
-        if (state[CableBlock.UP]) context.fallbackConsumer().accept(modelArray[5])
-        if (state[CableBlock.DOWN]) context.fallbackConsumer().accept(modelArray[6])
     }
 }
