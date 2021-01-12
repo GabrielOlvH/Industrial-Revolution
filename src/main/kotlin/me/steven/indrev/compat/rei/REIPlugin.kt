@@ -4,6 +4,7 @@ import me.shedaniel.rei.api.EntryRegistry
 import me.shedaniel.rei.api.EntryStack
 import me.shedaniel.rei.api.RecipeHelper
 import me.shedaniel.rei.api.plugins.REIPluginV0
+import me.shedaniel.rei.plugin.information.DefaultInformationDisplay
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
@@ -15,6 +16,8 @@ import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
 object REIPlugin : REIPluginV0 {
@@ -192,6 +195,22 @@ object REIPlugin : REIPluginV0 {
                 SAWMILL,
                 EntryStack.create(block)
             )
+        }
+
+        MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (id, registry) ->
+            if (registry.upgradeable && registry.tiers.size > 1) {
+                registry.forEachBlock { tier, block ->
+                    val entryStack = EntryStack.create(block)
+                    if (tier != Tier.CREATIVE && tier != Tier.MK1 && recipeHelper?.getRecipesFor(entryStack)?.isEmpty() == true) {
+                        val info = DefaultInformationDisplay.createFromEntry(entryStack, TranslatableText(block.translationKey))
+                        info.lines(TranslatableText("indrev.category.rei.upgrading",
+                            TranslatableText("item.indrev.tier_upgrade_" + tier.toString().toLowerCase()).formatted(Formatting.DARK_GRAY),
+                            TranslatableText(registry.block(registry.tiers[registry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
+                            tier.toString()))
+                        recipeHelper.registerDisplay(info)
+                    }
+                }
+            }
         }
     }
 
