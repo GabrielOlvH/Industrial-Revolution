@@ -3,7 +3,6 @@ package me.steven.indrev.registry
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.blocks.models.CableModel
-import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.PumpPipeBakedModel
 import me.steven.indrev.items.models.TankItemBakedModel
 import me.steven.indrev.utils.SimpleBlockModel
@@ -33,7 +32,6 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
-            path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
             path == "tank" && variant == "inventory" -> TankItemBakedModel
             path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
             MachineRegistry.MAP.containsKey(id) -> MachineRegistry.MAP[id]?.modelProvider?.get(Tier.values()[(path.last().toString().toIntOrNull() ?: 4) - 1])?.invoke(id.path.replace("_creative", "_mk4"))

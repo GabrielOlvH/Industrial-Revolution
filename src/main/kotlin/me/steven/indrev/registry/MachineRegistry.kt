@@ -16,6 +16,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
+import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
 import me.steven.indrev.config.IConfig
@@ -208,7 +209,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(blockEntity, dir) else null
                 }
             }
-            .noModelProvider()
+            .modelProvider { { id -> LazuliFluxContainerBakedModel(id) } }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry("electric_furnace")
             .blockProvider { tier ->
