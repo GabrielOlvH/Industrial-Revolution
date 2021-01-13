@@ -16,6 +16,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -32,7 +33,6 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -92,32 +92,29 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
 
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
         if (world?.isClient == false && state[COVERED]) {
-            val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity !is CableBlockEntity) return
+            val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity ?: return
             world.setBlockState(pos, state.with(COVERED, false))
-            val coverId = blockEntity.cover
-            val block = Registry.BLOCK.get(coverId).asItem()
-            ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(block)))
-            blockEntity.cover = null
+            val cover = blockEntity.coverState ?: return
+            ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(cover.block)))
+            blockEntity.coverState = null
             blockEntity.markDirty()
         }
     }
 
-    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
+    override fun onUse(state: BlockState, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         if (player?.isSneaking == true) return ActionResult.PASS
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
-        if (state?.get(COVERED) == false && !handStack.isEmpty) {
-            val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity !is CableBlockEntity) return ActionResult.FAIL
-            val id = Registry.ITEM.getId(handStack.item)
-            if (!Registry.BLOCK.getOrEmpty(id).isPresent) return ActionResult.FAIL
-            val block = Registry.BLOCK.get(id)
-            if (block is BlockEntityProvider || !block.defaultState.isFullCube(world, pos)) return ActionResult.FAIL
-            blockEntity.cover = id
-            blockEntity.markDirty()
-            world.setBlockState(pos, state.with(COVERED, true))
-            handStack.count--
-            return ActionResult.SUCCESS
+        val item = handStack.item
+        if (!state[COVERED] && !handStack.isEmpty) {
+            val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity ?: return ActionResult.FAIL
+            if (item is BlockItem && item.block !is BlockEntityProvider && item.block.defaultState.isFullCube(world, pos)) {
+                val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
+                blockEntity.coverState = result
+                blockEntity.markDirty()
+                world.setBlockState(pos, state.with(COVERED, true))
+                handStack.count--
+                return ActionResult.SUCCESS
+            }
         }
         return ActionResult.FAIL
     }

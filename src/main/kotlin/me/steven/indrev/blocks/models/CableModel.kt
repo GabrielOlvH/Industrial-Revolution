@@ -20,7 +20,6 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Function
@@ -98,8 +97,8 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
     ) {
         if (state[CableBlock.COVERED]) {
             val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity
-            if (blockEntity?.cover != null) {
-                val coverState = Registry.BLOCK.get(blockEntity.cover).defaultState
+            if (blockEntity?.coverState != null) {
+                val coverState = blockEntity.coverState!!
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
                 model.emitFromVanilla(coverState, context, randSupplier) { quad -> !quad.hasColor() }
 
