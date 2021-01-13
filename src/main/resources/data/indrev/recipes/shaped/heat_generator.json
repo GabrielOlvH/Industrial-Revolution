@@ -1,19 +1,22 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NCN",
-    "BMB",
-    "NUN"
+    "UCU",
+    "NMN",
+    "LBL"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk4"
     },
     "U": {
-      "item": "minecraft:bucket"
+      "item": "indrev:heat_coil"
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "L": {
+      "tag": "c:lead_plates"
     },
     "M": {
       "item": "indrev:machine_block"

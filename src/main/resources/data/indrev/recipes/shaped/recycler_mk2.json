@@ -3,7 +3,7 @@
   "pattern": [
     "DCD",
     "NMN",
-    "DBD"
+    "SBS"
   ],
   "key": {
     "M": {
@@ -16,7 +16,10 @@
       "item": "indrev:nikolite_dust"
     },
     "D": {
-      "item": "minecraft:dirt"
+      "item": "minecraft:composter"
+    },
+    "S": {
+      "tag": "c:silver_plates"
     },
     "B": {
       "item": "indrev:battery"

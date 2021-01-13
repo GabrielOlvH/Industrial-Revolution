@@ -13,10 +13,10 @@
       "item": "indrev:circuit_mk1"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:copper_plates"
     },
     "N": {
-      "item": "indrev:nikolite_dust"
+      "item": "indrev:heat_coil"
     },
     "B": {
       "item": "indrev:battery"

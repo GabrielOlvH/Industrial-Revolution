@@ -1,14 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NEN",
-    "RCR",
-    " E "
+    "RER",
+    "ECE",
+    "RER"
   ],
   "key": {
-    "N": {
-      "item": "indrev:nikolite_dust"
-    },
     "E": {
       "item": "indrev:enriched_nikolite_ingot"
     },
@@ -16,7 +13,7 @@
       "item": "indrev:circuit_mk3"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "tag": "c:lead_plates"
     }
   },
   "result": {

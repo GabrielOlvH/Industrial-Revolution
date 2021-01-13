@@ -3,7 +3,7 @@
   "pattern": [
     " C ",
     "NSN",
-    " B "
+    "EBE"
   ],
   "key": {
     "S": {
@@ -14,6 +14,9 @@
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"
+    },
+    "E": {
+      "tag": "c:electrum_plates"
     },
     "B": {
       "item": "indrev:battery"

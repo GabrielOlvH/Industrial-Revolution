@@ -1,13 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
+    "PCP",
     "BLB",
-    " B "
+    "NBN"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk4"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "P": {
+      "tag": "c:lead_plates"
     },
     "L": {
       "item": "indrev:lazuli_flux_container_mk3"

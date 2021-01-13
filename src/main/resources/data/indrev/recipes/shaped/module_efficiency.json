@@ -1,18 +1,15 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "BCB",
-    "NIN"
+    "SCS",
+    "SNS"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk4"
     },
-    "I": {
-      "item": "minecraft:lapis_lazuli"
-    },
-    "B": {
-      "item": "minecraft:lapis_block"
+    "S": {
+      "tag": "c:silver_plates"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"

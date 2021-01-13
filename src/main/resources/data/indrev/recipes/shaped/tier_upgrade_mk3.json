@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NPN",
-    "TCT",
+    " P ",
+    "PCP",
     "NPN"
   ],
   "key": {
@@ -10,10 +10,7 @@
       "item": "indrev:circuit_mk3"
     },
     "P": {
-      "tag": "c:copper_plates"
-    },
-    "T": {
-      "tag": "c:tin_plates"
+      "tag": "c:electrum_plates"
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"

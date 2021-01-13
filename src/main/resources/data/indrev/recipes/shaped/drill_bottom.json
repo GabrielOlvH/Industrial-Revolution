@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SLS",
+    "SLS",
+    " S "
+  ],
+  "key": {
+    "S": {
+      "tag": "c:steel_plates"
+    },
+    "L": {
+      "tag": "c:lead_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:drill_bottom"
+  }
+}

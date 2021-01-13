@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
+    "PCP",
     "BLB",
-    " B "
+    "NBN"
   ],
   "key": {
     "C": {
@@ -12,8 +12,14 @@
     "L": {
       "item": "indrev:lazuli_flux_container_mk2"
     },
+    "N": {
+      "item": "indrev:enriched_nikolite_dust"
+    },
     "B": {
       "item": "indrev:battery"
+    },
+    "P": {
+      "tag": "c:electrum_plates"
     }
   },
   "result": {

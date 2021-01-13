@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NNN",
-    " I ",
-    "NNN"
+    "BNB",
+    "NIN",
+    "BNB"
   ],
   "key": {
     "N": {
@@ -11,6 +11,9 @@
     },
     "I": {
       "tag": "c:gold_plates"
+    },
+    "B": {
+      "tag": "c:bronze_plates"
     }
   },
   "result": {

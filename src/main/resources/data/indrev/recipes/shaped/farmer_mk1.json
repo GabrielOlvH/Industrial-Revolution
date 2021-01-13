@@ -13,10 +13,10 @@
       "item": "indrev:circuit_mk1"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:bronze_plates"
     },
     "N": {
-      "item": "minecraft:iron_hoe"
+      "item": "minecraft:golden_hoe"
     },
     "B": {
       "item": "indrev:battery"

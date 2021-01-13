@@ -369,6 +369,7 @@
   "gui.indrev.battery_slot_type": "Battery",
   "gui.indrev.upgrade_slot_type": "Upgrades",
   "gui.indrev.fishingrod": "Fishing rod",
+  "indrev.category.rei.upgrading": "You must craft a %s and use it on a %s to upgrade it to %s",
   "indrev.category.rei.pulverizing": "Pulverizing",
   "indrev.category.rei.infusing": "Infusing",
   "indrev.category.rei.compressing": "Compressing",

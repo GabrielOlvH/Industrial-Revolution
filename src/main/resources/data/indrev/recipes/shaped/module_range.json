@@ -2,14 +2,17 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "ICI",
-    "NIN"
+    "TNT"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk4"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:steel_plates"
+    },
+    "T": {
+      "tag": "c:electrum_plates"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"

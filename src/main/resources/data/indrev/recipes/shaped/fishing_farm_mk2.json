@@ -3,7 +3,7 @@
   "pattern": [
     "PCP",
     "NMN",
-    "FBF"
+    "NBN"
   ],
   "key": {
     "M": {
@@ -13,10 +13,7 @@
       "item": "indrev:circuit_mk2"
     },
     "N": {
-      "item": "indrev:nikolite_ingot"
-    },
-    "F": {
-      "item": "minecraft:fishing_rod"
+      "tag": "c:silver_plates"
     },
     "B": {
       "item": "indrev:battery"
