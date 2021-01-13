@@ -118,7 +118,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getCutout())
 
-        ModelLoadingRegistry.INSTANCE.registerAppender(IRModelManagers)
+        ModelLoadingRegistry.INSTANCE.registerModelProvider(IRModelManagers)
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }
 
         FabricModelPredicateProviderRegistry.register(
