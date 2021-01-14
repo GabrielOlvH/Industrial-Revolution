@@ -15,13 +15,12 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.gui.controllers.IRGuiController
+import me.steven.indrev.gui.controllers.machines.ModularWorkbenchController
 import me.steven.indrev.gui.controllers.machines.RancherController
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.tools.modular.ArmorModule
-import me.steven.indrev.utils.SPLIT_STACKS_PACKET
-import me.steven.indrev.utils.entries
-import me.steven.indrev.utils.isLoaded
-import me.steven.indrev.utils.weight
+import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -134,6 +133,15 @@ object PacketRegistry {
                     blockEntity.markDirty()
                     blockEntity.sync()
                 }
+            }
+        }
+        ServerPlayNetworking.registerGlobalReceiver(ModularWorkbenchController.MODULE_SELECT_PACKET) { server, player, _, buf, _ ->
+            val screenHandler = player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
+            val recipeId = buf.readIdentifier()
+            server.execute {
+                val recipe = server.recipeManager.getAllOfType(ModuleRecipe.TYPE)[recipeId]!!
+                screenHandler.layoutSlots(recipe)
+                screenHandler.selected = recipe
             }
         }
     }

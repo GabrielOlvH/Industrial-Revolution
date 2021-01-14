@@ -1,24 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "WCW",
-    "NGN"
-  ],
-  "key": {
-    "C": {
+  "type": "indrev:modules",
+  "ingredients": [
+    {
       "item": "indrev:circuit_mk4"
     },
-    "G": {
+    {
       "item": "minecraft:gold_block"
     },
-    "W": {
+    {
       "item": "minecraft:gold_nugget"
     },
-    "N": {
+    {
       "item": "indrev:enriched_nikolite_ingot"
     }
-  },
-  "result": {
+  ],
+  "output": {
     "item": "indrev:module_piglin_tricker"
-  }
+  },
+  "processTime": 0
 }

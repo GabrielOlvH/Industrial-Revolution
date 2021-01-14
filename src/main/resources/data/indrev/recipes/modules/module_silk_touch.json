@@ -1,21 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "ICI",
-    "NIN"
-  ],
-  "key": {
-    "C": {
+  "type": "indrev:modules",
+  "ingredients": [
+    {
       "item": "indrev:circuit_mk4"
     },
-    "I": {
+    {
       "item": "minecraft:stone"
     },
-    "N": {
+    {
       "item": "indrev:enriched_nikolite_ingot"
     }
-  },
-  "result": {
+  ],
+  "output": {
     "item": "indrev:module_silk_touch"
-  }
+  },
+  "processTime": 0
 }

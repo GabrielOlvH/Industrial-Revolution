@@ -1,21 +1,18 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "SCS",
-    "SNS"
-  ],
-  "key": {
-    "C": {
+  "type": "indrev:modules",
+  "ingredients": [
+    {
       "item": "indrev:circuit_mk4"
     },
-    "S": {
+    {
       "tag": "c:silver_plates"
     },
-    "N": {
+    {
       "item": "indrev:enriched_nikolite_ingot"
     }
-  },
-  "result": {
+  ],
+  "output": {
     "item": "indrev:module_efficiency"
-  }
+  },
+  "processTime": 0
 }
