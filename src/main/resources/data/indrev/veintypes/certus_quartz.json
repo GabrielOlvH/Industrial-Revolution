@@ -50,56 +50,6 @@
           "weight": 3
         }
       ]
-    },
-    {
-      "id": "indrev:certus_quartz",
-      "optional": true,
-      "output": [
-        {
-          "id": "appliedenergistics2:quartz_ore",
-          "weight": 8
-        },
-        {
-          "id": "appliedenergistics2:charged_quartz_ore",
-          "weight": 3
-        },
-        {
-          "id": "minecraft:stone",
-          "weight": 20
-        },
-        {
-          "id": "minecraft:dirt",
-          "weight": 10
-        },
-        {
-          "id": "minecraft:clay",
-          "weight": 1
-        },
-        {
-          "id": "minecraft:gravel",
-          "weight": 4
-        }
-      ],
-      "sizeRange": [
-        5000,
-        15000
-      ],
-      "biomes": [
-        {
-          "category": [
-            "EXTREME_HILLS",
-            "MESA"
-          ],
-          "weight": 5
-        },
-        {
-          "category": [
-            "SAVANNA",
-            "DESERT"
-          ],
-          "weight": 3
-        }
-      ]
     }
   ]
 }
