@@ -29,6 +29,15 @@ object WorldGeneration {
         if (config.nikolite) {
             configuredFeatures.add(nikoliteFeature)
         }
+        if (config.lead) {
+            configuredFeatures.add(leadFeature)
+        }
+        if (config.tungsten) {
+            configuredFeatures.add(tungstenFeature)
+        }
+        if (config.silver) {
+            configuredFeatures.add(silverFeature)
+        }
         if (config.sulfurCrystals) {
             configuredFeatures.add(sulfurFeatureOverworld)
             configuredFeatures.add(sulfurFeatureNether)
@@ -68,17 +77,56 @@ object WorldGeneration {
             .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
     private val tinFeature =
-      IRConfiguredFeature(
-          identifier("tin_ore"),
-          GenerationStep.Feature.UNDERGROUND_ORES,
-          Feature.ORE.configure(
-              OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
-          )
-              .rangeOf(48)
-              .spreadHorizontally()
-              .repeat(14),
-          IRConfiguredFeature.IS_OVERWORLD
-      )
+        IRConfiguredFeature(
+            identifier("tin_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
+            )
+                .rangeOf(48)
+                .spreadHorizontally()
+                .repeat(14),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val leadFeature =
+        IRConfiguredFeature(
+            identifier("lead_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.LEAD_ORE().defaultState, 6)
+            )
+                .rangeOf(32)
+                .spreadHorizontally()
+                .repeat(12),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val silverFeature =
+        IRConfiguredFeature(
+            identifier("silver_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.SILVER_ORE().defaultState, 8)
+            )
+                .rangeOf(32)
+                .spreadHorizontally()
+                .repeat(8),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val tungstenFeature =
+        IRConfiguredFeature(
+            identifier("tungsten_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TUNGSTEN_ORE().defaultState, 5)
+            )
+                .rangeOf(16)
+                .spreadHorizontally()
+                .repeat(5),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
 
     private val nikoliteFeature =
         IRConfiguredFeature(
@@ -93,7 +141,7 @@ object WorldGeneration {
             )
                 .rangeOf(16)
                 .spreadHorizontally()
-                .repeat(8),
+                .repeat(6),
             IRConfiguredFeature.IS_OVERWORLD
         )
 

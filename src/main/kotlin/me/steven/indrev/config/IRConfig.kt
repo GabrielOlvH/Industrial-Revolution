@@ -269,6 +269,9 @@ class OreGen : ConfigData {
     val copper = true
     val tin = true
     val nikolite = true
+    val lead = true
+    val silver = true
+    val tungsten = true
     val sulfuricAcidLake = true
     val sulfurCrystals = true
 }

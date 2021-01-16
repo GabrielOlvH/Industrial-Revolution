@@ -347,6 +347,9 @@ object IRRegistry {
     val NIKOLITE_ORE = { Registry.BLOCK.get(identifier("nikolite_ore")) }
     val COPPER_ORE = { Registry.BLOCK.get(identifier("copper_ore")) }
     val TIN_ORE = { Registry.BLOCK.get(identifier("tin_ore")) }
+    val LEAD_ORE = { Registry.BLOCK.get(identifier("lead_ore")) }
+    val SILVER_ORE = { Registry.BLOCK.get(identifier("silver_ore")) }
+    val TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("tungsten_ore")) }
     val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
     val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
     val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
