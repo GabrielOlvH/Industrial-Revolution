@@ -17,10 +17,7 @@ import me.steven.indrev.recipes.CopyNBTShapedRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
-import me.steven.indrev.registry.IRLootTables
-import me.steven.indrev.registry.IRRegistry
-import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.registry.PacketRegistry
+import me.steven.indrev.registry.*
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
@@ -29,6 +26,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
@@ -37,6 +35,7 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -47,18 +46,26 @@ object IndustrialRevolution : ModInitializer {
             IRConfig::class.java,
             PartitioningSerializer.wrap(::GsonConfigSerializer)
         )
-        IRRegistry.registerAll()
+        IRItemRegistry.registerAll()
+        IRBlockRegistry.registerAll()
+        IRFluidRegistry.registerAll()
+
+        WorldGeneration.init()
+
+        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
+        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register { _, _, biome -> WorldGeneration.handleBiome(biome) }
+        
         arrayOf(
-            IRRegistry.COOLANT_STILL,
-            IRRegistry.MOLTEN_NETHERITE_STILL,
-            IRRegistry.MOLTEN_IRON_STILL,
-            IRRegistry.MOLTEN_GOLD_STILL,
-            IRRegistry.MOLTEN_COPPER_STILL,
-            IRRegistry.MOLTEN_TIN_STILL,
-            IRRegistry.MOLTEN_SILVER_STILL,
-            IRRegistry.MOLTEN_LEAD_STILL,
-            IRRegistry.SULFURIC_ACID_STILL,
-            IRRegistry.TOXIC_MUD_STILL
+            IRFluidRegistry.COOLANT_STILL,
+            IRFluidRegistry.MOLTEN_NETHERITE_STILL,
+            IRFluidRegistry.MOLTEN_IRON_STILL,
+            IRFluidRegistry.MOLTEN_GOLD_STILL,
+            IRFluidRegistry.MOLTEN_COPPER_STILL,
+            IRFluidRegistry.MOLTEN_TIN_STILL,
+            IRFluidRegistry.MOLTEN_SILVER_STILL,
+            IRFluidRegistry.MOLTEN_LEAD_STILL,
+            IRFluidRegistry.SULFURIC_ACID_STILL,
+            IRFluidRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerFluidKey() }
 
         IRLootTables.register()
@@ -128,7 +135,7 @@ object IndustrialRevolution : ModInitializer {
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRRegistry.NIKOLITE_ORE().asItem() } }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRBlockRegistry.NIKOLITE_ORE().asItem() } }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorController.SCREEN_ID.registerScreenHandler(::CoalGeneratorController)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorController.SCREEN_ID.registerScreenHandler(::SolarGeneratorController)

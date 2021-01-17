@@ -4,7 +4,7 @@ import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
@@ -44,7 +44,7 @@ class TemperatureComponent(
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && machine.use(16.0))
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
         val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier

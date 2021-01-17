@@ -1,6 +1,6 @@
 package me.steven.indrev.items.misc
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.asString
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
@@ -57,7 +57,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 tag.putString("VeinIdentifier", identifier.toString())
                 tag.putString("ChunkPos", chunkPos.asString())
                 tag.putString("Dimension", world.registryKey.value.path)
-                val infoStack = ItemStack(IRRegistry.SCAN_OUTPUT_ITEM)
+                val infoStack = ItemStack(IRItemRegistry.SCAN_OUTPUT_ITEM)
                 infoStack.tag = tag
 
                 if (user is PlayerEntity) {

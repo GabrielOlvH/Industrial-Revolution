@@ -20,7 +20,7 @@ import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.mixin.AccessorSyncedGuiDescription
 import me.steven.indrev.recipes.machines.ModuleRecipe
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
@@ -99,7 +99,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         setRootPanel(root)
 
         root.add(WCustomTabPanel.Tab(null, ItemIcon(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4).asItem()), buildInstallPanel(), {}))
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRRegistry.PROTECTION_MODULE_ITEM), buildCraftPanel(), {}))
+        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRItemRegistry.PROTECTION_MODULE_ITEM), buildCraftPanel(), {}))
 
         root.validate(this)
     }

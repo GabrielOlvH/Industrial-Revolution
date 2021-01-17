@@ -3,7 +3,7 @@ package me.steven.indrev.blockentities.generators
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.item.Item
 import net.minecraft.screen.ArrayPropertyDelegate
@@ -24,7 +24,7 @@ class BiomassGeneratorBlockEntity(tier: Tier) : SolidFuelGeneratorBlockEntity(ti
         private val BURN_TIME_MAP = hashMapOf<Item, Int>()
 
         init {
-            BURN_TIME_MAP[IRRegistry.BIOMASS] = 150
+            BURN_TIME_MAP[IRItemRegistry.BIOMASS] = 150
         }
     }
 }

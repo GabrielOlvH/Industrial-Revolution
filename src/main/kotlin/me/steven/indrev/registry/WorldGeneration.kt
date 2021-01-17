@@ -68,7 +68,7 @@ object WorldGeneration {
             identifier("copper_ore"), GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(
             OreFeatureConfig(
                 OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                IRRegistry.COPPER_ORE().defaultState,
+                IRBlockRegistry.COPPER_ORE().defaultState,
                 10
             )
         )
@@ -81,7 +81,7 @@ object WorldGeneration {
             identifier("tin_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TIN_ORE().defaultState, 10)
             )
                 .rangeOf(48)
                 .spreadHorizontally()
@@ -94,7 +94,7 @@ object WorldGeneration {
             identifier("lead_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.LEAD_ORE().defaultState, 6)
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.LEAD_ORE().defaultState, 6)
             )
                 .rangeOf(32)
                 .spreadHorizontally()
@@ -107,7 +107,7 @@ object WorldGeneration {
             identifier("silver_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.SILVER_ORE().defaultState, 8)
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.SILVER_ORE().defaultState, 8)
             )
                 .rangeOf(32)
                 .spreadHorizontally()
@@ -120,7 +120,7 @@ object WorldGeneration {
             identifier("tungsten_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TUNGSTEN_ORE().defaultState, 5)
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TUNGSTEN_ORE().defaultState, 5)
             )
                 .rangeOf(16)
                 .spreadHorizontally()
@@ -135,7 +135,7 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(
                     OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                    IRRegistry.NIKOLITE_ORE().defaultState,
+                    IRBlockRegistry.NIKOLITE_ORE().defaultState,
                     7
                 )
             )
@@ -171,7 +171,7 @@ object WorldGeneration {
         identifier("sulfuric_acid_lake"),
         GenerationStep.Feature.LAKES,
         Feature.LAKE.configure(
-            SingleStateFeatureConfig(IRRegistry.SULFURIC_ACID.defaultState)
+            SingleStateFeatureConfig(IRFluidRegistry.SULFURIC_ACID.defaultState)
         ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
     ) { biome -> biome.category == Biome.Category.SWAMP }
 }

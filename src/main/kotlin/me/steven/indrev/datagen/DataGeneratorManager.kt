@@ -6,7 +6,8 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.datagen.generators.*
 import me.steven.indrev.datagen.utils.MetalModel
 import me.steven.indrev.datagen.utils.MetalSpriteRegistry
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Items
 import net.minecraft.util.Identifier
@@ -66,8 +67,8 @@ class DataGeneratorManager(namespace: String) {
             materialTagGenerator.register("${material}_ore", createTag("minecraft:${material}_ore"))
         }
 
-        itemModelGenerator.register(IRRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
-        itemModelGenerator.register(IRRegistry.DRILL_BOTTOM.asItem(), JsonFactory.nullFactory())
+        itemModelGenerator.register(IRItemRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
+        itemModelGenerator.register(IRBlockRegistry.DRILL_BOTTOM.asItem(), JsonFactory.nullFactory())
 
         MetalSpriteRegistry.MATERIAL_PROVIDERS.forEach { (id, model) ->
             val itemId = Identifier(id.namespace, id.path)

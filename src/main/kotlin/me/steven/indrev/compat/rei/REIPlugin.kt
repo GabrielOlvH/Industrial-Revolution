@@ -10,7 +10,7 @@ import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
@@ -32,20 +32,20 @@ object REIPlugin : REIPluginV0 {
         }
 
         registerCharged(
-            IRRegistry.MINING_DRILL_MK1,
-            IRRegistry.MINING_DRILL_MK2,
-            IRRegistry.MINING_DRILL_MK3,
-            IRRegistry.MINING_DRILL_MK4,
-            IRRegistry.MODULAR_ARMOR_HELMET,
-            IRRegistry.MODULAR_ARMOR_CHEST,
-            IRRegistry.MODULAR_ARMOR_LEGGINGS,
-            IRRegistry.MODULAR_ARMOR_BOOTS,
-            IRRegistry.PORTABLE_CHARGER_ITEM,
-            IRRegistry.BATTERY
+            IRItemRegistry.MINING_DRILL_MK1,
+            IRItemRegistry.MINING_DRILL_MK2,
+            IRItemRegistry.MINING_DRILL_MK3,
+            IRItemRegistry.MINING_DRILL_MK4,
+            IRItemRegistry.MODULAR_ARMOR_HELMET,
+            IRItemRegistry.MODULAR_ARMOR_CHEST,
+            IRItemRegistry.MODULAR_ARMOR_LEGGINGS,
+            IRItemRegistry.MODULAR_ARMOR_BOOTS,
+            IRItemRegistry.PORTABLE_CHARGER_ITEM,
+            IRItemRegistry.BATTERY
         )
 
-        entryRegistry?.registerEntriesAfter(EntryStack.create(IRRegistry.GAMER_AXE_ITEM),
-            EntryStack.create(ItemStack(IRRegistry.GAMER_AXE_ITEM).also {
+        entryRegistry?.registerEntriesAfter(EntryStack.create(IRItemRegistry.GAMER_AXE_ITEM),
+            EntryStack.create(ItemStack(IRItemRegistry.GAMER_AXE_ITEM).also {
                 val tag = it.orCreateTag
                 tag.putDouble("energy", energyOf(it)!!.energyCapacity)
                 tag.putBoolean("Active", true)

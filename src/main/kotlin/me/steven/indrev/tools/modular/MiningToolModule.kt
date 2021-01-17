@@ -1,6 +1,6 @@
 package me.steven.indrev.tools.modular
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
@@ -12,7 +12,7 @@ enum class MiningToolModule(
     override val maxLevel: Int,
     override val item: ItemConvertible
 ) : Module {
-    EFFICIENCY("efficiency", 5, IRRegistry.EFFICIENCY_MODULE_ITEM);
+    EFFICIENCY("efficiency", 5, IRItemRegistry.EFFICIENCY_MODULE_ITEM);
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)

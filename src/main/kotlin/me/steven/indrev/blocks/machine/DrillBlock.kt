@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.setBlockState
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -126,9 +126,9 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
     }
 
     companion object {
-        private val DRILL_TOP by lazy { IRRegistry.DRILL_TOP }
-        private val DRILL_MIDDLE by lazy { IRRegistry.DRILL_MIDDLE }
-        private val DRILL_BOTTOM by lazy { IRRegistry.DRILL_BOTTOM }
+        private val DRILL_TOP by lazy { IRBlockRegistry.DRILL_TOP }
+        private val DRILL_MIDDLE by lazy { IRBlockRegistry.DRILL_MIDDLE }
+        private val DRILL_BOTTOM by lazy { IRBlockRegistry.DRILL_BOTTOM }
         val WORKING = BooleanProperty.of("working")
     }
 }
