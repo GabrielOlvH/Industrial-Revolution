@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north,working=false": {
+      "model": "indrev:block/heat_generator_mk4"
+    },
+    "facing=south,working=false": {
+      "model": "indrev:block/heat_generator_mk4",
+      "y": 180
+    },
+    "facing=west,working=false": {
+      "model": "indrev:block/heat_generator_mk4",
+      "y": 270
+    },
+    "facing=east,working=false": {
+      "model": "indrev:block/heat_generator_mk4",
+      "y": 90
+    }
+  }
+}
