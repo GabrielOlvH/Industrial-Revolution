@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.farms
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.blocks.machine.MachineBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
@@ -20,7 +19,7 @@ class MinerBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
         light: Int,
         overlay: Int
     ) {
-        if (entity == null || !entity.cachedState[MachineBlock.WORKING_PROPERTY]) return
+        if (entity == null || !entity.workingState) return
         matrices?.run {
             push()
             val direction = entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]

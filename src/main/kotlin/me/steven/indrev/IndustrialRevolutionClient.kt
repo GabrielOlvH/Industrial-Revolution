@@ -1,6 +1,7 @@
 package me.steven.indrev
 
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap
+import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
@@ -126,6 +127,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
         ) { stack, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
 
         PacketRegistry.registerClient()
+
+        GlobalStateController.initClient()
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             positionsToRerender.keys.forEach { pos ->

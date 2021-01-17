@@ -69,6 +69,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     var itemTransferCooldown = 0
 
     var workingState: Boolean = false
+        set(value) {
+            val update = value != field
+            field = value
+            if (update && world?.isClient == false)
+                GlobalStateController.update(world!!, pos, value)
+        }
 
     var ticks = 0
 
@@ -111,13 +117,13 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 sync()
                 isMarkedForUpdate = false
             }
-            if (ticks % 20 == 0
-                && this.cachedState.contains(MachineBlock.WORKING_PROPERTY)
-                && this.cachedState[MachineBlock.WORKING_PROPERTY] != workingState
-            ) {
-                    val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, workingState)
-                    world!!.setBlockState(pos, state)
-            }
+            //if (ticks % 20 == 0
+                //&& this.cachedState.contains(MachineBlock.WORKING_PROPERTY)
+                //&& this.cachedState[MachineBlock.WORKING_PROPERTY] != workingState
+            //) {
+                    //val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, workingState)
+                    //world!!.setBlockState(pos, state)
+            //}
         }
     }
 
@@ -241,6 +247,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
         multiblockComponent?.fromTag(tag)
+        workingState = tag?.getBoolean("WorkingState") ?: workingState
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -251,6 +258,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         fluidComponent?.toTag(tag)
         multiblockComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
+        tag.putBoolean("WorkingState", workingState)
         return tag
     }
 

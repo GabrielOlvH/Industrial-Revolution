@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateManager
+import net.minecraft.state.property.BooleanProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.StringIdentifiable
@@ -128,6 +129,6 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         private val DRILL_TOP by lazy { IRRegistry.DRILL_TOP }
         private val DRILL_MIDDLE by lazy { IRRegistry.DRILL_MIDDLE }
         private val DRILL_BOTTOM by lazy { IRRegistry.DRILL_BOTTOM }
-        val WORKING = MachineBlock.WORKING_PROPERTY
+        val WORKING = BooleanProperty.of("working")
     }
 }

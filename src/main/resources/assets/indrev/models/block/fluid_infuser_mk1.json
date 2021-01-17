@@ -1,6 +1,0 @@
-{
-  "parent": "indrev:block/machine_mk1",
-  "textures": {
-    "texture": "indrev:block/fluid_infuser"
-  }
-}

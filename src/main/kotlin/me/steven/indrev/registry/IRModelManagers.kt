@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.resource.ResourceManager
+import net.minecraft.util.Identifier
 import java.util.function.Consumer
 
 object IRModelManagers : ModelVariantProvider, ModelAppender {
@@ -27,6 +28,7 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         if (resourceId.namespace != "indrev") return null
         val path = resourceId.path
         val variant = resourceId.variant
+        val id = Identifier(resourceId.namespace, resourceId.path)
         return when {
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
@@ -34,6 +36,7 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
             path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
             path == "tank" && variant == "inventory" -> TankItemBakedModel
             path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
+            MachineRegistry.MAP.containsKey(id) -> MachineRegistry.MAP[id]?.modelProvider?.get(Tier.values()[(path.last().toString().toIntOrNull() ?: 4) - 1])?.invoke(id.path.replace("_creative", "_mk4"))
             else -> return null
         }
     }

@@ -97,23 +97,25 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
 
         fun register() {
             map.entries.sortedWith(
-                compareBy<MutableMap.MutableEntry<Identifier, () -> Unit>> { a -> a.key.path.contains("ore") && !a.key.path.contains("purified") }
-                    .then(compareBy { a -> a.key.path.contains("block")  })
-                    .then(compareBy { a -> a.key.path.contains("ingot")  })
-                    .then(compareBy { a -> a.key.path.contains("chunk")  })
-                    .then(compareBy { a -> a.key.path.contains("dust")  })
-                    .then(compareBy { a -> a.key.path.contains("purified")  })
-                    .then(compareBy { a -> a.key.path.contains("plate") && !a.key.path.contains("chestplate")  })
-                    .then(compareBy { a -> a.key.path.contains("nugget")  })
-                    .then(compareBy { a -> a.key.path.contains("sword")  })
-                    .then(compareBy { a -> a.key.path.contains("pickaxe")  })
-                    .then(compareBy { a -> a.key.path.contains("axe")  })
-                    .then(compareBy { a -> a.key.path.contains("shovel")  })
-                    .then(compareBy { a -> a.key.path.contains("hoe")  })
-                    .then(compareBy { a -> a.key.path.contains("helmet")  })
-                    .then(compareBy { a -> a.key.path.contains("chestplate")  })
-                    .then(compareBy { a -> a.key.path.contains("leggings")  })
-                    .then(compareBy { a -> a.key.path.contains("boots")  })
+                compareBy<MutableMap.MutableEntry<Identifier, () -> Unit>> { id -> id.key.path.contains("ore") && !id.key.path.contains("purified") }
+                    .then(compareBy { id -> id.key.path.contains("block") })
+                    .then(compareBy { id -> id.key.path.contains("ingot") })
+                    .then(compareBy { id -> id.key.path.contains("chunk") })
+                    .then(compareBy { id -> id.key.path.contains("dust") })
+                    .then(compareBy { id -> id.key.path.contains("purified") })
+                    .then(compareBy { id -> id.key.path.contains("plate") && !id.key.path.contains("chestplate") })
+                    .then(compareBy { id -> id.key.path.contains("nugget") })
+                    .then(compareBy<MutableMap.MutableEntry<Identifier, () -> Unit>> { id -> id.key.path.substring(0, id.key.path.indexOf("_")) }
+                        .then(compareBy { id -> id.key.path.contains("sword") })
+                        .then(compareBy { id -> id.key.path.contains("pickaxe") })
+                        .then(compareBy { id -> id.key.path.contains("axe") && !id.key.path.contains("pickaxe") })
+                        .then(compareBy { id -> id.key.path.contains("shovel") })
+                        .then(compareBy { id -> id.key.path.contains("hoe") })
+                        .then(compareBy { id -> id.key.path.contains("helmet") })
+                        .then(compareBy { id -> id.key.path.contains("chestplate") })
+                        .then(compareBy { id -> id.key.path.contains("leggings") })
+                        .then(compareBy { id -> id.key.path.contains("boots") })
+                    )
             ).asReversed().forEach { it.value() }
         }
     }

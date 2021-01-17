@@ -18,10 +18,12 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
@@ -40,6 +42,8 @@ import kotlin.collections.ArrayList
 val EMPTY_INT_ARRAY = intArrayOf()
 
 fun identifier(id: String) = Identifier(IndustrialRevolution.MOD_ID, id)
+
+fun blockSpriteId(id: String) = SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier(id))
 
 fun Identifier.block(block: Block): Identifier {
     Registry.register(Registry.BLOCK, this, block)

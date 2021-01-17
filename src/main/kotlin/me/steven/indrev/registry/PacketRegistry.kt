@@ -8,6 +8,7 @@ import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
@@ -31,6 +32,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
@@ -238,6 +240,15 @@ object PacketRegistry {
             val time = buf.readInt()
             val pos = buf.readBlockPos()
             IndustrialRevolutionClient.positionsToRerender[pos] = time
+        }
+
+        ClientPlayNetworking.registerGlobalReceiver(GlobalStateController.UPDATE_PACKET_ID) { client, _, buf, _ ->
+            val pos = buf.readBlockPos()
+            val workingState = buf.readBoolean()
+            val blockEntity = client.world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@registerGlobalReceiver
+            blockEntity.workingState = workingState
+            GlobalStateController.chunksToUpdate.add(ChunkPos(pos))
+
         }
 
     }
