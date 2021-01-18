@@ -37,7 +37,7 @@ class HeatGeneratorBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) 
     }
 
     private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
-        val yMax = ((((inputVolume.amount().asInexactDouble()).toFloat() / 4f).toDouble() * 10.0) / 16.0).coerceAtLeast(0.1)
+        val yMax = (((inputVolume.amount().asInexactDouble().toFloat() / 4f) * 10.0) / 16.0).coerceAtLeast(0.1)
         val face =
             listOf(
                 FluidRenderFace.createFlatFaceZ(0.01, 0.1, 0.99, 0.99, yMax, 0.99, 2.0, true, false),
