@@ -250,12 +250,11 @@ object PacketRegistry {
             IndustrialRevolutionClient.positionsToRerender[pos] = time
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(GlobalStateController.UPDATE_PACKET_ID) { client, _, buf, _ ->
+        ClientPlayNetworking.registerGlobalReceiver(GlobalStateController.UPDATE_PACKET_ID) { _, _, buf, _ ->
             val pos = buf.readBlockPos()
             val workingState = buf.readBoolean()
-            val blockEntity = client.world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@registerGlobalReceiver
-            blockEntity.workingState = workingState
-            GlobalStateController.chunksToUpdate.add(ChunkPos(pos))
+            GlobalStateController.workingStateTracker[pos.asLong()] = workingState
+            GlobalStateController.chunksToUpdate.computeIfAbsent(ChunkPos(pos)) { hashSetOf() }.add(pos)
 
         }
 

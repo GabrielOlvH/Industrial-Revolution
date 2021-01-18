@@ -75,6 +75,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             if (update && world?.isClient == false)
                 GlobalStateController.update(world!!, pos, value)
         }
+        get() {
+            if (world?.isClient == true && GlobalStateController.workingStateTracker.contains(pos.asLong())) {
+                field = GlobalStateController.workingStateTracker.remove(pos.asLong())
+            }
+            return field
+        }
 
     var ticks = 0
 
