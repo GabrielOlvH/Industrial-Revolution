@@ -17,6 +17,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.model.*
 import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
+import net.minecraft.client.texture.MissingSprite
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
@@ -58,18 +59,21 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         modelId: Identifier?
     ): BakedModel {
         sprite = textureGetter.apply(baseSprite)
-        overlayIds.forEachIndexed { index, id ->
-            overlays[index] = textureGetter.apply(id)
-            if (isEmissive(overlays[index]))
-                emissives.add(overlays[index]!!)
-        }
-        workingOverlayIds.forEachIndexed { index, id ->
-            workingOverlays[index] = textureGetter.apply(id)
-            if (isEmissive(workingOverlays[index]))
-                emissives.add(workingOverlays[index]!!)
-        }
+        overlayIds.processSprites(overlays, textureGetter)
+        workingOverlayIds.processSprites(workingOverlays, textureGetter)
         if (isEmissive(sprite)) emissives.add(sprite!!)
         return this
+    }
+
+    private fun List<SpriteIdentifier>.processSprites(arr: Array<Sprite?>, textureGetter: Function<SpriteIdentifier, Sprite>) {
+        forEachIndexed { index, id ->
+            val sprite = textureGetter.apply(id)
+            if (sprite.id != MissingSprite.getMissingSpriteId()) {
+                arr[index] = sprite
+                if (isEmissive(sprite))
+                    emissives.add(sprite)
+            }
+        }
     }
 
     //don't judge me
@@ -117,14 +121,14 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         val direction = block.getFacing(state)
 
         emitQuads(direction, sprite!!, ctx)
-        if (overlays.isNotEmpty())
-            overlays.forEach { emitQuads(direction, it!!, ctx) }
         if (workingOverlays.isNotEmpty()) {
             val blockEntity = blockView.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
             if (blockEntity.workingState) {
                 workingOverlays.forEach { emitQuads(direction, it!!, ctx) }
             }
         }
+        if (overlays.isNotEmpty())
+            overlays.forEach { emitQuads(direction, it!!, ctx) }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
@@ -149,7 +153,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         side: Direction,
         sprite: Sprite
     ) {
-        square(side,  0f, 0f, 1f, 1f, 0f)
+        square(side, 0f, 0f, 1f, 1f, 0f)
         spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
         if (emissives.contains(sprite))
             material(MATERIAL)

@@ -112,6 +112,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.TANK_BLOCK, RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.DRILL_TOP, RenderLayer.getCutout())
