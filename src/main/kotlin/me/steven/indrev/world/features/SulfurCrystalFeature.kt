@@ -2,7 +2,7 @@ package me.steven.indrev.world.features
 
 import com.mojang.serialization.Codec
 import me.steven.indrev.blocks.misc.SulfurCrystalBlock
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.any
 import me.steven.indrev.utils.forEach
 import net.minecraft.block.Blocks
@@ -39,7 +39,7 @@ class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
                 val pos = mutablePos.offset(dir)
                 val airState = world?.getBlockState(pos)
                 if (blockState?.material == Material.STONE && airState?.isAir == true) {
-                    world.setBlockState(pos, IRRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir), 2)
+                    world.setBlockState(pos, IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir), 2)
                     return true
                 }
             }

@@ -3,12 +3,11 @@ package me.steven.indrev.registry
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.DrillHeadModel
 import me.steven.indrev.blocks.models.CableModel
-import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.PumpPipeBakedModel
 import me.steven.indrev.items.models.TankItemBakedModel
 import me.steven.indrev.utils.SimpleBlockModel
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.client.model.ModelAppender
+import net.fabricmc.fabric.api.client.model.ExtraModelProvider
 import net.fabricmc.fabric.api.client.model.ModelProviderContext
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider
 import net.minecraft.client.render.model.UnbakedModel
@@ -17,7 +16,7 @@ import net.minecraft.resource.ResourceManager
 import net.minecraft.util.Identifier
 import java.util.function.Consumer
 
-object IRModelManagers : ModelVariantProvider, ModelAppender {
+object IRModelManagers : ModelVariantProvider, ExtraModelProvider {
 
     private val LFC_OVERLAY_REGEX = Regex("lazuli_flux_container_(input|output|item_lf_level|mk[1-4]_overlay)")
     private val CABLE_MODELS = arrayOf(
@@ -33,7 +32,6 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
-            path.startsWith("lazuli_flux_container") -> LazuliFluxContainerBakedModel(path.replace("creative", "mk4"))
             path == "tank" && variant == "inventory" -> TankItemBakedModel
             path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
             MachineRegistry.MAP.containsKey(id) -> MachineRegistry.MAP[id]?.modelProvider?.get(Tier.values()[(path.last().toString().toIntOrNull() ?: 4) - 1])?.invoke(id.path.replace("_creative", "_mk4"))
@@ -41,7 +39,7 @@ object IRModelManagers : ModelVariantProvider, ModelAppender {
         }
     }
 
-    override fun appendAll(manager: ResourceManager?, out: Consumer<ModelIdentifier>) {
+    override fun provideExtraModels(manager: ResourceManager?, out: Consumer<Identifier>) {
         out.accept(ModelIdentifier(identifier("drill_head"), "stone"))
         out.accept(ModelIdentifier(identifier("drill_head"), "iron"))
         out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))

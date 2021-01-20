@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "IGI",
+    "III",
     "GBG",
-    "IGI"
+    "III"
   ],
   "key": {
     "G": {
       "item": "minecraft:glass"
     },
     "I": {
-      "tag": "c:iron_plates"
+      "tag": "c:steel_plates"
     },
     "B": {
       "item": "minecraft:bucket"

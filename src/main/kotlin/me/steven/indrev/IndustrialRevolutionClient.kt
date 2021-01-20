@@ -9,6 +9,7 @@ import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
+import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRenderer
@@ -43,18 +44,18 @@ object IndustrialRevolutionClient : ClientModInitializer {
         FluidType.WATER.registerReloadListener()
         FluidType.LAVA.registerReloadListener()
         arrayOf(
-            IRRegistry.COOLANT_STILL,
-            IRRegistry.SULFURIC_ACID_STILL,
-            IRRegistry.TOXIC_MUD_STILL
+            IRFluidRegistry.COOLANT_STILL,
+            IRFluidRegistry.SULFURIC_ACID_STILL,
+            IRFluidRegistry.TOXIC_MUD_STILL
         ).forEach { it.registerRender(FluidType.WATER) }
         arrayOf(
-            IRRegistry.MOLTEN_NETHERITE_STILL,
-            IRRegistry.MOLTEN_IRON_STILL,
-            IRRegistry.MOLTEN_GOLD_STILL,
-            IRRegistry.MOLTEN_COPPER_STILL,
-            IRRegistry.MOLTEN_TIN_STILL,
-            IRRegistry.MOLTEN_LEAD_STILL,
-            IRRegistry.MOLTEN_SILVER_STILL
+            IRFluidRegistry.MOLTEN_NETHERITE_STILL,
+            IRFluidRegistry.MOLTEN_IRON_STILL,
+            IRFluidRegistry.MOLTEN_GOLD_STILL,
+            IRFluidRegistry.MOLTEN_COPPER_STILL,
+            IRFluidRegistry.MOLTEN_TIN_STILL,
+            IRFluidRegistry.MOLTEN_LEAD_STILL,
+            IRFluidRegistry.MOLTEN_SILVER_STILL
         ).forEach { it.registerRender(FluidType.LAVA) }
         IRHudRender
         arrayOf(
@@ -104,25 +105,27 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
+        MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
 
-        BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.TANK_BLOCK, RenderLayer.getCutout())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_TOP, RenderLayer.getCutout())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_MIDDLE, RenderLayer.getCutout())
-        BlockRenderLayerMap.INSTANCE.putBlock(IRRegistry.DRILL_BOTTOM, RenderLayer.getCutout())
+        MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.TANK_BLOCK, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.DRILL_TOP, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.DRILL_MIDDLE, RenderLayer.getCutout())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.DRILL_BOTTOM, RenderLayer.getCutout())
 
-        ModelLoadingRegistry.INSTANCE.registerAppender(IRModelManagers)
+        ModelLoadingRegistry.INSTANCE.registerModelProvider(IRModelManagers)
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }
 
         FabricModelPredicateProviderRegistry.register(
-            IRRegistry.GAMER_AXE_ITEM,
+            IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
         ) { stack, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
 

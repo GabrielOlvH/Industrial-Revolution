@@ -3,10 +3,9 @@
   "veins": [
     {
       "id": "indrev:argentite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 6
         },
         {
@@ -53,10 +52,9 @@
     },
     {
       "id": "indrev:chlorargyrite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 8
         },
         {
@@ -103,19 +101,14 @@
     },
     {
       "id": "indrev:galena",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 7
         },
         {
-          "id": "techreborn:galena_ore",
+          "id": "indrev:lead_ore",
           "weight": 6
-        },
-        {
-          "id": "techreborn:lead_ore",
-          "weight": 4
         },
         {
           "id": "minecraft:gold_ore",

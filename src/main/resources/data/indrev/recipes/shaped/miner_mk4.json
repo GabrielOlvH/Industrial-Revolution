@@ -3,7 +3,7 @@
   "pattern": [
     "GCG",
     "NMN",
-    " B "
+    "NBN"
   ],
   "key": {
     "M": {
@@ -13,10 +13,10 @@
       "item": "indrev:circuit_mk4"
     },
     "N": {
-      "item": "indrev:nikolite_dust"
+      "tag": "c:lead_plates"
     },
     "G": {
-      "item": "minecraft:diamond_pickaxe"
+      "item": "indrev:netherite_drill_head"
     },
     "B": {
       "item": "indrev:battery"

@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.drill
 
 import me.steven.indrev.blocks.machine.DrillBlock
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -24,10 +24,10 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
         overlay: Int
     ) {
         val variant = when (entity.inventory[0].item) {
-            IRRegistry.STONE_DRILL_HEAD -> "stone"
-            IRRegistry.IRON_DRILL_HEAD -> "iron"
-            IRRegistry.DIAMOND_DRILL_HEAD -> "diamond"
-            IRRegistry.NETHERITE_DRILL_HEAD -> "netherite"
+            IRItemRegistry.STONE_DRILL_HEAD -> "stone"
+            IRItemRegistry.IRON_DRILL_HEAD -> "iron"
+            IRItemRegistry.DIAMOND_DRILL_HEAD -> "diamond"
+            IRItemRegistry.NETHERITE_DRILL_HEAD -> "netherite"
             else -> return
         }
         val model =

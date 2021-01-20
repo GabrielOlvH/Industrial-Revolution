@@ -16,6 +16,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
+import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
 import me.steven.indrev.config.IConfig
@@ -37,7 +38,9 @@ import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.UnbakedModel
+import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.BlockItem
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
@@ -114,9 +117,20 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
        return this
     }
 
-    fun defaultModelProvider(): MachineRegistry {
+    fun defaultModelProvider(hasWorkingState: Boolean = true): MachineRegistry {
         if (FabricLoader.getInstance().environmentType == EnvType.CLIENT)
-            modelProvider { tier -> { id -> MachineBakedModel(id).also { it.tierOverlay(tier) } } }
+            modelProvider { tier ->
+                { id ->
+                    MachineBakedModel(id).also {
+                        it.tierOverlay(tier)
+                        if (hasWorkingState)
+                            it.workingOverlayIds.add(
+                                SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
+                                    identifier("block/${id.replace(Regex("_mk[0-4]"), "")}_on"))
+                            )
+                    }
+                }
+            }
         return this
     }
 
@@ -197,7 +211,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { HeatGeneratorBlockEntity(tier) } }
             .defaultEnergyProvider()
-            .defaultModelProvider()
+            .noModelProvider()
 
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
             .blockProvider { tier -> LazuliFluxContainerBlock(this, SETTINGS(), tier) }
@@ -208,7 +222,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(blockEntity, dir) else null
                 }
             }
-            .noModelProvider()
+            .modelProvider { { id -> LazuliFluxContainerBakedModel(id) } }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry("electric_furnace")
             .blockProvider { tier ->
@@ -330,7 +344,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { SmelterBlockEntity(tier) } }
             .defaultEnergyProvider()
-            .defaultModelProvider()
+            .defaultModelProvider(hasWorkingState = false)
 
         val CONDENSER_REGISTRY = MachineRegistry("condenser", false, Tier.MK4)
             .blockProvider { tier ->
@@ -434,7 +448,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { DrainBlockEntity(tier) } }
             .defaultEnergyProvider()
-            .defaultModelProvider()
+            .defaultModelProvider(hasWorkingState = false)
 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
@@ -495,7 +509,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { FarmerBlockEntity(tier) } }
             .defaultEnergyProvider()
-            .defaultModelProvider()
+            .defaultModelProvider(hasWorkingState = false)
 
         val RANCHER_REGISTRY = MachineRegistry("rancher", true)
             .blockProvider { tier ->

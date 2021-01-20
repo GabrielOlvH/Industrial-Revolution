@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NPN",
+    " P ",
     "PCP",
     "NPN"
   ],
@@ -10,7 +10,7 @@
       "item": "indrev:circuit_mk2"
     },
     "P": {
-      "tag": "c:copper_plates"
+      "tag": "c:silver_plates"
     },
     "N": {
       "item": "indrev:nikolite_ingot"

@@ -1,24 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "FCF",
-    "NLN"
-  ],
-  "key": {
-    "F": {
+  "type": "indrev:modules",
+  "ingredients": [
+    {
       "item": "minecraft:feather"
     },
-    "L": {
+    {
       "item": "minecraft:leather_boots"
     },
-    "C": {
+    {
       "item": "indrev:circuit_mk4"
     },
-    "N": {
+    {
       "item": "indrev:enriched_nikolite_ingot"
     }
-  },
-  "result": {
+  ],
+  "output": {
     "item": "indrev:module_speed"
-  }
+  },
+  "processTime": 0
 }

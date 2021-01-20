@@ -1,6 +1,6 @@
 package me.steven.indrev.tools.modular
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
@@ -12,9 +12,9 @@ enum class DrillModule(
     override val maxLevel: Int,
     override val item: ItemConvertible
 ) : Module {
-    RANGE("range", 5, IRRegistry.RANGE_MODULE_ITEM),
-    FORTUNE("fortune", 3, IRRegistry.FORTUNE_MODULE_ITEM),
-    SILK_TOUCH("silk_touch", 1, IRRegistry.SILK_TOUCH_MODULE_ITEM);
+    RANGE("range", 5, IRItemRegistry.RANGE_MODULE_ITEM),
+    FORTUNE("fortune", 3, IRItemRegistry.FORTUNE_MODULE_ITEM),
+    SILK_TOUCH("silk_touch", 1, IRItemRegistry.SILK_TOUCH_MODULE_ITEM);
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)

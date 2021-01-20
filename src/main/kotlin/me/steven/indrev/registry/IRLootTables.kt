@@ -33,16 +33,16 @@ object IRLootTables {
     private val woodlandMansion = Identifier("chests/woodland_mansion")
     private val endCityTreasure = Identifier("chests/end_city_treasure")
     private val colorModules = arrayOf(
-        IRRegistry.PINK_MODULE_ITEM,
-        IRRegistry.RED_MODULE_ITEM,
-        IRRegistry.PURPLE_MODULE_ITEM,
-        IRRegistry.BLUE_MODULE_ITEM,
-        IRRegistry.CYAN_MODULE_ITEM,
-        IRRegistry.GREEN_MODULE_ITEM,
-        IRRegistry.YELLOW_MODULE_ITEM,
-        IRRegistry.ORANGE_MODULE_ITEM,
-        IRRegistry.BLUE_MODULE_ITEM,
-        IRRegistry.BLACK_MODULE_ITEM,
-        IRRegistry.BROWN_MODULE_ITEM
+        IRItemRegistry.PINK_MODULE_ITEM,
+        IRItemRegistry.RED_MODULE_ITEM,
+        IRItemRegistry.PURPLE_MODULE_ITEM,
+        IRItemRegistry.BLUE_MODULE_ITEM,
+        IRItemRegistry.CYAN_MODULE_ITEM,
+        IRItemRegistry.GREEN_MODULE_ITEM,
+        IRItemRegistry.YELLOW_MODULE_ITEM,
+        IRItemRegistry.ORANGE_MODULE_ITEM,
+        IRItemRegistry.BLUE_MODULE_ITEM,
+        IRItemRegistry.BLACK_MODULE_ITEM,
+        IRItemRegistry.BROWN_MODULE_ITEM
     )
 }

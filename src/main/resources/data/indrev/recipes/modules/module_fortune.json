@@ -1,24 +1,21 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "BCB",
-    "NIN"
-  ],
-  "key": {
-    "C": {
+  "type": "indrev:modules",
+  "ingredients": [
+    {
       "item": "indrev:circuit_mk4"
     },
-    "I": {
+    {
       "item": "minecraft:emerald"
     },
-    "B": {
+    {
       "item": "minecraft:diamond"
     },
-    "N": {
+    {
       "item": "indrev:enriched_nikolite_ingot"
     }
-  },
-  "result": {
+  ],
+  "output": {
     "item": "indrev:module_fortune"
-  }
+  },
+  "processTime": 0
 }

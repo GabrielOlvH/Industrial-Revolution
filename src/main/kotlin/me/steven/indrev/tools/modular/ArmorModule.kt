@@ -1,6 +1,6 @@
 package me.steven.indrev.tools.modular
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
@@ -16,17 +16,17 @@ enum class ArmorModule(
     val hasTexture: Boolean,
     val hasOverlay: Boolean,
 ) : Module {
-    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, IRRegistry.NIGHT_VISION_MODULE_ITEM, true, true),
-    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, IRRegistry.SPEED_MODULE_ITEM, false, false),
-    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, IRRegistry.JUMP_BOOST_MODULE_ITEM,false, false),
-    BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, IRRegistry.BREATHING_MODULE_ITEM, false, false),
-    FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 1, IRRegistry.FEATHER_FALLING_MODULE_ITEM, false, false),
-    PROTECTION("protection", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 3, IRRegistry.PROTECTION_MODULE_ITEM, true, true),
-    AUTO_FEEDER("auto_feeder", arrayOf(EquipmentSlot.HEAD), 1, IRRegistry.AUTO_FEEDER_MODULE_ITEM, false, false),
-    CHARGER("charger", arrayOf(EquipmentSlot.CHEST), 1, IRRegistry.CHARGER_MODULE_ITEM, false, false),
-    SOLAR_PANEL("solar_panel", arrayOf(EquipmentSlot.HEAD), 2, IRRegistry.SOLAR_PANEL_MODULE_ITEM, false, false),
-    FIRE_RESISTANCE("fire_resistance", arrayOf(EquipmentSlot.CHEST),1, IRRegistry.FIRE_RESISTANCE_MODULE_ITEM, false, false),
-    PIGLIN_TRICKER("piglin_tricker", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, IRRegistry.PIGLIN_TRICKER_MODULE_ITEM ,false, false),
+    NIGHT_VISION("night_vision", arrayOf(EquipmentSlot.HEAD), 1, IRItemRegistry.NIGHT_VISION_MODULE_ITEM, true, true),
+    SPEED("speed", arrayOf(EquipmentSlot.LEGS), 3, IRItemRegistry.SPEED_MODULE_ITEM, false, false),
+    JUMP_BOOST("jump_boost", arrayOf(EquipmentSlot.FEET), 3, IRItemRegistry.JUMP_BOOST_MODULE_ITEM,false, false),
+    BREATHING("breathing", arrayOf(EquipmentSlot.HEAD), 1, IRItemRegistry.BREATHING_MODULE_ITEM, false, false),
+    FEATHER_FALLING("feather_falling", arrayOf(EquipmentSlot.FEET), 1, IRItemRegistry.FEATHER_FALLING_MODULE_ITEM, false, false),
+    PROTECTION("protection", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 3, IRItemRegistry.PROTECTION_MODULE_ITEM, true, true),
+    AUTO_FEEDER("auto_feeder", arrayOf(EquipmentSlot.HEAD), 1, IRItemRegistry.AUTO_FEEDER_MODULE_ITEM, false, false),
+    CHARGER("charger", arrayOf(EquipmentSlot.CHEST), 1, IRItemRegistry.CHARGER_MODULE_ITEM, false, false),
+    SOLAR_PANEL("solar_panel", arrayOf(EquipmentSlot.HEAD), 2, IRItemRegistry.SOLAR_PANEL_MODULE_ITEM, false, false),
+    FIRE_RESISTANCE("fire_resistance", arrayOf(EquipmentSlot.CHEST),1, IRItemRegistry.FIRE_RESISTANCE_MODULE_ITEM, false, false),
+    PIGLIN_TRICKER("piglin_tricker", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, IRItemRegistry.PIGLIN_TRICKER_MODULE_ITEM ,false, false),
     COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1, ItemConvertible { null },false, false);
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {

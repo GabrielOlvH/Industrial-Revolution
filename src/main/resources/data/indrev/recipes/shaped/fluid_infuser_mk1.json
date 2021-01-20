@@ -13,13 +13,13 @@
       "item": "indrev:circuit_mk1"
     },
     "N": {
-      "item": "indrev:nikolite_dust"
+      "tag": "c:bronze_plates"
     },
     "B": {
       "item": "indrev:battery"
     },
     "G": {
-      "item": "minecraft:bucket"
+      "item": "indrev:tank"
     }
   },
   "result": {

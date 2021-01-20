@@ -6,13 +6,13 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.components.fluid.FluidComponent
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Direction
 
-class TankBlockEntity : IRSyncableBlockEntity(IRRegistry.TANK_BLOCK_ENTITY), Tickable {
+class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY), Tickable {
     val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
 
     override fun tick() {

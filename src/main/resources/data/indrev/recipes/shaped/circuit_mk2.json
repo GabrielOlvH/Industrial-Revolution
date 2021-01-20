@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " E ",
+    "SES",
     "ECE",
-    " E "
+    "SES"
   ],
   "key": {
     "E": {
@@ -11,6 +11,9 @@
     },
     "C": {
       "item": "indrev:circuit_mk1"
+    },
+    "S": {
+      "tag": "c:silver_plates"
     }
   },
   "result": {

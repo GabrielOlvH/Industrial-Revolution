@@ -5,7 +5,7 @@ import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.items.upgrade.IRUpgradeItem
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
@@ -53,7 +53,7 @@ open class IRInventoryDSL : Filterable() {
                 { (stack, item) ->
                     when {
                         slot == batterySlot -> true
-                        coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRRegistry.HEAT_COIL
+                        coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
                         blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.getUpgradeSlots() && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.getAvailableUpgrades().contains(item.upgrade)
                         else -> false

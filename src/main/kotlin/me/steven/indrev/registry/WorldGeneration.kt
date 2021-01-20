@@ -29,6 +29,15 @@ object WorldGeneration {
         if (config.nikolite) {
             configuredFeatures.add(nikoliteFeature)
         }
+        if (config.lead) {
+            configuredFeatures.add(leadFeature)
+        }
+        if (config.tungsten) {
+            configuredFeatures.add(tungstenFeature)
+        }
+        if (config.silver) {
+            configuredFeatures.add(silverFeature)
+        }
         if (config.sulfurCrystals) {
             configuredFeatures.add(sulfurFeatureOverworld)
             configuredFeatures.add(sulfurFeatureNether)
@@ -59,7 +68,7 @@ object WorldGeneration {
             identifier("copper_ore"), GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(
             OreFeatureConfig(
                 OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                IRRegistry.COPPER_ORE().defaultState,
+                IRBlockRegistry.COPPER_ORE().defaultState,
                 10
             )
         )
@@ -68,17 +77,56 @@ object WorldGeneration {
             .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
     private val tinFeature =
-      IRConfiguredFeature(
-          identifier("tin_ore"),
-          GenerationStep.Feature.UNDERGROUND_ORES,
-          Feature.ORE.configure(
-              OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRRegistry.TIN_ORE().defaultState, 10)
-          )
-              .rangeOf(48)
-              .spreadHorizontally()
-              .repeat(14),
-          IRConfiguredFeature.IS_OVERWORLD
-      )
+        IRConfiguredFeature(
+            identifier("tin_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TIN_ORE().defaultState, 10)
+            )
+                .rangeOf(48)
+                .spreadHorizontally()
+                .repeat(14),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val leadFeature =
+        IRConfiguredFeature(
+            identifier("lead_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.LEAD_ORE().defaultState, 6)
+            )
+                .rangeOf(32)
+                .spreadHorizontally()
+                .repeat(12),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val silverFeature =
+        IRConfiguredFeature(
+            identifier("silver_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.SILVER_ORE().defaultState, 8)
+            )
+                .rangeOf(32)
+                .spreadHorizontally()
+                .repeat(8),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
+
+    private val tungstenFeature =
+        IRConfiguredFeature(
+            identifier("tungsten_ore"),
+            GenerationStep.Feature.UNDERGROUND_ORES,
+            Feature.ORE.configure(
+                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TUNGSTEN_ORE().defaultState, 5)
+            )
+                .rangeOf(16)
+                .spreadHorizontally()
+                .repeat(5),
+            IRConfiguredFeature.IS_OVERWORLD
+        )
 
     private val nikoliteFeature =
         IRConfiguredFeature(
@@ -87,13 +135,13 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(
                     OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                    IRRegistry.NIKOLITE_ORE().defaultState,
+                    IRBlockRegistry.NIKOLITE_ORE().defaultState,
                     7
                 )
             )
                 .rangeOf(16)
                 .spreadHorizontally()
-                .repeat(8),
+                .repeat(6),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
@@ -123,7 +171,7 @@ object WorldGeneration {
         identifier("sulfuric_acid_lake"),
         GenerationStep.Feature.LAKES,
         Feature.LAKE.configure(
-            SingleStateFeatureConfig(IRRegistry.SULFURIC_ACID.defaultState)
+            SingleStateFeatureConfig(IRFluidRegistry.SULFURIC_ACID.defaultState)
         ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
     ) { biome -> biome.category == Biome.Category.SWAMP }
 }

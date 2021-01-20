@@ -14,7 +14,7 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -57,7 +57,7 @@ class RancherController(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
         killAfter = propertyDelegate[7]
 
         root.add(WCustomTabPanel.Tab(null, ItemIcon(RANCHER_MK4.asItem()), buildMainPanel(), {}))
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRRegistry.WRENCH), buildConfigPanel(), {}))
+        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRItemRegistry.WRENCH), buildConfigPanel(), {}))
 
         root.validate(this)
     }

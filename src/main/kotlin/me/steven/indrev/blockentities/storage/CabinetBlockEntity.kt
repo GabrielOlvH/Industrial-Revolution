@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.storage
 
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -17,7 +17,7 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.collection.DefaultedList
 
-class CabinetBlockEntity : LootableContainerBlockEntity(IRRegistry.CABINET_BLOCK_ENTITY_TYPE), ExtendedScreenHandlerFactory {
+class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_BLOCK_ENTITY_TYPE), ExtendedScreenHandlerFactory {
 
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(27, ItemStack.EMPTY)
 

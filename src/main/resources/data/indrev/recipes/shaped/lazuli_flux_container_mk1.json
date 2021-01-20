@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NCN",
+    "PCP",
     "BMB",
     "NBN"
   ],
@@ -17,6 +17,9 @@
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "P": {
+      "tag": "c:bronze_plates"
     }
   },
   "result": {
