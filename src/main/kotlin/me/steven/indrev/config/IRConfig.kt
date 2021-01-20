@@ -280,12 +280,4 @@ class OreGen : ConfigData {
 class Hud : ConfigData {
     val renderPosX = 0
     val renderPosY = 0
-    val renderHelmetArmor = true
-    val renderHelmetShield = true
-    val renderChestplateArmor = true
-    val renderChestplateShield = true
-    val renderLeggingsArmor = true
-    val renderLeggingsShield = true
-    val renderBootsArmor = true
-    val renderBootsShield = true
 }
