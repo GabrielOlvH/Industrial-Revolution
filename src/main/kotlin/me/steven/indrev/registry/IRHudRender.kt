@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.IRPlayerEntityExtension
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -28,12 +29,17 @@ object IRHudRender : HudRenderCallback {
         val client = MinecraftClient.getInstance()
         val player = client.player
         if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
+
+            val color = player.armorItems.toList().firstOrNull { (it.item as? IRModularArmorItem)?.slotType == HEAD }?.let {
+                val item = it.item as IRModularArmorItem
+                item.getColor(it)
+            } ?: -1
             val x = IndustrialRevolution.CONFIG.hud.renderPosX + 2
             val y = IndustrialRevolution.CONFIG.hud.renderPosY + 2
-            ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, -1, 0.8f)
-            ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, -1, 0.3f)
+            ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, color, 0.8f)
+            ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
             val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"
-            ScreenDrawing.drawStringWithShadow(matrixStack, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), -1)
+            ScreenDrawing.drawStringWithShadow(matrixStack, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
             player.armorItems.forEach { stack ->
                 val item = stack.item as? ArmorItem ?: return@forEach
                 val xOffset = 21 * when (item.slotType) {
@@ -54,7 +60,7 @@ object IRHudRender : HudRenderCallback {
                 else -> DAMAGED
             }
             val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
-            texturedRect(x + 5, y + 50, 16, 16, sprite, -1, 0.8f)
+            texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
         }
     }
 
