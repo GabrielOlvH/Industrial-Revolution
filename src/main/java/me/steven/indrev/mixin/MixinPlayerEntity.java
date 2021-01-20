@@ -32,6 +32,7 @@ import java.util.Map;
 @Mixin(PlayerEntity.class)
 public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayerEntityExtension {
 
+    private boolean indrev_regenerating = false;
     private double indrev_shield = 0.0;
     private final Object2IntMap<ArmorModule> appliedEffects = new Object2IntOpenHashMap<>();
 
@@ -108,5 +109,15 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
     @Override
     public int getAppliedLevel(@NotNull ArmorModule module) {
         return appliedEffects.getOrDefault(module, 0);
+    }
+
+    @Override
+    public void setRegenerating(boolean isRegenerating) {
+        this.indrev_regenerating = isRegenerating;
+    }
+
+    @Override
+    public boolean isRegenerating() {
+        return indrev_regenerating;
     }
 }

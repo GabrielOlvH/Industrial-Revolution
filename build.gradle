@@ -159,9 +159,9 @@ dependencies {
 
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
     include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
-    modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
-        exclude group: "teamreborn", module: "energy"
-    }
+    //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
+        //exclude group: "teamreborn", module: "energy"
+    //}
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
 

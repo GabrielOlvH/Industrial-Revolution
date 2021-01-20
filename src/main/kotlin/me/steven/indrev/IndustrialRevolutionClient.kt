@@ -157,6 +157,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
             ClientSpriteRegistryCallback { _, registry ->
                 registry.register(identifier("block/lazuli_flux_container_lf_level"))
+                registry.register(identifier("gui/hud_damaged"))
+                registry.register(identifier("gui/hud_regenerating"))
+                registry.register(identifier("gui/hud_warning"))
+                registry.register(identifier("gui/hud_default"))
             })
     }
 

@@ -225,12 +225,14 @@ object PacketRegistry {
                 modules[module] = level
             }
             val durability = buf.readDouble()
+            val isRegenerating = buf.readBoolean()
             client.execute {
                 val player = client.player!!
                 if (player is IRPlayerEntityExtension) {
                     (player.getAppliedModules() as MutableMap<*, *>).clear()
                     modules.forEach(player::applyModule)
                     player.shieldDurability = durability
+                    player.isRegenerating = isRegenerating
                 }
             }
         }

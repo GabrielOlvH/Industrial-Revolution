@@ -73,7 +73,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     private boolean shouldApplyToShield(DamageSource source) {
         return (source.equals(DamageSource.FALL) && isApplied(ArmorModule.FEATHER_FALLING))
                 || (source.isFire() && isApplied(ArmorModule.FIRE_RESISTANCE))
-                || (!source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN));
+                && (!source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN));
     }
 
     private void applyArmorEffects() {
@@ -164,6 +164,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
             buf.writeInt(level);
         });
         buf.writeDouble(getShieldDurability());
+        buf.writeBoolean(ticks - 120 > lastDamageTick);
         ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
+    }
+
+    @Override
+    public boolean isRegenerating() {
+        return ticks - 120 > lastDamageTick;
     }
 }

@@ -5,6 +5,7 @@ import me.steven.indrev.tools.modular.ArmorModule
 interface IRPlayerEntityExtension {
 
     var shieldDurability: Double
+    var isRegenerating: Boolean
 
     fun getMaxShieldDurability(): Double
 
