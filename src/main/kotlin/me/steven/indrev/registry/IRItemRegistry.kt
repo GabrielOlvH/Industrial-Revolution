@@ -17,10 +17,7 @@ import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.tools.modular.GamerAxeModule
 import me.steven.indrev.tools.modular.MiningToolModule
-import me.steven.indrev.utils.EnergyDamageHandler
-import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.item
-import me.steven.indrev.utils.itemSettings
+import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
@@ -246,6 +243,10 @@ object IRItemRegistry {
         identifier("portable_charger").item(PORTABLE_CHARGER_ITEM)
 
         identifier("gamer_axe").item(GAMER_AXE_ITEM)
+
+        identifier("modular_core").item(MODULAR_CORE)
+        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(1000000000.0, 16384.0, 16384.0), MODULAR_CORE)
+        identifier("modular_core_activated").item(MODULAR_CORE_ACTIVATED)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -348,4 +349,18 @@ object IRItemRegistry {
         IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val TANK_BLOCK_ITEM = BlockItem(IRBlockRegistry.TANK_BLOCK, itemSettings())
+
+    val MODULAR_CORE: Item = object : Item(itemSettings().maxCount(1)), IREnergyItem {
+        override fun appendTooltip(
+            stack: ItemStack?,
+            world: World?,
+            tooltip: MutableList<Text>?,
+            context: TooltipContext?
+        ) {
+            buildEnergyTooltip(stack, tooltip)
+        }
+    }
+    val MODULAR_CORE_ACTIVATED = object : Item(itemSettings().maxCount(1)) {
+        override fun hasGlint(stack: ItemStack?): Boolean = true
+    }
 }

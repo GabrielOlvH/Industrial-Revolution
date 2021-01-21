@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "group": "electrum_ingots",
+  "ingredient": {
+    "tag": "c:electrum_dusts"
+  },
+  "result": "indrev:electrum_ingot",
+  "cookingTime": 200
+}

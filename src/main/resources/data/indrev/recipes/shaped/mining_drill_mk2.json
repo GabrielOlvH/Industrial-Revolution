@@ -2,13 +2,10 @@
   "type": "indrev:copy_nbt_crafting_shaped",
   "pattern": [
     "NPN",
-    "ACS",
-    "BMB"
+    "OCO",
+    "OBO"
   ],
   "key": {
-    "M": {
-      "item": "indrev:mining_drill_mk1"
-    },
     "C": {
       "item": "indrev:circuit_mk2"
     },
@@ -16,16 +13,13 @@
       "item": "indrev:nikolite_ingot"
     },
     "P": {
-      "item": "minecraft:iron_pickaxe"
-    },
-    "A": {
-      "item": "minecraft:iron_axe"
-    },
-    "S": {
-      "item": "minecraft:iron_shovel"
+      "item": "indrev:iron_drill_head"
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "O": {
+      "tag": "c:silver_plates"
     }
   },
   "result": {

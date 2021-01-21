@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "NPN",
-    "ACS",
+    "OCO",
     "OBO"
   ],
   "key": {
@@ -13,19 +13,13 @@
       "item": "indrev:nikolite_dust"
     },
     "P": {
-      "item": "minecraft:stone_pickaxe"
-    },
-    "A": {
-      "item": "minecraft:stone_axe"
-    },
-    "S": {
-      "item": "minecraft:stone_shovel"
+      "item": "indrev:stone_drill_head"
     },
     "B": {
       "item": "indrev:battery"
     },
     "O": {
-      "tag": "c:copper_plates"
+      "tag": "c:bronze_plates"
     }
   },
   "result": {

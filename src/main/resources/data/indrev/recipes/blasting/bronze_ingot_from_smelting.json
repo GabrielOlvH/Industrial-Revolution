@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "group": "bronze_ingots",
+  "ingredient": {
+    "tag": "c:bronze_dusts"
+  },
+  "result": "indrev:bronze_ingot",
+  "cookingTime": 200
+}

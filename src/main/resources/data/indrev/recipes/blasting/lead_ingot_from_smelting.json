@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "group": "lead_ingots",
   "ingredient": {
     "tag": "c:lead_dusts"

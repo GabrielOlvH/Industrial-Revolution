@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "PNP",
+    "PCP"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "P": {
+      "tag": "c:tungsten_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:modular_core"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "I I",
+    "III",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "indrev:stone_drill_head"
+  }
+}

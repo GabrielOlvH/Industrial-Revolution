@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    "III",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:diamond"
+    },
+    "S": {
+      "item": "indrev:iron_drill_head"
+    }
+  },
+  "result": {
+    "item": "indrev:diamond_drill_head"
+  }
+}
