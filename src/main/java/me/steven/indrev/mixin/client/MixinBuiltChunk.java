@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.client;
 
 import me.steven.indrev.blockentities.GlobalStateController;
 import net.minecraft.client.render.chunk.ChunkBuilder;

@@ -1,6 +1,6 @@
 package me.steven.indrev.utils
 
-import me.steven.indrev.mixin.*
+import me.steven.indrev.mixin.common.*
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory

@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import me.steven.indrev.api.IRPlayerEntityExtension;
 import me.steven.indrev.tools.modular.ArmorModule;

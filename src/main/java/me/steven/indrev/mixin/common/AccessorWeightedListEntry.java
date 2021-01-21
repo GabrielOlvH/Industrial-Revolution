@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import net.minecraft.util.collection.WeightedList;
 import org.spongepowered.asm.mixin.Mixin;

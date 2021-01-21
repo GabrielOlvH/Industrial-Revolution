@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import com.mojang.authlib.GameProfile;
 import dev.technici4n.fasttransferlib.api.ContainerItemContext;

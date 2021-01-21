@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription;
 import net.minecraft.entity.player.PlayerEntity;

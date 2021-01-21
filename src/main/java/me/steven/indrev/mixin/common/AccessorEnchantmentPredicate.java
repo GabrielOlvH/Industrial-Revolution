@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.predicate.NumberRange;

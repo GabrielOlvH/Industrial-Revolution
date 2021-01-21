@@ -18,7 +18,7 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.mixin.AccessorSyncedGuiDescription
+import me.steven.indrev.mixin.common.AccessorSyncedGuiDescription
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry

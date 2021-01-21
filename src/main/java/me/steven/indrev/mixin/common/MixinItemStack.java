@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import com.google.common.collect.Multimap;
 import me.steven.indrev.api.AttributeModifierProvider;

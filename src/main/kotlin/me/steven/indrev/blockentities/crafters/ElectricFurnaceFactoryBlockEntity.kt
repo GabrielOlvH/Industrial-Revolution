@@ -7,7 +7,7 @@ import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.mixin.MixinAbstractCookingRecipe
+import me.steven.indrev.mixin.common.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry

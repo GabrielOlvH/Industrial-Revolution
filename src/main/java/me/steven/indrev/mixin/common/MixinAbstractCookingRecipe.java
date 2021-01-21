@@ -1,4 +1,4 @@
-package me.steven.indrev.mixin;
+package me.steven.indrev.mixin.common;
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import me.steven.indrev.recipes.machines.IRRecipe;
