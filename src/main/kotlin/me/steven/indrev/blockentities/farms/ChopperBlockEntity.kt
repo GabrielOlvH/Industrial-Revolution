@@ -117,14 +117,16 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         chunk: Chunk
     ): Boolean {
         fun damageTool(amount: Int): Boolean {
-            if (toolEnergyHandler != null && !toolEnergyHandler.use(amount.toDouble()))
-                return false
-            else {
-                toolStack.damage(amount, world?.random, null)
-                if (toolStack.damage >= toolStack.maxDamage)
-                    toolStack.decrement(1)
+            return when {
+                toolEnergyHandler != null && !toolEnergyHandler.use(amount.toDouble()) -> false
+                toolStack.isEmpty -> false
+                else -> {
+                    toolStack.damage(amount, world?.random, null)
+                    if (toolStack.damage >= toolStack.maxDamage)
+                        toolStack.decrement(1)
+                    true
+                }
             }
-            return true
         }
         val block = blockState.block
         when {
@@ -139,13 +141,11 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             toolStack.item.isIn(FabricToolTags.SWORDS) && block is BambooBlock && blockPos.y > pos.y -> {
                 val upPos = blockPos.up()
                 val up = chunk.getBlockState(upPos)
-                if (up.isOf(block)) {
-                    scannedBlocks.add(upPos)
+                scannedBlocks.add(upPos)
+                if (up.isOf(block))
                     tryChop(toolStack, toolEnergyHandler, upPos, blockState, chunk)
-                } else {
-                    if (!damageTool(2)) return false
-                    world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
-                }
+                if (!damageTool(2)) return false
+                world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
             else -> return false
         }
@@ -157,7 +157,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val block = blockState.block
         when {
             item is BoneMealItem && itemStack.count > 1
-                    && (block.isIn(BlockTags.SAPLINGS) || block is MushroomPlantBlock || block is BambooBlock)
+                    && (block.isIn(BlockTags.SAPLINGS) || block is MushroomPlantBlock || block is BambooBlock || block is BambooSaplingBlock)
                     && block is Fertilizable
                     && block.isFertilizable(world, pos, blockState, false)
                     && block.canGrow(world, world?.random, pos, blockState) -> {
