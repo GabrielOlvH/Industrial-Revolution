@@ -1,10 +1,7 @@
 package me.steven.indrev.blockentities
 
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap
-import me.steven.indrev.utils.component1
-import me.steven.indrev.utils.component2
-import me.steven.indrev.utils.component3
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -47,16 +44,16 @@ object GlobalStateController {
         var ticks = 0
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             ticks++
-            if (client != null && ticks % 5 == 0) {
-                chunksToUpdate.entries.removeIf { (chunkPos, positions) ->
-                    val minX = positions.minByOrNull { it.x }?.x ?: return@removeIf true
-                    val minY = positions.minByOrNull { it.y }?.y ?: return@removeIf true
-                    val minZ = positions.minByOrNull { it.z }?.z ?: return@removeIf true
-                    val maxX = positions.maxByOrNull { it.x }?.x ?: return@removeIf true
-                    val maxY = positions.maxByOrNull { it.y }?.y ?: return@removeIf true
-                    val maxZ = positions.maxByOrNull { it.z }?.z ?: return@removeIf true
+            if (client != null && ticks % 10 == 0) {
+                chunksToUpdate.entries.forEach { (_, positions) ->
+
+                    val minX = positions.minByOrNull { it.x }?.x ?: return@forEach
+                    val minY = positions.minByOrNull { it.y }?.y ?: return@forEach
+                    val minZ = positions.minByOrNull { it.z }?.z ?: return@forEach
+                    val maxX = positions.maxByOrNull { it.x }?.x ?: return@forEach
+                    val maxY = positions.maxByOrNull { it.y }?.y ?: return@forEach
+                    val maxZ = positions.maxByOrNull { it.z }?.z ?: return@forEach
                     client.worldRenderer.scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
-                    true
                 }
             }
         }

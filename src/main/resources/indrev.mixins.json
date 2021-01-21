@@ -25,6 +25,7 @@
     "MixinSheepEntity"
   ],
   "client": [
+    "MixinBuiltChunk",
     "MixinClientRecipeBook",
     "MixinGameRenderer",
     "MixinLivingEntityClient",
