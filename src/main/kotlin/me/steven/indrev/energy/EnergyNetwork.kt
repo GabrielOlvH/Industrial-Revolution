@@ -3,6 +3,7 @@ package me.steven.indrev.energy
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.energyOf
@@ -16,8 +17,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
 import java.util.*
+import kotlin.collections.ArrayDeque
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 class EnergyNetwork(
     val world: ServerWorld,
     val cables: MutableSet<BlockPos> = hashSetOf(),
@@ -29,8 +30,8 @@ class EnergyNetwork(
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
-        val receiversHandlers = ArrayList<EnergyIo>(lastReceiverSize)
-        val senderHandlers = ArrayList<EnergyIo>(lastSenderSize)
+        val receiversHandlers = ArrayDeque<EnergyIo>(lastReceiverSize)
+        val senderHandlers = ArrayDeque<EnergyIo>(lastSenderSize)
         machines.forEach { (pos, directions) ->
             if (!world.isLoaded(pos)) return@forEach
             directions.forEach inner@{ dir ->
@@ -49,38 +50,41 @@ class EnergyNetwork(
 
         val totalInput = receiversHandlers.sumByDouble { handler -> handler.maxInput }
         val totalEnergy = senderHandlers.sumByDouble { handler -> handler.maxOutput }
-        val senderIt = senderHandlers.iterator()
-        val receiverIt = receiversHandlers.iterator()
 
-        var sender = senderIt.next()
-        var receiver = receiverIt.next()
+        var sender = senderHandlers.removeFirst()
+        var receiver = receiversHandlers.removeFirst()
         var sentThisTick = 0.0
         var receivedThisTick = 0.0
 
-        while (true) {
-            if (sender == receiver) {
-                if (senderIt.hasNext())
-                    sender = senderIt.next()
-                else if (receiverIt.hasNext())
-                    receiver = receiverIt.next()
-                else break
-                continue
-            }
+        val remainingInputs = Object2DoubleOpenHashMap<EnergyIo>()
+        remainingInputs.defaultReturnValue(0.0)
 
-            val amount = ((receiver.maxInput / totalInput) * totalEnergy).coerceIn(1.0, tier.io)
+        while (true) {
+            val maxInput = receiver.maxInput
+
+            val amount = ((maxInput / totalInput) * totalEnergy).coerceIn(1.0, tier.io).coerceAtMost(maxInput - receivedThisTick)
+
+            val energyBefore = receiver.energy
             val moved = EnergyMovement.move(sender, receiver, amount)
+            val energyAfter = receiver.energy
+
+            val isSame = moved > 0 && energyBefore == energyAfter
             sentThisTick += moved
             receivedThisTick += moved
 
             if (sentThisTick >= sender.maxOutput || sentThisTick.isNaN()) {
-                if (!senderIt.hasNext()) break
+                if (senderHandlers.isEmpty()) break
+                sender = senderHandlers.removeFirst()
                 sentThisTick = 0.0
-                sender = senderIt.next()
             }
             if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount || receivedThisTick.isNaN()) {
-                if (!receiverIt.hasNext()) break
-                sentThisTick = 0.0
-                receiver = receiverIt.next()
+                if (!isSame && receivedThisTick < receiver.maxInput) {
+                    remainingInputs.addTo(receiver, receivedThisTick)
+                    receiversHandlers.addLast(receiver)
+                }
+                if (receiversHandlers.isEmpty()) break
+                receiver = receiversHandlers.removeFirst()
+                receivedThisTick = remainingInputs.getDouble(receiver)
             }
         }
     }
