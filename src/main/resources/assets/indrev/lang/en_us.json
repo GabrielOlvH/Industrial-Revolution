@@ -961,6 +961,8 @@
   "gui.indrev.progress": "Progress: ",
   "death.attack.acid": "%s was dissolved in sulfuric acid",
   "death.attack.acid.player": "%s was dissolved in sulfuric acid while trying to escape %s",
+  "death.attack.laser": "%s ran into the laser and got fried.",
+  "death.attack.laser.player": "%s ran into the laser and got fried while trying to escape %s",
   "vein.indrev.bauxite": "Bauxite",
   "vein.indrev.certus_quartz": "Certus Quartz",
   "vein.indrev.peat": "Peat",

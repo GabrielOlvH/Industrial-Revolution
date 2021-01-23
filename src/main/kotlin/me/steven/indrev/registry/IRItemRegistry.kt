@@ -245,7 +245,6 @@ object IRItemRegistry {
         identifier("gamer_axe").item(GAMER_AXE_ITEM)
 
         identifier("modular_core").item(MODULAR_CORE)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(1000000000.0, 16384.0, 16384.0), MODULAR_CORE)
         identifier("modular_core_activated").item(MODULAR_CORE_ACTIVATED)
     }
 
@@ -349,6 +348,8 @@ object IRItemRegistry {
         IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val TANK_BLOCK_ITEM = BlockItem(IRBlockRegistry.TANK_BLOCK, itemSettings())
+
+    val CAPSULE_BLOCK_ITEM = BlockItem(IRBlockRegistry.CAPSULE_BLOCK, itemSettings().maxCount(1))
 
     val MODULAR_CORE: Item = object : Item(itemSettings().maxCount(1)), IREnergyItem {
         override fun appendTooltip(

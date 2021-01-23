@@ -12,6 +12,7 @@ import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
@@ -572,6 +573,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { ChargePadBlockEntity(tier) } }
             .energyProvider { { be, dir -> if (dir == Direction.DOWN) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
+            .noModelProvider()
+
+        val LASER_REGISTRY = MachineRegistry("laser", false, Tier.MK4)
+            .blockProvider { LaserBlock(this, SETTINGS()) }
+            .blockEntityProvider { { LaserBlockEntity() } }
+            .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING].opposite) be as LaserBlockEntity else null } }
             .noModelProvider()
 
         val CABLE_REGISTRY = MachineRegistry("cable", false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)

@@ -28,6 +28,8 @@ import me.steven.indrev.config.IConfig
 import me.steven.indrev.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
@@ -89,6 +91,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     protected open fun machineTick() {}
 
+    @Environment(EnvType.CLIENT)
+    protected open fun machineClientTick() {}
+
     final override fun tick() {
         if (world?.isClient == false) {
             ticks++
@@ -130,7 +135,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                     //val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, workingState)
                     //world!!.setBlockState(pos, state)
             //}
-        }
+        } else machineClientTick()
     }
 
     override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy
