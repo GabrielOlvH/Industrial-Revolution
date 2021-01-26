@@ -117,6 +117,10 @@ dependencies {
     modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+    
+    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -154,19 +158,17 @@ dependencies {
         transitive = false
     }
 
-    modApi "me.shedaniel.cloth.api:cloth-api:${project.cloth_api_version}"
-    include "me.shedaniel.cloth.api:cloth-api:${project.cloth_api_version}"
+    modApi "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
+    include "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
 
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
     include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
+    //modRuntime "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
     //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
         //exclude group: "teamreborn", module: "energy"
     //}
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
-
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
 }
 
 processResources {
