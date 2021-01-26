@@ -4,6 +4,7 @@ import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.energyOf
@@ -27,6 +28,13 @@ class EnergyNetwork(
     var lastSenderSize = 0
     var lastReceiverSize = 0
     var tier = Tier.MK1
+    val maxCableTransfer: Double
+        get() = when (tier) {
+            Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1.maxInput
+            Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2.maxInput
+            Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3.maxInput
+            else -> IndustrialRevolution.CONFIG.cables.cableMk4.maxInput
+        }
 
     fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
@@ -62,7 +70,7 @@ class EnergyNetwork(
         while (true) {
             val maxInput = receiver.maxInput
 
-            val amount = ((maxInput / totalInput) * totalEnergy).coerceIn(1.0, tier.io).coerceAtMost(maxInput - receivedThisTick)
+            val amount = ((maxInput / totalInput) * totalEnergy).coerceIn(1.0, maxCableTransfer).coerceAtMost(maxInput - receivedThisTick)
 
             val energyBefore = receiver.energy
             val moved = EnergyMovement.move(sender, receiver, amount)

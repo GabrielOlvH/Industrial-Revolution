@@ -93,12 +93,8 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
-        //exclude group: "teamreborn", module: "energy"
-    }
-    include ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
-        //exclude group: "teamreborn", module: "energy"
-    }
+    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 
     modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -117,7 +113,7 @@ dependencies {
     modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    
+
     include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
