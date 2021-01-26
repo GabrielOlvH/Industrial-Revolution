@@ -52,15 +52,6 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredients: {
-                tag: 'c:bronze_ingots'
-            },
-            output: {
-                item: 'techreborn:bronze_dust'
-            },
-            processTime: 200
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
                 item: 'minecraft:charcoal'
             },
             output: {
@@ -104,15 +95,6 @@ if (mod.isLoaded('techreborn')) {
                 item: 'techreborn:diorite_dust'
             },
             processTime: 1440
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_dust'
-            },
-            processTime: 220
         })
         event.recipes.indrev.pulverize({
             ingredients: {
@@ -186,25 +168,6 @@ if (mod.isLoaded('techreborn')) {
             },
             output: {
                 item: 'techreborn:invar_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
-                tag: 'c:lead_ingots'
-            },
-            output: {
-                item: 'techreborn:lead_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
-                tag: 'c:lead_ores'
-            },
-            output: {
-                item: 'techreborn:lead_dust',
-                count: 2
             },
             processTime: 220
         })
@@ -332,39 +295,11 @@ if (mod.isLoaded('techreborn')) {
         })
         event.recipes.indrev.pulverize({
             ingredients: {
-                tag: 'c:silver_ingots'
-            },
-            output: {
-                item: 'techreborn:silver_dust'
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
-                tag: 'c:silver_ores'
-            },
-            output: {
-                item: 'techreborn:silver_dust',
-                count: 2
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
                 tag: 'c:sodalite_ores'
             },
             output: {
                 item: 'techreborn:sodalite_dust',
                 count: 2
-            },
-            processTime: 220
-        })
-        event.recipes.indrev.pulverize({
-            ingredients: {
-                tag: 'c:tungsten_ingots'
-            },
-            output: {
-                item: 'techreborn:tungsten_dust'
             },
             processTime: 220
         })
