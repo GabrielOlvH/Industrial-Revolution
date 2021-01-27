@@ -191,8 +191,8 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     override fun isConfigurable(type: ConfigurationType): Boolean {
         return when (type) {
             ConfigurationType.ITEM -> inventoryComponent != null
-                    && inventoryComponent?.inventory?.inputSlots?.isNotEmpty() == true
-                    && inventoryComponent?.inventory?.outputSlots?.isNotEmpty() == true
+                    && (inventoryComponent?.inventory?.inputSlots?.isNotEmpty() == true
+                    || inventoryComponent?.inventory?.outputSlots?.isNotEmpty() == true)
             ConfigurationType.FLUID -> fluidComponent != null
             ConfigurationType.ENERGY -> false
         }
