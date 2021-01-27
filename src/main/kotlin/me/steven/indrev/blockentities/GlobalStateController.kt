@@ -53,7 +53,7 @@ object GlobalStateController {
                     val maxX = positions.maxByOrNull { it.x }?.x ?: return@forEach
                     val maxY = positions.maxByOrNull { it.y }?.y ?: return@forEach
                     val maxZ = positions.maxByOrNull { it.z }?.z ?: return@forEach
-                    client.worldRenderer.scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
+                    client.worldRenderer?.scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
                 }
             }
         }
