@@ -77,6 +77,18 @@ class EnergyNetwork(
             val energyAfter = receiver.energy
 
             val isSame = moved > 0 && energyBefore == energyAfter
+            if (isSame) {
+                if (senderHandlers.isNotEmpty()) {
+                    sender = senderHandlers.removeFirst()
+                    sentThisTick = 0.0
+                }
+                else if (receiversHandlers.isNotEmpty()) {
+                    receiver = receiversHandlers.removeFirst()
+                    receivedThisTick = remainingInputs.getDouble(receiver)
+                }
+                else break
+                continue
+            }
             sentThisTick += moved
             receivedThisTick += moved
 
