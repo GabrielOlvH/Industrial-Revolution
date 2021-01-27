@@ -1,0 +1,27 @@
+{
+  "name": "Core of Modularity",
+  "category": "tools",
+  "sortnum": 6,
+  "icon": "indrev:modular_core",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/modular_core",
+      "text": "The Core of Modularity is the base for every modular tool here. However, it must be activated before being usable. To activate it, you'll need at least one Laser, one Capsule and a lot of stored energy."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/capsule",
+      "text": "The Capsule will hold your Core of Modularity during the process of activation."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/laser",
+      "text": "Lasers should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They will store energy they are activated with a redstone signal."
+    },
+    {
+      "type": "text",
+      "text": "This process takes time but it goes faster for each laser active. You must pay attention to these details to avoid problems:$(br)- Pointing the laser to something other than the capsule or and empty capsule will result in explosion.$(br)- If the lasers run out of power during the process, all progress will be lost.$(br)- Make sure to turn off your Lasers before retrieving the activated core."
+    }
+  ]
+}
