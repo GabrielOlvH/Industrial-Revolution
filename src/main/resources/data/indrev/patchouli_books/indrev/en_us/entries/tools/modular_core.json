@@ -17,7 +17,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/laser",
-      "text": "Lasers should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They will store energy they are activated with a redstone signal."
+      "text": "Lasers should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 25M LF and require a redstone signal to be toggled on."
     },
     {
       "type": "text",

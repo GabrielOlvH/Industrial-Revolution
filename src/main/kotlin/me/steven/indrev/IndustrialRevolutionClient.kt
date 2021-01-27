@@ -88,7 +88,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
             IndustrialRevolution.INFUSER_FACTORY_HANDLER,
             IndustrialRevolution.CABINET_HANDLER,
-            IndustrialRevolution.DRILL_HANDLER
+            IndustrialRevolution.DRILL_HANDLER,
+            IndustrialRevolution.LASER_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }

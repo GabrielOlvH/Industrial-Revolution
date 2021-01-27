@@ -140,6 +140,8 @@
   "item.indrev.modular_core": "Core of Modularity (Uncharged)",
   "item.indrev.modular_core_activated": "Core of Modularity",
   "item.indrev.sawdust": "Sawdust",
+  "block.indrev.laser_mk4": "Laser",
+  "block.indrev.capsule": "Capsule",
   "block.indrev.tin_ore": "Tin Ore",
   "block.indrev.tin_block": "Block of Tin",
   "item.indrev.tin_ingot": "Tin Ingot",

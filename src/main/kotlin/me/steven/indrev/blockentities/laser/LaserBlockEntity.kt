@@ -28,6 +28,9 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         this.propertyDelegate = ArrayPropertyDelegate(5)
     }
 
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
+
     override fun machineTick() {
         if (!cachedState[LaserBlock.POWERED]) return
         val facing = cachedState[FacingMachineBlock.FACING]

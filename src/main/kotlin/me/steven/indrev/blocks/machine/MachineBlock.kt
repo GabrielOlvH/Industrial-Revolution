@@ -78,9 +78,9 @@ open class MachineBlock(
             blockEntity.multiblockComponent?.toggleRender()
             blockEntity.markDirty()
             blockEntity.sync()
-        } else if (screenHandler != null && blockEntity.inventoryComponent != null) {
+        } else if (screenHandler != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
-        }
+        } else return ActionResult.PASS
         return ActionResult.SUCCESS
     }
 

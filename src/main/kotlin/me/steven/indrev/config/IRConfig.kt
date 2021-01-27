@@ -214,7 +214,7 @@ class Machines : ConfigData {
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
     @ConfigEntry.Gui.CollapsibleObject
-    val laser: MachineConfig = MachineConfig(4096.0, 1.0, 25000000.0, 16384.0)
+    val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
 }
 
 // this is so auto config actually generates the config properly
