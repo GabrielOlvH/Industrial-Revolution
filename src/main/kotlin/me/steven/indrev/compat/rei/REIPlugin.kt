@@ -13,12 +13,18 @@ import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.weight
+import me.steven.indrev.world.chunkveins.VeinType
+import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import kotlin.math.roundToInt
 
 object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
@@ -212,6 +218,24 @@ object REIPlugin : REIPluginV0 {
                 }
             }
         }
+
+        val recipeHelpers = mutableMapOf<Block, DefaultInformationDisplay>()
+        VeinType.REGISTERED.forEach { (id, type) ->
+            val sum = type.outputs.entries.sumBy { it.weight }
+            type.outputs.entries.forEach { entry ->
+                val block = entry.element
+                val info = recipeHelpers.computeIfAbsent(block) {
+                    val info = DefaultInformationDisplay.createFromEntry(EntryStack.create(block), TranslatableText(block.translationKey))
+                    info.line(LiteralText("This can be mined by Industrial Revolution's miner in the following veins:"))
+                    info.line(LiteralText.EMPTY)
+                    info
+                }
+                val chance = entry.weight * 100 / sum.toDouble()
+                val chanceString = ((chance * 100.0).roundToInt() / 100.0).toString()
+                info.line(TranslatableText("vein.${id.namespace}.${id.path}").append(" (").append(LiteralText(chanceString)).append("%)"))
+            }
+        }
+        recipeHelpers.forEach { (_, info) -> recipeHelper?.registerDisplay(info) }
     }
 
     private val ID = identifier("rei_plugin")
