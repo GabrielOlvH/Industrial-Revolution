@@ -128,13 +128,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 sync()
                 isMarkedForUpdate = false
             }
-            //if (ticks % 20 == 0
-                //&& this.cachedState.contains(MachineBlock.WORKING_PROPERTY)
-                //&& this.cachedState[MachineBlock.WORKING_PROPERTY] != workingState
-            //) {
-                    //val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, workingState)
-                    //world!!.setBlockState(pos, state)
-            //}
         } else machineClientTick()
     }
 
