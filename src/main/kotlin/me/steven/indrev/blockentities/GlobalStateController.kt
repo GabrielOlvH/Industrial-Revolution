@@ -44,7 +44,7 @@ object GlobalStateController {
         var ticks = 0
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             ticks++
-            if (client != null && ticks % 10 == 0) {
+            if (client?.world != null && ticks % 10 == 0) {
                 chunksToUpdate.entries.forEach { (_, positions) ->
 
                     val minX = positions.minByOrNull { it.x }?.x ?: return@forEach
