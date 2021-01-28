@@ -56,7 +56,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val area = getWorkingArea()
         if (!scheduledBlocks.hasNext()) {
             // includes tree branches that goes outside the actual area
-            val fullArea = area.expand(4.0)
+            val fullArea = area.expand(4.0).shrink(0.0, -4.0, 0.0)
             scheduledBlocks = fullArea.map(::BlockPos).iterator()
             scannedBlocks.clear()
         } else {
