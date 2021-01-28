@@ -32,7 +32,9 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
             player.setStackInHand(hand, ItemStack.EMPTY)
             blockEntity.inventory[0] = stack
         } else if (!blockEntity.inventory[0].isEmpty) {
-            player?.inventory?.insertStack(blockEntity.inventory[0])
+            val itemStack = blockEntity.inventory[0]
+            itemStack.tag = null
+            player?.inventory?.insertStack(itemStack)
             blockEntity.inventory[0] = ItemStack.EMPTY
         } else
             return ActionResult.PASS
