@@ -16,6 +16,9 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
@@ -42,8 +45,4 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
                 else -> VanillaCookingRecipeCachedGetter.SMELTING
             } as IRecipeGetter<MixinAbstractCookingRecipe>
         }
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
 }

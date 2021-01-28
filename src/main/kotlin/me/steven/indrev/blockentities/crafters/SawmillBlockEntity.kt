@@ -10,6 +10,9 @@ import me.steven.indrev.registry.MachineRegistry
 
 class SawmillBlockEntity(tier: Tier) : CraftingMachineBlockEntity<SawmillRecipe>(tier, MachineRegistry.SAWMILL_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(7, 8, 9, 10)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
@@ -19,8 +22,4 @@ class SawmillBlockEntity(tier: Tier) : CraftingMachineBlockEntity<SawmillRecipe>
     }
 
     override val type: IRRecipeType<SawmillRecipe> = SawmillRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(7, 8, 9, 10)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

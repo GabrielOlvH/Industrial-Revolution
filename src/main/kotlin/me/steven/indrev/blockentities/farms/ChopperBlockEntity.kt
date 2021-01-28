@@ -23,6 +23,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.chunk.Chunk
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
+
+    override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.inventoryComponent = inventory(this) {
             input {
@@ -180,10 +184,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         }
         return true
     }
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {

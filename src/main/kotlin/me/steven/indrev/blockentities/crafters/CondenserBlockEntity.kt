@@ -12,6 +12,9 @@ import me.steven.indrev.registry.MachineRegistry
 class CondenserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(3, 4, 5, 6)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
@@ -21,10 +24,6 @@ class CondenserBlockEntity(tier: Tier) :
     }
 
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(3, 4, 5, 6)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {
         return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)

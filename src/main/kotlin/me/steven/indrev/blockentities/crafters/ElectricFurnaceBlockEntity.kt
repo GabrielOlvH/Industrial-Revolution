@@ -12,6 +12,9 @@ import me.steven.indrev.registry.MachineRegistry
 class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(4, 5, 6, 7)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
         this.inventoryComponent = inventory(this) {
@@ -30,8 +33,4 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
                 else -> VanillaCookingRecipeCachedGetter.SMELTING
             } as IRecipeGetter<MixinAbstractCookingRecipe>
         }
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.values()
 }

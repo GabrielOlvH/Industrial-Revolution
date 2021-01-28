@@ -9,6 +9,9 @@ import me.steven.indrev.registry.MachineRegistry
 
 class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY), UpgradeProvider {
 
+    override val upgradeSlots: IntArray = intArrayOf(4, 5, 6, 7)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
@@ -18,10 +21,6 @@ class RecyclerBlockEntity(tier: Tier) : CraftingMachineBlockEntity<RecyclerRecip
     }
 
     override val type: IRRecipeType<RecyclerRecipe> = RecyclerRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(4, 5, 6, 7)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun isLocked(slot: Int, tier: Tier): Boolean = false
 }

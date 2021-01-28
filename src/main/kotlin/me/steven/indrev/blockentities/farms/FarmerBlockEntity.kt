@@ -21,6 +21,9 @@ import net.minecraft.util.math.Box
 
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
+    override val upgradeSlots: IntArray = intArrayOf(14, 15, 16, 17)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(1, 2, 3, 4) }
@@ -117,10 +120,6 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
     }
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(14, 15, 16, 17)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {
         return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)

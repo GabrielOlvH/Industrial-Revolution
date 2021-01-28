@@ -30,6 +30,9 @@ import net.minecraft.util.registry.Registry
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
+    override val upgradeSlots: IntArray = intArrayOf(10, 11, 12, 13)
+    override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
@@ -182,10 +185,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             } else null
         }
     }
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
 
     override fun getBaseValue(upgrade: Upgrade): Double {
         val activeDrills = getActiveDrills()

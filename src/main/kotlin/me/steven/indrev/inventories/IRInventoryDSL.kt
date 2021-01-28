@@ -46,7 +46,7 @@ open class IRInventoryDSL : Filterable() {
         var size = input.slots.plus(output.slots).plus(filters.keys).distinct().size + 1
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
-        if (blockEntity is UpgradeProvider) size += blockEntity.getUpgradeSlots().size
+        if (blockEntity is UpgradeProvider) size += blockEntity.upgradeSlots.size
         return IRInventory(this, size, input.slots, output.slots) { slot, stack ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) { slot ->
@@ -55,7 +55,7 @@ open class IRInventoryDSL : Filterable() {
                         slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
-                        blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.getUpgradeSlots() && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.getAvailableUpgrades().contains(item.upgrade)
+                        blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.upgradeSlots && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.availableUpgrades.contains(item.upgrade)
                         else -> false
                     }
                 }

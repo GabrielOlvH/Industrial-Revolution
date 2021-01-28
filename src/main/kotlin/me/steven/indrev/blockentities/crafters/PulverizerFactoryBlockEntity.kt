@@ -15,6 +15,9 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class PulverizerFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_FACTORY_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
@@ -32,8 +35,4 @@ class PulverizerFactoryBlockEntity(tier: Tier) :
     }
 
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

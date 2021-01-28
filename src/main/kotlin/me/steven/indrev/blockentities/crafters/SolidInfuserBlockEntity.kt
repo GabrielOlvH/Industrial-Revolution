@@ -11,6 +11,9 @@ import me.steven.indrev.registry.MachineRegistry
 class SolidInfuserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(5, 6, 7, 8)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
@@ -20,8 +23,4 @@ class SolidInfuserBlockEntity(tier: Tier) :
     }
 
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

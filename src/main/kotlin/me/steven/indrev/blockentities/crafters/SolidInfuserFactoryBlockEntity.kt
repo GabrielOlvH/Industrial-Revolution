@@ -15,6 +15,9 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class SolidInfuserFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY) {
 
+    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
@@ -37,8 +40,4 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
     }
 
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(2, 3, 4, 5)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

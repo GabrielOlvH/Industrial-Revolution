@@ -20,6 +20,9 @@ import net.minecraft.util.math.Direction
 
 class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
 
+    override val upgradeSlots: IntArray = intArrayOf(6, 7, 8, 9)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.inventoryComponent = inventory(this) {
             input {
@@ -69,10 +72,6 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     }
 
     override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(6, 7, 8, 9)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
         Upgrade.ENERGY -> config.energyCost

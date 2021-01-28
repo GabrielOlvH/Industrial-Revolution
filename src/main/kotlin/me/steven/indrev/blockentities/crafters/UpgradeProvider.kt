@@ -10,24 +10,23 @@ import net.minecraft.inventory.Inventory
 
 interface UpgradeProvider {
 
-    fun getUpgradeSlots(): IntArray
-
-    fun getAvailableUpgrades(): Array<Upgrade>
+    val upgradeSlots: IntArray
+    val availableUpgrades: Array<Upgrade>
 
     fun getBaseValue(upgrade: Upgrade): Double
 
     fun getUpgrades(inventory: Inventory): Map<Upgrade, Int> {
         val map = Object2IntArrayMap<Upgrade>(4)
-        getUpgradeSlots()
+        upgradeSlots
             .forEach { slot ->
                 val (stack, item) = inventory.getStack(slot)
-                if (item is IRUpgradeItem)
+                if (item is IRUpgradeItem && availableUpgrades.contains(item.upgrade))
                     map.mergeInt(item.upgrade, stack.count) { i, j -> i + j }
             }
         return map
     }
 
-    fun isLocked(slot: Int, tier: Tier) = getUpgradeSlots().indexOf(slot) > tier.ordinal
+    fun isLocked(slot: Int, tier: Tier) = upgradeSlots.indexOf(slot) > tier.ordinal
 
     fun getMaxUpgrade(upgrade: Upgrade): Int {
         return when (upgrade) {

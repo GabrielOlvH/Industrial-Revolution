@@ -22,7 +22,7 @@ class IRUpgradeItem(settings: Settings, val upgrade: Upgrade) : Item(settings) {
             val handler = currentScreen.screenHandler as? IRGuiController ?: return
             handler.ctx.run { _, pos ->
                 val blockEntity = world?.getBlockEntity(pos) as? UpgradeProvider? ?: return@run
-                if (!blockEntity.getAvailableUpgrades().contains(upgrade))
+                if (!blockEntity.availableUpgrades.contains(upgrade))
                     tooltip?.add(TranslatableText("item.indrev.upgrades.incompatible").formatted(Formatting.DARK_RED))
                 else
                     tooltip?.add(TranslatableText("item.indrev.upgrades.count", blockEntity.getMaxUpgrade(upgrade)).formatted(Formatting.AQUA))

@@ -25,6 +25,9 @@ import net.minecraft.util.Hand
 
 class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
 
+    override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(8)
         this.inventoryComponent = inventory(this) {
@@ -128,10 +131,6 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             values.map { animals -> animals.dropLast((animals.size - killAfter).coerceAtLeast(killAfter)) }
         }.flatten()
     }
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(15, 16, 17, 18)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 
     override fun getBaseValue(upgrade: Upgrade): Double =
         when (upgrade) {

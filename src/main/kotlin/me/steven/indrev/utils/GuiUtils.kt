@@ -73,7 +73,7 @@ fun SyncedGuiDescription.configure(
         val blockEntity = world.getBlockEntity(blockPos)
         if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
             val slotPanel = WGridPanel()
-            for ((i, slot) in blockEntity.getUpgradeSlots().withIndex()) {
+            for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
                 val s =
                     object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
                         override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
