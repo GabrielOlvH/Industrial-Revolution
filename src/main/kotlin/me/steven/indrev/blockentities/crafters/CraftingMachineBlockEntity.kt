@@ -11,10 +11,10 @@ import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.associateStacks
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -100,6 +100,19 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             if (remaining < 0) set += remaining
             inventory.setStack(slot, ItemStack(item, set))
         }
+    }
+
+    private inline fun IntArray.associateStacks(transform: (Int) -> ItemStack): Map<Item, Int> {
+        return associateToStacks(Object2IntOpenHashMap(5), transform)
+    }
+
+    private inline fun <M : Object2IntOpenHashMap<Item>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
+        for (element in this) {
+            val stack = transform(element)
+            if (!stack.isEmpty && stack.tag?.isEmpty != false)
+                destination.addTo(stack.item, stack.count)
+        }
+        return destination
     }
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {

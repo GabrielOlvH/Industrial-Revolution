@@ -22,7 +22,6 @@ import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -31,13 +30,10 @@ import net.minecraft.text.OrderedText
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import java.util.*
-import kotlin.collections.ArrayList
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -101,42 +97,6 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
     return fluidKey.withAmount(fluidAmount)
 }
 
-inline fun Box.any(f: (Int, Int, Int) -> Boolean): Boolean {
-    for (x in minX.toInt()..maxX.toInt())
-        for (y in minY.toInt()..maxY.toInt())
-            for (z in minZ.toInt()..maxZ.toInt())
-                if (f(x, y, z)) return true
-    return false
-}
-
-inline fun Box.forEach(f: (Int, Int, Int) -> Unit) {
-    for (x in minX.toInt() until maxX.toInt())
-        for (y in minY.toInt() until maxY.toInt())
-            for (z in minZ.toInt() until maxZ.toInt())
-                f(x, y, z)
-}
-
-inline fun <T> Box.map(f: (Int, Int, Int) -> T): MutableList<T> {
-    val list = ArrayList<T>((xLength * yLength * zLength).toInt())
-    for (x in minX.toInt() until maxX.toInt())
-        for (y in minY.toInt() until maxY.toInt())
-            for (z in minZ.toInt() until maxZ.toInt())
-                list.add(f(x, y, z))
-    return list
-}
-
-operator fun Box.contains(pos: BlockPos): Boolean {
-    return contains(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble())
-}
-
-inline fun Box.firstOrNull(f: (Int, Int, Int) -> Boolean): BlockPos? {
-    for (x in minX.toInt()..maxX.toInt())
-        for (y in minY.toInt()..maxY.toInt())
-            for (z in minZ.toInt()..maxZ.toInt())
-                if (f(x, y, z)) return BlockPos(x, y, z)
-    return null
-}
-
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
     widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
     widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
@@ -148,19 +108,6 @@ fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid:
             MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
         }
     })
-}
-
-inline fun IntArray.associateStacks(transform: (Int) -> ItemStack): Map<Item, Int> {
-    return associateToStacks(HashMap(5), transform)
-}
-
-inline fun <M : MutableMap<Item, Int>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
-    for (element in this) {
-        val stack = transform(element)
-        if (!stack.isEmpty && stack.tag?.isEmpty != false)
-            destination.merge(stack.item, stack.count) { old, new -> old + new }
-    }
-    return destination
 }
 
 fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState) -> Boolean) {
