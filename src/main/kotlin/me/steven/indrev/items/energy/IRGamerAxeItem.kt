@@ -192,7 +192,7 @@ class IRGamerAxeItem(
         equipmentSlot: EquipmentSlot
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
         val itemIo = energyOf(itemStack)
-        if (isActive(itemStack) || itemIo == null || itemIo.energy <= 0)
+        if (!isActive(itemStack) || itemIo == null || itemIo.energy <= 0)
             return ImmutableMultimap.of()
         else if (equipmentSlot == EquipmentSlot.MAINHAND) {
             val builder = ImmutableMultimap.builder<EntityAttribute, EntityAttributeModifier>()
