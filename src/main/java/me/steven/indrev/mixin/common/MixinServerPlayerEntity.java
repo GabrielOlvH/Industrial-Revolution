@@ -71,9 +71,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     }
 
     private boolean shouldApplyToShield(DamageSource source) {
-        return (source.equals(DamageSource.FALL) && isApplied(ArmorModule.FEATHER_FALLING))
-                || (source.isFire() && isApplied(ArmorModule.FIRE_RESISTANCE))
-                && (!source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN));
+        if (source.equals(DamageSource.FALL)) return isApplied(ArmorModule.FEATHER_FALLING);
+        else if (source.isFire()) return isApplied(ArmorModule.FIRE_RESISTANCE);
+        else return !source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN);
     }
 
     private void applyArmorEffects() {
