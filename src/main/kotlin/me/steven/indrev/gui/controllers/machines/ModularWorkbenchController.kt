@@ -69,28 +69,28 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
 
     init {
 
-        slotLayout[1] = arrayOf(WToggleableItemSlot(craftingInventory, 0, 2 * 18, 0, false))
+        slotLayout[1] = arrayOf(WToggleableItemSlot(0, 2 * 18, 0, false))
         slotLayout[2] = arrayOf(
-            WToggleableItemSlot(craftingInventory, 0, 0,2 * 18,false),
-            WToggleableItemSlot(craftingInventory, 1, 4 * 18, 2 * 18, false)
+            WToggleableItemSlot(0, 0,2 * 18,false),
+            WToggleableItemSlot(1, 4 * 18, 2 * 18, false)
         )
         slotLayout[3] = arrayOf(
-            WToggleableItemSlot(craftingInventory, 0, 2 * 18, 0, false),
-            WToggleableItemSlot(craftingInventory, 1, 0, 4 * 17, false),
-            WToggleableItemSlot(craftingInventory, 2, 4 * 18, 4 * 17, false)
+            WToggleableItemSlot(0, 2 * 18, 0, false),
+            WToggleableItemSlot(1, 0, 4 * 17, false),
+            WToggleableItemSlot(2, 4 * 18, 4 * 17, false)
         )
         slotLayout[4] = arrayOf(
-            WToggleableItemSlot(craftingInventory, 0, 2 * 18, 0, false),
-            WToggleableItemSlot(craftingInventory, 1, 0, 2 * 18, false),
-            WToggleableItemSlot(craftingInventory, 2, 4 * 18, 2 * 18, false),
-            WToggleableItemSlot(craftingInventory, 3, 2 * 18, 4 * 18, false)
+            WToggleableItemSlot(0, 2 * 18, 0, false),
+            WToggleableItemSlot(1, 0, 2 * 18, false),
+            WToggleableItemSlot(2, 4 * 18, 2 * 18, false),
+            WToggleableItemSlot(3, 2 * 18, 4 * 18, false)
         )
         slotLayout[5] = arrayOf(
-            WToggleableItemSlot(craftingInventory, 0, 2 * 18, 0, false),
-            WToggleableItemSlot(craftingInventory, 1, 0, 2 * 18, false),
-            WToggleableItemSlot(craftingInventory, 2, 4 * 18, 2 * 18, false),
-            WToggleableItemSlot(craftingInventory, 3, 1 * 14, 4 * 18, false),
-            WToggleableItemSlot(craftingInventory, 4, 3 * 20, 4 * 18, false)
+            WToggleableItemSlot(0, 2 * 18, 0, false),
+            WToggleableItemSlot(1, 0, 2 * 18, false),
+            WToggleableItemSlot(2, 4 * 18, 2 * 18, false),
+            WToggleableItemSlot(3, 1 * 14, 4 * 18, false),
+            WToggleableItemSlot(4, 3 * 20, 4 * 18, false)
         )
 
         slotLayout.forEach { (_, slots) -> slots.forEach { slotsPanel.add(it, it.x, it.y) } }
@@ -346,8 +346,8 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         }
     }
 
-    inner class WToggleableItemSlot(inventory: Inventory, index: Int, x: Int, y: Int, big: Boolean)
-        : WItemSlot(inventory, index, 1, 1, big) {
+    inner class WToggleableItemSlot(index: Int, x: Int, y: Int, big: Boolean)
+        : WItemSlot(craftingInventory, index, 1, 1, big) {
 
         var preview: ItemStack? = null
 
