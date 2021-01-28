@@ -1,6 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -30,6 +32,7 @@ import net.minecraft.util.registry.Registry
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
 
+    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(10, 11, 12, 13)
     override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
 

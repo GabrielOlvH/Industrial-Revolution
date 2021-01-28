@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.farms
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.config.BasicMachineConfig
@@ -21,6 +23,7 @@ import net.minecraft.util.math.Box
 
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
+    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(14, 15, 16, 17)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
 

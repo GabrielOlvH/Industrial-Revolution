@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import it.unimi.dsi.fastutil.objects.Object2IntMap
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -29,6 +30,8 @@ import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
+
+    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
