@@ -80,6 +80,13 @@ repositories {
             includeGroup "dev.technici4n"
         }
     }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -158,7 +165,8 @@ dependencies {
     include "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
 
     modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
-    include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
+    //modImplementation "curse.maven:kubejs-395864:3183435"
+    //include "curse.maven:kubejs-395864:3183435"
     //modRuntime "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
     //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
         //exclude group: "teamreborn", module: "energy"
