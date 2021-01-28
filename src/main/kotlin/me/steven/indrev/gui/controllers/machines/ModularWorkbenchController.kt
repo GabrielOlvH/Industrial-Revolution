@@ -139,16 +139,19 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         return panel
     }
 
-    override fun onContentChanged(inventory: Inventory?) {
-        if (!world.isClient) {
-            val list = (0 until craftingInventory.size()).map { craftingInventory.getStack(it) }
-            var stack = ItemStack.EMPTY
-            if (selected?.matches(list, null) == true) {
-                stack = selected!!.craft(null as Random?).first()
-            }
-            outputInventory.setStack(0, stack)
-            (playerInventory.player as ServerPlayerEntity).networkHandler.sendPacket(ScreenHandlerSlotUpdateS2CPacket(syncId, 54, stack))
+    private fun updateItems() {
+        val list = (0 until craftingInventory.size()).map { craftingInventory.getStack(it) }
+        var stack = ItemStack.EMPTY
+        if (selected?.matches(list, null) == true) {
+            stack = selected!!.craft(null as Random?).first()
         }
+        outputInventory.setStack(0, stack)
+        (playerInventory.player as ServerPlayerEntity).networkHandler.sendPacket(ScreenHandlerSlotUpdateS2CPacket(syncId, 54, stack))
+    }
+
+    override fun onContentChanged(inventory: Inventory?) {
+        if (!world.isClient)
+           updateItems()
         super.onContentChanged(inventory)
     }
 
@@ -215,6 +218,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         }
         ctx.run { world, _ ->
             dropInventory(playerInventory.player, world, craftingInventory)
+            if (!world.isClient) updateItems()
         }
     }
 
