@@ -18,7 +18,6 @@ interface UpgradeProvider {
 
     fun getUpgrades(inventory: Inventory): Map<Upgrade, Int> {
         val map = Object2IntArrayMap<Upgrade>(4)
-        map.defaultReturnValue(0)
         getUpgradeSlots()
             .forEach { slot ->
                 val (stack, item) = inventory.getStack(slot)

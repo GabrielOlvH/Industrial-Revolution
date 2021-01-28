@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -103,14 +104,14 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     private inline fun IntArray.associateStacks(transform: (Int) -> ItemStack): Map<Item, Int> {
-        return associateToStacks(Object2IntOpenHashMap(5), transform)
+        return associateToStacks(Object2IntArrayMap(5), transform)
     }
 
-    private inline fun <M : Object2IntOpenHashMap<Item>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
+    private inline fun <M : Object2IntArrayMap<Item>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
         for (element in this) {
             val stack = transform(element)
             if (!stack.isEmpty && stack.tag?.isEmpty != false)
-                destination.addTo(stack.item, stack.count)
+                destination.mergeInt(stack.item, stack.count) { old, new -> old + new }
         }
         return destination
     }
