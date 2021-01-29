@@ -123,7 +123,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             }
         }
 
-        val outputSlot = WCraftingItemSlot(outputInventory, 0, 2 * 18, 2 * 18, true)
+        val outputSlot = WCraftingItemSlot(outputInventory, 0, true)
         slotsPanel.add(outputSlot, 2 * 18, 2 * 18)
 
         panel.add(slotsPanel, 4, 0)
@@ -374,7 +374,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             return WToggleableSlot(inventory, index, x, y) { hidden }
         }
     }
-    inner class WCraftingItemSlot(inventory: Inventory, index: Int, x: Int, y: Int, big: Boolean)
+    inner class WCraftingItemSlot(inventory: Inventory, index: Int, big: Boolean)
         : WItemSlot(inventory, index, 1, 1, big) {
 
         init {

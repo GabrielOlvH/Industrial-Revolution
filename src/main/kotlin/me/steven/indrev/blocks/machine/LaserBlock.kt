@@ -27,6 +27,7 @@ class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineB
         builder?.add(POWERED)
     }
 
+    @Suppress("DEPRECATION")
     override fun neighborUpdate(
         state: BlockState?,
         world: World?,

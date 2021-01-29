@@ -16,6 +16,7 @@ import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.resource.language.I18n
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
+import java.util.*
 
 open class IRMachineRecipeCategory(
     private val identifier: Identifier,
@@ -78,7 +79,7 @@ open class IRMachineRecipeCategory(
     }
 
     override fun getSimpleRenderer(recipe: IRMachinePlugin): RecipeEntry =
-        SimpleRecipeEntry.create(listOf(recipe.inputEntries[0]), recipe.outputEntries)
+        SimpleRecipeEntry.from(listOf(recipe.inputEntries[0]), Collections.singletonList(recipe.outputEntries))
 
     override fun getDisplayHeight(): Int = 66
 

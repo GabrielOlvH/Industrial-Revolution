@@ -166,6 +166,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return super.toClientTag(tag)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun dropExperience(player: PlayerEntity) {
         //TODO wtf bro
         val list = mutableListOf<T>()

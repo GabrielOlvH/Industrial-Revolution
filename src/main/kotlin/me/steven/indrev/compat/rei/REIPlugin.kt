@@ -203,7 +203,7 @@ object REIPlugin : REIPluginV0 {
             )
         }
 
-        MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (id, registry) ->
+        MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (_, registry) ->
             if (registry.upgradeable && registry.tiers.size > 1) {
                 registry.forEachBlock { tier, block ->
                     val entryStack = EntryStack.create(block)

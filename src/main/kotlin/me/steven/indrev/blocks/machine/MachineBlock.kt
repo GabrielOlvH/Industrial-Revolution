@@ -84,6 +84,7 @@ open class MachineBlock(
         return ActionResult.SUCCESS
     }
 
+    @Suppress("DEPRECATION")
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
         super.onStateReplaced(state, world, pos, newState, moved)

@@ -24,7 +24,3 @@ operator fun FluidAmount.times(volume: FluidAmount): FluidAmount {
 operator fun FluidAmount.times(whole: Int): FluidAmount {
     return mul(whole.toLong())
 }
-
-operator fun FluidAmount.div(volume: FluidAmount): FluidAmount {
-    return div(volume)
-}

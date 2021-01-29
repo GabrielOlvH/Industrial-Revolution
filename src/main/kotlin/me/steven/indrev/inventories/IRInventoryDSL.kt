@@ -49,8 +49,8 @@ open class IRInventoryDSL : Filterable() {
         if (blockEntity is UpgradeProvider) size += blockEntity.upgradeSlots.size
         return IRInventory(this, size, input.slots, output.slots) { slot, stack ->
             if (stack == null) false
-            else filters.computeIfAbsent(slot) { slot ->
-                { (stack, item) ->
+            else filters.computeIfAbsent(slot) {
+                { (_, item) ->
                     when {
                         slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL

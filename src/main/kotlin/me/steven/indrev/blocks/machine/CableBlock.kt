@@ -129,6 +129,7 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
         return state
     }
 
+    @Suppress("DEPRECATION")
     override fun onStateReplaced(
         state: BlockState,
         world: World,

@@ -11,12 +11,14 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 
+@Suppress("UNCHECKED_CAST")
 val <T> WeightedList<T>.entries: MutableList<WeightedList.Entry<T>>
     get() = (this as AccessorWeightedList<T>).entries
 
 val <T> WeightedList.Entry<T>.weight: Int
     get() = (this as AccessorWeightedListEntry).weight
 
+@Suppress("UNCHECKED_CAST")
 fun <T : Recipe<Inventory>> RecipeManager.getAllOfType(type: RecipeType<T>): Map<Identifier, T>
         = (this as AccessorRecipeManager).indrev_getAllOfType(type) as Map<Identifier, T>
 
