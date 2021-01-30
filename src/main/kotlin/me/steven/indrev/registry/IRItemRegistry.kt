@@ -20,7 +20,10 @@ import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.*
+import net.minecraft.item.BlockItem
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
+import net.minecraft.item.ToolMaterials
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
@@ -202,8 +205,6 @@ object IRItemRegistry {
 
         identifier("wrench").item(WRENCH)
 
-        identifier("tech_soup").item(TECH_SOUP)
-
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
@@ -303,8 +304,6 @@ object IRItemRegistry {
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 
     val WRENCH = IRWrenchItem(itemSettings())
-
-    val TECH_SOUP = Item(itemSettings().food(FoodComponent.Builder().hunger(12).saturationModifier(0.6f).build()))
 
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))

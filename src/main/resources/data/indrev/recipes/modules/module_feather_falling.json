@@ -5,7 +5,13 @@
       "item": "indrev:circuit_mk4"
     },
     {
-      "item": "minecraft:feather"
+      "item": "minecraft:slime_ball"
+    },
+    {
+      "tag": "c:steel_plates"
+    },
+    {
+      "tag": "c:steel_plates"
     },
     {
       "item": "indrev:enriched_nikolite_ingot"

@@ -5,13 +5,10 @@
       "item": "indrev:circuit_mk4"
     },
     {
-      "item": "minecraft:apple"
+      "tag": "c:tungsten_plates"
     },
     {
-      "item": "indrev:enriched_nikolite_ingot"
-    },
-    {
-      "item": "indrev:enriched_nikolite_ingot"
+      "tag": "c:tungsten_plates"
     },
     {
       "item": "indrev:enriched_nikolite_ingot"

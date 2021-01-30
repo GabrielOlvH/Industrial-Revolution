@@ -5,10 +5,13 @@
       "item": "indrev:circuit_mk4"
     },
     {
-      "item": "minecraft:wither_skeleton_skull"
+      "tag": "c:silver_plates"
     },
     {
-      "item": "minecraft:rotten_flesh"
+      "tag": "c:silver_plates"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
     },
     {
       "item": "indrev:enriched_nikolite_ingot"

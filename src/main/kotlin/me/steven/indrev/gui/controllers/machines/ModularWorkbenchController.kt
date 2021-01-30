@@ -92,6 +92,14 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             WToggleableItemSlot(3, 1 * 14, 4 * 18, false),
             WToggleableItemSlot(4, 3 * 20, 4 * 18, false)
         )
+        slotLayout[6] = arrayOf(
+            WToggleableItemSlot(0, 2 * 18, 0, false),
+            WToggleableItemSlot(1, 0 * 18, 1 * 18, false),
+            WToggleableItemSlot(2, 4 * 18, 1 * 18, false),
+            WToggleableItemSlot(3, 0 * 14, 3 * 18, false),
+            WToggleableItemSlot(4, 4 * 18, 3 * 18, false),
+            WToggleableItemSlot(5, 2 * 18, 4 * 18, false)
+        )
 
         slotLayout.forEach { (_, slots) -> slots.forEach { slotsPanel.add(it, it.x, it.y) } }
 
@@ -140,13 +148,21 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
     }
 
     private fun updateItems() {
-        val list = (0 until craftingInventory.size()).map { craftingInventory.getStack(it) }
         var stack = ItemStack.EMPTY
-        if (selected?.matches(list, null) == true) {
+        if (matches()) {
             stack = selected!!.craft(null as Random?).first()
         }
         outputInventory.setStack(0, stack)
-        (playerInventory.player as ServerPlayerEntity).networkHandler.sendPacket(ScreenHandlerSlotUpdateS2CPacket(syncId, 54, stack))
+        (playerInventory.player as ServerPlayerEntity).networkHandler.sendPacket(ScreenHandlerSlotUpdateS2CPacket(syncId, 60, stack))
+    }
+
+    private fun matches(): Boolean {
+        if (selected == null) return false
+        selected!!.input.forEachIndexed { index, entry ->
+            if (!entry.ingredient.test(craftingInventory.getStack(index))) return false
+        }
+
+        return true
     }
 
     override fun onContentChanged(inventory: Inventory?) {
@@ -337,7 +353,9 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            tooltip?.add(itemStack.name)
+            val texts = itemStack.getTooltip(MinecraftClient.getInstance().player)
+            { MinecraftClient.getInstance().options.advancedItemTooltips }
+            tooltip?.add(*texts.toTypedArray())
         }
 
         override fun onClick(x: Int, y: Int, button: Int) {
@@ -370,6 +388,12 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             }
         }
 
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            val texts = preview?.getTooltip(MinecraftClient.getInstance().player)
+            { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
+            tooltip?.add(*texts.toTypedArray())
+        }
+
         override fun createSlotPeer(inventory: Inventory, index: Int, x: Int, y: Int): ValidatedSlot {
             return WToggleableSlot(inventory, index, x, y) { hidden }
         }
@@ -379,6 +403,22 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
 
         init {
             isInsertingAllowed = false
+        }
+
+        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            super.paint(matrices, x, y, mouseX, mouseY)
+            if (selected != null) {
+                val renderer = MinecraftClient.getInstance().itemRenderer
+                renderer.renderInGui(selected!!.outputs[0].stack, x + 1, y + 1)
+                RenderSystem.disableDepthTest()
+                ScreenDrawing.coloredRect(x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
+            }
+        }
+
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player)
+            { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
+            tooltip?.add(*texts.toTypedArray())
         }
 
         override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {

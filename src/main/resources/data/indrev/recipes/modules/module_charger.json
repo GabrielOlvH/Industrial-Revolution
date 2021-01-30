@@ -8,7 +8,10 @@
       "item": "indrev:portable_charger"
     },
     {
-      "item": "indrev:nikolite_dust"
+      "tag": "c:tungsten_plates"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
     },
     {
       "item": "indrev:enriched_nikolite_ingot"

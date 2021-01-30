@@ -5,7 +5,13 @@
       "item": "indrev:circuit_mk4"
     },
     {
-      "item": "minecraft:blaze_powder"
+      "item": "minecraft:blaze_rod"
+    },
+    {
+      "tag": "c:tungsten_plates"
+    },
+    {
+      "tag": "c:tungsten_plates"
     },
     {
       "item": "indrev:enriched_nikolite_ingot"
