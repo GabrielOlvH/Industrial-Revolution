@@ -1,0 +1,7 @@
+{
+  "parent": "indrev:block/laser",
+  "textures": {
+    "5": "indrev:block/laser_on",
+    "particle": "indrev:block/laser_on"
+  }
+}
