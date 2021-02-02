@@ -10,7 +10,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.MathHelper
 import kotlin.math.absoluteValue
 import kotlin.math.sin
 
@@ -50,7 +49,7 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
                 0,
                 0,
                 3,
-                floatArrayOf(0.95f, 0f, MathHelper.lerp(delta, 0f, 0.15f)),
+                floatArrayOf(1f, 1f, 1f),
                 0.15f,
                 0.125f
             )
