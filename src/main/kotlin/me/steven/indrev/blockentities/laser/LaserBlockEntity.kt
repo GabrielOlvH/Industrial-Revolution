@@ -94,7 +94,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             val g = if (axis == Direction.Axis.Z) 0.5 + width * direction.offsetZ
                 .toDouble() else random.nextFloat().toDouble()
             world.addParticle(
-                DustParticleEffect.RED,
+                if (random.nextDouble() > 0.5) LIGHTER else DARKER,
                 pos.x.toDouble() + e,
                 pos.y.toDouble() + f,
                 pos.z.toDouble() + g,
@@ -105,8 +105,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         }
     }
 
-
-    fun explode() {
+    private fun explode() {
         world?.createExplosion(
             null,
             pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
@@ -114,5 +113,10 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             true,
             Explosion.DestructionType.DESTROY
         )
+    }
+
+    companion object {
+        private val LIGHTER = DustParticleEffect(115 / 255f, 239 / 255f, 232 / 255f, 1.0f)
+        private val DARKER = DustParticleEffect(89 / 255f, 205 / 255f, 223 / 255f, 1.0f)
     }
 }
