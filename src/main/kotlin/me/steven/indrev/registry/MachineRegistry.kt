@@ -576,7 +576,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .noModelProvider()
 
         val LASER_REGISTRY = MachineRegistry("laser", false, Tier.MK4)
-            .blockProvider { LaserBlock(this, SETTINGS()) }
+            .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { LaserBlockEntity() } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING].opposite) be as LaserBlockEntity else null } }
             .noModelProvider()
