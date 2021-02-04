@@ -50,8 +50,8 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
                 0,
                 3,
                 floatArrayOf(1f, 1f, 1f),
-                0.15f,
-                0.125f
+                0.08f,
+                0.1f
             )
             pop()
         }
