@@ -35,10 +35,12 @@ import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.sound.SoundEvent
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
@@ -49,6 +51,8 @@ object IndustrialRevolution : ModInitializer {
         IRItemRegistry.registerAll()
         IRBlockRegistry.registerAll()
         IRFluidRegistry.registerAll()
+
+        Registry.register(Registry.SOUND_EVENT, LASER_SOUND_ID, LASER_SOUND_EVENT)
 
         WorldGeneration.init()
 
@@ -181,6 +185,9 @@ object IndustrialRevolution : ModInitializer {
     val CABINET_HANDLER = CabinetController.SCREEN_ID.registerScreenHandler(::CabinetController)
 
     val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
+
+    val LASER_SOUND_ID = identifier("laser")
+    val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")

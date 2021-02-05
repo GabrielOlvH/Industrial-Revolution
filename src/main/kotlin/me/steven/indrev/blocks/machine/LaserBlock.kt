@@ -4,15 +4,20 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.gui.controllers.machines.LaserController
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.component3
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.item.ItemPlacementContext
+import net.minecraft.sound.SoundCategory
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import java.util.*
 
 class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineBlock(
     registry, settings, Tier.MK4, IndustrialRevolution.CONFIG.machines.laser, ::LaserController
@@ -39,6 +44,15 @@ class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineB
         super.neighborUpdate(state, world, pos, block, fromPos, notify)
 
         world?.setBlockState(pos, state?.with(POWERED, world.isReceivingRedstonePower(pos)))
+    }
+
+    override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random?) {
+        if (state!![POWERED] && random!!.nextDouble() > 0.9) {
+            val (x, y, z) = pos
+            world.playSound(x.toDouble() + 0.5, y.toDouble(), z.toDouble() + 0.5,
+                IndustrialRevolution.LASER_SOUND_EVENT, SoundCategory.BLOCKS, 0.4f, 1f, false
+            )
+        }
     }
 
 
