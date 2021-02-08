@@ -1,6 +1,5 @@
 package me.steven.indrev
 
-import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -37,7 +36,6 @@ import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.util.InputUtil
 import net.minecraft.screen.PlayerScreenHandler
-import net.minecraft.util.math.BlockPos
 import org.lwjgl.glfw.GLFW
 
 @Suppress("UNCHECKED_CAST")
@@ -140,14 +138,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
         GlobalStateController.initClient()
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            positionsToRerender.keys.forEach { pos ->
-                positionsToRerender.addTo(pos, -1)
-                if (positionsToRerender.getInt(pos) <= 0) {
-                    positionsToRerender.removeInt(pos)
-                    val blockState = client.world?.getBlockState(pos)
-                    client.worldRenderer.updateBlock(client.world, pos, blockState, blockState, 8)
-                }
-            }
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
                 val playerInventory = MinecraftClient.getInstance().player?.inventory ?: break
                 val hasModularItem = (0 until playerInventory.size())
@@ -169,8 +159,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("gui/hud_default"))
             })
     }
-
-    val positionsToRerender = Reference2IntOpenHashMap<BlockPos>()
 
     private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
         KeyBinding(

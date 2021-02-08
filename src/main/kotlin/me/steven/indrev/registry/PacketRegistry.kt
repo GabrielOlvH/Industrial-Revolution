@@ -3,7 +3,6 @@ package me.steven.indrev.registry
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.Configurable
@@ -235,21 +234,6 @@ object PacketRegistry {
                     player.isRegenerating = isRegenerating
                 }
             }
-        }
-
-        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.RERENDER_CHUNK_PACKET) { client, _, buf, _ ->
-            val pos = buf.readBlockPos()
-            val world = client.player!!.world
-            client.execute {
-                val blockState = world.getBlockState(pos)
-                MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, blockState, blockState, 8)
-            }
-        }
-
-        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SCHEDULE_RERENDER_CHUNK_PACKET) { _, _, buf, _ ->
-            val time = buf.readInt()
-            val pos = buf.readBlockPos()
-            IndustrialRevolutionClient.positionsToRerender[pos] = time
         }
 
         ClientPlayNetworking.registerGlobalReceiver(GlobalStateController.UPDATE_PACKET_ID) { _, _, buf, _ ->

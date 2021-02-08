@@ -4,20 +4,18 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.TranslatableText
@@ -73,9 +71,10 @@ class WrenchController(syncId: Int, playerInventory: PlayerInventory, ctx: Scree
     override fun close(player: PlayerEntity?) {
         super.close(player)
         if (player is ServerPlayerEntity) {
-            val buf = PacketByteBuf(Unpooled.buffer())
-            ctx.run { _, pos -> buf.writeBlockPos(pos) }
-            ServerPlayNetworking.send(player, IndustrialRevolution.RERENDER_CHUNK_PACKET, buf)
+            ctx.run { world, pos ->
+                val blockEntity = world.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return@run
+                blockEntity.sync()
+            }
         }
     }
 
