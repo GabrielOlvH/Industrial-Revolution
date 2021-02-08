@@ -23,12 +23,13 @@ import kotlin.collections.ArrayDeque
 class EnergyNetwork(
     val world: ServerWorld,
     val cables: MutableSet<BlockPos> = hashSetOf(),
-    val machines: MutableMap<BlockPos, MutableSet<Direction>> = hashMapOf()
+    val machines: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
 ) {
     var lastSenderSize = 0
     var lastReceiverSize = 0
+
     var tier = Tier.MK1
-    val maxCableTransfer: Double
+    private val maxCableTransfer: Double
         get() = when (tier) {
             Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1.maxInput
             Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2.maxInput
@@ -124,7 +125,7 @@ class EnergyNetwork(
     }
 
     fun appendMachine(blockPos: BlockPos, direction: Direction) {
-        machines.computeIfAbsent(blockPos) { hashSetOf() }.add(direction)
+        machines.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
     }
 
     fun toTag(tag: CompoundTag) {
@@ -223,7 +224,7 @@ class EnergyNetwork(
                 val posLong = machineTag.getLong("pos")
                 val pos = BlockPos.fromLong(posLong)
                 val dirList = machineTag.getList("dir", 8)
-                val directions = hashSetOf<Direction>()
+                val directions = EnumSet.noneOf(Direction::class.java)
                 dirList.forEach { dirTag ->
                     dirTag as StringTag
                     val dir = Direction.valueOf(dirTag.asString().toUpperCase())
