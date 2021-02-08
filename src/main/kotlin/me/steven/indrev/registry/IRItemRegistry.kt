@@ -35,7 +35,7 @@ import net.minecraft.world.World
 object IRItemRegistry {
     fun registerAll() {
 
-        identifier("guide_book").item(IRGuideBookItem(itemSettings()))
+        identifier("guide_book").item(GUIDE_BOOK)
 
         MaterialHelper("tin") {
             withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
@@ -250,6 +250,8 @@ object IRItemRegistry {
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
+
+    val GUIDE_BOOK = IRGuideBookItem(itemSettings())
 
     val BATTERY = IRBatteryItem(itemSettings().maxDamage(4096), 4096.0)
 

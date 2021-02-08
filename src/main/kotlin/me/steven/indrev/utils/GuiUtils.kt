@@ -20,17 +20,18 @@ import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 import vazkii.patchouli.client.book.ClientBookRegistry
 import java.util.function.Predicate
 
@@ -50,7 +51,7 @@ val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
 
 fun SyncedGuiDescription.configure(
     titleId: String,
-    screenHandlerContext: ScreenHandlerContext,
+    ctx: ScreenHandlerContext,
     playerInventory: PlayerInventory,
     blockInventory: Inventory,
     panel: WGridPanel = rootPanel as WGridPanel
@@ -66,90 +67,27 @@ fun SyncedGuiDescription.configure(
     val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
     batterySlot.filter = Predicate { stack -> energyOf(stack) != null }
 
-    screenHandlerContext.run { world, blockPos ->
+    ctx.run { world, blockPos ->
         if (world.isClient)
             batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
         panel.add(batterySlot, 0.0, 3.7)
         val blockEntity = world.getBlockEntity(blockPos)
+
         if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
-            val slotPanel = WGridPanel()
-            for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
-                val s =
-                    object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
-                        override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
-                            return object : ValidatedSlot(inventory, index, x, y) {
-                                override fun getMaxItemCount(stack: ItemStack): Int {
-                                    val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
-                                    return blockEntity.getMaxUpgrade(upgrade)
-                                }
-                            }
-                        }
-                    }
-                if (world.isClient)
-                    s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
-                        blockInventory,
-                        slot
-                    ) else getUpgradeSlotPainter(blockInventory, slot)
-                slotPanel.add(s, 0, i)
-            }
-            if (world.isClient)
-                slotPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
-            panel.add(slotPanel, 9.7, -0.25)
+            addUpgradeSlots(blockEntity, blockInventory, world, panel)
         }
+
         if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
             titlePos += 0.5
-            val controller = blockEntity.temperatureComponent!!
-            panel.add(WTemperature(controller), 1.1, 0.0)
-            val coolerSlot =
-                WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
-            if (world.isClient)
-                coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
-            panel.add(coolerSlot, 1.0, 3.7)
+            addTemperatureWidget(blockEntity, panel, blockInventory, world)
         }
-        if (blockEntity is AOEMachineBlockEntity<*>) {
-            val buttonPanel = WGridPanel()
-            val button = object : WButton() {
-                override fun addTooltip(information: TooltipBuilder?) {
-                    information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
-                }
-            }
-            button.setOnClick {
-                blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
-            }
-            button.icon = Icon { _, x, y, _ ->
-                ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
-            }
-            if (world.isClient)
-                buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
-            buttonPanel.add(button, 0, 0)
-            panel.add(buttonPanel, 9.7, 4.2)
-            button.setSize(20, 20)
-        }
-        if (blockEntity is CraftingMachineBlockEntity<*> && blockEntity.craftingComponents.size > 1) {
-            val buttonPanel = WGridPanel()
-            val button = object : WButton() {
-                init {
-                    icon = Icon { _, x, y, size ->
-                        val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
-                        ScreenDrawing.texturedRect(x + 1, y + 1, size, size, id, -1)
-                    }
-                }
 
-                override fun addTooltip(tooltip: TooltipBuilder?) {
-                    tooltip?.add(TranslatableText("gui.indrev.button.auto_split"))
-                }
-            }
-            button.setOnClick {
-                blockEntity.isSplitOn = !blockEntity.isSplitOn
-                val buf = PacketByteBuf(Unpooled.buffer())
-                buf.writeBlockPos(blockPos)
-                ClientPlayNetworking.send(SPLIT_STACKS_PACKET, buf)
-            }
-            if (world.isClient)
-                buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
-            buttonPanel.add(button, 0, 0)
-            panel.add(buttonPanel, 9.7, 4.2)
-            button.setSize(20, 20)
+        if (blockEntity is AOEMachineBlockEntity<*>) {
+            addAOEWidgets(world, blockEntity, panel)
+        }
+
+        if (blockEntity is CraftingMachineBlockEntity<*> && blockEntity.craftingComponents.size > 1) {
+            addSplitStackButton(blockEntity, blockPos, world, panel)
         }
     }
     if (this is PatchouliEntryShortcut) {
@@ -158,11 +96,92 @@ fun SyncedGuiDescription.configure(
     panel.add(title, titlePos, 0.0)
 }
 
+fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: BlockPos, world: World, panel: WGridPanel) {
+    val buttonPanel = WGridPanel()
+    val button = object : WButton() {
+        init {
+            icon = Icon { _, x, y, size ->
+                val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
+                ScreenDrawing.texturedRect(x + 1, y + 1, size, size, id, -1)
+            }
+        }
+
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            tooltip?.add(TranslatableText("gui.indrev.button.auto_split"))
+        }
+    }
+    button.setOnClick {
+        blockEntity.isSplitOn = !blockEntity.isSplitOn
+        val buf = PacketByteBuf(Unpooled.buffer())
+        buf.writeBlockPos(blockPos)
+        ClientPlayNetworking.send(SPLIT_STACKS_PACKET, buf)
+    }
+    if (world.isClient)
+        buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+    buttonPanel.add(button, 0, 0)
+    panel.add(buttonPanel, 9.7, 4.2)
+    button.setSize(20, 20)
+}
+
+fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
+    blockEntity as UpgradeProvider
+    val slotPanel = WGridPanel()
+    for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
+        val s =
+            object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
+                override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
+                    return object : ValidatedSlot(inventory, index, x, y) {
+                        override fun getMaxItemCount(stack: ItemStack): Int {
+                            val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
+                            return blockEntity.getMaxUpgrade(upgrade)
+                        }
+                    }
+                }
+            }
+        if (world.isClient)
+            s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
+                blockInventory,
+                slot
+            ) else getUpgradeSlotPainter(blockInventory, slot)
+        slotPanel.add(s, 0, i)
+    }
+    if (world.isClient)
+        slotPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+    panel.add(slotPanel, 9.7, -0.25)
+}
+
+fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World) {
+    val controller = blockEntity.temperatureComponent!!
+    panel.add(WTemperature(controller), 1.1, 0.0)
+    val coolerSlot =
+        WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
+    if (world.isClient)
+        coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
+    panel.add(coolerSlot, 1.0, 3.7)
+}
+
+fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WGridPanel) {
+    val buttonPanel = WGridPanel()
+    val button = object : WButton() {
+        override fun addTooltip(information: TooltipBuilder?) {
+            information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
+        }
+    }
+    button.setOnClick {
+        blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
+    }
+    button.icon = Icon { _, x, y, _ ->
+        ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
+    }
+    if (world.isClient)
+        buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+    buttonPanel.add(button, 0, 0)
+    panel.add(buttonPanel, 9.7, 4.2)
+    button.setSize(20, 20)
+}
+
 fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Double, y: Double): WButton {
-    val containsBook =
-        playerInventory.contains(ItemStack(Registry.ITEM[Identifier("patchouli:guide_book")]).also { stack ->
-            stack.tag = CompoundTag().also { it.putString("patchouli:book", "indrev:indrev") }
-        })
+    val containsBook = playerInventory.count(IRItemRegistry.GUIDE_BOOK) > 0
     val button = object : WBookEntryShortcut() {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             if (containsBook)
