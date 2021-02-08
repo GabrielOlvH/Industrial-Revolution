@@ -24,7 +24,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryComponent = inventory(this) {
-            0 filter { _ -> true }
+            input { 0 filter { stack -> energyOf(stack) != null } }
         }
     }
 
