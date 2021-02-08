@@ -18,9 +18,10 @@ class IRInventory(
     var component: InventoryComponent? = null
 
     private var availableSlots = inputSlots.plus(outputSlots)
+    private val coolerSlot = dsl.coolerSlot
 
     init {
-        if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(dsl.coolerSlot!!)
+        if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(coolerSlot!!)
         availableSlots = availableSlots.distinct().toIntArray()
     }
 
@@ -30,7 +31,7 @@ class IRInventory(
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
+        (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 
