@@ -7,6 +7,7 @@ import me.shedaniel.rei.api.plugins.REIPluginV0
 import me.shedaniel.rei.plugin.information.DefaultInformationDisplay
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
+import me.steven.indrev.compat.rei.categories.IRModuleCraftingRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRSawmillRecipeCategory
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
@@ -124,6 +125,14 @@ object REIPlugin : REIPluginV0 {
                 "indrev.category.rei.sawmill"
             )
         )
+
+        recipeHelper?.registerCategory(
+            IRModuleCraftingRecipeCategory(
+                MODULE,
+                EntryStack.create(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4)),
+                "indrev.category.rei.module"
+            )
+        )
     }
 
     override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
@@ -150,6 +159,9 @@ object REIPlugin : REIPluginV0 {
         }
         recipeHelper?.registerRecipes(SAWMILL, SawmillRecipe::class.java) {
             IRMachinePlugin(it, SAWMILL)
+        }
+        recipeHelper?.registerRecipes(MODULE, ModuleRecipe::class.java) {
+            IRMachinePlugin(it, MODULE)
         }
     }
 
@@ -202,6 +214,12 @@ object REIPlugin : REIPluginV0 {
                 EntryStack.create(block)
             )
         }
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                MODULE,
+                EntryStack.create(block)
+            )
+        }
 
         MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (_, registry) ->
             if (registry.upgradeable && registry.tiers.size > 1) {
@@ -247,4 +265,5 @@ object REIPlugin : REIPluginV0 {
     private val CONDENSER = identifier("plugins/condenser")
     private val FLUID_INFUSER = identifier("plugins/fluid_infusing")
     private val SAWMILL = identifier("plugins/sawmill")
+    private val MODULE = identifier("plugins/module")
 }
