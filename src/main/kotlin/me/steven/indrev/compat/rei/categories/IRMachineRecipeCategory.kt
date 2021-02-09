@@ -71,8 +71,9 @@ open class IRMachineRecipeCategory(
             }
         }
         if (recipe.outputs.isNotEmpty()) {
+            widgets.add(Widgets.createResultSlotBackground(Point(startPoint.x + 61, startPoint.y + 19)))
             widgets.add(
-                Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries)
+                Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries).disableBackground().markOutput()
             )
         }
         return widgets
