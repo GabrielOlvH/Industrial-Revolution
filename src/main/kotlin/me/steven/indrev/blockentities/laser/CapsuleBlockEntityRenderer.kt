@@ -27,6 +27,7 @@ class CapsuleBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bloc
             push()
             val time = entity.world?.time ?: 1
             translate(0.5, 0.35, 0.5)
+            scale(1.2f, 1.2f, 1.2f)
             multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 16 * entity.getActiveLasersCount()))
             MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, lightCoord, overlay, matrices, vertexConsumers)
             pop()
