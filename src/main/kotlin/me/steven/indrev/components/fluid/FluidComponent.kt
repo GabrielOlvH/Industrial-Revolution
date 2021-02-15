@@ -1,5 +1,6 @@
 package me.steven.indrev.components.fluid
 
+import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
@@ -18,13 +19,15 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
     val tanks: DefaultedList<FluidVolume>
         get() = tanks
 
+    val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.FLUID)
+
     operator fun set(tank: Int, volume: FluidVolume) {
         this.tanks[tank] = volume
     }
 
     operator fun get(tank: Int): FluidVolume = tanks[tank]
 
-    val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.FLUID)
+    open fun getInteractInventory(tank: Int): FluidTransferable = super.getTank(tank)
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         val tanksTag = CompoundTag()

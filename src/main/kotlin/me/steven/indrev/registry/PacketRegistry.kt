@@ -87,7 +87,7 @@ object PacketRegistry {
                 if (world.isLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(fluidComponent.getTank(tank), player, fluidComponent.getFilterForTank(tank))
+                    FluidInvUtil.interactCursorWithTank(fluidComponent.getInteractInventory(tank), player, fluidComponent.getFilterForTank(tank))
                 }
             }
         }
