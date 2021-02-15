@@ -13,7 +13,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
 
     override val upgradeSlots: IntArray = intArrayOf(4, 5, 6, 7)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val availableUpgrades: Array<Upgrade> = Upgrade.FURNACE
 
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)

@@ -9,6 +9,7 @@ enum class Upgrade {
 
     companion object {
         val DEFAULT = arrayOf(SPEED, ENERGY, BUFFER)
+        val FURNACE = arrayOf(SPEED, ENERGY, BUFFER, BLAST_FURNACE, SMOKER)
 
         fun getSpeed(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider)
                 = provider.getBaseValue(SPEED) + (IndustrialRevolution.CONFIG.upgrades.speedUpgradeModifier * (upgrades[SPEED] ?: 0))

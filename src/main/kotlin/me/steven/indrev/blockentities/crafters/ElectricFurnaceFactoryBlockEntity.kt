@@ -17,7 +17,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY) {
 
     override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val availableUpgrades: Array<Upgrade> = Upgrade.FURNACE
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
