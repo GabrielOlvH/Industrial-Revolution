@@ -9,11 +9,12 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.forEach
+import me.steven.indrev.utils.contains
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
+import net.minecraft.fluid.FlowableFluid
+import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
@@ -27,25 +28,37 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     override val maxInput: Double = config.maxInput
 
     override fun machineTick() {
-        if ((world?.time ?: return) % 20 != 0L || !fluidComponent!![0].isEmpty) return
+        val world = world ?: return
         val fluidComponent = fluidComponent ?: return
-        val hasFluid = world?.getFluidState(pos.up())?.isEmpty == false
-        val range = getWorkingArea()
-        if (hasFluid && canUse(config.energyCost)) {
+        if (world.time % 20 != 0L || !fluidComponent[0].isEmpty) return
+
+        val fluidState = world.getFluidState(pos.up())
+        if (fluidState?.isEmpty == false && canUse(config.energyCost)) {
+            val range = getWorkingArea()
+            // DOWN is intentionally excluded
+            val directions = arrayOf(Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST)
             val mutablePos = pos.mutableCopy()
-            var currentChunk = world!!.getChunk(pos)
-            range.forEach { x, y, z ->
-                mutablePos.set(x, y, z)
-                if (currentChunk.pos.x != x shr 4 && currentChunk.pos.z != z shr 4) {
-                    currentChunk = world!!.getChunk(mutablePos)
+            val fluid = getStill(fluidState.fluid)
+            val bfs = mutableListOf(pos.up())
+            var i = 0
+            while (i < bfs.size) {
+                val current = bfs[i++]
+                for (dir in directions) {
+                    mutablePos.set(current, dir)
+                    if (mutablePos !in bfs && mutablePos in range && getStill(world.getFluidState(mutablePos).fluid) === fluid) {
+                        bfs.add(mutablePos.toImmutable())
+                    }
                 }
-                val blockState = currentChunk.getBlockState(mutablePos)
+            }
+            bfs.sortByDescending { it.y }
+
+            for (pos in bfs) {
+                val blockState = world.getBlockState(pos)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
-                    val drained = block.tryDrainFluid(world, mutablePos, blockState)
+                    val drained = block.tryDrainFluid(world, pos, blockState)
                     if (drained != Fluids.EMPTY) {
                         val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
-                        currentChunk.setBlockState(mutablePos, Blocks.AIR.defaultState, false)
                         fluidComponent.insertable.insert(toInsert)
                         use(config.energyCost)
                         return
@@ -54,6 +67,8 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             }
         }
     }
+
+    private fun getStill(fluid: Fluid): Fluid = if (fluid is FlowableFluid) fluid.still else fluid
 
     fun getWorkingArea(): Box = Box(pos.up()).expand(8.0, 0.0, 8.0).stretch(0.0, 4.0, 0.0)
 
