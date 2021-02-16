@@ -35,7 +35,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     var isDescending = false
     var lastYPos = -1
 
-    val scannedBlocks = hashSetOf<BlockPos>()
     var areaIterator = emptySet<BlockPos>().iterator()
 
     override fun machineTick() {
@@ -54,7 +53,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                 areaIterator = areaBox.map(::BlockPos).sortedWith(compareByDescending { it.getSquaredDistance(pos) }).iterator()
             while (areaIterator.hasNext()) {
                 val fluidPos = areaIterator.next()
-                if (!scannedBlocks.add(fluidPos)) continue
                 val fluidState = world?.getFluidState(fluidPos)
                 val fluid = fluidState?.fluid
                 val block = fluidState?.blockState?.block
