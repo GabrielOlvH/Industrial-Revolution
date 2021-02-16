@@ -6,8 +6,11 @@ import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
@@ -35,6 +38,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
@@ -86,13 +90,46 @@ open class MachineBlock(
 
     @Suppress("DEPRECATION")
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
+        val oldBlockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
         super.onStateReplaced(state, world, pos, newState, moved)
-        if (!state.isOf(newState.block) && !world.isClient) {
-            if (blockEntity?.inventoryComponent != null) {
-                ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
-                world.updateComparators(pos, this)
+        if (world.isClient) return
+
+        if (newState.isOf(this)) {
+            val oldFacing = getFacing(state)
+            val newFacing = getFacing(newState)
+            if (oldFacing == newFacing) return
+
+            val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+            val rotation = offset(oldFacing, newFacing)
+            blockEntity.inventoryComponent?.run {
+                update(EnumMap(itemConfig).clone(), itemConfig, rotation)
             }
+            blockEntity.fluidComponent?.run {
+                update(EnumMap(transferConfig).clone(), transferConfig, rotation)
+            }
+            if (blockEntity is LazuliFluxContainerBlockEntity) {
+                update(EnumMap(blockEntity.transferConfig).clone(), blockEntity.transferConfig, rotation)
+            }
+            blockEntity.markDirty()
+            blockEntity.sync()
+        } else if (oldBlockEntity?.inventoryComponent != null) {
+            ItemScatterer.spawn(world, pos, oldBlockEntity.inventoryComponent!!.inventory)
+            world.updateComparators(pos, this)
+        }
+    }
+
+    private fun update(original: EnumMap<Direction, TransferMode>, config: SideConfiguration, rotation: BlockRotation) {
+        Direction.values().forEach { side ->
+            config[side] = original[rotation.rotate(side)]!!
+        }
+    }
+
+    private fun offset(old: Direction, new: Direction): BlockRotation {
+        return when (old) {
+            new.rotateYClockwise() -> BlockRotation.CLOCKWISE_90
+            new.rotateYCounterclockwise() -> BlockRotation.COUNTERCLOCKWISE_90
+            new.opposite -> BlockRotation.CLOCKWISE_180
+            else -> BlockRotation.NONE
         }
     }
 
