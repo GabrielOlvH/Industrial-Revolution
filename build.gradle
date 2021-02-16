@@ -25,6 +25,14 @@ repositories {
         }
     }
     maven {
+        url "https://maven.shedaniel.me/"
+        content {
+            includeGroup "me.shedaniel"
+            includeGroup "me.shedaniel.cloth"
+            includeGroup "me.shedaniel.cloth.api"
+        }
+    }
+    maven {
         url = "http://maven.fabricmc.net/"
         content {
             includeGroup "net.fabricmc"
@@ -42,6 +50,12 @@ repositories {
         url = "https://server.bbkr.space/artifactory/libs-release"
         content {
             includeGroup "io.github.cottonmc"
+        }
+    }
+    maven {
+        url = "https://maven.terraformersmc.com/releases/"
+        content {
+            includeGroup "com.terraformersmc"
         }
     }
     maven {
@@ -110,7 +124,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modCompile("io.github.prospector:modmenu:${project.modmenu_version}") {
+    modCompile("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
     modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
@@ -125,10 +139,10 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+    include("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
@@ -147,11 +161,15 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
-    modApi("com.github.Draylar:magna:${project.magna_version}") {
+    modCompileOnly("com.github.Draylar:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+        exclude group: "io.github.prospector", module: "modmenu"
+        exclude group: "me.shedaniel.cloth", module: "cloth-config"
     }
     include("com.github.Draylar:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+        exclude group: "io.github.prospector", module: "modmenu"
+        exclude group: "me.shedaniel.cloth", module: "cloth-config"
     }
 
     modImplementation("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {

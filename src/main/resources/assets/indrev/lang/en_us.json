@@ -991,5 +991,6 @@
   "vein.indrev.wolframite": "Wolframite",
   "vein.indrev.ferberite": "Ferberite",
   "vein.indrev.galena": "Galena",
-  "attribute.indrev.shield": "Shield"
+  "attribute.indrev.shield": "Shield",
+  "subtitles.indrev.laser": "Laser beam"
 }
