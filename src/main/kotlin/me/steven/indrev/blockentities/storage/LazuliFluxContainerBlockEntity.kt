@@ -130,6 +130,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
 
             if (simulation == Simulation.ACT)
                 blockEntity.energy -= extracted
+            blockEntity.update()
 
             return extracted
         }
@@ -143,6 +144,8 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
 
             if (simulation == Simulation.ACT)
                 blockEntity.energy += inserted
+
+            blockEntity.update()
             return amount - inserted
         }
 
