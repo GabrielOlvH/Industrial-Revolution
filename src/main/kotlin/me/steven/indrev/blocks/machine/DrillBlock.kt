@@ -16,6 +16,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -50,6 +51,19 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
     override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity?) {
         part.onBreak(world, pos)
         world.syncWorldEvent(player, 2001, pos, getRawIdFromState(state))
+    }
+
+    override fun onStateReplaced(
+        state: BlockState?,
+        world: World,
+        pos: BlockPos,
+        newState: BlockState,
+        moved: Boolean
+    ) {
+        super.onStateReplaced(state, world, pos, newState, moved)
+        if (!world.isClient && !newState.isOf(this)) {
+            part.onBreak(world, pos)
+        }
     }
 
     override fun onUse(
@@ -105,6 +119,8 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
             override fun onBreak(world: World, pos: BlockPos) {
                 world.setBlockState(pos.up(), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_MIDDLE) }
                 world.setBlockState(pos.up(2), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_TOP) }
+                val blockEntity = world.getBlockEntity(pos) as? DrillBlockEntity ?: return
+                ItemScatterer.spawn(world, pos, blockEntity)
             }
 
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos

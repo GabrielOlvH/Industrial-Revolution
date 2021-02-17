@@ -139,10 +139,10 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modApi("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}") {
+    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    include("me.shedaniel.cloth:cloth-config:${project.cloth_config_version}") {
+    include("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
