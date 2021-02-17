@@ -40,7 +40,7 @@ class SolarGeneratorController(
             sprite.setSize(19, 10)
 
             val text = WText({
-                if (blockEntity.shouldGenerate()) TranslatableText("gui.indrev.heatgen.title")
+                if (blockEntity.shouldGenerate()) TranslatableText("gui.indrev.solar.on")
                 else TranslatableText("gui.indrev.heatgen.idle")
             }, HorizontalAlignment.CENTER, 0x404040)
             root.add(text, 4.5, 2.7)
