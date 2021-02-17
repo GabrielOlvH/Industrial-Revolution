@@ -12,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockView
@@ -39,6 +40,19 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
         } else
             return ActionResult.PASS
         return ActionResult.SUCCESS
+    }
+
+    override fun onStateReplaced(
+        state: BlockState?,
+        world: World,
+        pos: BlockPos,
+        newState: BlockState?,
+        moved: Boolean
+    ) {
+        val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity
+        if (blockEntity != null)
+            ItemScatterer.spawn(world, pos, blockEntity.inventory)
+        super.onStateReplaced(state, world, pos, newState, moved)
     }
 
     override fun createBlockEntity(world: BlockView?): BlockEntity = CapsuleBlockEntity()
