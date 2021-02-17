@@ -60,10 +60,10 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         newState: BlockState,
         moved: Boolean
     ) {
-        super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient && !newState.isOf(this)) {
             part.onBreak(world, pos)
         }
+        super.onStateReplaced(state, world, pos, newState, moved)
     }
 
     override fun onUse(
