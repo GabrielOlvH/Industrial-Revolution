@@ -12,7 +12,7 @@ enum class MiningToolModule(
     override val maxLevel: Int,
     override val item: ItemConvertible
 ) : Module {
-    EFFICIENCY("efficiency", 5, IRItemRegistry.EFFICIENCY_MODULE_ITEM);
+    EFFICIENCY("efficiency", 5, { IRItemRegistry.EFFICIENCY_MODULE_ITEM });
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)
