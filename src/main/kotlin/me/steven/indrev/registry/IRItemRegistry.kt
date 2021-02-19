@@ -253,7 +253,7 @@ object IRItemRegistry {
 
     val GUIDE_BOOK = IRGuideBookItem(itemSettings())
 
-    val BATTERY = IRBatteryItem(itemSettings().maxDamage(4096), 4096.0)
+    val BATTERY = IRBatteryItem(itemSettings(), 4096.0)
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
