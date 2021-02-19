@@ -1,5 +1,5 @@
 {
-  "type": "indrev:copy_nbt_crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "NPN",
     "OCO",
@@ -23,7 +23,6 @@
     }
   },
   "result": {
-    "item": "indrev:mining_drill_mk3",
-    "copyNbt": "indrev:mining_drill_mk2"
+    "item": "indrev:mining_drill_mk3"
   }
 }

@@ -26,8 +26,9 @@ class CopyNBTShapedRecipe(
 
     override fun craft(craftingInventory: CraftingInventory): ItemStack {
         val stack = super.craft(craftingInventory)
-        val parent = (0 until craftingInventory.size()).map { craftingInventory.getStack(it) }.first { it.item == copyFrom }
-        stack.tag = parent.tag?.copy()
+        (0 until craftingInventory.size()).map { craftingInventory.getStack(it) }.firstOrNull { it.item == copyFrom }?.also {
+            stack.tag = it.tag?.copy()
+        }
         return stack
     }
 
