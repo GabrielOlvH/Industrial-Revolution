@@ -1,7 +1,6 @@
 package me.steven.indrev.items.energy
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.utils.buildEnergyTooltip
@@ -34,7 +33,6 @@ class IRPortableChargerItem(
     }
 
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
-        val handler = energyOf(stack) ?: return
 
         val player = entity as? PlayerEntity ?: return
         if (player.offHandStack != stack && player.mainHandStack != stack) return
@@ -44,19 +42,19 @@ class IRPortableChargerItem(
             .mapNotNull { s -> energyOf(s) }
         var rem = 16384.0
         items.forEach { h ->
-            rem -= EnergyMovement.move(handler, h, rem)
+            rem -= EnergyMovement.move(energyOf(stack) ?: return, h, rem)
         }
     }
 
     companion object {
-        fun chargeItemsInInv(handler: EnergyIo, inventory: DefaultedList<ItemStack>) {
+        fun chargeItemsInInv(itemStack: ItemStack, inventory: DefaultedList<ItemStack>) {
             val items = (0 until inventory.size)
                 .map { s -> inventory[s] }
                 .filter { s -> s.item !is IRPortableChargerItem }
                 .mapNotNull { s -> energyOf(s) }
             var rem = 16384.0
             items.forEach { h ->
-                rem -= EnergyMovement.move(handler, h, rem)
+                rem -= EnergyMovement.move(energyOf(itemStack) ?: return, h, rem)
             }
         }
     }

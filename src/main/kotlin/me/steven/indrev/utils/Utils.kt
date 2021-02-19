@@ -4,8 +4,6 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
-import dev.technici4n.fasttransferlib.api.Simulation
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import me.shedaniel.math.Point
 import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
@@ -114,15 +112,6 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
     val blockState = getBlockState(pos)
     if (condition(blockState)) setBlockState(pos, state)
 }
-
-fun EnergyIo.use(amount: Double): Boolean {
-    if (extract(amount, Simulation.SIMULATE) == amount) {
-        extract(amount, Simulation.ACT)
-        return true
-    }
-    return false
-}
-
 fun World.isLoaded(pos: BlockPos): Boolean {
     return chunkManager.isChunkLoaded(pos.x shr 4, pos.z shr 4)
 }

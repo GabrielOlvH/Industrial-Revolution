@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
@@ -70,7 +69,6 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             var currentChunk: Chunk? = null
             var performedActions = 0
             val axeStack = inventory.getStack(2)
-            val axeStackHandler = energyOf(axeStack)
             val brokenBlocks = hashMapOf<BlockPos, BlockState>()
             while (scheduledBlocks.hasNext() && cooldown > config.processSpeed) {
                 val pos = scheduledBlocks.next()
@@ -81,7 +79,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 val blockState = currentChunk?.getBlockState(pos) ?: continue
                 if (axeStack != null
                     && !axeStack.isEmpty
-                    && tryChop(axeStack, axeStackHandler, pos, blockState, currentChunk)
+                    && tryChop(axeStack, pos, blockState, currentChunk)
                 ) {
                     cooldown -= config.processSpeed
                     if (!use(energyCost)) break
@@ -118,14 +116,13 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
 
     private fun tryChop(
         toolStack: ItemStack,
-        toolEnergyHandler: EnergyIo?,
         blockPos: BlockPos,
         blockState: BlockState,
         chunk: Chunk
     ): Boolean {
         fun damageTool(amount: Int): Boolean {
             return when {
-                toolEnergyHandler != null && !toolEnergyHandler.use(amount.toDouble()) -> false
+                energyOf(toolStack).let { it != null && !it.use(amount.toDouble()) } -> false
                 toolStack.isEmpty -> false
                 else -> {
                     toolStack.damage(amount, world?.random, null)
@@ -150,7 +147,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 val up = chunk.getBlockState(upPos)
                 scannedBlocks.add(upPos)
                 if (up.isOf(block))
-                    tryChop(toolStack, toolEnergyHandler, upPos, blockState, chunk)
+                    tryChop(toolStack, upPos, blockState, chunk)
                 if (!damageTool(2)) return false
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }

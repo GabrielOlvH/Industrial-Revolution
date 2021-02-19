@@ -1,15 +1,13 @@
 package me.steven.indrev.mixin.common;
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext;
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi;
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
-import dev.technici4n.fasttransferlib.api.item.ItemKey;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.api.IRPlayerEntityExtension;
 import me.steven.indrev.items.energy.IREnergyItem;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.tools.modular.ArmorModule;
+import me.steven.indrev.utils.EnergyApiUtilsKt;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +44,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         PlayerInventory inventory = player.inventory;
         ItemStack itemStack = inventory.main.get(inventory.selectedSlot);
         Item item = itemStack.getItem();
-        EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
+        EnergyIo itemIo = EnergyApiUtilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
                 CompoundTag tag = itemStack.getOrCreateTag();

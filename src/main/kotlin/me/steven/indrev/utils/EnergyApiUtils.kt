@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import dev.technici4n.fasttransferlib.api.ContainerItemContext
+import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
@@ -21,4 +22,16 @@ fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Ener
 fun energyOf(itemStack: ItemStack?): EnergyIo? {
     return if (itemStack == null) null
     else EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack))
+}
+
+fun extract(itemStack: ItemStack?, amount: Double): Boolean {
+    return energyOf(itemStack)?.use(amount) == true
+}
+
+fun EnergyIo.use(amount: Double): Boolean {
+    if (extract(amount, Simulation.SIMULATE) == amount) {
+        extract(amount, Simulation.ACT)
+        return true
+    }
+    return false
 }

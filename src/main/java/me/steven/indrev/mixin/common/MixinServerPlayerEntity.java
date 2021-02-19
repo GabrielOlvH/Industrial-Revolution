@@ -1,11 +1,8 @@
 package me.steven.indrev.mixin.common;
 
 import com.mojang.authlib.GameProfile;
-import dev.technici4n.fasttransferlib.api.ContainerItemContext;
 import dev.technici4n.fasttransferlib.api.Simulation;
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi;
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
-import dev.technici4n.fasttransferlib.api.item.ItemKey;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -83,7 +80,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmorItem) {
                 List<ArmorModule> modules = ((IRModularArmorItem) itemStack.getItem()).getInstalled(itemStack);
-                EnergyIo itemIo = EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack));
                 for (ArmorModule module : modules) {
                     int level = module.getLevel(itemStack);
                     if (level <= 0) continue;
@@ -95,7 +91,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case FIRE_RESISTANCE:
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
-                            if (itemIo != null && itemIo.extract(20.0, Simulation.ACT) == 20.0)
+                            if (EnergyApiUtilsKt.extract(itemStack, 20.0))
                                 applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
@@ -104,15 +100,14 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && itemIo != null && itemIo.extract(30.0, Simulation.ACT) == 30.0)
+                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyApiUtilsKt.extract(itemStack, 30.0))
                                         player.eatFood(world, stack);
                                     if (!hungerManager.isNotFull()) break;
                                 }
                             }
                             break;
                         case CHARGER:
-                            if (itemIo != null)
-                                IRPortableChargerItem.Companion.chargeItemsInInv(itemIo, player.inventory.main);
+                                IRPortableChargerItem.Companion.chargeItemsInInv(itemStack, player.inventory.main);
                             break;
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
@@ -124,7 +119,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && itemIo != null && itemIo.extract(30.0, Simulation.ACT) == 30.0) {
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
                                 regenerateShield();
                             }
                             break;
