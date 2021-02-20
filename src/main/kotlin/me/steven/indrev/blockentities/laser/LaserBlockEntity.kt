@@ -70,7 +70,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         } else
             tag.putDouble("Progress", progress + config.energyCost)
     }
-    
+
     private fun Direction.vector3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
 
     @Environment(EnvType.CLIENT)
