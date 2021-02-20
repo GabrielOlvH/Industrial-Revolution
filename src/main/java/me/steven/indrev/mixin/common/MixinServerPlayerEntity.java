@@ -40,6 +40,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
 
     private int ticks = 0;
     private int lastDamageTick = 0;
+    private float lastDmg = 0f;
     private double lastShield = 0.0;
     private final Object2IntMap<ArmorModule> oldAppliedModules = new Object2IntOpenHashMap<>();
 
@@ -59,8 +60,15 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
 
     @ModifyVariable(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At("HEAD"), argsOnly = true)
     private float indrev_absorbDamage(float amount, DamageSource source) {
+        final float initial = amount;
         if (isInvulnerableTo(source)) return amount;
+        if (lastDamageTick + 10 > ticks) {
+            if (amount <= lastDmg)
+                return 0f;
+            amount = amount - lastDmg;
+        }
         lastDamageTick = ticks;
+        lastDmg = initial;
         if (shouldApplyToShield(source))
             return (float) applyDamageToShield(amount);
         else
