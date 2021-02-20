@@ -12,6 +12,7 @@ import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.minecraft.client.util.math.Vector3f
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.DustParticleEffect
@@ -44,7 +45,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             || !use(config.energyCost))
             return explode()
 
-        val (x, y, z) = facing.unitVector.apply { scale(3.0f) }
+        val (x, y, z) = facing.vector3f().apply { scale(3.0f) }
         val damageArea = Box(pos).stretch(x.toDouble(), y.toDouble(), z.toDouble()).let {
             when {
                 facing.axis.isVertical ->
@@ -69,6 +70,8 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         } else
             tag.putDouble("Progress", progress + config.energyCost)
     }
+    
+    private fun Direction.vector3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
 
     @Environment(EnvType.CLIENT)
     override fun machineClientTick() {
