@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
@@ -12,6 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -25,10 +25,8 @@ class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_
 
     override fun getContainerName(): Text = TranslatableText("block.indrev.cabinet")
 
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?): ScreenHandler {
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeBlockPos(pos)
-        return IndustrialRevolution.CABINET_HANDLER.create(syncId, playerInventory, buf)
+    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
+        return CabinetController(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory

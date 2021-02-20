@@ -1,8 +1,7 @@
 package me.steven.indrev.blockentities.drill
 
-import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.gui.controllers.machines.DrillController
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
@@ -16,6 +15,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -52,10 +52,8 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOC
 
     override fun getContainerName(): Text = TranslatableText("block.indrev.drill")
 
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?): ScreenHandler {
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeBlockPos(pos)
-        return IndustrialRevolution.DRILL_HANDLER.create(syncId, playerInventory, buf)
+    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
+        return DrillController(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory
