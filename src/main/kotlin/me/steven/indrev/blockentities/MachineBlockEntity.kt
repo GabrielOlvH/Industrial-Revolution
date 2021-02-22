@@ -12,6 +12,7 @@ import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.machines.properties.Property
@@ -59,7 +60,16 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     private var lastEnergyUpdate = 0
 
-    internal var energy: Double by Property(0, 0.0) { i -> if (tier == Tier.CREATIVE) energyCapacity else i.coerceIn(0.0, energyCapacity) }
+    internal var energy: Double by Property(0, 0.0) { i ->
+        when {
+            i.isNaN() -> {
+                IndustrialRevolution.LOGGER.error("Received NaN energy! $pos, $this", IllegalArgumentException())
+                if (energy.isNaN()) 0.0 else energy
+            }
+            tier == Tier.CREATIVE -> energyCapacity
+            else -> i.coerceIn(0.0, energyCapacity)
+        }
+    }
     open val maxInput: Double = tier.io
     open val maxOutput: Double = tier.io
 
