@@ -3,10 +3,8 @@ package me.steven.indrev.blocks.models
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.blockSpriteId
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
-import net.minecraft.client.render.model.BakedModel
 import net.minecraft.client.texture.Sprite
 import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
@@ -62,29 +60,18 @@ class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_
         emitQuads(direction, overlays[4]!!, ctx)
     }
 
-    private fun emitHorizontalQuads(facing: Direction?, sprite: Sprite, ctx: RenderContext) {
+    private fun emitHorizontalQuads(sprite: Sprite, ctx: RenderContext) {
         ctx.emitter.run {
-            draw(facing, Direction.NORTH, sprite, 255 shl 24 or color)
-            draw(facing, Direction.SOUTH, sprite, 255 shl 24 or color)
-            draw(facing, Direction.EAST, sprite, 255 shl 24 or  color)
-            draw(facing, Direction.WEST, sprite,255 shl 24 or  color)
+            draw(null, Direction.NORTH, sprite, 255 shl 24 or color)
+            draw(null, Direction.SOUTH, sprite, 255 shl 24 or color)
+            draw(null, Direction.EAST, sprite, 255 shl 24 or  color)
+            draw(null, Direction.WEST, sprite,255 shl 24 or  color)
         }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
         emitQuads(null, sprite!!, ctx)
         emitQuads(null, overlays[4]!!, ctx)
-        emitHorizontalQuads(null, overlays[3]!!, ctx)
-    }
-
-    private fun handleBakedModel(
-        world: BlockRenderView,
-        state: BlockState,
-        pos: BlockPos,
-        randSupplier: Supplier<Random>,
-        context: RenderContext,
-        bakedModel: BakedModel?) {
-        if (bakedModel is FabricBakedModel) bakedModel.emitBlockQuads(world, state, pos, randSupplier, context)
-        else if (bakedModel != null) context.fallbackConsumer().accept(bakedModel)
+        emitHorizontalQuads( overlays[3]!!, ctx)
     }
 }
