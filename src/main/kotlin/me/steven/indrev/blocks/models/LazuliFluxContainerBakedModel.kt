@@ -15,15 +15,12 @@ import java.util.function.Supplier
 
 class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_flux_container") {
 
-    val outputOverlay = blockSpriteId("block/lazuli_flux_container_output")
-    val inputOverlay = blockSpriteId("block/lazuli_flux_container_input")
-
     init {
         overlayIds.addAll(
             arrayOf(
                 blockSpriteId("block/lazuli_flux_container"),
-                inputOverlay,
-                outputOverlay,
+                blockSpriteId("block/lazuli_flux_container_input"),
+                blockSpriteId("block/lazuli_flux_container_output"),
                 blockSpriteId("block/lazuli_flux_container_item_lf_level"),
                 blockSpriteId("block/${id}_overlay")
             )
