@@ -1,42 +1,36 @@
 package me.steven.indrev.blocks.models
 
-import com.mojang.datafixers.util.Pair
-import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.utils.blockSpriteId
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.model.*
-import net.minecraft.client.render.model.json.ModelOverrideList
-import net.minecraft.client.render.model.json.ModelTransformation
+import net.minecraft.client.render.model.BakedModel
 import net.minecraft.client.texture.Sprite
-import net.minecraft.client.util.ModelIdentifier
-import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.PlayerScreenHandler
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockRenderView
 import java.util.*
-import java.util.function.Function
 import java.util.function.Supplier
 
-class LazuliFluxContainerBakedModel(val id: String) : UnbakedModel, BakedModel, FabricBakedModel {
+class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_flux_container") {
 
-    private val spriteIdCollection = mutableListOf(
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/lazuli_flux_container"))
-    )
+    val outputOverlay = blockSpriteId("block/lazuli_flux_container_output")
+    val inputOverlay = blockSpriteId("block/lazuli_flux_container_input")
 
-    private val modelIdentifier = identifier("block/lazuli_flux_container")
-
-    private var bakedModel: BakedModel? = null
-    private val inputModels: Array<BakedModel?> = arrayOfNulls(Direction.values().size)
-    private val outputModels: Array<BakedModel?> = arrayOfNulls(Direction.values().size)
-    private val energyLevelModels: Array<BakedModel?> = arrayOfNulls(Direction.values().size)
-    private val tierOverlayModels:  Array<BakedModel?> = arrayOfNulls(Direction.values().size)
+    init {
+        overlayIds.addAll(
+            arrayOf(
+                blockSpriteId("block/lazuli_flux_container"),
+                inputOverlay,
+                outputOverlay,
+                blockSpriteId("block/lazuli_flux_container_item_lf_level"),
+                blockSpriteId("block/${id}_overlay")
+            )
+        )
+    }
 
     private val color: Int = when (id.last()) {
         '1' -> 0xffbb19
@@ -45,99 +39,42 @@ class LazuliFluxContainerBakedModel(val id: String) : UnbakedModel, BakedModel, 
         else -> 0xff4070
     }
 
-    private var sprite: Sprite? = null
-
-    override fun bake(
-        loader: ModelLoader,
-        textureGetter: Function<SpriteIdentifier, Sprite>,
-        rotationContainer: ModelBakeSettings?,
-        modelId: Identifier?
-    ): BakedModel {
-        bakedModel = loader.getOrLoadModel(modelIdentifier).bake(loader, textureGetter, rotationContainer, modelId)
-        sprite = textureGetter.apply(spriteIdCollection[0])
-        val inputModel = loader.getOrLoadModel(identifier("block/lazuli_flux_container_input"))
-        val outputModel = loader.getOrLoadModel(identifier("block/lazuli_flux_container_output"))
-        val energyLevelModel = loader.getOrLoadModel(identifier("block/lazuli_flux_container_item_lf_level"))
-        val tierOverlay = loader.getOrLoadModel(identifier("block/${id}_overlay"))
-        Direction.values().forEach { dir ->
-            val rotation = getModelRotationFacingDown(dir)
-            inputModels[dir.id] = inputModel.bake(loader, textureGetter, rotation, modelId)
-            outputModels[dir.id] = outputModel.bake(loader, textureGetter, rotation, modelId)
-            tierOverlayModels[dir.id] = tierOverlay.bake(loader, textureGetter, rotation, modelId)
-            if (dir.axis.isHorizontal)
-                energyLevelModels[dir.id] = energyLevelModel.bake(loader, textureGetter, rotation, modelId)
-        }
-
-        return this
-    }
-
-    override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-
-    override fun getTextureDependencies(
-        unbakedModelGetter: Function<Identifier, UnbakedModel>?,
-        unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> {
-        return spriteIdCollection
-    }
-
-    override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> =
-        mutableListOf()
-
-    override fun useAmbientOcclusion(): Boolean = true
-
-    override fun hasDepth(): Boolean = false
-
-    override fun isSideLit(): Boolean = true
-
-    override fun isBuiltin(): Boolean = false
-
-    override fun getSprite(): Sprite? = sprite
-
-    override fun getTransformation(): ModelTransformation = MinecraftClient.getInstance().bakedModelManager.getModel(
-        ModelIdentifier(Identifier("stone"), "")
-    ).transformation
-
-    override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
-
-    override fun isVanillaAdapter(): Boolean = false
-
     override fun emitBlockQuads(
-        blockView: BlockRenderView?,
+        blockView: BlockRenderView,
         state: BlockState,
         pos: BlockPos,
         randomSupplier: Supplier<Random>,
         ctx: RenderContext
     ) {
-        ctx.fallbackConsumer().accept(bakedModel)
-        val blockEntity = blockView?.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return
-        Direction.values().forEach { dir ->
-            handleBakedModel(blockView, state, pos, randomSupplier, ctx, tierOverlayModels[dir.id])
+        val blockEntity = blockView.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return
+        val block = state.block as? MachineBlock ?: return
+        val direction = block.getFacing(state)
+
+        val emitter = ctx.emitter
+        emitQuads(direction, sprite!!, ctx)
+        blockEntity.transferConfig.forEach { side, mode ->
+            if (mode.input) {
+                emitter.draw(direction, side, overlays[1]!!)
+            } else if (mode.output) {
+                emitter.draw(direction, side, overlays[2]!!)
+            }
         }
-        blockEntity.transferConfig.forEach { dir, mode ->
-            val modelArray =
-                when (mode) {
-                    TransferMode.OUTPUT -> outputModels
-                    TransferMode.INPUT -> inputModels
-                    else -> return@forEach
-                }
-            ctx.fallbackConsumer().accept(modelArray[dir.id])
+        emitQuads(direction, overlays[4]!!, ctx)
+    }
+
+    private fun emitHorizontalQuads(facing: Direction?, sprite: Sprite, ctx: RenderContext) {
+        ctx.emitter.run {
+            draw(facing, Direction.NORTH, sprite, 255 shl 24 or color)
+            draw(facing, Direction.SOUTH, sprite, 255 shl 24 or color)
+            draw(facing, Direction.EAST, sprite, 255 shl 24 or  color)
+            draw(facing, Direction.WEST, sprite,255 shl 24 or  color)
         }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
-        ctx.fallbackConsumer().accept(bakedModel)
-        ctx.pushTransform { quad ->
-            val color = 255 shl 24 or color
-            quad.spriteColor(0, color, color, color, color)
-            true
-        }
-        energyLevelModels.forEach {
-            ctx.fallbackConsumer().accept(it ?: return@forEach)
-        }
-        ctx.popTransform()
-        Direction.values().forEach { dir ->
-            ctx.fallbackConsumer().accept(tierOverlayModels[dir.id])
-        }
+        emitQuads(null, sprite!!, ctx)
+        emitQuads(null, overlays[4]!!, ctx)
+        emitHorizontalQuads(null, overlays[3]!!, ctx)
     }
 
     private fun handleBakedModel(
@@ -149,17 +86,5 @@ class LazuliFluxContainerBakedModel(val id: String) : UnbakedModel, BakedModel, 
         bakedModel: BakedModel?) {
         if (bakedModel is FabricBakedModel) bakedModel.emitBlockQuads(world, state, pos, randSupplier, context)
         else if (bakedModel != null) context.fallbackConsumer().accept(bakedModel)
-    }
-
-
-    private fun getModelRotationFacingDown(direction: Direction): ModelRotation {
-        return when (direction) {
-            Direction.DOWN -> ModelRotation.X90_Y0
-            Direction.UP -> ModelRotation.X270_Y270
-            Direction.NORTH -> ModelRotation.X0_Y0
-            Direction.SOUTH -> ModelRotation.X0_Y180
-            Direction.WEST -> ModelRotation.X0_Y270
-            Direction.EAST -> ModelRotation.X0_Y90
-        }
     }
 }

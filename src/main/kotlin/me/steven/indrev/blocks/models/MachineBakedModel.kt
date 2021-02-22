@@ -39,8 +39,8 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     var workingOverlayIds: MutableList<SpriteIdentifier> = mutableListOf()
 
     private var sprite: Sprite? = null
-    private val overlays: Array<Sprite?> by lazy { arrayOfNulls(overlayIds.size) }
-    private val workingOverlays: Array<Sprite?> by lazy { arrayOfNulls(workingOverlayIds.size) }
+    protected val overlays: Array<Sprite?> by lazy { arrayOfNulls(overlayIds.size) }
+    protected val workingOverlays: Array<Sprite?> by lazy { arrayOfNulls(workingOverlayIds.size) }
 
     protected val emissives = hashSetOf<Sprite>()
 
@@ -137,7 +137,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
             overlays.forEach { emitQuads(null, it!!, ctx) }
     }
 
-    private fun emitQuads(facing: Direction?, sprite: Sprite, ctx: RenderContext) {
+    protected fun emitQuads(facing: Direction?, sprite: Sprite, ctx: RenderContext) {
         ctx.emitter.run {
             draw(facing, Direction.UP, sprite)
             draw(facing, Direction.DOWN, sprite)
@@ -151,10 +151,12 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     protected fun QuadEmitter.draw(
         facing: Direction?,
         side: Direction,
-        sprite: Sprite
+        sprite: Sprite,
+        color: Int = -1
     ) {
         square(side, 0f, 0f, 1f, 1f, 0f)
         spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
+        spriteColor(0,  color, color, color, color)
         if (emissives.contains(sprite))
             material(MATERIAL)
         val offset = if (side.axis.isVertical) side else when (facing) {
@@ -170,7 +172,6 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         sprite(1, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
         sprite(2, 0, sprite.getFrameU(uv.u2.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
         sprite(3, 0, sprite.getFrameU(uv.u2.toDouble()), sprite.getFrameV(uv.v1.toDouble()))
-        spriteColor(0, -1, -1, -1, -1)
         emit()
     }
 
