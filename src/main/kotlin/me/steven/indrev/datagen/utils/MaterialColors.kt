@@ -36,8 +36,8 @@ const val ENRICHED_NIKOLITE_HIGHLIGHT = 0xFF3740d4
 const val IRON_BASE = 0xFFfdfdfd
 const val IRON_HIGHLIGHT = 0xFFffffff
 
-const val TIN_BASE = 0xFFd7d7d8
-const val TIN_HIGHLIGHT = 0xFFdee4e4
+const val TIN_BASE = 0xFFc9c9c9
+const val TIN_HIGHLIGHT = 0xFFc1c7c7
 const val TIN_OUTLINE = 0xFF9ca1aa
 
 const val DIAMOND_BASE = 0xFF4aedd9

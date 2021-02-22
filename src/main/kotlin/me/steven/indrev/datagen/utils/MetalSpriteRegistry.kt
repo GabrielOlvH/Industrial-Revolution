@@ -240,52 +240,24 @@ object MetalSpriteRegistry {
             ).build())
             put("steel_chunk", MetalModel.Builder().chunkBase(STEEL_BASE).chunkHighlight(STEEL_HIGHLIGHT).build())
 
-            put("tin_ingot", MetalModel.Builder().ingotBase(TIN_BASE).ingotHighlight(TIN_HIGHLIGHT).ingotOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_plate", MetalModel.Builder().plateBase(TIN_BASE).plateHighlight(TIN_HIGHLIGHT).plateOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_pickaxe", MetalModel.Builder().toolStick().pickaxeBase(TIN_BASE).pickaxeHighlight(TIN_HIGHLIGHT).pickaxeOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_axe", MetalModel.Builder().toolStick().axeBase(TIN_BASE).axeHighlight(TIN_HIGHLIGHT).axeOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_sword", MetalModel.Builder().toolStick().swordBase(TIN_BASE).swordHighlight(TIN_HIGHLIGHT).swordOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_hoe", MetalModel.Builder().toolStick().hoeBase(TIN_BASE).hoeHighlight(TIN_HIGHLIGHT).hoeOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_shovel", MetalModel.Builder().toolStick().shovelBase(TIN_BASE).shovelHighlight(TIN_HIGHLIGHT).shovelOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_helmet", MetalModel.Builder().helmetBase(TIN_BASE).helmetHighlight(TIN_HIGHLIGHT).helmetOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_dust", MetalModel.Builder().dustBase(TIN_BASE).dustHighlight(TIN_HIGHLIGHT).dustOutline(TIN_OUTLINE).build())
-            put("tin_chestplate", MetalModel.Builder().chestplateBase(TIN_BASE).chestplateHighlight(TIN_HIGHLIGHT).chestplateOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_boots", MetalModel.Builder().bootsBase(TIN_BASE).bootsHighlight(TIN_HIGHLIGHT).bootsOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_leggings", MetalModel.Builder().leggingsBase(TIN_BASE).leggingsHighlight(TIN_HIGHLIGHT).leggingsOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_nugget", MetalModel.Builder().nuggetBase(TIN_BASE).nuggetHighlight(TIN_HIGHLIGHT).nuggetOutline(
-                TIN_OUTLINE
-            ).build())
-            putBlock("tin_ore", MetalModel.Builder().ore().oreBase(TIN_BASE).oreHighlight(TIN_HIGHLIGHT).build())
+            put("tin_ingot", MetalModel.Builder().ingotBase(TIN_BASE).ingotHighlight(TIN_HIGHLIGHT).build())
+            put("tin_plate", MetalModel.Builder().plateBase(TIN_BASE).plateHighlight(TIN_HIGHLIGHT).build())
+            put("tin_pickaxe", MetalModel.Builder().toolStick().pickaxeBase(TIN_BASE).pickaxeHighlight(TIN_HIGHLIGHT).build())
+            put("tin_axe", MetalModel.Builder().toolStick().axeBase(TIN_BASE).axeHighlight(TIN_HIGHLIGHT).build())
+            put("tin_sword", MetalModel.Builder().toolStick().swordBase(TIN_BASE).swordHighlight(TIN_HIGHLIGHT).build())
+            put("tin_hoe", MetalModel.Builder().toolStick().hoeBase(TIN_BASE).hoeHighlight(TIN_HIGHLIGHT).build())
+            put("tin_shovel", MetalModel.Builder().toolStick().shovelBase(TIN_BASE).shovelHighlight(TIN_HIGHLIGHT).build())
+            put("tin_helmet", MetalModel.Builder().helmetBase(TIN_BASE).helmetHighlight(TIN_HIGHLIGHT).build())
+            put("tin_dust", MetalModel.Builder().dustBase(TIN_BASE).dustHighlight(TIN_HIGHLIGHT).build())
+            put("tin_chestplate", MetalModel.Builder().chestplateBase(TIN_BASE).chestplateHighlight(TIN_HIGHLIGHT).build())
+            put("tin_boots", MetalModel.Builder().bootsBase(TIN_BASE).bootsHighlight(TIN_HIGHLIGHT).build())
+            put("tin_leggings", MetalModel.Builder().leggingsBase(TIN_BASE).leggingsHighlight(TIN_HIGHLIGHT).build())
+            put("tin_nugget", MetalModel.Builder().nuggetBase(TIN_BASE).nuggetHighlight(TIN_HIGHLIGHT).build())
+            putBlock("tin_ore", MetalModel.Builder().ore().oreBase(0xFFFFFFFF).oreHighlight(0xFFdedede).build())
             putBlock("tin_block", MetalModel.Builder().block().blockBase(TIN_BASE).build())
-            put("tin_purified_ore", MetalModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).purifiedOreOutline(
-                TIN_OUTLINE
-            ).build())
-            put("tin_chunk", MetalModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).chunkOutline(
-                TIN_OUTLINE
-            ).build())
-            put("molten_tin_bucket", MetalModel.Builder().bucket().moltenBucketBase(TIN_BASE).moltenBucketHighlight(TIN_HIGHLIGHT).moltenBucketOutline(TIN_OUTLINE).build())
+            put("tin_purified_ore", MetalModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).build())
+            put("tin_chunk", MetalModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).build())
+            put("molten_tin_bucket", MetalModel.Builder().bucket().moltenBucketBase(TIN_BASE).moltenBucketHighlight(TIN_HIGHLIGHT).build())
 
             put("nikolite_ingot", MetalModel.Builder().ingotBase(NIKOLITE_BASE).ingotHighlight(NIKOLITE_HIGHLIGHT).build())
             put("nikolite_dust", MetalModel.Builder().dustBase(NIKOLITE_BASE).dustHighlight(NIKOLITE_HIGHLIGHT).build())
