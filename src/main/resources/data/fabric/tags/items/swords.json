@@ -3,6 +3,9 @@
   "values": [
     "indrev:tin_sword",
     "indrev:copper_sword",
-    "indrev:steel_sword"
+    "indrev:steel_sword",
+    "indrev:lead_sword",
+    "indrev:silver_sword",
+    "indrev:bronze_sword"
   ]
 }

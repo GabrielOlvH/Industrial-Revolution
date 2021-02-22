@@ -7,6 +7,9 @@
     "indrev:mining_drill_mk4",
     "indrev:tin_shovel",
     "indrev:copper_shovel",
-    "indrev:steel_shovel"
+    "indrev:steel_shovel",
+    "indrev:lead_shovel",
+    "indrev:silver_shovel",
+    "indrev:bronze_shovel"
   ]
 }

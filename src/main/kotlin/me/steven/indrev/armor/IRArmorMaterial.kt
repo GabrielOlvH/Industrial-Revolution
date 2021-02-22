@@ -31,19 +31,19 @@ enum class IRArmorMaterial(
     ),
     TIN(
         "tin", 10, intArrayOf(1, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.COPPER_INGOT())
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.TIN_INGOT())
     ),
     BRONZE(
-    "bronze", 15, intArrayOf(1, 4, 5, 2), 15,
-    SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.COPPER_INGOT())
+        "bronze", 15, intArrayOf(2, 5, 6, 2), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.BRONZE_INGOT())
     ),
     LEAD(
-        "lead", 20, intArrayOf(2, 5, 6, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.COPPER_INGOT())
+        "lead", 20, intArrayOf(2, 4, 4, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.LEAD_INGOT())
     ),
     SILVER(
-        "silver", 30, intArrayOf(1, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.COPPER_INGOT())
+        "silver", 30, intArrayOf(1, 4, 4, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.SILVER_INGOT())
     );
 
     override fun getName(): String = armorName

@@ -105,7 +105,7 @@ object IRItemRegistry {
             withOre()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.LEAD, 1, -1.0f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.LEAD, 4.5f, -2.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.LEAD, 3.8f, -2.9f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.LEAD, 1.5f, -0.7f, itemSettings()),
                 IRBasicSword(IRToolMaterial.LEAD, 3, -1.5f, itemSettings()),
                 IRBasicHoe(IRToolMaterial.LEAD, 2, -0.5f, itemSettings())
@@ -118,7 +118,7 @@ object IRItemRegistry {
             withBlock()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.BRONZE, 1, -1.0f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.BRONZE, 4.5f, -2.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.BRONZE, 5f, -2.0f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.BRONZE, 1.5f, -0.7f, itemSettings()),
                 IRBasicSword(IRToolMaterial.BRONZE, 3, -1.5f, itemSettings()),
                 IRBasicHoe(IRToolMaterial.BRONZE, 2, -0.5f, itemSettings())
@@ -132,7 +132,7 @@ object IRItemRegistry {
             withOre()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.SILVER, 1, -1.0f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.SILVER, 4.5f, -2.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.SILVER, 3.5f, -1.0f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.SILVER, 1.5f, -0.7f, itemSettings()),
                 IRBasicSword(IRToolMaterial.SILVER, 3, -1.5f, itemSettings()),
                 IRBasicHoe(IRToolMaterial.SILVER, 2, -0.5f, itemSettings())
@@ -260,6 +260,9 @@ object IRItemRegistry {
     val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
     val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
     val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
+    val LEAD_INGOT = { Registry.ITEM.get(identifier("lead_ingot")) }
+    val BRONZE_INGOT = { Registry.ITEM.get(identifier("bronze_ingot")) }
+    val SILVER_INGOT = { Registry.ITEM.get(identifier("silver_ingot")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
