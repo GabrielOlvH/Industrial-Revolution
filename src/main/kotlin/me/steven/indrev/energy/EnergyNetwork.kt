@@ -60,7 +60,7 @@ class EnergyNetwork(
 
         val totalInput = receiversHandlers.sumByDouble { handler ->
             if (!senderHandlers.contains(handler)) handler.maxInput else 0.0
-        }
+        }.coerceAtLeast(1.0)
         val totalEnergy = senderHandlers.sumByDouble { handler -> handler.maxOutput }
 
         var sender = senderHandlers.removeFirst()
