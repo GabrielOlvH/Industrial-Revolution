@@ -207,7 +207,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry("heat_generator", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
+                    this, SETTINGS().nonOpaque(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
                 )
             }
             .blockEntityProvider { tier -> { HeatGeneratorBlockEntity(tier) } }
