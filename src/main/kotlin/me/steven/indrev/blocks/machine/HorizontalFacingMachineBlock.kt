@@ -42,11 +42,12 @@ open class HorizontalFacingMachineBlock(
     companion object {
         val HORIZONTAL_FACING: DirectionProperty = Properties.HORIZONTAL_FACING
 
-        fun getRotated(direction: Direction, rotation: BlockRotation): Direction = when (rotation) {
-            BlockRotation.NONE -> direction
-            BlockRotation.CLOCKWISE_90 -> direction.rotateYClockwise()
-            BlockRotation.CLOCKWISE_180 -> direction.opposite
-            BlockRotation.COUNTERCLOCKWISE_90 -> direction.rotateYCounterclockwise()
-        }
+        fun getRotated(direction: Direction, rotation: BlockRotation): Direction =
+            if (direction.axis.isVertical) direction else when (rotation) {
+                BlockRotation.NONE -> direction
+                BlockRotation.CLOCKWISE_90 -> direction.rotateYClockwise()
+                BlockRotation.CLOCKWISE_180 -> direction.opposite
+                BlockRotation.COUNTERCLOCKWISE_90 -> direction.rotateYCounterclockwise()
+            }
     }
 }
