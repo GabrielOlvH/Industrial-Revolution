@@ -64,14 +64,14 @@ class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_
         ctx.emitter.run {
             draw(null, Direction.NORTH, sprite, 255 shl 24 or color)
             draw(null, Direction.SOUTH, sprite, 255 shl 24 or color)
-            draw(null, Direction.EAST, sprite, 255 shl 24 or  color)
-            draw(null, Direction.WEST, sprite,255 shl 24 or  color)
+            draw(null, Direction.EAST, sprite, 255 shl 24 or color)
+            draw(null, Direction.WEST, sprite, 255 shl 24 or color)
         }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
         emitQuads(null, sprite!!, ctx)
         emitQuads(null, overlays[4]!!, ctx)
-        emitHorizontalQuads( overlays[3]!!, ctx)
+        emitHorizontalQuads(overlays[3]!!, ctx)
     }
 }
