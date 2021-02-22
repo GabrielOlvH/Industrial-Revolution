@@ -33,6 +33,7 @@ import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
+import java.util.function.LongFunction
 
 object PacketRegistry {
     fun registerServer() {
@@ -240,7 +241,8 @@ object PacketRegistry {
             val pos = buf.readBlockPos()
             val workingState = buf.readBoolean()
             GlobalStateController.workingStateTracker[pos.asLong()] = workingState
-            GlobalStateController.chunksToUpdate.computeIfAbsent(ChunkPos(pos)) { hashSetOf() }.add(pos)
+            val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
+            GlobalStateController.chunksToUpdate.computeIfAbsent(chunkPos, LongFunction { hashSetOf() }).add(pos)
 
         }
 

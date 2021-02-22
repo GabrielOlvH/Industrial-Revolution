@@ -16,6 +16,7 @@ public abstract class MixinBuiltChunk {
 
     @Inject(method = "rebuild", at = @At("INVOKE"))
     private void indrev_removeBuiltChunk(CallbackInfo ci) {
-        GlobalStateController.INSTANCE.getChunksToUpdate().remove(new ChunkPos(getOrigin()));
+        long chunkPos = ChunkPos.toLong(getOrigin().getX() >> 4, getOrigin().getZ() >> 4);
+        GlobalStateController.INSTANCE.getChunksToUpdate().remove(chunkPos);
     }
 }
