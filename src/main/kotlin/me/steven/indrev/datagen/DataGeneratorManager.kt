@@ -77,7 +77,10 @@ class DataGeneratorManager(namespace: String) {
                 if (item is BlockItem) {
                     blockModelGenerator.register(item.block, BlockModelGenerator.CUBE_ALL(item.block))
                 }
-                metalSpriteGenerator.register(id, ImageFactory.simpleFactory<Identifier>()(id))
+                if (id.toString().contains("sword"))
+                    metalSpriteGenerator.register(id, ImageFactory.simpleFactory0<Identifier>()(id))
+                else
+                    metalSpriteGenerator.register(id, ImageFactory.simpleFactory<Identifier>()(id))
                 val factory =
                     if (model.type == MetalModel.TransformationType.HANDHELD) ItemModelGenerator.HANDHELD
                     else ItemModelGenerator.DEFAULT_ITEM
