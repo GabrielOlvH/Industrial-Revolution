@@ -19,6 +19,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
 import java.util.*
 import kotlin.collections.ArrayDeque
+import kotlin.math.absoluteValue
 
 class EnergyNetwork(
     val world: ServerWorld,
@@ -45,9 +46,9 @@ class EnergyNetwork(
             if (!world.isLoaded(pos)) return@forEach
             directions.forEach inner@{ dir ->
                 val energyIo = energyOf(world, pos, dir) ?: return@inner
-                if (energyIo.supportsInsertion() && energyIo.maxInput > 0)
+                if (energyIo.supportsInsertion() && energyIo.maxInput > 1e-9)
                     receiversHandlers.add(energyIo)
-                if (energyIo.supportsExtraction() && energyIo.maxOutput > 0)
+                if (energyIo.supportsExtraction() && energyIo.maxOutput > 1e-9)
                     senderHandlers.add(energyIo)
             }
         }
@@ -73,7 +74,7 @@ class EnergyNetwork(
         while (true) {
             val maxInput = receiver.maxInput
 
-            if (maxInput <= 0) {
+            if (maxInput <= 1e-9) {
                 if (receiversHandlers.isEmpty()) break
                 receiver = receiversHandlers.removeFirst()
                 receivedThisTick = remainingInputs.getDouble(receiver)
@@ -85,7 +86,7 @@ class EnergyNetwork(
             val moved = EnergyMovement.move(sender, receiver, amount)
             val energyAfter = receiver.energy
 
-            val isSame = moved > 0 && energyBefore == energyAfter
+            val isSame = moved > 1e-9 && (energyAfter - energyBefore).absoluteValue < 1e-9
             if (isSame) {
                 if (senderHandlers.isNotEmpty()) {
                     sender = senderHandlers.removeFirst()
