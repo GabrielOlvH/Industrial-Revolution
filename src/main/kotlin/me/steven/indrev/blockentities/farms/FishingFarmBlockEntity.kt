@@ -37,6 +37,7 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     }
 
     private var cooldown = config.processSpeed
+    
     override val maxInput: Double = config.maxInput
     override val maxOutput: Double = 0.0
 

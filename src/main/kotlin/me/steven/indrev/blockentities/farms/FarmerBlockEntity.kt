@@ -35,6 +35,9 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         }
     }
 
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
+
     override var range: Int = 5
 
     var cooldown = 0.0
@@ -147,4 +150,6 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         Upgrade.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
+
+    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
 }
