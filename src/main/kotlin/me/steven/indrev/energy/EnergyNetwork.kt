@@ -67,11 +67,17 @@ class EnergyNetwork(
         var sentThisTick = 0.0
         var receivedThisTick = 0.0
 
-        val remainingInputs = Object2DoubleOpenHashMap<EnergyIo>()
+        val remainingInputs = Object2DoubleOpenHashMap<EnergyIo>(lastReceiverSize / 2)
         remainingInputs.defaultReturnValue(0.0)
 
         while (true) {
             val maxInput = receiver.maxInput
+
+            if (maxInput <= 0) {
+                if (receiversHandlers.isEmpty()) break
+                receiver = receiversHandlers.removeFirst()
+                receivedThisTick = remainingInputs.getDouble(receiver)
+            }
 
             val amount = ((maxInput / totalInput) * totalEnergy).coerceIn(1.0, maxCableTransfer).coerceAtMost(maxInput - receivedThisTick)
 
