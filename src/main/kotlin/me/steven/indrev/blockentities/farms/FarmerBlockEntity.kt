@@ -49,9 +49,9 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
         if (!canUse(energyCost)) return
         if (nextBlocks.hasNext()) {
-            var pos = nextBlocks.next()
-            var state = world.getBlockState(pos)
             while (nextBlocks.hasNext()) {
+                val pos = nextBlocks.next()
+                val state = world.getBlockState(pos)
                 if (state.block != Blocks.SUGAR_CANE)
                     tryHarvest(state, pos, world)
                 else {
@@ -63,8 +63,6 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         }
                     }
                 }
-                pos = nextBlocks.next()
-                state = world.getBlockState(pos)
             }
         } else {
             nextBlocks = getWorkingArea().map(::BlockPos).iterator()
