@@ -11,12 +11,16 @@ import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.World
+import java.util.*
 import java.util.function.LongFunction
 
-private val ENERGY_IO_CACHE = Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>>()
+private val ENERGY_IO_CACHE = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>>>()
 
 fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): EnergyIo? {
-    return ENERGY_IO_CACHE.computeIfAbsent(blockPos.asLong(), LongFunction { BlockApiCache.create(EnergyApi.SIDED, world, blockPos) })[direction]
+    return ENERGY_IO_CACHE.computeIfAbsent(world) { Long2ObjectOpenHashMap() }.computeIfAbsent(
+        blockPos.asLong(),
+        LongFunction { BlockApiCache.create(EnergyApi.SIDED, world, blockPos) })[direction]
 }
 
 fun energyOf(itemStack: ItemStack?): EnergyIo? {
