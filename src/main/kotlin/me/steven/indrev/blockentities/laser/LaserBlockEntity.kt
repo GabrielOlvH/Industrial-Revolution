@@ -45,7 +45,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             || !use(config.energyCost))
             return explode()
 
-        val (x, y, z) = facing.vector3f().apply { scale(3.0f) }
+        val (x, y, z) = scale(facing.vector3f(), 3.0f)
         val damageArea = Box(pos).stretch(x.toDouble(), y.toDouble(), z.toDouble()).let {
             when {
                 facing.axis.isVertical ->
@@ -72,6 +72,9 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     }
 
     private fun Direction.vector3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
+    fun scale(v: Vector3f, scale: Float): Vector3f {
+        return Vector3f(v.x * scale, v.y * scale, v.z * scale)
+    }
 
     @Environment(EnvType.CLIENT)
     override fun machineClientTick() {
