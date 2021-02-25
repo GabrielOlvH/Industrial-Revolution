@@ -3,12 +3,12 @@ package me.steven.indrev.energy
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.utils.energyOf
-import me.steven.indrev.utils.isLoaded
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.nbt.LongTag
@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.chunk.Chunk
 import java.util.*
-import kotlin.collections.ArrayDeque
 import kotlin.math.absoluteValue
 
 class EnergyNetwork(
@@ -26,8 +25,6 @@ class EnergyNetwork(
     val cables: MutableSet<BlockPos> = hashSetOf(),
     val machines: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
 ) {
-    var lastSenderSize = 0
-    var lastReceiverSize = 0
 
     var tier = Tier.MK1
     private val maxCableTransfer: Double
@@ -38,83 +35,56 @@ class EnergyNetwork(
             else -> IndustrialRevolution.CONFIG.cables.cableMk4.maxInput
         }
 
-    fun tick(world: ServerWorld) {
-        if (machines.isEmpty()) return
-        val receiversHandlers = ArrayDeque<EnergyIo>(lastReceiverSize)
-        val senderHandlers = ArrayDeque<EnergyIo>(lastSenderSize)
-        machines.forEach { (pos, directions) ->
-            if (!world.isLoaded(pos)) return@forEach
-            directions.forEach inner@{ dir ->
-                val energyIo = energyOf(world, pos, dir) ?: return@inner
-                if (energyIo.supportsInsertion() && energyIo.maxInput > 1e-9)
-                    receiversHandlers.add(energyIo)
-                if (energyIo.supportsExtraction() && energyIo.maxOutput > 1e-9)
-                    senderHandlers.add(energyIo)
+    private val queue = hashMapOf<BlockPos, PriorityQueue<Node>>()
+
+    private fun buildQueue() {
+        queue.clear()
+        machines.forEach { (pos, _) ->
+            find(pos, pos, 0, LongOpenHashSet())
+        }
+    }
+
+    private fun find(source: BlockPos, blockPos: BlockPos, count: Short, s: LongOpenHashSet) {
+        DIRECTIONS.forEach { dir ->
+            val offset = blockPos.offset(dir)
+            if (cables.contains(offset) && s.add(offset.asLong())) {
+                find(source, offset, (count + 1).toShort(), s)
+            }
+            if (source != offset && machines.contains(offset) && machines[offset]!!.contains(dir.opposite)) {
+                queue.computeIfAbsent(source) { PriorityQueue(machines.size) }.add(Node(source, offset, count, dir.opposite))
             }
         }
+    }
 
-        lastReceiverSize = receiversHandlers.size
-        lastSenderSize = senderHandlers.size
+    fun tick(world: ServerWorld) {
+        if (machines.isEmpty()) return
+        else if (queue.isEmpty()) {
+            buildQueue()
+        }
+        if (queue.isNotEmpty()) {
+            val remainingInputs = Object2DoubleOpenHashMap<BlockPos>()
+            machines.forEach { (pos, directions) ->
+                val q = PriorityQueue(queue[pos] ?: return@forEach)
+                directions.forEach inner@{ dir ->
+                    val energyIo = energyOf(world, pos, dir) ?: return@inner
+                    var remaining = energyIo.maxOutput
 
-        if (senderHandlers.isEmpty() || receiversHandlers.isEmpty()) return
+                    while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
+                        val (_, targetPos, _, targetDir) = q.poll()
+                        val target = energyOf(world, targetPos, targetDir) ?: continue
+                        val maxInput = remainingInputs.computeIfAbsent(targetPos) { target.maxInput }
+                        if (maxInput < 1e-9) continue
 
-        val totalInput = receiversHandlers.sumByDouble { handler ->
-            if (!senderHandlers.contains(handler)) handler.maxInput else 0.0
-        }.coerceAtLeast(1.0)
-        val totalEnergy = senderHandlers.sumByDouble { handler -> handler.maxOutput }
-
-        var sender = senderHandlers.removeFirst()
-        var receiver = receiversHandlers.removeFirst()
-        var sentThisTick = 0.0
-        var receivedThisTick = 0.0
-
-        val remainingInputs = Object2DoubleOpenHashMap<EnergyIo>(lastReceiverSize / 2)
-        remainingInputs.defaultReturnValue(0.0)
-
-        while (true) {
-            val maxInput = receiver.maxInput
-
-            if (maxInput <= 1e-9) {
-                if (receiversHandlers.isEmpty()) break
-                receiver = receiversHandlers.removeFirst()
-                receivedThisTick = remainingInputs.getDouble(receiver)
-            }
-
-            val amount = ((maxInput / totalInput) * totalEnergy).coerceIn(1.0, maxCableTransfer).coerceAtMost(maxInput - receivedThisTick)
-
-            val energyBefore = receiver.energy
-            val moved = EnergyMovement.move(sender, receiver, amount)
-            val energyAfter = receiver.energy
-
-            val isSame = moved > 1e-9 && (energyAfter - energyBefore).absoluteValue < 1e-9
-            if (isSame) {
-                if (senderHandlers.isNotEmpty()) {
-                    sender = senderHandlers.removeFirst()
-                    sentThisTick = 0.0
+                        val amount = remaining.coerceAtMost(maxInput).coerceAtMost(maxCableTransfer)
+                        val before = target.energy
+                        val moved = EnergyMovement.move(energyIo, target, amount)
+                        val after = target.energy
+                        if (moved > 1e-9 && (after - before).absoluteValue > 1e-9) {
+                            remaining -= moved
+                            remainingInputs.addTo(targetPos, -moved)
+                        }
+                    }
                 }
-                else if (receiversHandlers.isNotEmpty()) {
-                    receiver = receiversHandlers.removeFirst()
-                    receivedThisTick = remainingInputs.getDouble(receiver)
-                }
-                else break
-                continue
-            }
-            sentThisTick += moved
-            receivedThisTick += moved
-
-            if (sentThisTick >= sender.maxOutput || sentThisTick.isNaN()) {
-                if (senderHandlers.isEmpty()) break
-                sender = senderHandlers.removeFirst()
-                sentThisTick = 0.0
-            }
-            if (receivedThisTick >= receiver.maxInput || receivedThisTick >= amount || receivedThisTick.isNaN()) {
-                if (!isSame && receivedThisTick < receiver.maxInput) {
-                    remainingInputs.addTo(receiver, receivedThisTick)
-                    receiversHandlers.addLast(receiver)
-                }
-                if (receiversHandlers.isEmpty()) break
-                receiver = receiversHandlers.removeFirst()
-                receivedThisTick = remainingInputs.getDouble(receiver)
             }
         }
     }
@@ -157,6 +127,8 @@ class EnergyNetwork(
     }
 
     companion object {
+        
+        val DIRECTIONS = Direction.values()
 
         private const val MAX_VALUE = (Integer.MAX_VALUE - 1).toDouble()
 
@@ -169,7 +141,7 @@ class EnergyNetwork(
             val state = EnergyNetworkState.getNetworkState(world)
             if (state.networksByPos.containsKey(pos))
                 state.networksByPos[pos]?.remove()
-            Direction.values().forEach {
+            DIRECTIONS.forEach {
                 val offset = pos.offset(it)
                 handleUpdate(world, offset)
             }
@@ -182,7 +154,7 @@ class EnergyNetwork(
             val network = EnergyNetwork(world)
             state.networks.add(network)
             val scanned = hashSetOf<BlockPos>()
-            Direction.values().forEach { dir ->
+            DIRECTIONS.forEach { dir ->
                 buildNetwork(scanned, state, network, world.getChunk(pos), world, pos, pos, dir)
             }
             if (network.machines.isEmpty() || network.cables.isEmpty())
@@ -204,7 +176,7 @@ class EnergyNetwork(
                         oldNetwork?.remove()
                     }
                 }
-                Direction.values().forEach { dir ->
+                DIRECTIONS.forEach { dir ->
                     if (blockState[CableBlock.getProperty(dir)]) {
                         val nPos = blockPos.offset(dir)
                         if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
