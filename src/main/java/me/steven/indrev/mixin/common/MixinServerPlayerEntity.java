@@ -21,6 +21,7 @@ import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -73,6 +74,11 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
             return (float) applyDamageToShield(amount);
         else
             return amount;
+    }
+
+    @Inject(method = "worldChanged", at = @At("TAIL"))
+    private void indrev_syncOnDimChange(ServerWorld origin, CallbackInfo ci) {
+        sync();
     }
 
     private boolean shouldApplyToShield(DamageSource source) {
