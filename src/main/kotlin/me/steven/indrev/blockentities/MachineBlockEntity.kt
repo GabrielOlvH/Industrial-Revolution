@@ -215,7 +215,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
         return when (type) {
-            ConfigurationType.ITEM -> TransferMode.values()
+            ConfigurationType.ITEM -> TransferMode.DEFAULT
             ConfigurationType.FLUID, ConfigurationType.ENERGY -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT)
         }
     }
@@ -311,13 +311,13 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    private fun getFirstSlot(inventory: Inventory, predicate: (Int, ItemStack) -> Boolean): Int? =
+    protected open fun getFirstSlot(inventory: Inventory, direction: Direction, predicate: (Int, ItemStack) -> Boolean): Int? =
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
-    private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
+    protected open fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
-            val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
+            val firstSlot = getFirstSlot(to, direction) { firstSlot, firstStack ->
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
                     && (to !is SidedInventory || to.canInsert(firstSlot, toTransfer, direction.opposite))
             } ?: break

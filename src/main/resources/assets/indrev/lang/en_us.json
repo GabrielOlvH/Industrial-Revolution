@@ -302,6 +302,8 @@
   "item.indrev.wrench.energy": "Energy",
   "item.indrev.wrench.output": "Output",
   "item.indrev.wrench.input": "Input",
+  "item.indrev.wrench.input_first": "Input (First Slot)",
+  "item.indrev.wrench.input_second": "Input (Second Slot)",
   "item.indrev.wrench.input_output": "Input and Output",
   "item.indrev.wrench.none": "None",
   "item.indrev.wrench.tooltip": "Shift + Right Click to change mode",

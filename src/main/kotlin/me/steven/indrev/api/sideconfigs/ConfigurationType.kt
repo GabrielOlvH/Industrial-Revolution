@@ -4,9 +4,9 @@ import me.steven.indrev.api.machines.TransferMode
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 
-enum class ConfigurationType(val title: Text, vararg val validModes: TransferMode = TransferMode.values()) {
-    ITEM(TranslatableText("item.indrev.wrench.item")),
-    FLUID(TranslatableText("item.indrev.wrench.fluid")),
+enum class ConfigurationType(val title: Text, vararg val validModes: TransferMode) {
+    ITEM(TranslatableText("item.indrev.wrench.item"), TransferMode.INPUT, TransferMode.OUTPUT, TransferMode.INPUT_OUTPUT, TransferMode.INPUT_FIRST, TransferMode.INPUT_SECOND, TransferMode.NONE),
+    FLUID(TranslatableText("item.indrev.wrench.fluid"), TransferMode.INPUT, TransferMode.OUTPUT, TransferMode.INPUT_OUTPUT, TransferMode.NONE),
     ENERGY(TranslatableText("item.indrev.wrench.energy"), TransferMode.INPUT, TransferMode.OUTPUT, TransferMode.NONE);
 
     fun next(): ConfigurationType {

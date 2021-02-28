@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
@@ -10,7 +11,10 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.inventory.Inventory
+import net.minecraft.item.ItemStack
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.Direction
 
 class SolidInfuserFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY) {
@@ -35,9 +39,33 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
     }
 
     override fun splitStacks() {
-        splitStacks(intArrayOf(6, 9, 12, 15, 18))
-        splitStacks(intArrayOf(7, 10, 13, 16, 19))
+        splitStacks(TOP_SLOTS)
+        splitStacks(BOTTOM_SLOTS)
+    }
+
+    override fun getFirstSlot(
+        inventory: Inventory,
+        direction: Direction,
+        predicate: (Int, ItemStack) -> Boolean
+    ): Int? {
+        inventoryComponent?.let { component ->
+            val mode = component.itemConfig[direction.opposite]
+            when {
+                inventory != component.inventory -> return@let
+                mode == TransferMode.INPUT_FIRST ->
+                    return super.getFirstSlot(inventory, direction) { slot, stack -> TOP_SLOTS.contains(slot) && predicate(slot, stack) }
+                mode == TransferMode.INPUT_SECOND ->
+                    return super.getFirstSlot(inventory, direction) { slot, stack -> BOTTOM_SLOTS.contains(slot) && predicate(slot, stack) }
+            }
+
+        }
+        return super.getFirstSlot(inventory, direction, predicate)
     }
 
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
+
+    companion object {
+        val TOP_SLOTS = intArrayOf(6, 9, 12, 15, 18)
+        val BOTTOM_SLOTS = intArrayOf(7, 10, 13, 16, 19)
+    }
 }
