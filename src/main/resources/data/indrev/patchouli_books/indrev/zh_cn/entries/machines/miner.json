@@ -1,17 +1,24 @@
 {
-    "name": "挖矿机",
+    "name": "自动挖矿钻机",
     "category": "machines",
     "sortnum": 4,
     "icon": "indrev:miner_mk4",
     "pages": [
       {
-        "type": "text",
-        "text": "自动挖矿，谁不爱呢？"
+        "type": "crafting",
+        "recipe": "indrev:shaped/miner_mk4",
+        "text": "将$(l)$(o)自动挖矿钻机$()放置在$(l:machines/miner#chunk_scanner)$(t:区块扫描仪)$(l)$(o)$(#0000ff)扫描过$()的区块中即可自动挖矿。值得一提的是它并不会破坏方块。"
       },
       {
         "type": "crafting",
-        "recipe": "indrev:shaped/miner_mk4",
-        "text": "$(l)$(o)挖矿机$()放置在$(l:machines/miner#chunk_scanner)$(t:区块扫描仪)$(l)$(o)$(#0000ff)扫描过的区块中$()就会开始耗电挖矿。注意：它并不实际破坏方块。"
+        "recipe": "indrev:shaped/drill_bottom",
+        "text": "自动挖矿钻机的运行需要钻头。钻头相对钻机本体斜向放置，且需安装钻机头部。每一个钻头都能加快运行速率。$(br)不废话，上图："
+      },
+      {
+        "type": "image",
+        "title": "Example",
+        "images": ["indrev:textures/gui/mrc_setup.png"],
+        "text": "注意钻头相对钻机本体斜向放置，且钻机对准中间一格。"
       },
       {
         "anchor": "chunk_scanner",
