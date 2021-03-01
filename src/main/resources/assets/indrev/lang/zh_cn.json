@@ -142,7 +142,7 @@
     "item.indrev.modular_core":"模块化核心（未充能）",
     "item.indrev.modular_core_activated":"模块化核心",
     "item.indrev.sawdust":"锯末",
-    "block.indrev.laser_mk4":"激光",
+    "block.indrev.laser_mk4":"激光器",
     "block.indrev.capsule":"微仓",
     "block.indrev.tin_ore":"锡矿石",
     "block.indrev.tin_block":"锡块",
@@ -995,5 +995,5 @@
     "vein.indrev.ferberite":"钨铁矿脉",
     "vein.indrev.galena":"方铅矿脉",
     "attribute.indrev.shield":"护盾",
-    "subtitles.indrev.laser":"激光束"
+    "subtitles.indrev.laser":"激光：激发"
 }
