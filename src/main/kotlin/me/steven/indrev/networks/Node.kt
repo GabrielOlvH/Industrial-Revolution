@@ -1,4 +1,4 @@
-package me.steven.indrev.energy
+package me.steven.indrev.networks
 
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction

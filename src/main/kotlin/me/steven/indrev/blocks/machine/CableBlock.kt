@@ -4,7 +4,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.energy.EnergyNetwork
+import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
@@ -140,9 +140,9 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
             if (state.isOf(newState.block))
-                EnergyNetwork.handleUpdate(world as ServerWorld, pos)
+                Network.handleUpdate(Network.Type.ENERGY, world as ServerWorld, pos)
             else
-                EnergyNetwork.handleBreak(world as ServerWorld, pos)
+                Network.handleBreak(Network.Type.ENERGY, world as ServerWorld, pos)
         }
     }
 
@@ -158,7 +158,7 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
     ) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
-            EnergyNetwork.handleUpdate(world as ServerWorld, pos)
+            Network.handleUpdate(Network.Type.ENERGY, world as ServerWorld, pos)
         }
     }
 

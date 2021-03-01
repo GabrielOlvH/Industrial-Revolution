@@ -26,7 +26,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.energy.IREnergyMovement
+import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType

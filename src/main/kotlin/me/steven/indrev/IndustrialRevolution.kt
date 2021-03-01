@@ -7,12 +7,12 @@ import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
-import me.steven.indrev.energy.NetworkEvents
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.networks.NetworkEvents
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe

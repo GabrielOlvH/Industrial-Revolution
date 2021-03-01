@@ -1,15 +1,14 @@
-package me.steven.indrev.energy
+package me.steven.indrev.networks
 
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
-import java.util.*
 
-class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indrev_networks") {
-    var networks = hashSetOf<EnergyNetwork>()
-    val networksByPos = hashMapOf<BlockPos, EnergyNetwork>()
+class NetworkState<T : Network>(private val type: Network.Type<T>, private val world: ServerWorld, key: String) : PersistentState(key) {
+    var networks = hashSetOf<T>()
+    val networksByPos = hashMapOf<BlockPos, T>()
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         val list = ListTag()
@@ -25,15 +24,16 @@ class EnergyNetworkState(private val world: ServerWorld) : PersistentState("indr
     override fun fromTag(tag: CompoundTag) {
         val list = tag.getList("networks", 10)
         networks = list.map { networkTag ->
-            EnergyNetwork.fromTag(world, networkTag as CompoundTag)
+            type.createEmpty(world).also { it.fromTag(world, networkTag as CompoundTag) }
         }.toHashSet()
         networks.forEach { network ->
-            network.cables.forEach { pos -> networksByPos[pos] = network }
+            network.pipes.forEach { pos -> networksByPos[pos] = network }
         }
     }
 
     companion object {
-        val NETWORK_STATES = WeakHashMap<ServerWorld, EnergyNetworkState>()
-        fun getNetworkState(world: ServerWorld): EnergyNetworkState = world.persistentStateManager.getOrCreate({ EnergyNetworkState(world) }, "indrev_networks")
+        const val ENERGY_KEY = "indrev_networks"
+        const val FLUID_KEY = "indrev_fluid_networks"
+        const val ITEM_KEY = "indrev_item_networks"
     }
 }

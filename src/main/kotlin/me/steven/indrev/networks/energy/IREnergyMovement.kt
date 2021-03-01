@@ -1,4 +1,4 @@
-package me.steven.indrev.energy
+package me.steven.indrev.networks.energy
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.blockentities.MachineBlockEntity
