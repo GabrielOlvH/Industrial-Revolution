@@ -88,13 +88,13 @@ abstract class Network(
             machineTag.put("dir", dirList)
             containersList.add(machineTag)
         }
-        tag.put("pipes", pipesList)
-        tag.put("containers", containersList)
+        tag.put("cables", pipesList)
+        tag.put("machines", containersList)
     }
 
     fun readPositions(tag: CompoundTag) {
-        val pipesList = tag.getList("pipes", 4)
-        val containersList = tag.getList("containers", 10)
+        val pipesList = tag.getList("cables", 4)
+        val containersList = tag.getList("machines", 10)
         pipesList.forEach { cableTag ->
             cableTag as LongTag
             this.pipes.add(BlockPos.fromLong(cableTag.long).toImmutable())
