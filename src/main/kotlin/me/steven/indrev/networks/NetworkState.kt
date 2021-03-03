@@ -6,9 +6,21 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
 
-class NetworkState<T : Network>(private val type: Network.Type<T>, private val world: ServerWorld, key: String) : PersistentState(key) {
+open class NetworkState<T : Network>(private val type: Network.Type<T>, private val world: ServerWorld, key: String) : PersistentState(key) {
     var networks = hashSetOf<T>()
-    val networksByPos = hashMapOf<BlockPos, T>()
+    private val networksByPos = hashMapOf<BlockPos, T>()
+
+    open fun remove(pos: BlockPos) {
+        networksByPos.remove(pos)
+    }
+
+    fun contains(pos: BlockPos) = networksByPos.containsKey(pos)
+
+    open operator fun set(blockPos: BlockPos, network: T) {
+        networksByPos[blockPos] = network
+    }
+
+    operator fun get(pos: BlockPos): T? = networksByPos[pos]
 
     override fun toTag(tag: CompoundTag): CompoundTag {
         val list = ListTag()

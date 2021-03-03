@@ -1,16 +1,19 @@
 package me.steven.indrev.registry
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
+import net.minecraft.block.Blocks
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
@@ -45,6 +48,11 @@ object IRBlockRegistry {
         identifier("tank").block(TANK_BLOCK).item(IRItemRegistry.TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
 
         identifier("capsule").block(CAPSULE_BLOCK).item(IRItemRegistry.CAPSULE_BLOCK_ITEM).blockEntityType(CAPSULE_BLOCK_ENTITY)
+
+        identifier("fluid_pipe_mk1").block(FLUID_PIPE_MK1)
+        identifier("fluid_pipe_mk2").block(FLUID_PIPE_MK2)
+        identifier("fluid_pipe_mk3").block(FLUID_PIPE_MK3)
+        identifier("fluid_pipe_mk4").block(FLUID_PIPE_MK4)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -107,4 +115,12 @@ object IRBlockRegistry {
     val CAPSULE_BLOCK = CapsuleBlock()
 
     val CAPSULE_BLOCK_ENTITY: BlockEntityType<CapsuleBlockEntity> = BlockEntityType.Builder.create({ CapsuleBlockEntity() }, CAPSULE_BLOCK).build(null)
+
+    val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
+
+    val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
+
+    val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
+
+    val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
 }

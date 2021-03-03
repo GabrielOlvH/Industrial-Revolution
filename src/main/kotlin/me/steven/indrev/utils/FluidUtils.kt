@@ -1,12 +1,17 @@
 package me.steven.indrev.utils
 
+import alexiil.mc.lib.attributes.SearchOptions
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import net.minecraft.world.World
 import java.math.RoundingMode
 
 val NUGGET_AMOUNT: FluidAmount = FluidAmount.of(10, 625)
@@ -32,7 +37,7 @@ operator fun FluidAmount.times(whole: Int): FluidAmount {
     return mul(whole.toLong())
 }
 
-fun  FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : GroupedFluidInvFixedWrapper(this) {
+fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : GroupedFluidInvFixedWrapper(this) {
 
     override fun attemptExtraction(
         filter: FluidFilter?,
@@ -63,3 +68,9 @@ fun  FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Gro
         return fluid
     }
 }
+
+fun insertableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction))
+
+fun extractableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction))
+
+fun groupedFluidInv(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.GROUPED_INV.get(world, pos, SearchOptions.inDirection(direction))

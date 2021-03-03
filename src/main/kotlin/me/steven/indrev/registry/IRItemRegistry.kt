@@ -12,6 +12,7 @@ import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.networks.fluid.FluidEndpointData
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.DrillModule
@@ -247,6 +248,14 @@ object IRItemRegistry {
 
         identifier("modular_core").item(MODULAR_CORE)
         identifier("modular_core_activated").item(MODULAR_CORE_ACTIVATED)
+
+        identifier("fluid_pipe_mk1").item(FLUID_PIPE_ITEM_MK1)
+        identifier("fluid_pipe_mk2").item(FLUID_PIPE_ITEM_MK2)
+        identifier("fluid_pipe_mk3").item(FLUID_PIPE_ITEM_MK3)
+        identifier("fluid_pipe_mk4").item(FLUID_PIPE_ITEM_MK4)
+
+        identifier("servo_retriever").item(SERVO_RETRIEVER)
+        identifier("servo_output").item(SERVO_OUTPUT)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -368,4 +377,12 @@ object IRItemRegistry {
     val MODULAR_CORE_ACTIVATED = object : Item(itemSettings().maxCount(1)) {
         override fun hasGlint(stack: ItemStack?): Boolean = true
     }
+
+    val FLUID_PIPE_ITEM_MK1 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK1, itemSettings())
+    val FLUID_PIPE_ITEM_MK2 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK2, itemSettings())
+    val FLUID_PIPE_ITEM_MK3 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK3, itemSettings())
+    val FLUID_PIPE_ITEM_MK4 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK4, itemSettings())
+
+    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), FluidEndpointData.Type.RETRIEVER)
+    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), FluidEndpointData.Type.OUTPUT)
 }

@@ -3,7 +3,7 @@ package me.steven.indrev.blocks.models
 import com.mojang.datafixers.util.Pair
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
-import me.steven.indrev.blocks.machine.CableBlock
+import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
@@ -95,7 +95,7 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
         randSupplier: Supplier<Random>,
         context: RenderContext
     ) {
-        if (state[CableBlock.COVERED]) {
+        if (state[BasePipeBlock.COVERED]) {
             val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity
             if (blockEntity?.coverState != null) {
                 val coverState = blockEntity.coverState!!
@@ -115,12 +115,12 @@ class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
             }
         }
         handleBakedModel(world, state, pos, randSupplier, context, modelArray[0])
-        if (state[CableBlock.NORTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[1])
-        if (state[CableBlock.EAST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[2])
-        if (state[CableBlock.SOUTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[3])
-        if (state[CableBlock.WEST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[4])
-        if (state[CableBlock.UP]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[5])
-        if (state[CableBlock.DOWN]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[6])
+        if (state[BasePipeBlock.NORTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[1])
+        if (state[BasePipeBlock.EAST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[2])
+        if (state[BasePipeBlock.SOUTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[3])
+        if (state[BasePipeBlock.WEST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[4])
+        if (state[BasePipeBlock.UP]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[5])
+        if (state[BasePipeBlock.DOWN]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[6])
     }
 
     private fun BakedModel.emitFromVanilla(blockState: BlockState, context: RenderContext, randSupplier: Supplier<Random>, shouldEmit: (BakedQuad) -> Boolean) {

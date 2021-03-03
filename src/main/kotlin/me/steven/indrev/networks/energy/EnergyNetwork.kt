@@ -6,7 +6,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blocks.machine.CableBlock
+import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.utils.energyOf
@@ -66,7 +66,7 @@ open class EnergyNetwork(
         }
     }
 
-    override fun <T : Network> appendPipe(state: NetworkState<T>, block: Block, blockPos: BlockPos) {
+    override fun <K : Network> appendPipe(state: NetworkState<K>, block: Block, blockPos: BlockPos) {
         val cable = block as? CableBlock ?: return
         this.tier = cable.tier
         super.appendPipe(state, block, blockPos)

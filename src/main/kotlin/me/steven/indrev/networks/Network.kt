@@ -1,9 +1,15 @@
 package me.steven.indrev.networks
 
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
-import me.steven.indrev.blocks.machine.CableBlock
+import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
+import me.steven.indrev.blocks.machine.pipes.CableBlock
+import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.networks.energy.EnergyNetwork
+import me.steven.indrev.networks.fluid.FluidNetwork
+import me.steven.indrev.networks.fluid.FluidNetworkState
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.groupedFluidInv
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
@@ -59,13 +65,13 @@ abstract class Network(
     fun remove() {
         val state = type.getNetworkState(world)
         state.networks.remove(this)
-        pipes.forEach { state.networksByPos.remove(it) }
+        pipes.forEach { state.remove(it) }
     }
 
     @Suppress("UNCHECKED_CAST")
-    open fun <T : Network> appendPipe(state: NetworkState<T>, block: Block, blockPos: BlockPos) {
+    open fun <V : Network> appendPipe(state: NetworkState<V>, block: Block, blockPos: BlockPos) {
         pipes.add(blockPos)
-        state.networksByPos[blockPos] = this as T
+        state[blockPos] = this as V
     }
 
     fun appendContainer(blockPos: BlockPos, direction: Direction) {
@@ -120,8 +126,8 @@ abstract class Network(
 
         fun <T : Network> handleBreak(type: Type<T>, world: ServerWorld, pos: BlockPos) {
             val state = type.getNetworkState(world)
-            if (state.networksByPos.containsKey(pos))
-                state.networksByPos[pos]?.remove()
+            if (state.contains(pos))
+                state[pos]?.remove()
             DIRECTIONS.forEach {
                 val offset = pos.offset(it)
                 handleUpdate(type, world, offset)
@@ -130,8 +136,8 @@ abstract class Network(
 
         fun <T : Network> handleUpdate(type: Type<T>, world: ServerWorld, pos: BlockPos) {
             val state = type.getNetworkState(world)
-            if (state.networksByPos.containsKey(pos))
-                state.networksByPos[pos]?.remove()
+            if (state.contains(pos))
+                state[pos]?.remove()
             val network = type.createEmpty(world)
             state.networks.add(network)
             val scanned = hashSetOf<BlockPos>()
@@ -160,14 +166,14 @@ abstract class Network(
             val blockState = chunk.getBlockState(blockPos) ?: return
             val block = blockState.block
             if (network.type.isPipe(blockState)) {
-                if (state.networksByPos.containsKey(blockPos)) {
-                    val oldNetwork = state.networksByPos[blockPos]
+                if (state.contains(blockPos)) {
+                    val oldNetwork = state[blockPos]
                     if (state.networks.contains(oldNetwork) && oldNetwork != network) {
                         oldNetwork?.remove()
                     }
                 }
                 DIRECTIONS.forEach { dir ->
-                    if (blockState[CableBlock.getProperty(dir)]) {
+                    if (blockState[BasePipeBlock.getProperty(dir)]) {
                         val nPos = blockPos.offset(dir)
                         if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
                             buildNetwork(scanned, state, network, chunk, world, nPos, source, dir)
@@ -175,7 +181,7 @@ abstract class Network(
                             buildNetwork(scanned, state, network, world.getChunk(nPos), world, nPos, source, dir)
                     }
                 }
-                if (blockState[CableBlock.getProperty(direction.opposite)])
+                if (blockState[BasePipeBlock.getProperty(direction.opposite)])
                     network.appendPipe(state, block, blockPos.toImmutable())
             }
         }
@@ -198,7 +204,7 @@ abstract class Network(
 
         abstract fun isPipe(blockState: BlockState): Boolean
 
-        fun getNetworkState(world: ServerWorld): NetworkState<T> {
+        open fun getNetworkState(world: ServerWorld): NetworkState<T> {
             return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ NetworkState(this, world, key) }, key) }
         }
 
@@ -211,13 +217,17 @@ abstract class Network(
 
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is CableBlock
             }
-            val FLUID = object : Type<EnergyNetwork>(NetworkState.FLUID_KEY) {
+            val FLUID = object : Type<FluidNetwork>(NetworkState.FLUID_KEY) {
 
-                override fun createEmpty(world: ServerWorld): EnergyNetwork = throw NotImplementedError()
+                override fun createEmpty(world: ServerWorld): FluidNetwork = FluidNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = false
+                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedFluidInv(world, pos, direction) != EmptyGroupedFluidInv.INSTANCE
 
-                override fun isPipe(blockState: BlockState): Boolean = false
+                override fun isPipe(blockState: BlockState): Boolean = blockState.block is FluidPipeBlock
+
+                override fun getNetworkState(world: ServerWorld): FluidNetworkState {
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ FluidNetworkState(world) }, key) } as FluidNetworkState
+                }
             }
             val ITEM = object : Type<EnergyNetwork>(NetworkState.ITEM_KEY) {
 

@@ -3,8 +3,8 @@ package me.steven.indrev.items.energy
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blocks.machine.CableBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig

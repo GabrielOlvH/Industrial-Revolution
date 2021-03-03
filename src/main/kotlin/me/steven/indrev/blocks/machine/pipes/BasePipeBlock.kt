@@ -1,10 +1,8 @@
-package me.steven.indrev.blocks.machine
+package me.steven.indrev.blocks.machine.pipes
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.fluid.FluidNetworkState
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
@@ -12,8 +10,6 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItem
@@ -23,10 +19,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Property
-import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
-import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.collection.DefaultedList
@@ -39,7 +32,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
-class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEntityProvider {
+abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Block(settings), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -50,22 +43,6 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
             .with(UP, false)
             .with(DOWN, false)
             .with(COVERED, false)
-    }
-
-    override fun appendTooltip(
-        stack: ItemStack?,
-        world: BlockView?,
-        tooltip: MutableList<Text>?,
-        options: TooltipContext?
-    ) {
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
-        )
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
-        )
     }
 
     override fun getOutlineShape(
@@ -120,11 +97,12 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
+        val world = ctx?.world
+        if (world !is ServerWorld) return defaultState
         var state = defaultState
-        val blockPos = ctx?.blockPos ?: return state
+        val blockPos = ctx.blockPos
         for (direction in Direction.values()) {
-            val neighbor = ctx.world.getBlockEntity(blockPos.offset(direction)) ?: continue
-            state = state.with(getProperty(direction), isConnectable(neighbor, direction.opposite))
+            state = state.with(getProperty(direction), isConnectable(world, blockPos.offset(direction), direction.opposite))
         }
         return state
     }
@@ -140,14 +118,16 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
             if (state.isOf(newState.block))
-                Network.handleUpdate(Network.Type.ENERGY, world as ServerWorld, pos)
+                Network.handleUpdate(type, world as ServerWorld, pos)
             else
-                Network.handleBreak(Network.Type.ENERGY, world as ServerWorld, pos)
+                Network.handleBreak(type, world as ServerWorld, pos)
+            if (type == Network.Type.FLUID) {
+                (type.getNetworkState(world) as FluidNetworkState).recentlyRemoved.clear()
+            }
         }
     }
 
-    private fun isConnectable(blockEntity: BlockEntity?, dir: Direction) =
-        blockEntity != null && EnergyApi.SIDED[blockEntity.world, blockEntity.pos, dir] != null || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
+    abstract fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean
 
     override fun onPlaced(
         world: World,
@@ -158,7 +138,10 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
     ) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
-            Network.handleUpdate(Network.Type.ENERGY, world as ServerWorld, pos)
+            Network.handleUpdate(type, world as ServerWorld, pos)
+            if (type == Network.Type.FLUID) {
+                (type.getNetworkState(world) as FluidNetworkState).recentlyRemoved.clear()
+            }
         }
     }
 
@@ -170,26 +153,18 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
         pos: BlockPos,
         neighborPos: BlockPos
     ): BlockState {
-        val neighborBlockEntity = world?.getBlockEntity(neighborPos)
         val (x, y, z) = pos.subtract(neighborPos)
-        return state.with(getProperty(facing), isConnectable(neighborBlockEntity, Direction.fromVector(x, y, z)!!))
+        return if (world is ServerWorld)
+            state.with(getProperty(facing), isConnectable(world, neighborPos, Direction.fromVector(x, y, z)!!))
+        else state
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
-
-    fun getConfig() = when(tier) {
-        Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1
-        Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2
-        Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3
-        else -> IndustrialRevolution.CONFIG.cables.cableMk4
-    }
-
-    data class CableShape(val directions: Array<Direction>, val shape: VoxelShape) {
+    data class PipeShape(val directions: Array<Direction>, val shape: VoxelShape) {
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
             if (javaClass != other?.javaClass) return false
 
-            other as CableShape
+            other as PipeShape
 
             if (!directions.contentEquals(other.directions)) return false
             if (shape != other.shape) return false
@@ -246,7 +221,7 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
             }
         }
 
-        private val SHAPE_CACHE = hashSetOf<CableShape>()
+        private val SHAPE_CACHE = hashSetOf<PipeShape>()
         private fun getShape(state: BlockState): VoxelShape {
             val directions = Direction.values().filter { dir -> state[getProperty(dir)] }.toTypedArray()
             var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
@@ -255,7 +230,7 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
                 Direction.values().forEach { direction ->
                     if (state[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
                 }
-                cableShapeCache = CableShape(directions, shape)
+                cableShapeCache = PipeShape(directions, shape)
                 SHAPE_CACHE.add(cableShapeCache)
             }
             return cableShapeCache.shape
