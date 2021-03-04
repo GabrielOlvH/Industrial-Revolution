@@ -67,8 +67,8 @@ class FluidNetwork(
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
             val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite)
-            val isRetriever = targetData?.type == FluidEndpointData.Type.RETRIEVER
-            if (isRetriever) continue
+            val input = targetData == null || targetData.type == FluidEndpointData.Type.INPUT
+            if (!input) continue
 
             val insertable = insertableOf(world, targetPos, targetDir)
             val moved = FluidVolumeUtil.move(extractable, insertable, remaining, Simulation.ACTION).amount()
@@ -82,8 +82,8 @@ class FluidNetwork(
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
             val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite)
-            val input = targetData == null || targetData.type == FluidEndpointData.Type.INPUT
-            if (!input) continue
+            val isRetriever = targetData?.type == FluidEndpointData.Type.RETRIEVER
+            if (isRetriever) continue
 
             val extractable = extractableOf(world, targetPos, targetDir)
             val moved = FluidVolumeUtil.move(extractable, insertable, remaining, Simulation.ACTION).amount()
