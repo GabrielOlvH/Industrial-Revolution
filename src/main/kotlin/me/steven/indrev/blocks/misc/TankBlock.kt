@@ -2,9 +2,12 @@ package me.steven.indrev.blocks.misc
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import alexiil.mc.lib.attributes.fluid.impl.CombinedFixedFluidInv
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -33,6 +36,7 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import java.util.*
 import java.util.stream.Stream
 
 class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, AttributeProvider {
@@ -65,12 +69,13 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
 
     override fun onUse(
         state: BlockState?,
-        world: World?,
+        world: World,
         pos: BlockPos?,
         player: PlayerEntity,
         hand: Hand,
         hit: BlockHitResult?
     ): ActionResult {
+        if (world.isClient) return ActionResult.SUCCESS
         val insertable = FluidAttributes.INSERTABLE.get(world, pos)
         val extractable = FluidAttributes.EXTRACTABLE.get(world, pos)
         return FluidInvUtil.interactHandWithTank(insertable, extractable, player, hand).asActionResult()
@@ -88,6 +93,19 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         player?.incrementStat(Stats.MINED.getOrCreateStat(this))
         player?.addExhaustion(0.005f)
         toTagComponents(world, player, pos, state, blockEntity, toolStack)
+    }
+
+    override fun onStateReplaced(
+        state: BlockState?,
+        world: World,
+        pos: BlockPos,
+        newState: BlockState?,
+        moved: Boolean
+    ) {
+        super.onStateReplaced(state, world, pos, newState, moved)
+        //val positions = mutableSetOf<BlockPos>()
+       // findAllTanks(world, world.getBlockState(pos), pos, positions, null)
+        //positions.forEach { CACHED_TANKS[world]?.remove(it.asLong()) }
     }
 
     fun toTagComponents(
@@ -127,17 +145,21 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     }
 
     override fun onPlaced(
-        world: World?,
-        pos: BlockPos?,
-        state: BlockState?,
+        world: World,
+        pos: BlockPos,
+        state: BlockState,
         placer: LivingEntity?,
         itemStack: ItemStack?
     ) {
         val tag = itemStack?.tag
-        if (tag?.isEmpty == false && world?.isClient == false) {
-            val tankEntity = world.getBlockEntity(pos) as? TankBlockEntity ?: return
+        if (world.isClient) return
+        val tankEntity = world.getBlockEntity(pos) as? TankBlockEntity ?: return
+        if (tag?.isEmpty == false) {
             tankEntity.fluidComponent.fromTag(tag)
         }
+        //val positions = mutableSetOf<BlockPos>()
+        //findAllTanks(world, world.getBlockState(pos), pos, positions, null)
+        //positions.forEach { CACHED_TANKS[world]?.remove(it.asLong()) }
     }
 
     override fun appendTooltip(
@@ -166,47 +188,33 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     }
 
 
-    override fun addAllAttributes(world: World?, pos: BlockPos?, state: BlockState, to: AttributeList<*>?) {
-        val tankEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return
-        val fluidComponent = tankEntity.fluidComponent
-        val volume = fluidComponent[0]
-        when (to?.attribute) {
-            FluidAttributes.GROUPED_INV ->
-                to?.offer(fluidComponent.groupedInv)
-            FluidAttributes.EXTRACTABLE -> {
-                if (volume.isEmpty && state[DOWN]) {
-                    var currentPos = pos?.down()
-                    var currentState = world.getBlockState(currentPos)
-                    while (currentState.block is TankBlock && currentState[DOWN]) {
-                        val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
-                        if (component[0].amount() < component.limit) {
-                            to?.offer(component.extractable)
-                            break
-                        }
-                        if (!currentState[DOWN]) break
-                        currentPos = currentPos?.down()
-                        currentState = world.getBlockState(currentPos)
-                    }
-                } else
-                    to?.offer(fluidComponent)
-            }
-            FluidAttributes.INSERTABLE-> {
-                if (fluidComponent.limit <= volume.amount() && state[UP]) {
-                    var currentPos = pos?.up()
-                    var currentState = world.getBlockState(currentPos)
-                    while (currentState.block is TankBlock) {
-                        val component = (world.getBlockEntity(currentPos) as TankBlockEntity).fluidComponent
-                        if (component[0].amount() < component.limit) {
-                            to?.offer(component.insertable)
-                            break
-                        }
-                        if (!currentState[UP]) break
-                        currentPos = currentPos?.up()
-                        currentState = world.getBlockState(currentPos)
-                    }
-                } else
-                    to?.offer(fluidComponent)
-            }
+    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
+        if (
+            to.attribute == FluidAttributes.GROUPED_INV
+            || to.attribute == FluidAttributes.EXTRACTABLE
+            || to.attribute == FluidAttributes.INSERTABLE
+        ) {
+            /*to.offer(
+                CACHED_TANKS.computeIfAbsent(world) { Long2ObjectOpenHashMap() }
+                    .computeIfAbsent(pos.asLong(), LongFunction {
+                        val inv = mutableListOf<FixedFluidInv>()
+                        findAllTanks(world, world.getBlockState(pos), pos, mutableSetOf(), inv)
+                        CombinedFixedFluidInv(inv)
+                    })
+            )*/
+            findAllTanks(world, world.getBlockState(pos), pos, mutableSetOf(), to)
+        }
+    }
+
+    private fun findAllTanks(world: World, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: AttributeList<*>) {
+        if (blockState.isOf(this)) {
+            to.offer((world.getBlockEntity(pos) as TankBlockEntity).fluidComponent)
+            if (!scanned.add(pos)) return
+
+            if (blockState[UP])
+                findAllTanks(world, world.getBlockState(pos.up()), pos.up(), scanned, to)
+            if (blockState[DOWN])
+                findAllTanks(world, world.getBlockState(pos.down()), pos.down(), scanned, to)
         }
     }
 
@@ -218,6 +226,9 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     }
 
     companion object {
+
+        val CACHED_TANKS = WeakHashMap<World, Long2ObjectOpenHashMap<CombinedFixedFluidInv<FixedFluidInv>>>()
+
         val UP: BooleanProperty = BooleanProperty.of("up")
         val DOWN: BooleanProperty = BooleanProperty.of("down")
         

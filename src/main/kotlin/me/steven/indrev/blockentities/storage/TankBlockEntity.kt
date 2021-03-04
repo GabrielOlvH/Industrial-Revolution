@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
@@ -10,7 +9,6 @@ import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
-import net.minecraft.util.math.Direction
 
 class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY), Tickable {
     val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
@@ -23,19 +21,9 @@ class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY)
             isMarkedForUpdate = false
         }
         if (!cachedState[TankBlock.DOWN]) return
-        val tank = fluidComponent[0]
-        val fluidAmount = tank.amount()
-        val insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, Direction.DOWN).firstOrNull ?: return
-        val extractable = fluidComponent.extractable
-        val extractionResult = extractable?.attemptAnyExtraction(fluidAmount, Simulation.SIMULATE)
-        val insertionResult = insertable.attemptInsertion(extractionResult, Simulation.SIMULATE)
-        if (extractionResult?.isEmpty == false) {
-            val resultVolume = extractionResult.fluidKey.withAmount(extractionResult.amount().sub(insertionResult.amount()))
-            if (!resultVolume.isEmpty) {
-                insertable.insert(resultVolume)
-                extractable.extract(resultVolume.amount())
-            }
-        }
+        val down = world?.getBlockEntity(pos.down()) as? TankBlockEntity ?: return
+        FluidVolumeUtil.move(fluidComponent, down.fluidComponent)
+        down.isMarkedForUpdate = true
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {
