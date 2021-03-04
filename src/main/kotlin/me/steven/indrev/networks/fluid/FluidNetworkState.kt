@@ -1,68 +1,7 @@
 package me.steven.indrev.networks.fluid
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.NetworkState
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import me.steven.indrev.networks.ServoNetworkState
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 
-class FluidNetworkState(world: ServerWorld) : NetworkState<FluidNetwork>(Network.Type.FLUID, world, FLUID_KEY) {
-    val endpointData = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, FluidEndpointData>>()
-    val recentlyRemoved = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, FluidEndpointData>>()
-
-    override fun remove(pos: BlockPos) {
-        super.remove(pos)
-        if (endpointData.containsKey(pos.asLong()))
-            recentlyRemoved[pos.asLong()] = endpointData.remove(pos.asLong())
-    }
-
-    override fun set(blockPos: BlockPos, network: FluidNetwork) {
-        super.set(blockPos, network)
-        if (recentlyRemoved.containsKey(blockPos.asLong())) {
-            endpointData[blockPos.asLong()] = recentlyRemoved.remove(blockPos.asLong())
-        }
-    }
-
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        val modesTag = ListTag()
-        endpointData.forEach { (pos, modes) ->
-            val sidesTag = ListTag()
-            modes.forEach { (dir, mode) ->
-                val t = CompoundTag()
-                t.put(dir.ordinal.toString(), mode.toTag(CompoundTag()))
-                sidesTag.add(t)
-            }
-            val posTag = CompoundTag()
-            posTag.putLong("pos", pos)
-            posTag.put("sides", sidesTag)
-            sidesTag.add(posTag)
-        }
-        tag.put("modes", modesTag)
-        return super.toTag(tag)
-    }
-
-    override fun fromTag(tag: CompoundTag) {
-        val modesTag = tag.getList("modes", 10)
-        modesTag.forEach { posTag ->
-            posTag as CompoundTag
-            val pos = posTag.getLong("pos")
-            val map = Object2ObjectOpenHashMap<Direction, FluidEndpointData>()
-            val sidesTag = posTag.getList("sides", 10)
-            sidesTag.forEach { t ->
-                t as CompoundTag
-                t.keys.forEach { id ->
-                    val data = FluidEndpointData.fromTag(t.getCompound(id))
-                    val dir = Direction.values()[id.toInt()]
-                    map[dir] = data
-                }
-            }
-
-            endpointData[pos] = map
-        }
-        super.fromTag(tag)
-    }
-}
+class FluidNetworkState(world: ServerWorld) : ServoNetworkState<FluidNetwork>(Network.Type.FLUID, world)

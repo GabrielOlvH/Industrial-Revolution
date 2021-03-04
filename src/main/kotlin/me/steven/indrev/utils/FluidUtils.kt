@@ -69,8 +69,8 @@ fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Grou
     }
 }
 
-fun insertableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction))
+fun fluidInsertableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction))
 
-fun extractableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction))
+fun fluidExtractableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction))
 
 fun groupedFluidInv(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.GROUPED_INV.get(world, pos, SearchOptions.inDirection(direction))

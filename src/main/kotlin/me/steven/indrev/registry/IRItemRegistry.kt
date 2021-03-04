@@ -12,7 +12,7 @@ import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.upgrade.IRUpgradeItem
 import me.steven.indrev.items.upgrade.Upgrade
-import me.steven.indrev.networks.fluid.FluidEndpointData
+import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.DrillModule
@@ -254,6 +254,11 @@ object IRItemRegistry {
         identifier("fluid_pipe_mk3").item(FLUID_PIPE_ITEM_MK3)
         identifier("fluid_pipe_mk4").item(FLUID_PIPE_ITEM_MK4)
 
+        identifier("item_pipe_mk1").item(ITEM_PIPE_ITEM_MK1)
+        identifier("item_pipe_mk2").item(ITEM_PIPE_ITEM_MK2)
+        identifier("item_pipe_mk3").item(ITEM_PIPE_ITEM_MK3)
+        identifier("item_pipe_mk4").item(ITEM_PIPE_ITEM_MK4)
+
         identifier("servo_retriever").item(SERVO_RETRIEVER)
         identifier("servo_output").item(SERVO_OUTPUT)
     }
@@ -383,6 +388,11 @@ object IRItemRegistry {
     val FLUID_PIPE_ITEM_MK3 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK3, itemSettings())
     val FLUID_PIPE_ITEM_MK4 = BlockItem(IRBlockRegistry.FLUID_PIPE_MK4, itemSettings())
 
-    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), FluidEndpointData.Type.RETRIEVER)
-    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), FluidEndpointData.Type.OUTPUT)
+    val ITEM_PIPE_ITEM_MK1 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK1, itemSettings())
+    val ITEM_PIPE_ITEM_MK2 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK2, itemSettings())
+    val ITEM_PIPE_ITEM_MK3 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK3, itemSettings())
+    val ITEM_PIPE_ITEM_MK4 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK4, itemSettings())
+
+    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.RETRIEVER)
+    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.OUTPUT)
 }

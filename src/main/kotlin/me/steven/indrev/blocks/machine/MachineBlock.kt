@@ -222,5 +222,7 @@ open class MachineBlock(
             to.offer(fluidComponent)
         else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
             to.offer(fluidComponent)
+        else if (to.attribute == FluidAttributes.GROUPED_INV)
+            to.offer(fluidComponent)
     }
 }

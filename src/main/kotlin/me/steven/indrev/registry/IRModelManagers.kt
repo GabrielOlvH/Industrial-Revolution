@@ -33,7 +33,7 @@ object IRModelManagers : ModelVariantProvider, ExtraModelProvider {
             path == "pump_pipe" -> PumpPipeBakedModel()
             LFC_OVERLAY_REGEX.matches(path) -> SimpleBlockModel(path)
             path == "tank" && variant == "inventory" -> TankItemBakedModel
-            path.startsWith("cable_mk") || path.startsWith("fluid_pipe_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
+            path.startsWith("cable_mk") || path.startsWith("fluid_pipe_mk") || path.startsWith("item_pipe_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
             MachineRegistry.MAP.containsKey(id) -> MachineRegistry.MAP[id]?.modelProvider?.get(Tier.values()[(path.last().toString().toIntOrNull() ?: 4) - 1])?.invoke(id.path.replace("_creative", "_mk4"))
             else -> return null
         }

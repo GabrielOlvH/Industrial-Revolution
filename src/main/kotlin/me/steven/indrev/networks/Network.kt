@@ -1,15 +1,20 @@
 package me.steven.indrev.networks
 
 import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
+import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
+import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.networks.energy.EnergyNetwork
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.fluid.FluidNetworkState
+import me.steven.indrev.networks.item.ItemNetwork
+import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.groupedFluidInv
+import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
@@ -229,13 +234,17 @@ abstract class Network(
                     return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ FluidNetworkState(world) }, key) } as FluidNetworkState
                 }
             }
-            val ITEM = object : Type<EnergyNetwork>(NetworkState.ITEM_KEY) {
+            val ITEM = object : Type<ItemNetwork>(NetworkState.ITEM_KEY) {
 
-                override fun createEmpty(world: ServerWorld): EnergyNetwork = throw NotImplementedError()
+                override fun createEmpty(world: ServerWorld): ItemNetwork = ItemNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = false
+                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedItemInv(world, pos, direction) != EmptyGroupedItemInv.INSTANCE
 
-                override fun isPipe(blockState: BlockState): Boolean = false
+                override fun isPipe(blockState: BlockState): Boolean = blockState.block is ItemPipeBlock
+
+                override fun getNetworkState(world: ServerWorld): ItemNetworkState {
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState(world) }, key) } as ItemNetworkState
+                }
             }
 
             fun valueOf(string: String): Type<*> {

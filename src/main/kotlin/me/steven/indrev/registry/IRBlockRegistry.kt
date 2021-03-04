@@ -8,6 +8,7 @@ import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
+import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -53,6 +54,11 @@ object IRBlockRegistry {
         identifier("fluid_pipe_mk2").block(FLUID_PIPE_MK2)
         identifier("fluid_pipe_mk3").block(FLUID_PIPE_MK3)
         identifier("fluid_pipe_mk4").block(FLUID_PIPE_MK4)
+
+        identifier("item_pipe_mk1").block(ITEM_PIPE_MK1)
+        identifier("item_pipe_mk2").block(ITEM_PIPE_MK2)
+        identifier("item_pipe_mk3").block(ITEM_PIPE_MK3)
+        identifier("item_pipe_mk4").block(ITEM_PIPE_MK4)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -123,4 +129,12 @@ object IRBlockRegistry {
     val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
 
     val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+
+    val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
+
+    val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
+
+    val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
+
+    val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
 }

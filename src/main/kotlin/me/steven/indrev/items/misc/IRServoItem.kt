@@ -2,10 +2,8 @@ package me.steven.indrev.items.misc
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
-import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
-import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.fluid.FluidEndpointData
-import me.steven.indrev.networks.fluid.FluidNetworkState
+import me.steven.indrev.networks.EndpointData
+import me.steven.indrev.networks.ServoNetworkState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -19,7 +17,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import java.util.function.LongFunction
 
-class IRServoItem(settings: Settings, val type: FluidEndpointData.Type) : Item(settings) {
+class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settings) {
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == true) return TypedActionResult.pass(user.getStackInHand(hand))
@@ -40,7 +38,8 @@ class IRServoItem(settings: Settings, val type: FluidEndpointData.Type) : Item(s
         val pos = context.blockPos
 
         val state = world.getBlockState(pos)
-        if (state.block !is FluidPipeBlock) return ActionResult.PASS
+        val block = state.block
+        if (block !is BasePipeBlock) return ActionResult.PASS
 
         if (world is ServerWorld && hand == Hand.MAIN_HAND) {
             val x = hit.x - pos!!.x
@@ -56,10 +55,11 @@ class IRServoItem(settings: Settings, val type: FluidEndpointData.Type) : Item(s
                 else -> null
             }
             if (dir != null && state[BasePipeBlock.getProperty(dir)]) {
-                (Network.Type.FLUID.getNetworkState(world) as? FluidNetworkState?)?.let { networkState ->
-                    if (networkState[pos]?.machines?.containsKey(pos.offset(dir)) == true)
+                val network = block.type.getNetworkState(world) as? ServoNetworkState?
+                network?.let { networkState ->
+                    if (networkState[pos]?.containers?.containsKey(pos.offset(dir)) == true)
                         networkState.endpointData.let { modes ->
-                            val data = FluidEndpointData(type, getMode(stack))
+                            val data = EndpointData(type, getMode(stack))
                             modes.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() })[dir] = data
                             context.player?.sendMessage(LiteralText("Set $dir to $data"), true)
                         }
@@ -72,10 +72,10 @@ class IRServoItem(settings: Settings, val type: FluidEndpointData.Type) : Item(s
     }
 
     companion object {
-        fun getMode(itemStack: ItemStack): FluidEndpointData.Mode {
+        fun getMode(itemStack: ItemStack): EndpointData.Mode {
             val m = itemStack.orCreateTag.getString("mode")
-            if (m.isNullOrEmpty()) return FluidEndpointData.Mode.NEAREST_FIRST
-            return FluidEndpointData.Mode.valueOf(m.toUpperCase())
+            if (m.isNullOrEmpty()) return EndpointData.Mode.NEAREST_FIRST
+            return EndpointData.Mode.valueOf(m.toUpperCase())
         }
     }
 }

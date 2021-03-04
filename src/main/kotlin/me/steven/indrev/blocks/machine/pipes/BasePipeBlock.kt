@@ -2,7 +2,7 @@ package me.steven.indrev.blocks.machine.pipes
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.fluid.FluidNetworkState
+import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
@@ -121,9 +121,7 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
                 Network.handleUpdate(type, world as ServerWorld, pos)
             else
                 Network.handleBreak(type, world as ServerWorld, pos)
-            if (type == Network.Type.FLUID) {
-                (type.getNetworkState(world) as FluidNetworkState).recentlyRemoved.clear()
-            }
+            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
         }
     }
 
@@ -139,9 +137,7 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
             Network.handleUpdate(type, world as ServerWorld, pos)
-            if (type == Network.Type.FLUID) {
-                (type.getNetworkState(world) as FluidNetworkState).recentlyRemoved.clear()
-            }
+            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
         }
     }
 
