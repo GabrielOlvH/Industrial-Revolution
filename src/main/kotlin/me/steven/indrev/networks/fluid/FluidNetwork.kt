@@ -62,6 +62,7 @@ class FluidNetwork(
                 }
             }
         }
+        lastTransferred = null
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
