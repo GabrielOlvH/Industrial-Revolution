@@ -48,14 +48,12 @@ class FluidNetwork(
                         if (data.mode == FluidEndpointData.Mode.NEAREST_FIRST)
                             PriorityQueue(originalQueue)
                         else
-                            PriorityQueue(data.mode.comparator(world)).also { q -> q.addAll(originalQueue) }
+                            PriorityQueue(data.mode.comparator(world, data.type)).also { q -> q.addAll(originalQueue) }
 
-                    val output = data.type == FluidEndpointData.Type.OUTPUT
-                    if (output)
+                    if (data.type == FluidEndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, queue, state)
                     else if (data.type == FluidEndpointData.Type.RETRIEVER)
                         tickRetriever(pos, dir, queue, state)
-
                 }
             }
         }

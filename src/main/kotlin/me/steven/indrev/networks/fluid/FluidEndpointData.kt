@@ -2,6 +2,7 @@ package me.steven.indrev.networks.fluid
 
 import me.steven.indrev.networks.Node
 import me.steven.indrev.utils.groupedFluidInv
+import me.steven.indrev.utils.minus
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.World
 import java.util.*
@@ -33,13 +34,18 @@ data class FluidEndpointData(var type: Type, var mode: Mode) {
         }
     }
 
-    enum class Mode(val comparator: (World) -> Comparator<Node>) {
-        ROUND_ROBIN({ world ->
-            Comparator.comparing {
-                groupedFluidInv(world, it.target, it.direction).getAmount_F { true }
-            }
+    enum class Mode(val comparator: (World, Type) -> Comparator<Node>) {
+        ROUND_ROBIN({ world, type ->
+            if (type == Type.RETRIEVER)
+                Comparator.comparing { node ->
+                    groupedFluidInv(world, node.target, node.direction).let { it.totalCapacity_F - it.getAmount_F { true } }
+                }
+            else
+                Comparator.comparing {
+                    groupedFluidInv(world, it.target, it.direction).getAmount_F { true }
+                }
         }),
-        FURTHEST_FIRST({
+        FURTHEST_FIRST({ _, _ ->
             Comparator { first, second ->
                 when {
                     first.dist > second.dist -> -1
@@ -48,8 +54,8 @@ data class FluidEndpointData(var type: Type, var mode: Mode) {
                 }
             }
         }),
-        NEAREST_FIRST({ Comparator.comparing { it } }),
-        RANDOM({ Comparator.comparing { R.nextInt(3) - 1 } });
+        NEAREST_FIRST({ _, _ -> Comparator.comparing { it } }),
+        RANDOM({ _, _ -> Comparator.comparing { R.nextInt(3) - 1 } });
 
         fun next(): Mode {
             return when (this) {
