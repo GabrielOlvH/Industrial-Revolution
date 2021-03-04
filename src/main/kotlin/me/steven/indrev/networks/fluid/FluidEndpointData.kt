@@ -1,8 +1,9 @@
 package me.steven.indrev.networks.fluid
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import me.steven.indrev.networks.Node
 import me.steven.indrev.utils.groupedFluidInv
-import me.steven.indrev.utils.minus
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.world.World
 import java.util.*
@@ -34,18 +35,18 @@ data class FluidEndpointData(var type: Type, var mode: Mode) {
         }
     }
 
-    enum class Mode(val comparator: (World, Type) -> Comparator<Node>) {
-        ROUND_ROBIN({ world, type ->
+    enum class Mode(val comparator: (World, Type, FluidFilter) -> Comparator<Node>) {
+        ROUND_ROBIN({ world, type, fluid ->
             if (type == Type.RETRIEVER)
-                Comparator.comparing { node ->
-                    groupedFluidInv(world, node.target, node.direction).let { it.totalCapacity_F - it.getAmount_F { true } }
-                }
+                Comparator.comparing<Node, FluidAmount> { node ->
+                    groupedFluidInv(world, node.target, node.direction).getAmount_F(fluid)
+                }.reversed()
             else
                 Comparator.comparing {
-                    groupedFluidInv(world, it.target, it.direction).getAmount_F { true }
+                    groupedFluidInv(world, it.target, it.direction).getAmount_F(fluid)
                 }
         }),
-        FURTHEST_FIRST({ _, _ ->
+        FURTHEST_FIRST({ _, _, _ ->
             Comparator { first, second ->
                 when {
                     first.dist > second.dist -> -1
@@ -54,8 +55,8 @@ data class FluidEndpointData(var type: Type, var mode: Mode) {
                 }
             }
         }),
-        NEAREST_FIRST({ _, _ -> Comparator.comparing { it } }),
-        RANDOM({ _, _ -> Comparator.comparing { R.nextInt(3) - 1 } });
+        NEAREST_FIRST({ _, _, _ -> Comparator.comparing { it } }),
+        RANDOM({ _, _, _ -> Comparator.comparing { R.nextInt(3) - 1 } });
 
         fun next(): Mode {
             return when (this) {

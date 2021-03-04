@@ -3,6 +3,8 @@ package me.steven.indrev.networks.fluid
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.networks.Network
@@ -31,6 +33,8 @@ class FluidNetwork(
             else -> 8
         })
 
+    var lastTransferred: FluidKey? = null
+
     override fun tick(world: ServerWorld) {
         if (world.time % 20 != 0L) return
         val state = Type.FLUID.getNetworkState(world) as FluidNetworkState
@@ -44,22 +48,23 @@ class FluidNetwork(
                 directions.forEach inner@{ dir ->
                     val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) ?: return@inner
 
+                    val filter = lastTransferred?.exactFilter ?: FluidFilter { true }
                     val queue =
                         if (data.mode == FluidEndpointData.Mode.NEAREST_FIRST)
                             PriorityQueue(originalQueue)
                         else
-                            PriorityQueue(data.mode.comparator(world, data.type)).also { q -> q.addAll(originalQueue) }
+                            PriorityQueue(data.mode.comparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
 
                     if (data.type == FluidEndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir, queue, state)
+                        tickOutput(pos, dir, queue, state, filter)
                     else if (data.type == FluidEndpointData.Type.RETRIEVER)
-                        tickRetriever(pos, dir, queue, state)
+                        tickRetriever(pos, dir, queue, state, filter)
                 }
             }
         }
     }
 
-    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState) {
+    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val extractable = extractableOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
@@ -69,12 +74,14 @@ class FluidNetwork(
             if (!input) continue
 
             val insertable = insertableOf(world, targetPos, targetDir)
-            val moved = FluidVolumeUtil.move(extractable, insertable, remaining, Simulation.ACTION).amount()
-            remaining -= moved
+            val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, Simulation.ACTION)
+            if (!moved.isEmpty)
+                lastTransferred = moved.fluidKey
+            remaining -= moved.amount()
         }
     }
 
-    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState) {
+    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val insertable = insertableOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
@@ -84,8 +91,10 @@ class FluidNetwork(
             if (isRetriever) continue
 
             val extractable = extractableOf(world, targetPos, targetDir)
-            val moved = FluidVolumeUtil.move(extractable, insertable, remaining, Simulation.ACTION).amount()
-            remaining -= moved
+            val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, Simulation.ACTION)
+            if (!moved.isEmpty)
+                lastTransferred = moved.fluidKey
+            remaining -= moved.amount()
         }
     }
 

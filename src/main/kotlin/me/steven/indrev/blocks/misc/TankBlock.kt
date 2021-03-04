@@ -2,12 +2,9 @@ package me.steven.indrev.blocks.misc
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.fluid.impl.CombinedFixedFluidInv
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -36,7 +33,6 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import java.util.*
 import java.util.stream.Stream
 
 class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, AttributeProvider {
@@ -103,9 +99,6 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         moved: Boolean
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
-        //val positions = mutableSetOf<BlockPos>()
-       // findAllTanks(world, world.getBlockState(pos), pos, positions, null)
-        //positions.forEach { CACHED_TANKS[world]?.remove(it.asLong()) }
     }
 
     fun toTagComponents(
@@ -157,9 +150,6 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         if (tag?.isEmpty == false) {
             tankEntity.fluidComponent.fromTag(tag)
         }
-        //val positions = mutableSetOf<BlockPos>()
-        //findAllTanks(world, world.getBlockState(pos), pos, positions, null)
-        //positions.forEach { CACHED_TANKS[world]?.remove(it.asLong()) }
     }
 
     override fun appendTooltip(
@@ -194,14 +184,6 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
             || to.attribute == FluidAttributes.EXTRACTABLE
             || to.attribute == FluidAttributes.INSERTABLE
         ) {
-            /*to.offer(
-                CACHED_TANKS.computeIfAbsent(world) { Long2ObjectOpenHashMap() }
-                    .computeIfAbsent(pos.asLong(), LongFunction {
-                        val inv = mutableListOf<FixedFluidInv>()
-                        findAllTanks(world, world.getBlockState(pos), pos, mutableSetOf(), inv)
-                        CombinedFixedFluidInv(inv)
-                    })
-            )*/
             findAllTanks(world, world.getBlockState(pos), pos, mutableSetOf(), to)
         }
     }
@@ -226,8 +208,6 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     }
 
     companion object {
-
-        val CACHED_TANKS = WeakHashMap<World, Long2ObjectOpenHashMap<CombinedFixedFluidInv<FixedFluidInv>>>()
 
         val UP: BooleanProperty = BooleanProperty.of("up")
         val DOWN: BooleanProperty = BooleanProperty.of("down")
