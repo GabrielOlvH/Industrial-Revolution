@@ -7,27 +7,41 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.ItemScatterer
-import net.minecraft.util.TypedActionResult
+import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.*
 import net.minecraft.world.World
 
 class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settings) {
+
+    override fun appendTooltip(
+        stack: ItemStack,
+        world: World?,
+        tooltip: MutableList<Text>,
+        context: TooltipContext?
+    ) {
+        tooltip.add(TranslatableText("$translationKey.tooltip"))
+        tooltip.add(LiteralText.EMPTY)
+        val modeString = getMode(stack).toString().toLowerCase()
+        tooltip.add(TranslatableText("item.indrev.servo.mode")
+            .append(TranslatableText("item.indrev.servo.mode.$modeString").formatted(Formatting.BLUE)))
+        tooltip.add(TranslatableText("item.indrev.servo.mode.$modeString.tooltip").formatted(Formatting.DARK_GRAY))
+    }
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == true) return TypedActionResult.pass(user.getStackInHand(hand))
         val stack = user.getStackInHand(hand)
         val newMode = getMode(stack).next()
         stack.orCreateTag.putString("mode", newMode.toString())
-        //TODO fix this
-        user.sendMessage(LiteralText("set mode to $newMode"), true)
+        user.sendMessage(TranslatableText("item.indrev.servo.mode")
+            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().toLowerCase()}").formatted(Formatting.BLUE)), true)
         return TypedActionResult.consume(stack)
     }
 
@@ -62,7 +76,6 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                         val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(LiteralText("Failed to put servo"), true)
                         data.type = type
                         data.mode = getMode(stack)
-                        context.player?.sendMessage(LiteralText("Set $dir to $data"), true)
                         stack.decrement(1)
 
                         networkState.markDirty()

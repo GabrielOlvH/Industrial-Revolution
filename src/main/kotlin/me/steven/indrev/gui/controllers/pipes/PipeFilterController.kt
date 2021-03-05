@@ -13,13 +13,15 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.sound.SoundEvents
-import net.minecraft.text.LiteralText
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -49,7 +51,7 @@ class PipeFilterController(
 
         val whitelistButton = object : WToggleButton() {
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(LiteralText(if (isOn) "Whitelist" else "Blacklist"))
+                tooltip?.add(TranslatableText("gui.indrev.whitelist.$isOn"))
             }
         }
         whitelistButton.onToggle = Consumer { value ->
@@ -64,7 +66,7 @@ class PipeFilterController(
 
         val matchDurabilityButton = object : WToggleButton() {
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(LiteralText(if (isOn) "Match item damage" else "Ignore item damage"))
+                tooltip?.add(TranslatableText("gui.indrev.matchDurability.$isOn"))
             }
         }
         matchDurabilityButton.onToggle = Consumer { value ->
@@ -79,7 +81,7 @@ class PipeFilterController(
 
         val matchTagButton = object : WToggleButton() {
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(LiteralText(if (isOn) "Match item NBT" else "Ignore item NBT"))
+                tooltip?.add(TranslatableText("gui.indrev.matchTag.$isOn"))
             }
         }
         matchTagButton.onToggle = Consumer { value ->
@@ -137,7 +139,8 @@ class PipeFilterController(
                 MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y + 1)
             else if (type == EndpointData.Type.RETRIEVER)
                 MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y + 1)
-
+            if (mouseX >= 0 && mouseY >= 0 && mouseX < getWidth() && mouseY < getHeight())
+                DrawableHelper.fill(matrices, x, y, x + 16, y + 16, -2130706433)
         }
 
         override fun onClick(x: Int, y: Int, button: Int) {
@@ -150,7 +153,9 @@ class PipeFilterController(
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            tooltip?.add(LiteralText("Current mode is $mode"))
+            tooltip?.add(
+                TranslatableText("item.indrev.servo.mode")
+                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().toLowerCase()}").formatted(Formatting.BLUE)))
         }
     }
 
