@@ -37,7 +37,8 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
             val posTag = CompoundTag()
             posTag.putLong("pos", pos)
             posTag.put("sides", sidesTag)
-            sidesTag.add(posTag)
+            modesTag.add(posTag)
+
         }
         tag.put("modes", modesTag)
         return super.toTag(tag)
