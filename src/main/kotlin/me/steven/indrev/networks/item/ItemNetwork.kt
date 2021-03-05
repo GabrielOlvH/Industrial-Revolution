@@ -42,7 +42,7 @@ class ItemNetwork(
                 val originalQueue = queue[pos] ?: return@forEach
 
                 directions.forEach inner@{ dir ->
-                    val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) as? ItemEndpointData? ?: return@inner
+                    val data = state.getEndpointData(pos.offset(dir), dir.opposite) as? ItemEndpointData? ?: return@inner
                     if (data.type == EndpointData.Type.INPUT) return@inner
                     val queue =
                         if (data.mode == EndpointData.Mode.NEAREST_FIRST)
@@ -64,7 +64,7 @@ class ItemNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val (_, targetPos, _, targetDir) = queue.poll()
-            val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite) as? ItemEndpointData
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
 
@@ -79,7 +79,7 @@ class ItemNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val (_, targetPos, _, targetDir) = queue.poll()
-            val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite) as? ItemEndpointData
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue
 

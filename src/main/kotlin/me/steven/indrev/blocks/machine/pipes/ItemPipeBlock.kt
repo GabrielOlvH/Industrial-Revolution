@@ -7,6 +7,7 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.BlockState
@@ -46,24 +47,26 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
     override fun onUse(
         state: BlockState,
         world: World,
-        pos: BlockPos?,
+        pos: BlockPos,
         player: PlayerEntity?,
         hand: Hand?,
-        hit: BlockHitResult?
+        hit: BlockHitResult
     ): ActionResult {
-        val dir = getSideFromHit(hit!!.pos, pos!!)
-        if (!world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && state[getProperty(dir)]) {
+        val dir = getSideFromHit(hit.pos, pos)
+        if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && state[getProperty(dir)]) {
             val state = Network.Type.ITEM.getNetworkState(world as ServerWorld) as ItemNetworkState
             if (state[pos]?.containers?.containsKey(pos.offset(dir)) == true) {
                 player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterController, pos, dir))
                 return ActionResult.SUCCESS
             }
         }
-        return ActionResult.PASS
+        return super.onUse(state, world, pos, player, hand, hit)
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedItemInv(world, pos, dir) != EmptyGroupedItemInv.INSTANCE  || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
+        groupedItemInv(world, pos, dir) != EmptyGroupedItemInv.INSTANCE
+                || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
+                || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 
     override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 

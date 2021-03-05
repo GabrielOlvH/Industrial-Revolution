@@ -1,8 +1,10 @@
 package me.steven.indrev.blocks.machine.pipes
 
 import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
@@ -79,11 +81,27 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
         }
     }
 
-    override fun onUse(state: BlockState, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
-        if (player?.isSneaking == true) return ActionResult.PASS
+    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult): ActionResult {
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
+        if (handStack.item == IRItemRegistry.WRENCH && world is ServerWorld) {
+            val dir = getSideFromHit(hit.pos, pos)
+            val (x, y, z) = hit.pos
+            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
+                if (dir != null) {
+                    val data = networkState.removeEndpointData(pos, dir)
+                    when (data?.type) {
+                        EndpointData.Type.OUTPUT ->
+                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
+                        EndpointData.Type.RETRIEVER ->
+                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
+                        else -> return@let
+                    }
+                    return ActionResult.CONSUME
+                }
+            }
+        }
         val item = handStack.item
-        if (!state[COVERED] && !handStack.isEmpty) {
+        if (!state[COVERED] && !handStack.isEmpty && !player.isSneaking) {
             val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity ?: return ActionResult.FAIL
             if (item is BlockItem && item.block !is BlockEntityProvider && item.block.defaultState.isFullCube(world, pos)) {
                 val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))

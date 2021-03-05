@@ -5,6 +5,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.utils.groupedFluidInv
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
@@ -35,7 +36,9 @@ class FluidPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(setting
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedFluidInv(world, pos, dir) != EmptyGroupedFluidInv.INSTANCE  || world.getBlockState(pos).block.let { it is FluidPipeBlock && it.tier == tier }
+        groupedFluidInv(world, pos, dir) != EmptyGroupedFluidInv.INSTANCE
+                || world.getBlockState(pos).block.let { it is FluidPipeBlock && it.tier == tier }
+                || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir)
 
     override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 

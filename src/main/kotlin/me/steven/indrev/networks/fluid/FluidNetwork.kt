@@ -47,7 +47,7 @@ class FluidNetwork(
                 val originalQueue = queue[pos] ?: return@forEach
 
                 directions.forEach inner@{ dir ->
-                    val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) ?: return@inner
+                    val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
 
                     val filter = lastTransferred?.exactFilter ?: FluidFilter { true }
                     val queue =
@@ -71,7 +71,7 @@ class FluidNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
-            val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite)
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
 
@@ -88,7 +88,7 @@ class FluidNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
-            val targetData = state.endpointData[targetPos.offset(targetDir).asLong()]?.get(targetDir.opposite)
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue
 
