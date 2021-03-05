@@ -7,6 +7,7 @@ import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -52,8 +53,11 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
     ): ActionResult {
         val dir = getSideFromHit(hit!!.pos, pos!!)
         if (!world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && state[getProperty(dir)]) {
-            player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterController, pos, dir))
-            return ActionResult.SUCCESS
+            val state = Network.Type.ITEM.getNetworkState(world as ServerWorld) as ItemNetworkState
+            if (state[pos]?.containers?.containsKey(pos.offset(dir)) == true) {
+                player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterController, pos, dir))
+                return ActionResult.SUCCESS
+            }
         }
         return ActionResult.PASS
     }
