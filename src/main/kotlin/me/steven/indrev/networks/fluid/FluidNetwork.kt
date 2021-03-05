@@ -54,7 +54,7 @@ class FluidNetwork(
                         if (data.mode == EndpointData.Mode.NEAREST_FIRST)
                             PriorityQueue(originalQueue)
                         else
-                            PriorityQueue(data.mode.getFluidComparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
+                            PriorityQueue(data.mode!!.getFluidComparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, queue, state, filter)

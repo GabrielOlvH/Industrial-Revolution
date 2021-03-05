@@ -25,6 +25,8 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         }
     }
 
+    open fun createEndpointData(type: EndpointData.Type, mode: EndpointData.Mode?): EndpointData = EndpointData(type, mode)
+
     override fun toTag(tag: CompoundTag): CompoundTag {
         val modesTag = ListTag()
         endpointData.forEach { (pos, modes) ->
@@ -54,7 +56,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
             sidesTag.forEach { t ->
                 t as CompoundTag
                 t.keys.forEach { id ->
-                    val data = EndpointData.fromTag(t.getCompound(id))
+                    val data = createEndpointData(EndpointData.Type.INPUT, EndpointData.Mode.NEAREST_FIRST).fromTag(t.getCompound(id))
                     val dir = Direction.values()[id.toInt()]
                     map[dir] = data
                 }

@@ -9,6 +9,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.*
+import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
@@ -36,6 +37,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundEvent
+import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
@@ -168,6 +170,21 @@ object IndustrialRevolution : ModInitializer {
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryController.SCREEN_ID.registerScreenHandler(::PulverizerFactoryController)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryController.SCREEN_ID.registerScreenHandler(::CompressorFactoryController)
     val INFUSER_FACTORY_HANDLER = SolidInfuserFactoryController.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryController)
+
+    val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterController.SCREEN_ID) { syncId, inv, buf ->
+        val dir = buf.readEnumConstant(Direction::class.java)
+        val pos = buf.readBlockPos()
+        val list = (0 until 9).map { buf.readItemStack() }
+        val whitelist = buf.readBoolean()
+        val matchDurability = buf.readBoolean()
+        val matchTag = buf.readBoolean()
+
+        val controller = PipeFilterController(syncId, inv, whitelist, matchDurability, matchTag)
+        controller.direction = dir
+        controller.blockPos = pos
+        list.forEachIndexed { index, itemStack -> controller.backingList[index] = itemStack }
+        controller
+    } as ExtendedScreenHandlerType<PipeFilterController>
 
     val DRILL_HANDLER = DrillController.SCREEN_ID.registerScreenHandler(::DrillController)
 

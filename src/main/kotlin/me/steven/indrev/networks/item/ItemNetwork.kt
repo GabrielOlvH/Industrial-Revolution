@@ -42,24 +42,24 @@ class ItemNetwork(
                 val originalQueue = queue[pos] ?: return@forEach
 
                 directions.forEach inner@{ dir ->
-                    val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) ?: return@inner
+                    val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) as? ItemEndpointData? ?: return@inner
                     
                     val queue =
                         if (data.mode == EndpointData.Mode.NEAREST_FIRST)
                             PriorityQueue(originalQueue)
                         else
-                            PriorityQueue(data.mode.getItemComparator(world, data.type) { true }).also { q -> q.addAll(originalQueue) }
+                            PriorityQueue(data.mode!!.getItemComparator(world, data.type) { data.matches(it) }).also { q -> q.addAll(originalQueue) }
 
                     if (data.type == EndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir, queue, state)
+                        tickOutput(pos, dir, queue, state, data)
                     else if (data.type == EndpointData.Type.RETRIEVER)
-                        tickRetriever(pos, dir, queue, state)
+                        tickRetriever(pos, dir, queue, state, data)
                 }
             }
         }
     }
 
-    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState) {
+    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: ItemEndpointData) {
         val extractable = itemExtractableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
@@ -69,12 +69,12 @@ class ItemNetwork(
             if (!input) continue
 
             val insertable = itemInsertableOf(world, targetPos, targetDir.opposite)
-            val moved = ItemInvUtil.move(extractable, insertable, remaining)
+            val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) }, remaining)
             remaining -= moved
         }
     }
 
-    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState) {
+    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: ItemEndpointData) {
         val insertable = itemInsertableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
@@ -84,7 +84,7 @@ class ItemNetwork(
             if (isRetriever) continue
 
             val extractable = itemExtractableOf(world, targetPos, targetDir.opposite)
-            val moved = ItemInvUtil.move(extractable, insertable, remaining)
+            val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) }, remaining)
             remaining -= moved
         }
     }

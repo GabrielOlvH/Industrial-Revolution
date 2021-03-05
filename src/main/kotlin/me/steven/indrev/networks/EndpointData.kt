@@ -10,20 +10,19 @@ import net.minecraft.world.World
 import java.util.*
 import kotlin.random.Random
 
-data class EndpointData(var type: Type, var mode: Mode) {
+open class EndpointData(var type: Type, var mode: Mode?) {
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    open fun toTag(tag: CompoundTag): CompoundTag {
         tag.putInt("t", type.ordinal)
-        tag.putInt("m", mode.ordinal)
+        if (mode != null)
+            tag.putInt("m", mode!!.ordinal)
         return tag
     }
 
-    companion object {
-        fun fromTag(tag: CompoundTag): EndpointData {
-            val type = Type.VALUES[tag.getInt("t")]
-            val mode = Mode.VALUES[tag.getInt("m")]
-            return EndpointData(type, mode)
-        }
+    open fun fromTag(tag: CompoundTag): EndpointData {
+        val type = Type.VALUES[tag.getInt("t")]
+        val mode = if (tag.contains("m")) Mode.VALUES[tag.getInt("m")] else null
+        return EndpointData(type, mode)
     }
 
     enum class Type {

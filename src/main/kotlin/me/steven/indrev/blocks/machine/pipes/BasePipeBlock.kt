@@ -26,6 +26,7 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
@@ -230,6 +231,21 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
                 SHAPE_CACHE.add(cableShapeCache)
             }
             return cableShapeCache.shape
+        }
+
+        fun getSideFromHit(hit: Vec3d, pos: BlockPos): Direction? {
+            val x = hit.x - pos.x
+            val y = hit.y - pos.y
+            val z = hit.z - pos.z
+            return when {
+                y > 0.6625 -> Direction.UP
+                y < 0.3375 -> Direction.DOWN
+                x > 0.6793 -> Direction.EAST
+                x < 0.3169 -> Direction.WEST
+                z < 0.3169 -> Direction.NORTH
+                z > 0.6625 -> Direction.SOUTH
+                else -> null
+            }
         }
     }
 }

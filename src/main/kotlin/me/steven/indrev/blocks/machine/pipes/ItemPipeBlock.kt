@@ -4,18 +4,26 @@ import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.gui.controllers.pipes.PipeFilterController
+import me.steven.indrev.gui.controllers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.groupedItemInv
+import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
+import net.minecraft.util.Hand
+import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 
 class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings, Network.Type.ITEM) {
     override fun appendTooltip(
@@ -32,6 +40,22 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
             TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
                 .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
         )
+    }
+
+    override fun onUse(
+        state: BlockState,
+        world: World,
+        pos: BlockPos?,
+        player: PlayerEntity?,
+        hand: Hand?,
+        hit: BlockHitResult?
+    ): ActionResult {
+        val dir = getSideFromHit(hit!!.pos, pos!!)
+        if (!world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && state[getProperty(dir)]) {
+            player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterController, pos, dir))
+            return ActionResult.SUCCESS
+        }
+        return ActionResult.PASS
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =

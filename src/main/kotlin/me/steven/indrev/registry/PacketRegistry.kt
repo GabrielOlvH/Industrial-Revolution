@@ -16,16 +16,24 @@ import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.ModularWorkbenchController
 import me.steven.indrev.gui.controllers.machines.RancherController
+import me.steven.indrev.gui.controllers.pipes.PipeFilterController
+import me.steven.indrev.gui.controllers.pipes.PipeFilterScreen
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.networks.EndpointData
+import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.item.ItemEndpointData
+import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
@@ -144,6 +152,44 @@ object PacketRegistry {
                 screenHandler.selected = recipe
             }
         }
+
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CLICK_FILTER_SLOT_PACKET) { server, player, _, buf, _ ->
+            val slotIndex = buf.readInt()
+            val dir = buf.readEnumConstant(Direction::class.java)
+            val pos = buf.readBlockPos()
+            server.execute {
+                val cursorStack = player.inventory.cursorStack
+                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) { state.createEndpointData(EndpointData.Type.INPUT, null) } as ItemEndpointData
+                if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
+                else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
+                state.markDirty()
+                val buf = PacketByteBufs.create()
+                buf.writeInt(slotIndex)
+                buf.writeItemStack(data.filter[slotIndex])
+                ServerPlayNetworking.send(player, PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
+            }
+        }
+
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CHANGE_FILTER_MODE_PACKET) { server, player, _, buf, _ ->
+            val dir = buf.readEnumConstant(Direction::class.java)
+            val pos = buf.readBlockPos()
+            val field = buf.readInt()
+            val value = buf.readBoolean()
+
+            server.execute {
+                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) { state.createEndpointData(EndpointData.Type.INPUT, null) } as ItemEndpointData
+                when (field) {
+                    0 -> data.whitelist = value
+                    1 -> data.matchDurability = value
+                    2 -> data.matchTag = value
+                    else -> return@execute
+                }
+                state.markDirty()
+
+            }
+        }
     }
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
@@ -243,8 +289,16 @@ object PacketRegistry {
             GlobalStateController.workingStateTracker[pos.asLong()] = workingState
             val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
             GlobalStateController.chunksToUpdate.computeIfAbsent(chunkPos, LongFunction { hashSetOf() }).add(pos)
-
         }
 
+         ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
+             val slotIndex = buf.readInt()
+             val stack = buf.readItemStack()
+             client.execute {
+                 val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
+                 val controller = screen.controller
+                 controller.backingList[slotIndex] = stack
+             }
+         }
     }
 }

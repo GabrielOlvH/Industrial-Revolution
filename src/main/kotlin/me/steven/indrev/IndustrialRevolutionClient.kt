@@ -19,6 +19,7 @@ import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
 import me.steven.indrev.gui.controllers.modular.ModularController
+import me.steven.indrev.gui.controllers.pipes.PipeFilterScreen
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
@@ -87,10 +88,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.INFUSER_FACTORY_HANDLER,
             IndustrialRevolution.CABINET_HANDLER,
             IndustrialRevolution.DRILL_HANDLER,
-            IndustrialRevolution.LASER_HANDLER
+            IndustrialRevolution.LASER_HANDLER,
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
+        ScreenRegistry.register(IndustrialRevolution.PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
 
         MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
         MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
