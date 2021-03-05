@@ -30,7 +30,7 @@ class ItemEndpointData(
         tag.put("filter", Inventories.toTag(CompoundTag(), filter))
         tag.putBoolean("w", whitelist)
         tag.putBoolean("d", matchDurability)
-        tag.putBoolean("t", matchTag)
+        tag.putBoolean("mt", matchTag)
         return super.toTag(tag)
     }
 
@@ -38,7 +38,7 @@ class ItemEndpointData(
         Inventories.fromTag(tag.getCompound("filter"), filter)
         whitelist = tag.getBoolean("w")
         matchDurability = tag.getBoolean("d")
-        matchTag = tag.getBoolean("t")
+        matchTag = tag.getBoolean("mt")
         val data = super.fromTag(tag)
         type = data.type
         mode = data.mode
