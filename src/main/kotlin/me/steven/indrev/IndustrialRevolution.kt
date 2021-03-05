@@ -13,6 +13,7 @@ import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.resreport.ResourceReportController
 import me.steven.indrev.gui.controllers.storage.CabinetController
 import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
 import me.steven.indrev.recipes.CopyNBTShapedRecipe
 import me.steven.indrev.recipes.RechargeableRecipe
@@ -178,8 +179,11 @@ object IndustrialRevolution : ModInitializer {
         val whitelist = buf.readBoolean()
         val matchDurability = buf.readBoolean()
         val matchTag = buf.readBoolean()
+        val hasServo = buf.readBoolean()
+        val type = if (hasServo) buf.readEnumConstant(EndpointData.Type::class.java) else null
+        val mode = if (hasServo) buf.readEnumConstant(EndpointData.Mode::class.java) else null
 
-        val controller = PipeFilterController(syncId, inv, whitelist, matchDurability, matchTag)
+        val controller = PipeFilterController(syncId, inv, whitelist, matchDurability, matchTag, mode, type)
         controller.direction = dir
         controller.blockPos = pos
         list.forEachIndexed { index, itemStack -> controller.backingList[index] = itemStack }

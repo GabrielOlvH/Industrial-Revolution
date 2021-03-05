@@ -43,7 +43,7 @@ class ItemNetwork(
 
                 directions.forEach inner@{ dir ->
                     val data = state.endpointData[pos.offset(dir).asLong()]?.get(dir.opposite) as? ItemEndpointData? ?: return@inner
-                    
+                    if (data.type == EndpointData.Type.INPUT) return@inner
                     val queue =
                         if (data.mode == EndpointData.Mode.NEAREST_FIRST)
                             PriorityQueue(originalQueue)

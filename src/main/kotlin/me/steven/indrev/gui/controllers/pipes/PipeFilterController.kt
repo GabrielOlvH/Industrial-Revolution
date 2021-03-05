@@ -7,14 +7,18 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WToggleButton
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.networks.EndpointData
+import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.sound.SoundEvents
 import net.minecraft.text.LiteralText
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
@@ -25,7 +29,9 @@ class PipeFilterController(
     syncId: Int, playerInventory: PlayerInventory,
     whitelist: Boolean = false,
     matchDurability: Boolean = false,
-    matchTag: Boolean = false
+    matchTag: Boolean = false,
+    var mode: EndpointData.Mode? = null,
+    val type: EndpointData.Type? = null
 ) : SyncedGuiDescription(IndustrialRevolution.PIPE_FILTER_HANDLER, syncId, playerInventory) {
 
     val backingList = DefaultedList.ofSize(9, ItemStack.EMPTY)
@@ -86,6 +92,12 @@ class PipeFilterController(
         matchTagButton.toggle = matchTag
         root.add(matchTagButton, 6, 2)
 
+        if (mode != null && type != null) {
+            val modeWidget = WServoMode()
+            root.add(modeWidget, 8, 0)
+            modeWidget.setLocation(8 * 18, -3)
+        }
+
         root.add(createPlayerInventoryPanel(), 0, 3)
 
         root.validate(this)
@@ -118,10 +130,35 @@ class PipeFilterController(
         }
     }
 
+    inner class WServoMode : WWidget() {
+
+        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            if (type == EndpointData.Type.OUTPUT)
+                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y + 1)
+            else if (type == EndpointData.Type.RETRIEVER)
+                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y + 1)
+
+        }
+
+        override fun onClick(x: Int, y: Int, button: Int) {
+            mode = mode?.next() ?: return
+            MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f))
+            val buf = PacketByteBufs.create()
+            writeIdentifyingData(buf)
+            buf.writeEnumConstant(mode)
+            ClientPlayNetworking.send(CHANGE_SERVO_MODE_PACKET, buf)
+        }
+
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            tooltip?.add(LiteralText("Current mode is $mode"))
+        }
+    }
+
     companion object {
         val CLICK_FILTER_SLOT_PACKET = identifier("click_filter_slot")
         val UPDATE_FILTER_SLOT_S2C_PACKET = identifier("update_filter_s2c")
         val CHANGE_FILTER_MODE_PACKET = identifier("change_whitelist_mode")
+        val CHANGE_SERVO_MODE_PACKET = identifier("change_servo_mode")
 
         val SCREEN_ID = identifier("pipe_filter_screen")
     }

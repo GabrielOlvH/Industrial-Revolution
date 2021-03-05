@@ -187,7 +187,19 @@ object PacketRegistry {
                     else -> return@execute
                 }
                 state.markDirty()
+            }
+        }
 
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CHANGE_SERVO_MODE_PACKET) { server, player, _, buf, _ ->
+            val dir = buf.readEnumConstant(Direction::class.java)
+            val pos = buf.readBlockPos()
+            val mode = buf.readEnumConstant(EndpointData.Mode::class.java)
+
+            server.execute {
+                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val data = state.endpointData[pos.asLong()][dir] as? ItemEndpointData ?: return@execute
+                data.mode = mode
+                state.markDirty()
             }
         }
     }

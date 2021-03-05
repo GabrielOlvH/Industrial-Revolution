@@ -1,5 +1,7 @@
 package me.steven.indrev.gui.controllers.pipes
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.item.ItemEndpointData
 import me.steven.indrev.networks.item.ItemNetworkState
@@ -13,6 +15,7 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import java.util.function.LongFunction
 
 class PipeFilterScreenFactory(
     private val handlerFactory: (Int, PlayerInventory) -> ScreenHandler,
@@ -25,13 +28,18 @@ class PipeFilterScreenFactory(
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {
         (Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState)?.let { state ->
-            val data = state.endpointData[pos.asLong()]?.get(dir) as ItemEndpointData
+            val data = state.endpointData.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() }).computeIfAbsent(dir) { ItemEndpointData(EndpointData.Type.INPUT, null, false, false, false) } as ItemEndpointData
             buf.writeEnumConstant(dir)
             buf.writeBlockPos(pos)
             data.filter.forEach { buf.writeItemStack(it) }
             buf.writeBoolean(data.whitelist)
             buf.writeBoolean(data.matchDurability)
             buf.writeBoolean(data.matchTag)
+            buf.writeBoolean(data.type != EndpointData.Type.INPUT)
+            if (data.type != EndpointData.Type.INPUT) {
+                buf.writeEnumConstant(data.type)
+                buf.writeEnumConstant(data.mode)
+            }
         }
     }
 
