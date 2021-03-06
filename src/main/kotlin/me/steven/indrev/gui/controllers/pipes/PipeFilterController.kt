@@ -116,6 +116,8 @@ class PipeFilterController(
             ScreenDrawing.drawBeveledPanel(x, y, height, width, -1207959552, 1275068416, -1191182337)
             MinecraftClient.getInstance().itemRenderer.renderInGui(backingList[index], x + 1, y + 1)
             MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
+            if (mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height)
+                DrawableHelper.fill(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433)
         }
 
         override fun onClick(x: Int, y: Int, button: Int) {
@@ -139,8 +141,6 @@ class PipeFilterController(
                 MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y + 1)
             else if (type == EndpointData.Type.RETRIEVER)
                 MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y + 1)
-            if (mouseX >= 0 && mouseY >= 0 && mouseX < getWidth() && mouseY < getHeight())
-                DrawableHelper.fill(matrices, x, y, x + 16, y + 16, -2130706433)
         }
 
         override fun onClick(x: Int, y: Int, button: Int) {
