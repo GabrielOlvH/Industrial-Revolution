@@ -52,7 +52,7 @@ class ResourceReportController(
             .forEachIndexed { index, entry ->
                 val block = (entry.element as Block)
                 val weight = entry.weight
-                val text = LiteralText("${((weight / sum.toDouble()) * 100).toInt()}% ").formatted(Formatting.DARK_GRAY)
+                val text = LiteralText("${String.format("%.1f", (weight / sum.toDouble()) * 100)}% ").formatted(Formatting.DARK_GRAY)
                     .append(
                         TranslatableText(block.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(block.defaultMaterialColor.color)))
                     )
