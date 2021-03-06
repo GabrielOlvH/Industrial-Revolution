@@ -46,15 +46,19 @@ class FluidNetwork(
             containers.forEach { (pos, directions) ->
                 val originalQueue = queue[pos] ?: return@forEach
 
+                val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
+
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
 
                     val filter = lastTransferred?.exactFilter ?: FluidFilter { true }
                     val queue =
-                        if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                            PriorityQueue(originalQueue)
-                        else
-                            PriorityQueue(data.mode!!.getFluidComparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
+                        PriorityQueue(sortedQueues.computeIfAbsent(data.mode!!) {
+                            if (data.mode == EndpointData.Mode.NEAREST_FIRST)
+                                PriorityQueue(originalQueue)
+                            else
+                                PriorityQueue(data.mode!!.getFluidComparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
+                        })
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, queue, state, filter)

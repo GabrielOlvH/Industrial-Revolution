@@ -41,14 +41,19 @@ class ItemNetwork(
             containers.forEach { (pos, directions) ->
                 val originalQueue = queue[pos] ?: return@forEach
 
+                val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
+
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) as? ItemEndpointData? ?: return@inner
                     if (data.type == EndpointData.Type.INPUT) return@inner
                     val queue =
-                        if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                            PriorityQueue(originalQueue)
-                        else
-                            PriorityQueue(data.mode!!.getItemComparator(world, data.type) { data.matches(it) }).also { q -> q.addAll(originalQueue) }
+                        PriorityQueue(sortedQueues.computeIfAbsent(data.mode!!) {
+                            if (data.mode == EndpointData.Mode.NEAREST_FIRST)
+                                PriorityQueue(originalQueue)
+                            else
+                                PriorityQueue(data.mode!!.getItemComparator(world, data.type) { data.matches(it) }).also { q -> q.addAll(originalQueue) }
+                        })
+
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, queue, state, data)
