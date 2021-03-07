@@ -44,4 +44,10 @@ class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY)
         fluidComponent.toTag(tag)
         return tag
     }
+
+    override fun markDirty() {
+        if (world != null) {
+            world!!.markDirty(pos, this)
+        }
+    }
 }
