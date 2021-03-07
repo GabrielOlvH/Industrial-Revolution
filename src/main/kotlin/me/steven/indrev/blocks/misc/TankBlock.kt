@@ -33,6 +33,7 @@ import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import net.minecraft.world.chunk.Chunk
 import java.util.stream.Stream
 
 class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, AttributeProvider {
@@ -184,19 +185,19 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
             || to.attribute == FluidAttributes.EXTRACTABLE
             || to.attribute == FluidAttributes.INSERTABLE
         ) {
-            findAllTanks(world, world.getBlockState(pos), pos, mutableSetOf(), to)
+            findAllTanks(world.getChunk(pos), world.getBlockState(pos), pos, mutableSetOf(), to)
         }
     }
 
-    private fun findAllTanks(world: World, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: AttributeList<*>) {
+    private fun findAllTanks(chunk: Chunk, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: AttributeList<*>) {
         if (blockState.isOf(this)) {
-            to.offer((world.getBlockEntity(pos) as TankBlockEntity).fluidComponent)
+            to.offer((chunk.getBlockEntity(pos) as TankBlockEntity).fluidComponent)
             if (!scanned.add(pos)) return
 
             if (blockState[UP])
-                findAllTanks(world, world.getBlockState(pos.up()), pos.up(), scanned, to)
+                findAllTanks(chunk, chunk.getBlockState(pos.up()), pos.up(), scanned, to)
             if (blockState[DOWN])
-                findAllTanks(world, world.getBlockState(pos.down()), pos.down(), scanned, to)
+                findAllTanks(chunk, chunk.getBlockState(pos.down()), pos.down(), scanned, to)
         }
     }
 
