@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import kotlinx.coroutines.sync.Mutex
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -10,7 +11,6 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.contains
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -19,9 +19,13 @@ import net.minecraft.fluid.FlowableFluid
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.server.MinecraftServer
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
+import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.function.Supplier
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -38,56 +42,92 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     var isDescending = false
     var lastYPos = -1
 
+    var currentTarget: BlockPos = pos
+
+    val mutex = Mutex(false)
+    val executor = Executors.newSingleThreadExecutor()
+    var future: Future<*>? = null
+    var count: Int = 0
+    val scanned = mutableSetOf<BlockPos>()
+
+    val directions = mutableListOf(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
+
     override fun machineTick() {
+        val world = world ?: return
         val fluidComponent = fluidComponent ?: return
         val currentLevel = floor(movingTicks).toInt()
         val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        val currentFluid = world?.getFluidState(lookLevel)
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
-            if (currentFluid?.isEmpty == false && canUse(config.energyCost)) {
-                val range = getWorkingArea(lookLevel)
-                val directions = arrayOf(Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST)
-                val mutablePos = pos.mutableCopy()
-                val fluid = getStill(currentFluid.fluid)
-                val bfs = mutableListOf(lookLevel)
-                var i = 0
-                while (i < bfs.size) {
-                    val current = bfs[i++]
-                    for (dir in directions) {
-                        mutablePos.set(current, dir)
-                        if (mutablePos !in bfs && mutablePos in range && getStill(world!!.getFluidState(mutablePos).fluid) === fluid) {
-                            bfs.add(mutablePos.toImmutable())
-                        }
-                    }
-                }
+        val currentFluid = world.getFluidState(lookLevel)
 
-                for (pos in bfs) {
-                    val blockState = world!!.getBlockState(pos)
-                    val block = blockState?.block
-                    if (block is FluidDrainable && block is FluidBlock) {
-                        val drained = block.tryDrainFluid(world, pos, blockState)
-                        if (drained != Fluids.EMPTY) {
-                            val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
-                            fluidComponent.insertable.insert(toInsert)
-                            use(config.energyCost)
-                            return
-                        }
+        val fluidState = world.getFluidState(currentTarget)
+
+        if ((fluidState.isEmpty || !fluidState.isStill) && !currentFluid.isEmpty) {
+            val server = (world as ServerWorld).server
+
+            if (mutex.isLocked) {
+                count = 0
+                mutex.unlock()
+            }
+
+            if (future?.isCancelled != false) {
+                scanned.clear()
+                future = executor.submit {
+                    val start = pos.offset(Direction.DOWN, floor(movingTicks).toInt())
+                    val startFluid = world.getFluidState(start)
+                    scan(start, getStill(startFluid.fluid), server, scanned)
+                }
+            } else if (future?.isDone == true) {
+                currentTarget = lookLevel
+            }
+        }
+
+        val fluidToPump = world.getFluidState(currentTarget)
+
+        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
+            if (!fluidToPump.isEmpty && canUse(config.energyCost)) {
+                val blockState = world.getBlockState(currentTarget)
+                val block = blockState?.block
+                if (block is FluidDrainable && block is FluidBlock) {
+                    val drained = block.tryDrainFluid(world, currentTarget, blockState)
+                    if (drained != Fluids.EMPTY) {
+                        val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
+                        fluidComponent.insert(toInsert)
+                        use(config.energyCost)
                     }
                 }
             }
-            lastYPos = lookLevel.y
-            isDescending = true
-        }
-        else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
+        } else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
             isDescending = false
             movingTicks = movingTicks.roundToInt().toDouble()
-        } else if (use(2.0) && (lookLevel == pos || (world?.isAir(lookLevel) == true && currentFluid?.isEmpty != false))) {
+        } else if (use(2.0) && (lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false))) {
             movingTicks += 0.01
             sync()
         }
     }
 
     private fun getStill(fluid: Fluid): Fluid = if (fluid is FlowableFluid) fluid.still else fluid
+
+    private fun scan(pos: BlockPos, fluid: Fluid, server: MinecraftServer, scanned: MutableSet<BlockPos>) {
+        val world = world ?: return
+        val centerBlock = this.pos.offset(Direction.DOWN, floor(movingTicks).toInt())
+
+        count++
+        if (count > 10) {
+            mutex.tryLock()
+        }
+        directions.associate { dir ->
+            val offset = pos.offset(dir)
+            val fluidState = server.submit(Supplier { world.getFluidState(offset) }).get()
+            offset to fluidState
+        }.entries.sortedByDescending { if (it.value.isStill) 20 else it.value.level }.forEach { (offset, fluidState) ->
+            if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
+                scan(offset, fluid, server, scanned)
+            else if (offset != centerBlock && fluidState.fluid == fluid) {
+                currentTarget = offset
+                future?.cancel(true)
+            }
+        }
+    }
 
     override fun applyDefault(
         state: BlockState,
@@ -100,8 +140,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     }
 
     override fun isFixed(type: ConfigurationType): Boolean = true
-
-    private fun getWorkingArea(center: BlockPos): Box = Box(center).expand(7.0, 0.0, 7.0)
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("MovingTicks", movingTicks)
