@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.*
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -24,8 +24,8 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import java.util.function.Supplier
+import kotlin.coroutines.resume
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -44,9 +44,9 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     var currentTarget: BlockPos = pos
 
-    val mutex = Mutex(false)
-    val executor = Executors.newSingleThreadExecutor()
-    var future: Future<*>? = null
+    //val mutex = Mutex(false)
+    var future: Job? = null
+    var cont: CancellableContinuation<Unit>? = null
     var count: Int = 0
     val scanned = mutableSetOf<BlockPos>()
 
@@ -64,19 +64,20 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         if ((fluidState.isEmpty || !fluidState.isStill) && !currentFluid.isEmpty) {
             val server = (world as ServerWorld).server
 
-            if (mutex.isLocked) {
+            //if (mutex.isLocked) {
+            cont?.resume(Unit)
+            cont = null
                 count = 0
-                mutex.unlock()
-            }
+            //}
 
             if (future?.isCancelled != false) {
                 scanned.clear()
-                future = executor.submit {
+                future = GlobalScope.launch(FIXED) {
                     val start = pos.offset(Direction.DOWN, floor(movingTicks).toInt())
                     val startFluid = world.getFluidState(start)
                     scan(start, getStill(startFluid.fluid), server, scanned)
                 }
-            } else if (future?.isDone == true) {
+            } else if (future?.isCompleted == true) {
                 currentTarget = lookLevel
             }
         }
@@ -107,15 +108,17 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     private fun getStill(fluid: Fluid): Fluid = if (fluid is FlowableFluid) fluid.still else fluid
 
-    private fun scan(pos: BlockPos, fluid: Fluid, server: MinecraftServer, scanned: MutableSet<BlockPos>) {
+    private suspend fun scan(pos: BlockPos, fluid: Fluid, server: MinecraftServer, scanned: MutableSet<BlockPos>) {
         val world = world ?: return
         val centerBlock = this.pos.offset(Direction.DOWN, floor(movingTicks).toInt())
 
         count++
         if (count > 10) {
-            mutex.tryLock()
+             suspendCancellableCoroutine { cont: CancellableContinuation<Unit> ->
+                 this.cont = cont
+            }
         }
-        directions.associate { dir ->
+        directions.shuffled(world.random).associate { dir ->
             val offset = pos.offset(dir)
             val fluidState = server.submit(Supplier { world.getFluidState(offset) }).get()
             offset to fluidState
@@ -124,7 +127,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                 scan(offset, fluid, server, scanned)
             else if (offset != centerBlock && fluidState.fluid == fluid) {
                 currentTarget = offset
-                future?.cancel(true)
+                future?.cancel()
             }
         }
     }
@@ -159,5 +162,9 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("MovingTicks", movingTicks)
         return super.toClientTag(tag)
+    }
+
+    companion object {
+        val FIXED = Executors.newSingleThreadExecutor { t -> Thread(t).also { it.name = "Indrev Pump" } }.asCoroutineDispatcher()
     }
 }
