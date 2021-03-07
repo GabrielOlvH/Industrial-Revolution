@@ -1,0 +1,47 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:sulfur_nether",
+      "optional": true,
+      "output": [
+        {
+          "id": "minecraft:netherrack",
+          "weight": 40
+        },
+        {
+          "id": "minecraft:nether_gold_ore",
+          "weight": 20
+        },
+        {
+          "id": "minecraft:glowstone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:soul_sand",
+          "weight": 6
+        },
+        {
+          "id": "indrev:sulfur_crystal",
+          "weight": 6
+        },
+        {
+          "id": "minecraft:ancient_debris",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        8000,
+        18000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "NETHER"
+          ],
+          "weight": 10
+        }
+      ]
+    }
+  ]
+}

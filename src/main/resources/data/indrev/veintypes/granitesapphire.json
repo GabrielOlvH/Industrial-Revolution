@@ -1,0 +1,57 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:granitesapphire",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:sapphire_ore",
+          "weight": 64
+        },
+        {
+          "id": "techreborn:ruby_ore",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:andesite",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:granite",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:diorite",
+          "weight": 8
+        },
+		{
+          "id": "minecraft:emerald_ore",
+          "weight": 4
+        }
+      ],
+      "sizeRange": [
+        1000,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "EXTREME_HILLS",
+            "MESA",
+            "DESERT",
+            "PLAINS",
+            "TAIGA",
+			"NETHER",
+            "ICY"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

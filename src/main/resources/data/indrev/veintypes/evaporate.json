@@ -2,15 +2,19 @@
   "containsMultiple": true,
   "veins": [
     {
-      "id": "indrev:iridium",
+      "id": "indrev:evaporate",
       "optional": true,
       "output": [
         {
-          "id": "techreborn:iridium_ore",
-          "weight": 2
+          "id": "modern_industrialization:salt_ore",
+          "weight": 80
         },
         {
           "id": "minecraft:stone",
+          "weight": 30
+        },
+        {
+          "id": "minecraft:basalt",
           "weight": 15
         },
         {
@@ -33,15 +37,9 @@
       "biomes": [
         {
           "category": [
-            "EXTREME_HILLS",
-            "MESA",
-            "DESERT",
-            "PLAINS",
-            "TAIGA",
-			"OCEAN",
-            "ICY"
+            "OCEAN"
           ],
-          "weight": 1
+          "weight": 2
         }
       ]
     }

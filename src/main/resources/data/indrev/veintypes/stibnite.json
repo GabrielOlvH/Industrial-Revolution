@@ -2,12 +2,12 @@
   "containsMultiple": true,
   "veins": [
     {
-      "id": "indrev:iridium",
+      "id": "indrev:stibnite",
       "optional": true,
       "output": [
         {
-          "id": "techreborn:iridium_ore",
-          "weight": 2
+          "id": "modern_industrialization:antimony_ore",
+          "weight": 40
         },
         {
           "id": "minecraft:stone",
@@ -33,15 +33,10 @@
       "biomes": [
         {
           "category": [
-            "EXTREME_HILLS",
-            "MESA",
             "DESERT",
-            "PLAINS",
-            "TAIGA",
-			"OCEAN",
-            "ICY"
+            "PLAINS"
           ],
-          "weight": 1
+          "weight": 2
         }
       ]
     }

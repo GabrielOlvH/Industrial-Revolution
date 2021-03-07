@@ -1,0 +1,40 @@
+                                                                                                                                                                         {
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:denseice",
+      "optional": true,
+      "output": [
+        {
+          "id": "minecraft:ice",
+          "weight": 32
+        },
+        {
+          "id": "minecraft:snow_block",
+          "weight": 64
+        },
+		{
+          "id": "minecraft:blue_ice",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:packed_ice",
+          "weight": 10
+        }
+      ],
+      "sizeRange": [
+        9000,
+        12000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "ICY"
+          ],
+          "weight": 3
+        }
+      ]
+    }
+
+  ]
+}

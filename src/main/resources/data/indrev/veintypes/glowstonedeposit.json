@@ -1,0 +1,40 @@
+                                                                                                                                                                         {
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:glowstonedeposit",
+      "optional": true,
+      "output": [
+        {
+          "id": "minecraft:glowstone",
+          "weight": 32
+        },
+        {
+          "id": "minecraft:nether_gold_ore",
+          "weight": 32
+        },
+		{
+          "id": "minecraft:netherrack",
+          "weight": 32
+        },
+        {
+          "id": "minecraft:ancient_debris",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        9000,
+        12000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "NETHER"
+          ],
+          "weight": 5
+        }
+      ]
+    }
+
+  ]
+}

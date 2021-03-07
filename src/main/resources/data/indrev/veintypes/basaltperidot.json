@@ -1,0 +1,35 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:basalt",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:peridot_ore",
+          "weight": 4
+        },
+        {
+          "id": "techreborn:tungsten_ore",
+          "weight": 1
+        },
+		{
+          "id": "minecraft:endstone",
+          "weight": 8
+        }
+      ],
+      "sizeRange": [
+        1000,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+			"END"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

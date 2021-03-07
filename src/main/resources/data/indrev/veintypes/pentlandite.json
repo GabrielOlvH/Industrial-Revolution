@@ -2,12 +2,16 @@
   "containsMultiple": true,
   "veins": [
     {
-      "id": "indrev:iridium",
+      "id": "indrev:stibnite",
       "optional": true,
       "output": [
         {
-          "id": "techreborn:iridium_ore",
-          "weight": 2
+          "id": "modern_industrialization:nickel_ore",
+          "weight": 40
+        },
+		{
+          "id": "minecraft:iron_ore",
+          "weight": 40
         },
         {
           "id": "minecraft:stone",
@@ -35,13 +39,9 @@
           "category": [
             "EXTREME_HILLS",
             "MESA",
-            "DESERT",
-            "PLAINS",
-            "TAIGA",
-			"OCEAN",
-            "ICY"
+            "TAIGA"
           ],
-          "weight": 1
+          "weight": 3
         }
       ]
     }
