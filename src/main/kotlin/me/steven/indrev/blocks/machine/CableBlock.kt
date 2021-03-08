@@ -8,6 +8,7 @@ import me.steven.indrev.energy.EnergyNetwork
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
+import me.steven.indrev.utils.get
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -147,7 +148,7 @@ class CableBlock(settings: Settings, val tier: Tier) : Block(settings), BlockEnt
     }
 
     private fun isConnectable(blockEntity: BlockEntity?, dir: Direction) =
-        blockEntity != null && EnergyApi.SIDED[blockEntity.world, blockEntity.pos, dir] != null || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
+        blockEntity != null && EnergyApi.SIDED[blockEntity.world!!, blockEntity.pos, dir] != null || (blockEntity is CableBlockEntity && tier == blockEntity.tier)
 
     override fun onPlaced(
         world: World,
