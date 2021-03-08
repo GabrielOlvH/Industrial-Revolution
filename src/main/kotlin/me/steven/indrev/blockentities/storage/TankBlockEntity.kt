@@ -22,8 +22,11 @@ class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY)
         }
         if (!cachedState[TankBlock.DOWN]) return
         val down = world?.getBlockEntity(pos.down()) as? TankBlockEntity ?: return
-        FluidVolumeUtil.move(fluidComponent, down.fluidComponent)
-        down.isMarkedForUpdate = true
+        val volume = FluidVolumeUtil.move(fluidComponent, down.fluidComponent)
+        if (!volume.amount().isZero) {
+            down.isMarkedForUpdate = true
+            isMarkedForUpdate = true
+        }
     }
 
     override fun toTag(tag: CompoundTag): CompoundTag {

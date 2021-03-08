@@ -190,9 +190,8 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     }
 
     private fun findAllTanks(chunk: Chunk, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: AttributeList<*>) {
-        if (blockState.isOf(this)) {
+        if (blockState.isOf(this) && scanned.add(pos)) {
             to.offer((chunk.getBlockEntity(pos) as TankBlockEntity).fluidComponent)
-            if (!scanned.add(pos)) return
 
             if (blockState[UP])
                 findAllTanks(chunk, chunk.getBlockState(pos.up()), pos.up(), scanned, to)
