@@ -44,7 +44,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     var currentTarget: BlockPos = pos
 
-    //val mutex = Mutex(false)
     var future: Job? = null
     var cont: CancellableContinuation<Unit>? = null
     var count: Int = 0
@@ -64,11 +63,9 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         if ((fluidState.isEmpty || !fluidState.isStill) && !currentFluid.isEmpty) {
             val server = (world as ServerWorld).server
 
-            //if (mutex.isLocked) {
             cont?.resume(Unit)
             cont = null
-                count = 0
-            //}
+            count = 0
 
             if (future?.isCancelled != false) {
                 scanned.clear()
