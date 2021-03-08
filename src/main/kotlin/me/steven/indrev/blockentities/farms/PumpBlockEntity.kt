@@ -44,8 +44,8 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     var currentTarget: BlockPos = pos
 
-    var future: Job? = null
-    var cont: CancellableContinuation<Unit>? = null
+    var job: Job? = null
+    var continuation: CancellableContinuation<Unit>? = null
     var count: Int = 0
     val scanned = mutableSetOf<BlockPos>()
 
@@ -63,19 +63,21 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         if ((fluidState.isEmpty || !fluidState.isStill) && !currentFluid.isEmpty) {
             val server = (world as ServerWorld).server
 
-            cont?.resume(Unit)
-            cont = null
-            count = 0
-
-            if (future?.isCancelled != false) {
+            if (job?.isCancelled != false) {
                 scanned.clear()
-                future = GlobalScope.launch(FIXED) {
+                job = GlobalScope.launch(DISPATCHER) {
                     val start = pos.offset(Direction.DOWN, floor(movingTicks).toInt())
                     val startFluid = world.getFluidState(start)
                     scan(start, getStill(startFluid.fluid), server, scanned)
                 }
-            } else if (future?.isCompleted == true) {
+                return
+            } else if (job?.isCompleted == true) {
                 currentTarget = lookLevel
+                job = null
+            } else {
+                count = 0
+                continuation?.resume(Unit)
+                continuation = null
             }
         }
 
@@ -111,21 +113,20 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
         count++
         if (count > 10) {
-             suspendCancellableCoroutine { cont: CancellableContinuation<Unit> ->
-                 this.cont = cont
+            suspendCancellableCoroutine { cont: CancellableContinuation<Unit> ->
+                this.continuation = cont
             }
         }
         directions.shuffled(world.random).associate { dir ->
             val offset = pos.offset(dir)
-            val fluidState = server.submit(Supplier { world.getFluidState(offset) }).get()
+            val fluidState = server.submit(Supplier { world.getFluidState(offset)}).get()
             offset to fluidState
         }.entries.sortedByDescending { if (it.value.isStill) 20 else it.value.level }.forEach { (offset, fluidState) ->
-            if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
-                scan(offset, fluid, server, scanned)
-            else if (offset != centerBlock && fluidState.fluid == fluid) {
+            if (offset != centerBlock && fluidState.fluid == fluid) {
                 currentTarget = offset
-                future?.cancel()
-            }
+                job?.cancel()
+            } else if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
+                scan(offset, fluid, server, scanned)
         }
     }
 
@@ -162,6 +163,6 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
     }
 
     companion object {
-        val FIXED = Executors.newSingleThreadExecutor { t -> Thread(t).also { it.name = "Indrev Pump" } }.asCoroutineDispatcher()
+        val DISPATCHER = Executors.newSingleThreadExecutor { t -> Thread(t).also { it.name = "Indrev Pump" } }.asCoroutineDispatcher()
     }
 }
