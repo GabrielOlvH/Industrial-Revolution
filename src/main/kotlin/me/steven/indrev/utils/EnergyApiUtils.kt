@@ -7,6 +7,7 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.item.ItemKey
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -39,3 +40,7 @@ fun EnergyIo.use(amount: Double): Boolean {
     }
     return false
 }
+
+operator fun BlockApiLookup<EnergyIo, Direction>.get(world: World, pos: BlockPos, direction: Direction) = this.find(world, pos, direction)
+
+operator fun BlockApiCache<EnergyIo, Direction>.get(direction: Direction) = this.find(direction)
