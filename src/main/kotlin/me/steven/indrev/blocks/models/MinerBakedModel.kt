@@ -14,7 +14,6 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Function
@@ -58,6 +57,6 @@ class MinerBakedModel(id: String) : MachineBakedModel(id) {
         val blockEntity = blockView.getBlockEntity(pos) as? MinerBlockEntity ?: return
 
         if (blockEntity.workingState)
-            ctx.emitter.draw(direction, Direction.NORTH, screenSprite!!)
+            ctx.emitter.draw(direction, direction, screenSprite!!)
     }
 }
