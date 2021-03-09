@@ -122,15 +122,17 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         override fun createBlockEntity(world: BlockView?): BlockEntity = DrillBlockEntity()
 
         override fun onStateReplaced(
-            state: BlockState?,
+            state: BlockState,
             world: World?,
             pos: BlockPos?,
-            newState: BlockState?,
+            newState: BlockState,
             moved: Boolean
         ) {
 
-            (world?.getBlockEntity(pos) as? DrillBlockEntity)?.let {
-                ItemScatterer.spawn(world, pos, it)
+            if (!newState.isOf(this)) {
+                (world?.getBlockEntity(pos) as? DrillBlockEntity)?.let {
+                    ItemScatterer.spawn(world, pos, it)
+                }
             }
             super.onStateReplaced(state, world, pos, newState, moved)
         }
