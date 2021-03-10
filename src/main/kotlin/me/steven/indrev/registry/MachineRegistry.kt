@@ -2,7 +2,6 @@ package me.steven.indrev.registry
 
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import me.steven.indrev.IndustrialRevolution.CONFIG
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.cables.CableBlockEntity
@@ -22,6 +21,7 @@ import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.machines.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
@@ -172,7 +172,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val COAL_GENERATOR_REGISTRY = MachineRegistry("coal_generator", false, Tier.MK1)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.generators.coalGenerator, ::CoalGeneratorController
+                    this, SETTINGS(), tier, IRConfig.generators.coalGenerator, ::CoalGeneratorController
                 )
             }
             .blockEntityProvider { { CoalGeneratorBlockEntity() } }
@@ -186,8 +186,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(), 
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.generators.solarGeneratorMk1
-                        else -> CONFIG.generators.solarGeneratorMk3
+                        Tier.MK1 -> IRConfig.generators.solarGeneratorMk1
+                        else -> IRConfig.generators.solarGeneratorMk3
                     }, ::SolarGeneratorController
                 )
             }
@@ -198,7 +198,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry("biomass_generator", false, Tier.MK3)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.generators.biomassGenerator, ::BiomassGeneratorController
+                    this, SETTINGS(), tier, IRConfig.generators.biomassGenerator, ::BiomassGeneratorController
                 )
             }
             .blockEntityProvider { tier -> { BiomassGeneratorBlockEntity(tier) } }
@@ -208,7 +208,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry("heat_generator", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS().nonOpaque(), tier, CONFIG.generators.heatGenerator, ::HeatGeneratorController
+                    this, SETTINGS().nonOpaque(), tier, IRConfig.generators.heatGenerator, ::HeatGeneratorController
                 )
             }
             .blockEntityProvider { tier -> { HeatGeneratorBlockEntity(tier) } }
@@ -232,10 +232,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(), tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.electricFurnaceMk1
-                        Tier.MK2 -> CONFIG.machines.electricFurnaceMk2
-                        Tier.MK3 -> CONFIG.machines.electricFurnaceMk3
-                        else -> CONFIG.machines.electricFurnaceMk4
+                        Tier.MK1 -> IRConfig.machines.electricFurnaceMk1
+                        Tier.MK2 -> IRConfig.machines.electricFurnaceMk2
+                        Tier.MK3 -> IRConfig.machines.electricFurnaceMk3
+                        else -> IRConfig.machines.electricFurnaceMk4
                     }, ::ElectricFurnaceController
                 )
             }
@@ -257,10 +257,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.pulverizerMk1
-                        Tier.MK2 -> CONFIG.machines.pulverizerMk2
-                        Tier.MK3 -> CONFIG.machines.pulverizerMk3
-                        else -> CONFIG.machines.pulverizerMk4
+                        Tier.MK1 -> IRConfig.machines.pulverizerMk1
+                        Tier.MK2 -> IRConfig.machines.pulverizerMk2
+                        Tier.MK3 -> IRConfig.machines.pulverizerMk3
+                        else -> IRConfig.machines.pulverizerMk4
                     }, ::PulverizerController
                 )
             }
@@ -275,10 +275,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.compressorMk1
-                        Tier.MK2 -> CONFIG.machines.compressorMk2
-                        Tier.MK3 -> CONFIG.machines.compressorMk3
-                        else -> CONFIG.machines.compressorMk4
+                        Tier.MK1 -> IRConfig.machines.compressorMk1
+                        Tier.MK2 -> IRConfig.machines.compressorMk2
+                        Tier.MK3 -> IRConfig.machines.compressorMk3
+                        else -> IRConfig.machines.compressorMk4
                     }, ::CompressorController
                 )
             }
@@ -293,10 +293,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.infuserMk1
-                        Tier.MK2 -> CONFIG.machines.infuserMk2
-                        Tier.MK3 -> CONFIG.machines.infuserMk3
-                        else -> CONFIG.machines.infuserMk4
+                        Tier.MK1 -> IRConfig.machines.infuserMk1
+                        Tier.MK2 -> IRConfig.machines.infuserMk2
+                        Tier.MK3 -> IRConfig.machines.infuserMk3
+                        else -> IRConfig.machines.infuserMk4
                     }, ::SolidInfuserController
                 )
             }
@@ -317,10 +317,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(), tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.sawmillMk1
-                        Tier.MK2 -> CONFIG.machines.sawmillMk2
-                        Tier.MK3 -> CONFIG.machines.sawmillMk3
-                        else -> CONFIG.machines.sawmillMk4
+                        Tier.MK1 -> IRConfig.machines.sawmillMk1
+                        Tier.MK2 -> IRConfig.machines.sawmillMk2
+                        Tier.MK3 -> IRConfig.machines.sawmillMk3
+                        else -> IRConfig.machines.sawmillMk4
                     }, ::SawmillController
                 )
             }
@@ -331,7 +331,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val RECYCLER_REGISTRY = MachineRegistry("recycler", false, Tier.MK2)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.machines.recycler, ::RecyclerController
+                    this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerController
                 )
             }
             .blockEntityProvider { tier -> { RecyclerBlockEntity(tier) } }
@@ -341,7 +341,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val SMELTER_REGISTRY = MachineRegistry("smelter", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.machines.smelter, ::SmelterController
+                    this, SETTINGS(), tier, IRConfig.machines.smelter, ::SmelterController
                 )
             }
             .blockEntityProvider { tier -> { SmelterBlockEntity(tier) } }
@@ -351,7 +351,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CONDENSER_REGISTRY = MachineRegistry("condenser", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, CONFIG.machines.condenser, ::CondenserController
+                    this, SETTINGS(), tier, IRConfig.machines.condenser, ::CondenserController
                 )
             }
             .blockEntityProvider { tier -> { CondenserBlockEntity(tier) } }
@@ -364,7 +364,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    CONFIG.machines.electricFurnaceFactory,
+                    IRConfig.machines.electricFurnaceFactory,
                     ::ElectricFurnaceFactoryController
                 )
             }
@@ -385,7 +385,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    CONFIG.machines.pulverizerFactory,
+                    IRConfig.machines.pulverizerFactory,
                     ::PulverizerFactoryController
                 )
             }
@@ -406,7 +406,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    CONFIG.machines.compressorFactory,
+                    IRConfig.machines.compressorFactory,
                     ::CompressorFactoryController
                 )
             }
@@ -427,7 +427,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS(),
                     tier,
-                    CONFIG.machines.infuserFactory,
+                    IRConfig.machines.infuserFactory,
                     ::SolidInfuserFactoryController
                 )
             }
@@ -445,7 +445,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val DRAIN_REGISTRY = MachineRegistry("drain", false, Tier.MK1)
             .blockProvider { tier ->
                 MachineBlock(
-                    this, SETTINGS(), tier, CONFIG.machines.drain, null
+                    this, SETTINGS(), tier, IRConfig.machines.drain, null
                 )
             }
             .blockEntityProvider { tier -> { DrainBlockEntity(tier) } }
@@ -465,10 +465,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.fluidInfuserMk1
-                        Tier.MK2 -> CONFIG.machines.fluidInfuserMk2
-                        Tier.MK3 -> CONFIG.machines.fluidInfuserMk3
-                        else -> CONFIG.machines.fluidInfuserMk4
+                        Tier.MK1 -> IRConfig.machines.fluidInfuserMk1
+                        Tier.MK2 -> IRConfig.machines.fluidInfuserMk2
+                        Tier.MK3 -> IRConfig.machines.fluidInfuserMk3
+                        else -> IRConfig.machines.fluidInfuserMk4
                     },
                     ::FluidInfuserController
                 )
@@ -484,10 +484,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.chopperMk1
-                        Tier.MK2 -> CONFIG.machines.chopperMk2
-                        Tier.MK3 -> CONFIG.machines.chopperMk3
-                        else -> CONFIG.machines.chopperMk4
+                        Tier.MK1 -> IRConfig.machines.chopperMk1
+                        Tier.MK2 -> IRConfig.machines.chopperMk2
+                        Tier.MK3 -> IRConfig.machines.chopperMk3
+                        else -> IRConfig.machines.chopperMk4
                     }, ::ChopperController
                 )
             }
@@ -502,10 +502,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.farmerMk1
-                        Tier.MK2 -> CONFIG.machines.farmerMk2
-                        Tier.MK3 -> CONFIG.machines.farmerMk3
-                        else -> CONFIG.machines.farmerMk4
+                        Tier.MK1 -> IRConfig.machines.farmerMk1
+                        Tier.MK2 -> IRConfig.machines.farmerMk2
+                        Tier.MK3 -> IRConfig.machines.farmerMk3
+                        else -> IRConfig.machines.farmerMk4
                     }, ::FarmerController
                 )
             }
@@ -520,10 +520,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK1 -> CONFIG.machines.rancherMk1
-                        Tier.MK2 -> CONFIG.machines.rancherMk2
-                        Tier.MK3 -> CONFIG.machines.rancherMk3
-                        else -> CONFIG.machines.rancherMk4
+                        Tier.MK1 -> IRConfig.machines.rancherMk1
+                        Tier.MK2 -> IRConfig.machines.rancherMk2
+                        Tier.MK3 -> IRConfig.machines.rancherMk3
+                        else -> IRConfig.machines.rancherMk4
                     }, ::RancherController
                 )
             }
@@ -546,9 +546,9 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     when (tier) {
-                        Tier.MK2 -> CONFIG.machines.fishingMk2
-                        Tier.MK3 -> CONFIG.machines.fishingMk3
-                        else -> CONFIG.machines.fishingMk4
+                        Tier.MK2 -> IRConfig.machines.fishingMk2
+                        Tier.MK3 -> IRConfig.machines.fishingMk3
+                        else -> IRConfig.machines.fishingMk4
                     }, ::FishingFarmController
                 )
             }
@@ -562,7 +562,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this,
                     SETTINGS().nonOpaque(),
                     tier,
-                    CONFIG.machines.modularWorkbench,
+                    IRConfig.machines.modularWorkbench,
                     ::ModularWorkbenchController
                 )
             }

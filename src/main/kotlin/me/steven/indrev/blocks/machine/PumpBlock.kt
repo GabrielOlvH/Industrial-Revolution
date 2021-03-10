@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.machine
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -16,7 +16,7 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
     registry,
     settings,
     Tier.MK1,
-    IndustrialRevolution.CONFIG.machines.pump,
+    IRConfig.machines.pump,
     null) {
 
     override fun getOutlineShape(

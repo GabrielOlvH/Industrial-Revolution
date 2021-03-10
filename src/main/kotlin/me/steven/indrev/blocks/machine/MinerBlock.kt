@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.machine
 
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.machines.MinerController
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.client.item.TooltipContext
@@ -15,7 +15,7 @@ class MinerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : Ho
     registry,
     settings,
     tier,
-    IndustrialRevolution.CONFIG.machines.miner,
+    IRConfig.machines.miner,
     ::MinerController,
 ) {
     override fun appendTooltip(

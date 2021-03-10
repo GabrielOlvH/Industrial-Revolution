@@ -4,9 +4,9 @@ import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.CableBlock
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.utils.energyOf
@@ -27,10 +27,10 @@ open class EnergyNetwork(
     var tier = Tier.MK1
     private val maxCableTransfer: Double
         get() = when (tier) {
-            Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1.maxInput
-            Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2.maxInput
-            Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3.maxInput
-            else -> IndustrialRevolution.CONFIG.cables.cableMk4.maxInput
+            Tier.MK1 -> IRConfig.cables.cableMk1.maxInput
+            Tier.MK2 -> IRConfig.cables.cableMk2.maxInput
+            Tier.MK3 -> IRConfig.cables.cableMk3.maxInput
+            else -> IRConfig.cables.cableMk4.maxInput
         }
 
     override fun tick(world: ServerWorld) {

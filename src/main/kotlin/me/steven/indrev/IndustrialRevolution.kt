@@ -1,8 +1,5 @@
 package me.steven.indrev
 
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
-import me.sargunvohra.mcmods.autoconfig1u.serializer.GsonConfigSerializer
-import me.sargunvohra.mcmods.autoconfig1u.serializer.PartitioningSerializer
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
@@ -47,10 +44,7 @@ import org.apache.logging.log4j.Logger
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
-        AutoConfig.register(
-            IRConfig::class.java,
-            PartitioningSerializer.wrap(::GsonConfigSerializer)
-        )
+        IRConfig
         IRItemRegistry.registerAll()
         IRBlockRegistry.registerAll()
         IRFluidRegistry.registerAll()
@@ -204,8 +198,6 @@ object IndustrialRevolution : ModInitializer {
     } as ExtendedScreenHandlerType<ResourceReportController>
 
     val CABINET_HANDLER = CabinetController.SCREEN_ID.registerScreenHandler(::CabinetController)
-
-    val CONFIG: IRConfig by lazy { AutoConfig.getConfigHolder(IRConfig::class.java).config }
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)

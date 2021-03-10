@@ -1,9 +1,9 @@
 package me.steven.indrev.blocks.machine.pipes
 
 import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.networks.Network
@@ -71,9 +71,9 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
     override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 
     fun getConfig() = when(tier) {
-        Tier.MK1 -> IndustrialRevolution.CONFIG.cables.cableMk1
-        Tier.MK2 -> IndustrialRevolution.CONFIG.cables.cableMk2
-        Tier.MK3 -> IndustrialRevolution.CONFIG.cables.cableMk3
-        else -> IndustrialRevolution.CONFIG.cables.cableMk4
+        Tier.MK1 -> IRConfig.cables.cableMk1
+        Tier.MK2 -> IRConfig.cables.cableMk2
+        Tier.MK3 -> IRConfig.cables.cableMk3
+        else -> IRConfig.cables.cableMk4
     }
 }

@@ -5,8 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager.SrcFactor
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.IRPlayerEntityExtension
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
@@ -34,8 +34,8 @@ object IRHudRender : HudRenderCallback {
                 val item = it.item as IRModularArmorItem
                 item.getColor(it)
             } ?: -1
-            val x = IndustrialRevolution.CONFIG.hud.renderPosX + 2
-            val y = IndustrialRevolution.CONFIG.hud.renderPosY + 2
+            val x = IRConfig.hud.renderPosX + 2
+            val y = IRConfig.hud.renderPosY + 2
             ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, color, 0.8f)
             ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
             val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"

@@ -2,6 +2,7 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.31'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -114,20 +115,26 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
+
+    include "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
+
     modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
     include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 
     modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+
     include("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modCompile("com.terraformersmc:modmenu:${project.modmenu_version}") {
+    modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
@@ -136,21 +143,6 @@ dependencies {
     }
 
     include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    //modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        //exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    //}
-    //include("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        //exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    //}
-
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 

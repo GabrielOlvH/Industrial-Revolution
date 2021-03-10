@@ -3,13 +3,13 @@ package me.steven.indrev.blockentities.farms
 import io.netty.buffer.Unpooled
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.config.BasicMachineConfig
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -192,7 +192,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     override fun getBaseValue(upgrade: Upgrade): Double {
         val activeDrills = getActiveDrills()
         return when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
+            Upgrade.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()

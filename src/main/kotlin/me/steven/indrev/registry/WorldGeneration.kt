@@ -1,7 +1,7 @@
 package me.steven.indrev.registry
 
 import com.google.common.collect.ImmutableList
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.features.IRConfiguredFeature
 import me.steven.indrev.world.features.SulfurCrystalFeature
@@ -18,7 +18,7 @@ import java.util.function.Supplier
 
 object WorldGeneration {
     fun init() {
-        val config = IndustrialRevolution.CONFIG.oregen
+        val config = IRConfig.oregen
 
         if (config.copper) {
             configuredFeatures.add(copperFeature)

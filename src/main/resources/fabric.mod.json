@@ -32,12 +32,6 @@
         "adapter": "kotlin",
         "value": "me.steven.indrev.compat.rei.REIPlugin"
       }
-    ],
-    "modmenu": [
-      {
-        "adapter": "kotlin",
-        "value": "me.steven.indrev.compat.modmenu.ModMenuCompat"
-      }
     ]
   },
   "mixins": [
