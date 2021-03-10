@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.models
+package me.steven.indrev.blocks.models.pipes
 
 import com.mojang.datafixers.util.Pair
 import me.steven.indrev.api.machines.Tier
@@ -16,7 +16,6 @@ import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -25,17 +24,12 @@ import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
-class CableModel(val tier: Tier) : BakedModel, FabricBakedModel, UnbakedModel {
+abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, FabricBakedModel, UnbakedModel {
 
-    private val spriteIdCollection = mutableListOf(
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/cable_center")),
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/cable_center_emissive_${tier.toString().toLowerCase()}")),
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/cable_wrap")),
-        SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/cable_wire_emissive_${tier.toString().toLowerCase()}"))
-    )
+    abstract val spriteIdCollection: MutableList<SpriteIdentifier>
     private val modelIdCollection = mutableListOf(
-        identifier("block/cable_center_${tier.toString().toLowerCase()}"),
-        identifier("block/cable_side_${tier.toString().toLowerCase()}")
+        identifier("block/${type}_center_${tier.toString().toLowerCase()}"),
+        identifier("block/${type}_side_${tier.toString().toLowerCase()}")
     )
     private val spriteArray = arrayOfNulls<Sprite>(4)
     private val modelArray = arrayOfNulls<BakedModel>(7)
