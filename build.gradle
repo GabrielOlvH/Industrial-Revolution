@@ -2,7 +2,6 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id "org.jetbrains.kotlin.jvm"
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.31'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -114,11 +113,6 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
-
-    include "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
-
     modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
     include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 

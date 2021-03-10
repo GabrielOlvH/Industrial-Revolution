@@ -24,12 +24,8 @@ class CableBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings, N
         options: TooltipContext?
     ) {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
-        )
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
+            TranslatableText("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.lftick", getMaxTransferRate()).formatted(Formatting.GRAY))
         )
     }
 
@@ -38,7 +34,7 @@ class CableBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings, N
 
     override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 
-    fun getConfig() = when(tier) {
+    fun getMaxTransferRate() = when(tier) {
         Tier.MK1 -> IRConfig.cables.cableMk1
         Tier.MK2 -> IRConfig.cables.cableMk2
         Tier.MK3 -> IRConfig.cables.cableMk3

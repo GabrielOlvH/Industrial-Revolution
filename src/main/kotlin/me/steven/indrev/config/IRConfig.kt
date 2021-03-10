@@ -1,15 +1,15 @@
 package me.steven.indrev.config
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import com.google.gson.GsonBuilder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import net.fabricmc.loader.api.FabricLoader
 import java.io.File
 
 object IRConfig {
+
+    private val gson = GsonBuilder().setPrettyPrinting().create()
+
     val generators: Generators
     val machines: Machines
     val cables: Cables
@@ -29,18 +29,22 @@ object IRConfig {
     private inline fun <reified T> readOrCreate(file: String, default: () -> T): T {
         val dir = File(FabricLoader.getInstance().configDir.toFile(), "indrev")
         val f = File(dir, file)
-        return if (!f.exists()) {
-            if (!f.createNewFile())
-                IndustrialRevolution.LOGGER.error("Failed to create default config file ($file), using default config.")
-            else
-                f.writeText(Json { prettyPrint = true }.encodeToString(default()))
+        return try {
+            if (!f.exists()) {
+                if (!f.createNewFile())
+                    IndustrialRevolution.LOGGER.error("Failed to create default config file ($file), using default config.")
+                else
+                    f.writeText(gson.toJson(default()))
+                default()
+            } else
+                gson.fromJson(f.readLines().joinToString(""), T::class.java)
+        } catch (e: Exception) {
+            IndustrialRevolution.LOGGER.error("Failed to read config file! Using default values.", e)
             default()
-        } else
-            Json.decodeFromString(f.readLines().joinToString(""))
+        }
     }
 }
 
-@Serializable
 class Generators {
     val coalGenerator: GeneratorConfig = GeneratorConfig(16.0, 1.5, 1000.0, Tier.MK1.io)
 
@@ -53,7 +57,6 @@ class Generators {
     val biomassGenerator: GeneratorConfig = GeneratorConfig(128.0, 1.5, 10000.0, Tier.MK3.io)
 }
 
-@Serializable
 class GeneratorConfig(
     val ratio: Double = 16.0,
     val temperatureBoost: Double = 1.5,
@@ -61,7 +64,6 @@ class GeneratorConfig(
     val maxOutput: Double
 ) : IConfig
 
-@Serializable
 class Machines {
     val electricFurnaceMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
 
@@ -168,7 +170,6 @@ class Machines {
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
 }
 
-@Serializable
 class HeatMachineConfig(
     override val energyCost: Double,
     override val processSpeed: Double,
@@ -177,7 +178,6 @@ class HeatMachineConfig(
     override val maxInput: Double
 ) : BasicMachineConfig
 
-@Serializable
 open class MachineConfig(
     override val energyCost: Double,
     override val processSpeed: Double,
@@ -195,28 +195,19 @@ interface IConfig {
     val maxEnergyStored: Double
 }
 
-@Serializable
 class Cables {
-    val cableMk1 = CableConfig(128.0, 128.0)
-
-    val cableMk2 = CableConfig(512.0, 512.0)
-
-    val cableMk3 = CableConfig(4096.0, 4096.0)
-
-    val cableMk4 = CableConfig(16384.0, 16384.0)
+    val cableMk1 = 128.0
+    val cableMk2 = 512.0
+    val cableMk3 = 4096.0
+    val cableMk4 = 16384.0
 }
 
-@Serializable
-class CableConfig(val maxOutput: Double, val maxInput: Double)
-
-@Serializable
 class Upgrades  {
     val speedUpgradeModifier = 6.5
     val energyUpgradeModifier = 1.12
     val bufferUpgradeModifier = 25000.0
 }
 
-@Serializable
 class OreGen  {
     val copper = true
     val tin = true
@@ -228,7 +219,6 @@ class OreGen  {
     val sulfurCrystals = true
 }
 
-@Serializable
 class Hud {
     val renderPosX = 0
     val renderPosY = 0

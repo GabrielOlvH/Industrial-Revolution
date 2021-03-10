@@ -12,8 +12,6 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
@@ -25,14 +23,7 @@ class FluidPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(setting
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
-        )
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
-        )
+
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =

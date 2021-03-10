@@ -3,7 +3,6 @@ package me.steven.indrev.utils
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.config.CableConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import net.minecraft.client.gui.screen.Screen
@@ -179,16 +178,6 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
                                 TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(
                                     Formatting.GRAY))
                     )
-            }
-            is CableConfig -> {
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxOutput).formatted(Formatting.GRAY))
-                )
             }
         }
     } else {

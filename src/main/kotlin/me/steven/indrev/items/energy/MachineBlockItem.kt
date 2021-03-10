@@ -4,7 +4,6 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.IConfig
@@ -37,9 +36,9 @@ class MachineBlockItem(private val machineBlock: Block, settings: Settings) : Bl
         options: TooltipContext?
     ) {
         val itemIo = energyOf(stack)
-        if (machineBlock !is CableBlock && itemIo != null)
+        if (itemIo != null)
             buildEnergyTooltip(stack, tooltip)
-        val config = (machineBlock as? MachineBlock)?.config ?: (machineBlock as? CableBlock)?.getConfig()
+        val config = (machineBlock as? MachineBlock)?.config
         buildMachineTooltip(config ?: return, tooltip)
     }
 }

@@ -376,6 +376,7 @@
   "gui.indrev.heatgen.extra": "Careful, it's hot!",
   "gui.indrev.guide_book_shortcut.contains": "Opens about page on the Revolutionary Guide",
   "gui.indrev.guide_book_shortcut.missing": "Missing the Revolutionary Guide!",
+  "gui.indrev.tooltip.maxTransferRate": "Transfer capacity: ",
   "gui.indrev.tooltip.maxInput": "Input capacity: ",
   "gui.indrev.tooltip.maxOutput": "Output capacity: ",
   "gui.indrev.tooltip.maxEnergyStored": "Energy capacity: ",

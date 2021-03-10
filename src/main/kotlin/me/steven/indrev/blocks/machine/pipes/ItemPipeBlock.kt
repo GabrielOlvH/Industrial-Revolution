@@ -17,9 +17,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
-import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -34,14 +32,7 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxInput).formatted(Formatting.GRAY))
-        )
-        tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.lftick", getConfig().maxOutput).formatted(Formatting.GRAY))
-        )
+
     }
 
     override fun onUse(

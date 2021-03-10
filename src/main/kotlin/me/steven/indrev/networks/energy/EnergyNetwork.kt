@@ -27,10 +27,10 @@ open class EnergyNetwork(
     var tier = Tier.MK1
     private val maxCableTransfer: Double
         get() = when (tier) {
-            Tier.MK1 -> IRConfig.cables.cableMk1.maxInput
-            Tier.MK2 -> IRConfig.cables.cableMk2.maxInput
-            Tier.MK3 -> IRConfig.cables.cableMk3.maxInput
-            else -> IRConfig.cables.cableMk4.maxInput
+            Tier.MK1 -> IRConfig.cables.cableMk1
+            Tier.MK2 -> IRConfig.cables.cableMk2
+            Tier.MK3 -> IRConfig.cables.cableMk3
+            else -> IRConfig.cables.cableMk4
         }
 
     override fun tick(world: ServerWorld) {
