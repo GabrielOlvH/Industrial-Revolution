@@ -203,6 +203,7 @@ object IndustrialRevolution : ModInitializer {
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
+    val SYNC_CONFIG_PACKET = identifier("sync_config_packet")
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
     val SYNC_PROPERTY = identifier("sync_property")
     val SYNC_MODULE_PACKET = identifier("sync_module")

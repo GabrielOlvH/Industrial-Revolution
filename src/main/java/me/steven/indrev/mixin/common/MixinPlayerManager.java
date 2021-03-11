@@ -15,6 +15,7 @@ public class MixinPlayerManager {
     @Inject(method = "onPlayerConnect", at = @At("RETURN"))
     private void indrev_onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci) {
         PacketRegistry.INSTANCE.syncVeinData(player);
+        PacketRegistry.INSTANCE.syncConfig(player);
         if (player instanceof IRServerPlayerEntityExtension) {
             ((IRServerPlayerEntityExtension) player).sync();
         }

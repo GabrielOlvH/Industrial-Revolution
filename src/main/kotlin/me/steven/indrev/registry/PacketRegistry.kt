@@ -13,6 +13,8 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.config.IRConfig
+import me.steven.indrev.config.IRConfig.writeToClient
 import me.steven.indrev.gui.controllers.IRGuiController
 import me.steven.indrev.gui.controllers.machines.ModularWorkbenchController
 import me.steven.indrev.gui.controllers.machines.RancherController
@@ -224,6 +226,12 @@ object PacketRegistry {
         ServerPlayNetworking.send(playerEntity, IndustrialRevolution.SYNC_VEINS_PACKET, buf)
     }
 
+    fun syncConfig(playerEntity: ServerPlayerEntity) {
+        val buf = PacketByteBufs.create()
+        writeToClient(buf)
+        ServerPlayNetworking.send(playerEntity, IndustrialRevolution.SYNC_CONFIG_PACKET, buf)
+    }
+
     fun registerClient() {
         ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_VEINS_PACKET) { _, _, buf, _ ->
             val totalVeins = buf.readInt()
@@ -312,5 +320,9 @@ object PacketRegistry {
                  controller.backingList[slotIndex] = stack
              }
          }
+
+        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
+            IRConfig.readFromServer(buf)
+        }
     }
 }

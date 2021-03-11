@@ -4,18 +4,19 @@ import com.google.gson.GsonBuilder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.network.PacketByteBuf
 import java.io.File
 
 object IRConfig {
 
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    val generators: Generators
-    val machines: Machines
-    val cables: Cables
-    val upgrades: Upgrades
-    val oregen: OreGen
-    val hud: Hud
+    var generators: Generators
+    var machines: Machines
+    var cables: Cables
+    var upgrades: Upgrades
+    var oregen: OreGen
+    var hud: Hud
 
     init {
         generators = readOrCreate("generators.json") { Generators() }
@@ -42,6 +43,25 @@ object IRConfig {
             IndustrialRevolution.LOGGER.error("Failed to read config file! Using default values.", e)
             default()
         }
+    }
+    
+    fun writeToClient(buf: PacketByteBuf) {
+        val gson = GsonBuilder().create()
+        buf.writeString(gson.toJson(generators))
+        buf.writeString(gson.toJson(machines))
+        buf.writeString(gson.toJson(cables))
+        buf.writeString(gson.toJson(upgrades))
+        buf.writeString(gson.toJson(oregen))
+        buf.writeString(gson.toJson(hud))
+    }
+    
+    fun readFromServer(buf: PacketByteBuf) {
+        generators = gson.fromJson(buf.readString(), Generators::class.java)
+        machines = gson.fromJson(buf.readString(), Machines::class.java)
+        cables = gson.fromJson(buf.readString(), Cables::class.java)
+        upgrades = gson.fromJson(buf.readString(), Upgrades::class.java)
+        oregen = gson.fromJson(buf.readString(), OreGen::class.java)
+        hud = gson.fromJson(buf.readString(), Hud::class.java)
     }
 }
 
