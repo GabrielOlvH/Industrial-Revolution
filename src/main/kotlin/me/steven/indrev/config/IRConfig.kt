@@ -30,18 +30,17 @@ object IRConfig {
     private inline fun <reified T> readOrCreate(file: String, default: () -> T): T {
         val dir = File(FabricLoader.getInstance().configDir.toFile(), "indrev")
         val f = File(dir, file)
-        return try {
-            if (!f.exists()) {
-                if (!f.createNewFile())
-                    IndustrialRevolution.LOGGER.error("Failed to create default config file ($file), using default config.")
-                else
-                    f.writeText(gson.toJson(default()))
-                default()
-            } else
-                gson.fromJson(f.readLines().joinToString(""), T::class.java)
+        try {
+            if (f.exists())
+                return gson.fromJson(f.readLines().joinToString(""), T::class.java)
+            else if (!f.createNewFile())
+                IndustrialRevolution.LOGGER.error("Failed to create default config file ($file), using default config.")
+            else
+                f.writeText(gson.toJson(default()))
+            return default()
         } catch (e: Exception) {
             IndustrialRevolution.LOGGER.error("Failed to read config file! Using default values.", e)
-            default()
+            return default()
         }
     }
     
