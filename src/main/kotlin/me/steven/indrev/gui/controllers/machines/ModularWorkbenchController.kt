@@ -36,14 +36,11 @@ import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.inventory.CraftingInventory
-import net.minecraft.inventory.CraftingResultInventory
 import net.minecraft.inventory.Inventory
+import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.screen.slot.SlotActionType
-import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundEvents
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
@@ -53,6 +50,7 @@ import java.util.*
 import kotlin.math.floor
 
 // Careful, here be dragons.
+// All the `index + 3` are because the slot numbers changed and it was easier to do this, if you don't like it don't read it :)
 class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiController(
         IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
@@ -61,11 +59,18 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         ctx
     ) {
 
-    private val craftingInventory = CraftingInventory(this, 3, 3)
-    private val outputInventory = CraftingResultInventory()
     private val slotLayout = hashMapOf<Int, Array<WToggleableItemSlot>>()
     private var slotsPanel = WPlainPanel()
-    var selected: ModuleRecipe? = null
+
+    private val selected: ModuleRecipe?
+        get() {
+            var r: ModuleRecipe? = null
+            ctx.run { world, pos ->
+                val blockEntity = world.getBlockEntity(pos) as? ModularWorkbenchBlockEntity
+                r = blockEntity?.recipe
+            }
+            return r
+        }
 
     init {
 
@@ -103,6 +108,9 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
 
         slotLayout.forEach { (_, slots) -> slots.forEach { slotsPanel.add(it, it.x, it.y) } }
 
+        if (selected != null)
+            layoutSlots(selected!!)
+
         val root = WCustomTabPanel()
         setRootPanel(root)
 
@@ -116,22 +124,23 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         val panel = WGridPanel()
 
         val modules = WGridPanel()
-        ctx.run { world, _ ->
+        ctx.run { world, pos ->
             world.recipeManager.getAllOfType(ModuleRecipe.TYPE).entries.forEachIndexed { index, (id, recipe) ->
                 val button = WModule(recipe.outputs.first().stack)
                 button.clickAction = {
                     val buf = PacketByteBufs.create()
+                    buf.writeInt(syncId)
                     buf.writeIdentifier(id)
+                    buf.writeBlockPos(pos)
                     ClientPlayNetworking.send(MODULE_SELECT_PACKET, buf)
                     layoutSlots(recipe)
                     slotsPanel.addPainters()
-                    selected = recipe
                 }
                 modules.add(button, index % 3, floor(index / 3.0).toInt())
             }
         }
 
-        val outputSlot = WCraftingItemSlot(outputInventory, 0, true)
+        val outputSlot = WCraftingItemSlot(blockInventory, 15, true)
         slotsPanel.add(outputSlot, 2 * 18, 2 * 18)
 
         panel.add(slotsPanel, 4, 0)
@@ -152,14 +161,13 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         if (matches()) {
             stack = selected!!.craft(null as Random?).first()
         }
-        outputInventory.setStack(0, stack)
-        (playerInventory.player as ServerPlayerEntity).networkHandler.sendPacket(ScreenHandlerSlotUpdateS2CPacket(syncId, 60, stack))
+        blockInventory.setStack(15, stack)
     }
 
     private fun matches(): Boolean {
         if (selected == null) return false
         selected!!.input.forEachIndexed { index, entry ->
-            if (!entry.ingredient.test(craftingInventory.getStack(index))) return false
+            if (!entry.ingredient.test(blockInventory.getStack(index + 3))) return false
         }
 
         return true
@@ -189,8 +197,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
                                 else
                                     ItemStack.EMPTY
                             } else if (
-                                !insertItem(toTransfer, craftingInventory, false, player)
-                                && !insertItem(toTransfer, blockInventory, false, player)
+                                !insertItem(toTransfer, blockInventory, false, player)
                             ) ItemStack.EMPTY
                         } else if (!swapHotbar(toTransfer, slotNumber, playerInventory, player))
                             ItemStack.EMPTY
@@ -233,7 +240,6 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             }
         }
         ctx.run { world, _ ->
-            dropInventory(playerInventory.player, world, craftingInventory)
             if (!world.isClient) updateItems()
         }
     }
@@ -260,6 +266,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         return root
     }
 
+    // Are you seriously still going?
     private fun addTextInfo(panel: WGridPanel) {
         val armorInfoText = WText({
             val stack = blockInventory.getStack(2)
@@ -334,13 +341,6 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             ))
     }
 
-    override fun close(player: PlayerEntity?) {
-        super.close(player)
-        ctx.run { world, _ ->
-            dropInventory(player, world, craftingInventory)
-        }
-    }
-
     inner class WModule(private val itemStack: ItemStack) : WWidget() {
 
         var clickAction: () -> Unit = {}
@@ -365,7 +365,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
     }
 
     inner class WToggleableItemSlot(index: Int, x: Int, y: Int, big: Boolean)
-        : WItemSlot(craftingInventory, index, 1, 1, big) {
+        : WItemSlot(blockInventory, index + 3, 1, 1, big) {
 
         var preview: ItemStack? = null
 
@@ -374,7 +374,7 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
             this.y = y
         }
 
-        var hidden = true
+        var hidden = false
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (!hidden) {
@@ -424,22 +424,22 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
             return object : ValidatedSlot(inventory, index, x, y) {
                 override fun onTakeItem(player: PlayerEntity, stack: ItemStack): ItemStack {
-                    val remainders = selected!!.getRemainingStacks(craftingInventory)
+                    val remainders = selected!!.getRemainingStacks(SimpleInventory(*(3 until 15).map { blockInventory.getStack(it) }.toTypedArray()))
 
                     for (slot in remainders.indices) {
-                        var itemStack = craftingInventory.getStack(slot)
+                        var itemStack = blockInventory.getStack(slot + 3)
                         val rem = remainders[slot]
                         if (!itemStack.isEmpty) {
-                            craftingInventory.removeStack(slot, 1)
-                            itemStack = craftingInventory.getStack(slot)
+                            blockInventory.removeStack(slot + 3, 1)
+                            itemStack = blockInventory.getStack(slot + 3)
                         }
                         if (!rem.isEmpty) {
                             when {
-                                itemStack.isEmpty -> craftingInventory.setStack(slot, rem)
+                                itemStack.isEmpty -> blockInventory.setStack(slot + 3, rem)
                                 ItemStack.areItemsEqualIgnoreDamage(itemStack, rem)
                                         && ItemStack.areTagsEqual(itemStack, rem) -> {
                                     rem.increment(itemStack.count)
-                                    craftingInventory.setStack(slot, rem)
+                                    blockInventory.setStack(slot + 3, rem)
                                 }
                                 !player.inventory.insertStack(rem) -> player.dropItem(rem, false)
                             }
@@ -452,7 +452,11 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         }
     }
 
-    class WToggleableSlot(inventory: Inventory, index: Int, x: Int, y: Int, val hidden: () -> Boolean) : ValidatedSlot(inventory, index, x, y) {
+    inner class WToggleableSlot(inventory: Inventory, private val index: Int, x: Int, y: Int, val hidden: () -> Boolean) : ValidatedSlot(inventory, index, x, y) {
+
+        override fun getMaxItemCount(): Int {
+            return selected?.input?.get(index - 3)?.count ?: 0
+        }
 
         override fun canInsert(stack: ItemStack?): Boolean {
             return !hidden() && super.canInsert(stack)

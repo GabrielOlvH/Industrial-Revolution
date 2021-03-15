@@ -19,6 +19,7 @@ class IRInventory(
 
     private var availableSlots = inputSlots.plus(outputSlots)
     private val coolerSlot = dsl.coolerSlot
+    private val maxCount = dsl.maxStackCount
 
     init {
         if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(coolerSlot!!)
@@ -32,6 +33,8 @@ class IRInventory(
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
         (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
+
+    override fun getMaxCountPerStack(): Int = maxCount
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
 

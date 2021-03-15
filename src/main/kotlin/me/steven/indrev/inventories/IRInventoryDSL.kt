@@ -29,6 +29,7 @@ open class IRInventoryDSL : Filterable() {
     private var input: FilteredSlots = FilteredSlots.EMPTY_FILTER
     private var output: FilteredSlots = FilteredSlots.EMPTY_FILTER
     var upgradeSlots: IntRange? = null
+    var maxStackCount = 64
 
     fun input(block: FilteredSlots.() -> Unit) {
         input = FilteredSlots()

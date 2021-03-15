@@ -13,6 +13,7 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.config.IRConfig.writeToClient
 import me.steven.indrev.gui.controllers.IRGuiController
@@ -146,12 +147,21 @@ object PacketRegistry {
             }
         }
         ServerPlayNetworking.registerGlobalReceiver(ModularWorkbenchController.MODULE_SELECT_PACKET) { server, player, _, buf, _ ->
-            val screenHandler = player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
+            val syncId = buf.readInt()
             val recipeId = buf.readIdentifier()
+            val pos = buf.readBlockPos()
+            val screenHandler = player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
+            if (syncId != screenHandler.syncId) return@registerGlobalReceiver
             server.execute {
-                val recipe = server.recipeManager.getAllOfType(ModuleRecipe.TYPE)[recipeId]!!
-                screenHandler.layoutSlots(recipe)
-                screenHandler.selected = recipe
+                val world = player.world
+                if (world.isLoaded(pos)) {
+                    val recipe = server.recipeManager.getAllOfType(ModuleRecipe.TYPE)[recipeId]!!
+                    screenHandler.layoutSlots(recipe)
+                    val blockEntity = world.getBlockEntity(pos) as? ModularWorkbenchBlockEntity ?: return@execute
+                    blockEntity.selectedRecipe = recipeId
+                    blockEntity.markDirty()
+                    blockEntity.sync()
+                }
             }
         }
 

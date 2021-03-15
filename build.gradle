@@ -124,13 +124,13 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+    //modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        //exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+   // }
 
-    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+    //modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+       // exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    //}
 
     modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"

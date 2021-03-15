@@ -8,24 +8,37 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
+import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.getAllOfType
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.Identifier
 
 class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
+        this.propertyDelegate = ArrayPropertyDelegate(7)
         this.inventoryComponent = inventory(this) {
+
+            maxStackCount = 1
+
             0 filter { (_, item) -> item !is IRModularItem<*> }
             1 filter { stack -> stack.item is IRModuleItem }
             2 filter { stack -> stack.item is IRModularItem<*> }
+            3 until 15 filter { stack, index -> recipe != null && recipe!!.input.size > index - 3 && recipe!!.input[index - 3].ingredient.test(stack) }
+            input {
+                slots = (1 until 15).map { it }.toIntArray()
+            }
+
+            output { slot = 15 }
+
         }
     }
 
@@ -39,7 +52,25 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             propertyDelegate[4] = value.ordinal
         }
 
+    var selectedRecipe: Identifier? = null
+    var recipe: ModuleRecipe? = null
+        get() {
+            if (selectedRecipe != null)
+                field = world!!.recipeManager.getAllOfType(ModuleRecipe.TYPE)[selectedRecipe]!!
+            return field
+        }
+
+    var moduleProcessTime: Int by Property(5, 0)
+    var moduleMaxProcessTime: Int by Property(6, 0)
+
     override fun machineTick() {
+       tickModuleInstall()
+    }
+
+    private fun tickModuleCraft() {
+    }
+
+    private fun tickModuleInstall() {
         val inventory = inventoryComponent?.inventory ?: return
         val targetStack = inventory.getStack(2)
         val moduleStack = inventory.getStack(1)
@@ -48,7 +79,6 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
             state = State.IDLE
             return
         }
-        //val armorItem = armorStack.item as IRModularArmor
         val targetItem = targetStack.item as IRModularItem<*>
         val moduleItem = moduleStack.item as IRModuleItem
         val module = moduleItem.module
@@ -104,21 +134,29 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
+        if (tag?.contains("SelectedRecipe") == true)
+            selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
         super.fromTag(state, tag)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
+        if (selectedRecipe != null)
+            tag?.putString("SelectedRecipe", selectedRecipe!!.toString())
         return super.toTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
+        if (tag?.contains("SelectedRecipe") == true)
+            selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
         super.fromClientTag(tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("ProcessTime", processTime)
+        if (selectedRecipe != null)
+            tag?.putString("SelectedRecipe", selectedRecipe!!.toString())
         return super.toClientTag(tag)
     }
 
