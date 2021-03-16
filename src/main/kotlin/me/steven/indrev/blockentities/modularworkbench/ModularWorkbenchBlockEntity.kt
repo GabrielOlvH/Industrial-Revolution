@@ -64,10 +64,31 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
     var moduleMaxProcessTime: Int by Property(6, 0)
 
     override fun machineTick() {
-       tickModuleInstall()
+        tickModuleInstall()
+        tickModuleCraft()
     }
 
     private fun tickModuleCraft() {
+        val inventory = inventoryComponent?.inventory ?: return
+        if (!inventory.getStack(15).isEmpty) return
+        val inputStacks = inventory.inputSlots.map { inventory.getStack(it) }
+        when {
+            recipe?.matches(inputStacks, null) != true -> {
+                moduleMaxProcessTime = 0
+                moduleProcessTime = 0
+            }
+            moduleMaxProcessTime in 1..moduleProcessTime -> {
+                inventory.inputSlots.forEach { slot -> inventory.setStack(slot, ItemStack.EMPTY) }
+                inventory.setStack(15, recipe!!.outputs[0].stack.copy())
+
+                moduleMaxProcessTime = 0
+                moduleProcessTime = 0
+            }
+            else -> {
+                moduleMaxProcessTime = recipe!!.ticks
+                moduleProcessTime++
+            }
+        }
     }
 
     private fun tickModuleInstall() {

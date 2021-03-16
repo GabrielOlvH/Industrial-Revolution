@@ -18,7 +18,6 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.mixin.common.AccessorSyncedGuiDescription
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -34,20 +33,17 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
-import net.minecraft.inventory.SimpleInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.sound.SoundEvents
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import java.util.*
 import kotlin.math.floor
+import kotlin.math.sin
 
 // Careful, here be dragons.
 // All the `index + 3` are because the slot numbers changed and it was easier to do this, if you don't like it don't read it :)
@@ -156,80 +152,6 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         return panel
     }
 
-    private fun updateItems() {
-        var stack = ItemStack.EMPTY
-        if (matches()) {
-            stack = selected!!.craft(null as Random?).first()
-        }
-        blockInventory.setStack(15, stack)
-    }
-
-    private fun matches(): Boolean {
-        if (selected == null) return false
-        selected!!.input.forEachIndexed { index, entry ->
-            if (!entry.ingredient.test(blockInventory.getStack(index + 3))) return false
-        }
-
-        return true
-    }
-
-    override fun onContentChanged(inventory: Inventory?) {
-        if (!world.isClient)
-           updateItems()
-        super.onContentChanged(inventory)
-    }
-
-    // I told you.
-    override fun onSlotClick(slotNumber: Int, button: Int, action: SlotActionType, player: PlayerEntity?): ItemStack? {
-        return if (action == SlotActionType.QUICK_MOVE) {
-            if (slotNumber !in 0 until slots.size) ItemStack.EMPTY
-            else {
-                val slot = slots[slotNumber]
-                if (slot != null && slot.canTakeItems(player)) {
-                    var remaining = ItemStack.EMPTY
-                    if (slot.hasStack()) {
-                        val toTransfer = slot.stack
-                        remaining = toTransfer.copy()
-                        if (blockInventory != null) {
-                            if (slot.inventory != playerInventory) {
-                                if (insertItem(toTransfer, playerInventory, true, player))
-                                    slot.onTakeItem(player, remaining)
-                                else
-                                    ItemStack.EMPTY
-                            } else if (
-                                !insertItem(toTransfer, blockInventory, false, player)
-                            ) ItemStack.EMPTY
-                        } else if (!swapHotbar(toTransfer, slotNumber, playerInventory, player))
-                            ItemStack.EMPTY
-                        if (toTransfer.isEmpty) slot.stack = ItemStack.EMPTY
-                        else slot.markDirty()
-                    }
-                    remaining
-                } else {
-                    ItemStack.EMPTY
-                }
-            }
-        } else {
-            super.onSlotClick(slotNumber, button, action, player)
-        }.also { onContentChanged(blockInventory) }
-    }
-
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    private fun insertItem(
-        toInsert: ItemStack?,
-        inventory: Inventory?,
-        walkBackwards: Boolean,
-        player: PlayerEntity?
-    ): Boolean = (this as AccessorSyncedGuiDescription).indrev_callInsertItem(toInsert, inventory, walkBackwards, player)
-
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    private fun swapHotbar(
-        toInsert: ItemStack?,
-        slotNumber: Int,
-        inventory: Inventory?,
-        player: PlayerEntity?
-    ): Boolean = (this as AccessorSyncedGuiDescription).indrev_callSwapHotbar(toInsert, slotNumber, inventory, player)
-
     fun layoutSlots(recipe: ModuleRecipe) {
         val inputs = recipe.input
         slotLayout.forEach { (size, slots) ->
@@ -238,9 +160,6 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
                 if (!slot.hidden && FabricLoader.getInstance().environmentType == EnvType.CLIENT)
                     slot.preview = inputs[index].ingredient.matchingStacksClient[0]
             }
-        }
-        ctx.run { world, _ ->
-            if (!world.isClient) updateItems()
         }
     }
 
@@ -408,47 +327,37 @@ class ModularWorkbenchController(syncId: Int, playerInventory: PlayerInventory, 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
             if (selected != null) {
+                val cur = propertyDelegate[5]
+                val max = propertyDelegate[6]
                 val renderer = MinecraftClient.getInstance().itemRenderer
                 renderer.renderInGui(selected!!.outputs[0].stack, x + 1, y + 1)
                 RenderSystem.disableDepthTest()
-                ScreenDrawing.coloredRect(x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
+                val a = 255 - ((cur / max.toDouble()) * 255).toInt()
+                ScreenDrawing.coloredRect(x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
+                RenderSystem.enableDepthTest()
+
+                if (cur > 0 && max > 0 && cur != max) {
+                    val txt = "${(cur / max.toDouble() * 100).toInt() }%"
+                    val width = MinecraftClient.getInstance().textRenderer.getWidth(txt)
+                    MinecraftClient.getInstance().textRenderer.draw(matrices, txt, x.toFloat() + 10 - (width / 2), y.toFloat() + 25, 0x404040)
+
+                    val s = sin(world.time.toDouble() / 5) * 10
+                    ScreenDrawing.coloredRect(x - 3, (y + s).toInt() + 8, this.width + 6, 2, 0x99578bfa.toInt())
+                }
             }
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player)
             { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
-            tooltip?.add(*texts.toTypedArray())
-        }
 
-        override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
-            return object : ValidatedSlot(inventory, index, x, y) {
-                override fun onTakeItem(player: PlayerEntity, stack: ItemStack): ItemStack {
-                    val remainders = selected!!.getRemainingStacks(SimpleInventory(*(3 until 15).map { blockInventory.getStack(it) }.toTypedArray()))
-
-                    for (slot in remainders.indices) {
-                        var itemStack = blockInventory.getStack(slot + 3)
-                        val rem = remainders[slot]
-                        if (!itemStack.isEmpty) {
-                            blockInventory.removeStack(slot + 3, 1)
-                            itemStack = blockInventory.getStack(slot + 3)
-                        }
-                        if (!rem.isEmpty) {
-                            when {
-                                itemStack.isEmpty -> blockInventory.setStack(slot + 3, rem)
-                                ItemStack.areItemsEqualIgnoreDamage(itemStack, rem)
-                                        && ItemStack.areTagsEqual(itemStack, rem) -> {
-                                    rem.increment(itemStack.count)
-                                    blockInventory.setStack(slot + 3, rem)
-                                }
-                                !player.inventory.insertStack(rem) -> player.dropItem(rem, false)
-                            }
-                        }
-                    }
-                    markDirty()
-                    return stack
-                }
+            val cur = propertyDelegate[5]
+            val max = propertyDelegate[6]
+            if (max > 0 && cur != max) {
+                tooltip?.add(LiteralText("Crafting: "))
+                tooltip?.add(LiteralText.EMPTY)
             }
+            tooltip?.add(*texts.toTypedArray())
         }
     }
 

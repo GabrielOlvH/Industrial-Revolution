@@ -124,13 +124,13 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    //modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
-        //exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-   // }
+    modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+   }
 
-    //modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
-       // exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    //}
+    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -150,10 +150,12 @@ dependencies {
     modApi("com.github.GabrielOlvH:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
         exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
+        exclude group: "io.github.prospector", "module": "modmenu"
     }
     include("com.github.GabrielOlvH:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
         exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
+        exclude group: "io.github.prospector", "module": "modmenu"
     }
 
     modImplementation("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
