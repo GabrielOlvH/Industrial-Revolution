@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities
 
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
-import it.unimi.dsi.fastutil.longs.Long2ObjectMaps
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
@@ -19,7 +18,7 @@ object GlobalStateController {
     val UPDATE_PACKET_ID = identifier("global_state_update")
 
     @Environment(EnvType.CLIENT)
-    val chunksToUpdate: Long2ObjectMap<MutableSet<BlockPos>> = Long2ObjectMaps.synchronize(Long2ObjectOpenHashMap())
+    val chunksToUpdate: Long2ObjectMap<MutableSet<BlockPos>> = Long2ObjectOpenHashMap()
     @Environment(EnvType.CLIENT)
     val workingStateTracker = Long2BooleanOpenHashMap()
 
