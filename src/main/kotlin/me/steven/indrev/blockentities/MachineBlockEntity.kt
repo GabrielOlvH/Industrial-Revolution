@@ -89,7 +89,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
         get() {
             if (world?.isClient == true && GlobalStateController.workingStateTracker.contains(pos.asLong())) {
-                field = GlobalStateController.workingStateTracker.remove(pos.asLong())
+                field = runClient { GlobalStateController.workingStateTracker.remove(pos.asLong()) }.get()
             }
             return field
         }

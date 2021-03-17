@@ -1,6 +1,7 @@
 package me.steven.indrev.mixin.client;
 
 import me.steven.indrev.blockentities.GlobalStateController;
+import me.steven.indrev.utils.UtilsKt;
 import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -17,6 +18,6 @@ public abstract class MixinBuiltChunk {
     @Inject(method = "rebuild", at = @At("INVOKE"))
     private void indrev_removeBuiltChunk(CallbackInfo ci) {
         long chunkPos = ChunkPos.toLong(getOrigin().getX() >> 4, getOrigin().getZ() >> 4);
-        GlobalStateController.INSTANCE.getChunksToUpdate().remove(chunkPos);
+        UtilsKt.runClient(() -> GlobalStateController.INSTANCE.getChunksToUpdate().remove(chunkPos));
     }
 }

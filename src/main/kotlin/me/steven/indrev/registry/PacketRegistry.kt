@@ -98,7 +98,11 @@ object PacketRegistry {
                 if (world.isLoaded(pos)) {
                     val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                     val fluidComponent = blockEntity.fluidComponent ?: return@execute
-                    FluidInvUtil.interactCursorWithTank(fluidComponent.getInteractInventory(tank), player, fluidComponent.getFilterForTank(tank))
+                    FluidInvUtil.interactCursorWithTank(
+                        fluidComponent.getInteractInventory(tank),
+                        player,
+                        fluidComponent.getFilterForTank(tank)
+                    )
                 }
             }
         }
@@ -149,7 +153,8 @@ object PacketRegistry {
             val syncId = buf.readInt()
             val recipeId = buf.readIdentifier()
             val pos = buf.readBlockPos()
-            val screenHandler = player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
+            val screenHandler =
+                player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
             if (syncId != screenHandler.syncId) return@registerGlobalReceiver
             server.execute {
                 val world = player.world
@@ -171,7 +176,12 @@ object PacketRegistry {
             server.execute {
                 val cursorStack = player.inventory.cursorStack
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) { state.createEndpointData(EndpointData.Type.INPUT, null) } as ItemEndpointData
+                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
+                    state.createEndpointData(
+                        EndpointData.Type.INPUT,
+                        null
+                    )
+                } as ItemEndpointData
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
                 state.markDirty()
@@ -190,7 +200,12 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) { state.createEndpointData(EndpointData.Type.INPUT, null) } as ItemEndpointData
+                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
+                    state.createEndpointData(
+                        EndpointData.Type.INPUT,
+                        null
+                    )
+                } as ItemEndpointData
                 when (field) {
                     0 -> data.whitelist = value
                     1 -> data.matchDurability = value
@@ -321,18 +336,19 @@ object PacketRegistry {
                 GlobalStateController.chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos)
             }
 
-         ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
-             val slotIndex = buf.readInt()
-             val stack = buf.readItemStack()
-             client.execute {
-                 val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
-                 val controller = screen.controller
-                 controller.backingList[slotIndex] = stack
-             }
-         }
+            ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
+                val slotIndex = buf.readInt()
+                val stack = buf.readItemStack()
+                client.execute {
+                    val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
+                    val controller = screen.controller
+                    controller.backingList[slotIndex] = stack
+                }
+            }
 
-        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
-            IRConfig.readFromServer(buf)
+            ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
+                IRConfig.readFromServer(buf)
+            }
         }
     }
 }
