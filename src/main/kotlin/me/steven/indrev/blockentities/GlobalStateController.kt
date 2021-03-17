@@ -46,16 +46,18 @@ object GlobalStateController {
         var ticks = 0
         WorldRenderEvents.START.register { ctx ->
             if (ctx.world() != null && ticks % 15 == 0) {
-                chunksToUpdate.long2ObjectEntrySet().removeIf { (_, positions) ->
+                synchronized(chunksToUpdate) {
+                    chunksToUpdate.long2ObjectEntrySet().removeIf { (_, positions) ->
 
-                    val minX = positions.minByOrNull { it.x }?.x ?: return@removeIf true
-                    val minY = positions.minByOrNull { it.y }?.y ?: return@removeIf true
-                    val minZ = positions.minByOrNull { it.z }?.z ?: return@removeIf true
-                    val maxX = positions.maxByOrNull { it.x }?.x ?: return@removeIf true
-                    val maxY = positions.maxByOrNull { it.y }?.y ?: return@removeIf true
-                    val maxZ = positions.maxByOrNull { it.z }?.z ?: return@removeIf true
-                    ctx.worldRenderer().scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
-                    true
+                        val minX = positions.minByOrNull { it.x }?.x ?: return@removeIf true
+                        val minY = positions.minByOrNull { it.y }?.y ?: return@removeIf true
+                        val minZ = positions.minByOrNull { it.z }?.z ?: return@removeIf true
+                        val maxX = positions.maxByOrNull { it.x }?.x ?: return@removeIf true
+                        val maxY = positions.maxByOrNull { it.y }?.y ?: return@removeIf true
+                        val maxZ = positions.maxByOrNull { it.z }?.z ?: return@removeIf true
+                        ctx.worldRenderer().scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
+                        true
+                    }
                 }
             }
         }
