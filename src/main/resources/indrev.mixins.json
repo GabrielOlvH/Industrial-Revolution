@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "aprilfools.MixinTranslatableText",
     "common.AccessorAbstractCookingRecipe",
     "common.AccessorAnimalEntity",
     "common.AccessorEnchantmentPredicate",
