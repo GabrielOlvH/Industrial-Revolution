@@ -1,17 +1,12 @@
 package me.steven.indrev.mixin.aprilfools;
 
 import me.steven.indrev.IndustrialRevolution;
-import net.minecraft.text.StringVisitable;
 import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-
-import java.util.Locale;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(TranslatableText.class)
 public class MixinTranslatableText {
@@ -23,13 +18,16 @@ public class MixinTranslatableText {
             if (!original.contains(".")) {
                 String[] words = original.split(" ");
                 for (int i = 0; i < words.length; i++) {
-                    if (words[i].endsWith("er") || words[i].endsWith("re"))
+                    if (words[i].endsWith("ger") || words[i].endsWith("der"))
+                        words[i] = words[i].substring(0, words[i].length() - 2) + "ah";
+                    else if (words[i].endsWith("er") || words[i].endsWith("re"))
                         words[i] = words[i].substring(0, words[i].length() - 2) + 'y';
                     else if (words[i].endsWith("xe"))
-                        words[i] = words[i].substring(0, words[i].length() - 2) + 'x';
+                        words[i] = words[i].substring(0, words[i].length() - 2) + "xie";
                     else if (words[i].endsWith("et"))
-                        words[i] = words[i].substring(0, words[i].length() - 2) + 'i';
+                        words[i] = words[i].substring(0, words[i].length() - 2) + "ie";
 
+                    words[i] = words[i].replaceFirst("est", "ess"); // Chest -> Chess
                     words[i] = words[i].replaceFirst("O", "Ow").replaceFirst("o", "ow");
                 }
 
