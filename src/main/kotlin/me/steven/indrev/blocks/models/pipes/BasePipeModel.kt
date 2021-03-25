@@ -32,7 +32,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         identifier("block/${type}_side_${tier.toString().toLowerCase()}")
     )
     private val spriteArray = arrayOfNulls<Sprite>(4)
-    private val modelArray = arrayOfNulls<BakedModel>(7)
+    protected val modelArray = arrayOfNulls<BakedModel>(7)
     private lateinit var transformation: ModelTransformation
 
     override fun bake(
