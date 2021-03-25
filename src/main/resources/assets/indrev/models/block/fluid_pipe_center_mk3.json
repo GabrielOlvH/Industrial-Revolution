@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"2": "indrev:block/fluid_pipe_center_mk1",
-		"particle": "indrev:block/fluid_pipe_center_mk1"
+		"2": "indrev:block/fluid_pipe_center_mk3",
+		"particle": "indrev:block/fluid_pipe_center_mk3"
 	},
 	"elements": [
 		{
