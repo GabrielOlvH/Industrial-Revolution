@@ -70,7 +70,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             var performedActions = 0
             val axeStack = inventory.getStack(2)
             val brokenBlocks = hashMapOf<BlockPos, BlockState>()
-            while (scheduledBlocks.hasNext() && cooldown > config.processSpeed) {
+            while (scheduledBlocks.hasNext() && cooldown >= config.processSpeed) {
                 val pos = scheduledBlocks.next()
                 if (!scannedBlocks.add(pos)) continue
                 if (pos.x shr 4 != currentChunk?.pos?.x || pos.z shr 4 != currentChunk.pos.z) {
