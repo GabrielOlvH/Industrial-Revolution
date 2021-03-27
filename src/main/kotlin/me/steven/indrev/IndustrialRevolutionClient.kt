@@ -26,6 +26,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
@@ -36,6 +37,9 @@ import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.util.InputUtil
 import net.minecraft.screen.PlayerScreenHandler
+import net.minecraft.text.LiteralText
+import net.minecraft.util.Formatting
+import net.minecraft.util.registry.Registry
 import org.lwjgl.glfw.GLFW
 
 @Suppress("UNCHECKED_CAST")
@@ -158,6 +162,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("gui/hud_warning"))
                 registry.register(identifier("gui/hud_default"))
             })
+
+        if (AprilFools.isToday())
+            ItemTooltipCallback.EVENT.register { itemStack, _, list ->
+                if (Registry.ITEM.getId(itemStack.item).namespace == IndustrialRevolution.MOD_ID && list.size > 1) {
+                    list.add(LiteralText("")) // break line
+                    list.add(LiteralText("every good modpack uses forge...").formatted(Formatting.ITALIC))
+                }
+            }
     }
 
     private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(

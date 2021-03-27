@@ -1,23 +1,18 @@
 package me.steven.indrev.mixin.aprilfools;
 
+import me.steven.indrev.AprilFools;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class AprilFoolsMixinConfigPlugin implements IMixinConfigPlugin {
-    private static final LocalDate APRIL_FOOLS = LocalDate.parse("2021-04-01");
     private static final ArrayList<String> mixins = new ArrayList<>();
     static {
         mixins.add("aprilfools.MixinTranslatableText");
-    }
-
-    private boolean isAprilFools() {
-        return LocalDate.now().equals(APRIL_FOOLS);
     }
 
     @Override
@@ -38,7 +33,7 @@ public class AprilFoolsMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return isAprilFools()? mixins : null;
+        return AprilFools.isToday()? mixins : null;
     }
 
     @Override
