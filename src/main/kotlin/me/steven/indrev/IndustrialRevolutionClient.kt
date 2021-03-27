@@ -170,6 +170,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     list.add(LiteralText("every good modpack uses forge...").formatted(Formatting.ITALIC))
                 }
             }
+
+        if (!AprilFools.CHECK.exists())
+            AprilFools.CHECK.createNewFile()
     }
 
     private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
