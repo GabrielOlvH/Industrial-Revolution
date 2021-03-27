@@ -163,7 +163,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("gui/hud_default"))
             })
 
-        if (AprilFools.isToday())
+        if (AprilFools.isToday()) {
             ItemTooltipCallback.EVENT.register { itemStack, _, list ->
                 if (Registry.ITEM.getId(itemStack.item).namespace == IndustrialRevolution.MOD_ID && list.size > 1) {
                     list.add(LiteralText("")) // break line
@@ -171,8 +171,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 }
             }
 
-        if (!AprilFools.CHECK.exists())
-            AprilFools.CHECK.createNewFile()
+            if (!AprilFools.CHECK.exists())
+                AprilFools.CHECK.createNewFile()
+        }
     }
 
     private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
