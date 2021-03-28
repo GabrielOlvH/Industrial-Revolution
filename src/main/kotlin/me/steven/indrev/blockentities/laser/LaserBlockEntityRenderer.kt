@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.laser
 
 import me.steven.indrev.blocks.machine.FacingMachineBlock
-import me.steven.indrev.blocks.machine.LaserBlock
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer
@@ -10,8 +9,6 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
-import kotlin.math.absoluteValue
-import kotlin.math.sin
 
 class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<LaserBlockEntity>(dispatcher) {
 
@@ -24,7 +21,7 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
         overlay: Int
     ) {
         entity ?: return
-        if (!entity.cachedState[LaserBlock.POWERED]) return
+        if (!entity.isEmittingLaser()) return
         val direction = entity.cachedState[FacingMachineBlock.FACING]
         matrices?.run {
             push()
@@ -39,7 +36,6 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
             }
             multiply(rotation)
             translate(-0.5, -0.5, -0.5)
-            val delta = sin((entity.world!!.time + tickDelta) / 8.0).toFloat().absoluteValue
             BeaconBlockEntityRenderer.renderLightBeam(
                 matrices,
                 vertexConsumers,
