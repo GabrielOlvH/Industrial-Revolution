@@ -115,13 +115,14 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
                 spawnParticles(world!!, containerPos)
             BlockPos.iterate(pos.offset(facing), pos.offset(facing, 3)).forEach {
                 if (world!!.random.nextDouble() > 0.95)
-                    spawnParticles(world!!, it, 0.05)
+                    spawnParticles(world!!, it, 0.0)
             }
         }
     }
 
     private fun spawnParticles(world: World, pos: BlockPos, width: Double = 0.5625, isFire: Boolean = false) {
         val random = world.random
+        val facing = cachedState[FacingMachineBlock.FACING]
         Direction.values().forEach { direction ->
             val axis = direction.axis
             val e = if (axis == Direction.Axis.X) 0.5 + width * direction.offsetX
@@ -135,9 +136,9 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
                 pos.x.toDouble() + e,
                 pos.y.toDouble() + f,
                 pos.z.toDouble() + g,
-                0.0,
-                0.0,
-                0.0
+                if (isFire) 0.0 else facing.offsetX.toDouble(),
+                if (isFire) 0.1 else facing.offsetY.toDouble(),
+                if (isFire) 0.0 else facing.offsetZ.toDouble()
             )
         }
     }
