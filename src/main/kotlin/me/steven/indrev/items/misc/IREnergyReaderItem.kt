@@ -2,6 +2,7 @@ package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.utils.energyOf
@@ -23,12 +24,14 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
             val energy = machineIo.energy.toInt()
             val text = TranslatableText("item.indrev.energy_reader.use")
                 .formatted(Formatting.BLUE)
-                .append(LiteralText(" $energy").formatted(Formatting.WHITE))
+                .append(LiteralText(" $energy LF").formatted(Formatting.WHITE))
             if (blockEntity is MachineBlockEntity<*>) {
                 val energyCost =
                     when {
-                        blockEntity is UpgradeProvider -> Upgrade.getEnergyCost(blockEntity.getUpgrades(blockEntity.inventoryComponent!!.inventory), blockEntity)
-                        blockEntity.config is BasicMachineConfig -> (blockEntity.config as BasicMachineConfig).energyCost
+                        blockEntity is UpgradeProvider ->
+                            Upgrade.getEnergyCost(blockEntity.getUpgrades(blockEntity.inventoryComponent!!.inventory), blockEntity)
+                        blockEntity !is LazuliFluxContainerBlockEntity && blockEntity.config is BasicMachineConfig ->
+                            (blockEntity.config as BasicMachineConfig).energyCost
                         else -> -1.0
                     }
                 if (energyCost > 0.0) {

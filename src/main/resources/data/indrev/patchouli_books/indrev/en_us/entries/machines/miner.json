@@ -18,7 +18,7 @@
       "type": "image",
       "title": "Example",
       "images": ["indrev:textures/gui/mrc_setup.png"],
-      "text": "Note that the Drills can be placed connected or diagonally to the Mining Rig Computer.."
+      "text": "Note that the Drills can be placed connected or diagonally to the Mining Rig Computer."
     },
     {
       "anchor": "chunk_scanner",

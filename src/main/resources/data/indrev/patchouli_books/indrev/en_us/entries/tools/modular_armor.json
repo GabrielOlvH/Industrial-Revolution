@@ -9,6 +9,10 @@
       "text": "The Modular Armor is, on it's own, not much, but when you install modules, it can become very powerful!$(br2)Color modules do not have recipes, you must find them in dungeons."
     },
     {
+      "type": "text",
+      "text": "Module levels can be configured any way you want, go into the $(l)Controls$() menu and add a keybind to \"Modular item configuration.\""
+    },
+    {
       "type": "crafting",
       "recipe": "indrev:shaped/modular_armor_helmet",
       "recipe2": "indrev:shaped/modular_armor_chest"
