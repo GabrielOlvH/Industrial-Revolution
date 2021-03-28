@@ -17,11 +17,11 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/laser",
-      "text": "Lasers should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 25M LF and require a redstone signal to be toggled on."
+      "text": "Laser Emitters should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 25M LF and require a redstone signal to be toggled on."
     },
     {
       "type": "text",
-      "text": "This process takes time but it goes faster for each laser active. You must pay attention to these details to avoid problems:$(br)- Pointing the laser to something other than the capsule or and empty capsule will result in explosion.$(br)- If the lasers run out of power during the process, all progress will be lost.$(br)- Make sure to turn off your Lasers before retrieving the activated core."
+      "text": "This process takes time but it goes faster for each laser emitter active. You must pay attention to these details to avoid problems:$(br)- Pointing the laser emitter to something other than the capsule or and empty capsule will result in explosion.$(br)- If the laser emitters run out of power during the process, all progress will be lost.$(br)- Make sure to turn off your laser emitters before retrieving the activated core."
     }
   ]
 }
