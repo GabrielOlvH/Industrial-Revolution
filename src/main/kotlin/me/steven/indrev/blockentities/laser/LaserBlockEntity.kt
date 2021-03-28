@@ -38,7 +38,10 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     private var ticksUntilExplode = 100
 
     override fun machineTick() {
-        if (!cachedState[LaserBlock.POWERED]) return
+        if (!cachedState[LaserBlock.POWERED]) {
+            ticksUntilExplode = 100
+            return
+        }
         val facing = cachedState[FacingMachineBlock.FACING]
         val containerPos = pos.offset(facing, 4)
 
@@ -137,7 +140,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
                 pos.y.toDouble() + f,
                 pos.z.toDouble() + g,
                 if (isFire) 0.0 else facing.offsetX.toDouble(),
-                if (isFire) 0.1 else facing.offsetY.toDouble(),
+                if (isFire) 0.05 else facing.offsetY.toDouble(),
                 if (isFire) 0.0 else facing.offsetZ.toDouble()
             )
         }
