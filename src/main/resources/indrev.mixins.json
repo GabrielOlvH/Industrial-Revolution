@@ -2,6 +2,7 @@
   "required": true,
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "me.steven.indrev.mixin.aprilfools.AprilFoolsMixinConfigPlugin",
   "mixins": [
     "common.AccessorAbstractCookingRecipe",
     "common.AccessorAnimalEntity",

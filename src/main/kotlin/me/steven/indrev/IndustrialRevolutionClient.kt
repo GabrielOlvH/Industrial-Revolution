@@ -160,6 +160,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("gui/hud_warning"))
                 registry.register(identifier("gui/hud_default"))
             })
+
+        AprilFools.init()
     }
 
     private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
