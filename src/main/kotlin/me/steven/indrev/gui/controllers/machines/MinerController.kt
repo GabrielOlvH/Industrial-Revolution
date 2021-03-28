@@ -71,18 +71,18 @@ class MinerController(syncId: Int, playerInventory: PlayerInventory, ctx: Screen
                 else -> {
                     activeDrills.forEachIndexed { index, drill ->
                         val panel = getDrillInfo(drill)
-                        root.add(panel, 1.5 + index, 1.6)
+                        root.add(panel, 1.5 + if (index > 3) index - 4 else index, 1.5 + if (index > 3) 0.75 else 0.0)
                     }
                 }
             }
             root.add(WText({
                 val totalMultiplier = activeDrills.sumByDouble { it.getSpeedMultiplier() }
                 TranslatableText("block.indrev.drill.faster", totalMultiplier)
-            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 2.8)
+            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.2)
         }
         root.add(WText({
             TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
-        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
+        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.9)
 
         root.validate(this)
     }

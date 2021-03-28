@@ -12,13 +12,13 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/drill_bottom",
-      "text": "Mining Rig Drills are required for the Mining Rig Computer to work. They have to be placed diagonally from the Computer and require drill heads to work. Each Drill increases the mining speed.$(br)Screenshot of a functional setup:"
+      "text": "Mining Rig Drills are required for the Mining Rig Computer to work. They have to be placed next to the Computer and require drill heads to work. Each Drill increases the mining speed.$(br)Screenshot of a functional setup:"
     },
     {
       "type": "image",
       "title": "Example",
       "images": ["indrev:textures/gui/mrc_setup.png"],
-      "text": "Note that the Drills are placed diagonally and the Computer is aligned with the middle block."
+      "text": "Note that the Drills can be placed connected or diagonally to the Mining Rig Computer.."
     },
     {
       "anchor": "chunk_scanner",

@@ -171,8 +171,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     }
 
     fun getActiveDrills(): List<DrillBlockEntity> {
-        val offsets = arrayOf(BlockPos(-1, 0, -1), BlockPos(-1, 0, 1), BlockPos(1, 0, 1), BlockPos(1, 0, -1))
-        return offsets.map { pos.add(it) }.mapNotNull { pos ->
+        return VALID_DRILL_POSITIONS.map { pos.add(it) }.mapNotNull { pos ->
             val blockState = world?.getBlockState(pos)
             val block = blockState?.block
             if (block is DrillBlock) {
@@ -180,8 +179,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 val itemStack = blockEntity.inventory[0]
                 if (!itemStack.isEmpty && DrillBlockEntity.isValidDrill(itemStack.item)) {
                     blockEntity
-                }
-                else {
+                } else {
                     blockEntity.setWorkingState(false)
                     null
                 }
@@ -234,5 +232,16 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
 
     companion object {
         val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
+
+        val VALID_DRILL_POSITIONS = arrayOf(
+            BlockPos(-1, 0, 0),
+            BlockPos(1, 0, 0),
+            BlockPos(0, 0, -1),
+            BlockPos(0, 0, 1),
+            BlockPos(-1, 0, -1),
+            BlockPos(-1, 0, 1),
+            BlockPos(1, 0, 1),
+            BlockPos(1, 0, -1)
+        )
     }
 }
