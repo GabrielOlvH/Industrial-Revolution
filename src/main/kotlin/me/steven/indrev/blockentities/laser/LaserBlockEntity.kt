@@ -17,7 +17,6 @@ import net.fabricmc.api.Environment
 import net.minecraft.client.util.math.Vector3f
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
-import net.minecraft.particle.DustParticleEffect
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.sound.SoundCategory
@@ -120,13 +119,6 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
                 return
             }
             spawnParticles(world!!, pos, 0.4)
-
-            //if (world!!.random.nextDouble() > 0.7)
-                //spawnParticles(world!!, containerPos)
-           // BlockPos.iterate(pos.offset(facing), pos.offset(facing, 3)).forEach {
-              //  if (world!!.random.nextDouble() > 0.95)
-                    //spawnParticles(world!!, it, 0.0)
-            //}
         }
     }
 
@@ -175,9 +167,6 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     }
 
     companion object {
-        private val LIGHTER = DustParticleEffect(115 / 255f, 239 / 255f, 232 / 255f, 1.0f)
-        private val DARKER = DustParticleEffect(89 / 255f, 205 / 255f, 223 / 255f, 1.0f)
-
         private fun Direction.vector3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
 
         private fun scale(v: Vector3f, scale: Float): Vector3f {
