@@ -40,13 +40,13 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
                 matrices,
                 vertexConsumers,
                 TEXTURE,
-                0f,
+                tickDelta,
                 1.0f,
-                0,
+                entity.world!!.time,
                 0,
                 3,
                 floatArrayOf(1f, 1f, 1f),
-                0.08f,
+                0.085f,
                 0.1f
             )
             pop()
