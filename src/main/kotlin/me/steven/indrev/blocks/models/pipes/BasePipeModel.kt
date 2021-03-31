@@ -31,7 +31,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         identifier("block/${type}_center_${tier.toString().toLowerCase()}"),
         identifier("block/${type}_side_${tier.toString().toLowerCase()}")
     )
-    private val spriteArray = arrayOfNulls<Sprite>(4)
+    protected val spriteArray = arrayOfNulls<Sprite>(4)
     protected val modelArray = arrayOfNulls<BakedModel>(7)
     private lateinit var transformation: ModelTransformation
 
