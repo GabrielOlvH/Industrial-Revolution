@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
@@ -41,7 +42,6 @@ import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
         IRConfig
@@ -50,6 +50,7 @@ object IndustrialRevolution : ModInitializer {
         IRFluidRegistry.registerAll()
 
         Registry.register(Registry.SOUND_EVENT, LASER_SOUND_ID, LASER_SOUND_EVENT)
+        Registry.register(Registry.PARTICLE_TYPE, identifier("laser_particle"), LASER_PARTICLE)
 
         WorldGeneration.init()
 
@@ -201,6 +202,7 @@ object IndustrialRevolution : ModInitializer {
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
+    val LASER_PARTICLE = FabricParticleTypes.simple()
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val SYNC_CONFIG_PACKET = identifier("sync_config_packet")

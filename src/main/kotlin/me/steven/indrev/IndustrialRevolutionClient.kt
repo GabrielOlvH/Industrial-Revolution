@@ -29,15 +29,18 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.options.KeyBinding
+import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.util.InputUtil
 import net.minecraft.screen.PlayerScreenHandler
 import org.lwjgl.glfw.GLFW
+
 
 @Suppress("UNCHECKED_CAST")
 object IndustrialRevolutionClient : ClientModInitializer {
@@ -159,7 +162,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("gui/hud_regenerating"))
                 registry.register(identifier("gui/hud_warning"))
                 registry.register(identifier("gui/hud_default"))
+                registry.register(identifier("particle/laser_particle_1"))
+                registry.register(identifier("particle/laser_particle_2"))
+                registry.register(identifier("particle/laser_particle_3"))
             })
+
+        ParticleFactoryRegistry.getInstance().register(IndustrialRevolution.LASER_PARTICLE) { spriteProvider ->
+            FlameParticle.Factory(spriteProvider)
+        }
 
         AprilFools.init()
     }

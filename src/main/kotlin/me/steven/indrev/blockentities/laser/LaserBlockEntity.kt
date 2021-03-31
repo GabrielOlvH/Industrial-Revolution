@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.laser
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
@@ -10,6 +11,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
+import me.steven.indrev.utils.toVec3d
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.client.util.math.Vector3f
@@ -23,6 +25,7 @@ import net.minecraft.sound.SoundEvents
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
 
@@ -64,7 +67,10 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             return
         }
 
-        if (!use(config.energyCost)) return
+        if (!use(config.energyCost)) {
+            world?.setBlockState(pos, cachedState.with(LaserBlock.POWERED, false))
+            return
+        }
 
         val (x, y, z) = scale(facing.vector3f(), 3.0f)
         val damageArea = Box(pos).stretch(x.toDouble(), y.toDouble(), z.toDouble()).let {
@@ -113,35 +119,41 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
                 }
                 return
             }
+            spawnParticles(world!!, pos, 0.4)
 
-            if (world!!.random.nextDouble() > 0.7)
-                spawnParticles(world!!, containerPos)
-            BlockPos.iterate(pos.offset(facing), pos.offset(facing, 3)).forEach {
-                if (world!!.random.nextDouble() > 0.95)
-                    spawnParticles(world!!, it, 0.0)
-            }
+            //if (world!!.random.nextDouble() > 0.7)
+                //spawnParticles(world!!, containerPos)
+           // BlockPos.iterate(pos.offset(facing), pos.offset(facing, 3)).forEach {
+              //  if (world!!.random.nextDouble() > 0.95)
+                    //spawnParticles(world!!, it, 0.0)
+            //}
         }
     }
 
     private fun spawnParticles(world: World, pos: BlockPos, width: Double = 0.5625, isFire: Boolean = false) {
         val random = world.random
         val facing = cachedState[FacingMachineBlock.FACING]
-        Direction.values().forEach { direction ->
-            val axis = direction.axis
-            val e = if (axis == Direction.Axis.X) 0.5 + width * direction.offsetX
-                .toDouble() else random.nextFloat().toDouble()
-            val f = if (axis == Direction.Axis.Y) 0.5 + width * direction.offsetY
-                .toDouble() else random.nextFloat().toDouble()
-            val g = if (axis == Direction.Axis.Z) 0.5 + width * direction.offsetZ
-                .toDouble() else random.nextFloat().toDouble()
+        repeat(6) {
+            val axis = facing.axis
+            val x = if (axis != Direction.Axis.X) 0.7 - random.nextDouble() * width else 0.0
+            val y = if (axis != Direction.Axis.Y) 0.7 - random.nextDouble() * width else 0.0
+            val z = if (axis != Direction.Axis.Z) 0.7 - random.nextDouble() * width else 0.0
+            val source = Vec3d(pos.x + x, pos.y + y, pos.z + z).let {
+                val (x, y, z) = facing.unitVector
+                if (x > 0 || y > 0 || z > 0)
+                    it.add(Vec3d(facing.unitVector))
+                else it
+            }
+            val velocity = pos.offset(facing, 4).toVec3d().add(x, y, z).subtract(source).normalize().multiply(0.18)
             world.addParticle(
-                if (isFire) ParticleTypes.SMOKE else if (random.nextDouble() > 0.5) LIGHTER else DARKER,
-                pos.x.toDouble() + e,
-                pos.y.toDouble() + f,
-                pos.z.toDouble() + g,
-                if (isFire) 0.0 else facing.offsetX.toDouble(),
-                if (isFire) 0.05 else facing.offsetY.toDouble(),
-                if (isFire) 0.0 else facing.offsetZ.toDouble()
+                if (isFire) ParticleTypes.SMOKE else IndustrialRevolution.LASER_PARTICLE,
+                true,
+                source.x,
+                source.y,
+                source.z,
+                if (isFire) 0.0 else velocity.x,
+                if (isFire) 0.05 else velocity.y,
+                if (isFire) 0.0 else velocity.z
             )
         }
     }
