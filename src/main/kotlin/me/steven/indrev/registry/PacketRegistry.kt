@@ -335,18 +335,18 @@ object PacketRegistry {
                 val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
                 GlobalStateController.chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos)
             }
+        }
 
-            ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
-                val slotIndex = buf.readInt()
-                val stack = buf.readItemStack()
-                client.execute {
-                    val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
-                    val controller = screen.controller
-                    controller.backingList[slotIndex] = stack
-                }
+        ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
+            val slotIndex = buf.readInt()
+            val stack = buf.readItemStack()
+            client.execute {
+                val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
+                val controller = screen.controller
+                controller.backingList[slotIndex] = stack
             }
         }
-        
+
         ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
             IRConfig.readFromServer(buf)
         }
