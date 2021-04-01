@@ -9,7 +9,7 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
-import me.steven.indrev.config.BasicMachineConfig
+import me.steven.indrev.config.LFCConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
@@ -20,7 +20,7 @@ import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
 
 class LazuliFluxContainerBlockEntity(tier: Tier) :
-    MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY) {
+    MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
@@ -29,11 +29,11 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
         }
     }
 
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = config.maxOutput
+
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
     private var lastWidth = 0f
-
-    override val maxOutput: Double = getTransferRate()
-    override val maxInput: Double = getTransferRate()
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -62,13 +62,6 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
             sync()
             lastWidth = width
         }
-    }
-
-    private fun getTransferRate() = when (tier) {
-        Tier.MK1 -> 128.0
-        Tier.MK2 -> 512.0
-        Tier.MK3 -> 4096.0
-        else -> 16384.0
     }
 
     override fun isConfigurable(type: ConfigurationType): Boolean {
@@ -106,14 +99,6 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
         super.fromClientTag(tag)
         transferConfig.fromTag(tag)
         MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, null, null, 8)
-    }
-
-    override fun getEnergyCapacity(): Double = when (tier) {
-        Tier.MK1 -> 10000.0
-        Tier.MK2 -> 100000.0
-        Tier.MK3 -> 1000000.0
-        Tier.MK4 -> 10000000.0
-        Tier.CREATIVE -> Double.MAX_VALUE
     }
 
     class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {

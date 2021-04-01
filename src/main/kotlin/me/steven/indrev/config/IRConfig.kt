@@ -187,6 +187,14 @@ class Machines {
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
+
+    val lazuliFluxContainerMk1: LFCConfig = LFCConfig(10000.0, 128.0, 128.0)
+
+    val lazuliFluxContainerMk2: LFCConfig = LFCConfig(100000.0, 512.0, 512.0)
+
+    val lazuliFluxContainerMk3: LFCConfig = LFCConfig(1000000.0, 4096.0, 4096.0)
+
+    val lazuliFluxContainerMk4: LFCConfig = LFCConfig(10000000.0, 16384.0, 16384.0)
 }
 
 class HeatMachineConfig(
@@ -209,6 +217,12 @@ interface BasicMachineConfig : IConfig {
     val processSpeed: Double
     val maxInput: Double
 }
+
+class LFCConfig(
+    override val maxEnergyStored: Double,
+    val maxInput: Double,
+    val maxOutput: Double
+): IConfig
 
 interface IConfig {
     val maxEnergyStored: Double

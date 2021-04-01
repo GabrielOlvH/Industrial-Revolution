@@ -380,6 +380,7 @@
   "gui.indrev.tooltip.maxInput": "Input capacity: ",
   "gui.indrev.tooltip.maxOutput": "Output capacity: ",
   "gui.indrev.tooltip.maxEnergyStored": "Energy capacity: ",
+  "gui.indrev.tooltip.seconds": "%s seconds",
   "gui.indrev.tooltip.energyCost": "Energy cost: ",
   "gui.indrev.tooltip.processSpeed": "Speed: ",
   "gui.indrev.tooltip.ratio": "Generation: ",

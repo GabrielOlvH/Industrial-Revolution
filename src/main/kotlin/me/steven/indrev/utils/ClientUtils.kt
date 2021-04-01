@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
+import me.steven.indrev.config.LFCConfig
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.BufferRenderer
 import net.minecraft.client.render.Tessellator
@@ -89,95 +90,37 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
         tooltip?.add(LiteralText.EMPTY)
         when (config) {
             is BasicMachineConfig -> {
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
-                        .append(
-                            TranslatableText("gui.indrev.tooltip.lf", getEnergyString(config.maxEnergyStored)).formatted(
-                                Formatting.GRAY))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.energyCost).formatted(Formatting.GRAY))
-                )
+                tooltip?.add(configText("maxInput", "lftick", config.maxInput))
+                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
+                tooltip?.add(configText("energyCost", "lftick", config.energyCost))
                 val speed = config.processSpeed * 100
                 if (speed >= 1000)
-                    tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
-                            .append(LiteralText("${config.processSpeed / 20} seconds").formatted(Formatting.GRAY))
-                    )
+                    tooltip?.add(configText("processSpeed", "seconds", config.processSpeed / 20))
                 else
-                    tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
-                            .append(LiteralText("${speed.toInt()}%").formatted(Formatting.GRAY))
-                    )
+                    tooltip?.add(configText("processSpeed", "${speed.toInt()}%"))
             }
             is HeatMachineConfig -> {
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxInput").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.maxInput).formatted(Formatting.GRAY))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
-                        .append(
-                            TranslatableText("gui.indrev.tooltip.lf", getEnergyString(config.maxEnergyStored)).formatted(
-                                Formatting.GRAY))
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.energyCost").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.energyCost).formatted(Formatting.GRAY))
-                )
+                tooltip?.add(configText("maxInput", "lftick", config.maxInput))
+                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
+                tooltip?.add(configText("energyCost", "lftick", config.energyCost))
                 val speed = config.processSpeed * 100
                 if (speed >= 1000)
-                    tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
-                            .append(LiteralText("${config.processSpeed / 20} seconds").formatted(Formatting.GRAY))
-                    )
+                    tooltip?.add(configText("processSpeed", "seconds", config.processSpeed / 20))
                 else
-                    tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.processSpeed").formatted(Formatting.AQUA)
-                            .append(LiteralText("${speed.toInt()}%").formatted(Formatting.GRAY))
-                    )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.AQUA)
-                        .append(
-                            TranslatableText("gui.indrev.tooltip.lftick", config.processTemperatureBoost).formatted(
-                                Formatting.GRAY))
-                )
+                    tooltip?.add(configText("processSpeed", "${speed.toInt()}%"))
+                tooltip?.add(configText("temperatureBoost", "lftick", config.processTemperatureBoost))
             }
             is GeneratorConfig -> {
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxOutput").formatted(Formatting.AQUA)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lftick",
-                                config.maxOutput
-                            ).formatted(Formatting.GRAY)
-                        )
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.maxEnergyStored").formatted(Formatting.AQUA)
-                        .append(
-                            TranslatableText(
-                                "gui.indrev.tooltip.lf",
-                                getEnergyString(config.maxEnergyStored)
-                            ).formatted(Formatting.GRAY)
-                        )
-                )
-                tooltip?.add(
-                    TranslatableText("gui.indrev.tooltip.ratio").formatted(Formatting.AQUA)
-                        .append(TranslatableText("gui.indrev.tooltip.lftick", config.ratio).formatted(Formatting.GRAY))
-                )
+                tooltip?.add(configText("maxOutput", "lftick", config.maxOutput))
+                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
+                tooltip?.add(configText("ratio", "lftick", config.ratio))
                 if (config.temperatureBoost > 0)
-                    tooltip?.add(
-                        TranslatableText("gui.indrev.tooltip.temperatureBoost").formatted(Formatting.AQUA)
-                            .append(
-                                TranslatableText("gui.indrev.tooltip.lftick", config.temperatureBoost).formatted(
-                                    Formatting.GRAY))
-                    )
+                    tooltip?.add(configText("temperatureBoost", "lftick", config.temperatureBoost))
+            }
+            is LFCConfig -> {
+                tooltip?.add(configText("maxInput", "lftick", config.maxInput))
+                tooltip?.add(configText("maxOutput", "lftick", config.maxOutput))
+                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
             }
         }
     } else {
@@ -185,6 +128,16 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
             TranslatableText("gui.indrev.tooltip.press_shift").formatted(Formatting.DARK_GRAY)
         )
     }
+}
+
+private fun configText(key: String, value: String): Text {
+    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA).append(LiteralText(" "))
+        .append(LiteralText(value).formatted(Formatting.GRAY))
+}
+
+private fun configText(key: String, unit: String, value: Any): Text {
+    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA).append(LiteralText(" "))
+        .append(TranslatableText("gui.indrev.tooltip.$unit", value).formatted(Formatting.GRAY))
 }
 
 fun getEnergyString(energy: Double): String =

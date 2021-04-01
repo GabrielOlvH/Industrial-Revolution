@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.machines.LazuliFluxContainerController
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
@@ -11,7 +12,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class LazuliFluxContainerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : FacingMachineBlock(
-    registry, settings, tier, null, ::LazuliFluxContainerController
+    registry, settings, tier, when (tier) {
+        Tier.MK1 -> IRConfig.machines.lazuliFluxContainerMk1
+        Tier.MK2 -> IRConfig.machines.lazuliFluxContainerMk2
+        Tier.MK3 -> IRConfig.machines.lazuliFluxContainerMk3
+        else -> IRConfig.machines.lazuliFluxContainerMk4
+    }, ::LazuliFluxContainerController
 ) {
 
     override fun onPlaced(
