@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
+import net.minecraft.item.ItemStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.BlockRenderView
 import java.util.*
@@ -28,6 +29,15 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
         context: RenderContext
     ) {
         super.emitBlockQuads(world, state, pos, randSupplier, context)
+        emitOverlay(context)
+    }
+
+    override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
+        super.emitItemQuads(stack, p1, context)
+        emitOverlay(context)
+    }
+
+    private fun emitOverlay(context: RenderContext) {
         val sprite = spriteArray[1]!!
         context.pushTransform { q ->
             q.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
