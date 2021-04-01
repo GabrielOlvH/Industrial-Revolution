@@ -345,10 +345,10 @@ object PacketRegistry {
                     controller.backingList[slotIndex] = stack
                 }
             }
-
-            ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
-                IRConfig.readFromServer(buf)
-            }
+        }
+        
+        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
+            IRConfig.readFromServer(buf)
         }
     }
 }
