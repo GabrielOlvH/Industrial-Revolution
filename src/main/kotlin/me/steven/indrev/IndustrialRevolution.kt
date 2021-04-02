@@ -17,15 +17,19 @@ import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
+import me.steven.indrev.registry.PacketRegistry.syncConfig
+import me.steven.indrev.registry.PacketRegistry.syncVeinData
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
@@ -103,6 +107,19 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+
+        ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
+            val player = handler.player
+            syncVeinData(player)
+            syncConfig(player)
+            if (player is IRServerPlayerEntityExtension) {
+                (player as IRServerPlayerEntityExtension).sync()
+            }
+        }
+
+        ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
+            IRConfig.readConfigs()
+        }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->

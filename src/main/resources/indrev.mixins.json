@@ -21,7 +21,6 @@
     "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinPlayerManager",
     "common.MixinServerPlayerEntity",
     "common.MixinSheepEntity"
   ],

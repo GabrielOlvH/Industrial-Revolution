@@ -11,14 +11,18 @@ object IRConfig {
 
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    var generators: Generators
-    var machines: Machines
-    var cables: Cables
-    var upgrades: Upgrades
-    var oregen: OreGen
-    var hud: Hud
+    lateinit var generators: Generators
+    lateinit var machines: Machines
+    lateinit var cables: Cables
+    lateinit var upgrades: Upgrades
+    lateinit var oregen: OreGen
+    lateinit var hud: Hud
 
     init {
+       readConfigs()
+    }
+
+    fun readConfigs() {
         generators = readOrCreate("generators.json") { Generators() }
         machines = readOrCreate("machines.json") { Machines() }
         cables = readOrCreate("cables.json") { Cables() }
