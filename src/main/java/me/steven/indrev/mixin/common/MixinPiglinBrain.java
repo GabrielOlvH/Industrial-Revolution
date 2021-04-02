@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinPiglinBrain {
     @Inject(method = "wearsGoldArmor", at = @At("RETURN"), cancellable = true)
     private static void indrev_hasPiglinTrickerModule(LivingEntity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (entity instanceof IRPlayerEntityExtension && ((IRPlayerEntityExtension) entity).isApplied(ArmorModule.NIGHT_VISION)) {
+        if (entity instanceof IRPlayerEntityExtension && ((IRPlayerEntityExtension) entity).isApplied(ArmorModule.PIGLIN_TRICKER)) {
             cir.setReturnValue(true);
         }
     }
