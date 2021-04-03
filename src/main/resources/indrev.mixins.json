@@ -9,7 +9,6 @@
     "common.AccessorEnchantmentPredicate",
     "common.AccessorRecipeManager",
     "common.AccessorScreenHandler",
-    "common.AccessorSyncedGuiDescription",
     "common.AccessorWeightedList",
     "common.AccessorWeightedListEntry",
     "common.MixinAbstractCookingRecipe",
