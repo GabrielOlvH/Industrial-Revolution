@@ -2,7 +2,10 @@ package me.steven.indrev.registry
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import io.netty.buffer.Unpooled
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.IRPlayerEntityExtension
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.Configurable
@@ -41,9 +44,10 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.collection.WeightedList
-import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
+import java.util.function.LongFunction
 
 object PacketRegistry {
     fun registerServer() {
@@ -332,8 +336,7 @@ object PacketRegistry {
             val workingState = buf.readBoolean()
             client.execute {
                 GlobalStateController.workingStateTracker[pos.asLong()] = workingState
-                val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
-                GlobalStateController.chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos)
+                GlobalStateController.queueUpdate(pos)
             }
         }
 
@@ -349,6 +352,40 @@ object PacketRegistry {
 
         ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_CONFIG_PACKET) { client, _, buf, _ ->
             IRConfig.readFromServer(buf)
+        }
+
+        ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_NETWORK_SERVOS) { client, _, buf, _ ->
+            val type = Network.Type.valueOf(buf.readString())
+            val servoData = IndustrialRevolutionClient.CLIENT_RENDER_SERVO_DATA.computeIfAbsent(type) { Long2ObjectOpenHashMap() }
+            val before = Long2ObjectOpenHashMap(servoData)
+            val new = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
+            val positions = hashSetOf<BlockPos>()
+            val size = buf.readInt()
+            for (i in 0 until size) {
+                val pos = buf.readLong()
+                for (m in 0 until buf.readByte()) {
+                    val dir = Direction.values()[buf.readByte().toInt()]
+                    val type = EndpointData.Type.values()[buf.readByte().toInt()]
+                    val hasMode = buf.readBoolean()
+                    val mode = if (hasMode) EndpointData.Mode.values()[buf.readByte().toInt()] else null
+                    client.execute {
+                        val data = new.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
+                        data[dir] = EndpointData(type, mode)
+
+                        if (before[pos]?.size != data?.size || before[pos]?.any { it.value.mode != data[it.key]?.mode || it.value.type != data[it.key]?.type } == true) {
+                            positions.add(BlockPos.fromLong(pos))
+                        }
+                    }
+                }
+            }
+            client.execute {
+
+                servoData.clear()
+                servoData.putAll(new)
+                positions.forEach { (x, y, z) ->
+                    MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x, y, z, x, y, z)
+                }
+            }
         }
     }
 }

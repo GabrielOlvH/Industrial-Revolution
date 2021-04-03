@@ -6,7 +6,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.PersistentState
 
-open class NetworkState<T : Network>(private val type: Network.Type<T>, private val world: ServerWorld, key: String) : PersistentState(key) {
+open class NetworkState<T : Network>(val type: Network.Type<T>, private val world: ServerWorld, key: String) : PersistentState(key) {
     var networks = hashSetOf<T>()
     private val networksByPos = hashMapOf<BlockPos, T>()
 

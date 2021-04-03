@@ -226,4 +226,5 @@ object IndustrialRevolution : ModInitializer {
     val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
     val SYNC_PROPERTY = identifier("sync_property")
     val SYNC_MODULE_PACKET = identifier("sync_module")
+    val SYNC_NETWORK_SERVOS = identifier("sync_network_servos")
 }

@@ -1,25 +1,68 @@
 package me.steven.indrev.networks
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import me.steven.indrev.IndustrialRevolution
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import java.util.*
 import java.util.function.LongFunction
 
 abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: ServerWorld) : NetworkState<T>(type, world, type.key) {
     val endpointData = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
     val recentlyRemoved = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
 
+    private val syncedMaps = Object2IntOpenHashMap<UUID>()
+
+    init {
+        syncedMaps.defaultReturnValue(-1)
+    }
+
+    var version = 0
+
+    fun sync(world: ServerWorld) {
+        world.players.forEach { player ->
+            val v = syncedMaps.getInt(player.uuid)
+            if (version > v) {
+                val buf = PacketByteBufs.create()
+                write(buf)
+                ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_NETWORK_SERVOS, buf)
+                syncedMaps[player.uuid] = version
+            }
+        }
+    }
+
+    private fun write(buf: PacketByteBuf) {
+        buf.writeString(type.key)
+        buf.writeInt(endpointData.size)
+        endpointData.forEach { (pos, info) ->
+            buf.writeLong(pos)
+            buf.writeByte(info.size)
+            info.forEach { (dir, data) ->
+                buf.writeByte(dir.ordinal)
+                buf.writeByte(data.type.ordinal)
+                buf.writeBoolean(data.mode != null)
+                if (data.mode != null) buf.writeByte(data.mode!!.ordinal)
+            }
+        }
+    }
+
     override fun remove(pos: BlockPos) {
+        version++
         super.remove(pos)
         if (endpointData.containsKey(pos.asLong()))
             recentlyRemoved[pos.asLong()] = endpointData.remove(pos.asLong())
     }
 
     override fun set(blockPos: BlockPos, network: T) {
+        version++
         super.set(blockPos, network)
         if (recentlyRemoved.containsKey(blockPos.asLong())) {
             endpointData[blockPos.asLong()] = recentlyRemoved.remove(blockPos.asLong())
@@ -38,6 +81,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
     }
 
     fun removeEndpointData(pos: BlockPos, direction: Direction): EndpointData? {
+        version++
         val datas = endpointData.get(pos.asLong()) ?: return null
         val d = datas.remove(direction)
         if (datas.isEmpty()) endpointData.remove(pos.asLong())

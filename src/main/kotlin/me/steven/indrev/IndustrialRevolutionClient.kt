@@ -1,5 +1,7 @@
 package me.steven.indrev
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -20,6 +22,8 @@ import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
 import me.steven.indrev.gui.controllers.modular.ModularController
 import me.steven.indrev.gui.controllers.pipes.PipeFilterScreen
+import me.steven.indrev.networks.EndpointData
+import me.steven.indrev.networks.Network
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
@@ -39,6 +43,7 @@ import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.util.InputUtil
 import net.minecraft.screen.PlayerScreenHandler
+import net.minecraft.util.math.Direction
 import org.lwjgl.glfw.GLFW
 
 
@@ -190,4 +195,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
             "category.indrev"
         )
     )
+
+    val CLIENT_RENDER_SERVO_DATA = Object2ObjectOpenHashMap<Network.Type<*>, Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>>()
 }

@@ -10,7 +10,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.client.MinecraftClient
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
 
 object GlobalStateController {
@@ -21,6 +23,15 @@ object GlobalStateController {
     val chunksToUpdate: Long2ObjectMap<MutableSet<BlockPos>> = Long2ObjectOpenHashMap()
     @Environment(EnvType.CLIENT)
     val workingStateTracker = Long2BooleanOpenHashMap()
+
+    @Environment(EnvType.CLIENT)
+    fun queueUpdate(pos: BlockPos) {
+        val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
+        if (MinecraftClient.getInstance().isOnThread)
+            chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos)
+        else
+            MinecraftClient.getInstance().execute { chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos) }
+    }
 
     fun update(world: World, pos: BlockPos, workingState: Boolean) {
         val (x, y, z) = pos

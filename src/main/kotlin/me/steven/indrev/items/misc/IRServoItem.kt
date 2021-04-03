@@ -76,6 +76,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                         val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(LiteralText("Failed to put servo"), true)
                         data.type = type
                         data.mode = getMode(stack)
+                        networkState.version++
                         stack.decrement(1)
 
                         networkState.markDirty()

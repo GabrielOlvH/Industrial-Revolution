@@ -1,5 +1,7 @@
 package me.steven.indrev.networks
 
+import me.steven.indrev.networks.fluid.FluidNetwork
+import me.steven.indrev.networks.item.ItemNetwork
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.MinecraftServer
@@ -15,11 +17,13 @@ object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.Serv
         val fluidNetworkState = Network.Type.FLUID.getNetworkState(world)
         world.profiler.push("indrev_fluidNetworkTick")
         fluidNetworkState.networks.forEach { network -> network.tick(world) }
+        (fluidNetworkState as ServoNetworkState<FluidNetwork>).sync(world)
         world.profiler.pop()
 
         val itemNetworkState = Network.Type.ITEM.getNetworkState(world)
         world.profiler.push("indrev_itemNetworkTick")
         itemNetworkState.networks.forEach { network -> network.tick(world) }
+        (itemNetworkState as ServoNetworkState<ItemNetwork>).sync(world)
         world.profiler.pop()
     }
 
