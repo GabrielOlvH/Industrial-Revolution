@@ -2,7 +2,7 @@ package me.steven.indrev.blocks.models.pipes
 
 import com.mojang.datafixers.util.Pair
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
@@ -90,7 +90,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         context: RenderContext
     ) {
         if (state[BasePipeBlock.COVERED]) {
-            val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity
+            val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity
             if (blockEntity?.coverState != null) {
                 val coverState = blockEntity.coverState!!
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)

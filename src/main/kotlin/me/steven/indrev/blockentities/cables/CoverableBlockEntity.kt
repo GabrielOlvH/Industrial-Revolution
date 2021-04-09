@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.cables
 
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
@@ -10,8 +10,14 @@ import net.minecraft.nbt.NbtOps
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
-class CableBlockEntity(val tier: Tier) :
-    BlockEntity(MachineRegistry.CABLE_REGISTRY.blockEntityType(tier)), BlockEntityClientSerializable {
+class CoverableBlockEntity(tier: Tier) :
+    BlockEntity(when (tier) {
+        Tier.MK1 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK1
+        Tier.MK2 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK2
+        Tier.MK3 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK3
+        Tier.MK4 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK4
+        Tier.CREATIVE -> error("no creative cable")
+    }), BlockEntityClientSerializable {
     var coverState: BlockState? = null
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {

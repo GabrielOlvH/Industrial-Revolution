@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks.machine.pipes
 
-import me.steven.indrev.blockentities.cables.CableBlockEntity
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
@@ -12,6 +13,7 @@ import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.BlockItem
@@ -35,7 +37,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
-abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Block(settings), BlockEntityProvider {
+abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Network.Type<*>) : Block(settings), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState
@@ -70,9 +72,11 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
         )
     }
 
+    override fun createBlockEntity(world: BlockView?): BlockEntity = CoverableBlockEntity(tier)
+
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
         if (world?.isClient == false && state[COVERED]) {
-            val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity ?: return
+            val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity ?: return
             world.setBlockState(pos, state.with(COVERED, false))
             val cover = blockEntity.coverState ?: return
             ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(cover.block)))
@@ -102,7 +106,7 @@ abstract class BasePipeBlock(settings: Settings, val type: Network.Type<*>) : Bl
         }
         val item = handStack.item
         if (!state[COVERED] && !handStack.isEmpty && !player.isSneaking) {
-            val blockEntity = world.getBlockEntity(pos) as? CableBlockEntity ?: return ActionResult.FAIL
+            val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity ?: return ActionResult.FAIL
             if (item is BlockItem && item.block !is BlockEntityProvider && item.block.defaultState.isFullCube(world, pos)) {
                 val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
                 blockEntity.coverState = result

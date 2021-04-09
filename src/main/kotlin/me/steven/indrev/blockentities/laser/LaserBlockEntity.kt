@@ -93,6 +93,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             container.inventory[0] = ItemStack(IRItemRegistry.MODULAR_CORE_ACTIVATED)
             container.markDirty()
             container.sync()
+            world?.updateNeighbors(containerPos, container.cachedState.block)
         } else
             tag.putDouble("Progress", progress + config.energyCost)
     }
@@ -100,8 +101,6 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     @Environment(EnvType.CLIENT)
     override fun machineClientTick() {
         if (cachedState[LaserBlock.POWERED]) {
-            val facing = cachedState[FacingMachineBlock.FACING]
-            val containerPos = pos.offset(facing, 4)
             if (!isEmittingLaser()) {
                 if (world!!.random.nextDouble() > 0.7) {
                     spawnParticles(world!!, pos, isFire = true)

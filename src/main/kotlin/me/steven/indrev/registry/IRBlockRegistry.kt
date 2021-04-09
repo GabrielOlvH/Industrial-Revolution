@@ -1,12 +1,14 @@
 package me.steven.indrev.registry
 
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.blocks.misc.*
@@ -59,6 +61,11 @@ object IRBlockRegistry {
         identifier("item_pipe_mk2").block(ITEM_PIPE_MK2)
         identifier("item_pipe_mk3").block(ITEM_PIPE_MK3)
         identifier("item_pipe_mk4").block(ITEM_PIPE_MK4)
+
+        identifier("cable_mk1").block(CABLE_MK1).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK1)
+        identifier("cable_mk2").block(CABLE_MK2).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK2)
+        identifier("cable_mk3").block(CABLE_MK3).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK3)
+        identifier("cable_mk4").block(CABLE_MK4).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK4)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -123,18 +130,25 @@ object IRBlockRegistry {
     val CAPSULE_BLOCK_ENTITY: BlockEntityType<CapsuleBlockEntity> = BlockEntityType.Builder.create({ CapsuleBlockEntity() }, CAPSULE_BLOCK).build(null)
 
     val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
-
     val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
-
     val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
-
     val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
 
     val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
-
     val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
-
     val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
-
     val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+
+    val CABLE_MK1 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
+    val CABLE_MK2 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
+    val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
+    val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK1 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK1) }, FLUID_PIPE_MK1, ITEM_PIPE_MK1, CABLE_MK1).build(null)
+
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK2 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK2) }, FLUID_PIPE_MK2, ITEM_PIPE_MK2, CABLE_MK2).build(null)
+
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK3 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK3) }, FLUID_PIPE_MK3, ITEM_PIPE_MK3, CABLE_MK3).build(null)
+
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK4) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
 }

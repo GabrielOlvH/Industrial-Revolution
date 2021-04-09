@@ -4,7 +4,6 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
@@ -16,7 +15,6 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
-import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
@@ -581,9 +579,5 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { { LaserBlockEntity() } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING].opposite) be as LaserBlockEntity else null } }
             .noModelProvider()
-
-        val CABLE_REGISTRY = MachineRegistry("cable", false, Tier.MK1, Tier.MK2, Tier.MK3, Tier.MK4)
-            .blockProvider { tier -> CableBlock(SETTINGS().luminance(0).nonOpaque(), tier) }
-            .blockEntityProvider { tier -> { CableBlockEntity(tier) } }
     }
 }
