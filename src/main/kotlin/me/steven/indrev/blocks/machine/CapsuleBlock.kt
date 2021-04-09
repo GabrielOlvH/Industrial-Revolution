@@ -15,6 +15,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
@@ -39,6 +40,7 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
             blockEntity.inventory[0] = ItemStack.EMPTY
         } else
             return ActionResult.PASS
+        world.updateNeighbors(pos, this)
         return ActionResult.SUCCESS
     }
 
@@ -53,6 +55,19 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
         if (blockEntity != null)
             ItemScatterer.spawn(world, pos, blockEntity.inventory)
         super.onStateReplaced(state, world, pos, newState, moved)
+    }
+
+    override fun emitsRedstonePower(state: BlockState?): Boolean = true
+
+    override fun getWeakRedstonePower(
+        state: BlockState?,
+        world: BlockView,
+        pos: BlockPos,
+        direction: Direction?
+    ): Int {
+        val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity ?: return 0
+        return if (blockEntity.inventory[0].item == IRItemRegistry.MODULAR_CORE_ACTIVATED) 15
+        else 0
     }
 
     override fun createBlockEntity(world: BlockView?): BlockEntity = CapsuleBlockEntity()
