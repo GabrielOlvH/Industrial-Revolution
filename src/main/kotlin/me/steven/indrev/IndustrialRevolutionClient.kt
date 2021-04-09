@@ -118,14 +118,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
-
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
-        MachineRegistry.CABLE_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.TANK_BLOCK, RenderLayer.getCutout())
@@ -142,6 +140,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.FLUID_PIPE_MK2, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.FLUID_PIPE_MK3, RenderLayer.getTranslucent())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.FLUID_PIPE_MK4, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.CABLE_MK1, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.CABLE_MK2, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.CABLE_MK3, RenderLayer.getTranslucent())
+        BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.CABLE_MK4, RenderLayer.getTranslucent())
 
         ModelLoadingRegistry.INSTANCE.registerModelProvider(IRModelManagers)
         ModelLoadingRegistry.INSTANCE.registerVariantProvider { IRModelManagers }

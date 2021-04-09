@@ -259,6 +259,12 @@ object IRItemRegistry {
         identifier("item_pipe_mk3").item(ITEM_PIPE_ITEM_MK3)
         identifier("item_pipe_mk4").item(ITEM_PIPE_ITEM_MK4)
 
+
+        identifier("cable_mk1").item(CABLE_ITEM_MK1)
+        identifier("cable_mk2").item(CABLE_ITEM_MK2)
+        identifier("cable_mk3").item(CABLE_ITEM_MK3)
+        identifier("cable_mk4").item(CABLE_ITEM_MK4)
+
         identifier("servo_retriever").item(SERVO_RETRIEVER)
         identifier("servo_output").item(SERVO_OUTPUT)
     }
@@ -392,6 +398,11 @@ object IRItemRegistry {
     val ITEM_PIPE_ITEM_MK2 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK2, itemSettings())
     val ITEM_PIPE_ITEM_MK3 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK3, itemSettings())
     val ITEM_PIPE_ITEM_MK4 = BlockItem(IRBlockRegistry.ITEM_PIPE_MK4, itemSettings())
+
+    val CABLE_ITEM_MK1 = BlockItem(IRBlockRegistry.CABLE_MK1, itemSettings())
+    val CABLE_ITEM_MK2 = BlockItem(IRBlockRegistry.CABLE_MK2, itemSettings())
+    val CABLE_ITEM_MK3 = BlockItem(IRBlockRegistry.CABLE_MK3, itemSettings())
+    val CABLE_ITEM_MK4 = BlockItem(IRBlockRegistry.CABLE_MK4, itemSettings())
 
     val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.RETRIEVER)
     val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.OUTPUT)

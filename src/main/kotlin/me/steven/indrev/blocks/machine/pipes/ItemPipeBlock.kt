@@ -2,7 +2,6 @@ package me.steven.indrev.blocks.machine.pipes
 
 import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.cables.CableBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.controllers.pipes.PipeFilterController
 import me.steven.indrev.gui.controllers.pipes.PipeFilterScreenFactory
@@ -11,7 +10,6 @@ import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
@@ -25,7 +23,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings, Network.Type.ITEM) {
+class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier, Network.Type.ITEM) {
     override fun appendTooltip(
         stack: ItemStack?,
         world: BlockView?,
@@ -58,8 +56,6 @@ class ItemPipeBlock(settings: Settings, val tier: Tier) : BasePipeBlock(settings
         groupedItemInv(world, pos, dir) != EmptyGroupedItemInv.INSTANCE
                 || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
-
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CableBlockEntity(tier)
 
     fun getConfig() = when(tier) {
         Tier.MK1 -> IRConfig.cables.cableMk1
