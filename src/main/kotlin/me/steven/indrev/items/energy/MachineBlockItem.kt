@@ -17,7 +17,7 @@ import net.minecraft.world.World
 class MachineBlockItem(private val machineBlock: Block, settings: Settings) : BlockItem(machineBlock, settings) {
 
     init {
-        val capacity = (machineBlock as? MachineBlock)?.config?.maxEnergyStored ?: Double.MAX_VALUE
+        val capacity = (machineBlock as? MachineBlock)?.config?.maxEnergyStored ?: 0.0
         EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(capacity, Tier.MK4.io, 0.0), this)
     }
 
