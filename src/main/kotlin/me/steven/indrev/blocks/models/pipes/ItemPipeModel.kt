@@ -25,7 +25,9 @@ import java.util.function.Supplier
 class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
     override val spriteIdCollection: MutableList<SpriteIdentifier> = mutableListOf(
         blockSpriteId("block/item_pipe_center_${tier.toString().toLowerCase()}"),
-        blockSpriteId("block/item_pipe_side_${tier.toString().toLowerCase()}")
+        blockSpriteId("block/item_pipe_side_${tier.toString().toLowerCase()}"),
+        blockSpriteId("block/servo_retriever"),
+        blockSpriteId("block/servo_output")
     )
 
     private val retrieverServoModels = arrayOfNulls<BakedModel>(6)
@@ -39,7 +41,7 @@ class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
     ): BakedModel {
         super.bake(loader, textureGetter, rotationContainer, modelId)
 
-        val retrieverModel = loader.getOrLoadModel( identifier("block/servo_retriever"))
+        val retrieverModel = loader.getOrLoadModel(identifier("block/servo_retriever_item"))
         retrieverServoModels[0] = retrieverModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId) // NORTH
         retrieverServoModels[1] = retrieverModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId) // EAST
         retrieverServoModels[2] = retrieverModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId) // SOUTH
@@ -47,7 +49,7 @@ class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
         retrieverServoModels[4] = retrieverModel.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId) // UP
         retrieverServoModels[5] = retrieverModel.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId) // DOWN
 
-        val outputModel = loader.getOrLoadModel( identifier("block/servo_output"))
+        val outputModel = loader.getOrLoadModel(identifier("block/servo_output_item"))
         outputServoModels[0] = outputModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId) // NORTH
         outputServoModels[1] = outputModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId) // EAST
         outputServoModels[2] = outputModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId) // SOUTH

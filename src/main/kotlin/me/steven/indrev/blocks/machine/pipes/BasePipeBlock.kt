@@ -12,7 +12,6 @@ import me.steven.indrev.utils.component3
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
-import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -32,7 +31,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
-import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
@@ -50,15 +48,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             .with(COVERED, false)
     }
 
-    override fun getOutlineShape(
-        state: BlockState,
-        view: BlockView?,
-        pos: BlockPos?,
-        context: ShapeContext?
-    ): VoxelShape {
-        return if (state[COVERED]) VoxelShapes.fullCube()
-        else getShape(state)
-    }
+    abstract fun getShape(blockState: BlockState): VoxelShape
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         builder?.add(
@@ -200,14 +190,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
 
     companion object {
 
-        val CENTER_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 10.5)
-        val DOWN_SHAPE: VoxelShape = createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
-        val UP_SHAPE: VoxelShape = createCuboidShape(6.0, 10.5, 6.0, 10.0, 16.0, 10.0)
-        val SOUTH_SHAPE: VoxelShape = createCuboidShape(6.0, 6.0, 10.5, 10.0, 10.0, 16.0)
-        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.0, 6.0, 5.5, 10.0, 10.0, 0.0)
-        val EAST_SHAPE: VoxelShape = createCuboidShape(10.5, 6.0, 6.0, 16.0, 10.0, 10.0)
-        val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 6.0, 6.0, 5.5, 10.0, 10.0)
-
         val NORTH: BooleanProperty = BooleanProperty.of("north")
         val SOUTH: BooleanProperty = BooleanProperty.of("south")
         val EAST: BooleanProperty = BooleanProperty.of("east")
@@ -216,17 +198,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val DOWN: BooleanProperty = BooleanProperty.of("down")
 
         val COVERED: BooleanProperty = BooleanProperty.of("covered")
-
-        fun getShape(direction: Direction): VoxelShape {
-            var shape = VoxelShapes.empty()
-            if (direction == Direction.NORTH) shape = NORTH_SHAPE
-            if (direction == Direction.SOUTH) shape = SOUTH_SHAPE
-            if (direction == Direction.EAST) shape = EAST_SHAPE
-            if (direction == Direction.WEST) shape = WEST_SHAPE
-            if (direction == Direction.UP) shape = UP_SHAPE
-            if (direction == Direction.DOWN) shape = DOWN_SHAPE
-            return shape
-        }
 
         fun getProperty(facing: Direction): Property<Boolean> {
             return when (facing) {
@@ -238,21 +209,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 Direction.DOWN -> DOWN
                 else -> EAST
             }
-        }
-
-        private val SHAPE_CACHE = hashSetOf<PipeShape>()
-        private fun getShape(state: BlockState): VoxelShape {
-            val directions = Direction.values().filter { dir -> state[getProperty(dir)] }.toTypedArray()
-            var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
-            if (cableShapeCache == null) {
-                var shape = CENTER_SHAPE
-                Direction.values().forEach { direction ->
-                    if (state[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
-                }
-                cableShapeCache = PipeShape(directions, shape)
-                SHAPE_CACHE.add(cableShapeCache)
-            }
-            return cableShapeCache.shape
         }
 
         fun getSideFromHit(hit: Vec3d, pos: BlockPos): Direction? {

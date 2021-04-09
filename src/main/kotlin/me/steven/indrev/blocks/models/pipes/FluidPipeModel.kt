@@ -26,7 +26,9 @@ import java.util.function.Supplier
 class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
     override val spriteIdCollection: MutableList<SpriteIdentifier> = mutableListOf(
         blockSpriteId("block/fluid_pipe_center_${tier.toString().toLowerCase()}"),
-        blockSpriteId("block/fluid_pipe_side_${tier.toString().toLowerCase()}")
+        blockSpriteId("block/fluid_pipe_side_${tier.toString().toLowerCase()}"),
+        blockSpriteId("block/servo_retriever"),
+        blockSpriteId("block/servo_output")
     )
 
 
