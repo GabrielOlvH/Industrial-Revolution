@@ -7,6 +7,7 @@ import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.LFCConfig
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.options.KeyBinding
 import net.minecraft.client.render.BufferRenderer
 import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormats
@@ -87,7 +88,6 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
 
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
     if (Screen.hasShiftDown()) {
-        tooltip?.add(LiteralText.EMPTY)
         when (config) {
             is BasicMachineConfig -> {
                 tooltip?.add(configText("maxInput", "lftick", config.maxInput))
@@ -125,18 +125,18 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
         }
     } else {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.press_shift").formatted(Formatting.DARK_GRAY)
+            TranslatableText("gui.indrev.tooltip.press_shift", LiteralText("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.AQUA)).formatted(Formatting.GRAY)
         )
     }
 }
 
 private fun configText(key: String, value: String): Text {
-    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA).append(LiteralText(" "))
+    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
         .append(LiteralText(value).formatted(Formatting.GRAY))
 }
 
 private fun configText(key: String, unit: String, value: Any): Text {
-    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA).append(LiteralText(" "))
+    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
         .append(TranslatableText("gui.indrev.tooltip.$unit", value).formatted(Formatting.GRAY))
 }
 

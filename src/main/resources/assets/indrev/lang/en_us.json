@@ -384,7 +384,7 @@
   "gui.indrev.tooltip.energyCost": "Energy cost: ",
   "gui.indrev.tooltip.processSpeed": "Speed: ",
   "gui.indrev.tooltip.ratio": "Generation: ",
-  "gui.indrev.tooltip.press_shift": "Hold Shift for more information",
+  "gui.indrev.tooltip.press_shift": "Hold %s for more information",
   "gui.indrev.tooltip.lftick": "%s LF/tick",
   "gui.indrev.tooltip.lf": "%s LF",
   "gui.indrev.tooltip.itemsec": "%s items/s",
