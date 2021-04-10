@@ -1,5 +1,6 @@
 package me.steven.indrev.items.energy
 
+import draylar.magna.api.BlockProcessor
 import draylar.magna.api.MagnaTool
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
@@ -73,5 +74,18 @@ class IRModularDrillItem(
         val radius = getRadius(toolStack)
         return if (blockHitResult.side.axis == Direction.Axis.Y || radius < 1) pos
         else pos.up(radius - 1)
+    }
+
+    override fun attemptBreak(
+        world: World?,
+        pos: BlockPos?,
+        player: PlayerEntity,
+        breakRadius: Int,
+        processor: BlockProcessor?
+    ): Boolean {
+        val mainHandStack = player.mainHandStack
+        return if (getRadius(mainHandStack) > 0)
+            super.attemptBreak(world, pos, player, breakRadius, processor)
+        else false
     }
 }
