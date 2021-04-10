@@ -1,0 +1,22 @@
+{
+  "name": "Fluids",
+  "category": "transportation",
+  "sortnum": 2,
+  "icon": "indrev:fluid_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Fluid pipes can be used to transfer fluids between tanks far apart.$(br)Check the tooltips to see the amount of fluid that can be transferred.$(br)Pipes only transfer every second rather than every tick."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk1",
+      "recipe2": "indrev:shaped/fluid_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk3",
+      "recipe2": "indrev:shaped/fluid_pipe_mk4"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NIN"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:iron_ingot"
+    },
+    "I": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "result": {
+    "item": "indrev:item_pipe_mk1",
+    "count": 8
+  }
+}

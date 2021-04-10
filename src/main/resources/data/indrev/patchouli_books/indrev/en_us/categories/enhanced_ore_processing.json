@@ -1,6 +1,6 @@
 {
   "name": "Enhanced Ore Processing",
-  "sortnum": 0,
+  "sortnum": 5,
   "description": "One of the many features presented by Industrial Revolution is it's capability for even quadrupling ores.",
   "icon": "indrev:copper_ore"
 }

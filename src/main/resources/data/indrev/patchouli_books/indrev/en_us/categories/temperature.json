@@ -1,6 +1,6 @@
 {
   "name": "Temperature",
-  "sortnum": 2,
+  "sortnum": 3,
   "description": "Some machines will present features like temperature, which can be checked inside it's interface. This section will talk more about it.",
   "icon": "indrev:fan"
 }

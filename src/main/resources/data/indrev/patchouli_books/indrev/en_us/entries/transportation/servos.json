@@ -1,0 +1,31 @@
+{
+  "name": "Servos",
+  "category": "transportation",
+  "sortnum": 3,
+  "icon": "indrev:servo_retriever",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Item and fluid pipes require servos to function. There are two types of servo: Output and Retriever.$(br)Click on the pipe connected to your container to attach a servo. Use a wrench to remove it.$(br)$(l)Important:$() The Output and Retriever servos ARE INDEPENDENT. You do not need both for your pipes to work. They have different purposes."
+    },
+    {
+      "type": "text",
+      "text": "For example, if you have a single inventory that needs to output to multiple inventories you just need a single Output Servo on the dispensing end.$(br2)If you have multiple inventories that needs to output to a single inventory you just need a single Retriever Servo on the receiving end."
+    },
+    {
+      "type": "text",
+      "title": "Modes",
+      "text": "Servos have multiple modes to define priorities.$(br)Click on the servo to change it.$(br)$(l)Nearest first:$() the servo will look for the closest container.$(br)$(l)Furthest first:$() the servo will look for the furthest container.$(br)$(l)Random:$() the servo will chose a random container.$(br)$(l)Round Robin$() the servo will look for the container with the least amount of the transferred fluid/item."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/servo_output",
+      "text": "The Output Servo will push items/fluids to nearby containers UNLESS they are also marked as output."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/servo_retriever",
+      "text": "The Retriever Servo will pull items/fluids from nearby UNLESS they are also marked as retriever."
+    }
+  ]
+}
