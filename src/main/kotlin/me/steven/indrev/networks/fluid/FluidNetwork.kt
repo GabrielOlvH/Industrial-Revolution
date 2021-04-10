@@ -7,17 +7,28 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.Node
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.fluidExtractableOf
+import me.steven.indrev.utils.fluidInsertableOf
+import me.steven.indrev.utils.minus
 import net.minecraft.block.Block
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
+import kotlin.collections.MutableMap
+import kotlin.collections.MutableSet
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.hashSetOf
+import kotlin.collections.isNotEmpty
 
 class FluidNetwork(
     world: ServerWorld,
@@ -28,11 +39,11 @@ class FluidNetwork(
     var tier = Tier.MK1
     private val maxCableTransfer: FluidAmount
         get() = FluidAmount.ofWhole(when (tier) {
-            Tier.MK1 -> 1
-            Tier.MK2 -> 2
-            Tier.MK3 -> 4
-            else -> 8
-        })
+            Tier.MK1 -> IRConfig.cables.fluidPipeMk1
+            Tier.MK2 -> IRConfig.cables.fluidPipeMk2
+            Tier.MK3 -> IRConfig.cables.fluidPipeMk3
+            else -> IRConfig.cables.fluidPipeMk4
+        }.toLong())
 
     var lastTransferred: FluidKey? = null
 

@@ -237,6 +237,16 @@ class Cables {
     val cableMk2 = 512.0
     val cableMk3 = 4096.0
     val cableMk4 = 16384.0
+
+    val itemPipeMk1 = 32
+    val itemPipeMk2 = 64
+    val itemPipeMk3 = 128
+    val itemPipeMk4 = 256
+
+    val fluidPipeMk1 = 1
+    val fluidPipeMk2 = 2
+    val fluidPipeMk3 = 4
+    val fluidPipeMk4 = 8
 }
 
 class Upgrades  {

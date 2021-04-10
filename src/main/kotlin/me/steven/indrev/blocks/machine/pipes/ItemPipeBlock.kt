@@ -16,7 +16,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -33,7 +35,10 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-
+        tooltip?.add(
+            TranslatableText("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
+                .append(TranslatableText("gui.indrev.tooltip.itemsec", getMaxTransferRate()).formatted(Formatting.GRAY))
+        )
     }
 
     override fun getOutlineShape(
@@ -70,11 +75,12 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
                 || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 
-    fun getConfig() = when(tier) {
-        Tier.MK1 -> IRConfig.cables.cableMk1
-        Tier.MK2 -> IRConfig.cables.cableMk2
-        Tier.MK3 -> IRConfig.cables.cableMk3
-        else -> IRConfig.cables.cableMk4
+
+    private fun getMaxTransferRate() = when(tier) {
+        Tier.MK1 -> IRConfig.cables.itemPipeMk1
+        Tier.MK2 -> IRConfig.cables.itemPipeMk2
+        Tier.MK3 -> IRConfig.cables.itemPipeMk3
+        else -> IRConfig.cables.itemPipeMk4
     }
 
     override fun getShape(blockState: BlockState): VoxelShape {

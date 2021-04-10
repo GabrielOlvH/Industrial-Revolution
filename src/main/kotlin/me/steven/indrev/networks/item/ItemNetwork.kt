@@ -3,6 +3,7 @@ package me.steven.indrev.networks.item
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
@@ -25,10 +26,10 @@ class ItemNetwork(
     var tier = Tier.MK1
     private val maxCableTransfer: Int
         get() = when (tier) {
-            Tier.MK1 -> 32
-            Tier.MK2 -> 64
-            Tier.MK3 -> 128
-            else -> 256
+            Tier.MK1 -> IRConfig.cables.itemPipeMk1
+            Tier.MK2 -> IRConfig.cables.itemPipeMk2
+            Tier.MK3 -> IRConfig.cables.itemPipeMk3
+            else -> IRConfig.cables.itemPipeMk4
         }
 
     override fun tick(world: ServerWorld) {

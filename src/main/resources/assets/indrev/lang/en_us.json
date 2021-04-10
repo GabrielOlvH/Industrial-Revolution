@@ -387,6 +387,8 @@
   "gui.indrev.tooltip.press_shift": "Hold Shift for more information",
   "gui.indrev.tooltip.lftick": "%s LF/tick",
   "gui.indrev.tooltip.lf": "%s LF",
+  "gui.indrev.tooltip.itemsec": "%s items/s",
+  "gui.indrev.tooltip.fluidsec": "%s buckets/s",
   "gui.indrev.tooltip.temperatureBoost": "Temperature boost",
   "gui.indrev.locked": "Locked",
   "gui.indrev.modular_armor_slot_type": "Insert item here",
