@@ -385,6 +385,11 @@ object PacketRegistry {
                 positions.forEach { (x, y, z) ->
                     MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x, y, z, x, y, z)
                 }
+
+                before.filterKeys { !positions.contains(BlockPos.fromLong(it)) }.forEach {
+                    val (x, y, z) = BlockPos.fromLong(it.key)
+                    MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x, y, z, x, y, z)
+                }
             }
         }
     }
