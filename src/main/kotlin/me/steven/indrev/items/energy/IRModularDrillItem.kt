@@ -47,8 +47,6 @@ class IRModularDrillItem(
         getInstalledTooltip(getInstalled(stack), stack, tooltip)
     }
 
-    override fun getSlotLimit(): Int = -1
-
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
 
     override fun getLevel(enchantment: Enchantment, itemStack: ItemStack): Int {

@@ -48,8 +48,6 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
 
     fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0
 
-    override fun getSlotLimit(): Int = -1
-
     override fun getCompatibleModules(itemStack: ItemStack): Array<ArmorModule> {
         val armor = itemStack.item as? ArmorItem ?: return emptyArray()
         return when (armor.slotType) {

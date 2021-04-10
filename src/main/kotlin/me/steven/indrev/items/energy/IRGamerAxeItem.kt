@@ -148,8 +148,6 @@ class IRGamerAxeItem(
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
-    override fun getSlotLimit(): Int = -1
-
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = GamerAxeModule.COMPATIBLE
 
     fun isActive(stack: ItemStack): Boolean {
