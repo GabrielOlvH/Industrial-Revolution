@@ -88,51 +88,51 @@ class GeneratorConfig(
 ) : IConfig
 
 class Machines {
-    val electricFurnaceMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+    val electricFurnaceMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
 
-    val electricFurnaceMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
+    val electricFurnaceMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
 
-    val electricFurnaceMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
+    val electricFurnaceMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
 
-    val electricFurnaceMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+    val electricFurnaceMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
 
-    val electricFurnaceFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
+    val electricFurnaceFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, 16384.0)
 
-    val pulverizerMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+    val pulverizerMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
 
-    val pulverizerMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
+    val pulverizerMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
 
-    val pulverizerMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
+    val pulverizerMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
 
-    val pulverizerMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+    val pulverizerMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
 
-    val pulverizerFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
+    val pulverizerFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, 16384.0)
 
-    val compressorMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+    val compressorMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
 
-    val compressorMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
+    val compressorMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
 
-    val compressorMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
+    val compressorMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
 
-    val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+    val compressorMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
 
-    val compressorFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
+    val compressorFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, 16384.0)
 
-    val sawmillMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+    val sawmillMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
 
-    val sawmillMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0, 5000.0, Tier.MK2.io)
+    val sawmillMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0, 5000.0, Tier.MK2.io)
 
-    val sawmillMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0, 10000.0, Tier.MK3.io)
+    val sawmillMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0, 10000.0, Tier.MK3.io)
 
-    val sawmillMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, Tier.MK4.io)
+    val sawmillMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0, 100000.0, Tier.MK4.io)
 
-    val infuserMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.5, 2.0, 1000.0, Tier.MK1.io)
+    val infuserMk1: HeatMachineConfig = HeatMachineConfig(4.0, 1.0, 2.0, 1000.0, Tier.MK1.io)
 
-    val infuserMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.5, 2.0,5000.0, Tier.MK2.io)
+    val infuserMk2: HeatMachineConfig = HeatMachineConfig(8.0, 2.0, 2.0,5000.0, Tier.MK2.io)
 
-    val infuserMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.5, 2.0,10000.0, Tier.MK3.io)
+    val infuserMk3: HeatMachineConfig = HeatMachineConfig(16.0, 3.0, 2.0,10000.0, Tier.MK3.io)
 
-    val infuserMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0,100000.0, Tier.MK4.io)
+    val infuserMk4: HeatMachineConfig = HeatMachineConfig(64.0, 4.0, 2.0,100000.0, Tier.MK4.io)
 
     val infuserFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
 
@@ -180,13 +180,13 @@ class Machines {
 
     val condenser: MachineConfig = MachineConfig(64.0, 4.0, 50000.0, Tier.MK4.io)
 
-    val fluidInfuserMk1: MachineConfig = MachineConfig(4.0, 1.5, 1000.0, Tier.MK1.io)
+    val fluidInfuserMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
 
-    val fluidInfuserMk2: MachineConfig = MachineConfig(8.0, 2.5, 5000.0, Tier.MK2.io)
+    val fluidInfuserMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
 
-    val fluidInfuserMk3: MachineConfig = MachineConfig(16.0, 3.5, 10000.0, Tier.MK3.io)
+    val fluidInfuserMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
 
-    val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.5, 100000.0, Tier.MK4.io)
+    val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
 
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
