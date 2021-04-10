@@ -3,7 +3,7 @@ package me.steven.indrev.blocks.machine
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IRConfig
-import me.steven.indrev.gui.controllers.machines.LazuliFluxContainerController
+import me.steven.indrev.gui.screenhandlers.machines.LazuliFluxContainerScreenHandler
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
@@ -17,7 +17,7 @@ class LazuliFluxContainerBlock(registry: MachineRegistry, settings: Settings, ti
         Tier.MK2 -> IRConfig.machines.lazuliFluxContainerMk2
         Tier.MK3 -> IRConfig.machines.lazuliFluxContainerMk3
         else -> IRConfig.machines.lazuliFluxContainerMk4
-    }, ::LazuliFluxContainerController
+    }, ::LazuliFluxContainerScreenHandler
 ) {
 
     override fun onPlaced(

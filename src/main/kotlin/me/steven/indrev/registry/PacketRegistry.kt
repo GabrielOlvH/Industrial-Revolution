@@ -19,11 +19,11 @@ import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.config.IRConfig.writeToClient
-import me.steven.indrev.gui.controllers.IRGuiController
-import me.steven.indrev.gui.controllers.machines.ModularWorkbenchController
-import me.steven.indrev.gui.controllers.machines.RancherController
-import me.steven.indrev.gui.controllers.pipes.PipeFilterController
-import me.steven.indrev.gui.controllers.pipes.PipeFilterScreen
+import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.ModularWorkbenchScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.RancherScreenHandler
+import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
+import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
@@ -134,7 +134,7 @@ object PacketRegistry {
             }
         }
 
-        ServerPlayNetworking.registerGlobalReceiver(RancherController.SYNC_RANCHER_CONFIG) { server, player, _, buf, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(RancherScreenHandler.SYNC_RANCHER_CONFIG) { server, player, _, buf, _ ->
             val pos = buf.readBlockPos()
             val feedBabies = buf.readBoolean()
             val mateAdults = buf.readBoolean()
@@ -153,12 +153,12 @@ object PacketRegistry {
                 }
             }
         }
-        ServerPlayNetworking.registerGlobalReceiver(ModularWorkbenchController.MODULE_SELECT_PACKET) { server, player, _, buf, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(ModularWorkbenchScreenHandler.MODULE_SELECT_PACKET) { server, player, _, buf, _ ->
             val syncId = buf.readInt()
             val recipeId = buf.readIdentifier()
             val pos = buf.readBlockPos()
             val screenHandler =
-                player.currentScreenHandler as? ModularWorkbenchController ?: return@registerGlobalReceiver
+                player.currentScreenHandler as? ModularWorkbenchScreenHandler ?: return@registerGlobalReceiver
             if (syncId != screenHandler.syncId) return@registerGlobalReceiver
             server.execute {
                 val world = player.world
@@ -173,7 +173,7 @@ object PacketRegistry {
             }
         }
 
-        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CLICK_FILTER_SLOT_PACKET) { server, player, _, buf, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterScreenHandler.CLICK_FILTER_SLOT_PACKET) { server, player, _, buf, _ ->
             val slotIndex = buf.readInt()
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
@@ -192,11 +192,11 @@ object PacketRegistry {
                 val buf = PacketByteBufs.create()
                 buf.writeInt(slotIndex)
                 buf.writeItemStack(data.filter[slotIndex])
-                ServerPlayNetworking.send(player, PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
+                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
             }
         }
 
-        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CHANGE_FILTER_MODE_PACKET) { server, player, _, buf, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterScreenHandler.CHANGE_FILTER_MODE_PACKET) { server, player, _, buf, _ ->
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
             val field = buf.readInt()
@@ -220,7 +220,7 @@ object PacketRegistry {
             }
         }
 
-        ServerPlayNetworking.registerGlobalReceiver(PipeFilterController.CHANGE_SERVO_MODE_PACKET) { server, player, _, buf, _ ->
+        ServerPlayNetworking.registerGlobalReceiver(PipeFilterScreenHandler.CHANGE_SERVO_MODE_PACKET) { server, player, _, buf, _ ->
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
             val mode = buf.readEnumConstant(EndpointData.Mode::class.java)
@@ -287,7 +287,7 @@ object PacketRegistry {
             client.execute {
                 val handler = client.player!!.currentScreenHandler
                 if (handler.syncId == syncId)
-                    (handler as? IRGuiController)?.propertyDelegate?.set(property, value)
+                    (handler as? IRGuiScreenHandler)?.propertyDelegate?.set(property, value)
             }
         }
 
@@ -340,12 +340,12 @@ object PacketRegistry {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(PipeFilterController.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
+        ClientPlayNetworking.registerGlobalReceiver(PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET) { client, _, buf, _ ->
             val slotIndex = buf.readInt()
             val stack = buf.readItemStack()
             client.execute {
                 val screen = client.currentScreen as? PipeFilterScreen ?: return@execute
-                val controller = screen.controller
+                val controller = screen.screenHandler
                 controller.backingList[slotIndex] = stack
             }
         }

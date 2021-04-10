@@ -20,8 +20,8 @@ import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
-import me.steven.indrev.gui.controllers.modular.ModularController
-import me.steven.indrev.gui.controllers.pipes.PipeFilterScreen
+import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScreenHandler
+import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.registry.*
@@ -167,7 +167,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     .isNotEmpty()
                 if (hasModularItem)
                     MinecraftClient.getInstance()
-                        .openScreen(IRModularControllerScreen(ModularController(client.player!!.inventory)))
+                        .openScreen(IRModularControllerScreen(ModularItemConfigurationScreenHandler(client.player!!.inventory)))
             }
         }
 

@@ -2,7 +2,7 @@ package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
-import me.steven.indrev.gui.controllers.machines.MinerController
+import me.steven.indrev.gui.screenhandlers.machines.MiningRigComputerScreenHandler
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
@@ -16,7 +16,7 @@ class MinerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : Ho
     settings,
     tier,
     IRConfig.machines.miner,
-    ::MinerController,
+    ::MiningRigComputerScreenHandler,
 ) {
     override fun appendTooltip(
         stack: ItemStack?,

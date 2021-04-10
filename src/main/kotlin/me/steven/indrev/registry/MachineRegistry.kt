@@ -20,7 +20,7 @@ import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.config.IRConfig
-import me.steven.indrev.gui.controllers.machines.*
+import me.steven.indrev.gui.screenhandlers.machines.*
 import me.steven.indrev.items.energy.MachineBlockItem
 import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
@@ -170,7 +170,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val COAL_GENERATOR_REGISTRY = MachineRegistry("coal_generator", false, Tier.MK1)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.generators.coalGenerator, ::CoalGeneratorController
+                    this, SETTINGS(), tier, IRConfig.generators.coalGenerator, ::CoalGeneratorScreenHandler
                 )
             }
             .blockEntityProvider { { CoalGeneratorBlockEntity() } }
@@ -186,7 +186,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     when (tier) {
                         Tier.MK1 -> IRConfig.generators.solarGeneratorMk1
                         else -> IRConfig.generators.solarGeneratorMk3
-                    }, ::SolarGeneratorController
+                    }, ::SolarGeneratorScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { SolarGeneratorBlockEntity(tier) } }
@@ -196,7 +196,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val BIOMASS_GENERATOR_REGISTRY = MachineRegistry("biomass_generator", false, Tier.MK3)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.generators.biomassGenerator, ::BiomassGeneratorController
+                    this, SETTINGS(), tier, IRConfig.generators.biomassGenerator, ::BiomassGeneratorScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { BiomassGeneratorBlockEntity(tier) } }
@@ -206,7 +206,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val HEAT_GENERATOR_REGISTRY = MachineRegistry("heat_generator", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS().nonOpaque(), tier, IRConfig.generators.heatGenerator, ::HeatGeneratorController
+                    this, SETTINGS().nonOpaque(), tier, IRConfig.generators.heatGenerator, ::HeatGeneratorScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { HeatGeneratorBlockEntity(tier) } }
@@ -234,7 +234,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.electricFurnaceMk2
                         Tier.MK3 -> IRConfig.machines.electricFurnaceMk3
                         else -> IRConfig.machines.electricFurnaceMk4
-                    }, ::ElectricFurnaceController
+                    }, ::ElectricFurnaceScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { ElectricFurnaceBlockEntity(tier) } }
@@ -259,7 +259,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.pulverizerMk2
                         Tier.MK3 -> IRConfig.machines.pulverizerMk3
                         else -> IRConfig.machines.pulverizerMk4
-                    }, ::PulverizerController
+                    }, ::PulverizerScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { PulverizerBlockEntity(tier) } }
@@ -277,7 +277,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.compressorMk2
                         Tier.MK3 -> IRConfig.machines.compressorMk3
                         else -> IRConfig.machines.compressorMk4
-                    }, ::CompressorController
+                    }, ::CompressorScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { CompressorBlockEntity(tier) } }
@@ -295,7 +295,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.infuserMk2
                         Tier.MK3 -> IRConfig.machines.infuserMk3
                         else -> IRConfig.machines.infuserMk4
-                    }, ::SolidInfuserController
+                    }, ::SolidInfuserScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { SolidInfuserBlockEntity(tier) } }
@@ -319,7 +319,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.sawmillMk2
                         Tier.MK3 -> IRConfig.machines.sawmillMk3
                         else -> IRConfig.machines.sawmillMk4
-                    }, ::SawmillController
+                    }, ::SawmillScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { SawmillBlockEntity(tier) } }
@@ -329,7 +329,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val RECYCLER_REGISTRY = MachineRegistry("recycler", false, Tier.MK2)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerController
+                    this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { RecyclerBlockEntity(tier) } }
@@ -339,7 +339,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val SMELTER_REGISTRY = MachineRegistry("smelter", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.machines.smelter, ::SmelterController
+                    this, SETTINGS(), tier, IRConfig.machines.smelter, ::SmelterScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { SmelterBlockEntity(tier) } }
@@ -349,7 +349,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CONDENSER_REGISTRY = MachineRegistry("condenser", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.machines.condenser, ::CondenserController
+                    this, SETTINGS(), tier, IRConfig.machines.condenser, ::CondenserScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { CondenserBlockEntity(tier) } }
@@ -363,7 +363,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     IRConfig.machines.electricFurnaceFactory,
-                    ::ElectricFurnaceFactoryController
+                    ::ElectricFurnaceFactoryScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
@@ -384,7 +384,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     IRConfig.machines.pulverizerFactory,
-                    ::PulverizerFactoryController
+                    ::PulverizerFactoryScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { PulverizerFactoryBlockEntity(tier) } }
@@ -405,7 +405,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     IRConfig.machines.compressorFactory,
-                    ::CompressorFactoryController
+                    ::CompressorFactoryScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { CompressorFactoryBlockEntity(tier) } }
@@ -426,7 +426,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS(),
                     tier,
                     IRConfig.machines.infuserFactory,
-                    ::SolidInfuserFactoryController
+                    ::SolidInfuserFactoryScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { SolidInfuserFactoryBlockEntity(tier) } }
@@ -468,7 +468,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK3 -> IRConfig.machines.fluidInfuserMk3
                         else -> IRConfig.machines.fluidInfuserMk4
                     },
-                    ::FluidInfuserController
+                    ::FluidInfuserScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { FluidInfuserBlockEntity(tier) } }
@@ -486,7 +486,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.chopperMk2
                         Tier.MK3 -> IRConfig.machines.chopperMk3
                         else -> IRConfig.machines.chopperMk4
-                    }, ::ChopperController
+                    }, ::ChopperScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { ChopperBlockEntity(tier) } }
@@ -504,7 +504,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.farmerMk2
                         Tier.MK3 -> IRConfig.machines.farmerMk3
                         else -> IRConfig.machines.farmerMk4
-                    }, ::FarmerController
+                    }, ::FarmerScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { FarmerBlockEntity(tier) } }
@@ -522,7 +522,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.rancherMk2
                         Tier.MK3 -> IRConfig.machines.rancherMk3
                         else -> IRConfig.machines.rancherMk4
-                    }, ::RancherController
+                    }, ::RancherScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { RancherBlockEntity(tier) } }
@@ -547,7 +547,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.fishingMk2
                         Tier.MK3 -> IRConfig.machines.fishingMk3
                         else -> IRConfig.machines.fishingMk4
-                    }, ::FishingFarmController
+                    }, ::FishingFarmScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { FishingFarmBlockEntity(tier) } }
@@ -561,7 +561,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     SETTINGS().nonOpaque(),
                     tier,
                     IRConfig.machines.modularWorkbench,
-                    ::ModularWorkbenchController
+                    ::ModularWorkbenchScreenHandler
                 )
             }
             .blockEntityProvider { tier -> { ModularWorkbenchBlockEntity(tier) } }

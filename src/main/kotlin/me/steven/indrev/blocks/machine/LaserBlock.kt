@@ -3,7 +3,7 @@ package me.steven.indrev.blocks.machine
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
-import me.steven.indrev.gui.controllers.machines.LaserController
+import me.steven.indrev.gui.screenhandlers.machines.LaserEmitterScreenHandler
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
@@ -21,7 +21,7 @@ import net.minecraft.world.World
 import java.util.*
 
 class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineBlock(
-    registry, settings, Tier.MK4, IRConfig.machines.laser, ::LaserController
+    registry, settings, Tier.MK4, IRConfig.machines.laser, ::LaserEmitterScreenHandler
 ) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {

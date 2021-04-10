@@ -4,7 +4,7 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.gui.IRScreenHandlerFactory
-import me.steven.indrev.gui.controllers.wrench.WrenchController
+import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.item.TooltipContext
@@ -85,7 +85,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
                 ): ActionResult {
                     if (blockEntity is MachineBlockEntity<*>) {
                         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {
-                            player?.openHandledScreen(IRScreenHandlerFactory(::WrenchController, pos))
+                            player?.openHandledScreen(IRScreenHandlerFactory(::WrenchScreenHandler, pos))
                             return ActionResult.success(world.isClient)
                         }
                     }

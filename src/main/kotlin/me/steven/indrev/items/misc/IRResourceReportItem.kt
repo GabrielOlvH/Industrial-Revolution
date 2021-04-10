@@ -1,7 +1,7 @@
 package me.steven.indrev.items.misc
 
-import me.steven.indrev.gui.controllers.resreport.ResourceReportController
-import me.steven.indrev.gui.controllers.resreport.ResourceReportScreenHandlerFactory
+import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
+import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandlerFactory
 import me.steven.indrev.utils.getChunkPos
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import net.minecraft.client.item.TooltipContext
@@ -45,7 +45,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
         val veinData = state.veins[chunkPos]!!
         user.openHandledScreen(
             ResourceReportScreenHandlerFactory(
-                { syncId, inv, ctx -> ResourceReportController(syncId, inv, ctx, veinData) },
+                { syncId, inv, ctx -> ResourceReportScreenHandler(syncId, inv, ctx, veinData) },
                 user.blockPos,
                 veinData
             )

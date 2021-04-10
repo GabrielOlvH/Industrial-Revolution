@@ -1,6 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import me.steven.indrev.gui.controllers.storage.CabinetController
+import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
@@ -26,7 +26,7 @@ class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_
     override fun getContainerName(): Text = TranslatableText("block.indrev.cabinet")
 
     override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
-        return CabinetController(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
+        return CabinetScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory
