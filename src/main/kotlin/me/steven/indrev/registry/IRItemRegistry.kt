@@ -328,7 +328,7 @@ object IRItemRegistry {
     val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
 
-    val WRENCH = IRWrenchItem(itemSettings())
+    val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
 
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
