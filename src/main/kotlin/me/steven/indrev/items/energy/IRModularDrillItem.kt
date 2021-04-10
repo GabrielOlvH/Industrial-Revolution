@@ -12,9 +12,13 @@ import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
+import net.minecraft.util.hit.BlockHitResult
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class IRModularDrillItem(
@@ -60,4 +64,16 @@ class IRModularDrillItem(
     override fun getRadius(stack: ItemStack): Int = DrillModule.RANGE.getLevel(stack)
 
     override fun playBreakEffects(): Boolean = false
+
+    override fun getCenterPosition(
+        world: World,
+        player: PlayerEntity,
+        blockHitResult: BlockHitResult,
+        toolStack: ItemStack
+    ): BlockPos {
+        val pos = blockHitResult.blockPos
+        val radius = getRadius(toolStack)
+        return if (blockHitResult.side.axis == Direction.Axis.Y || radius < 1) pos
+        else pos.up(radius - 1)
+    }
 }
