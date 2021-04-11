@@ -2,10 +2,7 @@ package me.steven.indrev.gui.screenhandlers.pipes
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
-import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
-import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WToggleButton
-import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.github.cottonmc.cotton.gui.widget.*
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.registry.IRItemRegistry
@@ -49,7 +46,13 @@ class PipeFilterScreenHandler(
             root.add(slot, 1 * index, 1)
         }
 
-        val whitelistButton = object : WToggleButton() {
+        val whitelistButton = object : WToggleButton(WHITELIST_ICON, BLACKLIST_ICON) {
+
+            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
+                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            }
+
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(TranslatableText("gui.indrev.whitelist.$isOn"))
             }
@@ -63,8 +66,15 @@ class PipeFilterScreenHandler(
         }
         whitelistButton.toggle = whitelist
         root.add(whitelistButton, 2, 2)
+        whitelistButton.setLocation(2 * 18, (2.2 * 18).toInt())
 
-        val matchDurabilityButton = object : WToggleButton() {
+        val matchDurabilityButton = object : WToggleButton(MATCH_DURABILITY_ICON, IGNORE_DURABILITY_ICON) {
+
+            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
+                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            }
+
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(TranslatableText("gui.indrev.matchDurability.$isOn"))
             }
@@ -78,8 +88,15 @@ class PipeFilterScreenHandler(
         }
         matchDurabilityButton.toggle = matchDurability
         root.add(matchDurabilityButton, 4, 2)
+        matchDurabilityButton.setLocation(4 * 18, (2.2 * 18).toInt())
 
-        val matchTagButton = object : WToggleButton() {
+        val matchTagButton = object : WToggleButton(MATCH_NBT_ICON, IGNORE_NBT_ICON) {
+
+            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
+                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            }
+            
             override fun addTooltip(tooltip: TooltipBuilder?) {
                 tooltip?.add(TranslatableText("gui.indrev.matchTag.$isOn"))
             }
@@ -93,6 +110,7 @@ class PipeFilterScreenHandler(
         }
         matchTagButton.toggle = matchTag
         root.add(matchTagButton, 6, 2)
+        matchTagButton.setLocation(6 * 18, (2.2 * 18).toInt())
 
         if (mode != null && type != null) {
             val modeWidget = WServoMode()
@@ -100,7 +118,9 @@ class PipeFilterScreenHandler(
             modeWidget.setLocation(8 * 18, -3)
         }
 
-        root.add(createPlayerInventoryPanel(), 0, 3)
+        val panel = createPlayerInventoryPanel()
+        root.add(panel, 0, 4)
+        panel.setLocation(0, 18 * 3 + 9)
 
         root.validate(this)
     }
@@ -164,6 +184,13 @@ class PipeFilterScreenHandler(
         val UPDATE_FILTER_SLOT_S2C_PACKET = identifier("update_filter_s2c")
         val CHANGE_FILTER_MODE_PACKET = identifier("change_whitelist_mode")
         val CHANGE_SERVO_MODE_PACKET = identifier("change_servo_mode")
+
+        val WHITELIST_ICON = identifier("textures/gui/filter_whitelist.png")
+        val BLACKLIST_ICON = identifier("textures/gui/filter_blacklist.png")
+        val IGNORE_DURABILITY_ICON = identifier("textures/gui/filter_ignore_durability.png")
+        val MATCH_DURABILITY_ICON = identifier("textures/gui/filter_match_durability.png")
+        val IGNORE_NBT_ICON = identifier("textures/gui/filter_ignore_nbt.png")
+        val MATCH_NBT_ICON = identifier("textures/gui/filter_match_nbt.png")
 
         val SCREEN_ID = identifier("pipe_filter_screen")
     }
