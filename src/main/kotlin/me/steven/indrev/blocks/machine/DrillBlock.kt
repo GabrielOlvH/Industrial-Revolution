@@ -76,6 +76,14 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         else state
     }
 
+    override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
+        if (!world.isClient && player.isCreative && part != DrillPart.BOTTOM) {
+            val bottom = part.getBlockEntityPos(pos)
+            world.setBlockState(bottom, Blocks.AIR.defaultState)
+        }
+        super.onBreak(world, pos, state, player)
+    }
+
     override fun getPickStack(world: BlockView, pos: BlockPos, state: BlockState): ItemStack = ItemStack(DRILL_BOTTOM)
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
