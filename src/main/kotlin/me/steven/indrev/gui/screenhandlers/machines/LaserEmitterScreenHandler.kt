@@ -29,11 +29,12 @@ class LaserEmitterScreenHandler(
 
         val label = WLabel(TranslatableText("block.indrev.laser_mk4"))
         root.add(label, 0, 0)
-        label.setLocation(2, 0)
+        label.setLocation(3, 0)
+        label.setSize(70, 0)
 
         val energy = WEnergy()
         root.add(energy, 1, 1)
-        energy.setLocation(9, 18)
+        energy.setLocation(9 + 18, 18)
 
         root.validate(this)
     }
