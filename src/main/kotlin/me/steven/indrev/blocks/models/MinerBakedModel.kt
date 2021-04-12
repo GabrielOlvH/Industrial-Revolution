@@ -57,6 +57,6 @@ class MinerBakedModel(id: String) : MachineBakedModel(id) {
         val blockEntity = blockView.getBlockEntity(pos) as? MinerBlockEntity ?: return
 
         if (blockEntity.workingState)
-            ctx.emitter.draw(direction, direction, screenSprite!!)
+            ctx.emitter.draw(direction, screenSprite!!)
     }
 }

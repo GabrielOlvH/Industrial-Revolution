@@ -49,7 +49,8 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
 
     protected val emissives = hashSetOf<Sprite>()
 
-    private var mesh: Mesh? = null
+    var defaultMesh: Mesh? = null
+    private var workingStateMesh: Mesh? = null
 
     fun factoryOverlay() {
         overlayIds.add(blockSpriteId("block/factory_overlay"))
@@ -70,16 +71,35 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         workingOverlayIds.processSprites(workingOverlays, textureGetter)
         if (isEmissive(sprite)) emissives.add(sprite!!)
 
+        buildDefaultMesh()
+        buildWorkingStateMesh()
+
+        return this
+    }
+
+    protected open fun buildDefaultMesh() {
         val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
         val builder: MeshBuilder = renderer.meshBuilder()
         val emitter = builder.emitter
 
         for (direction in Direction.values()) {
-            emitter.draw(null, direction, sprite!!, -1)
+            emitter.draw(direction, sprite!!, -1)
+            overlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
         }
-        mesh = builder.build()
+        defaultMesh = builder.build()
+    }
 
-        return this
+    private fun buildWorkingStateMesh() {
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
+
+        for (direction in Direction.values()) {
+            emitter.draw(direction, sprite!!, -1)
+            workingOverlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
+            overlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
+        }
+        workingStateMesh = builder.build()
     }
 
     private fun List<SpriteIdentifier>.processSprites(arr: Array<Sprite?>, textureGetter: Function<SpriteIdentifier, Sprite>) {
@@ -136,69 +156,18 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     ) {
         val block = state.block as? MachineBlock ?: return
         val direction = block.getFacing(state)
-
-        ctx.pushTransform { q ->
-            val rotate = Vector3f.POSITIVE_Y.getDegreesQuaternion(
-                when (direction) {
-                    Direction.NORTH -> 0f
-                    Direction.EAST -> 270f
-                    Direction.SOUTH -> 180f
-                    Direction.WEST -> 90f
-                    else -> 0f
-                }
-            )
-
-            val tmp = Vector3f()
-            for (i in 0..3) {
-                // Transform the position (center of rotation is 0.5, 0.5, 0.5)
-                q.copyPos(i, tmp)
-                tmp.add(-0.5f, -0.5f, -0.5f)
-                tmp.rotate(rotate)
-                tmp.add(0.5f, 0.5f, 0.5f)
-                q.pos(i, tmp)
-
-                // Transform the normal
-                if (q.hasNormal(i)) {
-                    q.copyNormal(i, tmp)
-                    tmp.rotate(rotate)
-                    q.normal(i, tmp)
-                }
-            }
-            q.cullFace(direction)
-            q.nominalFace(direction)
-            true
-        }
-        ctx.meshConsumer().accept(mesh)
+        val blockEntity = blockView.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        ctx.pushTransform(rotateQuads(direction))
+        val m = if (blockEntity.workingState) workingStateMesh else defaultMesh
+        ctx.meshConsumer().accept(m)
         ctx.popTransform()
-        if (workingOverlays.isNotEmpty()) {
-            val blockEntity = blockView.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
-            if (blockEntity.workingState) {
-                workingOverlays.forEach { emitQuads(direction, it!!, ctx) }
-            }
-        }
-        if (overlays.isNotEmpty())
-            overlays.forEach { emitQuads(direction, it!!, ctx) }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
-        emitQuads(null, sprite!!, ctx)
-        if (overlays.isNotEmpty())
-            overlays.forEach { emitQuads(null, it!!, ctx) }
-    }
-
-    protected fun emitQuads(facing: Direction?, sprite: Sprite, ctx: RenderContext) {
-        ctx.emitter.run {
-            draw(facing, Direction.UP, sprite)
-            draw(facing, Direction.DOWN, sprite)
-            draw(facing, Direction.NORTH, sprite)
-            draw(facing, Direction.SOUTH, sprite)
-            draw(facing, Direction.EAST, sprite)
-            draw(facing, Direction.WEST, sprite)
-        }
+        ctx.meshConsumer().accept(defaultMesh)
     }
 
     protected fun QuadEmitter.draw(
-        facing: Direction?,
         side: Direction,
         sprite: Sprite,
         color: Int = -1
@@ -208,20 +177,48 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         spriteColor(0, color, color, color, color)
         if (emissives.contains(sprite))
             material(MATERIAL)
-        val offset = if (side.axis.isVertical) side else when (facing) {
-            Direction.SOUTH -> side.opposite
-            Direction.WEST -> side.rotateYClockwise()
-            Direction.EAST -> side.rotateYCounterclockwise()
-            else -> side
-        }
         val uv =
             if (sprite.width == 16 && sprite.height == 16) MachineTextureUV.FULL
-            else MachineTextureUV.BY_DIRECTION[offset]!!
+            else MachineTextureUV.BY_DIRECTION[side]!!
         sprite(0, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v1.toDouble()))
         sprite(1, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
         sprite(2, 0, sprite.getFrameU(uv.u2.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
         sprite(3, 0, sprite.getFrameU(uv.u2.toDouble()), sprite.getFrameV(uv.v1.toDouble()))
         emit()
+    }
+
+    /**
+     * Original code belongs to Haven-King.
+     * Source: https://github.com/Haven-King/Automotion
+     */
+    fun rotateQuads(direction: Direction): RenderContext.QuadTransform = RenderContext.QuadTransform { q ->
+        val rotate = Vector3f.POSITIVE_Y.getDegreesQuaternion(
+            when (direction) {
+                Direction.NORTH -> 0f
+                Direction.EAST -> 270f
+                Direction.SOUTH -> 180f
+                Direction.WEST -> 90f
+                else -> 0f
+            }
+        )
+
+        val tmp = Vector3f()
+        for (i in 0..3) {
+            q.copyPos(i, tmp)
+            tmp.add(-0.5f, -0.5f, -0.5f)
+            tmp.rotate(rotate)
+            tmp.add(0.5f, 0.5f, 0.5f)
+            q.pos(i, tmp)
+
+            if (q.hasNormal(i)) {
+                q.copyNormal(i, tmp)
+                tmp.rotate(rotate)
+                q.normal(i, tmp)
+            }
+        }
+        q.cullFace(direction)
+        q.nominalFace(direction)
+        true
     }
 
     enum class MachineTextureUV(val direction: Direction?, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {

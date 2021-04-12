@@ -1,8 +1,10 @@
 package me.steven.indrev.blocks.models
 
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
-import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.blockSpriteId
+import net.fabricmc.fabric.api.renderer.v1.Renderer
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.texture.Sprite
@@ -34,6 +36,18 @@ class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_
         else -> 0xff4070
     }
 
+    override fun buildDefaultMesh() {
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
+
+        for (direction in Direction.values()) {
+            emitter.draw(direction, sprite!!, -1)
+            emitter.draw(direction, overlays[4]!!, -1)
+        }
+        defaultMesh = builder.build()
+    }
+
     override fun emitBlockQuads(
         blockView: BlockRenderView,
         state: BlockState,
@@ -41,34 +55,30 @@ class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_
         randomSupplier: Supplier<Random>,
         ctx: RenderContext
     ) {
+        super.emitBlockQuads(blockView, state, pos, randomSupplier, ctx)
         val blockEntity = blockView.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return
-        val block = state.block as? MachineBlock ?: return
-        val direction = block.getFacing(state)
 
         val emitter = ctx.emitter
-        emitQuads(direction, sprite!!, ctx)
         blockEntity.transferConfig.forEach { side, mode ->
             if (mode.input) {
-                emitter.draw(direction, side, overlays[1]!!)
+                emitter.draw(side, overlays[1]!!)
             } else if (mode.output) {
-                emitter.draw(direction, side, overlays[2]!!)
+                emitter.draw(side, overlays[2]!!)
             }
         }
-        emitQuads(direction, overlays[4]!!, ctx)
     }
 
     private fun emitHorizontalQuads(sprite: Sprite, ctx: RenderContext) {
         ctx.emitter.run {
-            draw(null, Direction.NORTH, sprite, 255 shl 24 or color)
-            draw(null, Direction.SOUTH, sprite, 255 shl 24 or color)
-            draw(null, Direction.EAST, sprite, 255 shl 24 or color)
-            draw(null, Direction.WEST, sprite, 255 shl 24 or color)
+            draw(Direction.NORTH, sprite, 255 shl 24 or color)
+            draw(Direction.SOUTH, sprite, 255 shl 24 or color)
+            draw(Direction.EAST, sprite, 255 shl 24 or color)
+            draw(Direction.WEST, sprite, 255 shl 24 or color)
         }
     }
 
     override fun emitItemQuads(stack: ItemStack?, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
-        emitQuads(null, sprite!!, ctx)
-        emitQuads(null, overlays[4]!!, ctx)
+        super.emitItemQuads(stack, randomSupplier, ctx)
         emitHorizontalQuads(overlays[3]!!, ctx)
     }
 }
