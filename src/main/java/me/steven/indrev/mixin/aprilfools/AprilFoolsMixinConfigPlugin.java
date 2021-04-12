@@ -1,6 +1,8 @@
 package me.steven.indrev.mixin.aprilfools;
 
 import me.steven.indrev.AprilFools;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -33,7 +35,7 @@ public class AprilFoolsMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return AprilFools.isToday()? mixins : null;
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && AprilFools.isToday() ? mixins : null;
     }
 
     @Override

@@ -23,8 +23,9 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.thread.ThreadExecutor
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
-import java.util.function.Supplier
 import kotlin.coroutines.resume
 import kotlin.math.floor
 import kotlin.math.roundToInt
@@ -119,7 +120,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
         }
         directions.shuffled(world.random).associate { dir ->
             val offset = pos.offset(dir)
-            val fluidState = server.submit(Supplier { world.getFluidState(offset)}).get()
+            val fluidState = server.submitAndGet { world.getFluidState(offset) }
             offset to fluidState
         }.entries.sortedByDescending { if (it.value.isStill) 20 else it.value.level }.forEach { (offset, fluidState) ->
             if (offset != centerBlock && fluidState.fluid == fluid) {
@@ -128,6 +129,13 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
             } else if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
                 scan(offset, fluid, server, scanned)
         }
+    }
+
+    fun <V> ThreadExecutor<*>.submitAndGet(task: () -> V): V {
+        return (if (!this.isOnThread)
+            CompletableFuture.supplyAsync(task, this)
+        else
+            CompletableFuture.completedFuture(task())).get()
     }
 
     override fun applyDefault(
