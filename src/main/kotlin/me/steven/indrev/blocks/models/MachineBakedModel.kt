@@ -6,8 +6,11 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.blockSpriteId
 import me.steven.indrev.utils.identifier
+import net.fabricmc.fabric.api.renderer.v1.Renderer
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
@@ -21,6 +24,7 @@ import net.minecraft.client.texture.MissingSprite
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
+import net.minecraft.client.util.math.Vector3f
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
@@ -30,6 +34,7 @@ import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
+
 
 open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBakedModel {
 
@@ -43,6 +48,8 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     protected val workingOverlays: Array<Sprite?> by lazy { arrayOfNulls(workingOverlayIds.size) }
 
     protected val emissives = hashSetOf<Sprite>()
+
+    private var mesh: Mesh? = null
 
     fun factoryOverlay() {
         overlayIds.add(blockSpriteId("block/factory_overlay"))
@@ -62,6 +69,16 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         overlayIds.processSprites(overlays, textureGetter)
         workingOverlayIds.processSprites(workingOverlays, textureGetter)
         if (isEmissive(sprite)) emissives.add(sprite!!)
+
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
+
+        for (direction in Direction.values()) {
+            emitter.draw(null, direction, sprite!!, -1)
+        }
+        mesh = builder.build()
+
         return this
     }
 
@@ -120,7 +137,39 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         val block = state.block as? MachineBlock ?: return
         val direction = block.getFacing(state)
 
-        emitQuads(direction, sprite!!, ctx)
+        ctx.pushTransform { q ->
+            val rotate = Vector3f.POSITIVE_Y.getDegreesQuaternion(
+                when (direction) {
+                    Direction.NORTH -> 0f
+                    Direction.EAST -> 270f
+                    Direction.SOUTH -> 180f
+                    Direction.WEST -> 90f
+                    else -> 0f
+                }
+            )
+
+            val tmp = Vector3f()
+            for (i in 0..3) {
+                // Transform the position (center of rotation is 0.5, 0.5, 0.5)
+                q.copyPos(i, tmp)
+                tmp.add(-0.5f, -0.5f, -0.5f)
+                tmp.rotate(rotate)
+                tmp.add(0.5f, 0.5f, 0.5f)
+                q.pos(i, tmp)
+
+                // Transform the normal
+                if (q.hasNormal(i)) {
+                    q.copyNormal(i, tmp)
+                    tmp.rotate(rotate)
+                    q.normal(i, tmp)
+                }
+            }
+            q.cullFace(direction)
+            q.nominalFace(direction)
+            true
+        }
+        ctx.meshConsumer().accept(mesh)
+        ctx.popTransform()
         if (workingOverlays.isNotEmpty()) {
             val blockEntity = blockView.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
             if (blockEntity.workingState) {
@@ -156,7 +205,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     ) {
         square(side, 0f, 0f, 1f, 1f, 0f)
         spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
-        spriteColor(0,  color, color, color, color)
+        spriteColor(0, color, color, color, color)
         if (emissives.contains(sprite))
             material(MATERIAL)
         val offset = if (side.axis.isVertical) side else when (facing) {
@@ -176,12 +225,12 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     }
 
     enum class MachineTextureUV(val direction: Direction?, val u1: Float, val v1: Float, val u2: Float, val v2: Float) {
-        FRONT(Direction.NORTH, 5.333f, 5.333f, 10.666f, 10.666f),
-        LEFT(Direction.EAST, 0.0f, 5.333f, 5.332f, 10.666f),
-        BACK(Direction.SOUTH, 10.667f, 10.667f, 16.0f, 16f),
-        RIGHT(Direction.WEST, 10.667f, 5.333f, 16.0f, 10.665f),
-        TOP(Direction.UP, 5.333f, 0.0f, 10.666f, 5.333f),
-        BOTTOM(Direction.DOWN, 5.333f, 10.667f, 10.666f, 16.0f),
+        FRONT(Direction.NORTH, 16f / 48f * 16f, 16f / 48f * 16f, 32f / 48f * 16f, 32f / 48f * 16f),
+        LEFT(Direction.EAST, 0.0f, 16f / 48f * 16f, 16f / 48f * 16f, 32f / 48f * 16f),
+        BACK(Direction.SOUTH, 32f / 48f * 16f, 32f / 48f * 16f, 16.0f, 16f),
+        RIGHT(Direction.WEST, 32f / 48f * 16f, 16f / 48f * 16f, 16.0f, 32f / 48f * 16f),
+        TOP(Direction.UP, 16f / 48f * 16f, 0.0f, 32f / 48f * 16f, 16f / 48f * 16f),
+        BOTTOM(Direction.DOWN, 16f / 48f * 16f, 32f / 48f * 16f, 32f / 48f * 16f, 16.0f),
         FULL(null, 0f, 0f, 16f, 16f);
 
         companion object {
