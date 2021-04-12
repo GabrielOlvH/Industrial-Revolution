@@ -27,7 +27,6 @@ import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
@@ -117,10 +116,6 @@ object IndustrialRevolution : ModInitializer {
             if (player is IRServerPlayerEntityExtension) {
                 (player as IRServerPlayerEntityExtension).sync()
             }
-        }
-
-        ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
-            IRConfig.readConfigs()
         }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
