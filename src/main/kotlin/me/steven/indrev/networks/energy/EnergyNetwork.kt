@@ -49,6 +49,7 @@ open class EnergyNetwork(
                     while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
                         val (_, targetPos, _, targetDir) = q.poll()
                         val target = energyOf(world, targetPos, targetDir) ?: continue
+                        if (!target.supportsInsertion()) continue
                         val maxInput = remainingInputs.computeIfAbsent(targetPos) { target.maxInput }
                         if (maxInput < 1e-9) continue
 
