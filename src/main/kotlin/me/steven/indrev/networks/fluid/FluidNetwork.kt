@@ -14,6 +14,7 @@ import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.Node
 import me.steven.indrev.utils.fluidExtractableOf
 import me.steven.indrev.utils.fluidInsertableOf
+import me.steven.indrev.utils.isLoaded
 import me.steven.indrev.utils.minus
 import net.minecraft.block.Block
 import net.minecraft.nbt.CompoundTag
@@ -21,14 +22,8 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
-import kotlin.collections.MutableMap
-import kotlin.collections.MutableSet
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.forEach
-import kotlin.collections.hashMapOf
-import kotlin.collections.hashSetOf
-import kotlin.collections.isNotEmpty
 
 class FluidNetwork(
     world: ServerWorld,
@@ -55,6 +50,8 @@ class FluidNetwork(
             buildQueue()
         if (queue.isNotEmpty()) {
             containers.forEach { (pos, directions) ->
+                if (!world.isLoaded(pos)) return@forEach
+
                 val originalQueue = queue[pos] ?: return@forEach
 
                 val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
@@ -86,6 +83,7 @@ class FluidNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
+            if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
@@ -103,6 +101,7 @@ class FluidNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
+            if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue

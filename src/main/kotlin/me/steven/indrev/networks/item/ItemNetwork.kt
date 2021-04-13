@@ -8,6 +8,7 @@ import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.Node
+import me.steven.indrev.utils.isLoaded
 import me.steven.indrev.utils.itemExtractableOf
 import me.steven.indrev.utils.itemInsertableOf
 import net.minecraft.block.Block
@@ -40,6 +41,7 @@ class ItemNetwork(
             buildQueue()
         if (queue.isNotEmpty()) {
             containers.forEach { (pos, directions) ->
+                if (!world.isLoaded(pos)) return@forEach
                 val originalQueue = queue[pos] ?: return@forEach
 
                 val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
@@ -70,6 +72,7 @@ class ItemNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val (_, targetPos, _, targetDir) = queue.poll()
+            if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
@@ -85,6 +88,7 @@ class ItemNetwork(
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val (_, targetPos, _, targetDir) = queue.poll()
+            if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue

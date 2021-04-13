@@ -10,6 +10,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.isLoaded
 import net.minecraft.block.Block
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
@@ -42,12 +43,14 @@ open class EnergyNetwork(
             val remainingInputs = Object2DoubleOpenHashMap<BlockPos>()
             machines.forEach { (pos, directions) ->
                 val q = PriorityQueue(queue[pos] ?: return@forEach)
+                if (!world.isLoaded(pos)) return@forEach
                 directions.forEach inner@{ dir ->
                     val energyIo = energyOf(world, pos, dir) ?: return@inner
                     var remaining = energyIo.maxOutput
 
                     while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
                         val (_, targetPos, _, targetDir) = q.poll()
+                        if (!world.isLoaded(targetPos)) continue
                         val target = energyOf(world, targetPos, targetDir) ?: continue
                         if (!target.supportsInsertion()) continue
                         val maxInput = remainingInputs.computeIfAbsent(targetPos) { target.maxInput }
