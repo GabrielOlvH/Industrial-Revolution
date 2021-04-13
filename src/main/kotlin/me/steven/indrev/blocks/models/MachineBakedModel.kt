@@ -216,7 +216,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
                 q.normal(i, tmp)
             }
         }
-        q.cullFace(direction)
+        q.cullFace(null)
         q.nominalFace(direction)
         true
     }
