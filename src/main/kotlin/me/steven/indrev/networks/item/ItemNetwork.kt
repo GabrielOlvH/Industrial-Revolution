@@ -71,7 +71,8 @@ class ItemNetwork(
         val extractable = itemExtractableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
-            val (_, targetPos, _, targetDir) = queue.poll()
+            val node = queue.poll()
+            val (_, targetPos, _, targetDir) = node
             if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
@@ -80,6 +81,9 @@ class ItemNetwork(
             val insertable = itemInsertableOf(world, targetPos, targetDir.opposite)
             val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) && targetData?.matches(it) != false }, remaining)
             remaining -= moved
+            if (moved > 0) {
+                queue.offer(node)
+            }
         }
     }
 
@@ -87,7 +91,8 @@ class ItemNetwork(
         val insertable = itemInsertableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
-            val (_, targetPos, _, targetDir) = queue.poll()
+            val node = queue.poll()
+            val (_, targetPos, _, targetDir) = node
             if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
@@ -96,6 +101,8 @@ class ItemNetwork(
             val extractable = itemExtractableOf(world, targetPos, targetDir.opposite)
             val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) && targetData?.matches(it) != false }, remaining)
             remaining -= moved
+            if (moved > 0)
+                queue.offer(node)
         }
     }
 
