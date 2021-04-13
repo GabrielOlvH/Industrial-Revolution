@@ -9,8 +9,6 @@ import me.shedaniel.rei.api.widgets.Widgets
 import me.shedaniel.rei.gui.widget.Widget
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.machines.WFluid
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
@@ -34,7 +32,6 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import java.util.concurrent.CompletableFuture
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -118,6 +115,3 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
 fun World.isLoaded(pos: BlockPos): Boolean {
     return chunkManager.isChunkLoaded(pos.x shr 4, pos.z shr 4)
 }
-
-@Environment(EnvType.CLIENT)
-fun <T> runClient(f: () -> T): CompletableFuture<T> = MinecraftClient.getInstance().submit(f)

@@ -28,13 +28,14 @@ import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.ChestBlockEntity
+import net.minecraft.client.MinecraftClient
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
@@ -47,6 +48,18 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import org.apache.logging.log4j.LogManager
+import kotlin.collections.MutableMap
+import kotlin.collections.addAll
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.contains
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
+import kotlin.collections.mutableSetOf
+import kotlin.collections.set
+import kotlin.collections.toIntArray
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
@@ -89,7 +102,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
         get() {
             if (world?.isClient == true && GlobalStateController.workingStateTracker.contains(pos.asLong())) {
-                field = runClient { GlobalStateController.workingStateTracker.remove(pos.asLong()) }.get()
+                MinecraftClient.getInstance().execute { field = GlobalStateController.workingStateTracker.remove(pos.asLong()) }
             }
             return field
         }
