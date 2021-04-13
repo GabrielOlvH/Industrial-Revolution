@@ -108,13 +108,19 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
 
         override fun extract(maxAmount: Double, simulation: Simulation?): Double {
             val extracted = maxAmount.coerceAtMost(blockEntity.maxOutput).coerceAtMost(energy)
-            if (simulation?.isActing == true) blockEntity.energy -= extracted
+            if (simulation?.isActing == true) {
+                blockEntity.energy -= extracted
+                blockEntity.update()
+            }
             return extracted
         }
 
         override fun insert(amount: Double, simulation: Simulation?): Double {
             val inserted = amount.coerceAtMost(blockEntity.maxInput).coerceAtMost(this.energyCapacity - energy)
-            if (simulation?.isActing == true) blockEntity.energy += inserted
+            if (simulation?.isActing == true) {
+                blockEntity.energy += inserted
+                blockEntity.update()
+            }
             return amount - inserted
         }
 
