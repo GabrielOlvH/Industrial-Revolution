@@ -6,10 +6,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
-import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
@@ -579,5 +576,11 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { { LaserBlockEntity() } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING].opposite) be as LaserBlockEntity else null } }
             .noModelProvider()
+
+        val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
+            .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.generators.biomassGenerator, null) }
+            .blockEntityProvider { { SteamTurbineBlockEntity() } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(true)
     }
 }

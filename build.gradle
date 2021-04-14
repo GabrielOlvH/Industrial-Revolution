@@ -71,6 +71,7 @@ repositories {
             includeGroup "com.github.Technici4n"
             includeGroup "com.github.GabrielOlvH"
             includeGroup "com.github.emilyploszaj"
+            includeGroup "com.github.SuperCoder7979"
         }
     }
     maven {
@@ -167,6 +168,10 @@ dependencies {
 
     modApi "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
     include "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
+
+    modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
+        exclude module: "fabric-loader"
+    }
 
    // modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
     //modImplementation "curse.maven:kubejs-395864:3183435"
