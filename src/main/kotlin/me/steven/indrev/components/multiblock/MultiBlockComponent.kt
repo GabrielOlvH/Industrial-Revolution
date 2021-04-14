@@ -10,6 +10,7 @@ class MultiBlockComponent(
     val structureDecider: (BlockState, World, BlockPos) -> StructureDefinition
 ) {
     var shouldRenderHologram = false
+    var variant = 0
     private var ticks = 0
     private var cachedMatchers: MutableMap<String, AbstractMultiblockMatcher> = hashMapOf()
 
@@ -26,16 +27,21 @@ class MultiBlockComponent(
 
     fun isBuilt(world: World, pos: BlockPos, blockState: BlockState) = getSelectedMatcher(world, pos, blockState).structureIds.any(isBuilt)
 
-    fun toggleRender() {
-        shouldRenderHologram = !shouldRenderHologram
+    fun toggleRender(isSneaking: Boolean) {
+        if (!isSneaking)
+            shouldRenderHologram = !shouldRenderHologram
+        else
+            variant++
     }
 
     fun fromTag(tag: CompoundTag?) {
         shouldRenderHologram = tag?.getBoolean("ShouldRenderHologram") ?: false
+        variant = tag?.getInt("Variant") ?: 0
     }
 
     fun toTag(tag: CompoundTag): CompoundTag {
         tag.putBoolean("ShouldRenderHologram", shouldRenderHologram)
+        tag.putInt("Variant", variant)
         return tag
     }
 }

@@ -79,7 +79,7 @@ open class MachineBlock(
         else if (blockEntity.multiblockComponent != null
             && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
             player?.sendMessage(TranslatableText("text.multiblock.not_built"), true)
-            blockEntity.multiblockComponent?.toggleRender()
+            blockEntity.multiblockComponent?.toggleRender(player!!.isSneaking)
             blockEntity.markDirty()
             blockEntity.sync()
         } else if (screenHandler != null) {
