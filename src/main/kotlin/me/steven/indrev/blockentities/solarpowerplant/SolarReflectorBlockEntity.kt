@@ -1,12 +1,12 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 
-class SolarReflectorBlockEntity : BlockEntity(IRRegistry.SOLAR_REFLECTOR_BLOCK_ENTITY), BlockEntityClientSerializable {
+class SolarReflectorBlockEntity : BlockEntity(IRBlockRegistry.SOLAR_REFLECTOR_BLOCK_ENTITY), BlockEntityClientSerializable {
     var pitch: Float = 0.0f
     var yaw: Float = 0.0f
 

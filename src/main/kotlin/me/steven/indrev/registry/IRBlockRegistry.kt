@@ -4,8 +4,10 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
+import me.steven.indrev.blocks.SolarReflectorBlock
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
@@ -66,6 +68,11 @@ object IRBlockRegistry {
         identifier("cable_mk2").block(CABLE_MK2).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK2)
         identifier("cable_mk3").block(CABLE_MK3).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK3)
         identifier("cable_mk4").block(CABLE_MK4).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK4)
+
+        identifier("solar_reflector")
+            .block(SOLAR_REFLECTOR_BLOCK)
+            .item(SOLAR_REFLECTOR_ITEM)
+            .blockEntityType(SOLAR_REFLECTOR_BLOCK_ENTITY)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -151,4 +158,10 @@ object IRBlockRegistry {
     val COVERABLE_BLOCK_ENTITY_TYPE_MK3 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK3) }, FLUID_PIPE_MK3, ITEM_PIPE_MK3, CABLE_MK3).build(null)
 
     val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK4) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
+
+    val SOLAR_REFLECTOR_BLOCK = SolarReflectorBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val SOLAR_REFLECTOR_ITEM = BlockItem(SOLAR_REFLECTOR_BLOCK, itemSettings())
+    val SOLAR_REFLECTOR_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarReflectorBlockEntity() }, SOLAR_REFLECTOR_BLOCK).build(null)
 }

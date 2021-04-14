@@ -17,6 +17,8 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
+import me.steven.indrev.blocks.SolarReflectorBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.config.IRConfig.writeToClient
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -232,6 +234,22 @@ object PacketRegistry {
                 state.markDirty()
             }
         }
+        ServerPlayNetworking.registerGlobalReceiver(SolarReflectorBlock.SET_ANGLES_PACKET) { server, player, _, buf, _ ->
+            val yaw = buf.readFloat()
+            val pitch = buf.readFloat()
+            val pos = buf.readBlockPos()
+            server.execute {
+                val world = player.world
+                if (world.isLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? SolarReflectorBlockEntity ?: return@execute
+                    blockEntity.pitch = pitch
+                    blockEntity.yaw = yaw
+                    blockEntity.markDirty()
+                    blockEntity.sync()
+                }
+            }
+        }
+
     }
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {
