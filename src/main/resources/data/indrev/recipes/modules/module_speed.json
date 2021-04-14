@@ -1,0 +1,27 @@
+{
+  "type": "indrev:modules",
+  "ingredients": [
+    {
+      "item": "indrev:circuit_mk4"
+    },
+    {
+      "tag": "c:silver_plates"
+    },
+    {
+      "tag": "c:silver_plates"
+    },
+    {
+      "tag": "c:silver_plates"
+    },
+    {
+      "tag": "c:silver_plates"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  ],
+  "output": {
+    "item": "indrev:module_speed"
+  },
+  "processTime": 400
+}

@@ -26,7 +26,7 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
             Direction.EAST -> INPUT_EAST_FACE
             else -> return
         }
-        val inputVolume = fluidComponent.tanks[0].volume
+        val inputVolume = fluidComponent[0]
         if (!inputVolume.isEmpty) {
             inputVolume.render(inputFace, FluidVolumeRenderer.VCPS, matrices)
             FluidVolumeRenderer.VCPS.draw()
@@ -39,7 +39,7 @@ class FluidInfuserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
             Direction.EAST -> OUTPUT_EAST_FACE
             else -> return
         }
-        val outputVolume = fluidComponent.tanks[1].volume
+        val outputVolume = fluidComponent[1]
         if (!outputVolume.isEmpty) {
             outputVolume.render(outputFace, FluidVolumeRenderer.VCPS, matrices)
             FluidVolumeRenderer.VCPS.draw()

@@ -1,14 +1,11 @@
 {
-  "type": "indrev:copy_nbt_crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "NPN",
-    "ACS",
-    "BMB"
+    "OCO",
+    "OBO"
   ],
   "key": {
-    "M": {
-      "item": "indrev:mining_drill_mk3"
-    },
     "C": {
       "item": "indrev:circuit_mk4"
     },
@@ -16,20 +13,16 @@
       "item": "indrev:enriched_nikolite_ingot"
     },
     "P": {
-      "item": "minecraft:netherite_pickaxe"
-    },
-    "A": {
-      "item": "minecraft:netherite_axe"
-    },
-    "S": {
-      "item": "minecraft:netherite_shovel"
+      "item": "indrev:netherite_drill_head"
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "O": {
+      "tag": "c:lead_plates"
     }
   },
   "result": {
-    "item": "indrev:mining_drill_mk4",
-    "copyNbt": "indrev:mining_drill_mk3"
+    "item": "indrev:mining_drill_mk4"
   }
 }

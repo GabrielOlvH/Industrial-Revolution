@@ -1,15 +1,18 @@
 package me.steven.indrev.blockentities.crafters
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
 
 class PulverizerBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
+
+    override val upgradeSlots: IntArray = intArrayOf(5, 6, 7, 8)
+    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
 
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
@@ -20,8 +23,4 @@ class PulverizerBlockEntity(tier: Tier) :
     }
 
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(5, 6, 7, 8)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = Upgrade.DEFAULT
 }

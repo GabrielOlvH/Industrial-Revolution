@@ -1,10 +1,10 @@
 package me.steven.indrev.items.misc
 
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.utils.Tier
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -34,6 +34,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
             
             val inventoryTag = blockEntity.inventoryComponent?.toTag(CompoundTag())
             blockEntity.inventoryComponent?.inventory?.clear()
+            val fluidTag = blockEntity.fluidComponent?.toTag(CompoundTag())
             val temperatureTag = blockEntity.temperatureComponent?.toTag(CompoundTag())
             val energy = blockEntity.energy
 
@@ -48,6 +49,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
                 ?: throw RuntimeException("This should never happen, what the fuck")
             upgradedBlockEntity.energy = energy
             upgradedBlockEntity.inventoryComponent?.fromTag(inventoryTag)
+            upgradedBlockEntity.fluidComponent?.fromTag(fluidTag)
             upgradedBlockEntity.temperatureComponent?.fromTag(temperatureTag)
 
             context.player?.getStackInHand(context.hand)?.decrement(1)

@@ -3,10 +3,9 @@
   "veins": [
     {
       "id": "indrev:argentite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 6
         },
         {
@@ -31,8 +30,8 @@
         }
       ],
       "sizeRange": [
-        3000,
-        8000
+        5000,
+        10000
       ],
       "biomes": [
         {
@@ -53,10 +52,9 @@
     },
     {
       "id": "indrev:chlorargyrite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 8
         },
         {
@@ -81,8 +79,8 @@
         }
       ],
       "sizeRange": [
-        2000,
-        4500
+        6000,
+        13000
       ],
       "biomes": [
         {
@@ -103,19 +101,14 @@
     },
     {
       "id": "indrev:galena",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:silver_ore",
+          "id": "indrev:silver_ore",
           "weight": 7
         },
         {
-          "id": "techreborn:galena_ore",
+          "id": "indrev:lead_ore",
           "weight": 6
-        },
-        {
-          "id": "techreborn:lead_ore",
-          "weight": 4
         },
         {
           "id": "minecraft:gold_ore",
@@ -139,8 +132,8 @@
         }
       ],
       "sizeRange": [
-        3000,
-        6000
+        8000,
+        18000
       ],
       "biomes": [
         {

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NCN",
-    "IMI",
-    " B "
+    "ICI",
+    "NMN",
+    "EBE"
   ],
   "key": {
     "M": {
@@ -14,6 +14,9 @@
     },
     "I": {
       "item": "indrev:biomass"
+    },
+    "E": {
+      "tag": "c:electrum_plates"
     },
     "N": {
       "item": "indrev:nikolite_dust"

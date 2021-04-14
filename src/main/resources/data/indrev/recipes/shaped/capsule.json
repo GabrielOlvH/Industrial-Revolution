@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PMP",
+    "M M",
+    "LML"
+  ],
+  "key": {
+    "M": {
+      "item": "minecraft:glass"
+    },
+    "P": {
+      "tag": "c:tungsten_plates"
+    },
+    "L": {
+      "tag": "c:lead_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:capsule"
+  }
+}

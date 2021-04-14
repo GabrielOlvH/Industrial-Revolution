@@ -1,14 +1,23 @@
 package me.steven.indrev.registry
 
+import com.mojang.blaze3d.platform.GlStateManager.DstFactor
+import com.mojang.blaze3d.platform.GlStateManager.SrcFactor
+import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.items.armor.IRModularArmor
-import me.steven.indrev.tools.modular.ArmorModule
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.api.IRPlayerEntityExtension
+import me.steven.indrev.config.IRConfig
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.render.Tessellator
+import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.entity.EquipmentSlot
+import net.minecraft.entity.EquipmentSlot.*
+import net.minecraft.item.ArmorItem
+import net.minecraft.screen.PlayerScreenHandler
 
 object IRHudRender : HudRenderCallback {
 
@@ -18,71 +27,76 @@ object IRHudRender : HudRenderCallback {
 
     override fun onHudRender(matrixStack: MatrixStack?, tickDelta: Float) {
         val client = MinecraftClient.getInstance()
-        val x = IndustrialRevolution.CONFIG.hud.renderPosX
-        val y = IndustrialRevolution.CONFIG.hud.renderPosY
-        val armor = MinecraftClient.getInstance().player?.inventory?.armor?.filter { it.item is IRModularArmor }
-        armor?.forEach { itemStack ->
-            val item = itemStack.item as IRModularArmor
-            val yOffset = when (item.slotType) {
-                EquipmentSlot.HEAD -> 0
-                EquipmentSlot.CHEST -> 20
-                EquipmentSlot.LEGS -> 20 * 2
-                EquipmentSlot.FEET -> 20 * 3
-                else -> return@forEach
-            }
-            if (shouldRenderShield(item.slotType)) {
-                val totalShield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(itemStack))
-                if (totalShield > 0) {
-                    val currentShield = item.getShield(itemStack)
-                    var percent = currentShield.toFloat() / totalShield.toFloat()
-                    val color = if (percent < 0.35) 0xff0000 else -1
-                    val height = 16
-                    val width = 16
-                    percent = (percent * height).toInt() / height.toFloat()
-                    val barSize = (height * percent).toInt()
-                    ScreenDrawing.texturedRect(x + 18, y + yOffset + 1, width, height, SHIELD_ICON_FULL, 0f, 0f, 1f, 1f, color, 0.5f)
-                    if (barSize > 0)
-                        ScreenDrawing.texturedRect(
-                            x + 18, y + yOffset + height - barSize + 1, width, barSize,
-                            SHIELD_ICON_FULL, 0f, 1 - percent, 1f, 1f, color
-                        )
-                }
-            }
-            if (shouldRenderArmor(item.slotType)) {
-                val armorIcon = when (item.slotType) {
-                    EquipmentSlot.HEAD -> HELMET_ICON
-                    EquipmentSlot.CHEST -> CHEST_ICON
-                    EquipmentSlot.LEGS -> LEGS_ICON
-                    EquipmentSlot.FEET -> BOOTS_ICON
+        val player = client.player
+        if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
+
+            val color = player.armorItems.toList().firstOrNull { (it.item as? IRModularArmorItem)?.slotType == HEAD }?.let {
+                val item = it.item as IRModularArmorItem
+                item.getColor(it)
+            } ?: -1
+            val x = IRConfig.hud.renderPosX + 2
+            val y = IRConfig.hud.renderPosY + 2
+            ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, color, 0.8f)
+            ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
+            val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"
+            ScreenDrawing.drawStringWithShadow(matrixStack, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
+            player.armorItems.forEach { stack ->
+                val item = stack.item as? ArmorItem ?: return@forEach
+                val xOffset = 21 * when (item.slotType) {
+                    FEET -> 3
+                    LEGS -> 2
+                    CHEST -> 1
+                    HEAD -> 0
                     else -> return@forEach
                 }
-                ScreenDrawing.texturedRect(x, y + yOffset, 16, 16, armorIcon, 0f, 0f, 1f, 1f, -1, 0.8f)
-                client.itemRenderer.renderGuiItemOverlay(client.textRenderer, itemStack, x, y + yOffset)
+                client.itemRenderer.renderInGui(stack, x + 9 + xOffset, y + 35)
+                client.itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, x + 9 + xOffset, y + 35)
             }
+
+            val spriteId = when {
+                player.shieldDurability == player.getMaxShieldDurability() -> DEFAULT
+                player.isRegenerating -> REGENERATING
+                player.shieldDurability <= player.getMaxShieldDurability() * 0.25 -> WARNING
+                else -> DAMAGED
+            }
+            val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
+            texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
         }
     }
 
-    private fun shouldRenderArmor(equipmentSlot: EquipmentSlot): Boolean {
-        val hud = IndustrialRevolution.CONFIG.hud
-        return when (equipmentSlot) {
-            EquipmentSlot.HEAD -> hud.renderHelmetArmor
-            EquipmentSlot.CHEST -> hud.renderChestplateArmor
-            EquipmentSlot.LEGS -> hud.renderLeggingsArmor
-            EquipmentSlot.FEET -> hud.renderBootsArmor
-            else -> false
+    fun texturedRect(
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
+        sprite: Sprite,
+        color: Int,
+        opacity: Float
+    ) {
+        val r = (color shr 16 and 255).toFloat() / 255.0f
+        val g = (color shr 8 and 255).toFloat() / 255.0f
+        val b = (color and 255).toFloat() / 255.0f
+        Tessellator.getInstance().run {
+            buffer.run {
+                begin(7, VertexFormats.POSITION_COLOR_TEXTURE)
+                vertex(x.toDouble(), y + height.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.minU, sprite.maxV).next()
+                vertex(x + width.toDouble(), y + height.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.maxU, sprite.maxV).next()
+                vertex(x + width.toDouble(), y.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.maxU, sprite.minV).next()
+                vertex(x.toDouble(), y.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.minU, sprite.minV).next()
+            }
+            draw()
         }
+        RenderSystem.enableBlend()
+        RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA, SrcFactor.ONE, DstFactor.ZERO)
+        RenderSystem.disableBlend()
     }
 
-    private fun shouldRenderShield(equipmentSlot: EquipmentSlot): Boolean {
-        val hud = IndustrialRevolution.CONFIG.hud
-        return when (equipmentSlot) {
-            EquipmentSlot.HEAD -> hud.renderHelmetShield
-            EquipmentSlot.CHEST -> hud.renderChestplateShield
-            EquipmentSlot.LEGS -> hud.renderLeggingsShield
-            EquipmentSlot.FEET -> hud.renderBootsShield
-            else -> false
-        }
-    }
+    private val WARNING = identifier("gui/hud_warning")
+    private val REGENERATING = identifier("gui/hud_regenerating")
+    private val DAMAGED = identifier("gui/hud_damaged")
+    private val DEFAULT = identifier("gui/hud_default")
+    private val HUD_MAIN = identifier("textures/gui/hud_main.png")
+    private val HOLDER = identifier("textures/gui/hud_armor_holder.png")
 
     private val SHIELD_ICON_FULL = identifier("textures/gui/shield_icon.png")
     private val HELMET_ICON = identifier("textures/item/modular_armor_helmet.png")

@@ -1,12 +1,15 @@
 package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import it.unimi.dsi.fastutil.objects.Object2IntMap
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.config.BasicMachineConfig
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Upgrade
@@ -15,7 +18,7 @@ import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
@@ -26,10 +29,12 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
+
+    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
+    override val upgradeSlots: IntArray = intArrayOf(10, 11, 12, 13)
+    override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
@@ -39,14 +44,16 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 filter { itemStack, _ -> itemStack.item is IRResourceReportItem }
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
-            coolerSlot = 1
         }
     }
+
+    override val maxInput: Double = config.maxInput
+    override val maxOutput: Double = 0.0
 
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
     private var finished = false
-    var lastMinedItem = ItemStack.EMPTY
+    var lastMinedItem: ItemStack = ItemStack.EMPTY
     var requiredPower = 0.0
 
     override fun machineTick() {
@@ -56,15 +63,16 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val upgrades = getUpgrades(inventory)
         requiredPower = Upgrade.getEnergyCost(upgrades, this)
         if (finished) {
-            setWorkingState(false)
+            workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             return
-        } else if (isLocationCorrect() && Energy.of(this).use(requiredPower)) {
+        } else if (isLocationCorrect() && use(requiredPower)) {
+            workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Upgrade.getSpeed(upgrades, this)
             temperatureComponent?.tick(true)
         } else {
-            setWorkingState(false)
+            workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
             temperatureComponent?.tick(false)
         }
@@ -103,7 +111,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
 
                     sendBlockBreakPacket(drillBlockEntity.pos, generatedOre)
                 }
-                setWorkingState(true)
+                workingState = true
                 return@updateData true
             }
         }
@@ -122,7 +130,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeBlockPos(pos)
                     buf.writeInt(Registry.BLOCK.getRawId(block))
-                    ServerSidePacketRegistry.INSTANCE.sendToPlayer(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
+                    ServerPlayNetworking.send(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
                 }
             }
         }
@@ -163,8 +171,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
     }
 
     fun getActiveDrills(): List<DrillBlockEntity> {
-        val offsets = arrayOf(BlockPos(-1, 0, -1), BlockPos(-1, 0, 1), BlockPos(1, 0, 1), BlockPos(1, 0, -1))
-        return offsets.map { pos.add(it) }.mapNotNull { pos ->
+        return VALID_DRILL_POSITIONS.map { pos.add(it) }.mapNotNull { pos ->
             val blockState = world?.getBlockState(pos)
             val block = blockState?.block
             if (block is DrillBlock) {
@@ -172,8 +179,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 val itemStack = blockEntity.inventory[0]
                 if (!itemStack.isEmpty && DrillBlockEntity.isValidDrill(itemStack.item)) {
                     blockEntity
-                }
-                else {
+                } else {
                     blockEntity.setWorkingState(false)
                     null
                 }
@@ -181,32 +187,23 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         }
     }
 
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun getUpgradeSlots(): IntArray = intArrayOf(10, 11, 12, 13)
-
-    override fun getAvailableUpgrades(): Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
-
     override fun getBaseValue(upgrade: Upgrade): Double {
         val activeDrills = getActiveDrills()
         return when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost + (IndustrialRevolution.CONFIG.machines.drill * activeDrills.size)
+            Upgrade.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
             Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
-                val itemStack = blockEntity.inventory[0]
+                blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
-            Upgrade.BUFFER -> getBaseBuffer()
+            Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }
-
-    override fun getMaxInput(side: EnergySide?): Double = config.maxInput
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
         return super.toTag(tag)
     }
 
@@ -214,7 +211,6 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
         super.fromTag(state, tag)
     }
 
@@ -222,8 +218,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.putDouble("RequiredPower", requiredPower)
-        tag?.put("LastMined", lastMinedItem.toTag(CompoundTag()))
+        tag?.put("LastMinedBlock", lastMinedItem.toTag(CompoundTag()))
         return super.toClientTag(tag)
     }
 
@@ -231,12 +226,22 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        requiredPower = tag?.getDouble("RequiredPower") ?: 0.0
-        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMined"))
+        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMinedBlock"))
         super.fromClientTag(tag)
     }
 
     companion object {
-        val BLOCK_BREAK_PACKET = identifier("miner_block_break_packet")
+        val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
+
+        val VALID_DRILL_POSITIONS = arrayOf(
+            BlockPos(-1, 0, 0),
+            BlockPos(1, 0, 0),
+            BlockPos(0, 0, -1),
+            BlockPos(0, 0, 1),
+            BlockPos(-1, 0, -1),
+            BlockPos(-1, 0, 1),
+            BlockPos(1, 0, 1),
+            BlockPos(1, 0, -1)
+        )
     }
 }

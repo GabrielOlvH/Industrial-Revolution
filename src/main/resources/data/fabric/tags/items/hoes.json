@@ -3,6 +3,9 @@
   "values": [
     "indrev:tin_hoe",
     "indrev:copper_hoe",
-    "indrev:steel_hoe"
+    "indrev:steel_hoe",
+    "indrev:lead_hoe",
+    "indrev:silver_hoe",
+    "indrev:bronze_hoe"
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "type": "indrev:recycle",
+  "ingredients": [
+    {
+      "item": "minecraft:brown_mushroom",
+      "count": 2
+    }
+  ],
+  "output": {
+    "item": "indrev:biomass",
+    "count": 1
+  },
+  "processTime": 50
+}

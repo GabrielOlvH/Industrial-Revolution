@@ -1,17 +1,24 @@
 {
-  "name": "Miner",
+  "name": "Mining Rig Computer",
   "category": "machines",
   "sortnum": 4,
   "icon": "indrev:miner_mk4",
   "pages": [
     {
-      "type": "text",
-      "text": "Who doesn't like automated mining?"
+      "type": "crafting",
+      "recipe": "indrev:shaped/miner_mk4",
+      "text": "The $(l)$(o)Mining Rig Computer$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks."
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/miner_mk4",
-      "text": "The $(l)$(o)Miner$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks."
+      "recipe": "indrev:shaped/drill_bottom",
+      "text": "Mining Rig Drills are required for the Mining Rig Computer to work. They have to be placed next to the Computer and require drill heads to work. Each Drill increases the mining speed.$(br)Screenshot of a functional setup:"
+    },
+    {
+      "type": "image",
+      "title": "Example",
+      "images": ["indrev:textures/gui/mrc_setup.png"],
+      "text": "Note that the Drills can be placed connected or diagonally to the Mining Rig Computer."
     },
     {
       "anchor": "chunk_scanner",

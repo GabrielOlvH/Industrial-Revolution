@@ -1,0 +1,13 @@
+{
+  "type": "indrev:condenser",
+  "output": {
+    "item": "indrev:lead_chunk",
+    "count": 1
+  },
+  "fluidInput": {
+    "fluid": "indrev:molten_lead_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 500
+}

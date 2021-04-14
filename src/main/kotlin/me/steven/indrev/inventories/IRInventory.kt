@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
 class IRInventory(
+    dsl: IRInventoryDSL,
     size: Int,
     val inputSlots: IntArray,
     val outputSlots: IntArray,
@@ -16,19 +17,26 @@ class IRInventory(
 
     var component: InventoryComponent? = null
 
-    override fun getAvailableSlots(var1: Direction?): IntArray? = IntArray(size()) { i -> i }
+    private var availableSlots = inputSlots.plus(outputSlots)
+    private val coolerSlot = dsl.coolerSlot
+    private val maxCount = dsl.maxStackCount
+
+    init {
+        if (dsl.coolerSlot != null) availableSlots = availableSlots.plus(coolerSlot!!)
+        availableSlots = availableSlots.distinct().toIntArray()
+    }
+
+    override fun getAvailableSlots(var1: Direction?): IntArray = availableSlots
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        inputSlots.contains(slot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
+        (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
+
+    override fun getMaxCountPerStack(): Int = maxCount
 
     override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
-
-    fun getInputInventory() = SimpleInventory(*inputSlots.map { getStack(it) }.toTypedArray())
-
-    fun getOutputInventory() = SimpleInventory(*outputSlots.map { getStack(it) }.toTypedArray())
 
     fun fits(stack: Item, outputSlot: Int): Boolean {
         val outStack = getStack(outputSlot)
@@ -47,8 +55,7 @@ class IRInventory(
                 }
             }
         }
-        addToOutputSlot(stack)
-        return true
+        return addToOutputSlot(stack)
     }
 
     private fun canCombine(one: ItemStack, two: ItemStack): Boolean
@@ -64,14 +71,15 @@ class IRInventory(
         }
     }
 
-    private fun addToOutputSlot(stack: ItemStack) {
+    private fun addToOutputSlot(stack: ItemStack): Boolean {
         for (i in outputSlots) {
             val itemStack = getStack(i)
             if (itemStack.isEmpty) {
                 setStack(i, stack.copy())
                 stack.count = 0
-                return
+                return true
             }
         }
+        return false
     }
 }

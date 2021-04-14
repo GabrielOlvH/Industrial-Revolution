@@ -1,0 +1,51 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:endnikolite",
+	  "optional": true,
+      "output": [
+        {
+          "id": "indrev:nikolite_ore",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:lapis_ore",
+          "weight": 8
+        },
+        {
+          "id": "techreborn:sodalite_ore",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:redstone_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:endstone",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:obsidian",
+          "weight": 4
+        },
+		{
+          "id": "techreborn:sheldonite_ore",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        6000,
+        12000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "END"
+          ],
+          "weight": 6
+        }
+      ]
+    }
+  ]
+}

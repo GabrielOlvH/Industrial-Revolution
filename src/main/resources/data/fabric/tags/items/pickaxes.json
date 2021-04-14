@@ -7,6 +7,9 @@
     "indrev:mining_drill_mk4",
     "indrev:tin_pickaxe",
     "indrev:copper_pickaxe",
-    "indrev:steel_pickaxe"
+    "indrev:steel_pickaxe",
+    "indrev:lead_pickaxe",
+    "indrev:silver_pickaxe",
+    "indrev:bronze_pickaxe"
   ]
 }

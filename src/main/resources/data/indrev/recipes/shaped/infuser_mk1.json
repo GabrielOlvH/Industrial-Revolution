@@ -3,7 +3,7 @@
   "pattern": [
     "GCG",
     "NMN",
-    "GBG"
+    "NBN"
   ],
   "key": {
     "M": {
@@ -13,7 +13,7 @@
       "item": "indrev:circuit_mk1"
     },
     "N": {
-      "item": "indrev:nikolite_dust"
+      "tag": "c:copper_plates"
     },
     "B": {
       "item": "indrev:battery"

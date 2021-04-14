@@ -1,0 +1,47 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:evaporate",
+      "optional": true,
+      "output": [
+        {
+          "id": "modern_industrialization:salt_ore",
+          "weight": 80
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 30
+        },
+        {
+          "id": "minecraft:basalt",
+          "weight": 15
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1000,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "OCEAN"
+          ],
+          "weight": 2
+        }
+      ]
+    }
+  ]
+}

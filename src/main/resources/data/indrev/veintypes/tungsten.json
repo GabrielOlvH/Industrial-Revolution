@@ -6,7 +6,7 @@
       "optional": true,
       "output": [
         {
-          "id": "techreborn:tungsten_ore",
+          "id": "indrev:tungsten_ore",
           "weight": 6
         },
         {
@@ -47,23 +47,14 @@
     },
     {
       "id": "indrev:wolframite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:tungsten_ore",
+          "id": "indrev:tungsten_ore",
           "weight": 6
         },
         {
           "id": "minecraft:iron_ore",
           "weight": 6
-        },
-        {
-          "id": "techreborn:pyrite_ore",
-          "weight": 4
-        },
-        {
-          "id": "techreborn:galena_ore",
-          "weight": 4
         },
         {
           "id": "minecraft:stone",
@@ -84,7 +75,7 @@
       ],
       "sizeRange": [
         3000,
-        8000
+        10000
       ],
       "biomes": [
         {
@@ -110,19 +101,14 @@
     },
     {
       "id": "indrev:ferberite",
-      "optional": true,
       "output": [
         {
-          "id": "techreborn:tungsten_ore",
+          "id": "indrev:tungsten_ore",
           "weight": 6
         },
         {
           "id": "minecraft:iron_ore",
           "weight": 6
-        },
-        {
-          "id": "techreborn:pyrite_ore",
-          "weight": 4
         },
         {
           "id": "minecraft:stone",
@@ -142,8 +128,8 @@
         }
       ],
       "sizeRange": [
-        3000,
-        8000
+        5000,
+        12000
       ],
       "biomes": [
         {

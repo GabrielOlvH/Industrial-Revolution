@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " N ",
-    "LBL",
+    "BBB",
+    "BNB",
     "BBB"
   ],
   "key": {
@@ -11,13 +11,10 @@
     },
     "B": {
       "item": "indrev:cable_mk1"
-    },
-    "L": {
-      "item": "minecraft:lapis_lazuli"
     }
   },
   "result": {
     "item": "indrev:cable_mk2",
-    "count": 4
+    "count": 8
   }
 }

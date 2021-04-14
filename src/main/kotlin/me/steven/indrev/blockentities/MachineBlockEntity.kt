@@ -4,23 +4,38 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidExtractable
 import alexiil.mc.lib.attributes.fluid.FluidInsertable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
+import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
+import dev.technici4n.fasttransferlib.api.Simulation
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.machines.properties.Property
+import me.steven.indrev.api.sideconfigs.Configurable
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.energy.EnergyMovement
-import me.steven.indrev.inventories.IRFixedInventoryVanillaWrapper
+import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.energyOf
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.ChestBlockEntity
+import net.minecraft.client.MinecraftClient
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
@@ -33,21 +48,44 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.explosion.Explosion
 import org.apache.logging.log4j.LogManager
-import team.reborn.energy.Energy
-import team.reborn.energy.EnergySide
-import team.reborn.energy.EnergyStorage
-import team.reborn.energy.EnergyTier
-import kotlin.math.abs
+import kotlin.collections.MutableMap
+import kotlin.collections.addAll
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.contains
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.map
+import kotlin.collections.mutableSetOf
+import kotlin.collections.set
+import kotlin.collections.toIntArray
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier)), EnergyStorage, PropertyDelegateHolder, InventoryProvider, Tickable {
+    : IRSyncableBlockEntity(registry.blockEntityType(tier)), PropertyDelegateHolder, InventoryProvider, Tickable, EnergyIo,
+    Configurable {
+
+    val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
+
     var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0
 
-    var energy: Double by Property(0, 0.0) { i -> i.coerceIn(0.0, maxStoredPower) }
+    internal var energy: Double by Property(0, 0.0) { i ->
+        when {
+            i.isNaN() -> {
+                IndustrialRevolution.LOGGER.error("Received NaN energy! $pos, $this", IllegalArgumentException())
+                if (energy.isNaN()) 0.0 else energy
+            }
+            tier == Tier.CREATIVE -> energyCapacity
+            else -> i.coerceIn(0.0, energyCapacity)
+        }
+    }
+    open val maxInput: Double = tier.io
+    open val maxOutput: Double = tier.io
+
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
     var fluidComponent: FluidComponent? = null
@@ -55,15 +93,36 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var itemTransferCooldown = 0
 
+    var workingState: Boolean = false
+        set(value) {
+            val update = value != field
+            field = value
+            if (update && world?.isClient == false)
+                GlobalStateController.update(world!!, pos, value)
+        }
+        get() {
+            if (world?.isClient == true && GlobalStateController.workingStateTracker.contains(pos.asLong())) {
+                MinecraftClient.getInstance().execute { field = GlobalStateController.workingStateTracker.remove(pos.asLong()) }
+            }
+            return field
+        }
+
+    var ticks = 0
+
+    @Suppress("UNCHECKED_CAST")
     val config: T by lazy { registry.config(tier) as T }
 
     protected open fun machineTick() {}
 
+    @Environment(EnvType.CLIENT)
+    protected open fun machineClientTick() {}
+
     final override fun tick() {
         if (world?.isClient == false) {
+            ticks++
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
-            EnergyMovement.spreadNeighbors(this, pos)
+            IREnergyMovement.spreadNeighbors(this, pos)
             if (explode) {
                 val power = temperatureComponent!!.explosionPower
                 world?.createExplosion(
@@ -77,10 +136,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 return
             }
             val inventory = inventoryComponent?.inventory
-            if (inventoryComponent != null && inventory!!.size() > 0) {
+            if (inventoryComponent != null && inventory!!.size() > 0 && this !is LazuliFluxContainerBlockEntity) {
                 val stack = inventory.getStack(0)
-                if (Energy.valid(stack))
-                    Energy.of(stack).into(Energy.of(this)).move()
+                val itemIo = energyOf(stack)
+                if (itemIo != null)
+                    EnergyMovement.move(itemIo, this, maxInput)
             }
             transferItems()
             transferFluids()
@@ -91,19 +151,16 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                 sync()
                 isMarkedForUpdate = false
             }
-        }
+        } else machineClientTick()
     }
 
-    fun setWorkingState(value: Boolean) {
-        if (world?.isClient == false && this.cachedState.contains(MachineBlock.WORKING_PROPERTY) && this.cachedState[MachineBlock.WORKING_PROPERTY] != value) {
-            val state = this.cachedState.with(MachineBlock.WORKING_PROPERTY, value)
-            world!!.setBlockState(pos, state)
-        }
-    }
+    override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy
+
+    override fun getEnergyCapacity(): Double = config.maxEnergyStored
 
     override fun getPropertyDelegate(): PropertyDelegate {
         val delegate = this.propertyDelegate
-        delegate[1] = maxStoredPower.toInt()
+        delegate[1] = energyCapacity.toInt()
         return delegate
     }
 
@@ -111,31 +168,86 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         this.propertyDelegate = propertyDelegate
     }
 
-    override fun setStored(amount: Double) {
-        markForUpdate {
-            val abs = abs(lastEnergyUpdate - amount)
-            val max = (0.01 * maxStoredPower).coerceAtLeast(1.0)
-            this.tier != Tier.CREATIVE && abs > max
-        }
-        this.energy = amount
+    override fun insert(amount: Double, simulation: Simulation?): Double {
+        val inserted = amount.coerceAtMost(this.maxInput).coerceAtMost(this.energyCapacity - energy)
+        if (simulation?.isActing == true) this.energy += inserted
+        return amount - inserted
     }
 
-    open fun getBaseBuffer(): Double = config.maxEnergyStored
+    override fun extract(maxAmount: Double, simulation: Simulation?): Double {
+        val extracted = maxAmount.coerceAtMost(this.maxOutput).coerceAtMost(energy)
+        if (simulation?.isActing == true) this.energy -= extracted
+        return extracted
+    }
 
-    override fun getMaxStoredPower(): Double = getBaseBuffer()
+    override fun supportsExtraction(): Boolean = maxOutput > 0
 
-    @Deprecated("unsupported", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("this.tier"))
-    override fun getTier(): EnergyTier = throw UnsupportedOperationException()
+    override fun supportsInsertion(): Boolean = maxInput > 0
 
-    override fun getMaxOutput(side: EnergySide?): Double = tier.io
+    // internal consumption
+    fun use(amount: Double): Boolean {
+        val extracted = amount.coerceAtMost(energy)
+        if (extracted == amount) {
+            this.energy -= extracted
+            return true
+        }
+        return false
+    }
 
-    override fun getMaxInput(side: EnergySide?): Double = tier.io
-
-    fun getMaxOutput(direction: Direction) = getMaxOutput(EnergySide.fromMinecraft(direction))
-
-    override fun getStored(side: EnergySide?): Double = if (tier != Tier.CREATIVE) energy else maxStoredPower
+    fun canUse(amount: Double): Boolean {
+        val extracted = amount.coerceAtMost(energy)
+        if (extracted == amount) {
+            return true
+        }
+        return false
+    }
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? = inventoryComponent?.inventory
+
+    override fun isConfigurable(type: ConfigurationType): Boolean {
+        return when (type) {
+            ConfigurationType.ITEM -> inventoryComponent != null
+                    && (inventoryComponent?.inventory?.inputSlots?.isNotEmpty() == true
+                    || inventoryComponent?.inventory?.outputSlots?.isNotEmpty() == true)
+            ConfigurationType.FLUID -> fluidComponent != null
+            ConfigurationType.ENERGY -> false
+        }
+    }
+
+    override fun applyDefault(state: BlockState, type: ConfigurationType, configuration: MutableMap<Direction, TransferMode>) {
+        val direction = (state.block as MachineBlock).getFacing(state)
+        when (type) {
+            ConfigurationType.ITEM -> {
+                configuration[direction.rotateYClockwise()] = TransferMode.INPUT
+                configuration[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
+            }
+            ConfigurationType.ENERGY -> throw IllegalArgumentException("cannot apply energy configuration to $this")
+            else -> return
+        }
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> TransferMode.DEFAULT
+            ConfigurationType.FLUID, ConfigurationType.ENERGY -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT)
+        }
+    }
+
+    override fun getCurrentConfiguration(type: ConfigurationType): SideConfiguration {
+        return when (type) {
+            ConfigurationType.ITEM -> inventoryComponent!!.itemConfig
+            ConfigurationType.FLUID -> fluidComponent!!.transferConfig
+            ConfigurationType.ENERGY -> error("nope")
+        }
+    }
+
+    override fun isFixed(type: ConfigurationType): Boolean = false
+
+    open fun getFluidTransferRate(): FluidAmount = when (tier) {
+        Tier.MK1 -> FluidAmount.BOTTLE
+        Tier.MK2 -> FluidAmount.BOTTLE.mul(2)
+        else -> FluidAmount.BUCKET
+    }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
@@ -162,6 +274,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         temperatureComponent?.fromTag(tag)
         fluidComponent?.fromTag(tag)
         multiblockComponent?.fromTag(tag)
+        workingState = tag?.getBoolean("WorkingState") ?: workingState
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
@@ -172,6 +285,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         fluidComponent?.toTag(tag)
         multiblockComponent?.toTag(tag)
         tag.putDouble("Energy", energy)
+        tag.putBoolean("WorkingState", workingState)
         return tag
     }
 
@@ -182,7 +296,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
                 val pos = pos.offset(direction)
                 val inventory = inventoryComponent?.inventory ?: return@forEach
-                if (mode.output) {
+                if (mode.output && inventoryComponent!!.itemConfig.autoPush) {
                     val neighborInv = getInventory(pos)
                     if (neighborInv != null) {
                         inventory.outputSlots.forEach { slot ->
@@ -190,13 +304,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                         }
                         return@forEach
                     }
-                    val insertable = ItemAttributes.INSERTABLE.getFirstOrNull(world, pos)
-                    if (insertable != null) {
-                        val extractable = IRFixedInventoryVanillaWrapper(inventory, direction).extractable
-                        ItemInvUtil.move(extractable, insertable, 64)
-                    }
+                    val insertable = ItemAttributes.INSERTABLE.getFromNeighbour(this, direction)
+                    val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
+                    ItemInvUtil.move(extractable, insertable, 64)
                 }
-                if (mode.input) {
+                if (mode.input && inventoryComponent!!.itemConfig.autoPull) {
                     val neighborInv = getInventory(pos)
                     if (neighborInv != null) {
                         getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
@@ -204,23 +316,21 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
                         }
                         return@forEach
                     }
-                    val extractable = ItemAttributes.EXTRACTABLE.getFirstOrNull(world, pos)
-                    if (extractable != null) {
-                        val insertable = IRFixedInventoryVanillaWrapper(inventory, direction).insertable
-                        ItemInvUtil.move(extractable, insertable, 64)
-                    }
+                    val extractable = ItemAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
+                    val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
+                    ItemInvUtil.move(extractable, insertable, 64)
                 }
             }
         }
     }
 
-    private fun getFirstSlot(inventory: Inventory, predicate: (Int, ItemStack) -> Boolean): Int? =
+    protected open fun getFirstSlot(inventory: Inventory, direction: Direction, predicate: (Int, ItemStack) -> Boolean): Int? =
         (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
 
-    private fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
+    protected open fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
-            val firstSlot = getFirstSlot(to) { firstSlot, firstStack ->
+            val firstSlot = getFirstSlot(to, direction) { firstSlot, firstStack ->
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
                     && (to !is SidedInventory || to.canInsert(firstSlot, toTransfer, direction.opposite))
             } ?: break
@@ -242,7 +352,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
         if (inventory is SidedInventory) inventory.getAvailableSlots(side)
-        else (0 until inventory.size()).toIntArray()
+        else (0 until inventory.size()).map { it }.toIntArray()
 
     private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
         first.item == second.item
@@ -266,24 +376,21 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     private fun transferFluids() {
-        fluidComponent?.tanks?.forEach { tank ->
-            fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
-                if (mode == TransferMode.NONE) return@innerForEach
-                var extractable: FluidExtractable? = null
-                var insertable: FluidInsertable? = null
-                if (mode.output) {
-                    insertable = FluidAttributes.INSERTABLE.getAllFromNeighbour(this, direction).firstOrNull
-                        ?: return@innerForEach
-                    extractable = fluidComponent?.extractable
-                }
-                if (mode.input) {
-                    extractable = FluidAttributes.EXTRACTABLE.getAllFromNeighbour(this, direction).firstOrNull ?: return@innerForEach
-                    insertable = fluidComponent?.insertable
-
-                }
-                if (extractable != null && insertable != null)
-                    FluidVolumeUtil.move(extractable, insertable, NUGGET_AMOUNT)
+        fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
+            if (mode == TransferMode.NONE) return@innerForEach
+            var extractable: FluidExtractable? = null
+            var insertable: FluidInsertable? = null
+            if (mode.output) {
+                insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, direction)
+                extractable = fluidComponent?.extractable
             }
+            if (mode.input) {
+                extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
+                insertable = fluidComponent?.insertable
+
+            }
+            if (extractable != null && insertable != null)
+                FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
         }
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "Upgrades",
-  "sortnum": 1,
-  "description": "Upgrades are also an important part of this mod!",
+  "sortnum": 2,
+  "description": "Upgrades can boost machines stats.",
   "icon": "indrev:speed_upgrade"
 }

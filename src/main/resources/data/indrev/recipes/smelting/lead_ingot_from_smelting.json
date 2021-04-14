@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "group": "lead_ingots",
+  "ingredient": {
+    "tag": "c:lead_dusts"
+  },
+  "result": "indrev:lead_ingot",
+  "cookingTime": 200
+}

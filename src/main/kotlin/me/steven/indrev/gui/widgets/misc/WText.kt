@@ -19,13 +19,13 @@ class WText(
     )
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        var x = x
+        var alignedX = x
         val text = string()
         if (alignment == HorizontalAlignment.CENTER) {
-            x -= MinecraftClient.getInstance().textRenderer.getWidth(text) / 2
-            MinecraftClient.getInstance().textRenderer.draw(matrices, text, x.toFloat(), y.toFloat(), color)
+            alignedX -= MinecraftClient.getInstance().textRenderer.getWidth(text) / 2
+            MinecraftClient.getInstance().textRenderer.draw(matrices, text, alignedX.toFloat(), y.toFloat(), color)
             return
         }
-        ScreenDrawing.drawString(matrices, text.asOrderedText(), alignment, x, y, this.width, color)
+        ScreenDrawing.drawString(matrices, text.asOrderedText(), alignment, alignedX, y, this.width, color)
     }
 }

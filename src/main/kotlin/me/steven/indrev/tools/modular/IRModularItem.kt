@@ -7,7 +7,6 @@ import net.minecraft.util.Formatting
 
 interface IRModularItem<T : Module> {
     fun getCompatibleModules(itemStack: ItemStack): Array<T>
-    fun getSlotLimit(): Int
 
     fun getInstalled(stack: ItemStack): List<T> {
         val tag = stack.tag ?: return emptyList()

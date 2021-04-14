@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=north,working=false": {
+    "facing=north": {
       "model": "indrev:block/heat_generator_mk4"
     },
-    "facing=south,working=false": {
+    "facing=south": {
       "model": "indrev:block/heat_generator_mk4",
       "y": 180
     },
-    "facing=west,working=false": {
+    "facing=west": {
       "model": "indrev:block/heat_generator_mk4",
       "y": 270
     },
-    "facing=east,working=false": {
+    "facing=east": {
       "model": "indrev:block/heat_generator_mk4",
-      "y": 90
-    },
-    "facing=north,working=true": {
-      "model": "indrev:block/heat_generator_mk4_on"
-    },
-    "facing=south,working=true": {
-      "model": "indrev:block/heat_generator_mk4_on",
-      "y": 180
-    },
-    "facing=west,working=true": {
-      "model": "indrev:block/heat_generator_mk4_on",
-      "y": 270
-    },
-    "facing=east,working=true": {
-      "model": "indrev:block/heat_generator_mk4_on",
       "y": 90
     }
   }

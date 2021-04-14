@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:lead_ingots"
+  },
+  "output": {
+    "item": "indrev:lead_dust",
+    "count": 1
+  },
+  "processTime": 150
+}

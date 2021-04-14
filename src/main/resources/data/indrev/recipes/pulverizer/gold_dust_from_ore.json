@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:gold_ores"
+  },
+  "output": {
+    "item": "indrev:gold_dust",
+    "count": 2
+  },
+  "processTime": 200
+}

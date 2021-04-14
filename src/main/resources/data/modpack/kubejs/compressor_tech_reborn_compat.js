@@ -62,28 +62,6 @@ if (mod.isLoaded('techreborn')) {
         })
 
 
-        event.recipes.indrev.compress({
-            ingredients: {
-                item: 'techreborn:bronze_ingot'
-            },
-            output: {
-                item: 'techreborn:bronze_plate',
-                count: 1
-            },
-            processTime: 300
-        })
-
-
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:bronze_blocks'
-            },
-            output: {
-                item: 'techreborn:bronze_plate',
-                count: 9
-            },
-            processTime: 300
-        })
 
 
         event.recipes.indrev.compress({
@@ -169,28 +147,6 @@ if (mod.isLoaded('techreborn')) {
         })
 
 
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:electrum_ingots'
-            },
-            output: {
-                item: 'techreborn:electrum_plate',
-                count: 1
-            },
-            processTime: 300
-        })
-
-
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:electrum_blocks'
-            },
-            output: {
-                item: 'techreborn:electrum_plate',
-                count: 9
-            },
-            processTime: 300
-        })
 
 
         event.recipes.indrev.compress({
@@ -289,28 +245,7 @@ if (mod.isLoaded('techreborn')) {
         })
 
 
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:lead_ingots'
-            },
-            output: {
-                item: 'techreborn:lead_plate',
-                count: 1
-            },
-            processTime: 300
-        })
 
-
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:lead_blocks'
-            },
-            output: {
-                item: 'techreborn:lead_plate',
-                count: 9
-            },
-            processTime: 300
-        })
 
 
         event.recipes.indrev.compress({
@@ -531,30 +466,6 @@ if (mod.isLoaded('techreborn')) {
 
         event.recipes.indrev.compress({
             ingredients: {
-                tag: 'c:silver_ingots'
-            },
-            output: {
-                item: 'techreborn:silver_plate',
-                count: 1
-            },
-            processTime: 300
-        })
-
-
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:silver_blocks'
-            },
-            output: {
-                item: 'techreborn:silver_plate',
-                count: 9
-            },
-            processTime: 300
-        })
-
-
-        event.recipes.indrev.compress({
-            ingredients: {
                 tag: 'c:titanium_ingots'
             },
             output: {
@@ -577,38 +488,6 @@ if (mod.isLoaded('techreborn')) {
         })
 
 
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:tungsten_ingots'
-            },
-            output: {
-                item: 'techreborn:tungsten_plate',
-                count: 1
-            },
-            processTime: 300
-        })
-
-
-        event.recipes.indrev.compress({
-            ingredients: {
-                tag: 'c:tungsten_blocks'
-            },
-            output: {
-                item: 'techreborn:tungsten_plate',
-                count: 9
-            },
-            processTime: 300
-        })
-        event.recipes.indrev.compress({
-            ingredients: {
-                item: 'techreborn:tungstensteel_ingot'
-            },
-            output: {
-                item: 'techreborn:tungstensteel_plate',
-                count: 1
-            },
-            processTime: 300
-        })
         event.recipes.indrev.compress({
             ingredients: {
                 tag: 'c:tungstensteel_blocks'

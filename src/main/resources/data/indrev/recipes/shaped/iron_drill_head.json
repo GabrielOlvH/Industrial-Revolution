@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    "III",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "indrev:stone_drill_head"
+    }
+  },
+  "result": {
+    "item": "indrev:iron_drill_head"
+  }
+}

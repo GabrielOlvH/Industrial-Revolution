@@ -14,7 +14,7 @@ class IRScreenHandlerFactory(
     private val handlerFactory: (Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler,
     private val pos: BlockPos
 ) : ExtendedScreenHandlerFactory {
-    override fun createMenu(syncId: Int, inv: PlayerInventory?, player: PlayerEntity?): ScreenHandler? {
+    override fun createMenu(syncId: Int, inv: PlayerInventory?, player: PlayerEntity?): ScreenHandler {
         return handlerFactory(syncId, inv!!, ScreenHandlerContext.create(inv.player.world, pos))
     }
 

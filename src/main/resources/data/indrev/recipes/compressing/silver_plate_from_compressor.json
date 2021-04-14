@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:silver_ingots"
+  },
+  "output": {
+    "item": "indrev:silver_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

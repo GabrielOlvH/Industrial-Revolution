@@ -1,0 +1,18 @@
+{
+  "type": "indrev:modules",
+  "ingredients": [
+    {
+      "item": "indrev:circuit_mk4"
+    },
+    {
+      "item": "indrev:solar_generator_mk3"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  ],
+  "output": {
+    "item": "indrev:module_solar_panel"
+  },
+  "processTime": 400
+}

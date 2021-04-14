@@ -3,14 +3,14 @@
   "pattern": [
     "ICI",
     "NSN",
-    "BNB"
+    "BMB"
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk4"
     },
     "S": {
-      "tag": "c:steel_leggings"
+      "item": "indrev:steel_leggings"
     },
     "N": {
       "item": "indrev:enriched_nikolite_ingot"
@@ -20,6 +20,9 @@
     },
     "I": {
       "item": "minecraft:netherite_ingot"
+    },
+    "M": {
+      "item": "indrev:modular_core_activated"
     }
   },
   "result": {

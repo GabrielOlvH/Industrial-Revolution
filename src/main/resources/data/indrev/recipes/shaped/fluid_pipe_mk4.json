@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "BBB",
+    "BNB",
+    "BBB"
+  ],
+  "key": {
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:fluid_pipe_mk3"
+    }
+  },
+  "result": {
+    "item": "indrev:fluid_pipe_mk4",
+    "count": 8
+  }
+}

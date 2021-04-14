@@ -3,19 +3,25 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
-import me.steven.indrev.gui.controllers.wrench.WrenchController
-import me.steven.indrev.utils.TransferMode
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.utils.draw2Colors
+import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import net.minecraft.world.World
 
 class WMachineSideDisplay(
-    private val identifier: Identifier,
-    private val side: WrenchController.MachineSide,
-    var mode: TransferMode
+    private val side: Configurable.MachineSide,
+    private val direction: Direction,
+    var mode: TransferMode,
+    private val world: World,
+    private val blockPos: BlockPos
 ) : WButton() {
     init {
         this.setSize(16, 16)
@@ -27,7 +33,7 @@ class WMachineSideDisplay(
     }
 
     override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(x, y, width, height, identifier, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
+        ScreenDrawing.texturedRect(x, y, width, height, TEXTURE_ID, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
         if (mode == TransferMode.INPUT_OUTPUT)
             draw2Colors(matrices, x, y, x + width, y + height, TransferMode.INPUT.rgb, TransferMode.OUTPUT.rgb)
         else if (mode != TransferMode.NONE)
@@ -37,13 +43,22 @@ class WMachineSideDisplay(
     }
 
     override fun addTooltip(tooltip: TooltipBuilder?) {
-        tooltip?.add(
-            TranslatableText(
-                "item.indrev.wrench.mode",
-                TranslatableText("item.indrev.wrench.${mode.toString().toLowerCase()}").formatted(Formatting.WHITE)
-            )
-                .formatted(Formatting.BLUE)
-        )
-        super.addTooltip(tooltip)
+        val modeText = TranslatableText("item.indrev.wrench.mode",
+            TranslatableText("item.indrev.wrench.${mode.toString().toLowerCase()}").formatted(Formatting.WHITE)
+        ).formatted(Formatting.BLUE)
+        val side = TranslatableText("item.indrev.wrench.side.${side.toString().toLowerCase()}")
+            .append(LiteralText(" (")
+                .append(TranslatableText("item.indrev.wrench.side.${direction.toString().toLowerCase()}"))
+                .append(LiteralText(")"))).formatted(Formatting.WHITE)
+        tooltip?.add(modeText, side)
+        val blockState = world.getBlockState(blockPos.offset(direction))
+        if (!blockState.isAir) {
+            val neighbor = TranslatableText("item.indrev.wrench.connected", blockState.block.name)
+            tooltip?.add(neighbor)
+        }
+    }
+
+    companion object {
+        val TEXTURE_ID = identifier("textures/block/machine_block.png")
     }
 }

@@ -2,15 +2,14 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.registry.IRRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Property
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.utils.MB
 import net.minecraft.block.BlockState
-import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
@@ -18,58 +17,55 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
-        this.temperatureComponent = TemperatureComponent(
-            { this },
-            2.3,
-            { if (burnTime > 0 && stableTemperature > 0) stableTemperature.toDouble() else this.temperatureComponent!!.explosionLimit },
-            7000..9000,
-            10000.0
-        )
+        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000, 10000.0)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
         this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(4))
-    }
 
-    private var stableTemperature: Int = 0
+    }
     private var burnTime: Int by Property(4, 0)
     private var maxBurnTime: Int by Property(5, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (maxStoredPower > energy) {
+        else if (energyCapacity > energy) {
             val fluidComponent = fluidComponent!!
-            val volume = fluidComponent.tanks[0].volume
+            val volume = fluidComponent[0]
             val extractable = fluidComponent.extractable
-            if (TEMPERATURE_MAP.containsKey(volume.rawFluid)
-                && extractable.attemptAnyExtraction(FluidAmount.BUCKET, Simulation.SIMULATE).amount() == FluidAmount.BUCKET) {
-                stableTemperature = TEMPERATURE_MAP[volume.rawFluid] ?: return false
-                burnTime = 1600
+            fluidComponent.extractable
+            val consume = getConsumptionRate()
+            if (volume.rawFluid == Fluids.LAVA
+                && extractable.attemptAnyExtraction(consume, Simulation.SIMULATE).amount() == consume) {
+                burnTime = 10
                 maxBurnTime = burnTime
-                extractable.extract(FluidAmount.BUCKET)
+                extractable.extract(consume)
             }
+            markDirty()
         }
-        markDirty()
-        return burnTime > 0 && energy < maxStoredPower
+        return burnTime > 0 && energy < energyCapacity
     }
 
     override fun getGenerationRatio(): Double {
-        val ratio = 64.0 * (if (temperatureComponent?.isFullEfficiency() == true) stableTemperature / 1000 else 1)
+        val ratio = config.ratio * (temperatureComponent!!.temperature / temperatureComponent!!.optimalRange.first).coerceAtMost(1.0)
         propertyDelegate[6] = ratio.toInt()
         return ratio
+    }
+
+    fun getConsumptionRate(temperature: Double = temperatureComponent!!.temperature): FluidAmount {
+        val r = ((temperature / temperatureComponent!!.optimalRange.first).coerceIn(0.001, 1.0) * 500).toLong()
+        return MB.mul(r)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
         super.fromTag(state, tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        stableTemperature = tag?.getInt("StableTemperature") ?: 0
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        tag?.putInt("StableTemperature", stableTemperature)
         return super.toTag(tag)
     }
 
@@ -77,22 +73,11 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         super.fromClientTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-        stableTemperature = tag?.getInt("StableTemperature") ?: 0
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        tag?.putInt("StableTemperature", stableTemperature)
         return super.toClientTag(tag)
-    }
-
-    companion object {
-        private val TEMPERATURE_MAP = mutableMapOf<Fluid, Int>().also {
-            it[Fluids.LAVA] = 5500
-            it[Fluids.FLOWING_LAVA] = 2255
-            it[IRRegistry.MOLTEN_NETHERITE_STILL] = 8000
-            it[IRRegistry.MOLTEN_NETHERITE_FLOWING] = 5500
-        }
     }
 }

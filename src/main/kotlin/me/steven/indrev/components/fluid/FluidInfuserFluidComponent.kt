@@ -1,55 +1,45 @@
 package me.steven.indrev.components.fluid
 
 import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
+import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import alexiil.mc.lib.attributes.fluid.GroupedFluidInv
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.MachineBlockEntity
-import java.math.RoundingMode
+import me.steven.indrev.utils.createWrapper
 
 class FluidInfuserFluidComponent(machine: () -> MachineBlockEntity<*>) : FluidComponent(machine, FluidAmount.ofWhole(8) , 2) {
-    override fun getGroupedInv(): GroupedFluidInv {
-        return object : GroupedFluidInvFixedWrapper(this) {
 
-            override fun getInsertionFilter(): FluidFilter = inv().getFilterForTank(0)
+    private val grouped = this.createWrapper(1, 0)
 
-            override fun attemptExtraction(
-                filter: FluidFilter?,
-                maxAmount: FluidAmount,
-                simulation: Simulation?
-            ): FluidVolume {
-                if (maxAmount.isNegative)
-                    throw IllegalArgumentException("maxAmount cannot be negative! (was $maxAmount)")
+    override fun getGroupedInv(): GroupedFluidInv = grouped
 
-                    var fluid = FluidVolumeUtil.EMPTY
-                    return if (maxAmount.isZero)
-                        fluid
-                    else {
-                        val tank = 1
-                        val thisMax = maxAmount.roundedSub(fluid.amount_F, RoundingMode.DOWN)
-                        fluid = FluidVolumeUtil.extractSingle(this.inv(), tank, filter, fluid, thisMax, simulation)
-                        if (fluid.amount_F >= maxAmount)
-                            return fluid
-                        fluid
-                    }
-            }
+    override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume? {
+        return grouped.attemptInsertion(fluid, simulation)
+    }
 
-            override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
-                var fluid = fluid
-                return if (fluid.isEmpty)
-                    FluidVolumeUtil.EMPTY
-                else {
-                    fluid = fluid.copy()
-                    val tank = 0
-                    fluid = FluidVolumeUtil.insertSingle(this.inv(), tank, fluid, simulation)
-                    if (fluid.isEmpty)
-                        return FluidVolumeUtil.EMPTY
-                    fluid
-                }
-            }
-        }
+    override fun getMinimumAcceptedAmount(): FluidAmount? {
+        return grouped.minimumAcceptedAmount
+    }
+
+    override fun getInsertionFilter(): FluidFilter? {
+        return grouped.insertionFilter
+    }
+
+    override fun attemptExtraction(
+        filter: FluidFilter?,
+        maxAmount: FluidAmount,
+        simulation: Simulation?
+    ): FluidVolume {
+        return grouped.attemptExtraction(filter, maxAmount, simulation)
+    }
+
+    override fun attemptAnyExtraction(maxAmount: FluidAmount?, simulation: Simulation?): FluidVolume? {
+        return grouped.attemptAnyExtraction(maxAmount, simulation)
+    }
+
+    override fun getInteractInventory(tank: Int): FluidTransferable {
+        return createWrapper(tank, tank)
     }
 }

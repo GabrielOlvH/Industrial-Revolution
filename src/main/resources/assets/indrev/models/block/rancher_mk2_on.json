@@ -1,6 +1,0 @@
-{
-  "parent": "indrev:block/machine_mk2",
-  "textures": {
-    "texture": "indrev:block/rancher_on"
-  }
-}

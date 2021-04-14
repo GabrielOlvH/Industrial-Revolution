@@ -1,14 +1,11 @@
 {
-  "type": "indrev:copy_nbt_crafting_shaped",
+  "type": "minecraft:crafting_shaped",
   "pattern": [
     "NPN",
-    "ACS",
-    "BMB"
+    "OCO",
+    "OBO"
   ],
   "key": {
-    "M": {
-      "item": "indrev:mining_drill_mk2"
-    },
     "C": {
       "item": "indrev:circuit_mk3"
     },
@@ -16,20 +13,16 @@
       "item": "indrev:enriched_nikolite_dust"
     },
     "P": {
-      "item": "minecraft:diamond_pickaxe"
-    },
-    "A": {
-      "item": "minecraft:diamond_axe"
-    },
-    "S": {
-      "item": "minecraft:diamond_shovel"
+      "item": "indrev:diamond_drill_head"
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "O": {
+      "tag": "c:electrum_plates"
     }
   },
   "result": {
-    "item": "indrev:mining_drill_mk3",
-    "copyNbt": "indrev:mining_drill_mk2"
+    "item": "indrev:mining_drill_mk3"
   }
 }

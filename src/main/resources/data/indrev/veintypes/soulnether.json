@@ -1,0 +1,43 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:soul_nether",
+      "optional": true,
+      "output": [
+        {
+          "id": "minecraft:bone_block",
+          "weight": 8
+        },
+        {
+          "id": "minecraft:soul_sand",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:soul_soil",
+          "weight": 64
+        },
+        {
+          "id": "minecraft:netherrack",
+          "weight": 32
+        },
+        {
+          "id": "minecraft:ancient_debris",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        8000,
+        18000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "NETHER"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

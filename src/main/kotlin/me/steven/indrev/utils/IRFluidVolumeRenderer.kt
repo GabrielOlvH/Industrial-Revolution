@@ -18,7 +18,6 @@ object IRFluidVolumeRenderer : DefaultFluidVolumeRenderer() {
         vcp: VertexConsumerProvider?,
         matrices: MatrixStack?
     ) {
-
         val sprites = getSprites(fluid)
         val layer = getRenderLayer(fluid)
         val renderHandler = FluidRenderHandlerRegistry.INSTANCE.get(fluid.rawFluid) ?: return

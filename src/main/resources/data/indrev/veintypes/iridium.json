@@ -7,15 +7,19 @@
       "output": [
         {
           "id": "techreborn:iridium_ore",
-          "weight": 2
+          "weight": 1
+        },
+        {
+          "id": "techreborn:sheldonite_ore",
+          "weight": 1
         },
         {
           "id": "minecraft:stone",
-          "weight": 15
+          "weight": 20
         },
         {
           "id": "minecraft:dirt",
-          "weight": 10
+          "weight": 15
         },
         {
           "id": "minecraft:clay",
@@ -23,7 +27,7 @@
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 2
         }
       ],
       "sizeRange": [
@@ -38,6 +42,7 @@
             "DESERT",
             "PLAINS",
             "TAIGA",
+			"OCEAN",
             "ICY"
           ],
           "weight": 1

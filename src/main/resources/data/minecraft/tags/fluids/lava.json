@@ -10,6 +10,10 @@
     "indrev:molten_gold_still",
     "indrev:molten_gold_flowing",
     "indrev:molten_tin_still",
-    "indrev:molten_tin_flowing"
+    "indrev:molten_tin_flowing",
+    "indrev:molten_lead_still",
+    "indrev:molten_lead_flowing",
+    "indrev:molten_silver_still",
+    "indrev:molten_silver_flowing"
   ]
 }

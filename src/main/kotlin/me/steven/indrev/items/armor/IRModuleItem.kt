@@ -12,10 +12,6 @@ import net.minecraft.world.World
 
 open class IRModuleItem(val module: Module, settings: Settings) : Item(settings) {
 
-    init {
-        MODULE_ITEM_MAP[module] = this
-    }
-
     override fun appendTooltip(
         stack: ItemStack,
         world: World?,
@@ -27,9 +23,5 @@ open class IRModuleItem(val module: Module, settings: Settings) : Item(settings)
         } else {
             tooltip?.add(TranslatableText("gui.indrev.tooltip.press_shift").formatted(Formatting.BLUE, Formatting.ITALIC))
         }
-    }
-
-    companion object {
-        val MODULE_ITEM_MAP = mutableMapOf<Module, IRModuleItem>()
     }
 }

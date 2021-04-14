@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NNN",
+    "NNN"
+  ],
+  "key": {
+    "N": {
+      "tag": "c:bronze_nuggets"
+    }
+  },
+  "result": {
+    "item": "indrev:bronze_ingot"
+  }
+}

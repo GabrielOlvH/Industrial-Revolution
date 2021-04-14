@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ISI",
+    "III",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:netherite_ingot"
+    },
+    "S": {
+      "item": "indrev:diamond_drill_head"
+    }
+  },
+  "result": {
+    "item": "indrev:netherite_drill_head"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "indrev:item/netherite_purified_ore"
+    "layer0": "indrev:item/netherite_scrap_purified_ore"
   }
 }

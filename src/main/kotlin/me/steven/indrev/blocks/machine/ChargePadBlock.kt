@@ -1,8 +1,11 @@
 package me.steven.indrev.blocks.machine
 
 import com.google.common.collect.Iterables
+import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -26,12 +29,11 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
-import team.reborn.energy.Energy
 import java.util.*
 import java.util.stream.Stream
 
-class ChargePadBlock(settings: Settings, tier: Tier) :
-    HorizontalFacingMachineBlock(settings, tier, null, null, { ChargePadBlockEntity(tier) }) {
+class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) :
+    HorizontalFacingMachineBlock(registry, settings, tier, null, null) {
 
     override fun getOutlineShape(
         state: BlockState,
@@ -47,7 +49,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
             else -> FACING_NORTH
         }
 
-    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult? {
+    override fun onUse(state: BlockState?, world: World, pos: BlockPos?, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult?): ActionResult {
         val blockEntity = world.getBlockEntity(pos) as? ChargePadBlockEntity ?: return ActionResult.PASS
         val inventory = blockEntity.inventoryComponent?.inventory ?: return ActionResult.PASS
         val machineStack = inventory.getStack(0)
@@ -56,7 +58,7 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
             return ActionResult.SUCCESS
         }
         val handStack = player?.mainHandStack
-        if (Energy.valid(handStack)) {
+        if (energyOf(handStack) != null) {
             inventory.setStack(0, handStack)
             player?.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
             return ActionResult.SUCCESS
@@ -76,12 +78,11 @@ class ChargePadBlock(settings: Settings, tier: Tier) :
                 Iterables.concat(entity.inventory.armor, mutableListOf(entity.mainHandStack, entity.offHandStack))
             is ArmorStandEntity -> entity.itemsEquipped
             else -> return
-        }.filter { stack -> Energy.valid(stack) }.map { stack -> Energy.of(stack) }
-        val sum = items.sumByDouble { it.maxInput.coerceAtLeast(it.energy) }
-        val amount = sum / items.size.toDouble()
-        val chargePadHandler = Energy.of(blockEntity)
+        }.mapNotNull { stack -> energyOf(stack) }
+        var rem = blockEntity.maxOutput
         items.forEach { handler ->
-            chargePadHandler.into(handler).move(amount)
+            if (rem > 0)
+                rem -= EnergyMovement.move(blockEntity, handler, rem)
         }
     }
 

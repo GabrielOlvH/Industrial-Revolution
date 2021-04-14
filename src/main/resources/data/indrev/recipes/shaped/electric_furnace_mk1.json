@@ -1,7 +1,7 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "NCN",
+    " C ",
     "IFI",
     "IBI"
   ],
@@ -13,10 +13,7 @@
       "item": "indrev:circuit_mk1"
     },
     "I": {
-      "tag": "c:iron_plates"
-    },
-    "N": {
-      "item": "indrev:nikolite_dust"
+      "tag": "c:bronze_plates"
     },
     "B": {
       "item": "indrev:battery"

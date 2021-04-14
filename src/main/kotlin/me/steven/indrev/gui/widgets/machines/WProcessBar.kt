@@ -22,10 +22,5 @@ class WProcessBar(direction: Direction = Direction.RIGHT, bg: Identifier = PROCE
             identifier("textures/gui/widget_processing_empty.png")
         val PROCESS_FULL =
             identifier("textures/gui/widget_processing_full.png")
-        val PROCESS_VERTICAL_EMPTY =
-            identifier("textures/gui/widget_processing_empty_vertical.png")
-        val PROCESS_VERTICAL_FULL =
-            identifier("textures/gui/widget_processing_full_vertical.png")
-
     }
 }

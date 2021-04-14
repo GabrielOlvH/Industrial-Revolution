@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities.drill
 
-import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blocks.machine.DrillBlock
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.gui.screenhandlers.machines.MiningRigDrillScreenHandler
+import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
@@ -15,20 +15,22 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Tickable
 import net.minecraft.util.collection.DefaultedList
 
-class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENTITY_TYPE), BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable {
-    var inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
+class DrillBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE), BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable {
+    var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
     var position: Double = 1.0
 
     override fun tick() {
         if (world?.isClient == true) return
-        else if (inventory[0].isEmpty) {
+
+        if (inventory[0].isEmpty) {
             position = 1.0
             markDirty()
             sync()
@@ -50,10 +52,8 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENT
 
     override fun getContainerName(): Text = TranslatableText("block.indrev.drill")
 
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?): ScreenHandler {
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeBlockPos(pos)
-        return IndustrialRevolution.DRILL_HANDLER.create(syncId, playerInventory, buf)
+    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
+        return MiningRigDrillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory
@@ -103,19 +103,19 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRRegistry.DRILL_BLOCK_ENT
     fun getSpeedMultiplier(): Double {
         val item = inventory[0].item
         return if (position > 0) 0.0 else when (item) {
-            IRRegistry.STONE_DRILL_HEAD -> 0.5
-            IRRegistry.IRON_DRILL_HEAD -> 2.0
-            IRRegistry.DIAMOND_DRILL_HEAD -> 5.0
-            IRRegistry.NETHERITE_DRILL_HEAD -> 10.0
+            IRItemRegistry.STONE_DRILL_HEAD -> 0.5
+            IRItemRegistry.IRON_DRILL_HEAD -> 2.0
+            IRItemRegistry.DIAMOND_DRILL_HEAD -> 5.0
+            IRItemRegistry.NETHERITE_DRILL_HEAD -> 10.0
             else -> 0.0
         }
     }
 
     companion object {
         fun isValidDrill(item: Item) =
-            item == IRRegistry.STONE_DRILL_HEAD
-                    || item == IRRegistry.IRON_DRILL_HEAD
-                    || item == IRRegistry.DIAMOND_DRILL_HEAD
-                    || item == IRRegistry.NETHERITE_DRILL_HEAD
+            item == IRItemRegistry.STONE_DRILL_HEAD
+                    || item == IRItemRegistry.IRON_DRILL_HEAD
+                    || item == IRItemRegistry.DIAMOND_DRILL_HEAD
+                    || item == IRItemRegistry.NETHERITE_DRILL_HEAD
     }
 }

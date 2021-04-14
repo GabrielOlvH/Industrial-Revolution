@@ -1,10 +1,10 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:diamond_ore"
+    "tag": "c:diamond_ores"
   },
   "output": {
-    "item": "indrev:diamond_dust",
+    "item": "minecraft:diamond",
     "count": 2
   },
   "processTime": 200

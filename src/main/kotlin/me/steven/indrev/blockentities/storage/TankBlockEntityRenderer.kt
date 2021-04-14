@@ -2,7 +2,7 @@ package me.steven.indrev.blockentities.storage
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
-import me.steven.indrev.blocks.TankBlock
+import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.utils.IRFluidVolumeRenderer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
@@ -19,7 +19,7 @@ class TankBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         overlay: Int
     ) {
         val fluidComponent = entity.fluidComponent
-        val volume = fluidComponent.tanks[0].volume
+        val volume = fluidComponent[0]
         if (volume.isEmpty) return
         val fluid = volume.amount().asInt(1000)
         val maxFluid = fluidComponent.limit.asInt(1000).toDouble()

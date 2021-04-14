@@ -1,0 +1,44 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:stibnite",
+      "optional": true,
+      "output": [
+        {
+          "id": "modern_industrialization:antimony_ore",
+          "weight": 40
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 15
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 10
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 1
+        },
+        {
+          "id": "minecraft:gravel",
+          "weight": 1
+        }
+      ],
+      "sizeRange": [
+        1000,
+        3000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "DESERT",
+            "PLAINS"
+          ],
+          "weight": 2
+        }
+      ]
+    }
+  ]
+}

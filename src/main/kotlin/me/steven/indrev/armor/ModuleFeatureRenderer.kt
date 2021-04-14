@@ -1,6 +1,6 @@
 package me.steven.indrev.armor
 
-import me.steven.indrev.items.armor.IRModularArmor
+import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
@@ -30,7 +30,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
 
     private fun renderArmor(matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, livingEntity: T, equipmentSlot: EquipmentSlot, light: Int, bipedEntityModel: A) {
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
-        val item = itemStack.item as? IRModularArmor ?: return
+        val item = itemStack.item as? IRModularArmorItem ?: return
         if (item.slotType == equipmentSlot) {
             (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
             setVisible(bipedEntityModel, equipmentSlot)
@@ -75,7 +75,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
         return slot == EquipmentSlot.LEGS
     }
 
-    private fun getArmorTexture(armorItem: ArmorItem, secondLayer: Boolean, overlay: String?): Identifier? {
+    private fun getArmorTexture(armorItem: ArmorItem, secondLayer: Boolean, overlay: String?): Identifier {
         val path = "textures/models/armor/" + armorItem.material.name + "_layer_" + (if (secondLayer) 2 else 1) + (if (overlay == null) "" else "_$overlay") + ".png"
         return MODULAR_ARMOR_TEXTURE_CACHE.computeIfAbsent(path) { id -> identifier(id) }
     }

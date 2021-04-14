@@ -1,8 +1,7 @@
 package me.steven.indrev.blockentities.storage
 
-import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
+import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -12,12 +11,13 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.collection.DefaultedList
 
-class CabinetBlockEntity : LootableContainerBlockEntity(IRRegistry.CABINET_BLOCK_ENTITY_TYPE), ExtendedScreenHandlerFactory {
+class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_BLOCK_ENTITY_TYPE), ExtendedScreenHandlerFactory {
 
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(27, ItemStack.EMPTY)
 
@@ -25,10 +25,8 @@ class CabinetBlockEntity : LootableContainerBlockEntity(IRRegistry.CABINET_BLOCK
 
     override fun getContainerName(): Text = TranslatableText("block.indrev.cabinet")
 
-    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory?): ScreenHandler {
-        val buf = PacketByteBuf(Unpooled.buffer())
-        buf.writeBlockPos(pos)
-        return IndustrialRevolution.CABINET_HANDLER.create(syncId, playerInventory, buf)
+    override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
+        return CabinetScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
     }
 
     override fun getInvStackList(): DefaultedList<ItemStack> = inventory

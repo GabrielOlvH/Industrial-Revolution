@@ -1,0 +1,57 @@
+package me.steven.indrev.datagen.utils
+
+const val LEAD_BASE = 0xFF575d61
+const val LEAD_HIGHLIGHT = 0xFF77859a
+//const val LEAD_SHADOW = 0xFF343539
+
+const val SILVER_BASE = 0xFFc6e9e3
+const val SILVER_HIGHLIGHT = 0xFFd9f2e3
+//const val SILVER_SHADOW = 0xFF989890
+
+const val COPPER_BASE = 0xFFf3a565
+const val COPPER_HIGHLIGHT = 0xFFf3cd81
+//const val COPPER_SHADOW = 0xFFd1613f
+
+const val TUNGSTEN_BASE = 0xFF686b5b
+const val TUNGSTEN_HIGHLIGHT = 0xFF838961
+//const val TUNGSTEN_SHADOW = 0xFF58564a
+
+const val BRONZE_BASE = 0xFF914e3b
+const val BRONZE_HIGHLIGHT = 0xFFa86234
+//const val BRONZE_SHADOW = 0xFF815735
+
+const val ELECTRUM_BASE = 0xFFecd36f
+const val ELECTRUM_HIGHLIGHT = 0xFFf5e875
+//const val ELECTRUM_SHADOW = 0xFFc17a3d
+
+const val STEEL_BASE = 0xFF3b3b3b
+const val STEEL_HIGHLIGHT = 0xFF444341
+
+const val NIKOLITE_BASE = 0xFF008f8c
+const val NIKOLITE_HIGHLIGHT = 0xFF00ad88
+
+const val ENRICHED_NIKOLITE_BASE = 0xFF5300de
+const val ENRICHED_NIKOLITE_HIGHLIGHT = 0xFF3740d4
+
+const val IRON_BASE = 0xFFfdfdfd
+const val IRON_HIGHLIGHT = 0xFFffffff
+
+const val TIN_BASE = 0xFFc9c9c9
+const val TIN_HIGHLIGHT = 0xFFc1c7c7
+const val TIN_OUTLINE = 0xFF9ca1aa
+
+const val DIAMOND_BASE = 0xFF4aedd9
+const val DIAMOND_HIGHLIGHT = 0xFFa1fbe8
+const val DIAMOND_OUTLINE = 0xFF11727a
+
+const val SULFUR_BASE = 0xFFf5da68
+const val SULFUR_HIGHLIGHT = 0xFFffffff
+const val SULFUR_OUTLINE = 0xFFbda547
+
+const val COAL_BASE = 0xFF1f1721
+const val COAL_HIGHLIGHT = 0xFF261e24
+
+const val NETHERITE_SCRAP_BASE = 0xFF603a32
+const val NETHERITE_SCRAP_HIGHLIGHT = 0xFF7e6059
+const val NETHERITE_SCRAP_OUTLINE = 0xFF24110b
+

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "group": "silver_ingots",
+  "ingredient": {
+    "tag": "c:silver_ores"
+  },
+  "result": "indrev:silver_ingot",
+  "cookingTime": 150
+}

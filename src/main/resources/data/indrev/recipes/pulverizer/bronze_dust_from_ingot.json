@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:bronze_ingots"
+  },
+  "output": {
+    "item": "indrev:bronze_dust",
+    "count": 1
+  },
+  "processTime": 150
+}

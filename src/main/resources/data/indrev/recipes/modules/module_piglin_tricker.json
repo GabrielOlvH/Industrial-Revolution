@@ -1,0 +1,18 @@
+{
+  "type": "indrev:modules",
+  "ingredients": [
+    {
+      "item": "indrev:circuit_mk4"
+    },
+    {
+      "item": "minecraft:gold_block"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  ],
+  "output": {
+    "item": "indrev:module_piglin_tricker"
+  },
+  "processTime": 400
+}

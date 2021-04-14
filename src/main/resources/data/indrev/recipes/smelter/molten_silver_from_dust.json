@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "tag": "c:silver_dusts"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_silver_still",
+    "type": "ingot",
+    "count": 1
+  },
+  "processTime": 600
+}

@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " C ",
-    "NMN",
-    " B "
+    "NCN",
+    "SMS",
+    "SBS"
   ],
   "key": {
     "M": {
@@ -14,6 +14,9 @@
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"
+    },
+    "S": {
+      "tag": "c:electrum_plates"
     },
     "B": {
       "item": "indrev:battery"

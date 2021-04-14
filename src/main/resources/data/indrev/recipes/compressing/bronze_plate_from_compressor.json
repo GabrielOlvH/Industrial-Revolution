@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:bronze_ingots"
+  },
+  "output": {
+    "item": "indrev:bronze_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

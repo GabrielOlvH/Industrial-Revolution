@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " E ",
-    "RHR",
+    "HHH",
+    "HEH",
     "HHH"
   ],
   "key": {
@@ -11,13 +11,10 @@
     },
     "H": {
       "item": "indrev:cable_mk3"
-    },
-    "R": {
-      "item": "minecraft:redstone"
     }
   },
   "result": {
     "item": "indrev:cable_mk4",
-    "count": 4
+    "count": 8
   }
 }

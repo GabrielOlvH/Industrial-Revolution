@@ -1,0 +1,14 @@
+{
+  "type": "indrev:recycle",
+  "ingredients": [
+    {
+      "item": "minecraft:nether_wart",
+      "count": 1
+    }
+  ],
+  "output": {
+    "item": "indrev:biomass",
+    "count": 3
+  },
+  "processTime": 150
+}

@@ -1,8 +1,7 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
-import me.steven.indrev.registry.IRRegistry
-import me.steven.indrev.utils.setBlockState
+import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -13,8 +12,10 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.state.StateManager
+import net.minecraft.state.property.BooleanProperty
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.ItemScatterer
 import net.minecraft.util.StringIdentifiable
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -22,6 +23,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
+import net.minecraft.world.WorldView
 
 open class DrillBlock private constructor(settings: Settings, val part: DrillPart) : Block(settings) {
 
@@ -46,11 +48,6 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         world.setBlockState(pos.up(), DRILL_MIDDLE.defaultState)
     }
 
-    override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity?) {
-        part.onBreak(world, pos)
-        world.syncWorldEvent(player, 2001, pos, getRawIdFromState(state))
-    }
-
     override fun onUse(
         state: BlockState,
         world: World,
@@ -70,16 +67,24 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         state: BlockState,
         direction: Direction?,
         newState: BlockState,
-        world: WorldAccess?,
-        pos: BlockPos?,
+        world: WorldAccess,
+        pos: BlockPos,
         posFrom: BlockPos?
     ): BlockState {
         return if (newState.block is DrillBlock) state.with(WORKING, newState[WORKING])
+        else if (!part.test(world, pos)) Blocks.AIR.defaultState
         else state
     }
 
-    override fun getPickStack(world: BlockView?, pos: BlockPos?, state: BlockState?): ItemStack
-            = ItemStack(DRILL_BOTTOM)
+    override fun onBreak(world: World, pos: BlockPos, state: BlockState, player: PlayerEntity) {
+        if (!world.isClient && player.isCreative && part != DrillPart.BOTTOM) {
+            val bottom = part.getBlockEntityPos(pos)
+            world.setBlockState(bottom, Blocks.AIR.defaultState)
+        }
+        super.onBreak(world, pos, state, player)
+    }
+
+    override fun getPickStack(world: BlockView, pos: BlockPos, state: BlockState): ItemStack = ItemStack(DRILL_BOTTOM)
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         builder?.add(WORKING)
@@ -87,29 +92,30 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
 
     enum class DrillPart : StringIdentifiable {
         TOP {
-            override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.down(), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_MIDDLE) }
-                world.setBlockState(pos.down(2), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_BOTTOM) }
+            override fun test(world: WorldView, pos: BlockPos): Boolean {
+                return world.getBlockState(pos.down()).isOf(DRILL_MIDDLE)
+                        && world.getBlockState(pos.down(2)).isOf(DRILL_BOTTOM)
             }
+
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos.down(2)
         },
         MIDDLE {
-            override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.up(), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_TOP) }
-                world.setBlockState(pos.down(), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_BOTTOM) }
+            override fun test(world: WorldView, pos: BlockPos): Boolean {
+                return world.getBlockState(pos.up()).isOf(DRILL_TOP)
+                        && world.getBlockState(pos.down()).isOf(DRILL_BOTTOM)
             }
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos.down()
         },
         BOTTOM {
-            override fun onBreak(world: World, pos: BlockPos) {
-                world.setBlockState(pos.up(), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_MIDDLE) }
-                world.setBlockState(pos.up(2), Blocks.AIR.defaultState) { oldState -> oldState.isOf(DRILL_TOP) }
+            override fun test(world: WorldView, pos: BlockPos): Boolean {
+                return world.getBlockState(pos.up()).isOf(DRILL_MIDDLE)
+                        && world.getBlockState(pos.up(2)).isOf(DRILL_TOP)
             }
 
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos
         };
 
-        abstract fun onBreak(world: World, pos: BlockPos)
+        abstract fun test(world: WorldView, pos: BlockPos): Boolean
 
         abstract fun getBlockEntityPos(pos: BlockPos): BlockPos
 
@@ -121,13 +127,29 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
     class MiddleDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.MIDDLE)
 
     class BottomDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.BOTTOM), BlockEntityProvider {
-        override fun createBlockEntity(world: BlockView?): BlockEntity? = DrillBlockEntity()
+        override fun createBlockEntity(world: BlockView?): BlockEntity = DrillBlockEntity()
+
+        override fun onStateReplaced(
+            state: BlockState,
+            world: World?,
+            pos: BlockPos?,
+            newState: BlockState,
+            moved: Boolean
+        ) {
+
+            if (!newState.isOf(this)) {
+                (world?.getBlockEntity(pos) as? DrillBlockEntity)?.let {
+                    ItemScatterer.spawn(world, pos, it)
+                }
+            }
+            super.onStateReplaced(state, world, pos, newState, moved)
+        }
     }
 
     companion object {
-        private val DRILL_TOP by lazy { IRRegistry.DRILL_TOP }
-        private val DRILL_MIDDLE by lazy { IRRegistry.DRILL_MIDDLE }
-        private val DRILL_BOTTOM by lazy { IRRegistry.DRILL_BOTTOM }
-        val WORKING = MachineBlock.WORKING_PROPERTY
+        private val DRILL_TOP by lazy { IRBlockRegistry.DRILL_TOP }
+        private val DRILL_MIDDLE by lazy { IRBlockRegistry.DRILL_MIDDLE }
+        private val DRILL_BOTTOM by lazy { IRBlockRegistry.DRILL_BOTTOM }
+        val WORKING = BooleanProperty.of("working")
     }
 }

@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "tag": "c:tin_ores"
+  },
+  "output": {
+    "item": "indrev:tin_dust",
+    "count": 2
+  },
+  "processTime": 200
+}

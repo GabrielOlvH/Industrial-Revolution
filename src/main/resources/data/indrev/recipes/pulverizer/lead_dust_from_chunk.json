@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "indrev:lead_chunk"
+  },
+  "output": {
+    "item": "indrev:lead_dust",
+    "count": 1
+  },
+  "processTime": 200
+}

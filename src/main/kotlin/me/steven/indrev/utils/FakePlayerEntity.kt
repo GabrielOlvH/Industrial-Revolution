@@ -20,7 +20,6 @@ class FakePlayerEntity(world: ServerWorld, pos: BlockPos) :
     override fun tick() {
     }
 
-
     override fun playSound(event: SoundEvent?, category: SoundCategory?, volume: Float, pitch: Float) {
     }
 
@@ -29,9 +28,9 @@ class FakePlayerEntity(world: ServerWorld, pos: BlockPos) :
 
     override fun canStartRiding(entity: Entity?): Boolean = false
 
-    override fun isSpectator(): Boolean = true
+    override fun isSpectator(): Boolean = false
 
-    override fun isCreative(): Boolean = true
+    override fun isCreative(): Boolean = false
 
     companion object {
         private val FAKE_PLAYER_UUID = UUID.randomUUID()

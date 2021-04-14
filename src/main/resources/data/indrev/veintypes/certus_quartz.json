@@ -31,8 +31,8 @@
         }
       ],
       "sizeRange": [
-        3000,
-        8000
+        5000,
+        15000
       ],
       "biomes": [
         {
@@ -45,8 +45,7 @@
         {
           "category": [
             "SAVANNA",
-            "DESERT",
-            "NETHER"
+            "DESERT"
           ],
           "weight": 3
         }

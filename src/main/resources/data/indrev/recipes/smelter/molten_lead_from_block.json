@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "tag": "c:lead_blocks"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_lead_still",
+    "type": "block",
+    "count": 1
+  },
+  "processTime": 600
+}

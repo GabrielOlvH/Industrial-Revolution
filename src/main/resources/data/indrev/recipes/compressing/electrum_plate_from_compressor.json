@@ -1,0 +1,11 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "tag": "c:electrum_ingots"
+  },
+  "output": {
+    "item": "indrev:electrum_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

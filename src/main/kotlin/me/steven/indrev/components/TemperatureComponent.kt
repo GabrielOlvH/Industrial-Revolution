@@ -1,29 +1,20 @@
 package me.steven.indrev.components
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.registry.IRRegistry
-import me.steven.indrev.utils.Property
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
-import team.reborn.energy.Energy
 
 class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>,
     private val heatingSpeed: Double,
-    private val stableTemperature: () -> Double,
     val optimalRange: IntRange,
     explosionLimit: Double
 ) : PropertyDelegateHolder {
-
-    constructor(
-        machineProvider: () -> MachineBlockEntity<*>,
-        heatingSpeed: Double,
-        optimalRange: IntRange,
-        explosionLimit: Double
-    ) : this(machineProvider, heatingSpeed, { explosionLimit }, optimalRange, explosionLimit)
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
@@ -53,11 +44,11 @@ class TemperatureComponent(
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val isHeatingUp = shouldHeatUp || (coolerItem == IRRegistry.HEAT_COIL && Energy.of(machine).use(5.0))
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
         val overflowModifier = 0//if (inputOverflow) 20 else 0
         if (!isHeatingUp && !inputOverflow && temperature > 30.5)
             temperature -= coolingModifier
-        else if (cooling <= 0 && (temperature > optimalRange.last - 10 || temperature > stableTemperature())) {
+        else if (cooling <= 0 && (temperature > optimalRange.last - 10)) {
             cooling = 70
             coolingModifier = heatingSpeed
             if (coolerStack != null && coolerItem is IRCoolerItem) {

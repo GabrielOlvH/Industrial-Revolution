@@ -1,0 +1,12 @@
+{
+  "type": "indrev:smelter",
+  "ingredients": {
+    "tag": "c:silver_nuggets"
+  },
+  "fluidOutput": {
+    "fluid": "indrev:molten_silver_still",
+    "type": "nugget",
+    "count": 1
+  },
+  "processTime": 600
+}

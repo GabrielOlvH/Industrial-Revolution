@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "FCF",
+    "NMN",
+    "NBN"
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "N": {
+      "tag": "c:bronze_plates"
+    },
+    "F": {
+      "item": "minecraft:bucket"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:pump_mk1"
+  }
+}

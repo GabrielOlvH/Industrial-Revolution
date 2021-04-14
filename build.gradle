@@ -25,6 +25,14 @@ repositories {
         }
     }
     maven {
+        url "https://maven.shedaniel.me/"
+        content {
+            includeGroup "me.shedaniel"
+            includeGroup "me.shedaniel.cloth"
+            includeGroup "me.shedaniel.cloth.api"
+        }
+    }
+    maven {
         url = "http://maven.fabricmc.net/"
         content {
             includeGroup "net.fabricmc"
@@ -45,6 +53,12 @@ repositories {
         }
     }
     maven {
+        url = "https://maven.terraformersmc.com/releases/"
+        content {
+            includeGroup "com.terraformersmc"
+        }
+    }
+    maven {
         name = "Patchouli"
         url = "https://maven.blamejared.com"
         content {
@@ -55,12 +69,11 @@ repositories {
         url = "https://jitpack.io"
         content {
             includeGroup "com.github.Technici4n"
-            includeGroup "com.github.Draylar"
             includeGroup "com.github.GabrielOlvH"
+            includeGroup "com.github.emilyploszaj"
         }
     }
     maven {
-        name "Modmaven"
         url "https://modmaven.dev/"
         content {
             includeGroup 'appeng'
@@ -71,6 +84,21 @@ repositories {
         url = "https://maven.dblsaiko.net/"
         content {
             includeGroup 'grondag'
+        }
+    }
+    maven {
+        name = "Technici4n"
+        url = "https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/"
+        content {
+            includeGroup "net.fabricmc.fabric-api" // FTL needs this too
+            includeGroup "dev.technici4n"
+        }
+    }
+    maven {
+        name = "CurseMaven"
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
         }
     }
 }
@@ -85,24 +113,21 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-
-    modApi("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-    include("com.github.GabrielOlvH:Energy:${project.energy_api_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 
     modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+
     include("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modCompile("io.github.prospector:modmenu:${project.modmenu_version}") {
+    modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+   }
+
     modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
@@ -111,18 +136,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modApi("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-    include("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    modApi("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("me.sargunvohra.mcmods:autoconfig1u:${project.auto_config_version}") {
+    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
@@ -133,24 +147,36 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
 
-    modApi("com.github.Draylar:magna:${project.magna_version}") {
+    modApi("com.github.GabrielOlvH:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
+        exclude group: "io.github.prospector", "module": "modmenu"
     }
-    include("com.github.Draylar:magna:${project.magna_version}") {
+    include("com.github.GabrielOlvH:magna:${project.magna_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
+        exclude group: "io.github.prospector", "module": "modmenu"
     }
 
-
-    modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
-    include "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
-    modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
-        exclude group: "teamreborn", module: "energy"
+    modImplementation("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
+        transitive = false
     }
+    include("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
+        transitive = false
+    }
+
+    modApi "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
+    include "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
+
+   // modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
+    //modImplementation "curse.maven:kubejs-395864:3183435"
+    //include "curse.maven:kubejs-395864:3183435"
+    //modRuntime "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
+    //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
+        //exclude group: "teamreborn", module: "energy"
+    //}
     //modRuntime 'RebornCore:RebornCore-1.16:+'
     //modRuntime 'TechReborn:TechReborn-1.16:+'
-
-    // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
-    // You may need to force-disable transitiveness on them.
 }
 
 processResources {

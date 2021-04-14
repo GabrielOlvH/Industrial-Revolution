@@ -1,0 +1,49 @@
+                                                                                                                                                                         {
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:marblequarry",
+      "optional": true,
+      "output": [
+        {
+          "id": "unearthed:limestone",
+          "weight": 32
+        },
+        {
+          "id": "unearthed:marble",
+          "weight": 64
+        },
+		{
+          "id": "minecraft:stone",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:lapis_ore",
+          "weight": 10
+        }
+      ],
+      "sizeRange": [
+        9000,
+        12000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "SAVANNA",
+            "FOREST",
+            "PLAINS",
+            "SWAMP",
+            "ICY",
+            "TAIGA",
+            "MESA",
+            "DESERT",
+            "JUNGLE",
+			"OCEAN"
+          ],
+          "weight": 2
+        }
+      ]
+    }
+
+  ]
+}

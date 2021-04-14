@@ -1,5 +1,9 @@
 package me.steven.indrev.blockentities.crafters
 
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
+import it.unimi.dsi.fastutil.objects.Object2IntMap
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
@@ -9,11 +13,10 @@ import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.Tier
-import me.steven.indrev.utils.associateStacks
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.ListTag
@@ -23,43 +26,50 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.Tickable
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
-import team.reborn.energy.EnergySide
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry) :
     MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
 
+    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
+
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
     }
 
+    override val maxOutput: Double = 0.0
+
     private var currentRecipe: T? = null
-    val usedRecipes = mutableMapOf<Identifier, Int>()
+    val usedRecipes = Object2IntOpenHashMap<Identifier>()
     abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
     var isSplitOn = false
-    var ticks = 0
 
     override fun machineTick() {
         ticks++
         craftingComponents.forEach { it.tick() }
-        setWorkingState(craftingComponents.any { it.isCrafting })
+        workingState = craftingComponents.any { it.isCrafting }
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 
-    override fun getMaxStoredPower(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double {
+        return Upgrade.getBuffer(this)
+    }
 
-    override fun getMaxOutput(side: EnergySide?): Double = 0.0
-
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> config.energyCost
-        Upgrade.SPEED ->
-            if (temperatureComponent?.isFullEfficiency() == true)
-                ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
-            else
-                config.processSpeed
-        Upgrade.BUFFER -> getBaseBuffer()
-        else -> 0.0
+    override fun getBaseValue(upgrade: Upgrade): Double {
+        val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
+        return when (upgrade) {
+            Upgrade.ENERGY ->
+                if (isFullEfficiency) config.energyCost * 1.5
+                else config.energyCost
+            Upgrade.SPEED ->
+                if (isFullEfficiency)
+                    ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
+                else
+                    config.processSpeed
+            Upgrade.BUFFER -> config.maxEnergyStored
+            else -> 0.0
+        }
     }
 
     open fun splitStacks() {
@@ -94,6 +104,23 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             if (remaining < 0) set += remaining
             inventory.setStack(slot, ItemStack(item, set))
         }
+    }
+
+    private inline fun IntArray.associateStacks(transform: (Int) -> ItemStack): Map<Item, Int> {
+        return associateToStacks(Object2IntArrayMap(5), transform)
+    }
+
+    private inline fun <M : Object2IntArrayMap<Item>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
+        for (element in this) {
+            val stack = transform(element)
+            if (!stack.isEmpty && stack.tag?.isEmpty != false)
+                destination.mergeInt(stack.item, stack.count) { old, new -> old + new }
+        }
+        return destination
+    }
+
+    override fun getMaxUpgrade(upgrade: Upgrade): Int {
+        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
@@ -139,7 +166,9 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return super.toClientTag(tag)
     }
 
+    @Suppress("UNCHECKED_CAST")
     fun dropExperience(player: PlayerEntity) {
+        //TODO wtf bro
         val list = mutableListOf<T>()
         usedRecipes.forEach { (id, amount) ->
             world!!.recipeManager[id].ifPresent { recipe ->
@@ -164,6 +193,4 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             world.spawnEntity(ExperienceOrbEntity(world, pos.x, pos.y, pos.z, size))
         }
     }
-
-    open fun onCraft() {}
 }

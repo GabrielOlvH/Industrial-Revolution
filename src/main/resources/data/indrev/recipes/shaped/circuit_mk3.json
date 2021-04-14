@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    " E ",
-    "LCL",
-    " L "
+    "MEM",
+    "ECE",
+    "MEM"
   ],
   "key": {
     "E": {
@@ -12,8 +12,8 @@
     "C": {
       "item": "indrev:circuit_mk2"
     },
-    "L": {
-      "item": "minecraft:lapis_lazuli"
+    "M": {
+      "tag": "c:electrum_plates"
     }
   },
   "result": {

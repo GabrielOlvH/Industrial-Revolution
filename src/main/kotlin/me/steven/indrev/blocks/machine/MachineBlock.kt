@@ -2,14 +2,21 @@ package me.steven.indrev.blocks.machine
 
 import alexiil.mc.lib.attributes.AttributeList
 import alexiil.mc.lib.attributes.AttributeProvider
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.items.misc.IRWrenchItem
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -22,7 +29,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.BlockItem
-import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ScreenHandler
@@ -30,43 +36,28 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
-import net.minecraft.state.StateManager
-import net.minecraft.state.property.BooleanProperty
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import team.reborn.energy.Energy
 import java.util.*
 
 open class MachineBlock(
+    private val registry: MachineRegistry,
     settings: Settings,
     val tier: Tier,
     val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-    private val blockEntityProvider: () -> MachineBlockEntity<*>
 ) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
 
-    init {
-        if (this.defaultState.contains(WORKING_PROPERTY))
-            this.defaultState = stateManager.defaultState.with(WORKING_PROPERTY, false)
-    }
-
-    override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
-        super.appendProperties(builder)
-        builder?.add(WORKING_PROPERTY)
-    }
-
-    override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return defaultState.with(WORKING_PROPERTY, false)
-    }
-
-    override fun createBlockEntity(view: BlockView?): BlockEntity? = blockEntityProvider()
+    override fun createBlockEntity(view: BlockView?): BlockEntity? = registry.blockEntityType(tier).instantiate()
 
     override fun onUse(
         state: BlockState?,
@@ -79,7 +70,7 @@ open class MachineBlock(
         if (world.isClient) return ActionResult.CONSUME
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
         if (blockEntity.fluidComponent != null) {
-            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent, player as ServerPlayerEntity, hand)
+            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent as FixedFluidInv, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
         }
         val stack = player?.mainHandStack
@@ -91,20 +82,54 @@ open class MachineBlock(
             blockEntity.multiblockComponent?.toggleRender()
             blockEntity.markDirty()
             blockEntity.sync()
-        } else if (screenHandler != null && blockEntity.inventoryComponent != null) {
+        } else if (screenHandler != null) {
             player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
-        }
+        } else return ActionResult.PASS
         return ActionResult.SUCCESS
     }
 
+    @Suppress("DEPRECATION")
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
-        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
+        val oldBlockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*>
         super.onStateReplaced(state, world, pos, newState, moved)
-        if (!state.isOf(newState.block) && !world.isClient) {
-            if (blockEntity?.inventoryComponent != null) {
-                ItemScatterer.spawn(world, pos, blockEntity.inventoryComponent!!.inventory)
-                world.updateComparators(pos, this)
+        if (world.isClient) return
+
+        if (newState.isOf(this)) {
+            val oldFacing = getFacing(state)
+            val newFacing = getFacing(newState)
+            if (oldFacing == newFacing) return
+
+            val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+            val rotation = offset(oldFacing, newFacing)
+            blockEntity.inventoryComponent?.run {
+                update(EnumMap(itemConfig).clone(), itemConfig, rotation)
             }
+            blockEntity.fluidComponent?.run {
+                update(EnumMap(transferConfig).clone(), transferConfig, rotation)
+            }
+            if (blockEntity is LazuliFluxContainerBlockEntity) {
+                update(EnumMap(blockEntity.transferConfig).clone(), blockEntity.transferConfig, rotation)
+            }
+            blockEntity.markDirty()
+            blockEntity.sync()
+        } else if (oldBlockEntity?.inventoryComponent != null) {
+            ItemScatterer.spawn(world, pos, oldBlockEntity.inventoryComponent!!.inventory)
+            world.updateComparators(pos, this)
+        }
+    }
+
+    private fun update(original: EnumMap<Direction, TransferMode>, config: SideConfiguration, rotation: BlockRotation) {
+        Direction.values().forEach { side ->
+            config[side] = original[rotation.rotate(side)]!!
+        }
+    }
+
+    private fun offset(old: Direction, new: Direction): BlockRotation {
+        return when (old) {
+            new.rotateYClockwise() -> BlockRotation.CLOCKWISE_90
+            new.rotateYCounterclockwise() -> BlockRotation.COUNTERCLOCKWISE_90
+            new.opposite -> BlockRotation.CLOCKWISE_180
+            else -> BlockRotation.NONE
         }
     }
 
@@ -119,8 +144,10 @@ open class MachineBlock(
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item
                 if (blockEntity is MachineBlockEntity<*> && item is BlockItem && item.block is MachineBlock) {
-                    if (Energy.valid(stack))
-                        Energy.of(stack).set(blockEntity.energy)
+                    val itemIo = energyOf(stack)
+                    if (itemIo != null) {
+                        stack.orCreateTag.putDouble("energy", blockEntity.energy)
+                    }
                     val tag = stack.getOrCreateSubTag("MachineInfo")
                     val temperatureController = blockEntity.temperatureComponent
                     if (temperatureController != null)
@@ -132,21 +159,43 @@ open class MachineBlock(
         }
     }
 
-    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState?, placer: LivingEntity?, itemStack: ItemStack?) {
+    override fun onPlaced(world: World?, pos: BlockPos, state: BlockState, placer: LivingEntity?, itemStack: ItemStack?) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (world?.isClient == true) return
         val blockEntity = world?.getBlockEntity(pos)
         if (blockEntity is MachineBlockEntity<*>) {
-            val tag = itemStack?.getSubTag("MachineInfo") ?: return
+            val tag = itemStack?.getSubTag("MachineInfo")
             val temperatureController = blockEntity.temperatureComponent
-            if (Energy.valid(itemStack))
-                Energy.of(blockEntity).set(Energy.of(itemStack).energy)
-            if (temperatureController != null) {
-                val temperature = tag.getDouble("Temperature")
-                temperatureController.temperature = temperature
+            val itemIo = energyOf(itemStack)
+            if (itemIo != null) {
+                blockEntity.energy = itemIo.energy
             }
+            if (temperatureController != null) {
+                val temperature = tag?.getDouble("Temperature")
+                if (temperature != null) temperatureController.temperature = temperature
+            }
+            ConfigurationType.values().forEach { type ->
+                if (blockEntity.isConfigurable(type))
+                    blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
+            }
+            blockEntity.markDirty()
+            blockEntity.sync()
         }
     }
+
+    override fun neighborUpdate(
+        state: BlockState?,
+        world: World?,
+        pos: BlockPos?,
+        block: Block?,
+        fromPos: BlockPos?,
+        notify: Boolean
+    ) {
+        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        blockEntity.validConnections.addAll(Direction.values())
+    }
+
+    open fun getFacing(state: BlockState): Direction = Direction.UP
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? {
         val blockEntity = world?.getBlockEntity(pos) as? InventoryProvider
@@ -156,7 +205,8 @@ open class MachineBlock(
 
     @Environment(EnvType.CLIENT)
     override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random?) {
-        if (state?.contains(WORKING_PROPERTY) == true && state[WORKING_PROPERTY]) {
+        val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+        if (blockEntity.workingState) {
             val d = pos.x.toDouble() + 0.5
             val e = pos.y.toDouble() + 1.0
             val f = pos.z.toDouble() + 0.5
@@ -172,9 +222,7 @@ open class MachineBlock(
             to.offer(fluidComponent)
         else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
             to.offer(fluidComponent)
-    }
-
-    companion object {
-        val WORKING_PROPERTY: BooleanProperty = BooleanProperty.of("working")
+        else if (to.attribute == FluidAttributes.GROUPED_INV)
+            to.offer(fluidComponent)
     }
 }

@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "tag": "c:tin_dusts"
+    },
+    {
+      "tag": "c:copper_dusts"
+    }
+  ],
+  "output": {
+    "item": "indrev:bronze_dust",
+    "count": 2
+  },
+  "processTime": 300
+}

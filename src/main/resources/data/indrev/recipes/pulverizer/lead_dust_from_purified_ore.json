@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "indrev:lead_purified_ore"
+  },
+  "output": {
+    "item": "indrev:lead_dust",
+    "count": 3
+  },
+  "processTime": 200
+}

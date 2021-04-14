@@ -1,6 +1,6 @@
 package me.steven.indrev.armor
 
-import me.steven.indrev.registry.IRRegistry
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ArmorMaterial
 import net.minecraft.recipe.Ingredient
@@ -18,20 +18,32 @@ enum class IRArmorMaterial(
     private val repairIngredient: Ingredient?) : ArmorMaterial {
 
     MODULAR(
-        "modular", 40, intArrayOf(1, 3, 2, 1), 15,
+        "modular", 0, intArrayOf(1, 3, 2, 1), 15,
         SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 1.0F, null
     ),
     STEEL(
         "steel", 30, intArrayOf(2, 6, 7, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(IRRegistry.STEEL_INGOT())
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, Ingredient.ofItems(IRItemRegistry.STEEL_INGOT())
     ),
     COPPER(
-        "copper", 17, intArrayOf(2, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT())
+        "copper", 14, intArrayOf(2, 4, 5, 2), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.COPPER_INGOT())
     ),
     TIN(
         "tin", 10, intArrayOf(1, 4, 5, 2), 15,
-        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRRegistry.COPPER_INGOT())
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.TIN_INGOT())
+    ),
+    BRONZE(
+        "bronze", 15, intArrayOf(2, 5, 6, 2), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.BRONZE_INGOT())
+    ),
+    LEAD(
+        "lead", 20, intArrayOf(2, 4, 4, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.LEAD_INGOT())
+    ),
+    SILVER(
+        "silver", 30, intArrayOf(1, 4, 4, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, 0.0F, 0.0F, Ingredient.ofItems(IRItemRegistry.SILVER_INGOT())
     );
 
     override fun getName(): String = armorName

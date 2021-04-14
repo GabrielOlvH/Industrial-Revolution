@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    " I ",
+    " I "
+  ],
+  "key": {
+    "S": {
+      "tag": "c:lead_ingots"
+    },
+    "I": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "indrev:lead_pickaxe"
+  }
+}

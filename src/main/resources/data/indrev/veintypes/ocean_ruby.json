@@ -1,0 +1,47 @@
+{
+  "containsMultiple": true,
+  "veins": [
+    {
+      "id": "indrev:ocean_ruby",
+      "optional": true,
+      "output": [
+        {
+          "id": "techreborn:ruby_ore",
+          "weight": 1
+        },
+        {
+          "id": "techreborn:sapphire_ore",
+          "weight": 4
+        },
+        {
+          "id": "minecraft:stone",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:basalt",
+          "weight": 16
+        },
+        {
+          "id": "minecraft:dirt",
+          "weight": 2
+        },
+        {
+          "id": "minecraft:clay",
+          "weight": 2
+        }
+      ],
+      "sizeRange": [
+        3000,
+        9000
+      ],
+      "biomes": [
+        {
+          "category": [
+            "OCEAN"
+          ],
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

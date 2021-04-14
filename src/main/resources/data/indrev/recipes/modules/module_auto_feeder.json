@@ -1,0 +1,21 @@
+{
+  "type": "indrev:modules",
+  "ingredients": [
+    {
+      "item": "indrev:circuit_mk4"
+    },
+    {
+      "tag": "c:tungsten_plates"
+    },
+    {
+      "tag": "c:tungsten_plates"
+    },
+    {
+      "item": "indrev:enriched_nikolite_ingot"
+    }
+  ],
+  "output": {
+    "item": "indrev:module_auto_feeder"
+  },
+  "processTime": 400
+}

@@ -14,6 +14,7 @@ class WStaticTooltip : WWidget() {
         drawTooltipBackground(matrices ?: return, x, y, width, height)
     }
 
+    @Suppress("DEPRECATION")
     private fun drawTooltipBackground(matrices: MatrixStack, x: Int, y: Int, width: Int, height: Int) {
         val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.buffer

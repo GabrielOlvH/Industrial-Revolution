@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "group": "lead_ingots",
+  "ingredient": {
+    "tag": "c:lead_ores"
+  },
+  "result": "indrev:lead_ingot",
+  "cookingTime": 150
+}
