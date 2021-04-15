@@ -14,10 +14,12 @@ import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.Material
+import net.minecraft.block.MaterialColor
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.sound.BlockSoundGroup
@@ -32,6 +34,8 @@ object IRBlockRegistry {
 
         identifier("planks").block(PLANKS).item(BlockItem(PLANKS, itemSettings()))
         identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
+        FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
+        FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
 
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
 
@@ -81,10 +85,10 @@ object IRBlockRegistry {
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val PLANKS = PlankBlock(
-        FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.WOOD, MaterialColor.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(2.0f).sounds(BlockSoundGroup.WOOD)
     )
     val PLANK_BLOCK = Block(
-        FabricBlockSettings.of(Material.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.WOOD, MaterialColor.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
     )
 
     val CONTROLLER =  HorizontalFacingBlock(
