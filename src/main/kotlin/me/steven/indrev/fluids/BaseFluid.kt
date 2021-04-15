@@ -32,14 +32,14 @@ import net.minecraft.world.WorldView
 abstract class BaseFluid(
     val identifier: Identifier,
     val block: () -> FluidBlock,
-    private val bucketItem: () -> BucketItem,
+    private val bucketItem: () -> BucketItem?,
     private val color: Int
 ) : FlowableFluid() {
     override fun toBlockState(state: FluidState?): BlockState? = block().defaultState.with(
         FluidBlock.LEVEL, method_15741(state)
     )
 
-    override fun getBucketItem(): Item = bucketItem()
+    override fun getBucketItem(): Item? = bucketItem()
 
     override fun getLevelDecreasePerBlock(world: WorldView?): Int = 1
 
@@ -99,7 +99,7 @@ abstract class BaseFluid(
     class Flowing(
         identifier: Identifier,
         block: () -> FluidBlock,
-        bucketItem: () -> BucketItem,
+        bucketItem: () -> BucketItem?,
         color: Int,
         val still: () -> Still
     ) : BaseFluid(identifier, block, bucketItem, color) {
@@ -120,7 +120,7 @@ abstract class BaseFluid(
     class Still(
         identifier: Identifier,
         block: () -> FluidBlock,
-        bucketItem: () -> BucketItem,
+        bucketItem: () -> BucketItem?,
         color: Int,
         val flowing: () -> Flowing
     ) : BaseFluid(identifier, block, bucketItem, color) {

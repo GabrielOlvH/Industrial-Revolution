@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.generators
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.api.machines.Tier
@@ -10,6 +11,7 @@ import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
@@ -45,6 +47,10 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
             return FluidAmount.ofWhole(getRadius() * 10L)
+        }
+
+        override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
+            return fluid?.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true && super.isFluidValidForTank(tank, fluid)
         }
 
         override fun insertFluid(tank: Int, volume: FluidVolume, simulation: Simulation): FluidVolume {

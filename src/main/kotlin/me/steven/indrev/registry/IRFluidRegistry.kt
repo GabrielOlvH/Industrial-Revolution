@@ -65,6 +65,11 @@ object IRFluidRegistry {
         identifier("${TOXIC_MUD_IDENTIFIER.path}_still").fluid(TOXIC_MUD_STILL)
         identifier("${TOXIC_MUD_IDENTIFIER.path}_flowing").fluid(TOXIC_MUD_FLOWING)
         identifier("${TOXIC_MUD_IDENTIFIER.path}_bucket").item(TOXIC_MUD_BUCKET)
+
+
+        STEAM_IDENTIFIER.block(STEAM)
+        identifier("${STEAM_IDENTIFIER.path}_still").fluid(STEAM_STILL)
+        identifier("${STEAM_IDENTIFIER.path}_flowing").fluid(STEAM_FLOWING)
     }
 
     val COOLANT_IDENTIFIER = identifier("coolant")
@@ -143,4 +148,9 @@ object IRFluidRegistry {
         BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
     val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
+
+    val STEAM_IDENTIFIER = identifier("steam")
+    val STEAM_STILL: BaseFluid.Still = BaseFluid.Still(STEAM_IDENTIFIER, { STEAM }, { null }, -1) { STEAM_FLOWING }
+    val STEAM_FLOWING = BaseFluid.Flowing(STEAM_IDENTIFIER, { STEAM }, { null }, -1) { STEAM_STILL }
+    val STEAM = object : FluidBlock(STEAM_STILL, FabricBlockSettings.of(Material.WATER)) {}
 }
