@@ -1,8 +1,10 @@
 package me.steven.indrev.registry
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
@@ -75,9 +77,21 @@ object IRBlockRegistry {
             .item(SOLAR_REFLECTOR_ITEM)
             .blockEntityType(SOLAR_REFLECTOR_BLOCK_ENTITY)
 
-        identifier("steam_turbine_input_valve")
-            .block(STEAM_TURBINE_INPUT_VALVE)
-            .item(STEAM_TURBINE_INPUT_VALVE_ITEM)
+        identifier("steam_turbine_input_valve").block(STEAM_TURBINE_INPUT_VALVE).item(STEAM_TURBINE_INPUT_VALVE_ITEM)
+        identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
+
+        EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
+            val turbineBlockEntity = world.getBlockEntity(pos.up()) as? SteamTurbineBlockEntity
+            if (turbineBlockEntity?.multiblockComponent?.isBuilt(world, pos.up(), turbineBlockEntity.cachedState) == true)
+                turbineBlockEntity
+            else
+                null
+        }, STEAM_TURBINE_ENERGY_OUTPUT)
+
+        identifier("steam_turbine_casing").block(STEAM_TURBINE_CASING_BLOCK).item(STEAM_TURBINE_CASING_BLOCK_ITEM)
+        identifier("steam_turbine_rotor").block(STEAM_TURBINE_ROTOR_BLOCK).item(STEAM_TURBINE_ROTOR_BLOCK_ITEM)
+        identifier("steam_turbine_pressure_valve").block(STEAM_TURBINE_PRESSURE_VALVE_BLOCK).item(STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM)
+
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -172,4 +186,16 @@ object IRBlockRegistry {
 
     val STEAM_TURBINE_INPUT_VALVE = SteamTurbinePartBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val STEAM_TURBINE_INPUT_VALVE_ITEM = BlockItem(STEAM_TURBINE_INPUT_VALVE, itemSettings())
+
+    val STEAM_TURBINE_ENERGY_OUTPUT = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ENERGY_OUTPUT_ITEM = BlockItem(STEAM_TURBINE_ENERGY_OUTPUT, itemSettings())
+
+    val STEAM_TURBINE_CASING_BLOCK = Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_CASING_BLOCK_ITEM = BlockItem(STEAM_TURBINE_CASING_BLOCK, itemSettings())
+
+    val STEAM_TURBINE_ROTOR_BLOCK = VerticalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ROTOR_BLOCK_ITEM = BlockItem(STEAM_TURBINE_ROTOR_BLOCK, itemSettings())
+
+    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_PRESSURE_VALVE_BLOCK, itemSettings())
 }

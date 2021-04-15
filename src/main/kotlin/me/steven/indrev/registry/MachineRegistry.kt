@@ -581,7 +581,6 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
             .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { SteamTurbineBlockEntity() } }
-            .defaultEnergyProvider()
             .defaultModelProvider(true)
     }
 }
