@@ -61,7 +61,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             val blockItem =
                 if (block is MachineBlock) MachineBlockItem(block, itemSettings())
                 else BlockItem(block, itemSettings())
-            identifier("${key}_${tier.toString().toLowerCase()}").apply {
+            identifier("${key}_${tier.toString().toLowerCase(Locale.ROOT)}").apply {
                 block(block)
                 item(blockItem)
                 if (block is MachineBlock) {

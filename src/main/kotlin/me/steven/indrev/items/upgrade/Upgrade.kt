@@ -14,8 +14,11 @@ enum class Upgrade {
         fun getSpeed(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider)
                 = provider.getBaseValue(SPEED) + (IRConfig.upgrades.speedUpgradeModifier * (upgrades[SPEED] ?: 0))
 
-        fun getEnergyCost(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider)
-                = (provider.getBaseValue(ENERGY) * ((upgrades[SPEED] ?: 0) * 2).coerceAtLeast(1)) / (IRConfig.upgrades.energyUpgradeModifier * (upgrades[ENERGY] ?: 0)).coerceAtLeast(1.0)
+        fun getEnergyCost(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider): Double {
+            val a = (IRConfig.upgrades.energyUpgradeModifier * (upgrades[ENERGY] ?: 0))
+            return (provider.getBaseValue(ENERGY) * ((upgrades[SPEED]
+                ?: 0) * 2).coerceAtLeast(1)) / if (a > 0) a else 1.0
+        }
 
         fun getBuffer(provider: MachineBlockEntity<*>) = getBuffer((provider as UpgradeProvider).getUpgrades(provider.inventoryComponent!!.inventory), provider)
 
