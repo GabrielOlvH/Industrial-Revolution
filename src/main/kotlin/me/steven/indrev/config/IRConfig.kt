@@ -82,6 +82,8 @@ class Generators {
     val heatGenerator: GeneratorConfig = GeneratorConfig(128.0, -1.0, 10000.0, Tier.MK4.io)
 
     val biomassGenerator: GeneratorConfig = GeneratorConfig(128.0, 1.5, 10000.0, Tier.MK3.io)
+
+    val steamTurbine: GeneratorConfig = GeneratorConfig(4.0, -1.0, 20000.0, Tier.MK4.io)
 }
 
 class GeneratorConfig(

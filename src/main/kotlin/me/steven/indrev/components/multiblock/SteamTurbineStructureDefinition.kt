@@ -1,6 +1,9 @@
 package me.steven.indrev.components.multiblock
 
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
+import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import kotlin.math.abs
 
@@ -21,6 +24,25 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
         .from(createStructureMap(7))
         .create("15x15x15")
         .build()
+
+    fun getInputValves(pos: BlockPos, state: BlockState, matcher: AbstractMultiblockMatcher): List<BlockPos> {
+        val rotation =
+            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+
+        matcher.structureIds.firstOrNull()?.also { id ->
+            val radius = getRadius(id)
+            return arrayOf(
+                BlockPos(-radius + 1, 0, 0),
+                BlockPos(radius - 1, 0, 0),
+                BlockPos(0, -radius + 1, 0),
+                BlockPos(0, radius - 1, 0)
+            )
+                .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
+        }
+        return emptyList()
+    }
+
+    fun getRadius(id: StructureIdentifier) = (id.variant.substring(0, id.variant.indexOf("x")).toInt() - 1) / 2
 
     private fun createStructureMap(radius: Int): Map<BlockPos, BlockStateFilter> {
         val map = hashMapOf<BlockPos, BlockStateFilter>()

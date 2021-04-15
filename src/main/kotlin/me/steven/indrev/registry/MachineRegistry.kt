@@ -12,6 +12,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
+import me.steven.indrev.blocks.machine.steamturbine.SteamTurbineBlock
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
@@ -578,7 +579,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .noModelProvider()
 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
-            .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.generators.biomassGenerator, null) }
+            .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { SteamTurbineBlockEntity() } }
             .defaultEnergyProvider()
             .defaultModelProvider(true)

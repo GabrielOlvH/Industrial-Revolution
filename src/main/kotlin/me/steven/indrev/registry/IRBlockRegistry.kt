@@ -13,6 +13,7 @@ import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
+import me.steven.indrev.blocks.machine.steamturbine.SteamTurbinePartBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -73,6 +74,10 @@ object IRBlockRegistry {
             .block(SOLAR_REFLECTOR_BLOCK)
             .item(SOLAR_REFLECTOR_ITEM)
             .blockEntityType(SOLAR_REFLECTOR_BLOCK_ENTITY)
+
+        identifier("steam_turbine_input_valve")
+            .block(STEAM_TURBINE_INPUT_VALVE)
+            .item(STEAM_TURBINE_INPUT_VALVE_ITEM)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -164,4 +169,7 @@ object IRBlockRegistry {
     )
     val SOLAR_REFLECTOR_ITEM = BlockItem(SOLAR_REFLECTOR_BLOCK, itemSettings())
     val SOLAR_REFLECTOR_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarReflectorBlockEntity() }, SOLAR_REFLECTOR_BLOCK).build(null)
+
+    val STEAM_TURBINE_INPUT_VALVE = SteamTurbinePartBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_INPUT_VALVE_ITEM = BlockItem(STEAM_TURBINE_INPUT_VALVE, itemSettings())
 }

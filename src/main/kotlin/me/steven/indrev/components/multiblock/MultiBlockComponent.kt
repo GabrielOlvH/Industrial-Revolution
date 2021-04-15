@@ -5,7 +5,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class MultiBlockComponent(
+open class MultiBlockComponent(
     private val isBuilt: (StructureIdentifier) -> Boolean,
     val structureDecider: (BlockState, World, BlockPos) -> StructureDefinition
 ) {
@@ -14,7 +14,7 @@ class MultiBlockComponent(
     private var ticks = 0
     private var cachedMatchers: MutableMap<String, AbstractMultiblockMatcher> = hashMapOf()
 
-    fun tick(world: World, pos: BlockPos, blockState: BlockState) {
+    open fun tick(world: World, pos: BlockPos, blockState: BlockState) {
         ticks++
         if (ticks % 15 != 0) return
         getSelectedMatcher(world, pos, blockState).tick(world, pos, blockState)
