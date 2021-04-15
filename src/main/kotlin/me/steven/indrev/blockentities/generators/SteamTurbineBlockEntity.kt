@@ -24,11 +24,11 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         this.fluidComponent = SteamTurbineFluidComponent()
     }
 
-    var insertedLastTick: Int = 0
+    var insertedLastTick: Double = 0.0
 
     override fun machineTick() {
         super.machineTick()
-        insertedLastTick = 0
+        insertedLastTick = 0.0
     }
 
     override fun getGenerationRatio(): Double {
@@ -63,7 +63,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
                 else -> volume
             }
             if (simulation.isAction)
-                insertedLastTick += volume.amount().asInt(1000) - leftover.amount().asInt(1000)
+                insertedLastTick += volume.amount().asInexactDouble() - leftover.amount().asInexactDouble()
             return leftover
         }
     }
