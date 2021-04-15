@@ -9,6 +9,7 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
+import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -130,10 +131,26 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
+
             if (state.isOf(newState.block))
                 Network.handleUpdate(type, world as ServerWorld, pos)
-            else
-                Network.handleBreak(type, world as ServerWorld, pos)
+            else {
+                (type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?)?.let { networkState ->
+                    Direction.values().forEach { dir ->
+                        val data = networkState.removeEndpointData(pos, dir)
+                        val (x, y, z) = pos.toVec3d()
+                        when (data?.type) {
+                            EndpointData.Type.OUTPUT ->
+                                ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
+                            EndpointData.Type.RETRIEVER ->
+                                ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
+                            else -> {}
+                        }
+                    }
+                }
+
+                Network.handleBreak(type, world, pos)
+            }
             (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
         }
     }
