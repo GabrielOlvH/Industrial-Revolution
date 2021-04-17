@@ -70,8 +70,8 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
             }
         }
 
-        map[BlockPos(0, -radius, radius)] = BlockStateFilter(ROTOR_DOWN)
-        map[BlockPos(0, radius, radius)] = BlockStateFilter(ROTOR_UP)
+        map[BlockPos(0, -radius, radius)] = BlockStateFilter(ROTOR_UP)
+        map[BlockPos(0, radius, radius)] = BlockStateFilter(ROTOR_DOWN)
 
         map[BlockPos(-radius + 1, 0, 0)] = BlockStateFilter(STEAM_INPUT_VALVE_NORTH)
         map[BlockPos(radius - 1, 0, 0)] = BlockStateFilter(STEAM_INPUT_VALVE_NORTH)
@@ -86,9 +86,9 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
         for (i in -radius + 1 until radius)
             map[BlockPos(0, i, radius)] = BlockStateFilter(Blocks.ACACIA_FENCE.defaultState)
 
-        map[BlockPos(0, -1, 0)] = BlockStateFilter(ENERGY_OUTPUT_NORTH)
+        map[BlockPos(0, 1, 0)] = BlockStateFilter(ENERGY_OUTPUT_NORTH)
 
-        map.remove(BlockPos.ORIGIN)
+        map.remove(BlockPos(0, 0, 0))
         return map
     }
 }

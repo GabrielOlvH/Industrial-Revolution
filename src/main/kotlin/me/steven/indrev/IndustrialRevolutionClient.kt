@@ -58,7 +58,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
         arrayOf(
             IRFluidRegistry.COOLANT_STILL,
             IRFluidRegistry.SULFURIC_ACID_STILL,
-            IRFluidRegistry.TOXIC_MUD_STILL
+            IRFluidRegistry.TOXIC_MUD_STILL,
+            IRFluidRegistry.STEAM_STILL
         ).forEach { it.registerRender(FluidType.WATER) }
         arrayOf(
             IRFluidRegistry.MOLTEN_NETHERITE_STILL,
@@ -100,6 +101,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.CABINET_HANDLER,
             IndustrialRevolution.DRILL_HANDLER,
             IndustrialRevolution.LASER_HANDLER,
+            IndustrialRevolution.STEAM_TURBINE_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }

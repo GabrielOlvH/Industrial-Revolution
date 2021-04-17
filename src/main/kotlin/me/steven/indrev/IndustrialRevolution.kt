@@ -2,11 +2,6 @@ package me.steven.indrev
 
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.RancherBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
-import me.steven.indrev.blocks.SolarReflectorBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -180,6 +175,7 @@ object IndustrialRevolution : ModInitializer {
     val FARMER_HANDLER = FarmerScreenHandler.SCREEN_ID.registerScreenHandler(::FarmerScreenHandler)
     val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
     val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)
+    val STEAM_TURBINE_HANDLER = SteamTurbineScreenHandler.SCREEN_ID.registerScreenHandler(::SteamTurbineScreenHandler)
 
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)

@@ -22,7 +22,7 @@ abstract class StructureDefinition {
             return emptySet()
         val rotation =
             AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
-        return arrayOf(*appendices, this).map { it.holder.variants }.flatMap { it.entries }.filter { (_, structure) ->
+        return arrayOf(*appendices, this).map { it.holder.variants }.flatMap { it.entries }.filter { (id, structure) ->
             structure.all { (offset, statePredicate) ->
                 val statePos = pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180))
                 if (currentChunk.pos.startX < statePos.x || currentChunk.pos.endX > statePos.x || currentChunk.pos.startZ < statePos.z || currentChunk.pos.endZ > statePos.z) {

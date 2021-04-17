@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.api.machines.Tier
@@ -13,7 +14,10 @@ import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -24,21 +28,31 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         this.fluidComponent = SteamTurbineFluidComponent()
     }
 
-    var insertedLastTick: Double = 0.0
+    var maxSpeed: Double = 0.0
+    var speed: Double = 0.0
+
+    @Environment(EnvType.CLIENT)
+    var generating: Double = 0.0
 
     override fun machineTick() {
         super.machineTick()
-        insertedLastTick = 0.0
+        speed += (ACCELERATION * if (maxSpeed < speed) -0.05 else 1.0)
+        speed = speed.coerceIn(0.0, maxSpeed)
+        if (ticks % 10 == 0) maxSpeed = 0.0
     }
 
     override fun getGenerationRatio(): Double {
         val radius = getRadius()
-        return ((insertedLastTick * insertedLastTick) / (radius / 2)) * config.ratio
+        return ((speed * speed) / (radius / 2.0)) * config.ratio
     }
 
-    override fun shouldGenerate(): Boolean = true
+    override fun shouldGenerate(): Boolean {
+        fluidComponent!![0] = FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+        return true
+    }
 
     private fun getRadius(): Int {
+        return 7
         val matcher = multiblockComponent!!.getSelectedMatcher(world!!, pos, cachedState)
         return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
     }
@@ -50,12 +64,12 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         }
 
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
-            return fluid?.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true && super.isFluidValidForTank(tank, fluid)
+            return fluid?.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true
         }
 
         override fun insertFluid(tank: Int, volume: FluidVolume, simulation: Simulation): FluidVolume {
             //divided by 4 because it's the limit of the input valves
-            val limit = getMaxAmount_F(tank).max(getMaxAmount_F(tank).div(4))
+            val limit = getMaxAmount_F(tank).div(4)
             val result = FluidVolumeUtil.computeInsertion(getInvFluid(tank), limit, volume)
             val leftover = when {
                 result.result === volume -> volume
@@ -63,7 +77,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
                 else -> volume
             }
             if (simulation.isAction)
-                insertedLastTick += volume.amount().asInexactDouble() - leftover.amount().asInexactDouble()
+                maxSpeed += (volume.amount().asInexactDouble() - leftover.amount().asInexactDouble())
             return leftover
         }
     }
@@ -87,7 +101,35 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         }
     }
 
+    override fun toTag(tag: CompoundTag?): CompoundTag {
+        tag?.putDouble("Speed", speed)
+        tag?.putDouble("MaxSpeed", maxSpeed)
+        return super.toTag(tag)
+    }
+
+    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+        speed = tag?.getDouble("Speed") ?: speed
+        maxSpeed = tag?.getDouble("MaxSpeed") ?: maxSpeed
+        super.fromTag(state, tag)
+    }
+
+    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+        tag?.putDouble("Speed", speed)
+        tag?.putDouble("MaxSpeed", maxSpeed)
+        tag?.putDouble("Generating", getGenerationRatio())
+        return super.toClientTag(tag)
+    }
+
+    override fun fromClientTag(tag: CompoundTag?) {
+        speed = tag?.getDouble("Speed") ?: speed
+        maxSpeed = tag?.getDouble("MaxSpeed") ?: maxSpeed
+        generating = tag?.getDouble("Generating") ?: generating
+        super.fromClientTag(tag)
+    }
+
     companion object {
         val INPUT_VALVES_MAPPER = Long2LongOpenHashMap()
+
+        const val ACCELERATION: Double = 0.01
     }
 }
