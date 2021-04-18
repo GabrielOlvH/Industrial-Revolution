@@ -78,7 +78,7 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
                 moduleProcessTime = 0
             }
             moduleMaxProcessTime in 1..moduleProcessTime -> {
-                inventory.inputSlots.forEach { slot -> inventory.setStack(slot, ItemStack.EMPTY) }
+                (3 until 15).forEach { slot -> inventory.setStack(slot, ItemStack.EMPTY) }
                 inventory.setStack(15, recipe!!.outputs[0].stack.copy())
 
                 moduleMaxProcessTime = 0
