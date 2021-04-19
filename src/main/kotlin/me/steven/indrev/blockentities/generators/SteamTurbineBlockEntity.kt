@@ -63,6 +63,8 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
     }
 
+    override fun supportsInsertion(): Boolean = false
+
     private inner class SteamTurbineFluidComponent : FluidComponent({ this }, FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
