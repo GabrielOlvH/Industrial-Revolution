@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import io.netty.buffer.Unpooled
-import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.utils.forEach
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry
@@ -45,7 +45,7 @@ class SolarReflectorBlock(settings: Settings) : Block(settings), BlockEntityProv
         }
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity? = SolarReflectorBlockEntity()
+    override fun createBlockEntity(world: BlockView?): BlockEntity? = HeliostatBlockEntity()
 
     private fun getYaw(origin: BlockPos, target: BlockPos): Float {
         val xOffset = target.x - origin.x.toDouble()

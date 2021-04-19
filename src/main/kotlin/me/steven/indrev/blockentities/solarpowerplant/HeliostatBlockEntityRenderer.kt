@@ -10,9 +10,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.client.util.math.Vector3f
 
-class SolarReflectorBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<SolarReflectorBlockEntity>(dispatcher) {
+class HeliostatBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<HeliostatBlockEntity>(dispatcher) {
     override fun render(
-        entity: SolarReflectorBlockEntity?,
+        entity: HeliostatBlockEntity?,
         tickDelta: Float,
         matrices: MatrixStack?,
         vertexConsumers: VertexConsumerProvider?,

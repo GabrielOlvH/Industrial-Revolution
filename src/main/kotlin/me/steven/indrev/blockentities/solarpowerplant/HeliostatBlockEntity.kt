@@ -6,7 +6,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 
-class SolarReflectorBlockEntity : BlockEntity(IRBlockRegistry.SOLAR_REFLECTOR_BLOCK_ENTITY), BlockEntityClientSerializable {
+class HeliostatBlockEntity : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY), BlockEntityClientSerializable {
     var pitch: Float = 0.0f
     var yaw: Float = 0.0f
 

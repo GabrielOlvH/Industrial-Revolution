@@ -14,7 +14,7 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRendere
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
-import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntityRenderer
+import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
@@ -128,7 +128,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
 
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_REFLECTOR_BLOCK_ENTITY, ::SolarReflectorBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, ::HeliostatBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
