@@ -6,6 +6,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.widgets.misc.WKnob
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
@@ -25,16 +26,25 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         setRootPanel(root)
         configure("block.indrev.steam_turbine_mk4", ctx, playerInventory, blockInventory)
 
-
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? SteamTurbineBlockEntity ?: return@run
 
-            root.add(WDynamicLabel { "Speed: " + String.format("%.2f", blockEntity.speed) }, 1, 1)
-            root.add(WDynamicLabel { "MaxSpeed: " + String.format("%.2f", blockEntity.maxSpeed) }, 1, 2)
-            root.add(WDynamicLabel { "Generating: " + String.format("%.2f", blockEntity.generating) }, 1, 3)
+            root.add(WDynamicLabel { "  Efficiency: " + String.format("%.2f", blockEntity.efficiency) }, 1, 1)
+            root.add(WDynamicLabel {
+                val a = blockEntity.consuming.whole.coerceAtLeast(1)
+                val inexact = blockEntity.consuming.asInexactDouble()
+                val prefix = if (inexact > a) ">" else if (inexact < a) "<" else ""
+                "  Consuming: $prefix$a"
+            }, 1, 2)
+            root.add(WDynamicLabel { "  Generating: " + String.format("%.2f", blockEntity.generating) }, 1, 3)
+
+
+            val wKnob = WKnob((blockEntity.efficiency.toFloat() * 300f) + 30f, pos)
+            root.add(wKnob, 7, 4)
+
+            wKnob.setSize(30, 30)
+            wKnob.setLocation(7 * 18, 3 * 18 + 9)
         }
-
-
         root.validate(this)
     }
 

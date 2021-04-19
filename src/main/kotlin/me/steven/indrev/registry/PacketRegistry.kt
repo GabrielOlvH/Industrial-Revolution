@@ -16,6 +16,7 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarReflectorBlockEntity
 import me.steven.indrev.blocks.SolarReflectorBlock
@@ -27,6 +28,7 @@ import me.steven.indrev.gui.screenhandlers.machines.RancherScreenHandler
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.misc.WKnob
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.item.ItemEndpointData
@@ -250,6 +252,19 @@ object PacketRegistry {
             }
         }
 
+        ServerPlayNetworking.registerGlobalReceiver(WKnob.UPDATE_EFFICIENCY_PACKET) { server, player, _, buf, _ ->
+            val pos = buf.readBlockPos()
+            val efficiency = buf.readFloat()
+            server.execute {
+                val world = player.world
+                if (world.isLoaded(pos)) {
+                    val blockEntity = world.getBlockEntity(pos) as? SteamTurbineBlockEntity ?: return@execute
+                    blockEntity.efficiency = efficiency.toDouble()
+                    blockEntity.markDirty()
+                    blockEntity.sync()
+                }
+            }
+        }
     }
 
     fun syncVeinData(playerEntity: ServerPlayerEntity) {

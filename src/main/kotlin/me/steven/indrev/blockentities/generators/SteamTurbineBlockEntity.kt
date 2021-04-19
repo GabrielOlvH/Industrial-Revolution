@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.generators
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
@@ -28,28 +29,31 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         this.fluidComponent = SteamTurbineFluidComponent()
     }
 
-    var maxSpeed: Double = 0.0
-    var speed: Double = 0.0
+    var efficiency = 1.0
 
+    //these values are used for the screen handler
     @Environment(EnvType.CLIENT)
     var generating: Double = 0.0
-
-    override fun machineTick() {
-        super.machineTick()
-        speed += (ACCELERATION * if (maxSpeed < speed) -0.05 else 1.0)
-        speed = speed.coerceIn(0.0, maxSpeed)
-        if (ticks % 10 == 0) maxSpeed = 0.0
-    }
+    @Environment(EnvType.CLIENT)
+    var consuming: FluidAmount = FluidAmount.ZERO
 
     override fun getGenerationRatio(): Double {
         val radius = getRadius()
-        return ((speed * speed) / (radius / 2.0)) * config.ratio
+        val eff  = efficiency * 70
+        return ((eff * eff) / (radius / 2.0)) * config.ratio
     }
 
     override fun shouldGenerate(): Boolean {
-        fluidComponent!![0] = FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+        val amount = getConsumptionRatio()
+        val result = fluidComponent!!.attemptExtraction(STEAM_FILTER, amount, Simulation.SIMULATE)
+        if (result.amount() != amount)
+            return false
+        fluidComponent!!.extract(STEAM_FLUID_KEY, amount)
         return true
     }
+
+    private fun getConsumptionRatio(): FluidAmount = FluidAmount.ofWhole((getRadius() * 10 * efficiency).toLong()).coerceAtLeast(
+        FluidAmount.of(1, 1000))
 
     private fun getRadius(): Int {
         return 7
@@ -76,8 +80,6 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
                 setInvFluid(tank, result.inTank, simulation) -> result.result
                 else -> volume
             }
-            if (simulation.isAction)
-                maxSpeed += (volume.amount().asInexactDouble() - leftover.amount().asInexactDouble())
             return leftover
         }
     }
@@ -102,34 +104,33 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
-        tag?.putDouble("Speed", speed)
-        tag?.putDouble("MaxSpeed", maxSpeed)
+        tag?.putDouble("Efficiency", efficiency)
         return super.toTag(tag)
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        speed = tag?.getDouble("Speed") ?: speed
-        maxSpeed = tag?.getDouble("MaxSpeed") ?: maxSpeed
+        efficiency = tag?.getDouble("Efficiency") ?: efficiency
         super.fromTag(state, tag)
     }
 
     override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        tag?.putDouble("Speed", speed)
-        tag?.putDouble("MaxSpeed", maxSpeed)
+        tag?.putDouble("Efficiency", efficiency)
         tag?.putDouble("Generating", getGenerationRatio())
+        tag?.put("Consuming", getConsumptionRatio().toNbt())
         return super.toClientTag(tag)
     }
 
     override fun fromClientTag(tag: CompoundTag?) {
-        speed = tag?.getDouble("Speed") ?: speed
-        maxSpeed = tag?.getDouble("MaxSpeed") ?: maxSpeed
+        efficiency = tag?.getDouble("Efficiency") ?: efficiency
         generating = tag?.getDouble("Generating") ?: generating
+        consuming = FluidAmount.fromNbt(tag?.getCompound("Consuming")) ?: consuming
         super.fromClientTag(tag)
     }
 
     companion object {
         val INPUT_VALVES_MAPPER = Long2LongOpenHashMap()
 
-        const val ACCELERATION: Double = 0.01
+        val STEAM_FLUID_KEY = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
+        val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }
     }
 }
