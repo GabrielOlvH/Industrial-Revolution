@@ -15,6 +15,7 @@ import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.MB
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -52,8 +53,9 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         return true
     }
 
-    private fun getConsumptionRatio(): FluidAmount = FluidAmount.ofWhole((getRadius() * 10 * efficiency).toLong()).coerceAtLeast(
-        FluidAmount.of(1, 1000))
+    private fun getConsumptionRatio(): FluidAmount {
+        return FluidAmount.ofWhole((getRadius() * 10 * efficiency).toLong()).coerceAtLeast(MB)
+    }
 
     private fun getRadius(): Int {
         return 7
@@ -130,7 +132,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     companion object {
         val INPUT_VALVES_MAPPER = Long2LongOpenHashMap()
 
-        val STEAM_FLUID_KEY = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
+        val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
         val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }
     }
 }
