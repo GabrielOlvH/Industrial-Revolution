@@ -20,7 +20,7 @@ class SolidInfuserBlockEntity(tier: Tier) :
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(2, 3) }
             output { slot = 4 }

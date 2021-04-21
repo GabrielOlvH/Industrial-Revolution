@@ -13,6 +13,7 @@ class TemperatureComponent(
     private val machineProvider: () -> MachineBlockEntity<*>?,
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
+    private val explosionLimit: Double,
     val propertyDelegate: () -> PropertyDelegateHolder = { machineProvider()!! }
 ) : PropertyDelegateHolder {
 
@@ -34,6 +35,7 @@ class TemperatureComponent(
     fun isFullEfficiency() = (cooling <= 0 || getCoolerStack() != null) && temperature.toInt() in optimalRange
 
     fun tick(shouldHeatUp: Boolean) {
+        getPropertyDelegate()[3] = explosionLimit.toInt()
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item

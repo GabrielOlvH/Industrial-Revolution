@@ -17,7 +17,7 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000, 10000.0)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }

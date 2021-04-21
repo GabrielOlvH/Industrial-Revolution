@@ -15,7 +15,7 @@ class CompressorBlockEntity(tier: Tier) :
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1500.0)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slot = 3 }

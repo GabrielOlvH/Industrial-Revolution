@@ -20,7 +20,7 @@ class SolarPowerPlantTowerBlockEntity
     BlockEntityClientSerializable, Tickable, PropertyDelegateHolder {
 
     var propertyDelegate = ArrayPropertyDelegate(3)
-    var temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, { this })
+    var temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, 2000.0, { this })
     var multiblockComponent = MultiBlockComponent({ id -> id.structure == "solar_power_plant" }) { _, _, _ -> SolarPowerPlantTowerStructureDefinition }
     var fluidComponent = FluidComponent(FluidAmount.ofWhole(16))
 

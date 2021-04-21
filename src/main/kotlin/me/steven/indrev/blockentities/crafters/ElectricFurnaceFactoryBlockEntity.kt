@@ -21,7 +21,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(6, 8, 10, 12, 14) }
             output { slots =intArrayOf(7, 9, 11, 13, 15) }
