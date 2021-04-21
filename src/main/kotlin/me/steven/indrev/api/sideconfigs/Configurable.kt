@@ -80,7 +80,7 @@ interface Configurable {
             val mode = configuration[direction]!!
             val widget = WMachineSideDisplay(side, direction, mode, world, pos)
             widget.setOnClick {
-                widget.mode = widget.mode.next(type.validModes)
+                widget.mode = widget.mode.next(getValidConfigurations(type))
                 configuration[direction] = widget.mode
                 val buf = PacketByteBuf(Unpooled.buffer())
                 buf.writeEnumConstant(type)

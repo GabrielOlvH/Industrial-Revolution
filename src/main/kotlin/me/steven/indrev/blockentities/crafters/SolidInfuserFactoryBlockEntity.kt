@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
@@ -60,6 +61,13 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
 
         }
         return super.getFirstSlot(inventory, direction, predicate)
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> TransferMode.values()
+            else -> super.getValidConfigurations(type)
+        }
     }
 
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
