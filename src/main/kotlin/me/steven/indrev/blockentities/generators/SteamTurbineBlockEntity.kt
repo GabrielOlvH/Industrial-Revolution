@@ -65,7 +65,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
     override fun supportsInsertion(): Boolean = false
 
-    private inner class SteamTurbineFluidComponent : FluidComponent({ this }, FluidAmount.ofWhole(1), 1) {
+    private inner class SteamTurbineFluidComponent : FluidComponent(FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
             return FluidAmount.ofWhole(getRadius() * 10L)
@@ -92,7 +92,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
             SteamTurbineStructureDefinition
-                .getInputValves(pos, blockState, getSelectedMatcher(world, pos, blockState))
+                .getInputValvePositions(pos, blockState, getSelectedMatcher(world, pos, blockState))
                 .forEach { valvePos ->
                     val valveBlockState = world.getBlockState(valvePos)
                     if (valveBlockState.isOf(IRBlockRegistry.STEAM_TURBINE_INPUT_VALVE))

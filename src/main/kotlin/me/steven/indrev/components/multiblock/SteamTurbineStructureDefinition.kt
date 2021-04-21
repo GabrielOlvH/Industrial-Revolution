@@ -38,7 +38,7 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
         .create("15x15x15")
         .build()
 
-    fun getInputValves(pos: BlockPos, state: BlockState, matcher: AbstractMultiblockMatcher): List<BlockPos> {
+    fun getInputValvePositions(pos: BlockPos, state: BlockState, matcher: AbstractMultiblockMatcher): List<BlockPos> {
         val rotation =
             AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
 

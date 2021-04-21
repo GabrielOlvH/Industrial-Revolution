@@ -10,22 +10,15 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.PropertyDelegate
 
 class TemperatureComponent(
-    private val machineProvider: () -> MachineBlockEntity<*>,
+    private val machineProvider: () -> MachineBlockEntity<*>?,
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
-    explosionLimit: Double
+    val propertyDelegate: () -> PropertyDelegateHolder = { machineProvider()!! }
 ) : PropertyDelegateHolder {
 
     var temperature: Double by Property(2, 12.0 + (getTemperatureModifier() * 10))
     var cooling = 0
     var coolingModifier = heatingSpeed
-    var explosionPower = 2f
-    var inputOverflow = false
-    val explosionLimit: Double = explosionLimit
-        get() {
-            propertyDelegate[3] = field.toInt()
-            return field
-        }
 
     fun fromTag(tag: CompoundTag?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -44,9 +37,8 @@ class TemperatureComponent(
         val machine = machineProvider()
         val coolerStack = getCoolerStack()
         val coolerItem = coolerStack?.item
-        val isHeatingUp = shouldHeatUp || (coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
-        val overflowModifier = 0//if (inputOverflow) 20 else 0
-        if (!isHeatingUp && !inputOverflow && temperature > 30.5)
+        val isHeatingUp = shouldHeatUp || (coolerItem == IRItemRegistry.HEAT_COIL && machine?.use(16.0) == true)
+        if (!isHeatingUp && temperature > 30.5)
             temperature -= coolingModifier
         else if (cooling <= 0 && (temperature > optimalRange.last - 10)) {
             cooling = 70
@@ -58,22 +50,17 @@ class TemperatureComponent(
             }
         } else if (cooling > 0 && temperature > 25) {
             cooling--
-            temperature -= coolingModifier - overflowModifier
+            temperature -= coolingModifier
         } else
-            temperature += heatingSpeed + overflowModifier
-        if (temperature > explosionLimit - 5) {
-            //machine.explode = true
-        }
-        inputOverflow = false
-        //machine.markForUpdate { floor(previous) != floor(temperature) }
+            temperature += heatingSpeed
     }
 
-    fun getCoolerStack(): ItemStack? = machineProvider().inventoryComponent?.inventory?.getStack(1)
+    fun getCoolerStack(): ItemStack? = machineProvider()?.inventoryComponent?.inventory?.getStack(1)
 
     private fun getTemperatureModifier(): Float {
         val machine = machineProvider()
-        return machine.world?.getBiome(machine.pos)?.getTemperature(machine.pos) ?: 0f
+        return machine?.world?.getBiome(machine.pos)?.getTemperature(machine.pos) ?: 0f
     }
 
-    override fun getPropertyDelegate(): PropertyDelegate = machineProvider().propertyDelegate
+    override fun getPropertyDelegate(): PropertyDelegate = this.propertyDelegate().propertyDelegate
 }

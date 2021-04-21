@@ -1,4 +1,4 @@
-package me.steven.indrev.blocks.machine.steamturbine
+package me.steven.indrev.blocks.machine.solarpowerplant
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
@@ -16,7 +16,7 @@ class SteamTurbineBlock(registry: MachineRegistry, settings: Settings)
     override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
         if (!state.isOf(this)) {
             val blockEntity = world.getBlockEntity(pos) as? SteamTurbineBlockEntity ?: return
-            SteamTurbineStructureDefinition.getInputValves(pos, state, blockEntity.multiblockComponent!!.getSelectedMatcher(world, pos, state)).forEach { valvePos ->
+            SteamTurbineStructureDefinition.getInputValvePositions(pos, state, blockEntity.multiblockComponent!!.getSelectedMatcher(world, pos, state)).forEach { valvePos ->
                 SteamTurbineBlockEntity.INPUT_VALVES_MAPPER.remove(valvePos.asLong())
             }
         }

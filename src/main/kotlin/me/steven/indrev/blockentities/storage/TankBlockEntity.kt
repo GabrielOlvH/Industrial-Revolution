@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.Tickable
 
 class TankBlockEntity : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY), Tickable {
-    val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
+    val fluidComponent = FluidComponent(FluidAmount.ofWhole(8))
 
     override fun tick() {
         if (world?.isClient == true) return

@@ -12,7 +12,7 @@ import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEnti
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
-import me.steven.indrev.blocks.machine.steamturbine.SteamTurbineBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SteamTurbineBlock
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel

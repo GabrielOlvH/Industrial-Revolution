@@ -1,0 +1,65 @@
+package me.steven.indrev.components.multiblock
+
+import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.registry.IRBlockRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
+import net.minecraft.block.HorizontalFacingBlock
+import net.minecraft.util.BlockRotation
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
+import kotlin.math.abs
+
+object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
+
+    private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK
+    private val RESISTANT_GLASS = Blocks.GLASS.defaultState
+    private val SMELTER = IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK.defaultState
+    private val FLUID_OUTPUT = IRBlockRegistry.SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK.defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
+
+    override val identifier: String = "solar_power_plant"
+    override val isOptional: Boolean = false
+    override val holder: StructureHolder = StructureHelper(this)
+        .from(createStructureMap())
+        .create("default")
+        .build()
+
+    fun getSmelterPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
+        val rotation =
+            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+
+        val radius = 3
+        val positions = hashSetOf<BlockPos>()
+        for (x in -radius..radius) {
+            for (z in -radius..radius) {
+                if ((abs(z) == radius) || (abs(x) == radius))
+                    positions.add(BlockPos(x, 0, z + radius))
+            }
+        }
+        return positions
+            .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
+    }
+
+    private fun createStructureMap(): Map<BlockPos, BlockStateFilter> {
+        val map = hashMapOf<BlockPos, BlockStateFilter>()
+        val radius = 3
+        for (x in -radius..radius) {
+            for (y in -3..1) {
+                for (z in -radius..radius) {
+                    if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } >= 2 || y == -3 || y == 1)
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
+                    else if ((y == 0 && abs(z) == radius) || (y == 0 && abs(x) == radius))
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({state -> state == Blocks.IRON_BARS.defaultState || state == SMELTER }, SMELTER)
+                    else if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } != 0)
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({ state -> state == CASING || state == RESISTANT_GLASS }, RESISTANT_GLASS)
+                }
+            }
+        }
+        map[BlockPos(0, 1, 0)] = BlockStateFilter(FLUID_OUTPUT)
+
+        map.remove(BlockPos.ORIGIN)
+
+        return map
+    }
+
+}

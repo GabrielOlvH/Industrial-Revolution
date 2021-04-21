@@ -154,6 +154,8 @@ object IRItemRegistry {
 
         MaterialHelper.register()
 
+        identifier("salt").item(SALT)
+
         identifier("sawdust").item(DEFAULT_ITEM())
 
         identifier("hammer").item(HAMMER)
@@ -316,6 +318,8 @@ object IRItemRegistry {
     val ENERGY_READER = IREnergyReaderItem(itemSettings())
 
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
+
+    val SALT = DEFAULT_ITEM()
     
     val STONE_DRILL_HEAD = Item(itemSettings().maxDamage(256))
     val IRON_DRILL_HEAD = Item(itemSettings().maxDamage(1024))

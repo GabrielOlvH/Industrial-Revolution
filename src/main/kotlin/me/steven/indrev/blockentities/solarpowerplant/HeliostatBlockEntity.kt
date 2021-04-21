@@ -5,10 +5,15 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.Tickable
 
-class HeliostatBlockEntity : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY), BlockEntityClientSerializable {
+class HeliostatBlockEntity : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable {
     var pitch: Float = 0.0f
     var yaw: Float = 0.0f
+
+    override fun tick() {
+
+    }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
         tag?.putFloat("pitch", pitch)

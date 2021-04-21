@@ -22,7 +22,7 @@ import net.minecraft.util.math.Direction
 class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY) {
 
     init {
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
     }
 
     override val maxInput: Double = config.maxInput

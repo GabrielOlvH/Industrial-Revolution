@@ -7,6 +7,8 @@ import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.SolarReflectorBlock
@@ -15,7 +17,10 @@ import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
-import me.steven.indrev.blocks.machine.steamturbine.SteamTurbinePartBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantFluidOutputBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantSmelterBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantTowerBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SteamTurbinePartBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -96,6 +101,19 @@ object IRBlockRegistry {
         identifier("steam_turbine_rotor").block(STEAM_TURBINE_ROTOR_BLOCK).item(STEAM_TURBINE_ROTOR_BLOCK_ITEM)
         identifier("steam_turbine_pressure_valve").block(STEAM_TURBINE_PRESSURE_VALVE_BLOCK).item(STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM)
 
+        identifier("solar_power_plant_tower")
+            .block(SOLAR_POWER_PLANT_TOWER_BLOCK)
+            .item(SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY)
+
+        identifier("solar_power_plant_smelter")
+            .block(SOLAR_POWER_PLANT_SMELTER_BLOCK)
+            .item(SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY)
+
+        identifier("solar_power_plant_fluid_output")
+            .block(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK)
+            .item(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -202,4 +220,15 @@ object IRBlockRegistry {
 
     val STEAM_TURBINE_PRESSURE_VALVE_BLOCK = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_PRESSURE_VALVE_BLOCK, itemSettings())
+
+    val SOLAR_POWER_PLANT_TOWER_BLOCK = SolarPowerPlantTowerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_TOWER_BLOCK, itemSettings())
+    val SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarPowerPlantTowerBlockEntity() }, SOLAR_POWER_PLANT_TOWER_BLOCK).build(null)
+
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK = SolarPowerPlantSmelterBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_SMELTER_BLOCK, itemSettings())
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarPowerPlantSmelterBlockEntity() }, SOLAR_POWER_PLANT_SMELTER_BLOCK).build(null)
+
+    val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK = SolarPowerPlantFluidOutputBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK, itemSettings())
 }

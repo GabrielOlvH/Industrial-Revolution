@@ -16,7 +16,7 @@ class ElectricFurnaceBlockEntity(tier: Tier) :
     override val availableUpgrades: Array<Upgrade> = Upgrade.FURNACE
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700, 2000.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 1300..1700)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slot = 3 }

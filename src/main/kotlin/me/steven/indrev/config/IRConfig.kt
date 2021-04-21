@@ -198,6 +198,8 @@ class Machines {
 
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
 
+    val solarPowerPlantTower: MachineConfig = MachineConfig(4.0, -1.0, 20000.0, Tier.MK4.io)
+
     val lazuliFluxContainerMk1: LFCConfig = LFCConfig(10000.0, 128.0, 128.0)
 
     val lazuliFluxContainerMk2: LFCConfig = LFCConfig(100000.0, 512.0, 512.0)

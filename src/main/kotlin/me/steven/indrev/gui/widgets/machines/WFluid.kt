@@ -12,7 +12,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 
-class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
+open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     init {
         this.setSize(16, 64)
     }

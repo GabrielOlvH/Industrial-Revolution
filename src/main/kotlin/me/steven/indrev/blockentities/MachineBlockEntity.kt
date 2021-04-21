@@ -46,20 +46,9 @@ import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
-import net.minecraft.world.explosion.Explosion
-import org.apache.logging.log4j.LogManager
-import kotlin.collections.MutableMap
-import kotlin.collections.addAll
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.contains
-import kotlin.collections.firstOrNull
-import kotlin.collections.forEach
-import kotlin.collections.isNotEmpty
-import kotlin.collections.map
-import kotlin.collections.mutableSetOf
 import kotlin.collections.set
-import kotlin.collections.toIntArray
 import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
@@ -68,7 +57,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
-    var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0
@@ -123,18 +111,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             IREnergyMovement.spreadNeighbors(this, pos)
-            if (explode) {
-                val power = temperatureComponent!!.explosionPower
-                world?.createExplosion(
-                    null,
-                    pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
-                    power,
-                    false,
-                    Explosion.DestructionType.DESTROY)
-                LogManager.getLogger("Industrial Revolution")
-                    .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
-                return
-            }
             val inventory = inventoryComponent?.inventory
             if (inventoryComponent != null && inventory!!.size() > 0 && this !is LazuliFluxContainerBlockEntity) {
                 val stack = inventory.getStack(0)

@@ -9,7 +9,7 @@ class SolarGeneratorBlockEntity(tier: Tier) :
     GeneratorBlockEntity(tier, MachineRegistry.SOLAR_GENERATOR_REGISTRY) {
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 500..700, 1000.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.1, 500..700)
         this.inventoryComponent = inventory(this) {}
 
     }

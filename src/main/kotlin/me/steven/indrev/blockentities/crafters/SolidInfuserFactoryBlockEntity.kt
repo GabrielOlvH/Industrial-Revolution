@@ -24,7 +24,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19) }
             output { slots = intArrayOf(8, 11, 14, 17, 20) }

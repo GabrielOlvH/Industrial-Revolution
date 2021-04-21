@@ -14,7 +14,7 @@ class SawmillBlockEntity(tier: Tier) : CraftingMachineBlockEntity<SawmillRecipe>
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slots = intArrayOf(3, 4, 5, 6) }

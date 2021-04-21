@@ -17,11 +17,11 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000, 10000.0)
+        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(4))
+        this.fluidComponent = FluidComponent(FluidAmount.ofWhole(4))
 
     }
     private var burnTime: Int by Property(4, 0)
