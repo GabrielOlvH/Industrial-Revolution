@@ -6,6 +6,7 @@ import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
@@ -17,10 +18,7 @@ import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantFluidOutputBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantSmelterBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantTowerBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SteamTurbinePartBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.*
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -114,6 +112,11 @@ object IRBlockRegistry {
         identifier("solar_power_plant_fluid_output")
             .block(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK)
             .item(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM)
+
+        identifier("boiler")
+            .block(BOILER_BLOCK)
+            .item(BOILER_BLOCK_ITEM)
+            .blockEntityType(BOILER_BLOCK_ENTITY)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
@@ -231,4 +234,9 @@ object IRBlockRegistry {
 
     val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK = SolarPowerPlantFluidOutputBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK, itemSettings())
+
+    val BOILER_BLOCK = BoilerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val BOILER_BLOCK_ITEM = BlockItem(BOILER_BLOCK, itemSettings())
+    val BOILER_BLOCK_ENTITY = BlockEntityType.Builder.create({ BoilerBlockEntity() }, BOILER_BLOCK).build(null)
+
 }

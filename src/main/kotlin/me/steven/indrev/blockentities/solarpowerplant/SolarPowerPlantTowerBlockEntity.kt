@@ -19,15 +19,14 @@ class SolarPowerPlantTowerBlockEntity
     : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY),
     BlockEntityClientSerializable, Tickable, PropertyDelegateHolder {
 
-    var propertyDelegate = ArrayPropertyDelegate(3)
-    var temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, 2000.0, { this })
-    var multiblockComponent = MultiBlockComponent({ id -> id.structure == "solar_power_plant" }) { _, _, _ -> SolarPowerPlantTowerStructureDefinition }
-    var fluidComponent = FluidComponent(FluidAmount.ofWhole(16))
+    val propertyDelegate = ArrayPropertyDelegate(3)
+    val temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, 2000.0, { this })
+    val multiblockComponent = MultiBlockComponent({ id -> id.structure == "solar_power_plant" }) { _, _, _ -> SolarPowerPlantTowerStructureDefinition }
+    val fluidComponent = FluidComponent(FluidAmount.ofWhole(16))
 
     override fun tick() {
         multiblockComponent.tick(world!!, pos, cachedState)
         if (multiblockComponent.isBuilt(world!!, pos, cachedState)) {
-            val matcher = multiblockComponent.getSelectedMatcher(world!!, pos, cachedState)
             SolarPowerPlantTowerStructureDefinition.getSmelterPositions(pos, cachedState).forEach { smelterPos ->
                 val blockEntity = world!!.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
                 blockEntity.tickStacks(this)

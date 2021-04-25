@@ -116,8 +116,9 @@ class StructureHelper(private val definition: StructureDefinition, private val s
     }
 
 
-    fun remove(pos: BlockPos) {
+    fun remove(pos: BlockPos): StructureHelper {
         structure.remove(pos)
+        return this
     }
 
     fun create(variant: String): StructureHelper {

@@ -14,6 +14,7 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRendere
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
+import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntityRenderer
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRenderer
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
@@ -105,7 +106,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.STEAM_TURBINE_HANDLER,
             IndustrialRevolution.SOLAR_POWER_PLANT_TOWER_HANDLER,
             IndustrialRevolution.SOLAR_POWER_PLANT_SMELTER_HANDLER,
-            IndustrialRevolution.DISTILLER_HANDLER
+            IndustrialRevolution.DISTILLER_HANDLER,
+            IndustrialRevolution.BOILER_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
@@ -133,6 +135,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, ::SolarPowerPlantTowerBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, ::HeliostatBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY, ::BoilerBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
