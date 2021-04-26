@@ -92,21 +92,14 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
     }
 
     private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
-        val yMax = 0.15 + (0.16 * (8 / inputVolume.amount().asInexactDouble()))
+        val yMax = 0.15 + (0.16 * (1 / inputVolume.amount().asInexactDouble()))
         val face =
-            listOf(FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, 0.31, yMax, 2.0, false, false))
-        inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
-        translate(0.3715, 0.3, 0.37)
-        multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(90f))
-        translate(-0.5, -0.3, -0.5)
-        inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
-        translate(0.37308, 0.3, 0.37)
-        multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(90f))
-        translate(-0.5, -0.3, -0.5)
-        inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
-        translate(0.37308, 0.3, 0.37)
-        multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(90f))
-        translate(-0.5, -0.3, -0.5)
+            listOf(
+                FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, yMax, 0.32, 2.0, false, false),
+                FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32+ (0.55-0.443), 0.556, yMax, 0.32+ (0.55-0.443), 2.0, true, false),
+                FluidRenderFace.createFlatFaceX(0.443, 0.15, 0.323, 0.443, yMax, 0.426, 2.0, false, false),
+                FluidRenderFace.createFlatFaceX(0.443+ (0.55-0.443), 0.15, 0.323, 0.443+ (0.55-0.443), yMax, 0.426, 2.0, true, false)
+            )
         inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
     }
 
