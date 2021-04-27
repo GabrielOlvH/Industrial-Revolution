@@ -84,7 +84,7 @@ object IRBlockRegistry {
             .item(HELIOSTAT_BLOCK_ITEM)
             .blockEntityType(HELIOSTAT_BLOCK_ENTITY)
 
-        identifier("steam_turbine_input_valve").block(STEAM_TURBINE_INPUT_VALVE).item(STEAM_TURBINE_INPUT_VALVE_ITEM)
+        identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
         identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
 
         EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
@@ -209,8 +209,8 @@ object IRBlockRegistry {
     val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
     val HELIOSTAT_BLOCK_ENTITY = BlockEntityType.Builder.create({ HeliostatBlockEntity() }, HELIOSTAT_BLOCK).build(null)
 
-    val STEAM_TURBINE_INPUT_VALVE = SteamTurbinePartBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
-    val STEAM_TURBINE_INPUT_VALVE_ITEM = BlockItem(STEAM_TURBINE_INPUT_VALVE, itemSettings())
+    val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val FLUID_VALVE_ITEM = BlockItem(FLUID_VALVE, itemSettings())
 
     val STEAM_TURBINE_ENERGY_OUTPUT = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val STEAM_TURBINE_ENERGY_OUTPUT_ITEM = BlockItem(STEAM_TURBINE_ENERGY_OUTPUT, itemSettings())

@@ -41,7 +41,7 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
 
                 val temp = stackTemperatures[slot].second
 
-                val volume = FluidKeys.get(IRFluidRegistry.MOLTEN_SALT_STILL).withAmount(FluidAmount.BUCKET)
+                val volume = FluidKeys.get(IRFluidRegistry.MOLTEN_SALT_STILL).withAmount(MOLTEN_SALT_AMOUNT)
                 val fluidComponent = blockEntity.fluidComponent
 
                 if (temp >= 800 && fluidComponent.attemptInsertion(volume, Simulation.SIMULATE).isEmpty) {
@@ -94,6 +94,9 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
     }
 
     companion object {
+
+        val MOLTEN_SALT_AMOUNT: FluidAmount = FluidAmount.of(1, 4)
+
         fun fromTag(tag: CompoundTag, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
             val listTag = tag.getList("Items", 10)
             for (i in listTag.indices) {

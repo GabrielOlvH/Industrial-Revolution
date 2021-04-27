@@ -88,17 +88,17 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         }
     }
 
-    private inner class SteamTurbineMultiblockComponent : MultiBlockComponent({ id -> id.structure == "steam_turbine"}, { _, _, _ -> SteamTurbineStructureDefinition }) {
+    private inner class SteamTurbineMultiblockComponent : MultiBlockComponent({ id -> id.structure == "steam_turbine" }, { _, _, _ -> SteamTurbineStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
             SteamTurbineStructureDefinition
                 .getInputValvePositions(pos, blockState, getSelectedMatcher(world, pos, blockState))
                 .forEach { valvePos ->
                     val valveBlockState = world.getBlockState(valvePos)
-                    if (valveBlockState.isOf(IRBlockRegistry.STEAM_TURBINE_INPUT_VALVE))
-                        INPUT_VALVES_MAPPER[valvePos.asLong()] = pos.asLong()
+                    if (valveBlockState.isOf(IRBlockRegistry.FLUID_VALVE))
+                        FLUID_VALVES_MAPPER[valvePos.asLong()] = pos.asLong()
                     else
-                        INPUT_VALVES_MAPPER.remove(valvePos.asLong())
+                        FLUID_VALVES_MAPPER.remove(valvePos.asLong())
                 }
 
             if (!isBuilt(world, pos, blockState)) {
@@ -132,7 +132,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     }
 
     companion object {
-        val INPUT_VALVES_MAPPER = Long2LongOpenHashMap()
+        val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
 
         val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
         val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }

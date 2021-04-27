@@ -1,8 +1,8 @@
 package me.steven.indrev.blocks.machine.solarpowerplant
 
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.blocks.misc.HorizontalFacingBlock
+import me.steven.indrev.components.multiblock.BoilerStructureDefinition
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import net.minecraft.block.BlockEntityProvider
@@ -19,6 +19,15 @@ import net.minecraft.world.World
 
 class BoilerBlock(settings: Settings) : HorizontalFacingBlock(settings), BlockEntityProvider {
 
+    override fun onStateReplaced(state: BlockState, world: World, pos: BlockPos, newState: BlockState, moved: Boolean) {
+        if (!state.isOf(this)) {
+            BoilerStructureDefinition.getFluidValvePositions(pos, state).forEach { valvePos ->
+                BoilerBlockEntity.FLUID_VALVES_MAPPER.remove(valvePos.asLong())
+            }
+        }
+        super.onStateReplaced(state, world, pos, newState, moved)
+    }
+
     override fun createBlockEntity(world: BlockView?): BlockEntity = BoilerBlockEntity()
 
     override fun onUse(
@@ -30,7 +39,7 @@ class BoilerBlock(settings: Settings) : HorizontalFacingBlock(settings), BlockEn
         hit: BlockHitResult?
     ): ActionResult {
         if (!world.isClient) {
-            val blockEntity = world.getBlockEntity(pos) as? SolarPowerPlantTowerBlockEntity ?: return ActionResult.PASS
+            val blockEntity = world.getBlockEntity(pos) as? BoilerBlockEntity ?: return ActionResult.PASS
             if (!blockEntity.multiblockComponent.isBuilt(world, pos!!, state)) {
                 player?.sendMessage(TranslatableText("text.multiblock.not_built"), true)
                 blockEntity.multiblockComponent.toggleRender(player!!.isSneaking)

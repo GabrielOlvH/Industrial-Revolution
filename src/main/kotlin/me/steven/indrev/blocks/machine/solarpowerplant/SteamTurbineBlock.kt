@@ -17,7 +17,7 @@ class SteamTurbineBlock(registry: MachineRegistry, settings: Settings)
         if (!state.isOf(this)) {
             val blockEntity = world.getBlockEntity(pos) as? SteamTurbineBlockEntity ?: return
             SteamTurbineStructureDefinition.getInputValvePositions(pos, state, blockEntity.multiblockComponent!!.getSelectedMatcher(world, pos, state)).forEach { valvePos ->
-                SteamTurbineBlockEntity.INPUT_VALVES_MAPPER.remove(valvePos.asLong())
+                SteamTurbineBlockEntity.FLUID_VALVES_MAPPER.remove(valvePos.asLong())
             }
         }
         super.onStateReplaced(state, world, pos, newState, moved)

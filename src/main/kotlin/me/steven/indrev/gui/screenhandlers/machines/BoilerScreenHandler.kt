@@ -2,17 +2,20 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.machines.WTemperature
+import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
-import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -25,22 +28,28 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.boiler", ctx, playerInventory, blockInventory)
 
-        val firstInput = WItemSlot.of(blockInventory, 2)
-        root.add(firstInput, 3.7, 2.2)
+        root.add(WText(TranslatableText("block.indrev.boiler"), HorizontalAlignment.CENTER, 0x404040), 5, 0)
 
-        val fluid = WFluid(ctx, 0)
-        root.add(fluid, 2.5, 0.7)
+        ctx.run { world, pos ->
+            val blockEntity = world.getBlockEntity(pos) as? BoilerBlockEntity ?: return@run
+            root.add(WTemperature(blockEntity.temperatureComponent), 0, 2)
+        }
 
-        val processWidget = createProcessBar()
-        root.add(processWidget, 5.0, 2.2)
+        val leftoverSalt = WItemSlot.of(blockInventory, 0)
+        leftoverSalt.isInsertingAllowed = false
+        root.add(leftoverSalt, 3.7, 2.2)
 
-        val outputStack = WItemSlot.of(blockInventory, 3)
-        root.add(outputStack, 6.4, 2.2)
+        val moltenSaltWidget = WFluid(ctx, 0)
+        root.add(moltenSaltWidget, 2.5, 0.7)
 
-        val outputFluid = WFluid(ctx, 1)
-        root.add(outputFluid, 7.7, 0.7)
+        val waterWidget = WFluid(ctx, 1)
+        root.add(waterWidget, 4.0, 0.7)
+
+        val steamWidget = WFluid(ctx, 2)
+        root.add(steamWidget, 7.7, 0.7)
+
+        root.add(createPlayerInventoryPanel(), 0, 5)
 
         root.validate(this)
     }

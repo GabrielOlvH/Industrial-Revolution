@@ -19,7 +19,7 @@ class SolarPowerPlantTowerBlockEntity
     : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY),
     BlockEntityClientSerializable, Tickable, PropertyDelegateHolder {
 
-    val propertyDelegate = ArrayPropertyDelegate(3)
+    val propertyDelegate = ArrayPropertyDelegate(4)
     val temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, 2000.0, { this })
     val multiblockComponent = MultiBlockComponent({ id -> id.structure == "solar_power_plant" }) { _, _, _ -> SolarPowerPlantTowerStructureDefinition }
     val fluidComponent = FluidComponent(FluidAmount.ofWhole(16))

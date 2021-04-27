@@ -16,7 +16,7 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
     private val ROTOR_UP = IRBlockRegistry.STEAM_TURBINE_ROTOR_BLOCK.defaultState.with(VerticalFacingBlock.FACING, Direction.UP)
     private val ROTOR_DOWN = IRBlockRegistry.STEAM_TURBINE_ROTOR_BLOCK.defaultState.with(VerticalFacingBlock.FACING, Direction.DOWN)
     private val PRESSURE_VALVE_SOUTH = IRBlockRegistry.STEAM_TURBINE_PRESSURE_VALVE_BLOCK.defaultState.with(HorizontalFacingBlock.FACING, Direction.SOUTH)
-    private val STEAM_INPUT_VALVE_NORTH = IRBlockRegistry.STEAM_TURBINE_INPUT_VALVE.defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
+    private val STEAM_INPUT_VALVE_NORTH = IRBlockRegistry.FLUID_VALVE.defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
     private val ENERGY_OUTPUT_NORTH = IRBlockRegistry.STEAM_TURBINE_ENERGY_OUTPUT.defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
     private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK
     private val RESISTANT_GLASS = Blocks.GLASS.defaultState
