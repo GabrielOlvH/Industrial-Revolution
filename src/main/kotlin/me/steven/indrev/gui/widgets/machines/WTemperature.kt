@@ -26,7 +26,7 @@ class WTemperature(private val temperatureComponent: TemperatureComponent) : WBa
                 TranslatableText("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)
         }
         information?.add(TranslatableText("gui.widget.temperature").formatted(Formatting.BLUE))
-        information?.add(LiteralText("$temperature / $maxTemperature ºC"))
+        information?.add(LiteralText("$temperature / $maxTemperature °C"))
         information?.add(info)
     }
 
