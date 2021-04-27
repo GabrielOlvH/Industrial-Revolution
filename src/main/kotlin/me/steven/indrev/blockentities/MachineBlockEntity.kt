@@ -21,6 +21,8 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
@@ -53,7 +55,7 @@ import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
     : IRSyncableBlockEntity(registry.blockEntityType(tier)), PropertyDelegateHolder, InventoryProvider, Tickable, EnergyIo,
-    Configurable {
+    Configurable, ComponentProvider {
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
@@ -218,6 +220,17 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     override fun isFixed(type: ConfigurationType): Boolean = false
+
+    override fun <T> get(key: ComponentKey<T>): Any? {
+        return when (key) {
+            ComponentKey.FLUID -> fluidComponent
+            ComponentKey.ITEM -> inventoryComponent
+            ComponentKey.TEMPERATURE -> temperatureComponent
+            ComponentKey.MULTIBLOCK -> multiblockComponent
+            ComponentKey.PROPERTY_HOLDER -> this
+            else -> null
+        }
+    }
 
     open fun getFluidTransferRate(): FluidAmount = when (tier) {
         Tier.MK1 -> FluidAmount.BOTTLE

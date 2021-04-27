@@ -4,7 +4,8 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.netty.buffer.Unpooled
-import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
@@ -21,8 +22,8 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
         ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity<*>) {
-                val fluid = blockEntity.fluidComponent ?: return@run
+            if (blockEntity is ComponentProvider) {
+                val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
                 val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
                 val maxEnergy = fluid.limit.asInexactDouble() * 1000
                 if (energy > 0) {
@@ -31,7 +32,7 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
                         val offset = 2.0
-                        blockEntity.fluidComponent!!.tanks[tank].renderGuiRect(
+                        fluid.tanks[tank].renderGuiRect(
                             x + offset,
                             y.toDouble() + height - barSize + offset,
                             x.toDouble() + width - offset,
@@ -46,8 +47,8 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
     override fun addTooltip(information: TooltipBuilder?) {
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is MachineBlockEntity<*>) {
-                val fluid = blockEntity.fluidComponent ?: return@run
+            if (blockEntity is ComponentProvider) {
+                val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
                 val tank = fluid.tanks[tank]
                 val energy = tank.amount_F.asInt(1000)
                 val maxEnergy = fluid.limit.asInt(1000)
