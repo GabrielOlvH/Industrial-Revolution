@@ -150,8 +150,8 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 }
 
                 Network.handleBreak(type, world, pos)
+                (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
             }
-            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
         }
     }
 
