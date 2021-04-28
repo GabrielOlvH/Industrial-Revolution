@@ -21,7 +21,7 @@ class SmelterBlockEntity(tier: Tier) :
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
-        this.fluidComponent = FluidComponent(FluidAmount.ofWhole(8))
+        this.fluidComponent = FluidComponent(this, FluidAmount.ofWhole(8))
     }
 
     override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE

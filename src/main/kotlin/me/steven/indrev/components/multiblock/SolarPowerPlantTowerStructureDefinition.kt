@@ -4,7 +4,7 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
-import net.minecraft.block.HorizontalFacingBlock
+import net.minecraft.block.FacingBlock
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -15,7 +15,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
     private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK
     private val RESISTANT_GLASS = Blocks.GLASS.defaultState
     private val SMELTER = IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK.defaultState
-    private val FLUID_OUTPUT = IRBlockRegistry.SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK.defaultState.with(HorizontalFacingBlock.FACING, Direction.NORTH)
+    private val FLUID_OUTPUT = IRBlockRegistry.FLUID_VALVE.defaultState.with(FacingBlock.FACING, Direction.NORTH)
 
     override val identifier: String = "solar_power_plant"
     override val isOptional: Boolean = false

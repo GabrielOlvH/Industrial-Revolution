@@ -18,7 +18,10 @@ import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.*
+import me.steven.indrev.blocks.machine.solarpowerplant.BoilerBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.FluidValveBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantSmelterBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantTowerBlock
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -108,10 +111,6 @@ object IRBlockRegistry {
             .block(SOLAR_POWER_PLANT_SMELTER_BLOCK)
             .item(SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM)
             .blockEntityType(SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY)
-
-        identifier("solar_power_plant_fluid_output")
-            .block(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK)
-            .item(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM)
 
         identifier("boiler")
             .block(BOILER_BLOCK)
@@ -231,9 +230,6 @@ object IRBlockRegistry {
     val SOLAR_POWER_PLANT_SMELTER_BLOCK = SolarPowerPlantSmelterBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_SMELTER_BLOCK, itemSettings())
     val SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarPowerPlantSmelterBlockEntity() }, SOLAR_POWER_PLANT_SMELTER_BLOCK).build(null)
-
-    val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK = SolarPowerPlantFluidOutputBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
-    val SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_FLUID_OUTPUT_BLOCK, itemSettings())
 
     val BOILER_BLOCK = BoilerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val BOILER_BLOCK_ITEM = BlockItem(BOILER_BLOCK, itemSettings())

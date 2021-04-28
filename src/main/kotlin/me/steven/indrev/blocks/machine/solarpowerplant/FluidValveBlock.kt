@@ -24,7 +24,7 @@ class FluidValveBlock(settings: Settings) : FacingBlock(settings), AttributeProv
     }
 
     override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
-        if (to.attribute != FluidAttributes.INSERTABLE && to.attribute != FluidAttributes.GROUPED_INV) {
+        if (to.attribute != FluidAttributes.INSERTABLE && to.attribute != FluidAttributes.EXTRACTABLE && to.attribute != FluidAttributes.GROUPED_INV) {
             to.offer(EmptyGroupedFluidInv.INSTANCE)
         } else if (SteamTurbineBlockEntity.FLUID_VALVES_MAPPER.containsKey(pos.asLong())) {
             val turbinePos = BlockPos.fromLong(SteamTurbineBlockEntity.FLUID_VALVES_MAPPER[pos.asLong()])
@@ -33,7 +33,10 @@ class FluidValveBlock(settings: Settings) : FacingBlock(settings), AttributeProv
         } else if (BoilerBlockEntity.FLUID_VALVES_MAPPER.containsKey(pos.asLong())) {
             val boilerPos = BlockPos.fromLong(BoilerBlockEntity.FLUID_VALVES_MAPPER[pos.asLong()])
             val blockEntity = world.getBlockEntity(boilerPos) as? BoilerBlockEntity
-            to.offer(blockEntity?.fluidComponent ?: EmptyGroupedFluidInv.INSTANCE)
+            if (to.attribute == FluidAttributes.EXTRACTABLE)
+                to.offer(blockEntity?.fluidComponent?.getTank(2))
+            else
+                to.offer(blockEntity?.fluidComponent ?: EmptyGroupedFluidInv.INSTANCE)
         }
     }
 

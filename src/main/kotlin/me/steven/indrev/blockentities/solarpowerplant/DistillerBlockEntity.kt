@@ -18,7 +18,7 @@ class DistillerBlockEntity : CraftingMachineBlockEntity<DistillerRecipe>(Tier.MK
 
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.01, 70..120, 200.0)
-        this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent(this, FluidAmount.BUCKET)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
         }

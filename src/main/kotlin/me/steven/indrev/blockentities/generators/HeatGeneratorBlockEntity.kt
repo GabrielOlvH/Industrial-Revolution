@@ -21,7 +21,7 @@ class HeatGeneratorBlockEntity(tier: Tier) : GeneratorBlockEntity(tier, MachineR
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
-        this.fluidComponent = FluidComponent(FluidAmount.ofWhole(4))
+        this.fluidComponent = FluidComponent(this, FluidAmount.ofWhole(4))
 
     }
     private var burnTime: Int by Property(4, 0)

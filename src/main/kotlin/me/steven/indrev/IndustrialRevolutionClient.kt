@@ -14,9 +14,7 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRendere
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
-import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntityRenderer
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRenderer
-import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
@@ -133,9 +131,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, ::SolarPowerPlantTowerBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, ::MultiblockBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, ::HeliostatBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY, ::BoilerBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY, ::MultiblockBlockEntityRenderer)
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())

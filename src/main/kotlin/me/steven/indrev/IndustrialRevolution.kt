@@ -1,7 +1,6 @@
 package me.steven.indrev
 
 import me.steven.indrev.api.IRServerPlayerEntityExtension
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -25,6 +24,7 @@ import me.steven.indrev.utils.registerScreenHandler
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
@@ -129,7 +129,7 @@ object IndustrialRevolution : ModInitializer {
 
                 val handler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
                 handler.ctx.run { world, pos ->
-                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
+                    val blockEntity = world.getBlockEntity(pos) as? BlockEntityClientSerializable ?: return@run
                     blockEntity.sync()
                 }
             }

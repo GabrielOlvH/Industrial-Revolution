@@ -20,7 +20,7 @@ class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfu
             input { slot = 2 }
             output { slot = 3 }
         }
-        this.fluidComponent = FluidInfuserFluidComponent { this }
+        this.fluidComponent = FluidInfuserFluidComponent(this)
     }
 
     override val type: IRRecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE

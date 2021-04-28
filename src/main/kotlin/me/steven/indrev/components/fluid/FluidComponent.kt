@@ -6,10 +6,21 @@ import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.collection.DefaultedList
 
-open class FluidComponent(val limit: FluidAmount, tankCount: Int = 1) : SimpleFixedFluidInv(tankCount, limit) {
+open class FluidComponent(val blockEntity: BlockEntity?, val limit: FluidAmount, tankCount: Int = 1) : SimpleFixedFluidInv(tankCount, limit) {
+
+    init {
+        addListener({ _, _, _, _ ->
+            blockEntity?.markDirty()
+            if (blockEntity?.world?.isClient == false)
+                    (blockEntity as? BlockEntityClientSerializable)?.sync()
+        }, {})
+    }
+
 
     val tanks: DefaultedList<FluidVolume>
         get() = tanks

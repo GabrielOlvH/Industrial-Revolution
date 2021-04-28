@@ -1,13 +1,13 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.BoilerStructureDefinition
@@ -38,7 +38,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class BoilerBlockEntity
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable, PropertyDelegateHolder {
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable, PropertyDelegateHolder, ComponentProvider {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
     val multiblockComponent = BoilerMultiblockComponent()
@@ -53,7 +53,7 @@ class BoilerBlockEntity
             val moltenSaltVolume = fluidComponent.getTank(0)
             val hasMoltenSalt = moltenSaltVolume.get().fluidKey.rawFluid!!.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL)
             temperatureComponent.tick(hasMoltenSalt)
-            solidifiedSalt += moltenSaltVolume.extract(MB).amount().asInexactDouble()
+            solidifiedSalt += moltenSaltVolume.extract(MB.div(3)).amount().asInexactDouble()
 
             if (solidifiedSalt >= MOLTEN_SALT_AMOUNT.asInexactDouble() * 2.5) {
                 solidifiedSalt = 0.0
@@ -66,7 +66,7 @@ class BoilerBlockEntity
             val steamVolume = fluidComponent.getTank(2)
             if (waterVolume.get().isEmpty || steamVolume.get().amount() >= MAX_CAPACITY) return
 
-            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(500L)
+            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(5500L)
             if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
             val amountToConvert = waterVolume.get().amount()
                 .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
@@ -90,6 +90,15 @@ class BoilerBlockEntity
 
     override fun setInvStackList(list: DefaultedList<ItemStack>) {
         this.inventory = list
+    }
+
+    override fun <T> get(key: ComponentKey<T>): Any? {
+        return when (key) {
+            ComponentKey.FLUID -> fluidComponent
+            ComponentKey.TEMPERATURE -> temperatureComponent
+            ComponentKey.MULTIBLOCK -> multiblockComponent
+            else -> null
+        }
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag) {
@@ -125,7 +134,7 @@ class BoilerBlockEntity
 
     override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
 
-    inner class BoilerMultiblockComponent :  MultiBlockComponent({ id -> id.structure == "boiler" }, { _, _, _ -> BoilerStructureDefinition }) {
+    inner class BoilerMultiblockComponent : MultiBlockComponent({ id -> id.structure == "boiler" }, { _, _, _ -> BoilerStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
             BoilerStructureDefinition.getFluidValvePositions(pos, blockState)
@@ -140,22 +149,15 @@ class BoilerBlockEntity
         }
     }
 
-    inner class BoilerFluidComponent : FluidComponent(MAX_CAPACITY, 3) {
+    inner class BoilerFluidComponent : FluidComponent(this, MAX_CAPACITY, 3) {
 
-        override fun insertFluid(tank: Int, volume: FluidVolume, simulation: Simulation?): FluidVolume {
-            return if (tank == 2) volume
-            else super.insertFluid(tank, volume, simulation)
-        }
-
-        override fun extractFluid(
-            tank: Int,
-            filter: FluidFilter?,
-            mergeWith: FluidVolume?,
-            maxAmount: FluidAmount?,
-            simulation: Simulation?
-        ): FluidVolume {
-            return if (tank != 2) FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
-            else super.extractFluid(tank, filter, mergeWith, maxAmount, simulation)
+        override fun isFluidValidForTank(tank: Int, fluid: FluidKey): Boolean {
+            return when (tank) {
+                0 -> fluid.rawFluid?.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL) == true
+                1 -> fluid == FluidKeys.WATER
+                2 -> fluid.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true
+                else -> false
+            }
         }
 
         override fun getInteractInventory(tank: Int): FluidTransferable {

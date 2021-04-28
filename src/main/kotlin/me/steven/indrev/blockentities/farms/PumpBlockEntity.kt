@@ -33,7 +33,7 @@ import kotlin.math.roundToInt
 class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY), BlockEntityClientSerializable {
 
     init {
-        this.fluidComponent = FluidComponent(FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent(this, FluidAmount.BUCKET)
     }
 
     override val maxInput: Double = config.maxInput

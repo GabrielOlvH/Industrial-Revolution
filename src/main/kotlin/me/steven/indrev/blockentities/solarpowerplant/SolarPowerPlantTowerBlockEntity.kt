@@ -2,6 +2,8 @@ package me.steven.indrev.blockentities.solarpowerplant
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
@@ -17,12 +19,12 @@ import net.minecraft.util.Tickable
 
 class SolarPowerPlantTowerBlockEntity
     : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY),
-    BlockEntityClientSerializable, Tickable, PropertyDelegateHolder {
+    BlockEntityClientSerializable, Tickable, PropertyDelegateHolder, ComponentProvider {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
     val temperatureComponent = TemperatureComponent({ null }, 0.1, 500..1000, 2000.0, { this })
     val multiblockComponent = MultiBlockComponent({ id -> id.structure == "solar_power_plant" }) { _, _, _ -> SolarPowerPlantTowerStructureDefinition }
-    val fluidComponent = FluidComponent(FluidAmount.ofWhole(16))
+    val fluidComponent = FluidComponent(this, FluidAmount.ofWhole(16))
 
     override fun tick() {
         multiblockComponent.tick(world!!, pos, cachedState)
@@ -31,6 +33,15 @@ class SolarPowerPlantTowerBlockEntity
                 val blockEntity = world!!.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
                 blockEntity.tickStacks(this)
             }
+        }
+    }
+
+    override fun <T> get(key: ComponentKey<T>): Any? {
+        return when (key) {
+            ComponentKey.FLUID -> fluidComponent
+            ComponentKey.TEMPERATURE -> temperatureComponent
+            ComponentKey.MULTIBLOCK -> multiblockComponent
+            else -> null
         }
     }
 
