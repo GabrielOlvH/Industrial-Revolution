@@ -6,6 +6,7 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.FacingBlock
@@ -37,6 +38,9 @@ class FluidValveBlock(settings: Settings) : FacingBlock(settings), AttributeProv
                 to.offer(blockEntity?.fluidComponent?.getTank(2))
             else
                 to.offer(blockEntity?.fluidComponent ?: EmptyGroupedFluidInv.INSTANCE)
+        } else if (to.attribute != FluidAttributes.INSERTABLE) {
+            val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
+            to.offer(aboveBlockEntity?.fluidComponent ?: EmptyGroupedFluidInv.INSTANCE)
         }
     }
 

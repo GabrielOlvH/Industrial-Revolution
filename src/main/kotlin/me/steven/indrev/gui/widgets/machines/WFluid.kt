@@ -25,7 +25,7 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
             if (blockEntity is ComponentProvider) {
                 val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
                 val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
-                val maxEnergy = fluid.limit.asInexactDouble() * 1000
+                val maxEnergy = fluid.getMaxAmount_F(tank).asInexactDouble() * 1000
                 if (energy > 0) {
                     var percent = energy.toFloat() / maxEnergy.toFloat()
                     percent = (percent * height).toInt() / height.toFloat()
@@ -51,7 +51,7 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
                 val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
                 val tank = fluid.tanks[tank]
                 val energy = tank.amount_F.asInt(1000)
-                val maxEnergy = fluid.limit.asInt(1000)
+                val maxEnergy = fluid.getMaxAmount_F(this.tank).asInt(1000)
                 information?.add(*tank.fluidKey.fullTooltip.toTypedArray())
                 information?.add(LiteralText("$energy / $maxEnergy mB"))
                 super.addTooltip(information)

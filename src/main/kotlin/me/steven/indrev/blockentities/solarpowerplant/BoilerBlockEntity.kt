@@ -43,7 +43,7 @@ class BoilerBlockEntity
     val propertyDelegate = ArrayPropertyDelegate(4)
     val multiblockComponent = BoilerMultiblockComponent()
     val fluidComponent = BoilerFluidComponent()
-    val temperatureComponent = TemperatureComponent({ null }, 0.1, 700..1000, 2000.0, { this })
+    val temperatureComponent = TemperatureComponent({ null }, 0.1, 700..1000, 1200.0, { this })
     var inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
     var solidifiedSalt = 0.0
 
@@ -64,9 +64,9 @@ class BoilerBlockEntity
 
             val waterVolume = fluidComponent.getTank(1)
             val steamVolume = fluidComponent.getTank(2)
-            if (waterVolume.get().isEmpty || steamVolume.get().amount() >= MAX_CAPACITY) return
+            if (waterVolume.get().isEmpty || steamVolume.get().amount() >= fluidComponent.getMaxAmount_F(2)) return
 
-            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(5500L)
+            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(500L)
             if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
             val amountToConvert = waterVolume.get().amount()
                 .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
@@ -151,6 +151,10 @@ class BoilerBlockEntity
 
     inner class BoilerFluidComponent : FluidComponent(this, MAX_CAPACITY, 3) {
 
+        override fun getMaxAmount_F(tank: Int): FluidAmount {
+            return if (tank == 0) FluidAmount.BUCKET else super.getMaxAmount_F(tank)
+        }
+
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey): Boolean {
             return when (tank) {
                 0 -> fluid.rawFluid?.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL) == true
@@ -167,7 +171,7 @@ class BoilerBlockEntity
 
     companion object {
         val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
-        val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(2)
+        val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(8)
         val MOLTEN_SALT_AMOUNT: FluidAmount = SolarPowerPlantSmelterBlockEntity.MOLTEN_SALT_AMOUNT
     }
 }

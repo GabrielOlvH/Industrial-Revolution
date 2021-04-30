@@ -54,7 +54,7 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
 
     override fun size(): Int = inventory.size
 
-    override fun getAvailableSlots(side: Direction?): IntArray = intArrayOf(0)
+    override fun getAvailableSlots(side: Direction?): IntArray = (0 until stackTemperatures.size).map { it }.toIntArray()
 
     override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = stack?.item == IRItemRegistry.SALT
 

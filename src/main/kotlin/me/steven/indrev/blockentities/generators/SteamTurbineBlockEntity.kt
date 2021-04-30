@@ -16,6 +16,7 @@ import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.MB
+import me.steven.indrev.utils.times
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -31,6 +32,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     }
 
     var efficiency = 1.0
+    var generatingTicks = 0
 
     //these values are used for the screen handler
     @Environment(EnvType.CLIENT)
@@ -40,25 +42,29 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
     override fun getGenerationRatio(): Double {
         val radius = getRadius()
-        val eff  = efficiency * 70
-        return ((eff * eff) / (radius / 2.0)) * config.ratio
+        val eff  = efficiency * radius * 10
+        return ((eff * eff) / (radius.toDouble() / 2.0)) * config.ratio * (generatingTicks / 15.0).coerceAtMost(1.0)
     }
 
     override fun shouldGenerate(): Boolean {
         val amount = getConsumptionRatio()
         val result = fluidComponent!!.attemptExtraction(STEAM_FILTER, amount, Simulation.SIMULATE)
-        if (result.amount() != amount)
-            return false
+        if (result.amount() != amount) {
+            generatingTicks--
+            return generatingTicks > 0
+        }
         fluidComponent!!.extract(STEAM_FLUID_KEY, amount)
+        generatingTicks += 5
+        generatingTicks = generatingTicks.coerceAtMost(20)
         return true
     }
 
     private fun getConsumptionRatio(): FluidAmount {
-        return FluidAmount.ofWhole((getRadius() * 10 * efficiency).toLong()).coerceAtLeast(MB)
+        return (FluidAmount.ofWhole(getRadius() * 1L) * FluidAmount.ofWhole((efficiency * 10000).toLong()).div(10000)).coerceAtLeast(MB)
     }
 
     private fun getRadius(): Int {
-        return 7
+        return 3
         val matcher = multiblockComponent!!.getSelectedMatcher(world!!, pos, cachedState)
         return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
     }
@@ -68,7 +74,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     private inner class SteamTurbineFluidComponent : FluidComponent(this, FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
-            return FluidAmount.ofWhole(getRadius() * 10L)
+            return FluidAmount.ofWhole(64L)
         }
 
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
@@ -77,7 +83,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
         override fun insertFluid(tank: Int, volume: FluidVolume, simulation: Simulation): FluidVolume {
             //divided by 4 because it's the limit of the input valves
-            val limit = getMaxAmount_F(tank).div(4)
+            val limit = getMaxAmount_F(tank)
             val result = FluidVolumeUtil.computeInsertion(getInvFluid(tank), limit, volume)
             val leftover = when {
                 result.result === volume -> volume
