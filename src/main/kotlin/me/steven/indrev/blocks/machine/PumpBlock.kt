@@ -1,6 +1,9 @@
 package me.steven.indrev.blocks.machine
 
+import alexiil.mc.lib.attributes.AttributeList
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.farms.PumpBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
@@ -11,6 +14,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
+import net.minecraft.world.World
 
 class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacingMachineBlock(
     registry,
@@ -30,6 +34,15 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
         Direction.WEST -> SHAPE_WEST
         Direction.EAST -> SHAPE_EAST
         else -> VoxelShapes.fullCube()
+    }
+
+    override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
+        val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
+        val fluidComponent = blockEntity.fluidComponent ?: return
+        val dir = to.searchDirection
+        val facing = blockState!![HORIZONTAL_FACING]
+        if ((facing == dir?.opposite && to.attribute == FluidAttributes.EXTRACTABLE) || (facing == dir&&to.attribute == FluidAttributes.GROUPED_INV))
+            to.offer(fluidComponent)
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
