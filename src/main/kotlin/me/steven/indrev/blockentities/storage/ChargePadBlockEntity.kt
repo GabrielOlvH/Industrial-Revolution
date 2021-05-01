@@ -23,7 +23,7 @@ class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(
         val inventory = inventoryComponent?.inventory ?: return
         val stack = inventory.getStack(0)
         val itemIo = energyOf(stack)
-        workingState = itemIo != null && EnergyMovement.move(this, itemIo, maxOutput) == maxOutput
+        EnergyMovement.move(this, itemIo ?: return, maxOutput)
     }
 
     override fun getEnergyCapacity(): Double = 1000000.0

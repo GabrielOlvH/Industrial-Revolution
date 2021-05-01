@@ -114,7 +114,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             IREnergyMovement.spreadNeighbors(this, pos)
             val inventory = inventoryComponent?.inventory
-            if (inventoryComponent != null && inventory!!.size() > 0 && this !is LazuliFluxContainerBlockEntity) {
+            if (inventoryComponent != null && inventory!!.size() > 1 && this !is LazuliFluxContainerBlockEntity) {
                 val stack = inventory.getStack(0)
                 val itemIo = energyOf(stack)
                 if (itemIo != null)

@@ -89,6 +89,17 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
 fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
     if (Screen.hasShiftDown()) {
         when (config) {
+            is HeatMachineConfig -> {
+                tooltip?.add(configText("maxInput", "lftick", config.maxInput))
+                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
+                tooltip?.add(configText("energyCost", "lftick", config.energyCost))
+                val speed = config.processSpeed * 100
+                if (speed >= 1000)
+                    tooltip?.add(configText("processSpeed", "seconds", config.processSpeed / 20))
+                else
+                    tooltip?.add(configText("processSpeed", "${speed.toInt()}%"))
+                tooltip?.add(configText("temperatureBoost", "${config.processTemperatureBoost * config.processSpeed * 100}%"))
+            }
             is BasicMachineConfig -> {
                 tooltip?.add(configText("maxInput", "lftick", config.maxInput))
                 tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
@@ -99,23 +110,12 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
                 else
                     tooltip?.add(configText("processSpeed", "${speed.toInt()}%"))
             }
-            is HeatMachineConfig -> {
-                tooltip?.add(configText("maxInput", "lftick", config.maxInput))
-                tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
-                tooltip?.add(configText("energyCost", "lftick", config.energyCost))
-                val speed = config.processSpeed * 100
-                if (speed >= 1000)
-                    tooltip?.add(configText("processSpeed", "seconds", config.processSpeed / 20))
-                else
-                    tooltip?.add(configText("processSpeed", "${speed.toInt()}%"))
-                tooltip?.add(configText("temperatureBoost", "lftick", config.processTemperatureBoost))
-            }
             is GeneratorConfig -> {
                 tooltip?.add(configText("maxOutput", "lftick", config.maxOutput))
                 tooltip?.add(configText("maxEnergyStored", "lf", getEnergyString(config.maxEnergyStored)))
                 tooltip?.add(configText("ratio", "lftick", config.ratio))
                 if (config.temperatureBoost > 0)
-                    tooltip?.add(configText("temperatureBoost", "lftick", config.temperatureBoost))
+                    tooltip?.add(configText("temperatureBoost", "lftick", config.temperatureBoost * config.ratio))
             }
             is LFCConfig -> {
                 tooltip?.add(configText("maxInput", "lftick", config.maxInput))

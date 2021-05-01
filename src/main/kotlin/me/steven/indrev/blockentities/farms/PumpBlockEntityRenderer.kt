@@ -92,16 +92,18 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
     }
 
     private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
-        val yMax = 0.15 + (0.16 * (1 / inputVolume.amount().asInexactDouble()))
-        val face =
-            listOf(
-                FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, yMax, 0.32, 2.0, false, false),
-                FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32+ (0.55-0.443), 0.556, yMax, 0.32+ (0.55-0.443), 2.0, true, false),
-                FluidRenderFace.createFlatFaceX(0.443, 0.15, 0.323, 0.443, yMax, 0.426, 2.0, false, false),
-                FluidRenderFace.createFlatFaceX(0.443+ (0.55-0.443), 0.15, 0.323, 0.443+ (0.55-0.443), yMax, 0.426, 2.0, true, false)
-            )
-        inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
+
+        inputVolume.render(FACES, FluidVolumeRenderer.VCPS, this)
     }
 
     override fun rendersOutsideBoundingBox(blockEntity: PumpBlockEntity?): Boolean = true
+
+    companion object {
+        val FACES = listOf(
+            FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, 0.31, 0.32, 2.0, false, false),
+            FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32+ (0.55-0.443), 0.556, 0.31, 0.32+ (0.55-0.443), 2.0, true, false),
+            FluidRenderFace.createFlatFaceX(0.443, 0.15, 0.323, 0.443, 0.31, 0.426, 2.0, false, false),
+            FluidRenderFace.createFlatFaceX(0.443+ (0.55-0.443), 0.15, 0.323, 0.443+ (0.55-0.443), 0.31, 0.426, 2.0, true, false)
+        )
+    }
 }
