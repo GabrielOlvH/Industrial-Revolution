@@ -1,22 +1,19 @@
 package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
-import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.MB
-import me.steven.indrev.utils.times
+import me.steven.indrev.utils.minus
+import me.steven.indrev.utils.plus
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -33,6 +30,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
     var efficiency = 1.0
     var generatingTicks = 0
+    var totalInserted: FluidAmount = FluidAmount.ZERO
 
     //these values are used for the screen handler
     @Environment(EnvType.CLIENT)
@@ -43,28 +41,27 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     override fun getGenerationRatio(): Double {
         val radius = getRadius()
         val eff  = efficiency * radius * 10
-        return ((eff * eff) / (radius.toDouble() / 2.0)) * config.ratio * (generatingTicks / 15.0).coerceAtMost(1.0)
+        return ((eff * eff) * (radius.toDouble() / 7.0)) * config.ratio * (totalInserted.div(20)).asInexactDouble()
     }
 
     override fun shouldGenerate(): Boolean {
-        val amount = getConsumptionRatio()
-        val result = fluidComponent!!.attemptExtraction(STEAM_FILTER, amount, Simulation.SIMULATE)
-        if (result.amount() != amount) {
-            generatingTicks--
-            return generatingTicks > 0
+        if (generatingTicks <= 0) {
+            if (!totalInserted.isZero)
+                generatingTicks = 20
+            else
+                return false
         }
-        fluidComponent!!.extract(STEAM_FLUID_KEY, amount)
-        generatingTicks += 5
-        generatingTicks = generatingTicks.coerceAtMost(20)
+        generatingTicks--
+        if (generatingTicks <= 0) totalInserted = FluidAmount.ZERO
         return true
     }
 
     private fun getConsumptionRatio(): FluidAmount {
-        return (FluidAmount.ofWhole(getRadius() * 1L) * FluidAmount.ofWhole((efficiency * 10000).toLong()).div(10000)).coerceAtLeast(MB)
+        return totalInserted.div(20)
     }
 
     private fun getRadius(): Int {
-        return 3
+        //return 7
         val matcher = multiblockComponent!!.getSelectedMatcher(world!!, pos, cachedState)
         return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
     }
@@ -81,16 +78,15 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
             return fluid?.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true
         }
 
-        override fun insertFluid(tank: Int, volume: FluidVolume, simulation: Simulation): FluidVolume {
-            //divided by 4 because it's the limit of the input valves
-            val limit = getMaxAmount_F(tank)
-            val result = FluidVolumeUtil.computeInsertion(getInvFluid(tank), limit, volume)
-            val leftover = when {
-                result.result === volume -> volume
-                setInvFluid(tank, result.inTank, simulation) -> result.result
-                else -> volume
+        override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
+            if (generatingTicks > 0) return fluid
+            val result = super.attemptInsertion(fluid, simulation)
+            if (simulation.isAction) {
+                val actual = fluid.amount_F - result.amount_F
+                totalInserted += actual
+                extract(actual)
             }
-            return leftover
+            return result
         }
     }
 
@@ -100,11 +96,9 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
             SteamTurbineStructureDefinition
                 .getInputValvePositions(pos, blockState, getSelectedMatcher(world, pos, blockState))
                 .forEach { valvePos ->
-                    val valveBlockState = world.getBlockState(valvePos)
-                    if (valveBlockState.isOf(IRBlockRegistry.FLUID_VALVE))
-                        FLUID_VALVES_MAPPER[valvePos.asLong()] = pos.asLong()
-                    else
-                        FLUID_VALVES_MAPPER.remove(valvePos.asLong())
+                    val valveBlockEntity = world.getBlockEntity(valvePos)
+                    if (valveBlockEntity is SteamTurbineSteamInputValveBlockEntity)
+                        valveBlockEntity.steamTurbinePos = pos
                 }
 
             if (!isBuilt(world, pos, blockState)) {
@@ -138,8 +132,6 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     }
 
     companion object {
-        val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
-
         val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
         val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }
     }

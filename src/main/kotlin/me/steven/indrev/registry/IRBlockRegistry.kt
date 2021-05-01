@@ -5,6 +5,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
+import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
@@ -18,10 +19,7 @@ import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.BoilerBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.FluidValveBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantSmelterBlock
-import me.steven.indrev.blocks.machine.solarpowerplant.SolarPowerPlantTowerBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.*
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
@@ -88,6 +86,10 @@ object IRBlockRegistry {
             .blockEntityType(HELIOSTAT_BLOCK_ENTITY)
 
         identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
+        identifier("steam_turbine_steam_input_valve")
+            .block(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK)
+            .item(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM)
+            .blockEntityType(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY)
         identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
 
         EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
@@ -207,6 +209,10 @@ object IRBlockRegistry {
     )
     val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
     val HELIOSTAT_BLOCK_ENTITY = BlockEntityType.Builder.create({ HeliostatBlockEntity() }, HELIOSTAT_BLOCK).build(null)
+
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK, itemSettings())
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY = BlockEntityType.Builder.create({ SteamTurbineSteamInputValveBlockEntity() }, STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK).build(null)
 
     val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val FLUID_VALVE_ITEM = BlockItem(FLUID_VALVE, itemSettings())
