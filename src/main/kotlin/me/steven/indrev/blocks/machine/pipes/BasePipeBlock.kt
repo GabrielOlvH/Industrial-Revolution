@@ -131,11 +131,11 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
-            val fluidState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>? ?: return
+            val fluidState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?
             if (state.isOf(newState.block)) {
                 Network.handleUpdate(type, world, pos)
-                fluidState.recentlyRemoved.forEach { e -> fluidState.endpointData[e.key] = e.value }
-                fluidState.recentlyRemoved.clear()
+                fluidState?.recentlyRemoved?.forEach { e -> fluidState.endpointData[e.key] = e.value }
+                fluidState?.recentlyRemoved?.clear()
             } else {
                 (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
                     Direction.values().forEach { dir ->
@@ -152,7 +152,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 }
 
                 Network.handleBreak(type, world, pos)
-                fluidState.recentlyRemoved.clear()
+                fluidState?.recentlyRemoved?.clear()
             }
         }
     }
