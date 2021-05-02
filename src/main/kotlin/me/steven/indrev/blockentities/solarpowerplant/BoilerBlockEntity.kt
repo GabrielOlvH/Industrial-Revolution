@@ -1,6 +1,9 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
+import alexiil.mc.lib.attributes.SearchOptions
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidTransferable
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
@@ -35,6 +38,7 @@ import net.minecraft.text.Text
 import net.minecraft.util.Tickable
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class BoilerBlockEntity
@@ -50,6 +54,8 @@ class BoilerBlockEntity
     override fun tick() {
         multiblockComponent.tick(world!!, pos, cachedState)
         if (multiblockComponent.isBuilt(world!!, pos, cachedState)) {
+            interactWithTanks()
+
             val moltenSaltVolume = fluidComponent.getTank(0)
             val hasMoltenSalt = moltenSaltVolume.get().fluidKey.rawFluid!!.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL)
             temperatureComponent.tick(hasMoltenSalt)
@@ -64,18 +70,34 @@ class BoilerBlockEntity
 
             val waterVolume = fluidComponent.getTank(1)
             val steamVolume = fluidComponent.getTank(2)
+
             if (waterVolume.get().isEmpty || steamVolume.get().amount() >= fluidComponent.getMaxAmount_F(2)) return
 
-            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(500L)
+            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(2500L)
             if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
             val amountToConvert = waterVolume.get().amount()
                 .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
                 .coerceAtMost(waterSteamConversionRate)
 
             waterVolume.extract(amountToConvert)
-            steamVolume.insert(FluidKeys.get(IRFluidRegistry.STEAM_STILL).withAmount(amountToConvert))
+
+            val volumeToConvert = FluidKeys.get(IRFluidRegistry.STEAM_STILL).withAmount(amountToConvert)
+            steamVolume.insert(volumeToConvert)
 
         }
+    }
+
+    private fun interactWithTanks() {
+        val inputTanks = BoilerStructureDefinition.getInputTankPositions(pos, cachedState)
+        inputTanks.forEach { tankPos ->
+            val extractable = FluidAttributes.EXTRACTABLE.get(world, tankPos)
+            FluidVolumeUtil.move(extractable, fluidComponent)
+        }
+
+        val outputTankPos = BoilerStructureDefinition.getSteamOutputTankPos(pos, cachedState)
+        val insertable = FluidAttributes.INSERTABLE.get(world, outputTankPos, SearchOptions.inDirection(Direction.UP))
+        FluidVolumeUtil.move(fluidComponent.getTank(2), insertable)
+
     }
 
     override fun size(): Int = 1

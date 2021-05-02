@@ -40,15 +40,16 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
 
     override fun getGenerationRatio(): Double {
         val radius = getRadius()
-        val eff  = efficiency * radius * 10
-        return ((eff * eff) * (radius.toDouble() / 7.0)) * config.ratio * (totalInserted.div(20)).asInexactDouble()
+        val eff  = totalInserted.div(20).asInexactDouble()
+        return ((eff * 2) / (radius.toDouble() / 7)) * 2048
     }
 
     override fun shouldGenerate(): Boolean {
         if (generatingTicks <= 0) {
-            if (!totalInserted.isZero)
+            if (!totalInserted.isZero) {
                 generatingTicks = 20
-            else
+                fluidComponent!!.extract(FluidAmount.MAX_BUCKETS)
+            } else
                 return false
         }
         generatingTicks--
@@ -71,7 +72,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     private inner class SteamTurbineFluidComponent : FluidComponent(this, FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
-            return FluidAmount.ofWhole(64L)
+            return FluidAmount.ofWhole(getRadius() * getRadius().toLong())
         }
 
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
@@ -81,11 +82,8 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
             if (generatingTicks > 0) return fluid
             val result = super.attemptInsertion(fluid, simulation)
-            if (simulation.isAction) {
-                val actual = fluid.amount_F - result.amount_F
-                totalInserted += actual
-                extract(actual)
-            }
+            if (simulation.isAction)
+                totalInserted += fluid.amount_F - result.amount_F
             return result
         }
     }

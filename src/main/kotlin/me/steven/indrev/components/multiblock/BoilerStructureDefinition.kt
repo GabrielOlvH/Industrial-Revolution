@@ -37,4 +37,17 @@ object BoilerStructureDefinition : StructureDefinition() {
         return offsets
             .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
     }
+
+    fun getSteamOutputTankPos(pos: BlockPos, state: BlockState): BlockPos {
+        return pos.up(3).offset(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
+    }
+
+    fun getInputTankPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
+        val rotation =
+            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+        val offsets = arrayOf(BlockPos(2, 1, 1), BlockPos(-2, 1, 1))
+        return offsets
+            .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
+
+    }
 }

@@ -20,6 +20,8 @@ import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.blocks.SolarReflectorBlock
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.config.IRConfig.writeToClient
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -104,8 +106,8 @@ object PacketRegistry {
             val world = player.world
             server.execute {
                 if (world.isLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
-                    val fluidComponent = blockEntity.fluidComponent ?: return@execute
+                    val blockEntity = world.getBlockEntity(pos) as? ComponentProvider ?: return@execute
+                    val fluidComponent = ComponentKey.FLUID.get(blockEntity) ?: return@execute
                     FluidInvUtil.interactCursorWithTank(
                         fluidComponent.getInteractInventory(tank),
                         player,
