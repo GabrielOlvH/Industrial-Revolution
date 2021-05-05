@@ -15,8 +15,8 @@ object IREnergyMovement {
         Direction.values()
             .forEach { direction ->
                 if (source.validConnections.contains(direction)) {
-                    val sourceIo = energyOf(world, pos, direction)
-                    val targetIo = energyOf(world, pos.offset(direction), direction.opposite)
+                    val sourceIo = energyOf(world, pos, direction.opposite)
+                    val targetIo = energyOf(world, pos.offset(direction), direction)
                     if (sourceIo == null || targetIo == null)
                         source.validConnections.remove(direction)
                     else if (sourceIo.supportsExtraction() && targetIo.supportsInsertion())

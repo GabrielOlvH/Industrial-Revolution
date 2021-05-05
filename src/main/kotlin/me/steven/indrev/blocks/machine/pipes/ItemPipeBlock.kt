@@ -71,7 +71,7 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedItemInv(world, pos, dir) != EmptyGroupedItemInv.INSTANCE
+        groupedItemInv(world, pos, dir.opposite) != EmptyGroupedItemInv.INSTANCE
                 || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 
