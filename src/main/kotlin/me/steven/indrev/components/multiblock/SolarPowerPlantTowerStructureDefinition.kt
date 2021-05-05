@@ -40,6 +40,25 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
             .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
     }
 
+    fun getSolarReceiverPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
+        val rotation =
+            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+
+        val radius = 3
+        val positions = hashSetOf<BlockPos>()
+        for (x in -radius + 1 until radius) {
+            for (y in -10..-4) {
+                for (z in -radius + 1 until radius) {
+                    if (y == -8 && (abs(x) == radius-1 || abs(z) == radius-1))
+                        positions.add(BlockPos(x, y, z + 3))
+                }
+            }
+        }
+
+        return positions
+            .map { offset -> pos.subtract(offset.rotate(rotation).rotate(BlockRotation.CLOCKWISE_180)) }.toList()
+    }
+
     private fun createStructureMap(): Map<BlockPos, BlockStateFilter> {
         val map = hashMapOf<BlockPos, BlockStateFilter>()
         val radius = 3
@@ -56,6 +75,17 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
             }
         }
         map[BlockPos(0, 1, 0)] = BlockStateFilter(FLUID_OUTPUT)
+
+        for (x in -radius + 1 until radius) {
+            for (y in -10..-4) {
+                for (z in -radius + 1 until radius) {
+                    if (y == -8 && (abs(x) == radius-1 || abs(z) == radius-1))
+                        map[BlockPos(x, y, z + 3)] = BlockStateFilter(Blocks.OBSIDIAN.defaultState)
+                    else if (abs(x) == radius-1 || abs(z) == radius-1 || y == -10)
+                        map[BlockPos(x, y, z + 3)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
+                }
+            }
+        }
 
         map.remove(BlockPos.ORIGIN)
 

@@ -28,6 +28,7 @@ import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.utils.IRWorldRenderer
 import me.steven.indrev.utils.identifier
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
@@ -38,6 +39,7 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
@@ -170,6 +172,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
         PacketRegistry.registerClient()
 
         GlobalStateController.initClient()
+
+        WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(IRWorldRenderer)
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {

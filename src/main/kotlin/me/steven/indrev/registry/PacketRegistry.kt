@@ -18,8 +18,6 @@ import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
-import me.steven.indrev.blocks.SolarReflectorBlock
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.config.IRConfig
@@ -236,21 +234,6 @@ object PacketRegistry {
                 val data = state.endpointData[pos.asLong()][dir] as? ItemEndpointData ?: return@execute
                 data.mode = mode
                 state.markDirty()
-            }
-        }
-        ServerPlayNetworking.registerGlobalReceiver(SolarReflectorBlock.SET_ANGLES_PACKET) { server, player, _, buf, _ ->
-            val yaw = buf.readFloat()
-            val pitch = buf.readFloat()
-            val pos = buf.readBlockPos()
-            server.execute {
-                val world = player.world
-                if (world.isLoaded(pos)) {
-                    val blockEntity = world.getBlockEntity(pos) as? HeliostatBlockEntity ?: return@execute
-                    blockEntity.pitch = pitch
-                    blockEntity.yaw = yaw
-                    blockEntity.markDirty()
-                    blockEntity.sync()
-                }
             }
         }
 

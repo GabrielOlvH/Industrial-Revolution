@@ -13,7 +13,7 @@ import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBloc
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.blocks.SolarReflectorBlock
+import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
@@ -204,7 +204,7 @@ object IRBlockRegistry {
 
     val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK4) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
 
-    val HELIOSTAT_BLOCK = SolarReflectorBlock(
+    val HELIOSTAT_BLOCK = HeliostatBlock(
         FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )
     val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
