@@ -113,6 +113,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     final override fun tick() {
         if (world?.isClient == false) {
             ticks++
+            propertyDelegate[1] = energyCapacity.toInt()
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             IREnergyMovement.spreadNeighbors(this, pos)
@@ -151,11 +152,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     override fun getEnergyCapacity(): Double = config.maxEnergyStored
 
-    override fun getPropertyDelegate(): PropertyDelegate {
-        val delegate = this.propertyDelegate
-        delegate[1] = energyCapacity.toInt()
-        return delegate
-    }
+    override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
 
     fun setPropertyDelegate(propertyDelegate: PropertyDelegate) {
         this.propertyDelegate = propertyDelegate
