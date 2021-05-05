@@ -44,7 +44,7 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedFluidInv(world, pos, dir) != EmptyGroupedFluidInv.INSTANCE
+        groupedFluidInv(world, pos, dir.opposite) != EmptyGroupedFluidInv.INSTANCE
                 || world.getBlockState(pos).block.let { it is FluidPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 
