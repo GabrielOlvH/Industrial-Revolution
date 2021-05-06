@@ -33,15 +33,15 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
 
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? BoilerBlockEntity ?: return@run
-            root.add(WTemperature(blockEntity.temperatureComponent), 0, 2)
+            root.add(WTemperature(blockEntity.temperatureComponent), 0.0, 0.7)
         }
 
         val leftoverSalt = WItemSlot.of(blockInventory, 0)
         leftoverSalt.isInsertingAllowed = false
-        root.add(leftoverSalt, 3.7, 2.2)
+        root.add(leftoverSalt, 2.45, 3.25)
 
         val moltenSaltWidget = WFluid(ctx, 0)
-        root.add(moltenSaltWidget, 2.5, 0.7)
+        root.add(moltenSaltWidget, 1.5, 0.7)
 
         val waterWidget = WFluid(ctx, 1)
         root.add(waterWidget, 4.0, 0.7)
