@@ -68,7 +68,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
                     if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } >= 2 || y == -3 || y == 1)
                         map[BlockPos(x, y, z + radius)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
                     else if ((y == 0 && abs(z) == radius) || (y == 0 && abs(x) == radius))
-                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({state -> state == Blocks.IRON_BARS.defaultState || state == SMELTER }, SMELTER)
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({state -> state == Blocks.IRON_BLOCK.defaultState || state == SMELTER }, SMELTER)
                     else if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } != 0)
                         map[BlockPos(x, y, z + radius)] = BlockStateFilter({ state -> state == CASING || state == RESISTANT_GLASS }, RESISTANT_GLASS)
                 }
@@ -80,7 +80,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
             for (y in -10..-4) {
                 for (z in -radius + 1 until radius) {
                     if (y == -8 && (abs(x) == radius-1 || abs(z) == radius-1))
-                        map[BlockPos(x, y, z + 3)] = BlockStateFilter(Blocks.OBSIDIAN.defaultState)
+                        map[BlockPos(x, y, z + 3)] = BlockStateFilter(IRBlockRegistry.SOLAR_RECEIVER_BLOCK.defaultState)
                     else if (abs(x) == radius-1 || abs(z) == radius-1 || y == -10)
                         map[BlockPos(x, y, z + 3)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
                 }

@@ -36,8 +36,8 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
             if (!ItemStack.areEqual(meltingStack, stack)) {
                 stackTemperatures[slot] = Pair(stack.copy(), 12.0)
             } else if (!meltingStack.isEmpty) {
-                val modifier = (blockEntity.temperatureComponent.temperature / 600.0).coerceAtMost(1.0)
-                stackTemperatures[slot] = Pair(meltingStack, (temp + modifier * 30).coerceAtMost(800.0))
+                val modifier = ((blockEntity.temperatureComponent.temperature - 700) / (1200.0 - 700.0)).coerceAtMost(1.0)
+                stackTemperatures[slot] = Pair(meltingStack, (temp + modifier).coerceAtMost(800.0))
 
                 val temp = stackTemperatures[slot].second
 
@@ -54,7 +54,7 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
 
     override fun size(): Int = inventory.size
 
-    override fun getAvailableSlots(side: Direction?): IntArray = (0 until stackTemperatures.size).map { it }.toIntArray()
+    override fun getAvailableSlots(side: Direction?): IntArray = stackTemperatures.indices.map { it }.toIntArray()
 
     override fun canInsert(slot: Int, stack: ItemStack?, dir: Direction?): Boolean = stack?.item == IRItemRegistry.SALT
 

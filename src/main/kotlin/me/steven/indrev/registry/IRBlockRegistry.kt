@@ -7,10 +7,7 @@ import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
-import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.*
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.HeliostatBlock
@@ -84,6 +81,11 @@ object IRBlockRegistry {
             .block(HELIOSTAT_BLOCK)
             .item(HELIOSTAT_BLOCK_ITEM)
             .blockEntityType(HELIOSTAT_BLOCK_ENTITY)
+
+        identifier("solar_receiver")
+            .block(SOLAR_RECEIVER_BLOCK)
+            .item(SOLAR_RECEIVER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_RECEIVER_BLOCK_ENTITY)
 
         identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
         identifier("steam_turbine_steam_input_valve")
@@ -209,6 +211,12 @@ object IRBlockRegistry {
     )
     val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
     val HELIOSTAT_BLOCK_ENTITY = BlockEntityType.Builder.create({ HeliostatBlockEntity() }, HELIOSTAT_BLOCK).build(null)
+
+    val SOLAR_RECEIVER_BLOCK = SolarReceiverBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val SOLAR_RECEIVER_BLOCK_ITEM = BlockItem(SOLAR_RECEIVER_BLOCK, itemSettings())
+    val SOLAR_RECEIVER_BLOCK_ENTITY = BlockEntityType.Builder.create({ SolarReceiverBlockEntity() }, SOLAR_RECEIVER_BLOCK).build(null)
 
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK, itemSettings())

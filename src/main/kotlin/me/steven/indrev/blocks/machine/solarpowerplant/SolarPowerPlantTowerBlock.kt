@@ -2,7 +2,6 @@ package me.steven.indrev.blocks.machine.solarpowerplant
 
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
-import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.blocks.misc.HorizontalFacingBlock
 import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.gui.IRScreenHandlerFactory
@@ -43,8 +42,7 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
                 positions?.forEach { p ->
                     val heliostat = world.getBlockEntity(p) as HeliostatBlockEntity
                     val target = receivers.minByOrNull { it.getSquaredDistance(p) } ?: return@forEach
-                    heliostat.pitch = HeliostatBlock.getPitch(p, target)
-                    heliostat.yaw = HeliostatBlock.getYaw(p, target)
+                    heliostat.targetBlock = target
                     heliostat.markDirty()
                     heliostat.sync()
                 }
