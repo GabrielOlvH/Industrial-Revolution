@@ -72,7 +72,7 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
     private inner class SteamTurbineFluidComponent : FluidComponent(this, FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
-            return FluidAmount.ofWhole(getRadius() * getRadius().toLong())
+            return FluidAmount.ofWhole(getRadius() * getRadius().toLong()).mul((efficiency * 100).toLong()).div(100)
         }
 
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
