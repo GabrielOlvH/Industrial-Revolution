@@ -14,6 +14,7 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import net.minecraft.world.WorldView
 import java.util.stream.Stream
 
 class SulfurCrystalBlock(settings: Settings) : Block(settings) {
@@ -49,6 +50,13 @@ class SulfurCrystalBlock(settings: Settings) : Block(settings) {
         if (state[FACING] == dir) {
             world?.breakBlock(pos, true)
         }
+    }
+
+    override fun canPlaceAt(state: BlockState, world: WorldView, pos: BlockPos): Boolean {
+        val direction = state.get(FACING)
+        val blockPos = pos.offset(direction.opposite)
+        val blockState = world.getBlockState(blockPos)
+        return blockState.isSideSolidFullSquare(world, blockPos, direction)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {

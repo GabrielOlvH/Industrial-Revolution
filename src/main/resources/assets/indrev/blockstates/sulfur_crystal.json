@@ -11,8 +11,8 @@
     },
     "facing=west": {
       "model": "indrev:block/sulfur_crystal",
-      "x": 90,
-      "y": 270
+      "x": -90,
+      "y": 90
     },
     "facing=east": {
       "model": "indrev:block/sulfur_crystal",
