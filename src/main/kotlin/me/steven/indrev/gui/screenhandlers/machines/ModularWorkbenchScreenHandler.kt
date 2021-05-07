@@ -293,7 +293,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             this.y = y
         }
 
-        var hidden = false
+        var hidden = true
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (!hidden) {
