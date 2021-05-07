@@ -218,7 +218,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): EnergyNetwork = EnergyNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = energyOf(world, pos, direction) != null
+                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = energyOf(world, pos, direction.opposite) != null
 
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is CableBlock
             }
@@ -226,7 +226,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): FluidNetwork = FluidNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedFluidInv(world, pos, direction) != EmptyGroupedFluidInv.INSTANCE
+                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedFluidInv(world, pos, direction.opposite) != EmptyGroupedFluidInv.INSTANCE
 
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is FluidPipeBlock
 
@@ -238,7 +238,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): ItemNetwork = ItemNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedItemInv(world, pos, direction) != EmptyGroupedItemInv.INSTANCE
+                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedItemInv(world, pos, direction.opposite) != EmptyGroupedItemInv.INSTANCE
 
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is ItemPipeBlock
 

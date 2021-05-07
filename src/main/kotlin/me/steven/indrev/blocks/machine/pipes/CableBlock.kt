@@ -42,7 +42,7 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        energyOf(world, pos, dir) != null || world.getBlockState(pos).block.let { it is CableBlock && it.tier == tier }
+        energyOf(world, pos, dir.opposite) != null || world.getBlockState(pos).block.let { it is CableBlock && it.tier == tier }
 
     private fun getMaxTransferRate() = when(tier) {
         Tier.MK1 -> IRConfig.cables.cableMk1
