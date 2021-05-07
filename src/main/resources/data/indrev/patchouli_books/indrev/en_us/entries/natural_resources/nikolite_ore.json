@@ -1,0 +1,13 @@
+{
+  "name": "Nikolite Ore",
+  "category": "natural_resources",
+  "sortnum": 5,
+  "icon": "indrev:nikolite_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:nikolite_ore",
+      "text": "$(#008f8c)$(l)Nikolite ore$() is common and can be found from the layer 0 to 16.$(br)$(#008f8c)$(l)Nikolite$() is the main component used in $(l)INDREV$()'s machines, from basic to advanced."
+    }
+  ]
+}

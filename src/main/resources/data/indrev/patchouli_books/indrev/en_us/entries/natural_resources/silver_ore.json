@@ -1,0 +1,13 @@
+{
+  "name": "Silver Ore",
+  "category": "natural_resources",
+  "sortnum": 2,
+  "icon": "indrev:silver_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#c6e9e3)$(l)Silver ore$() is uncommon and can be found from the layer 0 to 32.$(br)$(#c6e9e3)$(l)Silver$() is used in the crafting of more advanced machines."
+    }
+  ]
+}

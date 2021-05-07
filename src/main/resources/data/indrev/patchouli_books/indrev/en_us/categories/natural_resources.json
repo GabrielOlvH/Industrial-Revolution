@@ -1,0 +1,6 @@
+{
+  "name": "Natural Resources",
+  "sortnum": 0,
+  "description": "Information about needed natural resources to explore the Industrial Revolution.",
+  "icon": "indrev:copper_ore"
+}

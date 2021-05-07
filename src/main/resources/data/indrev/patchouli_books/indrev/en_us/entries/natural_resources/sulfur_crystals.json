@@ -1,0 +1,13 @@
+{
+  "name": "Sulfur Crystal",
+  "category": "natural_resources",
+  "sortnum": 6,
+  "icon": "indrev:sulfur_crystal",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:sulfur_crystal",
+      "text": "$(#f5da68)$(l)Sulfur Crystals$() are common and can be found from the layer 0 to 16 in the overworld or up to layer 100 in the nether.$(br)$(#f5da68)$(l)Sulfur$() is used in the purification process of the advanced ore processing chain."
+    }
+  ]
+}

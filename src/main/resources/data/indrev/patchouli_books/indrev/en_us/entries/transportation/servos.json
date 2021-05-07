@@ -10,7 +10,7 @@
     },
     {
       "type": "text",
-      "text": "For example, if you have a single inventory that needs to output to multiple inventories you just need a single Output Servo on the dispensing end.$(br2)If you have multiple inventories that needs to output to a single inventory you just need a single Retriever Servo on the receiving end."
+      "text": "For example, if you have a single inventory that needs to output to multiple inventories you just need a single Output Servo on the dispensing end.$(br2)If you have multiple inventories that needs to output to a single inventory you just need a single Retriever Servo on the receiving end.$(br2)$(l)IMPORTANT:$() make sure the machine is configured. Read $(l:tools/wrench)$(t:Go to Wrench!)the Wrench chapter!$()"
     },
     {
       "type": "text",

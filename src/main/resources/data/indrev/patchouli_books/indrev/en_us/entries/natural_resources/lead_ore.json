@@ -1,0 +1,13 @@
+{
+  "name": "Lead Ore",
+  "category": "natural_resources",
+  "sortnum": 3,
+  "icon": "indrev:lead_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#575d61)$(l)Lead ore$() is uncommon and can be found from the layer 0 to 32.$(br)$(#575d61)$(l)Lead$() is used in the crafting of more advanced machines."
+    }
+  ]
+}
