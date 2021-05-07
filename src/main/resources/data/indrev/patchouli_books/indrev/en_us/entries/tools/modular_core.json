@@ -7,7 +7,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/modular_core",
-      "text": "The Core of Modularity is the base for every modular tool here. However, it must be activated before being usable. To activate it, you'll need at least one Laser, one Capsule and a lot of stored energy."
+      "text": "The Core of Modularity is the base for every modular tool here. However, it must be activated before being usable. To activate it, you'll need at least one Laser, one Capsule and a lot of stored energy (100M)."
     },
     {
       "type": "crafting",
