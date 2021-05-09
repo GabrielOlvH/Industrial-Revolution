@@ -82,6 +82,10 @@ object IRBlockRegistry {
             .item(HELIOSTAT_BLOCK_ITEM)
             .blockEntityType(HELIOSTAT_BLOCK_ENTITY)
 
+        identifier("resistant_glass")
+            .block(RESISTANT_GLASS_BLOCK)
+            .item(RESISTANT_GLASS_BLOCK_ITEM)
+
         identifier("solar_receiver")
             .block(SOLAR_RECEIVER_BLOCK)
             .item(SOLAR_RECEIVER_BLOCK_ITEM)
@@ -221,6 +225,11 @@ object IRBlockRegistry {
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK, itemSettings())
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY = BlockEntityType.Builder.create({ SteamTurbineSteamInputValveBlockEntity() }, STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK).build(null)
+    
+    val RESISTANT_GLASS_BLOCK = Block(
+        FabricBlockSettings.of(Material.GLASS).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val RESISTANT_GLASS_BLOCK_ITEM = BlockItem(RESISTANT_GLASS_BLOCK, itemSettings())
 
     val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val FLUID_VALVE_ITEM = BlockItem(FLUID_VALVE, itemSettings())
