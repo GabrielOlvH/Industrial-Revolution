@@ -67,7 +67,7 @@ abstract class Network(
         readPositions(tag)
     }
 
-    fun remove() {
+    open fun remove() {
         val state = type.getNetworkState(world)
         state.networks.remove(this)
         pipes.forEach { state.remove(it) }
