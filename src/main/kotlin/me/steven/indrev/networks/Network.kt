@@ -79,7 +79,7 @@ abstract class Network(
         state[blockPos] = this as V
     }
 
-    fun appendContainer(blockPos: BlockPos, direction: Direction) {
+    open fun appendContainer(blockPos: BlockPos, direction: Direction) {
         containers.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
     }
 
