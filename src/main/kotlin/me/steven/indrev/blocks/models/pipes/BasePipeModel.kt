@@ -94,10 +94,6 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         if (state[BasePipeBlock.COVERED]) {
             val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity
             if (blockEntity?.coverState != null) {
-                context.pushTransform { q ->
-                    q.material(TRANSLUCENT)
-                    true
-                }
                 val coverState = blockEntity.coverState!!
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
                 model.emitFromVanilla(coverState, context, randSupplier) { quad -> !quad.hasColor() }
@@ -110,7 +106,6 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
                 }
 
                 model.emitFromVanilla(coverState, context, randSupplier) { quad -> quad.hasColor() }
-                context.popTransform()
                 context.popTransform()
                 if (coverState.isOpaque) return
             }
@@ -130,14 +125,14 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         Direction.values().forEach { dir ->
             getQuads(blockState, dir, randSupplier.get()).forEach { quad ->
                 if (shouldEmit(quad)) {
-                    emitter.fromVanilla(quad.vertexData, 0, false)
+                    emitter.fromVanilla(quad, TRANSLUCENT, dir)
                     emitter.emit()
                 }
             }
         }
         getQuads(blockState, null, randSupplier.get()).forEach { quad ->
             if (shouldEmit(quad)) {
-                emitter.fromVanilla(quad.vertexData, 0, false)
+                emitter.fromVanilla(quad, TRANSLUCENT, null)
                 emitter.emit()
             }
         }
