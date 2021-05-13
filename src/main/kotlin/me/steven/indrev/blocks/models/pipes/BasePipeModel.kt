@@ -6,6 +6,8 @@ import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
@@ -92,6 +94,10 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         if (state[BasePipeBlock.COVERED]) {
             val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity
             if (blockEntity?.coverState != null) {
+                context.pushTransform { q ->
+                    q.material(TRANSLUCENT)
+                    true
+                }
                 val coverState = blockEntity.coverState!!
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
                 model.emitFromVanilla(coverState, context, randSupplier) { quad -> !quad.hasColor() }
@@ -105,9 +111,11 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
                 model.emitFromVanilla(coverState, context, randSupplier) { quad -> quad.hasColor() }
                 context.popTransform()
+                context.popTransform()
                 if (coverState.isOpaque) return
             }
         }
+
         handleBakedModel(world, state, pos, randSupplier, context, modelArray[0])
         if (state[BasePipeBlock.NORTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[1])
         if (state[BasePipeBlock.EAST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[2])
@@ -148,5 +156,11 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
         context.fallbackConsumer().accept(modelArray[0])
+    }
+
+    companion object {
+        val TRANSLUCENT by lazy {
+            RendererAccess.INSTANCE.renderer!!.materialFinder().blendMode(0, BlendMode.TRANSLUCENT).find()
+        }
     }
 }
