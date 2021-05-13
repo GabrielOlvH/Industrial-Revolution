@@ -115,13 +115,11 @@ abstract class Network(
             val posLong = machineTag.getLong("pos")
             val pos = BlockPos.fromLong(posLong)
             val dirList = machineTag.getList("dir", 8)
-            val directions = EnumSet.noneOf(Direction::class.java)
             dirList.forEach { dirTag ->
                 dirTag as StringTag
                 val dir = Direction.valueOf(dirTag.asString().toUpperCase())
-                directions.add(dir)
+                appendContainer(pos, dir)
             }
-            this.containers[pos] = directions
         }
     }
 
