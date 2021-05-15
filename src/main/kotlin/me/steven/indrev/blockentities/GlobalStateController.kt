@@ -3,11 +3,13 @@ package me.steven.indrev.blockentities
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.component3
+import me.steven.indrev.utils.identifier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.client.MinecraftClient
@@ -55,17 +57,13 @@ object GlobalStateController {
     @Environment(EnvType.CLIENT)
     fun initClient() {
         var ticks = 0
-        WorldRenderEvents.START.register { ctx ->
-            if (ctx.world() != null && ticks % 15 == 0) {
-                chunksToUpdate.long2ObjectEntrySet().removeIf { (_, positions) ->
-
-                    val minX = positions.minByOrNull { it.x }?.x ?: return@removeIf true
-                    val minY = positions.minByOrNull { it.y }?.y ?: return@removeIf true
-                    val minZ = positions.minByOrNull { it.z }?.z ?: return@removeIf true
-                    val maxX = positions.maxByOrNull { it.x }?.x ?: return@removeIf true
-                    val maxY = positions.maxByOrNull { it.y }?.y ?: return@removeIf true
-                    val maxZ = positions.maxByOrNull { it.z }?.z ?: return@removeIf true
-                    ctx.worldRenderer().scheduleBlockRenders(minX, minY, minZ, maxX, maxY, maxZ)
+        ClientTickEvents.END_CLIENT_TICK.register { client ->
+            val world = client.world
+            if (world != null && ticks % 15 == 0) {
+                chunksToUpdate.values.removeIf { positions ->
+                    positions.forEach { (x, y, z) ->
+                        client.worldRenderer.scheduleBlockRenders(x shr 4, y shr 4, z shr 4)
+                    }
                     true
                 }
             }

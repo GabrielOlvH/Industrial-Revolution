@@ -19,10 +19,10 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
     )
 
     override fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
         if (index == 0) {
-            val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
-            val builder: MeshBuilder = renderer.meshBuilder()
-            val emitter = builder.emitter
 
             val sprite = spriteArray[1]!!
             model.getQuads(null, null, null).forEach { q ->
@@ -34,7 +34,7 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
                 emitter.sprite(1, 0, sprite.getFrameU(3.0), sprite.getFrameV(13.0))
                 emitter.sprite(2, 0, sprite.getFrameU(13.0), sprite.getFrameV(13.0))
                 emitter.sprite(3, 0, sprite.getFrameU(13.0), sprite.getFrameV(3.0))
-                emitter.material(MATERIAL)
+                emitter.material(CENTER_MATERIAL)
                 emitter.emit()
             }
             return builder.build()
@@ -43,10 +43,10 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
     }
 
     companion object {
-        val MATERIAL by lazy {
+        val CENTER_MATERIAL by lazy {
             RendererAccess.INSTANCE.renderer?.materialFinder()!!.clear()
                 .spriteDepth(1)
-                .blendMode(0, BlendMode.TRANSLUCENT)
+                .blendMode(0, BlendMode.CUTOUT)
                 .disableAo(0, true)
                 .disableDiffuse(0, true)
                 .emissive(0, true)
