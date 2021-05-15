@@ -110,7 +110,7 @@ object TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun hasDepth(): Boolean = false
 
-    override fun getTransformation(): ModelTransformation? = transform
+    override fun getTransformation(): ModelTransformation = transform
 
     override fun useAmbientOcclusion(): Boolean = true
 

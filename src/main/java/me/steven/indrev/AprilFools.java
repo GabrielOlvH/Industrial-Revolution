@@ -3,7 +3,7 @@ package me.steven.indrev;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
-import net.fabricmc.loader.FabricLoader;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.registry.Registry;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Environment(EnvType.CLIENT)
 public final class AprilFools {
     private static final File CHECK =
-        new File(FabricLoader.INSTANCE.getGameDir().toString(), ".indrev_" + LocalDate.now().getYear());
+        new File(FabricLoader.getInstance().getGameDir().toString(), ".indrev_" + LocalDate.now().getYear());
 
     public static void init() {
         if (isToday()) {
