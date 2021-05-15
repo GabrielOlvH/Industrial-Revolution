@@ -58,6 +58,7 @@ object GlobalStateController {
     fun initClient() {
         var ticks = 0
         ClientTickEvents.END_CLIENT_TICK.register { client ->
+            ticks++
             val world = client.world
             if (world != null && ticks % 15 == 0) {
                 chunksToUpdate.values.removeIf { positions ->
@@ -68,6 +69,5 @@ object GlobalStateController {
                 }
             }
         }
-        ClientTickEvents.END_CLIENT_TICK.register { ticks++ }
     }
 }
