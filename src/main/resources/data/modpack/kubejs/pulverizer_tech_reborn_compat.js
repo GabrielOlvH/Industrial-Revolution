@@ -1,4 +1,4 @@
-if (mod.isLoaded('techreborn')) {
+if (Platform.isLoaded('techreborn')) {
     console.log('Tech Reborn is present, loading Pulverizer compatibility recipes with Industrial Revolution.')
     events.listen('recipes', function (event) {
         event.recipes.indrev.pulverize({

@@ -1,4 +1,4 @@
-if (mod.isLoaded('appliedenergistics2')) {
+if (Platform.isLoaded('appliedenergistics2')) {
 console.log('Applied Energistics 2 is present, loading Pulverizer compatibility recipes with Industrial Revolution.')
   events.listen('recipes', function (event) {
   event.recipes.indrev.pulverize({
