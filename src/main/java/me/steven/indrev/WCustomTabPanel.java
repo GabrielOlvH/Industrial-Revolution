@@ -43,11 +43,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class WCustomTabPanel extends WPanel {
@@ -157,7 +155,7 @@ public class WCustomTabPanel extends WPanel {
             this.title = title;
             this.icon = icon;
             this.widget = Objects.requireNonNull(widget, "widget");
-            this.tooltip = Objects.requireNonNull(tooltip, "tooltip");
+            this.tooltip = tooltip;
         }
 
         /**
@@ -193,19 +191,20 @@ public class WCustomTabPanel extends WPanel {
          * @param tooltip the tooltip builder
          */
         public void addTooltip(TooltipBuilder tooltip) {
-            this.tooltip.accept(tooltip);
+            if (this.tooltip != null)
+                this.tooltip.accept(tooltip);
         }
 
         /**
          * A builder for tab data.
          */
         public static final class Builder {
+            @Nullable
             private Text title;
+            @Nullable
             private Icon icon;
             private final WWidget widget;
-            private final List<Consumer<TooltipBuilder>> tooltip = new ArrayList<>();
-            private static final Consumer<TooltipBuilder> DEFAULT_TOOLTIP = builder -> {
-            };
+            private final List<Text> tooltip = new ArrayList<>();
 
             /**
              * Constructs a new tab data builder.
@@ -224,7 +223,7 @@ public class WCustomTabPanel extends WPanel {
              * @return this builder
              * @throws NullPointerException if the title is null
              */
-            public WCustomTabPanel.Tab.Builder title(Text title) {
+            public Builder title(Text title) {
                 this.title = Objects.requireNonNull(title, "title");
                 return this;
             }
@@ -236,7 +235,7 @@ public class WCustomTabPanel extends WPanel {
              * @return this builder
              * @throws NullPointerException if the icon is null
              */
-            public WCustomTabPanel.Tab.Builder icon(Icon icon) {
+            public Builder icon(Icon icon) {
                 this.icon = Objects.requireNonNull(icon, "icon");
                 return this;
             }
@@ -248,9 +247,9 @@ public class WCustomTabPanel extends WPanel {
              * @return this builder
              * @throws NullPointerException if the line array is null
              */
-            public WCustomTabPanel.Tab.Builder tooltip(Text... lines) {
+            public Builder tooltip(Text... lines) {
                 Objects.requireNonNull(lines, "lines");
-                tooltip.add(builder -> builder.add(lines));
+                Collections.addAll(tooltip, lines);
 
                 return this;
             }
@@ -262,9 +261,9 @@ public class WCustomTabPanel extends WPanel {
              * @return this builder
              * @throws NullPointerException if the line collection is null
              */
-            public WCustomTabPanel.Tab.Builder tooltip(Collection<? extends Text> lines) {
+            public Builder tooltip(Collection<? extends Text> lines) {
                 Objects.requireNonNull(lines, "lines");
-                tooltip.add(builder -> builder.add(lines.toArray(new Text[0])));
+                tooltip.addAll(lines);
                 return this;
             }
 
@@ -272,20 +271,22 @@ public class WCustomTabPanel extends WPanel {
              * Builds a tab from this builder.
              *
              * @return the built tab
-             * @see WCustomTabPanel.Tab#Tab(Text, Icon, WWidget, Consumer)
              */
-            public WCustomTabPanel.Tab build() {
-                Consumer<TooltipBuilder> tooltip = DEFAULT_TOOLTIP;
+            public Tab build() {
+                Consumer<TooltipBuilder> tooltip = null;
 
                 if (!this.tooltip.isEmpty()) {
-                    tooltip = builder -> {
-                        for (Consumer<TooltipBuilder> entry : this.tooltip) {
-                            entry.accept(builder);
+                    //noinspection Convert2Lambda
+                    tooltip = new Consumer<TooltipBuilder>() {
+                        @Environment(EnvType.CLIENT)
+                        @Override
+                        public void accept(TooltipBuilder builder) {
+                            builder.add(WCustomTabPanel.Tab.Builder.this.tooltip.toArray(new Text[0]));
                         }
                     };
                 }
 
-                return new WCustomTabPanel.Tab(title, icon, widget, tooltip);
+                return new Tab(title, icon, widget, tooltip);
             }
         }
     }

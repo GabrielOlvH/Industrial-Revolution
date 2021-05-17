@@ -110,9 +110,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val root = WCustomTabPanel()
         setRootPanel(root)
 
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4).asItem()), buildInstallPanel(), {}))
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRItemRegistry.PROTECTION_MODULE_ITEM), buildCraftPanel(), {}))
-
+        root.add(buildInstallPanel()) { it.icon(ItemIcon(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4).asItem())) }
+        root.add(buildCraftPanel()) { it.icon(ItemIcon(IRItemRegistry.PROTECTION_MODULE_ITEM)) }
         root.validate(this)
     }
 
