@@ -3,10 +3,12 @@ package me.steven.indrev.items.armor
 import me.steven.indrev.tools.modular.Module
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.options.KeyBinding
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
+import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
@@ -21,7 +23,7 @@ open class IRModuleItem(val module: Module, settings: Settings) : Item(settings)
         if (Screen.hasShiftDown()) {
             module.getTooltip(stack, tooltip)
         } else {
-            tooltip?.add(TranslatableText("gui.indrev.tooltip.press_shift").formatted(Formatting.BLUE, Formatting.ITALIC))
+            tooltip?.add(TranslatableText("gui.indrev.tooltip.press_shift", LiteralText("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.BLUE, Formatting.ITALIC)).formatted(Formatting.BLUE, Formatting.ITALIC))
         }
     }
 }
