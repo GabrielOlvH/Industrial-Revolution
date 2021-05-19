@@ -40,7 +40,7 @@
   "depends": {
     "fabricloader": ">=0.7.1",
     "fabric": ">=0.32.0",
-    "fabric-language-kotlin": "*",
+    "fabric-language-kotlin": ">=1.6.0",
     "minecraft": "1.16.x",
     "patchouli": "*",
     "libgui": "*"

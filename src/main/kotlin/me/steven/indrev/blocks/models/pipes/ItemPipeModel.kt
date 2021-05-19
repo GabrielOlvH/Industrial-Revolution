@@ -69,7 +69,7 @@ class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
     ) {
         super.emitBlockQuads(world, state, pos, randSupplier, context)
         IndustrialRevolutionClient.CLIENT_RENDER_SERVO_DATA[Network.Type.ITEM]?.get(pos.asLong())?.forEach { (dir, data) ->
-            val index = when (dir) {
+            val index = when (dir!!) {
                 Direction.DOWN -> 5
                 Direction.UP -> 4
                 Direction.NORTH -> 0

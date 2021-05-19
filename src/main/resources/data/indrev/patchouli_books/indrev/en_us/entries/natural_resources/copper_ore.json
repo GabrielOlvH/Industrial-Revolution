@@ -1,0 +1,13 @@
+{
+  "name": "Copper Ore",
+  "category": "natural_resources",
+  "sortnum": 0,
+  "icon": "indrev:copper_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:copper_ore",
+      "text": "$(#FFA500)$(l)Copper ore$() is common and can be found from the layer 0 to 64.$(br)$(#FFA500)$(l)Copper$() is heavily used in the crafting of machines."
+    }
+  ]
+}

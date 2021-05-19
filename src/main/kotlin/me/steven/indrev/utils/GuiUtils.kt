@@ -100,9 +100,11 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
     val buttonPanel = WGridPanel()
     val button = object : WButton() {
         init {
-            icon = Icon { _, x, y, size ->
-                val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
-                ScreenDrawing.texturedRect(x + 1, y + 1, size, size, id, -1)
+            if (world.isClient) {
+                icon = Icon { matrices, x, y, size ->
+                    val id = if (blockEntity.isSplitOn) SPLIT_ON_ICON else SPLIT_OFF_ICON
+                    ScreenDrawing.texturedRect(matrices, x + 1, y + 1, size, size, id, -1)
+                }
             }
         }
 
@@ -170,11 +172,12 @@ fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WG
     button.setOnClick {
         blockEntity.renderWorkingArea = !blockEntity.renderWorkingArea
     }
-    button.icon = Icon { _, x, y, _ ->
-        ScreenDrawing.texturedRect(x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
-    }
-    if (world.isClient)
+    if (world.isClient) {
+        button.icon = Icon { matrices, x, y, _ ->
+            ScreenDrawing.texturedRect(matrices,x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
+        }
         buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+    }
     buttonPanel.add(button, 0, 0)
     panel.add(buttonPanel, 9.7, 4.2)
     button.setSize(20, 20)

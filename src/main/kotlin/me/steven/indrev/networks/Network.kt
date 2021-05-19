@@ -67,7 +67,7 @@ abstract class Network(
         readPositions(tag)
     }
 
-    fun remove() {
+    open fun remove() {
         val state = type.getNetworkState(world)
         state.networks.remove(this)
         pipes.forEach { state.remove(it) }
@@ -79,7 +79,7 @@ abstract class Network(
         state[blockPos] = this as V
     }
 
-    fun appendContainer(blockPos: BlockPos, direction: Direction) {
+    open fun appendContainer(blockPos: BlockPos, direction: Direction) {
         containers.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
     }
 
@@ -115,13 +115,11 @@ abstract class Network(
             val posLong = machineTag.getLong("pos")
             val pos = BlockPos.fromLong(posLong)
             val dirList = machineTag.getList("dir", 8)
-            val directions = EnumSet.noneOf(Direction::class.java)
             dirList.forEach { dirTag ->
                 dirTag as StringTag
                 val dir = Direction.valueOf(dirTag.asString().toUpperCase())
-                directions.add(dir)
+                appendContainer(pos, dir)
             }
-            this.containers[pos] = directions
         }
     }
 

@@ -11,7 +11,7 @@
     },
     {
       "type": "text",
-      "text": "$(l)Rotate:$() in this mode you can rotate machines as well as disassemble them with a Shift + Right Click while looking at them.$(br)$(l)Configure:$() in this mode you can configure item output and input. Newly placed machines will have their left side as input and their right side as output as default but you can change it if you'd like.$(br2)$(l)IMPORTANT:$() machines placed previous to this update will not be configured at all!"
+      "text": "$(l)Rotate:$() in this mode you can rotate machines as well as disassemble them with a Shift + Right Click while looking at them.$(br)$(l)Configure:$() in this mode you can configure item output and input. Newly placed machines will have their left side as input and their right side as output as default but you can change it if you'd like."
     }
   ]
 }

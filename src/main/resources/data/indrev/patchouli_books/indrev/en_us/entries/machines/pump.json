@@ -1,0 +1,17 @@
+{
+  "name": "Pump",
+  "category": "machines",
+  "sortnum": 10,
+  "icon": "indrev:pump_mk1",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/pump_mk1",
+      "text": "The $(l)Pump$() is used to pump fluids placed on the world into fluid pipes and tanks."
+    },
+    {
+      "type": "text",
+      "text": "$(l)Usage:$() You must input energy from the top and take the fluid from the side it is facing. After receiving energy, it will drop down a pipe looking for fluids to pump.$(br2)There is no hard limit, except for the fluid's physics. As long as there is fluid touching the pump's pipe, source or not, it will look for a source block to pump. This means it can be used to drain lava lakes from the Nether."
+    }
+  ]
+}

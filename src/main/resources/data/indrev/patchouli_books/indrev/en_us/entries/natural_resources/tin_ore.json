@@ -1,0 +1,13 @@
+{
+  "name": "Tin Ore",
+  "category": "natural_resources",
+  "sortnum": 1,
+  "icon": "indrev:tin_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:tin_ore",
+      "text": "$(#999999)$(l)Tin ore$() is common and can be found from the layer 0 to 48.$(br)$(#999999)$(l)Tin$() is heavily used in the crafting of machines."
+    }
+  ]
+}

@@ -38,8 +38,9 @@ class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
                 val blockState = world?.getBlockState(mutablePos)
                 val pos = mutablePos.offset(dir)
                 val airState = world?.getBlockState(pos)
-                if (blockState?.material == Material.STONE && airState?.isAir == true) {
-                    world.setBlockState(pos, IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir), 2)
+                val state = IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir)
+                if (blockState?.material == Material.STONE && airState?.isAir == true && state.canPlaceAt(world, pos)) {
+                    world.setBlockState(pos, state, 2)
                     return true
                 }
             }

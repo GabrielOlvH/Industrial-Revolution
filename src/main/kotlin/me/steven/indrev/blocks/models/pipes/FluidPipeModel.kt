@@ -92,7 +92,7 @@ class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
         super.emitItemQuads(stack, p1, context)
 
-        context.fallbackConsumer().accept(modelArray[1])
-        context.fallbackConsumer().accept(modelArray[3])
+        context.meshConsumer().accept(meshArray[1])
+        context.meshConsumer().accept(meshArray[3])
     }
 }

@@ -187,20 +187,20 @@ object IRBlockRegistry {
 
     val CAPSULE_BLOCK_ENTITY: BlockEntityType<CapsuleBlockEntity> = BlockEntityType.Builder.create({ CapsuleBlockEntity() }, CAPSULE_BLOCK).build(null)
 
-    val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
-    val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
-    val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
-    val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+    val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK1)
+    val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK2)
+    val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK3)
+    val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK4)
 
-    val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
-    val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
-    val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
-    val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+    val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK1)
+    val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK2)
+    val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK3)
+    val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK4)
 
-    val CABLE_MK1 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK1)
-    val CABLE_MK2 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK2)
-    val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK3)
-    val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK), Tier.MK4)
+    val CABLE_MK1 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK1)
+    val CABLE_MK2 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK2)
+    val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK3)
+    val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque(), Tier.MK4)
 
     val COVERABLE_BLOCK_ENTITY_TYPE_MK1 = BlockEntityType.Builder.create({ CoverableBlockEntity(Tier.MK1) }, FLUID_PIPE_MK1, ITEM_PIPE_MK1, CABLE_MK1).build(null)
 

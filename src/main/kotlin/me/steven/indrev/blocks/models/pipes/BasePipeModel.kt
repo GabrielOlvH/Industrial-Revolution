@@ -6,6 +6,12 @@ import me.steven.indrev.blockentities.cables.CoverableBlockEntity
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
+import net.fabricmc.fabric.api.renderer.v1.Renderer
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
@@ -32,7 +38,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         identifier("block/${type}_side_${tier.toString().toLowerCase()}")
     )
     protected val spriteArray = arrayOfNulls<Sprite>(4)
-    protected val modelArray = arrayOfNulls<BakedModel>(7)
+    protected val meshArray = arrayOfNulls<Mesh>(7)
     private lateinit var transformation: ModelTransformation
 
     override fun bake(
@@ -41,21 +47,35 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
     ): BakedModel {
-        modelArray[0] = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)
-        transformation = modelArray[0]!!.transformation
-        val sideModel = loader.getOrLoadModel(modelIdCollection[1])
-        modelArray[1] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId) // NORTH
-        modelArray[2] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId) // EAST
-        modelArray[3] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId) // SOUTH
-        modelArray[4] = sideModel.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId) // WEST
-        modelArray[5] = sideModel.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId) // UP
-        modelArray[6] = sideModel.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId) // DOWN
-
         spriteIdCollection.forEachIndexed { idx, spriteIdentifier ->
             spriteArray[idx] = textureGetter.apply(spriteIdentifier)
         }
+
+        val center = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)!!
+        meshArray[0] = buildDefaultMesh(0, center)
+        transformation = center.transformation
+        val sideModel = loader.getOrLoadModel(modelIdCollection[1])
+        meshArray[1] = buildDefaultMesh(1, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
+        meshArray[2] = buildDefaultMesh(2, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
+        meshArray[3] = buildDefaultMesh(3, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId)!!)// SOUTH
+        meshArray[4] = buildDefaultMesh(4, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId)!!)// WEST
+        meshArray[5] = buildDefaultMesh(5, sideModel.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
+        meshArray[6] = buildDefaultMesh(6, sideModel.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
+
         return this
     }
+
+    protected open fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
+        model.getQuads(null, null, null).forEach { q ->
+            emitter.fromVanilla(q, null, null)
+            emitter.emit()
+        }
+        return builder.build()
+    }
+
 
     override fun getModelDependencies(): MutableCollection<Identifier> = modelIdCollection
 
@@ -94,59 +114,39 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
             if (blockEntity?.coverState != null) {
                 val coverState = blockEntity.coverState!!
                 val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
-                model.emitFromVanilla(coverState, context, randSupplier) { quad -> !quad.hasColor() }
+                val color = 255 shl 24 or (ColorProviderRegistry.BLOCK[coverState.block]?.getColor(coverState, world, pos, 0) ?: -1)
 
-                context.pushTransform { q ->
-                    val rawColor = ColorProviderRegistry.BLOCK[coverState.block]!!.getColor(coverState, world, pos, 0)
-                    val color = 255 shl 24 or rawColor
-                    q.spriteColor(0, color, color, color, color)
-                    true
+                val emitter = context.emitter
+                DIRECTIONS.forEach { dir ->
+                    model.getQuads(coverState, dir, randSupplier.get()).forEach { quad ->
+                        emitter.fromVanilla(quad, TRANSLUCENT, dir)
+                        if (quad.hasColor()) {
+                            emitter.spriteColor(0, color, color, color, color)
+                        }
+                        emitter.emit()
+                    }
                 }
-
-                model.emitFromVanilla(coverState, context, randSupplier) { quad -> quad.hasColor() }
-                context.popTransform()
                 if (coverState.isOpaque) return
             }
         }
-        handleBakedModel(world, state, pos, randSupplier, context, modelArray[0])
-        if (state[BasePipeBlock.NORTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[1])
-        if (state[BasePipeBlock.EAST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[2])
-        if (state[BasePipeBlock.SOUTH]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[3])
-        if (state[BasePipeBlock.WEST]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[4])
-        if (state[BasePipeBlock.UP]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[5])
-        if (state[BasePipeBlock.DOWN]) handleBakedModel(world, state, pos, randSupplier, context, modelArray[6])
-    }
 
-    private fun BakedModel.emitFromVanilla(blockState: BlockState, context: RenderContext, randSupplier: Supplier<Random>, shouldEmit: (BakedQuad) -> Boolean) {
-        val emitter = context.emitter
-        Direction.values().forEach { dir ->
-            getQuads(blockState, dir, randSupplier.get()).forEach { quad ->
-                if (shouldEmit(quad)) {
-                    emitter.fromVanilla(quad.vertexData, 0, false)
-                    emitter.emit()
-                }
-            }
-        }
-        getQuads(blockState, null, randSupplier.get()).forEach { quad ->
-            if (shouldEmit(quad)) {
-                emitter.fromVanilla(quad.vertexData, 0, false)
-                emitter.emit()
-            }
-        }
-    }
-
-    private fun handleBakedModel(
-        world: BlockRenderView,
-        state: BlockState,
-        pos: BlockPos,
-        randSupplier: Supplier<Random>,
-        context: RenderContext,
-        bakedModel: BakedModel?) {
-        if (bakedModel is FabricBakedModel) bakedModel.emitBlockQuads(world, state, pos, randSupplier, context)
-        else if (bakedModel != null) context.fallbackConsumer().accept(bakedModel)
+        context.meshConsumer().accept(meshArray[0])
+        if (state[BasePipeBlock.NORTH]) context.meshConsumer().accept(meshArray[1])
+        if (state[BasePipeBlock.EAST]) context.meshConsumer().accept(meshArray[2])
+        if (state[BasePipeBlock.SOUTH]) context.meshConsumer().accept(meshArray[3])
+        if (state[BasePipeBlock.WEST]) context.meshConsumer().accept(meshArray[4])
+        if (state[BasePipeBlock.UP]) context.meshConsumer().accept(meshArray[5])
+        if (state[BasePipeBlock.DOWN]) context.meshConsumer().accept(meshArray[6])
     }
 
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
-        context.fallbackConsumer().accept(modelArray[0])
+        context.meshConsumer().accept(meshArray[0])
+    }
+
+    companion object {
+        val TRANSLUCENT: RenderMaterial by lazy {
+            RendererAccess.INSTANCE.renderer!!.materialFinder().blendMode(0, BlendMode.TRANSLUCENT).find()
+        }
+        val DIRECTIONS = Direction.values()
     }
 }

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Fluid pipes can be used to transfer fluids between tanks far apart.$(br)Check the tooltips to see the amount of fluid that can be transferred.$(br)Pipes only transfer every second rather than every tick."
+      "text": "Fluid pipes can be used to transfer fluids between tanks far apart.$(br)Check the tooltips to see the amount of fluid that can be transferred.$(br)Pipes only transfer every second rather than every tick.$(br2)Servos are required, read the $(l:transportation/servos)$(t:Go to Servos)Servos$() chapter."
     },
     {
       "type": "crafting",

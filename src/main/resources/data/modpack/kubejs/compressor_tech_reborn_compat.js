@@ -1,4 +1,4 @@
-if (mod.isLoaded('techreborn')) {
+if (Platform.isLoaded('techreborn')) {
     console.log('Tech Reborn is present, loading Compressor compatibility recipes with Industrial Revolution.')
     events.listen('recipes', function (event) {
 

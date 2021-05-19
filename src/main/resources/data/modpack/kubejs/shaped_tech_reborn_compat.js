@@ -1,4 +1,4 @@
-if (mod.isLoaded('techreborn')) {
+if (Platform.isLoaded('techreborn')) {
     console.log('Tech Reborn is present, loading Shaped Recipes compatibility recipes with Industrial Revolution.')
     events.listen('recipes', function (event) {
         event.recipes.minecraft.crafting_shaped({

@@ -7,7 +7,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/miner_mk4",
-      "text": "The $(l)$(o)Mining Rig Computer$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks."
+      "text": "The $(l)$(o)Mining Rig Computer$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks.$(br)The Computer costs $(#1111FF)64LF/tick$() and each Drill will increase energy usage in $(#1111FF)256LF/tick$()"
     },
     {
       "type": "crafting",

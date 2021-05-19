@@ -89,7 +89,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
 
         val tag = stack.orCreateTag
         val progress = tag.getDouble("Progress")
-        if (progress >= 200000000) {
+        if (progress >= 100000000) {
             container.inventory[0] = ItemStack(IRItemRegistry.MODULAR_CORE_ACTIVATED)
             container.markDirty()
             container.sync()

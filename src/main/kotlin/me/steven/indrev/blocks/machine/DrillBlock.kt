@@ -150,6 +150,6 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         private val DRILL_TOP by lazy { IRBlockRegistry.DRILL_TOP }
         private val DRILL_MIDDLE by lazy { IRBlockRegistry.DRILL_MIDDLE }
         private val DRILL_BOTTOM by lazy { IRBlockRegistry.DRILL_BOTTOM }
-        val WORKING = BooleanProperty.of("working")
+        val WORKING: BooleanProperty = BooleanProperty.of("working")
     }
 }

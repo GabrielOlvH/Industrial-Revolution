@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Item pipes can be used to transfer items between inventories far apart.$(br)Check the tooltips to see the amount of items that can be transferred.$(br)Pipes only transfer every second rather than every tick.$(br2)Item pipes have advanced filtering options. Click on the attached servo to open a screen."
+      "text": "Item pipes can be used to transfer items between inventories far apart.$(br)Check the tooltips to see the amount of items that can be transferred.$(br)Pipes only transfer every second rather than every tick.$(br)Item pipes have $(l)advanced filtering$(), Right Click the pipe to see it.$(br2)Servos are required, read the $(l:transportation/servos)$(t:Go to Servos)Servos$() chapter."
     },
     {
       "type": "crafting",

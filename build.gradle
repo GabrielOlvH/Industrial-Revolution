@@ -117,11 +117,11 @@ dependencies {
     modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
     include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 
-    modImplementation("com.github.GabrielOlvH:LibGui:${project.libgui_version}") {
+    modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    include("com.github.GabrielOlvH:LibGui:${project.libgui_version}") {
+    include("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 

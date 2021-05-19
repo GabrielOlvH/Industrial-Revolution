@@ -56,8 +56,8 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         matingLimit = propertyDelegate[6]
         killAfter = propertyDelegate[7]
 
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(RANCHER_MK4.asItem()), buildMainPanel(), {}))
-        root.add(WCustomTabPanel.Tab(null, ItemIcon(IRItemRegistry.WRENCH), buildConfigPanel(), {}))
+        root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
+        root.add(buildConfigPanel()) { it.icon(ItemIcon(IRItemRegistry.WRENCH)) }
 
         root.validate(this)
     }

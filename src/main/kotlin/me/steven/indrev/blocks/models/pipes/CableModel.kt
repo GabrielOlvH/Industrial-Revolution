@@ -2,16 +2,13 @@ package me.steven.indrev.blocks.models.pipes
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.utils.blockSpriteId
+import net.fabricmc.fabric.api.renderer.v1.Renderer
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
+import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
-import net.minecraft.block.BlockState
-import net.minecraft.item.ItemStack
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockRenderView
-import java.util.*
-import java.util.function.Supplier
+import net.minecraft.client.render.model.BakedModel
 
 class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
     override val spriteIdCollection = mutableListOf(
@@ -21,42 +18,35 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
         blockSpriteId("block/cable_wire_emissive_${tier.toString().toLowerCase()}")
     )
 
-    override fun emitBlockQuads(
-        world: BlockRenderView,
-        state: BlockState,
-        pos: BlockPos,
-        randSupplier: Supplier<Random>,
-        context: RenderContext
-    ) {
-        super.emitBlockQuads(world, state, pos, randSupplier, context)
-        emitOverlay(context)
-    }
+    override fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {
+        val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
+        val builder: MeshBuilder = renderer.meshBuilder()
+        val emitter = builder.emitter
+        if (index == 0) {
 
-    override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {
-        super.emitItemQuads(stack, p1, context)
-        emitOverlay(context)
-    }
-
-    private fun emitOverlay(context: RenderContext) {
-        val sprite = spriteArray[1]!!
-        context.pushTransform { q ->
-            q.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
-            q.sprite(0, 0, sprite.getFrameU(3.0), sprite.getFrameV(3.0))
-            q.sprite(1, 0, sprite.getFrameU(3.0), sprite.getFrameV(13.0))
-            q.sprite(2, 0, sprite.getFrameU(13.0), sprite.getFrameV(13.0))
-            q.sprite(3, 0, sprite.getFrameU(13.0), sprite.getFrameV(3.0))
-            q.material(MATERIAL)
-            true
+            val sprite = spriteArray[1]!!
+            model.getQuads(null, null, null).forEach { q ->
+                emitter.fromVanilla(q, null, null)
+                emitter.emit()
+                emitter.fromVanilla(q, null, null)
+                emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
+                emitter.sprite(0, 0, sprite.getFrameU(3.0), sprite.getFrameV(3.0))
+                emitter.sprite(1, 0, sprite.getFrameU(3.0), sprite.getFrameV(13.0))
+                emitter.sprite(2, 0, sprite.getFrameU(13.0), sprite.getFrameV(13.0))
+                emitter.sprite(3, 0, sprite.getFrameU(13.0), sprite.getFrameV(3.0))
+                emitter.material(CENTER_MATERIAL)
+                emitter.emit()
+            }
+            return builder.build()
         }
-        context.fallbackConsumer().accept(modelArray[0])
-        context.popTransform()
+        return super.buildDefaultMesh(index, model)
     }
 
     companion object {
-        val MATERIAL by lazy {
+        val CENTER_MATERIAL by lazy {
             RendererAccess.INSTANCE.renderer?.materialFinder()!!.clear()
                 .spriteDepth(1)
-                .blendMode(0, BlendMode.TRANSLUCENT)
+                .blendMode(0, BlendMode.CUTOUT)
                 .disableAo(0, true)
                 .disableDiffuse(0, true)
                 .emissive(0, true)
