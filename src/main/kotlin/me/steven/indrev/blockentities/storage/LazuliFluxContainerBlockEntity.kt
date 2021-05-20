@@ -14,7 +14,6 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
-import net.minecraft.client.MinecraftClient
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
@@ -98,7 +97,6 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
         transferConfig.fromTag(tag)
-        MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, null, null, 8)
     }
 
     class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {
