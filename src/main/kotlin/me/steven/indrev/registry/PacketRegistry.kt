@@ -17,7 +17,6 @@ import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.MinerBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
-import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.config.IRConfig.writeToClient
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -63,8 +62,7 @@ object PacketRegistry {
                 blockEntity.getCurrentConfiguration(type)[dir] = mode
                 blockEntity.markDirty()
                 blockEntity.sync()
-                if (blockEntity is LazuliFluxContainerBlockEntity)
-                    MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, null, null, 8)
+                GlobalStateController.update(world, pos, false)
             }
         }
 
