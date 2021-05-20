@@ -17,6 +17,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
+import kotlin.math.floor
 
 class LazuliFluxContainerBlockEntity(tier: Tier) :
     MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY) {
@@ -56,7 +57,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
     }
 
     private fun update() {
-        val width = ((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f
+        val width = floor((((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f) * 16)
         if (width != lastWidth) {
             sync()
             lastWidth = width
