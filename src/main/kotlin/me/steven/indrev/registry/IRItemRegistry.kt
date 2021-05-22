@@ -404,6 +404,6 @@ object IRItemRegistry {
     val CABLE_ITEM_MK3 = BlockItem(IRBlockRegistry.CABLE_MK3, itemSettings())
     val CABLE_ITEM_MK4 = BlockItem(IRBlockRegistry.CABLE_MK4, itemSettings())
 
-    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.RETRIEVER)
-    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.OUTPUT)
+    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.RETRIEVER)
+    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.OUTPUT)
 }
