@@ -36,9 +36,9 @@ import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.block.Block
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
@@ -244,9 +244,9 @@ object PacketRegistry {
             val entries = veinType.outputs.entries
             buf.writeInt(entries.size)
             entries.forEach { entry ->
-                val block = entry.element
+                val item = entry.element
                 val weight = entry.weight
-                val rawId = Registry.BLOCK.getRawId(block)
+                val rawId = Registry.ITEM.getRawId(item)
                 buf.writeInt(rawId)
                 buf.writeInt(weight)
             }
@@ -268,12 +268,12 @@ object PacketRegistry {
             for (x in 0 until totalVeins) {
                 val id = buf.readIdentifier()
                 val entriesSize = buf.readInt()
-                val outputs = WeightedList<Block>()
+                val outputs = WeightedList<Item>()
                 for (y in 0 until entriesSize) {
                     val rawId = buf.readInt()
                     val weight = buf.readInt()
-                    val block = Registry.BLOCK.get(rawId)
-                    outputs.add(block, weight)
+                    val item = Registry.ITEM.get(rawId)
+                    outputs.add(item, weight)
                 }
                 val minSize = buf.readInt()
                 val maxSize = buf.readInt()

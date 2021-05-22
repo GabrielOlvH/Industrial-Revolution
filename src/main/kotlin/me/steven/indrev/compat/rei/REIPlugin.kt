@@ -18,7 +18,6 @@ import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.weight
 import me.steven.indrev.world.chunkveins.VeinType
-import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText
@@ -237,7 +236,7 @@ object REIPlugin : REIPluginV0 {
             }
         }
 
-        val recipeHelpers = mutableMapOf<Block, DefaultInformationDisplay>()
+        val recipeHelpers = mutableMapOf<Item, DefaultInformationDisplay>()
         VeinType.REGISTERED.forEach { (id, type) ->
             val sum = type.outputs.entries.sumBy { it.weight }
             type.outputs.entries.forEach { entry ->
