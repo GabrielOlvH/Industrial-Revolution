@@ -14,9 +14,8 @@ import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.weight
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinType
+import net.minecraft.block.Block
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Style
@@ -51,12 +50,11 @@ class ResourceReportScreenHandler(
         val sum = outputs.entries.sumBy { it.weight }
         outputs.entries.sortedByDescending { it.weight }
             .forEachIndexed { index, entry ->
-                val item = (entry.element as Item)
+                val block = (entry.element as Block)
                 val weight = entry.weight
-                val color = (item as? BlockItem)?.block?.defaultMaterialColor?.color ?: 0x404040
                 val text = LiteralText("${String.format("%.1f", (weight / sum.toDouble()) * 100)}% ").formatted(Formatting.DARK_GRAY)
                     .append(
-                        TranslatableText(item.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color)))
+                        TranslatableText(block.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(block.defaultMaterialColor.color)))
                     )
                 root.add(WText(text, HorizontalAlignment.LEFT), 0.2, 1.5 + index)
             }

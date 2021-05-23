@@ -21,7 +21,6 @@ import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.PacketByteBuf
@@ -110,7 +109,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                         }
                     }
 
-                    (generatedOre as? BlockItem)?.block?.also { sendBlockBreakPacket(drillBlockEntity.pos, it) }
+                    sendBlockBreakPacket(drillBlockEntity.pos, generatedOre)
                 }
                 workingState = true
                 return@updateData true

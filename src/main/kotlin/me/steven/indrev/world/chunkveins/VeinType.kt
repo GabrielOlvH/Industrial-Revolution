@@ -3,7 +3,7 @@ package me.steven.indrev.world.chunkveins
 import blue.endless.jankson.JsonArray
 import blue.endless.jankson.JsonObject
 import blue.endless.jankson.JsonPrimitive
-import net.minecraft.item.Item
+import net.minecraft.block.Block
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.registry.BuiltinRegistries
@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
 
-data class VeinType(val id: Identifier, val outputs: WeightedList<Item>, val sizeRange: IntRange) {
+data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val sizeRange: IntRange) {
     companion object {
         val REGISTERED = hashMapOf<Identifier, VeinType>()
         val BIOME_VEINS = hashMapOf<RegistryKey<Biome>, WeightedList<Identifier>>()
@@ -21,27 +21,27 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Item>, val siz
             val id = Identifier(json.get(String::class.java, "id"))
             val array = json.get(JsonArray::class.java, "output")
             val optional = json.getBoolean("optional", false)
-            val weightedList = WeightedList<Item>()
+            val weightedList = WeightedList<Block>()
             array?.forEach { element ->
                 element as JsonObject
                 val blockId = Identifier(element.get(String::class.java, "id"))
                 val weight = element.getInt("weight", 1)
-                if (!Registry.ITEM.getOrEmpty(blockId).isPresent) {
+                if (!Registry.BLOCK.getOrEmpty(blockId).isPresent) {
                     if (optional) {
                         VeinTypeResourceListener.LOGGER.debug("Not loading optional vein type $id because $blockId is missing")
                         return emptyArray()
                     }
                     VeinTypeResourceListener.LOGGER.error("Expected block but received unknown string $blockId when loading vein type $id")
                 }
-                weightedList.add(Registry.ITEM.get(blockId), weight)
+                weightedList.add(Registry.BLOCK.get(blockId), weight)
             }
             val range = json.get(JsonArray::class.java, "sizeRange")
             if (range == null) {
                 VeinTypeResourceListener.LOGGER.error("Missing range entry when loading vein type $id")
                 return null
             }
-            val min = range.minOf { (it as JsonPrimitive).asInt(1) }
-            val max = range.maxOf { (it as JsonPrimitive).asInt(1) }
+            val min = range.map { (it as JsonPrimitive).asInt(1) }.minOrNull()!!
+            val max = range.map { (it as JsonPrimitive).asInt(1) }.maxOrNull()!!
             val biomeArray = json.get(JsonArray::class.java, "biomes")
             val biomes = mutableMapOf<RegistryKey<Biome>, Int>()
             biomeArray?.forEach { element ->
