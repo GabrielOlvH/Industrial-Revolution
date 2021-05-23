@@ -701,6 +701,10 @@
   "vein.indrev.wolframite": "Wolframite",
   "vein.indrev.ferberite": "Ferberite",
   "vein.indrev.galena": "Galena",
+  "vein.indrev.glowstonedeposit": "Glowstone Deposit",
+  "vein.indrev.soul_nether": "Nether Soul Deposit",
+  "vein.indrev.sulfur_nether": "Sulfur",
+  "vein.indrev.denseice": "Dense Ice Deposit",
   "attribute.indrev.shield": "Shield",
   "subtitles.indrev.laser": "Laser beam"
 }
