@@ -27,7 +27,7 @@ import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
-object TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
+class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     private val modelIdentifier = ModelIdentifier(
         identifier("tank"),
