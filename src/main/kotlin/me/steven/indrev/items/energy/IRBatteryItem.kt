@@ -14,7 +14,7 @@ class IRBatteryItem(settings: Settings, maxStored: Double) :
     Item(settings), IREnergyItem {
 
     init {
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK1.io, Tier.MK1.io), this)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK1.io, Tier.MK1.io), this)
     }
 
     override fun appendTooltip(

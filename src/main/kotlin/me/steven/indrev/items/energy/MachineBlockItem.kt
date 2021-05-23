@@ -18,7 +18,7 @@ class MachineBlockItem(private val machineBlock: Block, settings: Settings) : Bl
 
     init {
         val capacity = (machineBlock as? MachineBlock)?.config?.maxEnergyStored ?: 0.0
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(capacity, Tier.MK4.io, 0.0), this)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(capacity, Tier.MK4.io, 0.0), this)
     }
 
     override fun appendTooltip(

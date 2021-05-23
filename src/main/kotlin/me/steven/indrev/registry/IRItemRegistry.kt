@@ -168,10 +168,10 @@ object IRItemRegistry {
         identifier("mining_drill_mk3").item(MINING_DRILL_MK3)
         identifier("mining_drill_mk4").item(MINING_DRILL_MK4)
 
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
 
         identifier("battery").item(BATTERY)
 

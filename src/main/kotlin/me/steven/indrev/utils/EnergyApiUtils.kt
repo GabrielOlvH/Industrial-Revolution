@@ -1,10 +1,8 @@
 package me.steven.indrev.utils
 
-import dev.technici4n.fasttransferlib.api.ContainerItemContext
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import dev.technici4n.fasttransferlib.api.item.ItemKey
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup
@@ -26,7 +24,7 @@ fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Ener
 
 fun energyOf(itemStack: ItemStack?): EnergyIo? {
     return if (itemStack == null) null
-    else EnergyApi.ITEM.get(ItemKey.of(itemStack), ContainerItemContext.ofStack(itemStack))
+    else EnergyApi.ITEM.find(itemStack, null)
 }
 
 fun extract(itemStack: ItemStack?, amount: Double): Boolean {

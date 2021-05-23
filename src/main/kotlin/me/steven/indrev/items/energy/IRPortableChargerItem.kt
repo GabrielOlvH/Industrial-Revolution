@@ -20,7 +20,7 @@ class IRPortableChargerItem(
 ) : Item(settings), IREnergyItem {
 
     init {
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, 16384.0, 16384.0), this)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, 16384.0, 16384.0), this)
     }
 
     override fun appendTooltip(
