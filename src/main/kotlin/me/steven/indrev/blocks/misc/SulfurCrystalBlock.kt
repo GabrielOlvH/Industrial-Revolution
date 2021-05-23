@@ -1,8 +1,10 @@
 package me.steven.indrev.blocks.misc
 
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
+import net.minecraft.item.Item
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.DirectionProperty
@@ -65,6 +67,10 @@ class SulfurCrystalBlock(settings: Settings) : Block(settings) {
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         return defaultState.with(FACING, ctx?.playerLookDirection?.opposite)
+    }
+
+    override fun asItem(): Item {
+        return IRItemRegistry.SULFUR_CRYSTAL_ITEM
     }
 
     companion object {
