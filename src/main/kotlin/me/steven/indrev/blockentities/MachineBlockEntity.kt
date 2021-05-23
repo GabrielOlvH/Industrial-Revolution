@@ -325,13 +325,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    protected open fun getFirstSlot(inventory: Inventory, direction: Direction, predicate: (Int, ItemStack) -> Boolean): Int? =
-        (0 until inventory.size()).firstOrNull { slot -> predicate(slot, inventory.getStack(slot)) }
-
     protected open fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
         val toTransfer = from.getStack(slot)
         while (!toTransfer.isEmpty) {
-            val firstSlot = getFirstSlot(to, direction) { firstSlot, firstStack ->
+            val firstSlot = (0 until to.size()).firstOrNull { firstSlot ->
+                val firstStack = to.getStack(firstSlot)
                 (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
                     && (to !is SidedInventory || to.canInsert(firstSlot, toTransfer, direction.opposite))
             } ?: break

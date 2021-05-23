@@ -9,8 +9,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
-import net.minecraft.inventory.Inventory
-import net.minecraft.item.ItemStack
 import net.minecraft.util.math.Direction
 
 class SolidInfuserBlockEntity(tier: Tier) :
@@ -22,28 +20,21 @@ class SolidInfuserBlockEntity(tier: Tier) :
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
-            input { slots = intArrayOf(2, 3) }
+            input {
+                slots = intArrayOf(2, 3)
+                filter { _, dir, slot -> canInput(dir, slot) }
+            }
             output { slot = 4 }
         }
     }
 
-    override fun getFirstSlot(
-        inventory: Inventory,
-        direction: Direction,
-        predicate: (Int, ItemStack) -> Boolean
-    ): Int? {
-        inventoryComponent?.let { component ->
-            val mode = component.itemConfig[direction.opposite]
-            when {
-                inventory != component.inventory -> return@let
-                mode == TransferMode.INPUT_FIRST ->
-                    return super.getFirstSlot(inventory, direction) { slot, stack -> slot == 2 && predicate(slot, stack) }
-                mode == TransferMode.INPUT_SECOND ->
-                    return super.getFirstSlot(inventory, direction) { slot, stack -> slot == 3 && predicate(slot, stack) }
-            }
-
+    private fun canInput(side: Direction?, slot: Int): Boolean {
+        if (side == null) return true
+        return when (inventoryComponent!!.itemConfig[side]) {
+            TransferMode.INPUT_FIRST -> slot == 2
+            TransferMode.INPUT_SECOND -> slot == 3
+            else -> true
         }
-        return super.getFirstSlot(inventory, direction, predicate)
     }
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {

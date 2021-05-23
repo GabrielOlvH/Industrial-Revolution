@@ -10,16 +10,25 @@ import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.item.ItemStack
+import net.minecraft.util.math.Direction
 
 open class Filterable {
-    var filters: MutableMap<Int, (ItemStack) -> Boolean> = hashMapOf()
+    var filters: MutableMap<Int, (ItemStack, Direction?) -> Boolean> = hashMapOf()
 
-    infix fun Int.filter(filter: (ItemStack) -> Boolean) {
+    infix fun Int.filter(filter: (ItemStack, Direction?) -> Boolean) {
         filters[this] = filter
     }
 
+    infix fun IntRange.filter(filter: (ItemStack, Direction?, Int) -> Boolean) {
+        forEach { slot -> filters[slot] = { stack, direction -> filter(stack, direction, slot) } }
+    }
+
+    infix fun Int.filter(filter: (ItemStack) -> Boolean) {
+        filters[this] = { stack, _ -> filter(stack) }
+    }
+
     infix fun IntRange.filter(filter: (ItemStack, Int) -> Boolean) {
-        forEach { slot -> filters[slot] = { stack -> filter(stack, slot) } }
+        forEach { slot -> filters[slot] = { stack, _ -> filter(stack,  slot) } }
     }
 }
 
@@ -48,10 +57,10 @@ open class IRInventoryDSL : Filterable() {
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
         if (blockEntity is UpgradeProvider) size += blockEntity.upgradeSlots.size
-        return IRInventory(this, size, input.slots, output.slots) { slot, stack ->
+        return IRInventory(this, size, input.slots, output.slots) { slot, stack, dir ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) {
-                { (_, item) ->
+                { (_, item), _ ->
                     when {
                         slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL
@@ -60,7 +69,7 @@ open class IRInventoryDSL : Filterable() {
                         else -> false
                     }
                 }
-            }(stack)
+            }(stack, dir)
         }
     }
 
@@ -73,8 +82,12 @@ open class IRInventoryDSL : Filterable() {
                 field = value
             }
 
+        fun filter(filter: (ItemStack, Direction?, Int) -> Boolean) {
+            slots.forEach { slot -> filters[slot] = { stack, dir -> filter(stack, dir, slot) } }
+        }
+
         fun filter(filter: (ItemStack, Int) -> Boolean) {
-            slots.forEach { slot -> filters[slot] = { stack -> filter(stack, slot) } }
+            slots.forEach { slot -> filters[slot] = { stack, _ -> filter(stack, slot) } }
         }
 
         companion object {
