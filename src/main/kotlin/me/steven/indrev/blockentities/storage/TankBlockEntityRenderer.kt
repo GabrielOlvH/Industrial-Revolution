@@ -28,11 +28,11 @@ class TankBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
         percent = (percent * maxHeight).toInt() / 16f
         val yHeight = percent.toDouble().coerceAtLeast(0.1)
         val faces = listOf(
-            FluidRenderFace.createFlatFaceZ(0.9, 0.0, 0.1, 0.1, yHeight, 0.1, 2.0, true, false),
-            FluidRenderFace.createFlatFaceZ(0.1, 0.0, 0.9, 0.9, yHeight, 0.9, 2.0, true, false),
-            FluidRenderFace.createFlatFaceX(0.1, 0.0, 0.1, 0.1, yHeight, 0.9, 2.0, false, false),
-            FluidRenderFace.createFlatFaceX(0.9, 0.0, 0.9, 0.9, yHeight, 0.1, 2.0, false, false),
-            FluidRenderFace.createFlatFaceY(0.1, yHeight, 0.1, 0.9, yHeight, 0.9, 2.0, true, false)
+            FluidRenderFace.createFlatFaceZ(0.9, 0.0, 0.1, 0.1, yHeight, 0.1, 1.0, true, false),
+            FluidRenderFace.createFlatFaceZ(0.1, 0.0, 0.9, 0.9, yHeight, 0.9, 1.0, true, false),
+            FluidRenderFace.createFlatFaceX(0.1, 0.0, 0.1, 0.1, yHeight, 0.9, 1.0, false, false),
+            FluidRenderFace.createFlatFaceX(0.9, 0.0, 0.9, 0.9, yHeight, 0.1, 1.0, false, false),
+            FluidRenderFace.createFlatFaceY(0.1, yHeight, 0.1, 0.9, yHeight, 0.9, 1.0, true, false)
         )
         IRFluidVolumeRenderer.render(entity.world!!, entity.pos, volume, faces, FluidVolumeRenderer.VCPS, matrices)
         FluidVolumeRenderer.VCPS.draw()
