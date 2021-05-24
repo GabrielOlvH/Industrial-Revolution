@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:warped_roots"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "output": {
+    "item": "minecraft:warped_roots",
+    "count": 2
+  },
+  "processTime": 600
+}

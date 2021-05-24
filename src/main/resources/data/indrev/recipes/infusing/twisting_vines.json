@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:twisting_vines"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "output": {
+    "item": "minecraft:twisting_vines",
+    "count": 2
+  },
+  "processTime": 600
+}

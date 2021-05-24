@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:lily_of_the_valley"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "output": {
+    "item": "minecraft:lily_of_the_valley",
+    "count": 2
+  },
+  "processTime": 600
+}

@@ -1,0 +1,16 @@
+{
+  "type": "indrev:infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:fern"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    }
+  ],
+  "output": {
+    "item": "minecraft:fern",
+    "count": 2
+  },
+  "processTime": 600
+}
