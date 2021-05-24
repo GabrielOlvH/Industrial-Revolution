@@ -17,7 +17,6 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
@@ -95,14 +94,12 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                     } else {
                         world.setBlockState(pos, Blocks.AIR.defaultState)
                     }
-                    val lootTable = world.server.lootManager.getTable(block.lootTableId)
-                    val lootContext = LootContext.Builder(world)
+                    val droppedStacks = state.getDroppedStacks(LootContext.Builder(world)
                         .random(world.random)
                         .parameter(LootContextParameters.ORIGIN, pos.toVec3d())
                         .parameter(LootContextParameters.BLOCK_STATE, state)
-                        .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
-                        .build(LootContextTypes.BLOCK)
-                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
+                        .parameter(LootContextParameters.TOOL, ItemStack.EMPTY))
+                    droppedStacks.forEach { inventory.output(it) }
                     true
                 }
                 block == Blocks.AIR && canPlant(item) && stack.count > 1 -> {
