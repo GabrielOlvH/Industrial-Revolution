@@ -108,10 +108,9 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         val directions = arrayOf(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)
 
                         directions.forEach loop@ {
-                            //print (it as String + "\n")
-                            if (world.getBlockState(pos.offset(it)).block == Blocks.JUNGLE_LOG) {
+                            var supportBlock = world.getBlockState(pos.offset(it)).block
+                            if (supportBlock == Blocks.JUNGLE_LOG || supportBlock == Blocks.JUNGLE_WOOD || supportBlock == Blocks.STRIPPED_JUNGLE_LOG || supportBlock == Blocks.STRIPPED_JUNGLE_WOOD) {
                                 cropState = cropState.with(CocoaBlock.FACING, it)
-                                //print("CHOOSEN\n")
                                 return@loop
                             }
                         }
