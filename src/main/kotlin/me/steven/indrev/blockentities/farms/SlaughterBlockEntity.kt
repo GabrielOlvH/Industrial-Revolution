@@ -11,6 +11,7 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.damage.DamageSource
+import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.SwordItem
 import net.minecraft.loot.context.LootContext
@@ -45,7 +46,7 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea(), {e -> (e !is PlayerEntity)})?.toMutableList()
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea(), { e -> (e !is PlayerEntity && e !is ArmorStandEntity)})?.toMutableList()
             ?: mutableListOf()
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
         if (mobs.isEmpty() || !canUse(energyCost)) {

@@ -15,6 +15,7 @@ import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.setIcon
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -39,9 +40,6 @@ class SlaughterScreenHandler(
         setRootPanel(root)
         configure("block.indrev.slaughter", ctx, playerInventory, blockInventory)
 
-        val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
-        root.add(inputFrame, 1.9, 0.7)
-        inputFrame.setSize(40, 44)
         val outputFrame = WSprite(identifier("textures/gui/output_frame.png"))
         root.add(outputFrame, 5.1, 0.7)
         outputFrame.setSize(58, 62)
@@ -55,14 +53,10 @@ class SlaughterScreenHandler(
         )
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.2, 1.0)
-        val inputSlot = WTooltipedItemSlot.of(
-            blockInventory,
-            (blockInventory as IRInventory).inputSlots.first(),
-            1,
-            1,
-            TranslatableText("gui.indrev.slaughter_input_slot_type")
-        )
-        root.add(inputSlot, 2.0, 1.0)
+
+        val swordSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.slaughter_input_sword"))
+        swordSlot.setIcon(ctx, blockInventory, 2, SWORD_ICON)
+        root.add(swordSlot, 2.5, 1.5)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
         root.add(slider, 1.6, 4.0)
@@ -92,5 +86,6 @@ class SlaughterScreenHandler(
 
     companion object {
         val SCREEN_ID = identifier("slaughter_screen")
+        val SWORD_ICON = identifier("textures/gui/sword_icon.png")
     }
 }
