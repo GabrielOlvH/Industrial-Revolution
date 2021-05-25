@@ -90,6 +90,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.CONDENSER_HANDLER,
             IndustrialRevolution.FLUID_INFUSER_HANDLER,
             IndustrialRevolution.FARMER_HANDLER,
+            IndustrialRevolution.SLAUGHTER_HANDLER,
             IndustrialRevolution.RESOURCE_REPORT_HANDLER,
             IndustrialRevolution.SAWMILL_HANDLER,
             IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
