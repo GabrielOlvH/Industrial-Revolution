@@ -230,8 +230,8 @@ publishing {
         maven {
             url "https://maven.cafeteria.dev/releases"
             credentials {
-                username = "$mcdUsername"
-                password = "$mcdPassword"
+                username = project.property("mcdUsername")
+                password = project.property("mcdPassword")
             }
             authentication {
                 basic(BasicAuthentication)
