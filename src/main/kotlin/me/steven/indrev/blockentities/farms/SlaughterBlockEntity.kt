@@ -23,7 +23,7 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(12, 13, 14, 15)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.BUFFER, Upgrade.DAMAGE)
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -66,7 +66,7 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(mob.lootTable)
-                mob.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
+                mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Upgrade.getDamageMultiplier(upgrades, this)).toFloat())
                 if (mob.isDead) {
                     mob.remove()
                     val lootContext = LootContext.Builder(world as ServerWorld)
@@ -92,7 +92,7 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         }
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+        return if (upgrade == Upgrade.SPEED || upgrade == Upgrade.DAMAGE) return 1 else super.getMaxUpgrade(upgrade)
     }
 
     override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)

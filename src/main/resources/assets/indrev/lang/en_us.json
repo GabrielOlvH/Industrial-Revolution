@@ -251,6 +251,8 @@
   "item.indrev.buffer_upgrade.tooltip": "Increases energy capacity",
   "item.indrev.energy_upgrade": "Energy Efficiency Enhancer",
   "item.indrev.energy_upgrade.tooltip": "Decreases energy cost",
+  "item.indrev.damage_upgrade": "Damage Enhancer",
+  "item.indrev.damage_upgrade.tooltip": "Increases the damage done by a Slaughter",
   "item.indrev.speed_upgrade": "Speed Enhancer",
   "item.indrev.speed_upgrade.tooltip": "Increases processing speed and power consumption",
   "item.indrev.blast_furnace_upgrade": "Blasting Enhancer",
