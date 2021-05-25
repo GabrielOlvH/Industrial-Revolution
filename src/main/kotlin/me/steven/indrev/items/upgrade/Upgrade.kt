@@ -21,7 +21,7 @@ enum class Upgrade {
         }
 
         fun getDamageMultiplier(upgrades: Map<Upgrade, Int>, provider: UpgradeProvider): Double {
-            return IRConfig.upgrades.damageUpgradeModifier * (upgrades[DAMAGE] ?: 0)
+            return IRConfig.upgrades.damageUpgradeModifier * (upgrades[DAMAGE] ?: 0) as Double
         }
 
         fun getBuffer(provider: MachineBlockEntity<*>) =
