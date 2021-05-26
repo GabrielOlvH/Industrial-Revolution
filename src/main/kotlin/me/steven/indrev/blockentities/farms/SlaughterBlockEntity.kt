@@ -46,8 +46,8 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea(), { e -> (e !is PlayerEntity && e !is ArmorStandEntity)})?.toMutableList()
-            ?: mutableListOf()
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea(), { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead)})
+            ?: emptyList()
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
         if (mobs.isEmpty() || !canUse(energyCost)) {
             workingState = false
@@ -59,16 +59,11 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
             val swordItem = swordStack.item as SwordItem
             use(energyCost)
             mobs.forEach { mob ->
-                if (mob == null) {
-                    mobs.remove(mob)
-                }
-
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(mob.lootTable)
                 mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Upgrade.getDamageMultiplier(upgrades, this)).toFloat())
                 if (mob.isDead) {
-                    mob.remove()
                     val lootContext = LootContext.Builder(world as ServerWorld)
                         .random(world?.random)
                         .parameter(LootContextParameters.ORIGIN, mob.pos)
