@@ -12,7 +12,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/capsule",
-      "text": "The Capsule will hold your Core of Modularity during the process of activation."
+      "text": "The Capsule will hold your Core of Modularity during the process of activation.$(br)It will emit a redstone signal when it's finished."
     },
     {
       "type": "crafting",
