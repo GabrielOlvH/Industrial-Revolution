@@ -556,7 +556,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry("modular_workbench", false, Tier.MK4)
             .blockProvider { tier ->
-                ModularWorkbenchBlock(
+                HorizontalFacingMachineBlock(
                     this,
                     SETTINGS().nonOpaque(),
                     tier,
