@@ -119,8 +119,10 @@ object PacketRegistry {
             val slot = buf.readInt()
             server.execute {
                 val stack = player.inventory.getStack(slot)
-                val tag = stack.getOrCreateSubTag("selected")
-                tag.putInt(key, value)
+                if (!stack.isEmpty) {
+                    val tag = stack.getOrCreateSubTag("selected")
+                    tag.putInt(key, value)
+                }
             }
         }
 
