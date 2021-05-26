@@ -1,6 +1,7 @@
 package me.steven.indrev
 
 import me.steven.indrev.api.IRServerPlayerEntityExtension
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
@@ -153,7 +154,7 @@ object IndustrialRevolution : ModInitializer {
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRBlockRegistry.NIKOLITE_ORE().asItem() } }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK4).asItem() } }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::CoalGeneratorScreenHandler)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::SolarGeneratorScreenHandler)
