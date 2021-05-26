@@ -83,9 +83,11 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
             when {
                 item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) -> {
                     stack.decrement(1)
-                    (block as Fertilizable).grow(world, world.random, pos, state)
-                    world.syncWorldEvent(2005, pos, 0)
-                    true
+                    if (block.canGrow(world, world.random, pos, state)) {
+                        block.grow(world, world.random, pos, state)
+                        world.syncWorldEvent(2005, pos, 0)
+                        true
+                    } else false
                 }
                 canHarvest(slot, state, block, item) -> {
                     if ((block is CropBlock || block is SweetBerryBushBlock) && stack.count > 1) {
