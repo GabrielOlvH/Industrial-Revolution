@@ -32,9 +32,9 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
         val textureId = Identifier(id.namespace, "textures/item/${id.path}.png")
         Icon { _, x, y, size ->
             if (item is IRGamerAxeItem)
-                ScreenDrawing.texturedRect(x, y, size, size, textureId, 0f, 0f, 1f, 0.14285714f, -1)
+                ScreenDrawing.texturedRect(MatrixStack(), x, y, size, size, textureId, 0f, 0f, 1f, 0.14285714f, -1)
             else
-                ScreenDrawing.texturedRect(x, y, size, size, textureId, -1)
+                ScreenDrawing.texturedRect(MatrixStack(), x, y, size, size, textureId, -1)
         }
     }
 
@@ -79,6 +79,9 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
                     moduleBox.add(slider)
                     tabPanel.add(moduleBox)
                 }
+
+                tabPanel.setSize(tabPanel.width + 65, tabPanel.height)
+
                 root.add(
                     WCustomTabPanel.Tab(
                         null,
