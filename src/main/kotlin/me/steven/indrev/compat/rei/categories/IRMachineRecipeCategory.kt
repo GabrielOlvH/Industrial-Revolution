@@ -1,5 +1,6 @@
 package me.steven.indrev.compat.rei.categories
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import it.unimi.dsi.fastutil.ints.IntList
 import me.shedaniel.math.Point
 import me.shedaniel.math.Rectangle
@@ -61,12 +62,12 @@ open class IRMachineRecipeCategory(
                 )
         }
         if (recipe is IRFluidRecipe) {
-            if (recipe.fluidInput != null) {
+            if (recipe.fluidInput != null && recipe.fluidInput?.amount() != FluidAmount.ZERO) {
                 val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
                 createREIFluidWidget(widgets, inputFluidPoint, recipe.fluidInput!!)
             }
-            if (recipe.fluidOutput != null) {
-                val outputFluidPoint = Point(startPoint.x + 80, startPoint.y)
+            if (recipe.fluidOutput != null && recipe.fluidOutput?.amount() != FluidAmount.ZERO) {
+                val outputFluidPoint = Point(startPoint.x + 83, startPoint.y)
                 createREIFluidWidget(widgets, outputFluidPoint, recipe.fluidOutput!!)
             }
         }
