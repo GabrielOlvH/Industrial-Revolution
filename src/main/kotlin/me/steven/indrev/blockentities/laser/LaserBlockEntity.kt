@@ -68,7 +68,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         if (recipe == null) {
             recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
                 .firstOrNull { it.matches(stack, null) }
-        } else if (ItemStack.areEqual(recipe!!.outputs.first().stack, stack)) {
+        } else if (ItemStack.areItemsEqual(recipe!!.outputs.first().stack, stack)) {
             return
         }
 
