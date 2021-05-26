@@ -169,7 +169,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 world?.syncWorldEvent(2005, pos, 0)
                 itemStack.decrement(1)
             }
-            block == Blocks.AIR
+            block is AirBlock
                     && item is BlockItem
                     && (item.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock)
                     && item.block.defaultState.canPlaceAt(world, pos)

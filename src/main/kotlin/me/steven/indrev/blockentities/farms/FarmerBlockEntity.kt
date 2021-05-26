@@ -11,15 +11,14 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.map
 import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.*
-import net.minecraft.item.BlockItem
-import net.minecraft.item.BoneMealItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
+import net.minecraft.item.*
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.state.property.DirectionProperty
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.Direction
 
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
@@ -79,7 +78,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         val performedAction = inventory?.inputSlots?.any { slot ->
             val stack = inventory.getStack(slot)
             val item = stack.item
-            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock
+            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock || block is CocoaBlock
             when {
                 item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) && block.canGrow(world, world.random, pos, state) -> {
                     stack.decrement(1)
@@ -102,8 +101,21 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                     droppedStacks.forEach { inventory.output(it) }
                     true
                 }
-                block == Blocks.AIR && canPlant(item) && stack.count > 1 -> {
-                    val cropState = (item as BlockItem).block.defaultState
+                block is AirBlock && canPlant(item) && stack.count > 1 -> {
+                    var cropState = (item as BlockItem).block.defaultState
+
+                    if (item.block is CocoaBlock) {
+                        val directions = arrayOf(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST)
+
+                        directions.forEach loop@ {
+                            var supportBlock = world.getBlockState(pos.offset(it)).block
+                            if (supportBlock == Blocks.JUNGLE_LOG || supportBlock == Blocks.JUNGLE_WOOD || supportBlock == Blocks.STRIPPED_JUNGLE_LOG || supportBlock == Blocks.STRIPPED_JUNGLE_WOOD) {
+                                cropState = cropState.with(CocoaBlock.FACING, it)
+                                return@loop
+                            }
+                        }
+                    }
+
                     if (cropState.canPlaceAt(world, pos) && world.isAir(pos)) {
                         world.setBlockState(pos, cropState)
                         stack.count--
@@ -124,6 +136,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         || item.block is StemBlock
                         || item.block == Blocks.SUGAR_CANE
                         || item.block is SweetBerryBushBlock
+                        || item.block is CocoaBlock
                 )
 
     private fun canHarvest(slot: Int, state: BlockState, block: Block, item: Item): Boolean =
@@ -132,6 +145,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                 && (item is BlockItem && item.block == block || slot == 4))
                 || block is GourdBlock
                 || block == Blocks.SUGAR_CANE
+                || (block is CocoaBlock && state[CocoaBlock.AGE] == 2)
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 
