@@ -29,7 +29,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem {
 
     init {
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
     }
 
     override fun isEnchantable(stack: ItemStack?): Boolean = false

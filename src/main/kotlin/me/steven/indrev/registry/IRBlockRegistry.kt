@@ -43,6 +43,8 @@ object IRBlockRegistry {
         FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
 
+        identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
+
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
 
         identifier("controller").block(CONTROLLER).item(BlockItem(CONTROLLER, itemSettings()))
@@ -143,6 +145,10 @@ object IRBlockRegistry {
     )
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD, MaterialColor.WOOD).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
+    )
+
+    val WITHER_PROOF_OBSIDIAN = Block(
+        FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
     )
 
     val CONTROLLER =  HorizontalFacingBlock(

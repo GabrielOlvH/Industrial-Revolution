@@ -1,11 +1,13 @@
 package me.steven.indrev.blocks.machine.pipes
 
-import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
-import me.steven.indrev.utils.groupedFluidInv
+import me.steven.indrev.utils.fluidExtractableOf
+import me.steven.indrev.utils.fluidInsertableOf
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.client.item.TooltipContext
@@ -44,7 +46,8 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedFluidInv(world, pos, dir.opposite) != EmptyGroupedFluidInv.INSTANCE
+        fluidInsertableOf(world, pos, dir.opposite) != RejectingFluidInsertable.NULL
+                || fluidExtractableOf(world, pos, dir.opposite) != EmptyFluidExtractable.NULL
                 || world.getBlockState(pos).block.let { it is FluidPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 

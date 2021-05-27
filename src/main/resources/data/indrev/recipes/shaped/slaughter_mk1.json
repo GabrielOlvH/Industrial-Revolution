@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "IFI",
+    "IBI"
+  ],
+  "key": {
+    "F": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "I": {
+      "tag": "c:bronze_plates"
+    },
+    "N": {
+      "item": "minecraft:golden_sword"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:slaughter_mk1"
+  }
+}

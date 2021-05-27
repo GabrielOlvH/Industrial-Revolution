@@ -12,7 +12,7 @@ class IRInventory(
     size: Int,
     val inputSlots: IntArray,
     val outputSlots: IntArray,
-    val slotPredicate: (Int, ItemStack?) -> Boolean = { _, _ -> true }
+    val slotPredicate: (Int, ItemStack?, Direction?) -> Boolean = { _, _, _ -> true }
 ) : SimpleInventory(size), SidedInventory {
 
     var component: InventoryComponent? = null
@@ -32,11 +32,11 @@ class IRInventory(
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
-        (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && isValid(slot, stack)
+        (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && slotPredicate(slot, stack, direction) || stack?.isEmpty == true
 
     override fun getMaxCountPerStack(): Int = maxCount
 
-    override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack) || stack?.isEmpty == true
+    override fun isValid(slot: Int, stack: ItemStack?): Boolean = slotPredicate(slot, stack, null) || stack?.isEmpty == true
 
     fun fits(stack: Item, outputSlot: Int): Boolean {
         val outStack = getStack(outputSlot)

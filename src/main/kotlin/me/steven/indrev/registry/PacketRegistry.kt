@@ -65,6 +65,8 @@ object PacketRegistry {
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                 blockEntity.getCurrentConfiguration(type)[dir] = mode
                 blockEntity.markDirty()
+                blockEntity.sync()
+                GlobalStateController.update(world, pos, false)
             }
         }
 
@@ -121,8 +123,10 @@ object PacketRegistry {
             val slot = buf.readInt()
             server.execute {
                 val stack = player.inventory.getStack(slot)
-                val tag = stack.getOrCreateSubTag("selected")
-                tag.putInt(key, value)
+                if (!stack.isEmpty) {
+                    val tag = stack.getOrCreateSubTag("selected")
+                    tag.putInt(key, value)
+                }
             }
         }
 

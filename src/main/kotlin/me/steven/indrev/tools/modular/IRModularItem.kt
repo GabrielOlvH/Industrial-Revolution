@@ -30,7 +30,7 @@ interface IRModularItem<T : Module> {
     }
     fun getCount(stack: ItemStack): Int {
         return getCompatibleModules(stack).map { module ->
-            val tag = stack.orCreateTag
+            val tag = stack.tag ?: return@map 0
             if (tag.contains(module.key)) tag.getInt(module.key)
             else 0
         }.sum()

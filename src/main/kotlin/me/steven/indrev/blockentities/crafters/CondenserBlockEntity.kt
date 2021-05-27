@@ -2,12 +2,17 @@ package me.steven.indrev.blockentities.crafters
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.Direction
 
 class CondenserBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
@@ -27,5 +32,26 @@ class CondenserBlockEntity(tier: Tier) :
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {
         return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    }
+
+    override fun applyDefault(
+        state: BlockState,
+        type: ConfigurationType,
+        configuration: MutableMap<Direction, TransferMode>
+    ) {
+        val direction = (state.block as MachineBlock).getFacing(state)
+        when (type) {
+            ConfigurationType.ITEM -> {
+                configuration[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
+            }
+            else -> super.applyDefault(state, type, configuration)
+        }
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> arrayOf(TransferMode.OUTPUT, TransferMode.NONE)
+            else -> return super.getValidConfigurations(type)
+        }
     }
 }

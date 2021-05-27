@@ -1,12 +1,16 @@
 package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.machines.properties.Property
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.CompoundTag
+import net.minecraft.util.math.Direction
 
 abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegistry) : GeneratorBlockEntity(tier, registry) {
     private var burnTime: Int by Property(4, 0)
@@ -28,6 +32,27 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
             markDirty()
         }
         return burnTime > 0 && energy < energyCapacity
+    }
+
+    override fun applyDefault(
+        state: BlockState,
+        type: ConfigurationType,
+        configuration: MutableMap<Direction, TransferMode>
+    ) {
+        val direction = (state.block as MachineBlock).getFacing(state)
+        when (type) {
+            ConfigurationType.ITEM -> {
+                configuration[direction.rotateYClockwise()] = TransferMode.INPUT
+            }
+            else -> super.applyDefault(state, type, configuration)
+        }
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> arrayOf(TransferMode.INPUT, TransferMode.NONE)
+            else -> return super.getValidConfigurations(type)
+        }
     }
 
     override fun fromTag(state: BlockState?, tag: CompoundTag?) {

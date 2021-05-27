@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:cobblestone"
+    "item": "minecraft:gravel"
   },
   "output": {
     "item": "minecraft:sand",

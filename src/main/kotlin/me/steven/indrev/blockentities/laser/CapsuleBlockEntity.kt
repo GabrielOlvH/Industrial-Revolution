@@ -48,11 +48,11 @@ class CapsuleBlockEntity : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY), Bl
     }
 
     override fun fromClientTag(tag: CompoundTag) {
-        Inventories.fromTag(tag, inventory)
+        inventory[0] = ItemStack.fromTag(tag.getCompound("Item"))
     }
 
     override fun toClientTag(tag: CompoundTag): CompoundTag {
-        Inventories.toTag(tag, inventory)
+        tag.put("Item", inventory[0].toTag(CompoundTag()))
         return tag
     }
 }

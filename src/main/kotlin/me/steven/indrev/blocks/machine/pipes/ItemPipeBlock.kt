@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks.machine.pipes
 
-import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
+import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
+import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenFactory
@@ -8,7 +9,8 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.networks.item.ItemNetworkState
-import me.steven.indrev.utils.groupedItemInv
+import me.steven.indrev.utils.itemExtractableOf
+import me.steven.indrev.utils.itemInsertableOf
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.client.item.TooltipContext
@@ -71,7 +73,8 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        groupedItemInv(world, pos, dir.opposite) != EmptyGroupedItemInv.INSTANCE
+        itemInsertableOf(world, pos, dir.opposite) != RejectingItemInsertable.NULL
+                || itemExtractableOf(world, pos, dir.opposite) != EmptyItemExtractable.NULL
                 || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
 

@@ -170,10 +170,10 @@ object IRItemRegistry {
         identifier("mining_drill_mk3").item(MINING_DRILL_MK3)
         identifier("mining_drill_mk4").item(MINING_DRILL_MK4)
 
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
 
         identifier("battery").item(BATTERY)
 
@@ -196,6 +196,7 @@ object IRItemRegistry {
         identifier("energy_upgrade").item(ENERGY_UPGRADE)
         identifier("blast_furnace_upgrade").item(BLAST_FURNACE_UPGRADE)
         identifier("smoker_upgrade").item(SMOKER_UPGRADE)
+        identifier("damage_upgrade").item(DAMAGE_UPGRADE)
 
         identifier("energy_reader").item(ENERGY_READER)
 
@@ -331,6 +332,7 @@ object IRItemRegistry {
     val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(32), Upgrade.ENERGY)
     val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
     val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
+    val DAMAGE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.DAMAGE)
 
     val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
 
@@ -408,6 +410,6 @@ object IRItemRegistry {
     val CABLE_ITEM_MK3 = BlockItem(IRBlockRegistry.CABLE_MK3, itemSettings())
     val CABLE_ITEM_MK4 = BlockItem(IRBlockRegistry.CABLE_MK4, itemSettings())
 
-    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.RETRIEVER)
-    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(1), EndpointData.Type.OUTPUT)
+    val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.RETRIEVER)
+    val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.OUTPUT)
 }

@@ -14,10 +14,10 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
-import net.minecraft.client.MinecraftClient
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
+import kotlin.math.floor
 
 class LazuliFluxContainerBlockEntity(tier: Tier) :
     MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY) {
@@ -57,7 +57,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
     }
 
     private fun update() {
-        val width = ((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f
+        val width = floor((((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f) * 16)
         if (width != lastWidth) {
             sync()
             lastWidth = width
@@ -98,7 +98,6 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
     override fun fromClientTag(tag: CompoundTag?) {
         super.fromClientTag(tag)
         transferConfig.fromTag(tag)
-        MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, null, null, 8)
     }
 
     class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {

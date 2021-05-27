@@ -21,6 +21,7 @@ import net.minecraft.tag.BlockTags
 import net.minecraft.tag.ItemTags
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Box
 import net.minecraft.world.chunk.Chunk
 
 class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
@@ -169,7 +170,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                 world?.syncWorldEvent(2005, pos, 0)
                 itemStack.decrement(1)
             }
-            block == Blocks.AIR
+            block is AirBlock
                     && item is BlockItem
                     && (item.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock)
                     && item.block.defaultState.canPlaceAt(world, pos)
@@ -192,6 +193,11 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
+
+    override fun getWorkingArea(): Box {
+        val box = Box(pos)
+        return box.expand(range.toDouble(), 0.0, range.toDouble()).stretch(0.0, 40.0, 0.0)
+    }
 
     override fun getMaxUpgrade(upgrade: Upgrade): Int {
         return if (upgrade == Upgrade.SPEED) return 12 else super.getMaxUpgrade(upgrade)

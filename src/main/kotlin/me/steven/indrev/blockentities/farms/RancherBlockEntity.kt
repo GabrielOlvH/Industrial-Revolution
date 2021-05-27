@@ -10,15 +10,14 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.FakePlayerEntity
+import me.steven.indrev.utils.eat
+import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.SwordItem
-import net.minecraft.loot.context.LootContext
-import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
@@ -73,37 +72,31 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             kill.forEach { animal ->
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
-                val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
-                animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
-                if (animal.isDead) {
-                    animals.remove(animal)
-                    val lootContext = LootContext.Builder(world as ServerWorld)
-                        .random(world?.random)
-                        .parameter(LootContextParameters.ORIGIN, animal.pos)
-                        .parameter(LootContextParameters.DAMAGE_SOURCE, DamageSource.player(fakePlayer))
-                        .parameter(LootContextParameters.THIS_ENTITY, animal)
-                        .build(LootContextTypes.ENTITY)
-                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
+
+                animal.redirectDrops(inventory) {
+                    animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
                 }
             }
         }
         for (animal in animals) {
             inventory.inputSlots.forEach { slot ->
                 val stack = inventory.getStack(slot).copy()
-                if (tryFeed(animals.size, animal, inventory.getStack(slot)).isAccepted) return@forEach
-                fakePlayer.inventory.selectedSlot = 8
-                fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
-                if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
-                    use(energyCost)
-                val inserted = inventory.output(fakePlayer.inventory.getStack(0))
-                val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
-                if (!handStack.isEmpty && handStack.item != stack.item) {
-                    inventory.output(handStack)
-                    fakePlayer.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
+                animal.redirectDrops(inventory) {
+                    if (tryFeed(animals.size, animal, inventory.getStack(slot)).isAccepted) return@forEach
+                    fakePlayer.inventory.selectedSlot = 8
+                    fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
+                    if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
+                        use(energyCost)
+                    val inserted = inventory.output(fakePlayer.inventory.getStack(0))
+                    val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
+                    if (!handStack.isEmpty && handStack.item != stack.item) {
+                        inventory.output(handStack)
+                        fakePlayer.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
+                    }
+                    if (inserted)
+                        inventory.setStack(slot, stack)
+                    fakePlayer.inventory.clear()
                 }
-                if (inserted)
-                    inventory.setStack(slot, stack)
-                fakePlayer.inventory.clear()
             }
         }
         fakePlayer.inventory.clear()

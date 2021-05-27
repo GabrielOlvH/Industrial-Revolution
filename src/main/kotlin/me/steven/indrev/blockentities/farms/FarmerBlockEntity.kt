@@ -17,10 +17,10 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
+import net.minecraft.util.math.Direction
 
 class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
 
@@ -80,11 +80,11 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
         val performedAction = inventory?.inputSlots?.any { slot ->
             val stack = inventory.getStack(slot)
             val item = stack.item
-            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock
+            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock || block is CocoaBlock
             when {
-                item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) -> {
+                item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) && block.canGrow(world, world.random, pos, state) -> {
                     stack.decrement(1)
-                    (block as Fertilizable).grow(world, world.random, pos, state)
+                    block.grow(world, world.random, pos, state)
                     world.syncWorldEvent(2005, pos, 0)
                     true
                 }
@@ -95,18 +95,24 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                     } else {
                         world.setBlockState(pos, Blocks.AIR.defaultState)
                     }
-                    val lootTable = world.server.lootManager.getTable(block.lootTableId)
-                    val lootContext = LootContext.Builder(world)
+                    val droppedStacks = state.getDroppedStacks(LootContext.Builder(world)
                         .random(world.random)
                         .parameter(LootContextParameters.ORIGIN, pos.toVec3d())
                         .parameter(LootContextParameters.BLOCK_STATE, state)
-                        .parameter(LootContextParameters.TOOL, ItemStack.EMPTY)
-                        .build(LootContextTypes.BLOCK)
-                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
+                        .parameter(LootContextParameters.TOOL, ItemStack.EMPTY))
+                    droppedStacks.forEach { inventory.output(it) }
                     true
                 }
-                block == Blocks.AIR && canPlant(item) && stack.count > 1 -> {
-                    val cropState = (item as BlockItem).block.defaultState
+                block is AirBlock && canPlant(item) && stack.count > 1 -> {
+                    var cropState = (item as BlockItem).block.defaultState
+
+                    if (item.block is CocoaBlock) {
+                        arrayOf(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST).firstOrNull {
+                            cropState = cropState.with(CocoaBlock.FACING, it)
+                            cropState.canPlaceAt(world, pos)
+                        } ?: return@any false
+                    }
+
                     if (cropState.canPlaceAt(world, pos) && world.isAir(pos)) {
                         world.setBlockState(pos, cropState)
                         stack.count--
@@ -127,6 +133,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                         || item.block is StemBlock
                         || item.block == Blocks.SUGAR_CANE
                         || item.block is SweetBerryBushBlock
+                        || item.block is CocoaBlock
                 )
 
     private fun canHarvest(slot: Int, state: BlockState, block: Block, item: Item): Boolean =
@@ -135,6 +142,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
                 && (item is BlockItem && item.block == block || slot == 4))
                 || block is GourdBlock
                 || block == Blocks.SUGAR_CANE
+                || (block is CocoaBlock && state[CocoaBlock.AGE] == 2)
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 

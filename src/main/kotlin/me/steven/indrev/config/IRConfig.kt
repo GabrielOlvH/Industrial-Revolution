@@ -160,6 +160,14 @@ class Machines {
 
     val farmerMk4: MachineConfig = MachineConfig(128.0, 20.0, 50000.0, Tier.MK4.io)
 
+    val slaughterMk1: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
+
+    val slaughterMk2: MachineConfig = MachineConfig(32.0, 40.0, 5000.0, Tier.MK2.io)
+
+    val slaughterMk3: MachineConfig = MachineConfig(64.0, 30.0, 25000.0, Tier.MK3.io)
+
+    val slaughterMk4: MachineConfig = MachineConfig(128.0, 20.0, 50000.0, Tier.MK4.io)
+
     val rancherMk1: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
 
     val rancherMk2: MachineConfig = MachineConfig(32.0, 40.0, 5000.0, Tier.MK2.io)
@@ -261,6 +269,7 @@ class Upgrades  {
     val speedUpgradeModifier = 6.5
     val energyUpgradeModifier = 1.02
     val bufferUpgradeModifier = 25000.0
+    val damageUpgradeModifier = 4
 }
 
 class OreGen  {

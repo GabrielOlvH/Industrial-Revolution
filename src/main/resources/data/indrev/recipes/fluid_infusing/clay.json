@@ -1,0 +1,19 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:sand",
+      "count": 1
+    }
+  ],
+  "fluidInput": {
+    "fluid": "minecraft:water",
+    "type": "bucket",
+    "count": 1
+  },
+  "output": {
+    "item": "minecraft:clay",
+    "count": 1
+  },
+  "processTime": 200
+}

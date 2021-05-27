@@ -1,6 +1,7 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.screenhandlers.machines.LazuliFluxContainerScreenHandler
@@ -28,9 +29,12 @@ class LazuliFluxContainerBlock(registry: MachineRegistry, settings: Settings, ti
         itemStack: ItemStack?
     ) {
         super.onPlaced(world, pos, state, placer, itemStack)
-        if (world?.isClient == false) {
+        if (world?.isClient == true) {
             val blockEntity = world.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return
-            blockEntity.sync()
+            ConfigurationType.values().forEach { type ->
+                if (blockEntity.isConfigurable(type))
+                    blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
+            }
         }
     }
 }

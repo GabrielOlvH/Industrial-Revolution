@@ -12,8 +12,6 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
-import net.minecraft.inventory.Inventory
-import net.minecraft.item.ItemStack
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.Direction
 
@@ -27,7 +25,10 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
         this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
         this.inventoryComponent = inventory(this) {
-            input { slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19) }
+            input {
+                slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19)
+                filter { _, dir, slot -> canInput(dir, slot) }
+            }
             output { slots = intArrayOf(8, 11, 14, 17, 20) }
         }
         this.craftingComponents = Array(5) { index ->
@@ -44,23 +45,13 @@ class SolidInfuserFactoryBlockEntity(tier: Tier) :
         splitStacks(BOTTOM_SLOTS)
     }
 
-    override fun getFirstSlot(
-        inventory: Inventory,
-        direction: Direction,
-        predicate: (Int, ItemStack) -> Boolean
-    ): Int? {
-        inventoryComponent?.let { component ->
-            val mode = component.itemConfig[direction.opposite]
-            when {
-                inventory != component.inventory -> return@let
-                mode == TransferMode.INPUT_FIRST ->
-                    return super.getFirstSlot(inventory, direction) { slot, stack -> TOP_SLOTS.contains(slot) && predicate(slot, stack) }
-                mode == TransferMode.INPUT_SECOND ->
-                    return super.getFirstSlot(inventory, direction) { slot, stack -> BOTTOM_SLOTS.contains(slot) && predicate(slot, stack) }
-            }
-
+    private fun canInput(side: Direction?, slot: Int): Boolean {
+        if (side == null) return true
+        return when (inventoryComponent!!.itemConfig[side]) {
+            TransferMode.INPUT_FIRST -> TOP_SLOTS.contains(slot)
+            TransferMode.INPUT_SECOND -> BOTTOM_SLOTS.contains(slot)
+            else -> true
         }
-        return super.getFirstSlot(inventory, direction, predicate)
     }
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {

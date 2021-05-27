@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
-import me.steven.indrev.registry.IRItemRegistry
+import me.steven.indrev.recipes.machines.LaserRecipe
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -10,6 +10,7 @@ import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
@@ -22,26 +23,33 @@ import net.minecraft.world.World
 class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f)), BlockEntityProvider {
     override fun onUse(
         state: BlockState?,
-        world: World?,
+        world: World,
         pos: BlockPos?,
-        player: PlayerEntity?,
+        player: PlayerEntity,
         hand: Hand?,
         hit: BlockHitResult?
     ): ActionResult {
-        val stack = player?.getStackInHand(hand)
-        val blockEntity = world?.getBlockEntity(pos) as? CapsuleBlockEntity ?: return ActionResult.PASS
-        if (stack?.item == IRItemRegistry.MODULAR_CORE && blockEntity.inventory[0].isEmpty) {
-            player.setStackInHand(hand, ItemStack.EMPTY)
-            blockEntity.inventory[0] = stack
-        } else if (!blockEntity.inventory[0].isEmpty) {
-            val itemStack = blockEntity.inventory[0]
-            itemStack.tag = null
-            player?.inventory?.insertStack(itemStack)
-            blockEntity.inventory[0] = ItemStack.EMPTY
-        } else
-            return ActionResult.PASS
-        world.updateNeighbors(pos, this)
-        return ActionResult.SUCCESS
+        if (!world.isClient && hand == Hand.MAIN_HAND) {
+            val stack = player.getStackInHand(hand)
+            val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
+                .firstOrNull { it.matches(stack, null) }
+            val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity ?: return ActionResult.PASS
+            if (recipe != null && blockEntity.inventory[0].isEmpty) {
+                player.setStackInHand(hand, ItemStack.EMPTY)
+                blockEntity.inventory[0] = stack
+            } else if (!blockEntity.inventory[0].isEmpty) {
+                val itemStack = blockEntity.inventory[0]
+                itemStack.tag = null
+                player.inventory?.insertStack(itemStack)
+                blockEntity.inventory[0] = ItemStack.EMPTY
+            } else
+                return ActionResult.PASS
+            world.updateNeighbors(pos, this)
+            blockEntity.markDirty()
+            blockEntity.sync()
+            return ActionResult.SUCCESS
+        }
+        return ActionResult.PASS
     }
 
     override fun onStateReplaced(
@@ -66,7 +74,11 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
         direction: Direction?
     ): Int {
         val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity ?: return 0
-        return if (blockEntity.inventory[0].item == IRItemRegistry.MODULAR_CORE_ACTIVATED) 15
+        if (blockEntity.world!!.isClient) return 0
+        val stack = blockEntity.inventory[0]
+        val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
+            .firstOrNull { it.matches(stack, null) }
+        return if (recipe == null) 15
         else 0
     }
 

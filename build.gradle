@@ -232,8 +232,16 @@ publishing {
 
     // select the repositories you want to publish to
     repositories {
-        // uncomment to publish to the local maven
-        mavenLocal()
+        maven {
+            url "https://maven.cafeteria.dev/releases"
+            credentials {
+                username = project.property("mcdUsername")
+                password = project.property("mcdPassword")
+            }
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
     }
 }
 

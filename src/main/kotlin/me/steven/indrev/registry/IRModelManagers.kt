@@ -39,7 +39,7 @@ object IRModelManagers : ModelVariantProvider, ExtraModelProvider {
         return when {
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
-            path == "tank" && variant == "inventory" -> TankItemBakedModel
+            path == "tank" && variant == "inventory" -> TankItemBakedModel()
             path.startsWith("cable_mk") -> CABLE_MODELS[path.last().toString().toInt() - 1]
             path.startsWith("item_pipe_mk") -> ITEM_PIPE_MODELS[path.last().toString().toInt() - 1]
             path.startsWith("fluid_pipe_mk") -> FLUID_PIPE_MODELS[path.last().toString().toInt() - 1]

@@ -4,10 +4,13 @@ import io.netty.buffer.Unpooled
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.api.machines.TransferMode
+import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.UpgradeProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
@@ -28,6 +31,7 @@ import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
 class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
@@ -197,6 +201,27 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
             }
             Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
+        }
+    }
+
+    override fun applyDefault(
+        state: BlockState,
+        type: ConfigurationType,
+        configuration: MutableMap<Direction, TransferMode>
+    ) {
+        val direction = (state.block as MachineBlock).getFacing(state)
+        when (type) {
+            ConfigurationType.ITEM -> {
+                configuration[direction.rotateYCounterclockwise()] = TransferMode.OUTPUT
+            }
+            else -> super.applyDefault(state, type, configuration)
+        }
+    }
+
+    override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
+        return when (type) {
+            ConfigurationType.ITEM -> arrayOf(TransferMode.OUTPUT, TransferMode.NONE)
+            else -> return super.getValidConfigurations(type)
         }
     }
 

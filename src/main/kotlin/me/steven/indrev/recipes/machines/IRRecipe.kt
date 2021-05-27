@@ -18,7 +18,6 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.util.*
-import kotlin.collections.ArrayList
 
 interface IRRecipe : Recipe<Inventory> {
     val identifier: Identifier
@@ -49,6 +48,7 @@ interface IRRecipe : Recipe<Inventory> {
 
     fun matches(inv: List<ItemStack>, fluidVolume: FluidVolume?): Boolean {
         if (inv.isEmpty()) return true
+        else if (inv.size == 1 && input.size == 1) return matches(inv.first(), fluidVolume)
         val remainder = input.map { it.copy() }.let { it as? ArrayList<InputEntry> ?: it.toMutableList() }
         for (stack in inv) {
             val result = remainder.firstOrNull { (ingredient, count) -> ingredient.test(stack) && stack.count >= count } ?: continue
@@ -56,6 +56,13 @@ interface IRRecipe : Recipe<Inventory> {
             if (result.count <= 0) remainder.remove(result)
         }
         return remainder.isEmpty()
+    }
+
+    fun matches(stack: ItemStack, fluidVolume: FluidVolume?): Boolean {
+        assert(input.size == 1)
+        val (ingredient, count) = input.first()
+        if (ingredient.test(stack) && stack.count >= count) return true
+        return false
     }
 
     open class IRRecipeSerializer<T : IRRecipe>(private val factory: (Identifier, Array<InputEntry>, Array<OutputEntry>, Int) -> T) : RecipeSerializer<T> {

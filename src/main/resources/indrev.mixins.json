@@ -17,11 +17,9 @@
     "common.MixinGenerationSettings",
     "common.MixinItemPredicate",
     "common.MixinItemStack",
-    "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinServerPlayerEntity",
-    "common.MixinSheepEntity"
+    "common.MixinServerPlayerEntity"
   ],
   "client": [
     "client.MixinBuiltChunk",

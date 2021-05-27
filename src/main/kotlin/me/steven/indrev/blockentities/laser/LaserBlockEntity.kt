@@ -6,7 +6,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.LaserBlock
 import me.steven.indrev.config.MachineConfig
-import me.steven.indrev.registry.IRItemRegistry
+import me.steven.indrev.recipes.machines.LaserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.math.BlockPos
@@ -27,6 +28,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
+import java.util.*
 
 class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_REGISTRY) {
 
@@ -38,6 +40,8 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     override val maxOutput: Double = 0.0
 
     private var ticksUntilExplode = 100
+
+    private var recipe: LaserRecipe? = null
 
     override fun machineTick() {
         if (!cachedState[LaserBlock.POWERED]) {
@@ -61,8 +65,16 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
         }
 
         val stack = container.inventory[0]
-        if ((stack.item != IRItemRegistry.MODULAR_CORE && stack.item != IRItemRegistry.MODULAR_CORE_ACTIVATED)) {
+        if (recipe == null) {
+            recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
+                .firstOrNull { it.matches(stack, null) }
+        } else if (ItemStack.areItemsEqual(recipe!!.outputs.first().stack, stack)) {
+            return
+        }
+
+        if (recipe?.matches(stack, null) != true) {
             world?.breakBlock(containerPos, false)
+            recipe = null
             return
         }
 
@@ -89,8 +101,8 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
 
         val tag = stack.orCreateTag
         val progress = tag.getDouble("Progress")
-        if (progress >= 100000000) {
-            container.inventory[0] = ItemStack(IRItemRegistry.MODULAR_CORE_ACTIVATED)
+        if (progress >= recipe!!.ticks) {
+            container.inventory[0] = recipe!!.craft(null as Random?).first()
             container.markDirty()
             container.sync()
             world?.updateNeighbors(containerPos, container.cachedState.block)

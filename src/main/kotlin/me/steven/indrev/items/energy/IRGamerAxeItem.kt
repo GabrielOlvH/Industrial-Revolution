@@ -52,7 +52,7 @@ class IRGamerAxeItem(
 ) : AxeItem(material, attackDamage, attackSpeed, settings), IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider {
 
     init {
-        EnergyApi.ITEM.register(SimpleItemEnergyIo.getProvider(maxStored, tier.io, tier.io), this)
+        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, tier.io, tier.io), this)
     }
 
     override fun appendTooltip(

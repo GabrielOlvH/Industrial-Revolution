@@ -1,6 +1,8 @@
 package me.steven.indrev
 
 import me.steven.indrev.api.IRServerPlayerEntityExtension
+import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -99,6 +101,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, SawmillRecipe.IDENTIFIER, SawmillRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, ModuleRecipe.IDENTIFIER, ModuleRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, ModuleRecipe.IDENTIFIER, ModuleRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, LaserRecipe.IDENTIFIER, LaserRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, LaserRecipe.IDENTIFIER, LaserRecipe.TYPE)
 
         Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
@@ -153,7 +157,7 @@ object IndustrialRevolution : ModInitializer {
     const val MOD_ID = "indrev"
 
     val MOD_GROUP: ItemGroup =
-        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { IRBlockRegistry.NIKOLITE_ORE().asItem() } }
+        FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK4).asItem() } }
 
     val COAL_GENERATOR_HANDLER = CoalGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::CoalGeneratorScreenHandler)
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::SolarGeneratorScreenHandler)
@@ -175,6 +179,7 @@ object IndustrialRevolution : ModInitializer {
     val CONDENSER_HANDLER = CondenserScreenHandler.SCREEN_ID.registerScreenHandler(::CondenserScreenHandler)
     val FLUID_INFUSER_HANDLER = FluidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::FluidInfuserScreenHandler)
     val FARMER_HANDLER = FarmerScreenHandler.SCREEN_ID.registerScreenHandler(::FarmerScreenHandler)
+    val SLAUGHTER_HANDLER = SlaughterScreenHandler.SCREEN_ID.registerScreenHandler(::SlaughterScreenHandler)
     val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
     val DISTILLER_HANDLER = DistillerScreenHandler.SCREEN_ID.registerScreenHandler(::DistillerScreenHandler)
     val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)

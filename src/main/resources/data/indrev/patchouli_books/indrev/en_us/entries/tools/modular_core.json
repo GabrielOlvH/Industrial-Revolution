@@ -12,12 +12,12 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/capsule",
-      "text": "The Capsule will hold your Core of Modularity during the process of activation."
+      "text": "The Capsule will hold your Core of Modularity during the process of activation.$(br)It will emit a redstone signal when it's finished."
     },
     {
       "type": "crafting",
       "recipe": "indrev:shaped/laser",
-      "text": "Laser Emitters should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 25M LF and require a redstone signal to be toggled on."
+      "text": "Laser Emitters should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 2,5M LF and require a redstone signal to be toggled on."
     },
     {
       "type": "text",
