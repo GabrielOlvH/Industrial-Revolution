@@ -14,6 +14,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormats
 import net.minecraft.client.texture.Sprite
+import net.minecraft.client.texture.SpriteAtlasTexture
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.EquipmentSlot.*
 import net.minecraft.item.ArmorItem
@@ -36,6 +37,19 @@ object IRHudRender : HudRenderCallback {
             } ?: -1
             val x = IRConfig.hud.renderPosX + 2
             val y = IRConfig.hud.renderPosY + 2
+
+
+            client.textureManager.bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)
+            client.textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)?.setFilter(false, false)
+            val spriteId = when {
+                player.shieldDurability == player.getMaxShieldDurability() -> DEFAULT
+                player.isRegenerating -> REGENERATING
+                player.shieldDurability <= player.getMaxShieldDurability() * 0.25 -> WARNING
+                else -> DAMAGED
+            }
+            val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
+            texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
+
             ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, color, 0.8f)
             ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
             val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"
@@ -52,15 +66,6 @@ object IRHudRender : HudRenderCallback {
                 client.itemRenderer.renderInGui(stack, x + 9 + xOffset, y + 35)
                 client.itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, x + 9 + xOffset, y + 35)
             }
-
-            val spriteId = when {
-                player.shieldDurability == player.getMaxShieldDurability() -> DEFAULT
-                player.isRegenerating -> REGENERATING
-                player.shieldDurability <= player.getMaxShieldDurability() * 0.25 -> WARNING
-                else -> DAMAGED
-            }
-            val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
-            texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
         }
     }
 
@@ -76,6 +81,8 @@ object IRHudRender : HudRenderCallback {
         val r = (color shr 16 and 255).toFloat() / 255.0f
         val g = (color shr 8 and 255).toFloat() / 255.0f
         val b = (color and 255).toFloat() / 255.0f
+        RenderSystem.enableBlend()
+        RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA, SrcFactor.ONE, DstFactor.ZERO)
         Tessellator.getInstance().run {
             buffer.run {
                 begin(7, VertexFormats.POSITION_COLOR_TEXTURE)
@@ -86,8 +93,6 @@ object IRHudRender : HudRenderCallback {
             }
             draw()
         }
-        RenderSystem.enableBlend()
-        RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA, SrcFactor.ONE, DstFactor.ZERO)
         RenderSystem.disableBlend()
     }
 

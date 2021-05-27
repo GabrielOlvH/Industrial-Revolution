@@ -8,6 +8,7 @@ import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.ChopperBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRenderer
@@ -105,7 +106,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         }
         ScreenRegistry.register(IndustrialRevolution.PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
 
-        MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
+        MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::ChopperBlockEntityRenderer)
         MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
         MachineRegistry.FARMER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
         MachineRegistry.SLAUGHTER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
