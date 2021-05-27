@@ -8,28 +8,25 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.FakePlayerEntity
+import me.steven.indrev.utils.redirectDrops
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.SwordItem
-import net.minecraft.loot.context.LootContext
-import net.minecraft.loot.context.LootContextParameters
-import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 
 class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY), UpgradeProvider {
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(12, 13, 14, 15)
+    override val upgradeSlots: IntArray = intArrayOf(11, 12, 13, 14)
     override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.BUFFER, Upgrade.DAMAGE)
 
     init {
         this.inventoryComponent = inventory(this) {
-            input { slot = 2 }
-            output { slots = intArrayOf(3, 4, 5, 6, 7, 8, 9, 10, 11) }
-            coolerSlot = 1
+            input { slot = 1 }
+            output { slots = intArrayOf(2, 3, 4, 5, 6, 7, 8, 9, 10) }
         }
     }
 
@@ -46,7 +43,7 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         val upgrades = getUpgrades(inventory)
         cooldown += Upgrade.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea(), { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead)})
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead) }
             ?: emptyList()
         val energyCost = Upgrade.getEnergyCost(upgrades, this)
         if (mobs.isEmpty() || !canUse(energyCost)) {
@@ -61,16 +58,9 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
             mobs.forEach { mob ->
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
-                val lootTable = (world as ServerWorld).server.lootManager.getTable(mob.lootTable)
-                mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Upgrade.getDamageMultiplier(upgrades, this)).toFloat())
-                if (mob.isDead) {
-                    val lootContext = LootContext.Builder(world as ServerWorld)
-                        .random(world?.random)
-                        .parameter(LootContextParameters.ORIGIN, mob.pos)
-                        .parameter(LootContextParameters.DAMAGE_SOURCE, DamageSource.player(fakePlayer))
-                        .parameter(LootContextParameters.THIS_ENTITY, mob)
-                        .build(LootContextTypes.ENTITY)
-                    lootTable.generateLoot(lootContext).forEach { inventory.output(it) }
+
+                mob.redirectDrops(inventory) {
+                    mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Upgrade.getDamageMultiplier(upgrades, this)).toFloat())
                 }
             }
         }

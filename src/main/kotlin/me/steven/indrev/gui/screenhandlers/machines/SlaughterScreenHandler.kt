@@ -54,8 +54,8 @@ class SlaughterScreenHandler(
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.2, 1.0)
 
-        val swordSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.slaughter_input_sword"))
-        swordSlot.setIcon(ctx, blockInventory, 2, SWORD_ICON)
+        val swordSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.slaughter_input_sword"))
+        swordSlot.setIcon(ctx, blockInventory, 1, SWORD_ICON)
         root.add(swordSlot, 2.5, 1.5)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
