@@ -3,7 +3,6 @@ package me.steven.indrev.blockentities.modularworkbench
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.items.armor.IRModularArmorItem
-import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
@@ -95,10 +94,15 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
             matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, null
         )
         item.getInstalled(itemStack).filter { it.slots.contains(slotType) }.forEach { module ->
-            if (module != ArmorModule.COLOR) {
+            if (module.hasTexture) {
                 renderArmorParts(
                     matrices, vertexConsumers, light, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, module.key
                 )
+                if (module.hasOverlay) {
+                    renderArmorParts(
+                        matrices, vertexConsumers, 15728880, item, itemStack.hasGlint(), bipedEntityModel, usesSecondLayer(slotType), r, g, b, "${module.key}_overlay"
+                    )
+                }
             }
         }
     }
