@@ -511,6 +511,24 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .defaultModelProvider(hasWorkingState = false)
 
+        val SLAUGHTER_REGISTRY = MachineRegistry("slaughter", true)
+            .blockProvider { tier ->
+                HorizontalFacingMachineBlock(
+                    this,
+                    SETTINGS(),
+                    tier,
+                    when (tier) {
+                        Tier.MK1 -> IRConfig.machines.slaughterMk1
+                        Tier.MK2 -> IRConfig.machines.slaughterMk2
+                        Tier.MK3 -> IRConfig.machines.slaughterMk3
+                        else -> IRConfig.machines.slaughterMk4
+                    }, ::SlaughterScreenHandler
+                )
+            }
+            .blockEntityProvider { tier -> { SlaughterBlockEntity(tier) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(hasWorkingState = false)
+
         val RANCHER_REGISTRY = MachineRegistry("rancher", true)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(

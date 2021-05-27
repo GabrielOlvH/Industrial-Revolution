@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:slaughter_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.slaughter_mk1"
+    },
+    "description": {
+      "translate": "advancements.indrev.slaughter_mk1.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:slaughter_mk1"
+          }
+        ]
+      }
+    }
+  }
+}
