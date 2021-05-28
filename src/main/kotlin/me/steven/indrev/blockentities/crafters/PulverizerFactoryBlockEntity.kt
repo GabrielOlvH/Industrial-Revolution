@@ -6,7 +6,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
@@ -15,8 +15,8 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class PulverizerFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_FACTORY_REGISTRY) {
 
-    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancementsSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)

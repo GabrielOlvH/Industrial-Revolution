@@ -6,7 +6,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.mixin.common.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
@@ -16,8 +16,8 @@ import net.minecraft.screen.ArrayPropertyDelegate
 class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY) {
 
-    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.FURNACE
+    override val enhancementsSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.FURNACE
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
@@ -38,10 +38,10 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier) :
     @Suppress("UNCHECKED_CAST")
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {
-            val upgrades = getUpgrades(inventoryComponent!!.inventory)
-            return when (upgrades.keys.firstOrNull { it == Upgrade.BLAST_FURNACE || it == Upgrade.SMOKER }) {
-                Upgrade.BLAST_FURNACE -> VanillaCookingRecipeCachedGetter.BLASTING
-                Upgrade.SMOKER -> VanillaCookingRecipeCachedGetter.SMOKING
+            val enhancements = getEnhancers(inventoryComponent!!.inventory)
+            return when (enhancements.keys.firstOrNull { it == Enhancer.BLAST_FURNACE || it == Enhancer.SMOKER }) {
+                Enhancer.BLAST_FURNACE -> VanillaCookingRecipeCachedGetter.BLASTING
+                Enhancer.SMOKER -> VanillaCookingRecipeCachedGetter.SMOKING
                 else -> VanillaCookingRecipeCachedGetter.SMELTING
             } as IRecipeGetter<MixinAbstractCookingRecipe>
         }

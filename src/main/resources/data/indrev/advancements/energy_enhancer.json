@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:empty_upgrade"
+      "item": "indrev:energy_enhancer"
     },
     "title": {
-      "translate": "advancements.indrev.empty_upgrade"
+      "translate": "advancements.indrev.energy_enhancer"
     },
     "description": {
-      "translate": "advancements.indrev.empty_upgrade.description"
+      "translate": "advancements.indrev.energy_enhancer.description"
     }
   },
-  "parent": "indrev:nikolite",
+  "parent": "indrev:empty_enhancer",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "indrev:empty_upgrade"
+            "item": "indrev:energy_enhancer"
           }
         ]
       }

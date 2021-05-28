@@ -5,10 +5,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.properties.BooleanProperty
 import me.steven.indrev.api.machines.properties.Property
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.eat
@@ -24,11 +24,11 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 
-class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
+class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancementsSlots: IntArray = intArrayOf(15, 16, 17, 18)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(8)
@@ -53,12 +53,12 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getUpgrades(inventory)
-        cooldown += Upgrade.getSpeed(upgrades, this)
+        val enhancements = getEnhancers(inventory)
+        cooldown += Enhancer.getSpeed(enhancements, this)
         if (cooldown < config.processSpeed) return
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        val energyCost = Upgrade.getEnergyCost(upgrades, this)
+        val energyCost = Enhancer.getEnergyCost(enhancements, this)
         if (animals.isEmpty() || !canUse(energyCost)) {
             workingState = false
             return
@@ -128,16 +128,16 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         }.flatten()
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double =
-        when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost
-            Upgrade.SPEED -> 1.0
-            Upgrade.BUFFER -> config.maxEnergyStored
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
+            Enhancer.ENERGY -> config.energyCost
+            Enhancer.SPEED -> 1.0
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxEnhancer(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxEnhancer(enhancer)
     }
 
     override fun toTag(tag: CompoundTag?): CompoundTag {
@@ -174,5 +174,5 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 }

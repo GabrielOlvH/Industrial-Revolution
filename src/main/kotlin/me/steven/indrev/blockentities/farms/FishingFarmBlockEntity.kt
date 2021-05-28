@@ -4,10 +4,10 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
@@ -20,11 +20,11 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 
-class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
+class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(6, 7, 8, 9)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancementsSlots: IntArray = intArrayOf(6, 7, 8, 9)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -42,11 +42,11 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
     override val maxOutput: Double = 0.0
 
     override fun machineTick() {
-        val upgrades = getUpgrades(inventoryComponent!!.inventory)
-        if (!use(Upgrade.getEnergyCost(upgrades, this))) return
+        val enhancements = getEnhancers(inventoryComponent!!.inventory)
+        if (!use(Enhancer.getEnergyCost(enhancements, this))) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
         if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
-        cooldown += Upgrade.getSpeed(upgrades, this)
+        cooldown += Enhancer.getSpeed(enhancements, this)
         if (cooldown < config.processSpeed) return
         cooldown = 0.0
         Direction.values().forEach { direction ->
@@ -75,17 +75,17 @@ class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig
         else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
-    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> config.energyCost
-        Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> config.maxEnergyStored
+    override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
+        Enhancer.ENERGY -> config.energyCost
+        Enhancer.SPEED -> 1.0
+        Enhancer.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    override fun getMaxEnhancer(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxEnhancer(enhancer)
     }
 
     companion object {

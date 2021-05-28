@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "These upgrades will improve the machine's input and output capability as well as other aspects.$(br2)Right clicking on a machine below the upgrade's tier will upgrade it."
+      "text": "These enhancements will improve the machine's input and output capability as well as other aspects.$(br2)Right clicking on a machine below the upgrade's tier will upgrade it."
     },
     {
       "type": "crafting",

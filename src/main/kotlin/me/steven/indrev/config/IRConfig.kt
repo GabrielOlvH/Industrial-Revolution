@@ -14,7 +14,7 @@ object IRConfig {
     lateinit var generators: Generators
     lateinit var machines: Machines
     lateinit var cables: Cables
-    lateinit var upgrades: Upgrades
+    lateinit var enhancers: Enhancers
     lateinit var oregen: OreGen
     lateinit var hud: Hud
 
@@ -26,7 +26,7 @@ object IRConfig {
         generators = readOrCreate("generators.json") { Generators() }
         machines = readOrCreate("machines.json") { Machines() }
         cables = readOrCreate("cables.json") { Cables() }
-        upgrades = readOrCreate("upgrades.json") { Upgrades() }
+        enhancers = readOrCreate("enhancers.json") { Enhancers() }
         oregen = readOrCreate("oregen.json") { OreGen() }
         hud = readOrCreate("hud.json") { Hud() }
     }
@@ -57,7 +57,7 @@ object IRConfig {
         buf.writeString(gson.toJson(generators))
         buf.writeString(gson.toJson(machines))
         buf.writeString(gson.toJson(cables))
-        buf.writeString(gson.toJson(upgrades))
+        buf.writeString(gson.toJson(enhancers))
         buf.writeString(gson.toJson(oregen))
         buf.writeString(gson.toJson(hud))
     }
@@ -66,7 +66,7 @@ object IRConfig {
         generators = gson.fromJson(buf.readString(), Generators::class.java)
         machines = gson.fromJson(buf.readString(), Machines::class.java)
         cables = gson.fromJson(buf.readString(), Cables::class.java)
-        upgrades = gson.fromJson(buf.readString(), Upgrades::class.java)
+        enhancers = gson.fromJson(buf.readString(), Enhancers::class.java)
         oregen = gson.fromJson(buf.readString(), OreGen::class.java)
         hud = gson.fromJson(buf.readString(), Hud::class.java)
     }
@@ -261,11 +261,11 @@ class Cables {
     val fluidPipeMk4 = 8
 }
 
-class Upgrades  {
-    val speedUpgradeModifier = 6.5
-    val energyUpgradeModifier = 1.02
-    val bufferUpgradeModifier = 25000.0
-    val damageUpgradeModifier = 4
+class Enhancers  {
+    val speedEnhancerModifier = 6.5
+    val energyEnhancerModifier = 1.02
+    val bufferEnhancerModifier = 25000.0
+    val damageEnhancerModifier = 4
 }
 
 class OreGen  {

@@ -8,7 +8,7 @@ import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
@@ -18,8 +18,8 @@ import net.minecraft.util.math.Direction
 class SmelterBlockEntity(tier: Tier) :
     CraftingMachineBlockEntity<SmelterRecipe>(tier, MachineRegistry.SMELTER_REGISTRY) {
 
-    override val upgradeSlots: IntArray = intArrayOf(3, 4, 5, 6)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancementsSlots: IntArray = intArrayOf(3, 4, 5, 6)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.2, 1700..2500, 2700.0)
@@ -31,8 +31,8 @@ class SmelterBlockEntity(tier: Tier) :
 
     override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    override fun getMaxEnhancer(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxEnhancer(enhancer)
     }
 
     override fun applyDefault(

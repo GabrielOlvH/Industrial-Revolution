@@ -7,7 +7,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/fishing_farm_mk2",
-      "text": "The $(l)Fisher$() is a machine focused in fish farming, and it also supports enhancement upgrades.$(br)It's only requirement is a Fishing Rod. Note that enchantments are supported."
+      "text": "The $(l)Fisher$() is a machine focused in fish farming, and it also supports enhancement enhancements.$(br)It's only requirement is a Fishing Rod. Note that enchantments are supported."
     }
   ]
 }

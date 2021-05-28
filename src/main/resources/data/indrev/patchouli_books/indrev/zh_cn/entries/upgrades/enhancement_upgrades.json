@@ -1,6 +1,6 @@
 {
   "name": "机器升级",
-  "category": "upgrades",
+  "category": "enhancements",
   "sortnum": 0,
   "icon": "indrev:speed_upgrade",
   "pages": [

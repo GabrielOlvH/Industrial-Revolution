@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:buffer_upgrade"
+      "item": "indrev:empty_enhancer"
     },
     "title": {
-      "translate": "advancements.indrev.buffer_upgrade"
+      "translate": "advancements.indrev.empty_enhancer"
     },
     "description": {
-      "translate": "advancements.indrev.buffer_upgrade.description"
+      "translate": "advancements.indrev.empty_enhancer.description"
     }
   },
-  "parent": "indrev:empty_upgrade",
+  "parent": "indrev:nikolite",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "indrev:buffer_upgrade"
+            "item": "indrev:empty_enhancer"
           }
         ]
       }

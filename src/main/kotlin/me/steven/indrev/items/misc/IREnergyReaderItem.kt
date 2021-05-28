@@ -1,10 +1,10 @@
 package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.BasicMachineConfig
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.utils.energyOf
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
@@ -28,8 +28,8 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
             if (blockEntity is MachineBlockEntity<*>) {
                 val energyCost =
                     when {
-                        blockEntity is UpgradeProvider ->
-                            Upgrade.getEnergyCost(blockEntity.getUpgrades(blockEntity.inventoryComponent!!.inventory), blockEntity)
+                        blockEntity is EnhancerProvider ->
+                            Enhancer.getEnergyCost(blockEntity.getEnhancers(blockEntity.inventoryComponent!!.inventory), blockEntity)
                         blockEntity !is LazuliFluxContainerBlockEntity && blockEntity.config is BasicMachineConfig ->
                             (blockEntity.config as BasicMachineConfig).energyCost
                         else -> -1.0

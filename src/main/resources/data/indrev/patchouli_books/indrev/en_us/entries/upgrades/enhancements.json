@@ -1,0 +1,37 @@
+{
+  "name": "Enhancements",
+  "category": "upgrades",
+  "sortnum": 0,
+  "icon": "indrev:speed_enhancer",
+  "pages": [
+    {
+      "type": "text",
+      "text": "These enhancements will improve certain aspects of the machine like speed and energy usage.$(br2)The machine will use enhancements inserted in the 4 right-side slots on its interface."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/speed_enhancer",
+      "text": "This enhancement will increase the machine's processing speed at cost of energy."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/energy_enhancer",
+      "text": "This enhancement will decrease the machine's energy cost."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/buffer_enhancer",
+      "text": "This enhancement will increase the machine's internal energy capacity."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/blast_furnace_enhancer",
+      "text": "This enhancement will make the Electric Furnace accept Blast Furnace recipes."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/smoker_enhancer",
+      "text": "This enhancement will make the Electric Furnace accept Smoker recipes."
+    }
+  ]
+}

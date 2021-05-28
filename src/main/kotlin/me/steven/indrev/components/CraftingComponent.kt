@@ -6,7 +6,7 @@ import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.enhancer.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
@@ -42,12 +42,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
-                val upgrades = machine.getUpgrades(inventory)
+                val enhancements = machine.getEnhancers(inventory)
                 if (recipe?.matches(inputInventory, fluidComponent?.get(0)) != true)
                     tryStartRecipe(inventory) ?: reset()
-                else if (machine.use(Upgrade.getEnergyCost(upgrades, machine))) {
+                else if (machine.use(Enhancer.getEnergyCost(enhancements, machine))) {
                     isCrafting = true
-                    processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
+                    processTime = (processTime + ceil(Enhancer.getSpeed(enhancements, machine))).coerceAtLeast(0.0).toInt()
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
                         machine.usedRecipes.addTo(recipe.id, 1)

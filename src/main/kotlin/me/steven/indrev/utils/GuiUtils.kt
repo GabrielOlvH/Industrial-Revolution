@@ -10,7 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WEnergy
@@ -19,7 +19,7 @@ import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.items.enhancer.IREnhancerItem
 import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
@@ -73,8 +73,8 @@ fun SyncedGuiDescription.configure(
         panel.add(batterySlot, 0.0, 3.7)
         val blockEntity = world.getBlockEntity(blockPos)
 
-        if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
-            addUpgradeSlots(blockEntity, blockInventory, world, panel)
+        if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {
+            addEnhancementSlots(blockEntity, blockInventory, world, panel)
         }
 
         if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
@@ -119,23 +119,23 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
         ClientPlayNetworking.send(SPLIT_STACKS_PACKET, buf)
     }
     if (world.isClient)
-        buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+        buttonPanel.backgroundPainter = ENHANCER_SLOT_PANEL_PAINTER
     buttonPanel.add(button, 0, 0)
     panel.add(buttonPanel, 9.7, 4.2)
     button.setSize(20, 20)
 }
 
-fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
-    blockEntity as UpgradeProvider
+fun addEnhancementSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
+    blockEntity as EnhancerProvider
     val slotPanel = WGridPanel()
-    for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
+    for ((i, slot) in blockEntity.enhancementsSlots.withIndex()) {
         val s =
-            object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
+            object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.enhancer_slot_type"))) {
                 override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
                     return object : ValidatedSlot(inventory, index, x, y) {
                         override fun getMaxItemCount(stack: ItemStack): Int {
-                            val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
-                            return blockEntity.getMaxUpgrade(upgrade)
+                            val enhancer = (stack.item as? IREnhancerItem)?.enhancer ?: return 0
+                            return blockEntity.getMaxEnhancer(enhancer)
                         }
                     }
                 }
@@ -144,11 +144,11 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
             s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
                 blockInventory,
                 slot
-            ) else getUpgradeSlotPainter(blockInventory, slot)
+            ) else getEnhancementSlotPainter(blockInventory, slot)
         slotPanel.add(s, 0, i)
     }
     if (world.isClient)
-        slotPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+        slotPanel.backgroundPainter = ENHANCER_SLOT_PANEL_PAINTER
     panel.add(slotPanel, 9.7, -0.25)
 }
 
@@ -176,7 +176,7 @@ fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WG
         button.icon = Icon { matrices, x, y, _ ->
             ScreenDrawing.texturedRect(matrices,x + 1, y + 1, 16, 16, identifier("textures/gui/range_icon.png"), -1)
         }
-        buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER
+        buttonPanel.backgroundPainter = ENHANCER_SLOT_PANEL_PAINTER
     }
     buttonPanel.add(button, 0, 0)
     panel.add(buttonPanel, 9.7, 4.2)
@@ -250,12 +250,12 @@ fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { 
         ScreenDrawing.texturedRect(left, top, 18, 18, VENT_ICON_ID, -1)
 }
 
-val UPGRADE_ICON_ID = identifier("textures/gui/upgrade_icon.png")
+val ENHANCER_ICON_ID = identifier("textures/gui/enhancer_icon.png")
 
-fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
+fun getEnhancementSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
     BackgroundPainter.SLOT.paintBackground(left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, UPGRADE_ICON_ID, -1)
+        ScreenDrawing.texturedRect(left, top, 18, 18, ENHANCER_ICON_ID, -1)
 }
 
 val LOCKED_ICON_ID = identifier("textures/gui/locked_icon.png")

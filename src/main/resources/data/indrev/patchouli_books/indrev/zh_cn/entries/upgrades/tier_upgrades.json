@@ -1,6 +1,6 @@
 {
   "name": "等级升级",
-  "category": "upgrades",
+  "category": "enhancements",
   "sortnum": 1,
   "icon": "indrev:tier_upgrade_mk2",
   "pages": [
