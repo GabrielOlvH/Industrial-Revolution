@@ -5,11 +5,12 @@
   "name": "Industrial Revolution",
   "description": "Every other industrial mod ever",
   "authors": [
-    "Gabriel Henrique de Oliveira"
+    "Gabriel Henrique de Oliveira",
+    "Marcus (MCrafterzz)"
   ],
   "contact": {
-    "homepage": "https://github.com/StupPlayer/Industrial-Revolution",
-    "sources": "https://github.com/StupPlayer/Industrial-Revolution"
+    "homepage": "https://github.com/GabrielOlvH/Industrial-Revolution",
+    "sources": "https://github.com/GabrielOlvH/Industrial-Revolution"
   },
   "license": "Apache-2.0",
   "icon": "assets/indrev/icon.png",
