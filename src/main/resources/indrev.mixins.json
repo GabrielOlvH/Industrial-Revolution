@@ -20,6 +20,7 @@
     "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
+    "common.MixinPlayerInventory",
     "common.MixinServerPlayerEntity",
     "common.MixinSheepEntity"
   ],
