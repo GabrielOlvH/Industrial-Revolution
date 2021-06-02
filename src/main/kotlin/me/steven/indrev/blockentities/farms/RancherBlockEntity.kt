@@ -10,7 +10,8 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.FakePlayerEntity
+import me.steven.indrev.utils.eat
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
@@ -71,10 +72,10 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             val kill = filterAnimalsToKill(animals)
             if (kill.isNotEmpty()) use(energyCost)
             kill.forEach { animal ->
+                if (!animal.isAlive || !animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)) return@forEach
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
                 val lootTable = (world as ServerWorld).server.lootManager.getTable(animal.lootTable)
-                animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
                 if (animal.isDead) {
                     animals.remove(animal)
                     val lootContext = LootContext.Builder(world as ServerWorld)
