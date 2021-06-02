@@ -8,9 +8,11 @@ import me.steven.indrev.mixin.common.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 
-class ElectricFurnaceBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY) {
+class ElectricFurnaceBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(4, 5, 6, 7)
     override val availableUpgrades: Array<Upgrade> = Upgrade.FURNACE

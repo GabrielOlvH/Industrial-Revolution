@@ -7,6 +7,8 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
@@ -24,6 +26,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
+import java.util.*
 
 open class DrillBlock private constructor(settings: Settings, val part: DrillPart) : Block(settings) {
 
@@ -119,7 +122,7 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
 
         abstract fun getBlockEntityPos(pos: BlockPos): BlockPos
 
-        override fun asString(): String = toString().toLowerCase()
+        override fun asString(): String = toString().lowercase(Locale.getDefault())
     }
 
     class TopDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.TOP)
@@ -127,7 +130,17 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
     class MiddleDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.MIDDLE)
 
     class BottomDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.BOTTOM), BlockEntityProvider {
-        override fun createBlockEntity(world: BlockView?): BlockEntity = DrillBlockEntity()
+
+        override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = DrillBlockEntity(pos, state)
+
+        override fun <T : BlockEntity?> getTicker(
+            world: World,
+            state: BlockState?,
+            type: BlockEntityType<T>?
+        ): BlockEntityTicker<T>? {
+            return if (world.isClient) null
+            else BlockEntityTicker { world, pos, state, blockEntity -> DrillBlockEntity.tick(world, pos, state, blockEntity as DrillBlockEntity) }
+        }
 
         override fun onStateReplaced(
             state: BlockState,

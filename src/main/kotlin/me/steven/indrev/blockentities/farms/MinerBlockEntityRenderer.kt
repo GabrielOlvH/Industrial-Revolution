@@ -3,14 +3,13 @@ package me.steven.indrev.blockentities.farms
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3f
 
-class MinerBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<MinerBlockEntity>(dispatcher) {
+class MinerBlockEntityRenderer : BlockEntityRenderer<MinerBlockEntity> {
     override fun render(
         entity: MinerBlockEntity?,
         tickDelta: Float,
@@ -33,9 +32,9 @@ class MinerBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
                     return
                 }
             }
-            multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(direction.asRotation()))
+            multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(direction.asRotation()))
             scale(0.3f, 0.3f, 0.01f)
-            MinecraftClient.getInstance().itemRenderer.renderItem(entity.lastMinedItem, ModelTransformation.Mode.GUI, 15728880, overlay, this, vertexConsumers)
+            MinecraftClient.getInstance().itemRenderer.renderItem(entity.lastMinedItem, ModelTransformation.Mode.GUI, 15728880, overlay, this, vertexConsumers, 0)
             pop()
         }
     }

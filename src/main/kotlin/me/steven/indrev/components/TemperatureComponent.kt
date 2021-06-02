@@ -6,7 +6,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.items.misc.IRCoolerItem
 import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PropertyDelegate
 
 class TemperatureComponent(
@@ -27,12 +27,12 @@ class TemperatureComponent(
             return field
         }
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
         cooling = tag?.getInt("Cooling") ?: 0
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putDouble("Temperature", temperature)
         tag.putInt("Cooling", cooling)
         return tag

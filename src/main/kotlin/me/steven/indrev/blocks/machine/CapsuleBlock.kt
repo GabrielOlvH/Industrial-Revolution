@@ -8,6 +8,8 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -82,5 +84,16 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
         else 0
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CapsuleBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = CapsuleBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else BlockEntityTicker { world, pos, state, blockEntity ->
+            CapsuleBlockEntity.tick(world, pos, state, blockEntity as CapsuleBlockEntity)
+        }
+    }
 }

@@ -24,7 +24,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.world.chunk.Chunk
 
-class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY), UpgradeProvider {
+class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY, pos, state), UpgradeProvider {
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
@@ -34,9 +34,9 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3, 4, 5)
-                2 filter { (_, item) -> item.isIn(FabricToolTags.AXES) || item.isIn(FabricToolTags.SWORDS) }
+                2 filter { stack -> stack.isIn(FabricToolTags.AXES) || stack.isIn(FabricToolTags.SWORDS) }
                 3 filter { (_, item) -> item is BoneMealItem }
-                4..5 filter { (_, item), _ -> item.isIn(ItemTags.SAPLINGS)
+                4..5 filter { (stack, item), _ -> stack.isIn(ItemTags.SAPLINGS)
                         || (item is BlockItem && (item.block is MushroomPlantBlock || item.block is BambooBlock)) }
             }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
@@ -135,15 +135,15 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         }
         val block = blockState.block
         when {
-            toolStack.item.isIn(FabricToolTags.AXES)
-                    && (block.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM) -> {
+            toolStack.isIn(FabricToolTags.AXES)
+                    && (blockState.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM) -> {
                 if (!damageTool(1)) return false
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
             block is LeavesBlock -> {
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
-            toolStack.item.isIn(FabricToolTags.SWORDS) && block is BambooBlock && blockPos.y > pos.y -> {
+            toolStack.isIn(FabricToolTags.SWORDS) && block is BambooBlock && blockPos.y > pos.y -> {
                 val upPos = blockPos.up()
                 val up = chunk.getBlockState(upPos)
                 scannedBlocks.add(upPos)
@@ -162,7 +162,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         val block = blockState.block
         when {
             item is BoneMealItem && itemStack.count > 1
-                    && (block.isIn(BlockTags.SAPLINGS) || block is MushroomPlantBlock || block is BambooBlock || block is BambooSaplingBlock)
+                    && (blockState.isIn(BlockTags.SAPLINGS) || block is MushroomPlantBlock || block is BambooBlock || block is BambooSaplingBlock)
                     && block is Fertilizable
                     && block.isFertilizable(world, pos, blockState, false)
                     && block.canGrow(world, world?.random, pos, blockState) -> {
@@ -172,7 +172,7 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             }
             block is AirBlock
                     && item is BlockItem
-                    && (item.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock)
+                    && (itemStack.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock)
                     && item.block.defaultState.canPlaceAt(world, pos)
                     && itemStack.count > 1 -> {
                 if (item.block is BambooBlock)

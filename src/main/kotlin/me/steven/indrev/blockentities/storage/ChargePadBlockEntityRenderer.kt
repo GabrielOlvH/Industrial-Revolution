@@ -4,16 +4,15 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3f
 import kotlin.math.abs
 import kotlin.math.sin
 
-class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<ChargePadBlockEntity>(dispatcher) {
+class ChargePadBlockEntityRenderer : BlockEntityRenderer<ChargePadBlockEntity> {
     override fun render(
         entity: ChargePadBlockEntity?,
         tickDelta: Float,
@@ -41,10 +40,10 @@ class ChargePadBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
                 val time = entity.world?.time ?: 1
                 val offset = sin((time + tickDelta) / 16.0) / 32.0
                 translate(x, 1.1 + offset, z)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
                 scale(0.5f, 0.5f, 0.5f)
                 val lightAbove = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos.up())
-                MinecraftClient.getInstance().itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, lightAbove, overlay, this, vertexConsumers)
+                MinecraftClient.getInstance().itemRenderer.renderItem(stack, ModelTransformation.Mode.GROUND, lightAbove, overlay, this, vertexConsumers, 0)
                 pop()
             }
         }

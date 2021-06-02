@@ -16,10 +16,11 @@ import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.FlowableFluid
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 
-class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY) {
+class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY, pos, state) {
 
     init {
         this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
@@ -56,7 +57,9 @@ class DrainBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 val blockState = world.getBlockState(pos)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
-                    val drained = block.tryDrainFluid(world, pos, blockState)
+
+                    //TODO figure out what the fuck did mojang do
+                    val drained = Fluids.EMPTY//block.tryDrainFluid(world, pos, blockState)
                     if (drained != Fluids.EMPTY) {
                         val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                         fluidComponent.insertable.insert(toInsert)

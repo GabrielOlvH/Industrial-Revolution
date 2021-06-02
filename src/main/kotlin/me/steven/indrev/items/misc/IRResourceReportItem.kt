@@ -35,11 +35,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
         if (world !is ServerWorld) return super.use(world, user, hand)
-        val state =
-            world.persistentStateManager.getOrCreate(
-                { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                ChunkVeinState.STATE_OVERWORLD_KEY
-            )
+        val state = ChunkVeinState.getState(world)
         val tag = user.getStackInHand(hand).tag ?: return super.use(world, user, hand)
         val chunkPos = getChunkPos(tag.getString("ChunkPos")) ?: return super.use(world, user, hand)
         val veinData = state.veins[chunkPos]!!

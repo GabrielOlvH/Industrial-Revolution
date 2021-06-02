@@ -10,10 +10,12 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.CompressorRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.BlockPos
 
-class CompressorFactoryBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_FACTORY_REGISTRY) {
+class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_FACTORY_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

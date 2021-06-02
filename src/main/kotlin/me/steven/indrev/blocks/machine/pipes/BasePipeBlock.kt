@@ -32,7 +32,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
@@ -63,7 +62,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         )
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CoverableBlockEntity(tier)
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = CoverableBlockEntity(tier, pos, state)
 
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
         if (world?.isClient == false && state[COVERED]) {

@@ -13,7 +13,7 @@ import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.utils.minus
 import me.steven.indrev.utils.plus
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
@@ -163,12 +163,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
 
     override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putInt("ProcessTime", processTime)
         tag.putInt("MaxProcessTime", totalProcessTime)
         return tag

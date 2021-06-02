@@ -24,6 +24,8 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -44,7 +46,6 @@ import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import java.util.*
@@ -57,7 +58,15 @@ open class MachineBlock(
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
 ) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
 
-    override fun createBlockEntity(view: BlockView?): BlockEntity? = registry.blockEntityType(tier).instantiate()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = registry.blockEntityType(tier).instantiate(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World?,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return BlockEntityTicker { _, _, _, blockEntity -> (blockEntity as? MachineBlockEntity<*>)?.tick() }
+    }
 
     override fun onUse(
         state: BlockState?,
@@ -136,10 +145,10 @@ open class MachineBlock(
     override fun afterBreak(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
         player?.incrementStat(Stats.MINED.getOrCreateStat(this))
         player?.addExhaustion(0.005f)
-        toTagComponents(world, player, pos, state, blockEntity, toolStack)
+        writeNbtComponents(world, player, pos, state, blockEntity, toolStack)
     }
 
-    fun toTagComponents(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
+    fun writeNbtComponents(world: World?, player: PlayerEntity?, pos: BlockPos?, state: BlockState?, blockEntity: BlockEntity?, toolStack: ItemStack?) {
         if (world is ServerWorld) {
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 val item = stack.item

@@ -8,8 +8,11 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 
-class FluidInfuserBlockEntity(tier: Tier) : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY) {
+class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(4, 5, 6, 7)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

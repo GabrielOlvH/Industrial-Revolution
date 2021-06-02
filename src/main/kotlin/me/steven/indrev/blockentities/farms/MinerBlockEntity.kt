@@ -24,8 +24,9 @@ import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
@@ -34,7 +35,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
-class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY), UpgradeProvider {
+class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY, pos, state), UpgradeProvider {
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(10, 11, 12, 13)
@@ -94,7 +96,8 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
                 }
                 data.explored++
                 mining = 0.0
-                val generatedOre = chunkVeinType!!.outputs.pickRandom(world?.random)
+                //TODO figure out what the fuck did mojang do
+                val generatedOre = Blocks.AIR//chunkVeinType!!.outputs.pickRandom(world?.random)
                 lastMinedItem = ItemStack(generatedOre)
                 inventory.output(lastMinedItem.copy())
                 sync()
@@ -166,11 +169,7 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val inventory = inventoryComponent?.inventory ?: return
         val scanOutput = inventory.getStack(14).tag ?: return
         val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
-        val state =
-            (world as ServerWorld).persistentStateManager.getOrCreate(
-                { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                ChunkVeinState.STATE_OVERWORLD_KEY
-            )
+        val state = ChunkVeinState.getState(world as ServerWorld)
         if (action(state.veins[chunkPos])) state.markDirty()
     }
 
@@ -195,10 +194,10 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         val activeDrills = getActiveDrills()
         return when (upgrade) {
             Upgrade.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
-            Upgrade.SPEED -> activeDrills.sumByDouble { blockEntity ->
+            Upgrade.SPEED -> activeDrills.sumOf<T>({ blockEntity ->
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
-            }
+            })
             Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
@@ -225,33 +224,33 @@ class MinerBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier
         }
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        super.fromTag(state, tag)
+        super.readNbt(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.put("LastMinedBlock", lastMinedItem.toTag(CompoundTag()))
+        tag?.put("LastMinedBlock", lastMinedItem.writeNbt(NbtCompound()))
         return super.toClientTag(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         mining = tag?.getDouble("Mining") ?: 0.0
         if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        lastMinedItem = ItemStack.fromTag(tag?.getCompound("LastMinedBlock"))
+        lastMinedItem = ItemStack.fromNbt(tag?.getCompound("LastMinedBlock"))
         super.fromClientTag(tag)
     }
 

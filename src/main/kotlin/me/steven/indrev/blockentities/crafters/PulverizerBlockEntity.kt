@@ -7,9 +7,11 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 
-class PulverizerBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY) {
+class PulverizerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<PulverizerRecipe>(tier, MachineRegistry.PULVERIZER_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(5, 6, 7, 8)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

@@ -1,7 +1,7 @@
 package me.steven.indrev.components.multiblock
 
 import net.minecraft.block.BlockState
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -30,11 +30,11 @@ class MultiBlockComponent(
         shouldRenderHologram = !shouldRenderHologram
     }
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         shouldRenderHologram = tag?.getBoolean("ShouldRenderHologram") ?: false
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putBoolean("ShouldRenderHologram", shouldRenderHologram)
         return tag
     }

@@ -3,7 +3,7 @@ package me.steven.indrev.networks.item
 import me.steven.indrev.networks.EndpointData
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.collection.DefaultedList
 
 class ItemEndpointData(
@@ -26,20 +26,20 @@ class ItemEndpointData(
         return !whitelist
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        tag.put("filter", Inventories.toTag(CompoundTag(), filter))
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        tag.put("filter", Inventories.writeNbt(NbtCompound(), filter))
         tag.putBoolean("w", whitelist)
         tag.putBoolean("d", matchDurability)
         tag.putBoolean("mt", matchTag)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(tag: CompoundTag): EndpointData {
-        Inventories.fromTag(tag.getCompound("filter"), filter)
+    override fun readNbt(tag: NbtCompound): EndpointData {
+        Inventories.readNbt(tag.getCompound("filter"), filter)
         whitelist = tag.getBoolean("w")
         matchDurability = tag.getBoolean("d")
         matchTag = tag.getBoolean("mt")
-        val data = super.fromTag(tag)
+        val data = super.readNbt(tag)
         type = data.type
         mode = data.mode
         return this

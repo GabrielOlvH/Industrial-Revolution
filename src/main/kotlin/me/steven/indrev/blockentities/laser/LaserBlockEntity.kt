@@ -14,7 +14,7 @@ import me.steven.indrev.utils.component3
 import me.steven.indrev.utils.toVec3d
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.minecraft.client.util.math.Vector3f
+import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
@@ -22,15 +22,12 @@ import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Box
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3d
+import net.minecraft.util.math.*
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
 import java.util.*
 
-class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_REGISTRY) {
+class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_REGISTRY, pos, state) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
@@ -83,7 +80,7 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
             return
         }
 
-        val (x, y, z) = scale(facing.vector3f(), 3.0f)
+        val (x, y, z) = scale(facing.vec3f(), 3.0f)
         val damageArea = Box(pos).stretch(x.toDouble(), y.toDouble(), z.toDouble()).let {
             when {
                 facing.axis.isVertical ->
@@ -178,10 +175,10 @@ class LaserBlockEntity : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegi
     }
 
     companion object {
-        private fun Direction.vector3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
+        private fun Direction.vec3f() = Vec3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
 
-        private fun scale(v: Vector3f, scale: Float): Vector3f {
-            return Vector3f(v.x * scale, v.y * scale, v.z * scale)
+        private fun scale(v: Vec3f, scale: Float): Vec3f {
+            return Vec3f(v.x * scale, v.y * scale, v.z * scale)
         }
     }
 }

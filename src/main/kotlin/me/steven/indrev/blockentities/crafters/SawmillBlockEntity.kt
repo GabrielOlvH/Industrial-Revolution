@@ -7,8 +7,11 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SawmillRecipe
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 
-class SawmillBlockEntity(tier: Tier) : CraftingMachineBlockEntity<SawmillRecipe>(tier, MachineRegistry.SAWMILL_REGISTRY) {
+class SawmillBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : CraftingMachineBlockEntity<SawmillRecipe>(tier, MachineRegistry.SAWMILL_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(7, 8, 9, 10)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

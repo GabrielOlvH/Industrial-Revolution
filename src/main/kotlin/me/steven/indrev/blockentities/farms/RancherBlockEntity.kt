@@ -10,7 +10,8 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.FakePlayerEntity
+import me.steven.indrev.utils.eat
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
@@ -19,13 +20,15 @@ import net.minecraft.item.SwordItem
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.math.BlockPos
 
-class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
+class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY, pos, state), UpgradeProvider {
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
@@ -147,8 +150,8 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+        super.writeNbt(tag)
         tag?.putBoolean("feedBabies", feedBabies)
         tag?.putBoolean("mateAdults", mateAdults)
         tag?.putInt("matingLimit", matingLimit)
@@ -156,15 +159,15 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         return tag!!
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
         mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults
         matingLimit = tag?.getInt("matingLimit") ?: matingLimit
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         super.toClientTag(tag)
         tag?.putBoolean("feedBabies", feedBabies)
         tag?.putBoolean("mateAdults", mateAdults)
@@ -173,7 +176,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         return tag!!
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         super.fromClientTag(tag)
         feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
         mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults

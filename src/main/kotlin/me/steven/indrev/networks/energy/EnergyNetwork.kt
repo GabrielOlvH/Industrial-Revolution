@@ -12,7 +12,7 @@ import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.isLoaded
 import net.minecraft.block.Block
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -76,14 +76,14 @@ open class EnergyNetwork(
         super.appendPipe(state, block, blockPos)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        super.writeNbt(tag)
         tag.putInt("tier", tier.ordinal)
         return tag
     }
 
-    override fun fromTag(world: ServerWorld, tag: CompoundTag) {
-        super.fromTag(world, tag)
+    override fun readNbt(world: ServerWorld, tag: NbtCompound) {
+        super.readNbt(world, tag)
         val tier = Tier.values()[tag.getInt("tier")]
         this.tier = tier
     }
@@ -97,8 +97,8 @@ open class EnergyNetwork(
         private val EnergyIo.maxOutput: Double
             get() = extract(MAX_VALUE, Simulation.SIMULATE)
 
-        fun fromTag(world: ServerWorld, tag: CompoundTag): EnergyNetwork {
-            val network = Network.fromTag(world, tag) as EnergyNetwork
+        fun readNbt(world: ServerWorld, tag: NbtCompound): EnergyNetwork {
+            val network = Network.readNbt(world, tag) as EnergyNetwork
             val tier = Tier.values()[tag.getInt("tier")]
             network.tier = tier
             return network

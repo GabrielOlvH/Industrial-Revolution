@@ -26,16 +26,17 @@ import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
+import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.util.SpriteIdentifier
@@ -43,15 +44,16 @@ import net.minecraft.item.BlockItem
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
-import java.util.function.Supplier
 
 class MachineRegistry(private val key: String, val upgradeable: Boolean = true, vararg val tiers: Tier = Tier.values()) {
 
     private val configs: MutableMap<Tier, IConfig> = EnumMap(Tier::class.java)
     private val blocks: MutableMap<Tier, Block> = EnumMap(Tier::class.java)
     val blockEntities: MutableMap<Tier, BlockEntityType<*>> = EnumMap(Tier::class.java)
+
     @Environment(EnvType.CLIENT)
     val modelProvider: MutableMap<Tier, (String) -> UnbakedModel?> = EnumMap(Tier::class.java)
 
@@ -63,7 +65,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             val blockItem =
                 if (block is MachineBlock) MachineBlockItem(block, itemSettings())
                 else BlockItem(block, itemSettings())
-            identifier("${key}_${tier.toString().toLowerCase(Locale.ROOT)}").apply {
+            identifier("${key}_${tier.toString().lowercase(Locale.ROOT)}").apply {
                 block(block)
                 item(blockItem)
                 if (block is MachineBlock) {
@@ -76,11 +78,11 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         return this
     }
 
-    fun blockEntityProvider(entityProvider: (Tier) -> () -> BlockEntity): MachineRegistry {
+    fun blockEntityProvider(entityProvider: (Tier) -> (BlockPos, BlockState) -> BlockEntity): MachineRegistry {
         tiers.forEach { tier ->
             val blockEntityType =
-                BlockEntityType.Builder.create(Supplier(entityProvider(tier)), block(tier)).build(null)
-            identifier("${key}_${tier.toString().toLowerCase()}").apply {
+                FabricBlockEntityTypeBuilder.create(entityProvider(tier), block(tier)).build(null)
+            identifier("${key}_${tier.toString().lowercase()}").apply {
                 blockEntityType(blockEntityType)
             }
             blockEntities[tier] = blockEntityType
@@ -114,7 +116,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             tiers.forEach { tier -> modelProvider[tier] = provider(tier) }
         }
 
-       return this
+        return this
     }
 
     fun defaultModelProvider(hasWorkingState: Boolean = true): MachineRegistry {
@@ -125,8 +127,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         it.tierOverlay(tier)
                         if (hasWorkingState)
                             it.workingOverlayIds.add(
-                                SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
-                                    identifier("block/${id.replace(Regex("_mk[0-4]"), "")}_on"))
+                                SpriteIdentifier(
+                                    PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,
+                                    identifier("block/${id.replace(Regex("_mk[0-4]"), "")}_on")
+                                )
                             )
                     }
                 }
@@ -139,14 +143,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             modelProvider { { null } }
         return this
     }
-    
+
     fun defaultEnergyProvider(): MachineRegistry = energyProvider { { be, _ -> be as? MachineBlockEntity<*>? } }
 
     @Suppress("UNCHECKED_CAST")
     @Environment(EnvType.CLIENT)
-    fun <T : BlockEntity> registerBlockEntityRenderer(renderer: (BlockEntityRenderDispatcher) -> BlockEntityRenderer<T>) {
+    fun <T : BlockEntity> registerBlockEntityRenderer(renderer: () -> BlockEntityRenderer<T>) {
         blockEntities.forEach { (_, type) ->
-            BlockEntityRendererRegistry.INSTANCE.register(type as BlockEntityType<T>) { dispatcher -> renderer(dispatcher) }
+            BlockEntityRendererRegistry.INSTANCE.register(type as BlockEntityType<T>) { _ -> renderer() }
         }
     }
 
@@ -173,7 +177,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.generators.coalGenerator, ::CoalGeneratorScreenHandler
                 )
             }
-            .blockEntityProvider { { CoalGeneratorBlockEntity() } }
+            .blockEntityProvider { { pos, state -> CoalGeneratorBlockEntity(pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -181,7 +185,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockProvider { tier ->
                 MachineBlock(
                     this,
-                    SETTINGS(), 
+                    SETTINGS(),
                     tier,
                     when (tier) {
                         Tier.MK1 -> IRConfig.generators.solarGeneratorMk1
@@ -189,7 +193,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::SolarGeneratorScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SolarGeneratorBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SolarGeneratorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -199,7 +203,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.generators.biomassGenerator, ::BiomassGeneratorScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { BiomassGeneratorBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> BiomassGeneratorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -209,17 +213,20 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS().nonOpaque(), tier, IRConfig.generators.heatGenerator, ::HeatGeneratorScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { HeatGeneratorBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> HeatGeneratorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .noModelProvider()
 
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
             .blockProvider { tier -> LazuliFluxContainerBlock(this, SETTINGS(), tier) }
-            .blockEntityProvider { tier -> { LazuliFluxContainerBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> LazuliFluxContainerBlockEntity(tier, pos, state) } }
             .energyProvider {
                 { be, dir ->
                     val blockEntity = be as? LazuliFluxContainerBlockEntity
-                    if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(blockEntity, dir.opposite) else null
+                    if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(
+                        blockEntity,
+                        dir.opposite
+                    ) else null
                 }
             }
             .modelProvider { { id -> LazuliFluxContainerBakedModel(id) } }
@@ -237,7 +244,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::ElectricFurnaceScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { ElectricFurnaceBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> ElectricFurnaceBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider { tier ->
                 { id ->
@@ -262,7 +269,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::PulverizerScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { PulverizerBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> PulverizerBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -280,7 +287,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::CompressorScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { CompressorBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> CompressorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -298,7 +305,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::SolidInfuserScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SolidInfuserBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SolidInfuserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider { tier ->
                 { id ->
@@ -322,7 +329,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::SawmillScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SawmillBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SawmillBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -332,7 +339,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { RecyclerBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> RecyclerBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -342,7 +349,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.machines.smelter, ::SmelterScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SmelterBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SmelterBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider(hasWorkingState = false)
 
@@ -352,7 +359,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.machines.condenser, ::CondenserScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { CondenserBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> CondenserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -366,7 +373,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::ElectricFurnaceFactoryScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { ElectricFurnaceFactoryBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> ElectricFurnaceFactoryBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id ->
@@ -387,7 +394,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::PulverizerFactoryScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { PulverizerFactoryBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> PulverizerFactoryBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id ->
@@ -408,7 +415,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::CompressorFactoryScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { CompressorFactoryBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> CompressorFactoryBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id ->
@@ -429,7 +436,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::SolidInfuserFactoryScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SolidInfuserFactoryBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SolidInfuserFactoryBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id ->
@@ -446,13 +453,13 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     this, SETTINGS(), tier, IRConfig.machines.drain, null
                 )
             }
-            .blockEntityProvider { tier -> { DrainBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> DrainBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider(hasWorkingState = false)
 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
-            .blockEntityProvider { tier -> { PumpBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
             .energyProvider { { be, dir -> if (dir == Direction.DOWN) be as? MachineBlockEntity<*> else null } }
             .noModelProvider()
 
@@ -471,7 +478,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::FluidInfuserScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { FluidInfuserBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> FluidInfuserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -489,7 +496,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::ChopperScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { ChopperBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> ChopperBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -507,7 +514,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::FarmerScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { FarmerBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> FarmerBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider(hasWorkingState = false)
 
@@ -525,13 +532,13 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::RancherScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { RancherBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> RancherBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
         val MINER_REGISTRY = MachineRegistry("miner", false, Tier.MK4)
             .blockProvider { tier -> MinerBlock(this, SETTINGS(), tier) }
-            .blockEntityProvider { tier -> { MinerBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> MinerBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id -> MinerBakedModel(id) }
@@ -550,7 +557,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::FishingFarmScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { FishingFarmBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> FishingFarmBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .noModelProvider()
 
@@ -564,19 +571,19 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     ::ModularWorkbenchScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { ModularWorkbenchBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> ModularWorkbenchBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .noModelProvider()
 
         val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
-            .blockEntityProvider { tier -> { ChargePadBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> ChargePadBlockEntity(tier, pos, state) } }
             .energyProvider { { be, dir -> if (dir == Direction.UP) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
             .noModelProvider()
 
         val LASER_REGISTRY = MachineRegistry("laser", false, Tier.MK4)
             .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
-            .blockEntityProvider { { LaserBlockEntity() } }
+            .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
             .noModelProvider()
     }

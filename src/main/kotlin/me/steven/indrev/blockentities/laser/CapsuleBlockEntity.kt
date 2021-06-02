@@ -7,26 +7,17 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.util.Tickable
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.collection.DefaultedList
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.World
 
-class CapsuleBlockEntity : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable {
+class CapsuleBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
 
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
     var lastProgress = 0
-
-    override fun tick() {
-        if (world?.isClient == true) return
-        val tag = inventory[0].orCreateTag
-        val progress = tag.getInt("Progress")
-        if (tag.contains("Progress") && progress == lastProgress) {
-            tag.remove("Progress")
-        }
-        this.lastProgress = progress
-    }
 
     fun getActiveLasersCount(): Int {
         return Direction.values().count {
@@ -35,24 +26,36 @@ class CapsuleBlockEntity : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY), Bl
         }
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
-        Inventories.fromTag(tag, inventory)
+        Inventories.readNbt(tag, inventory)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag? {
-        super.toTag(tag)
-        Inventories.toTag(tag, inventory)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+        super.writeNbt(tag)
+        Inventories.writeNbt(tag, inventory)
         return tag
     }
 
-    override fun fromClientTag(tag: CompoundTag) {
-        inventory[0] = ItemStack.fromTag(tag.getCompound("Item"))
+    override fun fromClientTag(tag: NbtCompound) {
+        inventory[0] = ItemStack.fromNbt(tag.getCompound("Item"))
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
-        tag.put("Item", inventory[0].toTag(CompoundTag()))
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.put("Item", inventory[0].writeNbt(NbtCompound()))
         return tag
+    }
+
+    companion object {
+        fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: CapsuleBlockEntity) {
+            if (world.isClient) return
+            val tag = blockEntity.inventory[0].orCreateTag
+            val progress = tag.getInt("Progress")
+            if (tag.contains("Progress") && progress == blockEntity.lastProgress) {
+                tag.remove("Progress")
+            }
+            blockEntity.lastProgress = progress
+        }
     }
 }

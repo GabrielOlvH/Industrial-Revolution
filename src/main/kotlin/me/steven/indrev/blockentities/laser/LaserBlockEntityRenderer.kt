@@ -4,13 +4,12 @@ import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 
-class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<LaserBlockEntity>(dispatcher) {
+class LaserBlockEntityRenderer : BlockEntityRenderer<LaserBlockEntity> {
 
     override fun render(
         entity: LaserBlockEntity?,
@@ -36,7 +35,7 @@ class LaserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
             }
             multiply(rotation)
             translate(-0.5, -0.5, -0.5)
-            BeaconBlockEntityRenderer.renderLightBeam(
+            BeaconBlockEntityRenderer.renderBeam(
                 matrices,
                 vertexConsumers,
                 TEXTURE,

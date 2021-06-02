@@ -42,8 +42,8 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
     override fun getColor(stack: ItemStack?): Int {
-        val compoundTag = stack!!.getSubTag("display")
-        return if (compoundTag != null && compoundTag.contains("color", 99)) compoundTag.getInt("color") else -1
+        val NbtCompound = stack!!.getSubTag("display")
+        return if (NbtCompound != null && NbtCompound.contains("color", 99)) NbtCompound.getInt("color") else -1
     }
 
     fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0

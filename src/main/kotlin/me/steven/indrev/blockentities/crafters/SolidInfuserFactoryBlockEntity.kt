@@ -12,11 +12,13 @@ import me.steven.indrev.items.upgrade.Upgrade
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SolidInfuserFactoryBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY) {
+class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

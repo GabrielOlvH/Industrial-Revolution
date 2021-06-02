@@ -12,15 +12,18 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.toVec3d
+import net.minecraft.block.BlockState
 import net.minecraft.item.FishingRodItem
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class FishingFarmBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY), UpgradeProvider {
+class FishingFarmBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHING_FARM_REGISTRY, pos, state), UpgradeProvider {
 
     override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
     override val upgradeSlots: IntArray = intArrayOf(6, 7, 8, 9)

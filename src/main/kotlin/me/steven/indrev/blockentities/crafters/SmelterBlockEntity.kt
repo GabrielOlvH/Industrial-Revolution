@@ -13,10 +13,11 @@ import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SmelterBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<SmelterRecipe>(tier, MachineRegistry.SMELTER_REGISTRY) {
+class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<SmelterRecipe>(tier, MachineRegistry.SMELTER_REGISTRY, pos, state) {
 
     override val upgradeSlots: IntArray = intArrayOf(3, 4, 5, 6)
     override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT

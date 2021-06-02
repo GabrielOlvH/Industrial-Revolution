@@ -8,7 +8,7 @@ import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -16,8 +16,9 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.collection.DefaultedList
+import net.minecraft.util.math.BlockPos
 
-class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_BLOCK_ENTITY_TYPE), ExtendedScreenHandlerFactory {
+class CabinetBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.CABINET_BLOCK_ENTITY_TYPE, pos, state), ExtendedScreenHandlerFactory {
 
     private var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(27, ItemStack.EMPTY)
 
@@ -39,18 +40,18 @@ class CabinetBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.CABINET_
         buf.writeBlockPos(pos)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, inventory)
+            Inventories.readNbt(tag, inventory)
         }
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag? {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+        super.writeNbt(tag)
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, inventory)
+            Inventories.writeNbt(tag, inventory)
         }
         return tag
     }

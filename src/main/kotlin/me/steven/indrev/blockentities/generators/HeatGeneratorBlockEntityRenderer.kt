@@ -5,13 +5,12 @@ import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3f
 
-class HeatGeneratorBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<HeatGeneratorBlockEntity>(dispatcher) {
+class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockEntity> {
     override fun render(
         entity: HeatGeneratorBlockEntity?,
         tickDelta: Float,
@@ -27,7 +26,7 @@ class HeatGeneratorBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) 
                 val direction = entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
                     .let { if (it.axis == Direction.Axis.X) it.opposite else it }
                 translate(0.5, 0.5, 0.5)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
                 translate(-0.5, -0.5, -0.5)
                 matrices.renderFluid(volume)
                 FluidVolumeRenderer.VCPS.draw()

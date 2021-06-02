@@ -41,7 +41,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.options.KeyBinding
+import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.util.InputUtil
@@ -121,9 +121,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
@@ -147,7 +147,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         FabricModelPredicateProviderRegistry.register(
             IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
-        ) { stack, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
+        ) { stack, _, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
 
         PacketRegistry.registerClient()
 

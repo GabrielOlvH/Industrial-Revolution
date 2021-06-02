@@ -10,7 +10,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
@@ -53,7 +53,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                     state.veins[chunkPos] = data
                     state.markDirty()
                 }
-                val tag = CompoundTag()
+                val tag = NbtCompound()
                 tag.putString("VeinIdentifier", identifier.toString())
                 tag.putString("ChunkPos", chunkPos.asString())
                 tag.putString("Dimension", world.registryKey.value.path)
