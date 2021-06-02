@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.recipe.*
 import net.minecraft.screen.Property
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 
@@ -30,4 +31,4 @@ val ScreenHandler.properties: List<Property>
 val AbstractCookingRecipe.input: Ingredient
     get() = (this as AccessorAbstractCookingRecipe).input
 
-fun AnimalEntity.eat(player: PlayerEntity, stack: ItemStack) = (this as AccessorAnimalEntity).callEat(player, stack)
+fun AnimalEntity.eat(player: PlayerEntity, hand: Hand, stack: ItemStack) = (this as AccessorAnimalEntity).callEat(player, hand, stack)

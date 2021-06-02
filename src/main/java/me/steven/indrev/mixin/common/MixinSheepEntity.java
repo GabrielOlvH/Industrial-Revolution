@@ -41,7 +41,7 @@ public abstract class MixinSheepEntity extends AnimalEntity {
             setSheared(true);
             int amount = 1 + random.nextInt(3);
             ItemStack stack = new ItemStack(DROPS.get(getColor()), amount);
-            if (player.inventory.insertStack(stack))
+            if (player.getInventory().insertStack(stack))
                 cir.setReturnValue(ActionResult.success(world.isClient));
         }
     }

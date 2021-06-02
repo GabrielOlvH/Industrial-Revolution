@@ -2,10 +2,7 @@ package me.steven.indrev.gui.widgets.misc
 
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.widget.WWidget
-import net.minecraft.client.render.BufferBuilder
-import net.minecraft.client.render.BufferRenderer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.Matrix4f
 
@@ -18,7 +15,7 @@ class WStaticTooltip : WWidget() {
     private fun drawTooltipBackground(matrices: MatrixStack, x: Int, y: Int, width: Int, height: Int) {
         val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.buffer
-        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR)
+        bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
         val matrix4f: Matrix4f = matrices.peek().model
         val z = 0
         fillGradient(matrix4f, bufferBuilder, x - 3, y - 4, x + width + 3, y - 3, z, -267386864, -267386864)
@@ -34,10 +31,10 @@ class WStaticTooltip : WWidget() {
         RenderSystem.disableTexture()
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
-        RenderSystem.shadeModel(7425)
+        //RenderSystem.shadeModel(7425)
         bufferBuilder.end()
         BufferRenderer.draw(bufferBuilder)
-        RenderSystem.shadeModel(7424)
+        //RenderSystem.shadeModel(7424)
         RenderSystem.disableBlend()
         RenderSystem.enableTexture()
     }

@@ -3,6 +3,7 @@ package me.steven.indrev.gui.screenhandlers.pipes
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.registry.IRItemRegistry
@@ -22,6 +23,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import java.util.*
 import java.util.function.Consumer
 
 class PipeFilterScreenHandler(
@@ -133,18 +135,20 @@ class PipeFilterScreenHandler(
     inner class WFilterSlot(val index: Int) : WWidget() {
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-            ScreenDrawing.drawBeveledPanel(x, y, height, width, -1207959552, 1275068416, -1191182337)
+            ScreenDrawing.drawBeveledPanel(matrices, x, y, height, width, -1207959552, 1275068416, -1191182337)
             MinecraftClient.getInstance().itemRenderer.renderInGui(backingList[index], x + 1, y + 1)
             MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
             if (mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height)
                 DrawableHelper.fill(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433)
         }
 
-        override fun onClick(x: Int, y: Int, button: Int) {
+        override fun onClick(x: Int, y: Int, button: Int): InputResult {
             val buf = PacketByteBufs.create()
             buf.writeInt(index)
             writeIdentifyingData(buf)
             ClientPlayNetworking.send(CLICK_FILTER_SLOT_PACKET, buf)
+
+            return InputResult.PROCESSED
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -163,19 +167,20 @@ class PipeFilterScreenHandler(
                 MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y + 1)
         }
 
-        override fun onClick(x: Int, y: Int, button: Int) {
-            mode = mode?.next() ?: return
+        override fun onClick(x: Int, y: Int, button: Int): InputResult {
+            mode = mode?.next() ?: return InputResult.IGNORED
             MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f))
             val buf = PacketByteBufs.create()
             writeIdentifyingData(buf)
             buf.writeEnumConstant(mode)
             ClientPlayNetworking.send(CHANGE_SERVO_MODE_PACKET, buf)
+            return InputResult.PROCESSED
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             tooltip?.add(
                 TranslatableText("item.indrev.servo.mode")
-                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().toLowerCase()}").formatted(Formatting.BLUE)))
+                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.BLUE)))
         }
     }
 

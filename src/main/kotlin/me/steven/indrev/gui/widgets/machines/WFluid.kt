@@ -3,6 +3,7 @@ package me.steven.indrev.gui.widgets.machines
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.netty.buffer.Unpooled
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
@@ -19,7 +20,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     }
 
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(x, y, width, height, ENERGY_EMPTY, -1)
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, ENERGY_EMPTY, -1)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is ComponentProvider) {
@@ -59,12 +60,13 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         }
     }
 
-    override fun onClick(x: Int, y: Int, button: Int) {
+    override fun onClick(x: Int, y: Int, button: Int): InputResult {
         super.onClick(x, y, button)
         val packet = PacketByteBuf(Unpooled.buffer())
         ctx.run { _, pos -> packet.writeBlockPos(pos) }
         packet.writeInt(tank)
         ClientPlayNetworking.send(FLUID_CLICK_PACKET, packet)
+        return InputResult.PROCESSED
     }
 
     override fun canResize(): Boolean = false

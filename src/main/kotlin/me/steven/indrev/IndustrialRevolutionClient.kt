@@ -2,6 +2,7 @@ package me.steven.indrev
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -38,13 +39,18 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.entity.LivingEntityRenderer
+import net.minecraft.client.render.entity.model.BipedEntityModel
+import net.minecraft.client.render.entity.model.EntityModelLayers
 import net.minecraft.client.util.InputUtil
+import net.minecraft.entity.LivingEntity
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.math.Direction
 import org.lwjgl.glfw.GLFW
@@ -185,6 +191,17 @@ object IndustrialRevolutionClient : ClientModInitializer {
         ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
             IRConfig.readConfigs()
         }
+
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(LivingEntityFeatureRendererRegistrationCallback { type, renderer, helper, ctx ->
+            val slim = false
+            helper.register(
+                ModuleFeatureRenderer(
+                    renderer as LivingEntityRenderer<LivingEntity, BipedEntityModel<LivingEntity>>,
+                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_INNER_ARMOR else EntityModelLayers.PLAYER_INNER_ARMOR)),
+                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR))
+                )
+            )
+        })
 
         AprilFools.init()
     }

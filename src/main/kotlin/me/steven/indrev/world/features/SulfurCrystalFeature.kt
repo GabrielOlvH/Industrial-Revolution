@@ -10,21 +10,18 @@ import net.minecraft.block.Material
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
-import net.minecraft.world.StructureWorldAccess
-import net.minecraft.world.gen.chunk.ChunkGenerator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
-import java.util.*
+import net.minecraft.world.gen.feature.util.FeatureContext
 
 class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
-    override fun generate(
-        world: StructureWorldAccess?,
-        chunkGenerator: ChunkGenerator?,
-        random: Random,
-        blockPos: BlockPos?,
-        featureConfig: DefaultFeatureConfig?
-    ): Boolean {
 
+    override fun generate(
+        context: FeatureContext<DefaultFeatureConfig>
+    ): Boolean {
+        val blockPos = context.origin
+        val world = context.world
+        val random = context.random
         val mutablePos = BlockPos.Mutable()
         val coveredArea = Box(blockPos).expand(8.0, 8.0, 8.0)
         val isNearLava = coveredArea.any { x, y, z ->

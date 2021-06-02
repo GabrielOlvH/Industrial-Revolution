@@ -3,12 +3,12 @@ package me.steven.indrev.items.armor
 import me.steven.indrev.tools.modular.Module
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
-import net.minecraft.client.options.KeyBinding
+import net.minecraft.client.option.KeyBinding
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import net.minecraft.text.LiteralText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 

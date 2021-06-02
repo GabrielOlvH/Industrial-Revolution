@@ -12,6 +12,7 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.Tessellator
+import net.minecraft.client.render.VertexFormat
 import net.minecraft.client.render.VertexFormats
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.texture.SpriteAtlasTexture
@@ -26,7 +27,7 @@ object IRHudRender : HudRenderCallback {
         HudRenderCallback.EVENT.register(this)
     }
 
-    override fun onHudRender(matrixStack: MatrixStack?, tickDelta: Float) {
+    override fun onHudRender(matrices: MatrixStack?, tickDelta: Float) {
         val client = MinecraftClient.getInstance()
         val player = client.player
         if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
@@ -50,10 +51,10 @@ object IRHudRender : HudRenderCallback {
             val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
             texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
 
-            ScreenDrawing.texturedRect(x, y, 90, 62, HUD_MAIN, color, 0.8f)
-            ScreenDrawing.texturedRect(x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
+            ScreenDrawing.texturedRect(matrices, x, y, 90, 62, HUD_MAIN, color, 0.8f)
+            ScreenDrawing.texturedRect(matrices, x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
             val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"
-            ScreenDrawing.drawStringWithShadow(matrixStack, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
+            ScreenDrawing.drawStringWithShadow(matrices, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
             player.armorItems.forEach { stack ->
                 val item = stack.item as? ArmorItem ?: return@forEach
                 val xOffset = 21 * when (item.slotType) {
@@ -85,7 +86,7 @@ object IRHudRender : HudRenderCallback {
         RenderSystem.blendFuncSeparate(SrcFactor.SRC_ALPHA, DstFactor.ONE_MINUS_SRC_ALPHA, SrcFactor.ONE, DstFactor.ZERO)
         Tessellator.getInstance().run {
             buffer.run {
-                begin(7, VertexFormats.POSITION_COLOR_TEXTURE)
+                begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE)
                 vertex(x.toDouble(), y + height.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.minU, sprite.maxV).next()
                 vertex(x + width.toDouble(), y + height.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.maxU, sprite.maxV).next()
                 vertex(x + width.toDouble(), y.toDouble(), 0.0).color(r, g, b, opacity).texture(sprite.maxU, sprite.minV).next()

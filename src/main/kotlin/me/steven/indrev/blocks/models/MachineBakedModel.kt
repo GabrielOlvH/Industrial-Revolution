@@ -24,12 +24,12 @@ import net.minecraft.client.texture.MissingSprite
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3f
 import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Function
@@ -57,7 +57,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     }
 
     fun tierOverlay(tier: Tier) {
-        overlayIds.add(blockSpriteId("block/${tier.toString().toLowerCase()}_overlay"))
+        overlayIds.add(blockSpriteId("block/${tier.toString().lowercase(Locale.getDefault())}_overlay"))
     }
 
     override fun bake(
@@ -192,7 +192,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
      * Source: https://github.com/Haven-King/Automotion
      */
     fun rotateQuads(direction: Direction): RenderContext.QuadTransform = RenderContext.QuadTransform { q ->
-        val rotate = Vector3f.POSITIVE_Y.getDegreesQuaternion(
+        val rotate = Vec3f.POSITIVE_Y.getDegreesQuaternion(
             when (direction) {
                 Direction.NORTH -> 0f
                 Direction.EAST -> 270f
@@ -202,7 +202,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
             }
         )
 
-        val tmp = Vector3f()
+        val tmp = Vec3f()
         for (i in 0..3) {
             q.copyPos(i, tmp)
             tmp.add(-0.5f, -0.5f, -0.5f)

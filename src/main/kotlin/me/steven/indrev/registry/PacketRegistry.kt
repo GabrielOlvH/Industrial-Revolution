@@ -182,7 +182,7 @@ object PacketRegistry {
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
             server.execute {
-                val cursorStack = player.inventory.cursorStack
+                val cursorStack = player.currentScreenHandler.cursorStack
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
                 val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
                     state.createEndpointData(

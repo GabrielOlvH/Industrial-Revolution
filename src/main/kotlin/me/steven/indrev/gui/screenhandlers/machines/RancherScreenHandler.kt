@@ -1,7 +1,6 @@
 package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
-import io.github.cottonmc.cotton.gui.client.NinePatch
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
@@ -141,9 +140,9 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val offset = 178 - rootPanel.width
         (rootPanel as WCustomTabPanel).setForceBackgroundPainter(
             BackgroundPainter.createLightDarkVariants(
-                NinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8).setLeftPadding(0)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8).setLeftPadding(0)
                     .setRightPadding(offset).setTopPadding(-25),
-                NinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
                     .setRightPadding(offset)
             ))
     }

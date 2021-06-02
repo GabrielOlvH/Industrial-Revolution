@@ -117,11 +117,11 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         if (animalEntity.isBreedingItem(stack)) {
             val breedingAge: Int = animalEntity.breedingAge
             if (!world!!.isClient && breedingAge == 0 && animalEntity.canEat() && size <= matingLimit && mateAdults) {
-                animalEntity.eat(fakePlayer, stack)
+                animalEntity.eat(fakePlayer, Hand.MAIN_HAND, stack)
                 animalEntity.lovePlayer(fakePlayer)
             }
             if (animalEntity.isBaby && feedBabies) {
-                animalEntity.eat(fakePlayer, stack)
+                animalEntity.eat(fakePlayer, Hand.MAIN_HAND, stack)
                 animalEntity.growUp(((-breedingAge / 20f) * 0.1f).toInt(), true)
             }
             return ActionResult.SUCCESS

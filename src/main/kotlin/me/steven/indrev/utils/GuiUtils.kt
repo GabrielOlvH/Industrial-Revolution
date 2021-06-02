@@ -227,43 +227,43 @@ fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: BackgroundPaint
 }
 
 fun WItemSlot.setIcon(ctx: ScreenHandlerContext, inventory: Inventory, slot: Int, identifier: Identifier) {
-    setPainterSafe(ctx) { left, top, widget ->
-        BackgroundPainter.SLOT.paintBackground(left, top, widget)
+    setPainterSafe(ctx) { matrices, left, top, widget ->
+        BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
         if (inventory.getStack(slot).isEmpty)
-            ScreenDrawing.texturedRect(left + 1, top + 1, 16, 16, identifier, -1)
+            ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
     }
 }
 
 val POWER_ICON_ID = identifier("textures/gui/power_icon.png")
 
-fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, POWER_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, POWER_ICON_ID, -1)
 }
 
 val VENT_ICON_ID = identifier("textures/gui/vent_icon.png")
 
-fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, VENT_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, VENT_ICON_ID, -1)
 }
 
 val UPGRADE_ICON_ID = identifier("textures/gui/upgrade_icon.png")
 
-fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, UPGRADE_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, UPGRADE_ICON_ID, -1)
 }
 
 val LOCKED_ICON_ID = identifier("textures/gui/locked_icon.png")
 
-fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, LOCKED_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, LOCKED_ICON_ID, -1)
 }
 
 val PROCESS_EMPTY =

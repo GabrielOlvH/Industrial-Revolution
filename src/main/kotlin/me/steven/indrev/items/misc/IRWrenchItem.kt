@@ -42,8 +42,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
         val pos = context.blockPos
         val player = context.player
         val state = world?.getBlockState(pos) ?: return ActionResult.FAIL
-        val block = state.block
-        val blockEntity = if (block.hasBlockEntity()) world.getBlockEntity(pos) else null
+        val blockEntity = if (state.hasBlockEntity()) world.getBlockEntity(pos) else null
         return getMode(stack).useOnBlock(world, pos, state, blockEntity, player, stack)
     }
 

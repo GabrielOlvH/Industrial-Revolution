@@ -122,7 +122,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
         val tanksTag = tag?.getCompound("tanks")
         tanksTag?.keys?.forEach { key ->
             val tankTag = tanksTag.getCompound(key)
-            return FluidVolume.readNbt(tankTag.getCompound("fluids"))
+            return FluidVolume.fromTag(tankTag.getCompound("fluids"))
         }
         return null
     }

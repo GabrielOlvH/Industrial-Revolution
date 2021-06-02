@@ -107,7 +107,7 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.5, 9.5, 6.5, 9.5, 16.0, 9.5)
         val SOUTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 9.5, 9.5, 9.5, 16.0)
-        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 6.5, 9.5, 9.5, 0.0)
+        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 0.0, 9.5, 9.5, 6.5)
         val EAST_SHAPE: VoxelShape = createCuboidShape(9.5, 6.5, 6.5, 16.0, 9.5, 9.5)
         val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 6.5, 6.5, 6.5, 9.5, 9.5)
 

@@ -30,6 +30,12 @@ open class IRMiningDrillItem(
         }
     }
 
+    override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
+
+    override fun isItemBarVisible(stack: ItemStack?): Boolean = hasDurabilityBar(stack)
+
+    override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
+
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
     override fun appendTooltip(

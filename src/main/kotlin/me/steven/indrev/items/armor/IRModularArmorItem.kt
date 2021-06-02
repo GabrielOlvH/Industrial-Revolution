@@ -32,6 +32,12 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
     }
 
+    override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
+
+    override fun isItemBarVisible(stack: ItemStack?): Boolean = hasDurabilityBar(stack)
+
+    override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
+
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
@@ -80,7 +86,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
             val uUID = MODIFIERS[equipmentSlot.entitySlotId]
             val attr = ImmutableMultimap.builder<EntityAttribute, EntityAttributeModifier>()
             if (level > 0) {
-                val toughnessModifier = EntityAttributeModifier(uUID, "Armor toughness", item.method_26353() * level, EntityAttributeModifier.Operation.ADDITION)
+                val toughnessModifier = EntityAttributeModifier(uUID, "Armor toughness", item.toughness * level, EntityAttributeModifier.Operation.ADDITION)
                 attr.put(
                     EntityAttributes.GENERIC_ARMOR_TOUGHNESS,
                     toughnessModifier

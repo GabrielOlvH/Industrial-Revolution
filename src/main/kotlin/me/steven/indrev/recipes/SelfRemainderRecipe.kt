@@ -19,7 +19,7 @@ class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingr
         return output.copy()
     }
 
-    override fun getRemainingStacks(input: CraftingInventory): DefaultedList<ItemStack> {
+    override fun getRemainder(input: CraftingInventory): DefaultedList<ItemStack> {
         val defaultedList = DefaultedList.ofSize(input.size(), ItemStack.EMPTY)
         for (i in 0 until input.size()) {
             val invStack: ItemStack = input.getStack(i)
@@ -42,12 +42,12 @@ class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingr
             override fun read(identifier: Identifier, jsonObject: JsonObject): SelfRemainderRecipe {
                 val shaped = super.read(identifier, jsonObject)!!
                 val group = JsonHelper.getString(jsonObject, "group", "")
-                return SelfRemainderRecipe(shaped.id, group, shaped.output, shaped.previewInputs)
+                return SelfRemainderRecipe(shaped.id, group, shaped.output, shaped.ingredients)
             }
 
             override fun read(identifier: Identifier?, packetByteBuf: PacketByteBuf?): SelfRemainderRecipe {
                 val shaped = super.read(identifier, packetByteBuf)
-                return SelfRemainderRecipe(shaped.id, shaped.group, shaped.output, shaped.previewInputs)
+                return SelfRemainderRecipe(shaped.id, shaped.group, shaped.output, shaped.ingredients)
             }
         }
     }

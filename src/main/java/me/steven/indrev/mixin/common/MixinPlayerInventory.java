@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(PlayerInventory.class)
 public class MixinPlayerInventory {
     @Redirect(
-            method = "offerOrDrop",
+            method = "offer",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"

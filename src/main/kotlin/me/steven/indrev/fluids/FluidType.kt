@@ -10,6 +10,7 @@ import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
+import java.util.*
 
 enum class FluidType(val stillId: Identifier, val flowId: Identifier) {
     LAVA(identifier("block/gray_lava_still"), identifier("block/gray_lava_flow")),
@@ -25,14 +26,14 @@ enum class FluidType(val stillId: Identifier, val flowId: Identifier) {
             })
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
             .registerReloadListener(object : SimpleSynchronousResourceReloadListener {
-                override fun apply(manager: ResourceManager?) {
+                override fun reload(manager: ResourceManager?) {
                     val atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
                     sprites[0] = atlas.apply(stillId)
                     sprites[1] = atlas.apply(flowId)
                 }
 
                 override fun getFabricId(): Identifier =
-                    identifier("${this@FluidType.name.toLowerCase()}_reload_listener")
+                    identifier("${this@FluidType.name.lowercase(Locale.getDefault())}_reload_listener")
             })
     }
 }

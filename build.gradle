@@ -113,8 +113,12 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
-    include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
+    include ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
+    }
 
     modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -128,11 +132,11 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
    }
 
-    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
-    modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
+    modCompileOnly("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 

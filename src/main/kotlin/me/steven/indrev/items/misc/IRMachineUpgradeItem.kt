@@ -35,7 +35,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
             
             val inventoryTag = blockEntity.inventoryComponent?.writeNbt(NbtCompound())
             blockEntity.inventoryComponent?.inventory?.clear()
-            val fluidTag = blockEntity.fluidComponent?.writeNbt(NbtCompound())
+            val fluidTag = blockEntity.fluidComponent?.toTag(NbtCompound())
             val temperatureTag = blockEntity.temperatureComponent?.writeNbt(NbtCompound())
             val energy = blockEntity.energy
 
@@ -50,7 +50,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
                 ?: throw RuntimeException("This should never happen, what the fuck")
             upgradedBlockEntity.energy = energy
             upgradedBlockEntity.inventoryComponent?.readNbt(inventoryTag)
-            upgradedBlockEntity.fluidComponent?.readNbt(fluidTag)
+            upgradedBlockEntity.fluidComponent?.fromTag(fluidTag)
             upgradedBlockEntity.temperatureComponent?.readNbt(temperatureTag)
 
             context.player?.getStackInHand(context.hand)?.decrement(1)

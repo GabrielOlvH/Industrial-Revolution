@@ -31,7 +31,6 @@
     "client.MixinGameRenderer",
     "client.MixinItemRenderer",
     "client.MixinLivingEntityClient",
-    "client.MixinPlayerEntityRenderer",
     "client.MixinWItemSlot"
   ],
   "injectors": {

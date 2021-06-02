@@ -34,11 +34,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
             val rnd = world.random.asKotlinRandom()
             val chunkPos = world.getChunk(user?.blockPos)?.pos
             if (chunkPos != null) {
-                val state =
-                    (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                        ChunkVeinState.STATE_OVERWORLD_KEY
-                    )
+                val state = ChunkVeinState.getState(world as ServerWorld)
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
                 val default = BuiltinRegistries.BIOME.getKey(BuiltinBiomes.PLAINS).get()
@@ -46,7 +42,8 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                     .getKey(world.getBiome(user?.blockPos))
                     .orElse(default)
                 val picker = VeinType.BIOME_VEINS.getOrDefault(biomeKey, VeinType.BIOME_VEINS[default])
-                val identifier = info?.veinIdentifier ?: picker?.pickRandom(world.random)!!
+                //TODO why mojang aaaaaaaaaaaaaaaa
+                val identifier = info?.veinIdentifier!! //picker?.pickRandom(world.random)!!
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
                     val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))

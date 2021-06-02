@@ -194,10 +194,10 @@ class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         val activeDrills = getActiveDrills()
         return when (upgrade) {
             Upgrade.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
-            Upgrade.SPEED -> activeDrills.sumOf<T>({ blockEntity ->
+            Upgrade.SPEED -> activeDrills.sumOf { blockEntity ->
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
-            })
+            }
             Upgrade.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
