@@ -1,8 +1,8 @@
 package me.steven.indrev.items.misc
 
 import me.steven.indrev.registry.IRItemRegistry
-import me.steven.indrev.utils.asString
 import me.steven.indrev.utils.pickRandom
+import me.steven.indrev.utils.toNbt
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
@@ -52,7 +52,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 }
                 val tag = NbtCompound()
                 tag.putString("VeinIdentifier", identifier.toString())
-                tag.putString("ChunkPos", chunkPos.asString())
+                tag.put("ChunkPos", chunkPos.toNbt())
                 tag.putString("Dimension", world.registryKey.value.path)
                 val infoStack = ItemStack(IRItemRegistry.SCAN_OUTPUT_ITEM)
                 infoStack.tag = tag

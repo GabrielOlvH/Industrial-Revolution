@@ -20,6 +20,7 @@ import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -72,14 +73,12 @@ fun <T : ScreenHandler> Identifier.registerScreenHandler(
 
 fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
-fun ChunkPos.asString() = "$x,$z"
-
-fun getChunkPos(s: String): ChunkPos? {
-    val split = s.split(",")
-    val x = split[0].toIntOrNull() ?: return null
-    val z = split[1].toIntOrNull() ?: return null
-    return ChunkPos(x, z)
+fun ChunkPos.toNbt() = NbtCompound().also {
+    it.putInt("x", x)
+    it.putInt("z", z)
 }
+
+fun getChunkPos(nbt: NbtCompound) = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
 fun getFluidFromJson(json: JsonObject): FluidVolume {
     val fluidId = json.get("fluid").asString

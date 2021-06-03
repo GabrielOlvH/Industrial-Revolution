@@ -144,7 +144,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     private fun isLocationCorrect(): Boolean {
         val inventory = inventoryComponent?.inventory ?: return false
         val scanOutput = inventory.getStack(14).tag ?: return false
-        val scanChunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
+        val scanChunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
         val chunkPos = world?.getChunk(pos)?.pos ?: return false
         return chunkPos == scanChunkPos
     }
@@ -166,7 +166,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     private inline fun updateData(action: (ChunkVeinData?) -> Boolean) {
         val inventory = inventoryComponent?.inventory ?: return
         val scanOutput = inventory.getStack(14).tag ?: return
-        val chunkPos = getChunkPos(scanOutput.getString("ChunkPos"))
+        val chunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
         val state = ChunkVeinState.getState(world as ServerWorld)
         if (action(state.veins[chunkPos])) state.markDirty()
     }
