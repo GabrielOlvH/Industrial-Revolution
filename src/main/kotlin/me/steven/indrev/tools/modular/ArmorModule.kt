@@ -33,7 +33,7 @@ enum class ArmorModule(
         super.getTooltip(stack, tooltip)
         tooltip?.add(TranslatableText("item.indrev.module_parts").formatted(Formatting.BLUE))
         slots.forEach {
-            tooltip?.add(TranslatableText("item.indrev.module_parts_${it.toString().toLowerCase()}").formatted(Formatting.GOLD))
+            tooltip?.add(TranslatableText("item.indrev.module_parts_${it.toString().lowercase()}").formatted(Formatting.GOLD))
         }
     }
 

@@ -13,9 +13,9 @@ import net.minecraft.client.render.model.BakedModel
 class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
     override val spriteIdCollection = mutableListOf(
         blockSpriteId("block/cable_center"),
-        blockSpriteId("block/cable_center_emissive_${tier.toString().toLowerCase()}"),
+        blockSpriteId("block/cable_center_emissive_${tier.toString().lowercase()}"),
         blockSpriteId("block/cable_wrap"),
-        blockSpriteId("block/cable_wire_emissive_${tier.toString().toLowerCase()}")
+        blockSpriteId("block/cable_wire_emissive_${tier.toString().lowercase()}")
     )
 
     override fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {

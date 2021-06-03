@@ -34,8 +34,8 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
     abstract val spriteIdCollection: MutableList<SpriteIdentifier>
     private val modelIdCollection = mutableListOf(
-        identifier("block/${type}_center_${tier.toString().toLowerCase()}"),
-        identifier("block/${type}_side_${tier.toString().toLowerCase()}")
+        identifier("block/${type}_center_${tier.toString().lowercase()}"),
+        identifier("block/${type}_side_${tier.toString().lowercase()}")
     )
     protected val spriteArray = arrayOfNulls<Sprite>(4)
     protected val meshArray = arrayOfNulls<Mesh>(7)

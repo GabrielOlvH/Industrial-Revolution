@@ -193,10 +193,10 @@ object PacketRegistry {
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
                 state.markDirty()
-                val buf = PacketByteBufs.create()
-                buf.writeInt(slotIndex)
-                buf.writeItemStack(data.filter[slotIndex])
-                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
+                val syncPacket = PacketByteBufs.create()
+                syncPacket.writeInt(slotIndex)
+                syncPacket.writeItemStack(data.filter[slotIndex])
+                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, syncPacket)
             }
         }
 
@@ -369,12 +369,12 @@ object PacketRegistry {
                 val pos = buf.readLong()
                 for (m in 0 until buf.readByte()) {
                     val dir = Direction.values()[buf.readByte().toInt()]
-                    val type = EndpointData.Type.values()[buf.readByte().toInt()]
+                    val endpointType = EndpointData.Type.values()[buf.readByte().toInt()]
                     val hasMode = buf.readBoolean()
                     val mode = if (hasMode) EndpointData.Mode.values()[buf.readByte().toInt()] else null
                     client.execute {
                         val data = new.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
-                        data[dir] = EndpointData(type, mode)
+                        data[dir] = EndpointData(endpointType, mode)
 
                         if (before[pos]?.size != data?.size || before[pos]?.any { it.value.mode != data[it.key]?.mode || it.value.type != data[it.key]?.type } == true) {
                             positions.add(BlockPos.fromLong(pos))

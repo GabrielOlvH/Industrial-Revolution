@@ -192,7 +192,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRConfig.readConfigs()
         }
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(LivingEntityFeatureRendererRegistrationCallback { type, renderer, helper, ctx ->
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(LivingEntityFeatureRendererRegistrationCallback { _, renderer, helper, ctx ->
             val slim = false
             helper.register(
                 ModuleFeatureRenderer(
