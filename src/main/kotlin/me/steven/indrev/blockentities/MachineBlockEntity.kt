@@ -10,7 +10,6 @@ import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
@@ -19,7 +18,6 @@ import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
-import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
@@ -30,7 +28,6 @@ import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -47,8 +44,6 @@ import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
-import net.minecraft.world.explosion.Explosion
-import org.apache.logging.log4j.LogManager
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
@@ -116,25 +111,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             IREnergyMovement.spreadNeighbors(this, pos)
-            if (explode) {
-                val power = temperatureComponent!!.explosionPower
-                world?.createExplosion(
-                    null,
-                    pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
-                    power,
-                    false,
-                    Explosion.DestructionType.DESTROY)
-                LogManager.getLogger("Industrial Revolution")
-                    .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
-                return
-            }
-            val inventory = inventoryComponent?.inventory
-            if (inventoryComponent != null && inventory!!.size() > 1 && this !is LazuliFluxContainerBlockEntity) {
-                val stack = inventory.getStack(0)
-                val itemIo = energyOf(stack)
-                if (itemIo != null)
-                    EnergyMovement.move(itemIo, this, maxInput)
-            }
+
             transferItems()
             transferFluids()
             machineTick()

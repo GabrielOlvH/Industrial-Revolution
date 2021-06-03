@@ -33,7 +33,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import vazkii.patchouli.client.book.ClientBookRegistry
-import java.util.function.Predicate
 
 fun WGridPanel.add(w: WWidget, x: Double, y: Double, width: Double, height: Double) {
     this.add(w, x.toInt(), y.toInt(), width.toInt(), height.toInt())
@@ -64,13 +63,7 @@ fun SyncedGuiDescription.configure(
     val energyWidget = WEnergy()
     panel.add(energyWidget, 0.1, 0.0)
 
-    val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
-    batterySlot.filter = Predicate { stack -> energyOf(stack) != null }
-
     ctx.run { world, blockPos ->
-        if (world.isClient)
-            batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
-        panel.add(batterySlot, 0.0, 3.7)
         val blockEntity = world.getBlockEntity(blockPos)
 
         if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {

@@ -33,11 +33,10 @@ open class Filterable {
 }
 
 open class IRInventoryDSL : Filterable() {
-    var batterySlot: Int = 0
     var coolerSlot: Int? = null
     private var input: FilteredSlots = FilteredSlots.EMPTY_FILTER
     private var output: FilteredSlots = FilteredSlots.EMPTY_FILTER
-    var upgradeSlots: IntRange? = null
+    var enhancerSlots: IntRange? = null
     var maxStackCount = 64
 
     fun input(block: FilteredSlots.() -> Unit) {
@@ -62,7 +61,6 @@ open class IRInventoryDSL : Filterable() {
             else filters.computeIfAbsent(slot) {
                 { (_, item), _ ->
                     when {
-                        slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
                         blockEntity is EnhancerProvider -> item is IREnhancerItem && slot in blockEntity.enhancerSlots && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.availableEnhancers.contains(item.enhancer)
