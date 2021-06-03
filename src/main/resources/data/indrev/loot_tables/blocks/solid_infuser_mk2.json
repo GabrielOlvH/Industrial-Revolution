@@ -2,11 +2,11 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1.0,
+      "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:infuser_creative"
+          "name": "indrev:solid_infuser_mk2"
         }
       ],
       "conditions": [

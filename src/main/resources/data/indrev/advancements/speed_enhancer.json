@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:smoker_upgrade"
+      "item": "indrev:speed_enhancer"
     },
     "title": {
-      "translate": "advancements.indrev.smoker_upgrade"
+      "translate": "advancements.indrev.speed_enhancer"
     },
     "description": {
-      "translate": "advancements.indrev.smoker_upgrade.description"
+      "translate": "advancements.indrev.speed_enhancer.description"
     }
   },
-  "parent": "indrev:empty_upgrade",
+  "parent": "indrev:empty_enhancer",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "indrev:smoker_upgrade"
+            "item": "indrev:speed_enhancer"
           }
         ]
       }

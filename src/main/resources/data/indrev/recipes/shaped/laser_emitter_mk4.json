@@ -1,28 +1,28 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "GCG",
-    "NMN",
+    "PCP",
+    "BMB",
     "NBN"
   ],
   "key": {
-    "M": {
-      "item": "indrev:machine_block"
-    },
     "C": {
       "item": "indrev:circuit_mk4"
     },
     "N": {
-      "tag": "c:lead_plates"
+      "item": "indrev:enriched_nikolite_ingot"
     },
-    "G": {
-      "item": "indrev:netherite_drill_head"
+    "M": {
+      "item": "indrev:machine_block"
     },
     "B": {
       "item": "indrev:battery"
+    },
+    "P": {
+      "tag": "c:tungsten_plates"
     }
   },
   "result": {
-    "item": "indrev:miner_mk4"
+    "item": "indrev:laser_emitter_mk4"
   }
 }

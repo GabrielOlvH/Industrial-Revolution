@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:infuser_mk1"
+      "item": "indrev:buffer_enhancer"
     },
     "title": {
-      "translate": "advancements.indrev.infuser"
+      "translate": "advancements.indrev.buffer_enhancer"
     },
     "description": {
-      "translate": "advancements.indrev.infuser.description"
+      "translate": "advancements.indrev.buffer_enhancer.description"
     }
   },
-  "parent": "indrev:machine_block",
+  "parent": "indrev:empty_enhancer",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "indrev:infuser_mk1"
+            "item": "indrev:buffer_enhancer"
           }
         ]
       }

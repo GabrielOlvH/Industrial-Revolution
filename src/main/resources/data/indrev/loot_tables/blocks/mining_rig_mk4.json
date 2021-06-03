@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:laser_mk4"
+          "name": "indrev:mining_rig_mk4"
         }
       ],
       "conditions": [

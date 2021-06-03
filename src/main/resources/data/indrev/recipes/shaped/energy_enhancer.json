@@ -13,13 +13,13 @@
       "item": "indrev:circuit_mk3"
     },
     "E": {
-      "item": "indrev:empty_upgrade"
+      "item": "indrev:empty_enhancer"
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"
     }
   },
   "result": {
-    "item": "indrev:energy_upgrade"
+    "item": "indrev:energy_enhancer"
   }
 }

@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:fishing_farm_mk3"
+          "name": "indrev:solid_infuser_mk3"
         }
       ],
       "conditions": [

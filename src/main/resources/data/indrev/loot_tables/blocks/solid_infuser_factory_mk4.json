@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:miner_mk4"
+          "name": "indrev:solid_infuser_factory_mk4"
         }
       ],
       "conditions": [

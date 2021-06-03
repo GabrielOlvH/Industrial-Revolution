@@ -13,13 +13,13 @@
       "item": "minecraft:blast_furnace"
     },
     "E": {
-      "item": "indrev:empty_upgrade"
+      "item": "indrev:empty_enhancer"
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"
     }
   },
   "result": {
-    "item": "indrev:blast_furnace_upgrade"
+    "item": "indrev:blast_furnace_enhancer"
   }
 }

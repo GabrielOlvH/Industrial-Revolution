@@ -1,25 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
+    "NEN",
     " C ",
-    "BEB",
-    "N N"
+    " B "
   ],
   "key": {
     "C": {
       "item": "indrev:circuit_mk1"
     },
     "B": {
-      "tag": "minecraft:logs"
+      "item": "indrev:battery"
     },
     "E": {
-      "item": "indrev:empty_upgrade"
+      "item": "indrev:empty_enhancer"
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"
     }
   },
   "result": {
-    "item": "indrev:smoker_upgrade"
+    "item": "indrev:buffer_enhancer"
   }
 }

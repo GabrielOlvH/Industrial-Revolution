@@ -2,11 +2,11 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": 1.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:fishing_farm_mk2"
+          "name": "indrev:solid_infuser_creative"
         }
       ],
       "conditions": [

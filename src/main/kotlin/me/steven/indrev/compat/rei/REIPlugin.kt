@@ -25,6 +25,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import java.util.*
+import kotlin.math.roundToInt
 
 object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
@@ -239,7 +240,7 @@ object REIPlugin : REIPluginV0 {
 
         val recipeHelpers = mutableMapOf<Block, DefaultInformationDisplay>()
         VeinType.REGISTERED.forEach { (id, type) ->
-            val sum = type.outputs.entries.sumOf<T>({ it.weight })
+            val sum = type.outputs.entries.sumOf { it.weight }
             type.outputs.entries.forEach { entry ->
                 val block = entry.element
                 val info = recipeHelpers.computeIfAbsent(block) {

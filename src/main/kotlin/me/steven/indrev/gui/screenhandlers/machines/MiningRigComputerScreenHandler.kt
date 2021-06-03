@@ -76,7 +76,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                 }
             }
             root.add(WText({
-                val totalMultiplier = activeDrills.sumOf<T>({ it.getSpeedMultiplier() })
+                val totalMultiplier = activeDrills.sumOf { it.getSpeedMultiplier() }
                 TranslatableText("block.indrev.drill.faster", totalMultiplier)
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.2)
         }

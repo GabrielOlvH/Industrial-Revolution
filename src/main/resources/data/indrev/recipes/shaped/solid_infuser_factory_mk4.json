@@ -7,7 +7,7 @@
   ],
   "key": {
     "F": {
-      "item": "indrev:infuser_mk4"
+      "item": "indrev:solid_infuser_mk4"
     },
     "C": {
       "item": "indrev:circuit_mk4"
@@ -23,6 +23,6 @@
     }
   },
   "result": {
-    "item": "indrev:infuser_factory_mk4"
+    "item": "indrev:solid_infuser_factory_mk4"
   }
 }
