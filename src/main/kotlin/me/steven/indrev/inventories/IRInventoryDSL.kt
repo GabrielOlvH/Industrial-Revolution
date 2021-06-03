@@ -1,10 +1,10 @@
 package me.steven.indrev.inventories
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.items.misc.IRCoolerItem
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
 import me.steven.indrev.utils.component1
@@ -56,7 +56,7 @@ open class IRInventoryDSL : Filterable() {
         var size = input.slots.plus(output.slots).plus(filters.keys).distinct().size + 1
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
-        if (blockEntity is UpgradeProvider) size += blockEntity.upgradeSlots.size
+        if (blockEntity is EnhancerProvider) size += blockEntity.enhancerSlots.size
         return IRInventory(this, size, input.slots, output.slots) { slot, stack, dir ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) {
@@ -65,7 +65,7 @@ open class IRInventoryDSL : Filterable() {
                         slot == batterySlot -> true
                         coolerSlot != null && slot == coolerSlot -> item is IRCoolerItem || item == IRItemRegistry.HEAT_COIL
                         input.slots.contains(slot) -> true
-                        blockEntity is UpgradeProvider -> item is IRUpgradeItem && slot in blockEntity.upgradeSlots && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.availableUpgrades.contains(item.upgrade)
+                        blockEntity is EnhancerProvider -> item is IREnhancerItem && slot in blockEntity.enhancerSlots && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.availableEnhancers.contains(item.enhancer)
                         else -> false
                     }
                 }

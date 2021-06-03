@@ -8,7 +8,7 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
@@ -20,8 +20,8 @@ import net.minecraft.util.math.Direction
 class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY, pos, state) {
 
-    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancerSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)

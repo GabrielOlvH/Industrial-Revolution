@@ -16,7 +16,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.weight
 import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
 import net.minecraft.item.Item
@@ -25,7 +24,7 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import kotlin.math.roundToInt
+import java.util.*
 
 object REIPlugin : REIPluginV0 {
     override fun getPluginIdentifier(): Identifier = ID
@@ -73,7 +72,7 @@ object REIPlugin : REIPluginV0 {
         recipeHelper?.registerCategory(
             IRMachineRecipeCategory(
                 INFUSING,
-                EntryStack.create(MachineRegistry.INFUSER_REGISTRY.block(Tier.MK1)),
+                EntryStack.create(MachineRegistry.SOLID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.infusing"
             )
         )
@@ -172,7 +171,7 @@ object REIPlugin : REIPluginV0 {
                 EntryStack.create(block)
             )
         }
-        MachineRegistry.INFUSER_REGISTRY.forEachBlock { _, block ->
+        MachineRegistry.SOLID_INFUSER_REGISTRY.forEachBlock { _, block ->
             recipeHelper?.registerWorkingStations(
                 INFUSING,
                 EntryStack.create(block)
@@ -228,7 +227,8 @@ object REIPlugin : REIPluginV0 {
                     if (tier != Tier.CREATIVE && tier != Tier.MK1 && recipeHelper?.getRecipesFor(entryStack)?.isEmpty() == true) {
                         val info = DefaultInformationDisplay.createFromEntry(entryStack, TranslatableText(block.translationKey))
                         info.lines(TranslatableText("indrev.category.rei.upgrading",
-                            TranslatableText("item.indrev.tier_upgrade_" + tier.toString().toLowerCase()).formatted(Formatting.DARK_GRAY),
+                            TranslatableText("item.indrev.tier_upgrade_" + tier.toString()
+                                .lowercase(Locale.getDefault())).formatted(Formatting.DARK_GRAY),
                             TranslatableText(registry.block(registry.tiers[registry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
                             tier.toString()))
                         recipeHelper.registerDisplay(info)
@@ -239,7 +239,7 @@ object REIPlugin : REIPluginV0 {
 
         val recipeHelpers = mutableMapOf<Block, DefaultInformationDisplay>()
         VeinType.REGISTERED.forEach { (id, type) ->
-            val sum = type.outputs.entries.sumBy { it.weight }
+            val sum = type.outputs.entries.sumOf<T>({ it.weight })
             type.outputs.entries.forEach { entry ->
                 val block = entry.element
                 val info = recipeHelpers.computeIfAbsent(block) {

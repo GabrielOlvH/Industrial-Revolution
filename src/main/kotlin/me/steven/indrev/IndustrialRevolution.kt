@@ -164,12 +164,12 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceScreenHandler)
     val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)
     val COMPRESSOR_HANDLER = CompressorScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorScreenHandler)
-    val INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
+    val SOLID_INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
     val RECYCLER_HANDLER = RecyclerScreenHandler.SCREEN_ID.registerScreenHandler(::RecyclerScreenHandler)
     val CHOPPER_HANDLER = ChopperScreenHandler.SCREEN_ID.registerScreenHandler(::ChopperScreenHandler)
     val RANCHER_HANDLER = RancherScreenHandler.SCREEN_ID.registerScreenHandler(::RancherScreenHandler)
-    val MINER_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)
-    val FISHING_FARM_HANDLER = FishingFarmScreenHandler.SCREEN_ID.registerScreenHandler(::FishingFarmScreenHandler)
+    val MINING_RIG_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)
+    val FISHER_HANDLER = FisherScreenHandler.SCREEN_ID.registerScreenHandler(::FisherScreenHandler)
     val MODULAR_WORKBENCH_HANDLER =
         ModularWorkbenchScreenHandler.SCREEN_ID.registerScreenHandler(::ModularWorkbenchScreenHandler)
     val SMELTER_HANDLER = SmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SmelterScreenHandler)
@@ -182,7 +182,7 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorFactoryScreenHandler)
-    val INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
+    val SOLID_INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
 
     val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterScreenHandler.SCREEN_ID) { syncId, inv, buf ->
         val dir = buf.readEnumConstant(Direction::class.java)

@@ -14,7 +14,7 @@ import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.config.IRConfig
@@ -295,7 +295,7 @@ object PacketRegistry {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(MinerBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
+        ClientPlayNetworking.registerGlobalReceiver(MiningRigBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
             val pos = buf.readBlockPos().down()
             val blockRawId = buf.readInt()
             val block = Registry.BLOCK.get(blockRawId)

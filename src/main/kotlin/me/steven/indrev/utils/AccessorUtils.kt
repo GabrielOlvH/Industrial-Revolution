@@ -1,8 +1,11 @@
 package me.steven.indrev.utils
 
+import it.unimi.dsi.fastutil.ints.IntList
 import me.steven.indrev.mixin.common.*
+import net.minecraft.block.FluidBlock
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
+import net.minecraft.fluid.FlowableFluid
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.*
@@ -25,10 +28,16 @@ fun <T : Recipe<Inventory>> RecipeManager.getAllOfType(type: RecipeType<T>): Map
 
 fun RecipeManager.getRecipes(): Map<RecipeType<*>, Map<Identifier, Recipe<*>>> = (this as AccessorRecipeManager).recipes
 
-val ScreenHandler.properties: List<Property>
+val ScreenHandler.properties: MutableList<Property>
     get() = (this as AccessorScreenHandler).properties
+
+val ScreenHandler.trackedPropertyValues: IntList
+    get() = (this as AccessorScreenHandler).trackedPropertyValues
 
 val AbstractCookingRecipe.input: Ingredient
     get() = (this as AccessorAbstractCookingRecipe).input
 
 fun AnimalEntity.eat(player: PlayerEntity, hand: Hand, stack: ItemStack) = (this as AccessorAnimalEntity).callEat(player, hand, stack)
+
+val FluidBlock.fluid: FlowableFluid
+    get() = (this as AccessorFluidBlock).fluid

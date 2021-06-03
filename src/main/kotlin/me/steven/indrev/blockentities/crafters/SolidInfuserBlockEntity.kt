@@ -5,7 +5,7 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
@@ -14,10 +14,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
 class SolidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
-    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.INFUSER_REGISTRY, pos, state) {
+    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_REGISTRY, pos, state) {
 
-    override val upgradeSlots: IntArray = intArrayOf(5, 6, 7, 8)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancerSlots: IntArray = intArrayOf(5, 6, 7, 8)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)

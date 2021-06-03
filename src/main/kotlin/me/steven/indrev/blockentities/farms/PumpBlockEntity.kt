@@ -11,6 +11,7 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.drainFluid
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -90,9 +91,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 val blockState = world.getBlockState(currentTarget)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
-
-                    //TODO figure out what the fuck did mojang do
-                    val drained = Fluids.EMPTY//block.tryDrainFluid(world, currentTarget, blockState)
+                    val drained = block.drainFluid(world, currentTarget, blockState)
                     if (drained != Fluids.EMPTY) {
                         val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                         fluidComponent.insert(toInsert)

@@ -85,13 +85,13 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.ELECTRIC_FURNACE_HANDLER,
             IndustrialRevolution.PULVERIZER_HANDLER,
             IndustrialRevolution.COMPRESSOR_HANDLER,
-            IndustrialRevolution.INFUSER_HANDLER,
+            IndustrialRevolution.SOLID_INFUSER_HANDLER,
             IndustrialRevolution.RECYCLER_HANDLER,
             IndustrialRevolution.CHOPPER_HANDLER,
             IndustrialRevolution.RANCHER_HANDLER,
-            IndustrialRevolution.MINER_HANDLER,
+            IndustrialRevolution.MINING_RIG_HANDLER,
             IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
-            IndustrialRevolution.FISHING_FARM_HANDLER,
+            IndustrialRevolution.FISHER_HANDLER,
             IndustrialRevolution.WRENCH_HANDLER,
             IndustrialRevolution.SMELTER_HANDLER,
             IndustrialRevolution.CONDENSER_HANDLER,
@@ -102,7 +102,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
             IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
             IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
-            IndustrialRevolution.INFUSER_FACTORY_HANDLER,
+            IndustrialRevolution.SOLID_INFUSER_FACTORY_HANDLER,
             IndustrialRevolution.CABINET_HANDLER,
             IndustrialRevolution.DRILL_HANDLER,
             IndustrialRevolution.LASER_HANDLER,
@@ -122,17 +122,17 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
+        MachineRegistry.MINING_RIG_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
-        MachineRegistry.LASER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
+        MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
-        MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.FISHER_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.TANK_BLOCK, RenderLayer.getCutout())

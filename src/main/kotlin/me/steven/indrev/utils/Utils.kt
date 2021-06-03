@@ -27,11 +27,13 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.OrderedText
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
+import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
+
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -114,4 +116,8 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
 }
 fun World.isLoaded(pos: BlockPos): Boolean {
     return chunkManager.isChunkLoaded(pos.x shr 4, pos.z shr 4)
+}
+
+fun <E> WeightedList<E>.pickRandom(): E {
+    return this.shuffle().entries.first().element
 }

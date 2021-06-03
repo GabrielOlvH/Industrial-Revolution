@@ -46,7 +46,7 @@ class ResourceReportScreenHandler(
         root.add(titleText, 3.0, 0.3)
 
         val outputs = VeinType.REGISTERED[veinData.veinIdentifier]!!.outputs
-        val sum = outputs.entries.sumOf<T>({ it.weight })
+        val sum = outputs.entries.sumOf { it.weight }
         outputs.entries.sortedByDescending { it.weight }
             .forEachIndexed { index, entry ->
                 val block = (entry.element as Block)

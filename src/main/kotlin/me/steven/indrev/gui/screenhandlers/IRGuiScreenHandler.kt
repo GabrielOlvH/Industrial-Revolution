@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.properties
+import me.steven.indrev.utils.trackedPropertyValues
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -23,7 +24,8 @@ open class IRGuiScreenHandler(
 ) : SyncedGuiDescription(type, syncId, playerInventory, getBlockInventory(ctx), getBlockPropertyDelegate(ctx)) {
 
     init {
-        (properties as ArrayList).clear()
+        properties.clear()
+        trackedPropertyValues.clear()
     }
 
     private val values = Array(propertyDelegate.size()) { -1 }

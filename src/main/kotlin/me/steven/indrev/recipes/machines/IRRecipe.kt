@@ -38,6 +38,11 @@ interface IRRecipe : Recipe<Inventory> {
 
     override fun getType(): IRRecipeType<*>
 
+    override fun isEmpty(): Boolean {
+        return input.isEmpty() || input
+            .any { entry -> entry.ingredient.matchingStacksClient.isEmpty() }
+    }
+
     fun craft(random: Random?): List<ItemStack> {
         val produced = ArrayList<ItemStack>(outputs.size)
         outputs.forEach { (stack, chance) ->

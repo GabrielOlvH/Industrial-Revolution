@@ -15,9 +15,9 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
-class FishingFarmScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.FISHING_FARM_HANDLER,
+        IndustrialRevolution.FISHER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -25,7 +25,7 @@ class FishingFarmScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.fishing_farm", ctx, playerInventory, blockInventory)
+        configure("block.indrev.fisher", ctx, playerInventory, blockInventory)
 
         root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.95, 0.7)
 

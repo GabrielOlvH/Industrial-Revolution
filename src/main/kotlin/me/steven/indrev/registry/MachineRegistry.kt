@@ -291,7 +291,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .defaultModelProvider()
 
-        val INFUSER_REGISTRY = MachineRegistry("infuser")
+        val SOLID_INFUSER_REGISTRY = MachineRegistry("solid_infuser")
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -310,7 +310,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider { tier ->
                 { id ->
                     MachineBakedModel(id).also {
-                        it.workingOverlayIds.add(blockSpriteId("block/infuser_emissive_on"))
+                        it.workingOverlayIds.add(blockSpriteId("block/solid_infuser_emissive_on"))
                         it.tierOverlay(tier)
                     }
                 }
@@ -426,7 +426,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                 }
             }
 
-        val SOLID_INFUSER_FACTORY_REGISTRY = MachineRegistry("infuser_factory", false, Tier.MK4)
+        val SOLID_INFUSER_FACTORY_REGISTRY = MachineRegistry("solid_infuser_factory", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -441,7 +441,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id ->
                     MachineBakedModel(id).also {
-                        it.baseSprite = blockSpriteId("block/infuser")
+                        it.baseSprite = blockSpriteId("block/solid_infuser")
                         it.factoryOverlay()
                     }
                 }
@@ -536,15 +536,15 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .defaultModelProvider()
 
-        val MINER_REGISTRY = MachineRegistry("miner", false, Tier.MK4)
-            .blockProvider { tier -> MinerBlock(this, SETTINGS(), tier) }
-            .blockEntityProvider { tier -> { pos, state -> MinerBlockEntity(tier, pos, state) } }
+        val MINING_RIG_REGISTRY = MachineRegistry("mining_rig", false, Tier.MK4)
+            .blockProvider { tier -> MiningRigBlock(this, SETTINGS(), tier) }
+            .blockEntityProvider { tier -> { pos, state -> MiningRigBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .modelProvider {
                 { id -> MinerBakedModel(id) }
             }
 
-        val FISHING_FARM_REGISTRY = MachineRegistry("fishing_farm", false, Tier.MK2, Tier.MK3, Tier.MK4)
+        val FISHER_REGISTRY = MachineRegistry("fisher", false, Tier.MK2, Tier.MK3, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
                     this,
@@ -554,10 +554,10 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                         Tier.MK2 -> IRConfig.machines.fishingMk2
                         Tier.MK3 -> IRConfig.machines.fishingMk3
                         else -> IRConfig.machines.fishingMk4
-                    }, ::FishingFarmScreenHandler
+                    }, ::FisherScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { pos, state -> FishingFarmBlockEntity(tier, pos, state) } }
+            .blockEntityProvider { tier -> { pos, state -> FisherBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .noModelProvider()
 
@@ -581,7 +581,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .energyProvider { { be, dir -> if (dir == Direction.UP) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
             .noModelProvider()
 
-        val LASER_REGISTRY = MachineRegistry("laser", false, Tier.MK4)
+        val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
             .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }

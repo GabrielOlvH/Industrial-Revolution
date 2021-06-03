@@ -8,7 +8,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
@@ -29,9 +29,9 @@ import net.minecraft.world.World
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) :
-    MachineBlockEntity<BasicMachineConfig>(tier, registry, pos, state), UpgradeProvider {
+    MachineBlockEntity<BasicMachineConfig>(tier, registry, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
@@ -53,21 +53,21 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     override fun getEnergyCapacity(): Double {
-        return Upgrade.getBuffer(this)
+        return Enhancer.getBuffer(this)
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double {
+    override fun getBaseValue(upgrade: Enhancer): Double {
         val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
         return when (upgrade) {
-            Upgrade.ENERGY ->
+            Enhancer.ENERGY ->
                 if (isFullEfficiency) config.energyCost * 1.5
                 else config.energyCost
-            Upgrade.SPEED ->
+            Enhancer.SPEED ->
                 if (isFullEfficiency)
                     ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
                 else
                     config.processSpeed
-            Upgrade.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }
@@ -119,8 +119,8 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return destination
     }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(upgrade: Enhancer): Int {
+        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
     }
 
     override fun readNbt(tag: NbtCompound?) {

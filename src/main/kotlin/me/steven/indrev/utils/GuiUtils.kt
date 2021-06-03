@@ -10,7 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WEnergy
@@ -19,7 +19,7 @@ import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
@@ -73,7 +73,7 @@ fun SyncedGuiDescription.configure(
         panel.add(batterySlot, 0.0, 3.7)
         val blockEntity = world.getBlockEntity(blockPos)
 
-        if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
+        if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {
             addUpgradeSlots(blockEntity, blockInventory, world, panel)
         }
 
@@ -126,16 +126,16 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
 }
 
 fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
-    blockEntity as UpgradeProvider
+    blockEntity as EnhancerProvider
     val slotPanel = WGridPanel()
-    for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
+    for ((i, slot) in blockEntity.enhancerSlots.withIndex()) {
         val s =
             object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
                 override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
                     return object : ValidatedSlot(inventory, index, x, y) {
                         override fun getMaxItemCount(stack: ItemStack): Int {
-                            val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
-                            return blockEntity.getMaxUpgrade(upgrade)
+                            val upgrade = (stack.item as? IREnhancerItem)?.enhancer ?: return 0
+                            return blockEntity.getMaxCount(upgrade)
                         }
                     }
                 }

@@ -10,6 +10,7 @@ import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.contains
+import me.steven.indrev.utils.drainFluid
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
@@ -57,9 +58,7 @@ class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBl
                 val blockState = world.getBlockState(pos)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
-
-                    //TODO figure out what the fuck did mojang do
-                    val drained = Fluids.EMPTY//block.tryDrainFluid(world, pos, blockState)
+                    val drained = block.drainFluid(world, pos, blockState)
                     if (drained != Fluids.EMPTY) {
                         val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                         fluidComponent.insertable.insert(toInsert)

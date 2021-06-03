@@ -8,10 +8,7 @@ import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.LFCConfig
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.option.KeyBinding
-import net.minecraft.client.render.BufferRenderer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText
@@ -56,6 +53,7 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     val h2 = (color2 shr 8 and 255) / 255.0f
     val k2 = (color2 and 255) / 255.0f
 
+    RenderSystem.setShader { GameRenderer.getPositionColorShader() }
     RenderSystem.enableBlend()
     RenderSystem.disableTexture()
     RenderSystem.defaultBlendFunc()

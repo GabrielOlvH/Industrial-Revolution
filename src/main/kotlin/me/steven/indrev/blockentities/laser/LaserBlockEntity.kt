@@ -27,7 +27,7 @@ import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
 import java.util.*
 
-class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_REGISTRY, pos, state) {
+class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_EMITTER_REGISTRY, pos, state) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)

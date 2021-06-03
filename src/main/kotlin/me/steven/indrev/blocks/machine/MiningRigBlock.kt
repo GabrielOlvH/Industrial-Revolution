@@ -11,7 +11,7 @@ import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.BlockView
 
-class MinerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : HorizontalFacingMachineBlock(
+class MiningRigBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : HorizontalFacingMachineBlock(
     registry,
     settings,
     tier,
@@ -26,7 +26,7 @@ class MinerBlock(registry: MachineRegistry, settings: Settings, tier: Tier) : Ho
     ) {
         super.appendTooltip(stack, view, tooltip, options)
         tooltip?.add(
-            TranslatableText("block.indrev.miner.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC)
+            TranslatableText("block.indrev.mining_rig.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC)
         )
     }
 }

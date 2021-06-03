@@ -7,7 +7,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.MachineBlock
@@ -15,7 +15,7 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
@@ -24,7 +24,6 @@ import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.Blocks
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
@@ -35,12 +34,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
-class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINER_REGISTRY, pos, state), UpgradeProvider {
+class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(10, 11, 12, 13)
-    override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.BUFFER, Upgrade.ENERGY)
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancerSlots: IntArray = intArrayOf(10, 11, 12, 13)
+    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.BUFFER, Enhancer.ENERGY)
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
@@ -66,8 +65,8 @@ class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         cacheVeinType()
-        val upgrades = getUpgrades(inventory)
-        requiredPower = Upgrade.getEnergyCost(upgrades, this)
+        val upgrades = getEnhancers(inventory)
+        requiredPower = Enhancer.getEnergyCost(upgrades, this)
         if (finished) {
             workingState = false
             getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
@@ -75,7 +74,7 @@ class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         } else if (isLocationCorrect() && use(requiredPower)) {
             workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
-            mining += Upgrade.getSpeed(upgrades, this)
+            mining += Enhancer.getSpeed(upgrades, this)
             temperatureComponent?.tick(true)
         } else {
             workingState = false
@@ -96,8 +95,7 @@ class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 }
                 data.explored++
                 mining = 0.0
-                //TODO figure out what the fuck did mojang do
-                val generatedOre = Blocks.AIR//chunkVeinType!!.outputs.pickRandom(world?.random)
+                val generatedOre = chunkVeinType!!.outputs.pickRandom()
                 lastMinedItem = ItemStack(generatedOre)
                 inventory.output(lastMinedItem.copy())
                 sync()
@@ -190,15 +188,15 @@ class MinerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double {
+    override fun getBaseValue(upgrade: Enhancer): Double {
         val activeDrills = getActiveDrills()
         return when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
-            Upgrade.SPEED -> activeDrills.sumOf { blockEntity ->
+            Enhancer.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
+            Enhancer.SPEED -> activeDrills.sumOf { blockEntity ->
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
-            Upgrade.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }

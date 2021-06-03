@@ -9,6 +9,11 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import net.minecraft.block.BlockState
+import net.minecraft.block.Blocks
+import net.minecraft.block.FluidBlock
+import net.minecraft.fluid.Fluid
+import net.minecraft.fluid.Fluids
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
@@ -74,3 +79,12 @@ fun fluidInsertableOf(world: World, pos: BlockPos, direction: Direction) = Fluid
 fun fluidExtractableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction))
 
 fun groupedFluidInv(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.GROUPED_INV.get(world, pos, SearchOptions.inDirection(direction))
+
+fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid {
+    return if (state.get(FluidBlock.LEVEL) as Int == 0) {
+        world.setBlockState(pos, Blocks.AIR.defaultState, 11)
+        fluid
+    } else {
+        Fluids.EMPTY
+    }
+}

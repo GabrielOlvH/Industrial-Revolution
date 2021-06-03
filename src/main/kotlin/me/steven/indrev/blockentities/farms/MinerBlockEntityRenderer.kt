@@ -9,9 +9,9 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3f
 
-class MinerBlockEntityRenderer : BlockEntityRenderer<MinerBlockEntity> {
+class MinerBlockEntityRenderer : BlockEntityRenderer<MiningRigBlockEntity> {
     override fun render(
-        entity: MinerBlockEntity?,
+        entity: MiningRigBlockEntity?,
         tickDelta: Float,
         matrices: MatrixStack?,
         vertexConsumers: VertexConsumerProvider?,
