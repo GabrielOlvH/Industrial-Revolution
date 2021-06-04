@@ -241,7 +241,7 @@ abstract class Network(
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is ItemPipeBlock
 
                 override fun getNetworkState(world: ServerWorld): ItemNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ServoNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
                 }
             }
 

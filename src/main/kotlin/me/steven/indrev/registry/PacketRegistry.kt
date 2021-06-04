@@ -27,7 +27,6 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.item.ItemEndpointData
 import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.tools.modular.ArmorModule
@@ -184,12 +183,7 @@ object PacketRegistry {
             server.execute {
                 val cursorStack = player.currentScreenHandler.cursorStack
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir)
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
                 state.markDirty()
@@ -208,12 +202,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir, true)
                 when (field) {
                     0 -> data.whitelist = value
                     1 -> data.matchDurability = value
@@ -231,7 +220,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()][dir] as? ItemEndpointData ?: return@execute
+                val data = state.getEndpointData(pos, dir, true) ?: return@execute
                 data.mode = mode
                 state.markDirty()
             }
