@@ -23,9 +23,9 @@ class FluidInfuserRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<FluidInfuserRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("fluid_infuse")
+        val TYPE = IRRecipeType<FluidInfuserRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRFluidRecipeSerializer<FluidInfuserRecipe>({ id, ingredients, output, fluidInput, fluidOutput, ticks -> FluidInfuserRecipe(id, ingredients, output, fluidInput!!, fluidOutput!!, ticks) })
     }

@@ -20,9 +20,9 @@ class RecyclerRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<RecyclerRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("recycle")
+        val TYPE = IRRecipeType<RecyclerRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<RecyclerRecipe>({ id, input, output, ticks -> RecyclerRecipe(id, input, output, ticks) })
     }

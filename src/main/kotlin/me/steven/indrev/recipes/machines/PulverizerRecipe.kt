@@ -20,9 +20,9 @@ class PulverizerRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<PulverizerRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("pulverize")
+        val TYPE = IRRecipeType<PulverizerRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<PulverizerRecipe>({ id, input, output, ticks -> PulverizerRecipe(id,  input, output, ticks) })
     }

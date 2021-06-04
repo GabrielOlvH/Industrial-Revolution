@@ -21,7 +21,7 @@ class SawmillRecipe(
 
     companion object {
         val IDENTIFIER = identifier("sawmill")
-        val TYPE = IRRecipeType<SawmillRecipe>()
+        val TYPE = IRRecipeType<SawmillRecipe>(IDENTIFIER)
         val SERIALIZER = IRRecipe.IRRecipeSerializer(::SawmillRecipe)
     }
 }

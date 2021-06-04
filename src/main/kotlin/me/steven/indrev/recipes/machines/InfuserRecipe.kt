@@ -19,9 +19,9 @@ class InfuserRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<InfuserRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("infuse")
+        val TYPE = IRRecipeType<InfuserRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<InfuserRecipe>({ id, input, output, ticks -> InfuserRecipe(id, input, output, ticks) })
     }

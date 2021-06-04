@@ -1,10 +1,12 @@
 package me.steven.indrev.compat.rei
 
-import me.shedaniel.rei.api.EntryRegistry
-import me.shedaniel.rei.api.EntryStack
-import me.shedaniel.rei.api.RecipeHelper
-import me.shedaniel.rei.api.plugins.REIPluginV0
-import me.shedaniel.rei.plugin.information.DefaultInformationDisplay
+import me.shedaniel.rei.api.client.plugins.REIClientPlugin
+import me.shedaniel.rei.api.client.registry.category.CategoryRegistry
+import me.shedaniel.rei.api.client.registry.display.DisplayRegistry
+import me.shedaniel.rei.api.client.registry.entry.EntryRegistry
+import me.shedaniel.rei.api.common.util.EntryStacks
+import me.shedaniel.rei.plugin.common.displays.DefaultInformationDisplay
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.compat.rei.categories.IRMachineRecipeCategory
 import me.steven.indrev.compat.rei.categories.IRModuleCraftingRecipeCategory
@@ -15,26 +17,25 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.entries
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.getRecipes
 import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.recipe.AbstractCookingRecipe
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
 import java.util.*
 import kotlin.math.roundToInt
 
-object REIPlugin : REIPluginV0 {
-    override fun getPluginIdentifier(): Identifier = ID
+object REIPlugin : REIClientPlugin {
 
     override fun registerEntries(entryRegistry: EntryRegistry?) {
         fun registerCharged(vararg items: Item) {
             items.forEach { item ->
-                entryRegistry?.registerEntriesAfter(EntryStack.create(item),
-                    EntryStack.create(ItemStack(item).also { it.orCreateTag.putDouble("energy", energyOf(it)!!.energyCapacity) }))
+                entryRegistry?.addEntriesAfter(EntryStacks.of(item),
+                    EntryStacks.of(ItemStack(item).also { it.orCreateTag.putDouble("energy", energyOf(it)!!.energyCapacity) }))
             }
         }
 
@@ -51,188 +52,107 @@ object REIPlugin : REIPluginV0 {
             IRItemRegistry.BATTERY
         )
 
-        entryRegistry?.registerEntriesAfter(EntryStack.create(IRItemRegistry.GAMER_AXE_ITEM),
-            EntryStack.create(ItemStack(IRItemRegistry.GAMER_AXE_ITEM).also {
+        entryRegistry?.addEntriesAfter(EntryStacks.of(IRItemRegistry.GAMER_AXE_ITEM),
+            EntryStacks.of(ItemStack(IRItemRegistry.GAMER_AXE_ITEM).also {
                 val tag = it.orCreateTag
                 tag.putDouble("energy", energyOf(it)!!.energyCapacity)
                 tag.putBoolean("Active", true)
                 tag.putFloat("Progress", 1f)
             }))
-
     }
 
-    override fun registerPluginCategories(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerCategory(
+    override fun registerCategories(registry: CategoryRegistry) {
+        registry.add(
             IRMachineRecipeCategory(
-                PULVERIZING,
-                EntryStack.create(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)),
+                PulverizerRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.pulverizing"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                INFUSING,
-                EntryStack.create(MachineRegistry.SOLID_INFUSER_REGISTRY.block(Tier.MK1)),
+                InfuserRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.SOLID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.infusing"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                COMPRESSING,
-                EntryStack.create(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1)),
+                CompressorRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.COMPRESSOR_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.compressing"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                RECYCLING,
-                EntryStack.create(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)),
+                RecyclerRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)),
                 "indrev.category.rei.recycling"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                FLUID_INFUSER,
-                EntryStack.create(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1)),
+                FluidInfuserRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.fluid_infusing"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                CONDENSER,
-                EntryStack.create(MachineRegistry.CONDENSER_REGISTRY.block(Tier.MK4)),
+                CondenserRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.CONDENSER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.condensing"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRMachineRecipeCategory(
-                SMELTER,
-                EntryStack.create(MachineRegistry.SMELTER_REGISTRY.block(Tier.MK4)),
+                SmelterRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.SMELTER_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.smelting"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRSawmillRecipeCategory(
-                SAWMILL,
-                EntryStack.create(MachineRegistry.SAWMILL_REGISTRY.block(Tier.MK4)),
+                SawmillRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.SAWMILL_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.sawmill"
             )
         )
 
-        recipeHelper?.registerCategory(
+        registry.add(
             IRModuleCraftingRecipeCategory(
-                MODULE,
-                EntryStack.create(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4)),
+                ModuleRecipe.IDENTIFIER,
+                EntryStacks.of(MachineRegistry.MODULAR_WORKBENCH_REGISTRY.block(Tier.MK4)),
                 "indrev.category.rei.module"
             )
         )
     }
 
-    override fun registerRecipeDisplays(recipeHelper: RecipeHelper?) {
-        recipeHelper?.registerRecipes(PULVERIZING, PulverizerRecipe::class.java) {
-            IRMachinePlugin(it, PULVERIZING)
-        }
-        recipeHelper?.registerRecipes(INFUSING, InfuserRecipe::class.java) {
-            IRMachinePlugin(it, INFUSING)
-        }
-        recipeHelper?.registerRecipes(COMPRESSING, CompressorRecipe::class.java) {
-            IRMachinePlugin(it, COMPRESSING)
-        }
-        recipeHelper?.registerRecipes(RECYCLING, RecyclerRecipe::class.java) {
-            IRMachinePlugin(it, RECYCLING)
-        }
-        recipeHelper?.registerRecipes(FLUID_INFUSER, FluidInfuserRecipe::class.java) {
-            IRMachinePlugin(it, FLUID_INFUSER)
-        }
-        recipeHelper?.registerRecipes(SMELTER, SmelterRecipe::class.java) {
-            IRMachinePlugin(it, SMELTER)
-        }
-        recipeHelper?.registerRecipes(CONDENSER, CondenserRecipe::class.java) {
-            IRMachinePlugin(it, CONDENSER)
-        }
-        recipeHelper?.registerRecipes(SAWMILL, SawmillRecipe::class.java) {
-            IRMachinePlugin(it, SAWMILL)
-        }
-        recipeHelper?.registerRecipes(MODULE, ModuleRecipe::class.java) {
-            IRMachinePlugin(it, MODULE)
-        }
-    }
-
-    override fun registerOthers(recipeHelper: RecipeHelper?) {
-        MachineRegistry.PULVERIZER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                PULVERIZING,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.SOLID_INFUSER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                INFUSING,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.COMPRESSOR_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                COMPRESSING,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.RECYCLER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                RECYCLING,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                FLUID_INFUSER,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.CONDENSER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                CONDENSER,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.SMELTER_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                SMELTER,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.SAWMILL_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                SAWMILL,
-                EntryStack.create(block)
-            )
-        }
-        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlock { _, block ->
-            recipeHelper?.registerWorkingStations(
-                MODULE,
-                EntryStack.create(block)
-            )
+    override fun registerDisplays(registry: DisplayRegistry) {
+        registry.recipeManager.getRecipes().keys.forEach { type ->
+            if (type is IRRecipeType<*> && type.id.namespace == IndustrialRevolution.MOD_ID)
+                registry.registerFiller(IRRecipe::class.java, { r -> r is IRRecipe && r !is AbstractCookingRecipe && r.type == type }) { recipe -> IRMachinePlugin(recipe) }
         }
 
-        MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (_, registry) ->
-            if (registry.upgradeable && registry.tiers.size > 1) {
-                registry.forEachBlock { tier, block ->
-                    val entryStack = EntryStack.create(block)
-                    if (tier != Tier.CREATIVE && tier != Tier.MK1 && recipeHelper?.getRecipesFor(entryStack)?.isEmpty() == true) {
+        MachineRegistry.MAP.entries.distinctBy { (_, v) -> v }.forEach { (_, machineRegistry) ->
+            if (machineRegistry.upgradeable && machineRegistry.tiers.size > 1) {
+                machineRegistry.forEachBlock { tier, block ->
+                    val entryStack = EntryStacks.of(block)
+                    if (tier != Tier.CREATIVE && tier != Tier.MK1) {
                         val info = DefaultInformationDisplay.createFromEntry(entryStack, TranslatableText(block.translationKey))
                         info.lines(TranslatableText("indrev.category.rei.upgrading",
                             TranslatableText("item.indrev.tier_upgrade_" + tier.toString()
                                 .lowercase(Locale.getDefault())).formatted(Formatting.DARK_GRAY),
-                            TranslatableText(registry.block(registry.tiers[registry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
+                            TranslatableText(machineRegistry.block(machineRegistry.tiers[machineRegistry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
                             tier.toString()))
-                        recipeHelper.registerDisplay(info)
+                        registry.add(info)
                     }
                 }
             }
@@ -244,7 +164,7 @@ object REIPlugin : REIPluginV0 {
             type.outputs.entries.forEach { entry ->
                 val block = entry.element
                 val info = recipeHelpers.computeIfAbsent(block) {
-                    val info = DefaultInformationDisplay.createFromEntry(EntryStack.create(block), TranslatableText(block.translationKey))
+                    val info = DefaultInformationDisplay.createFromEntry(EntryStacks.of(block), TranslatableText(block.translationKey))
                     info.line(LiteralText("This can be mined by Industrial Revolution's miner in the following veins:"))
                     info.line(LiteralText.EMPTY)
                     info
@@ -254,17 +174,63 @@ object REIPlugin : REIPluginV0 {
                 info.line(TranslatableText("vein.${id.namespace}.${id.path}").append(" (").append(LiteralText(chanceString)).append("%)"))
             }
         }
-        recipeHelpers.forEach { (_, info) -> recipeHelper?.registerDisplay(info) }
+        recipeHelpers.forEach { (_, info) -> registry.add(info) }
     }
 
-    private val ID = identifier("rei_plugin")
-    private val PULVERIZING = identifier("plugins/pulverizing")
-    private val INFUSING = identifier("plugins/infusing")
-    private val COMPRESSING = identifier("plugins/compressing")
-    private val RECYCLING = identifier("plugins/recycling")
-    private val SMELTER = identifier("plugins/smelter")
-    private val CONDENSER = identifier("plugins/condenser")
-    private val FLUID_INFUSER = identifier("plugins/fluid_infusing")
-    private val SAWMILL = identifier("plugins/sawmill")
-    private val MODULE = identifier("plugins/module")
+    /*override fun registerOthers(recipeHelper: RecipeHelper?) {
+        MachineRegistry.PULVERIZER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                PULVERIZING,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.SOLID_INFUSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                INFUSING,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.COMPRESSOR_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                COMPRESSING,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.RECYCLER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                RECYCLING,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.FLUID_INFUSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                FLUID_INFUSER,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.CONDENSER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                CONDENSER,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.SMELTER_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                SMELTER,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.SAWMILL_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                SAWMILL,
+                EntryStacks.of(block)
+            )
+        }
+        MachineRegistry.MODULAR_WORKBENCH_REGISTRY.forEachBlock { _, block ->
+            recipeHelper?.registerWorkingStations(
+                MODULE,
+                EntryStacks.of(block)
+            )
+        }
+    }*/
 }

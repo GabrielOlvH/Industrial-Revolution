@@ -27,6 +27,7 @@ repositories {
     maven {
         url "https://maven.shedaniel.me/"
         content {
+            includeGroup "dev.architectury"
             includeGroup "me.shedaniel"
             includeGroup "me.shedaniel.cloth"
             includeGroup "me.shedaniel.cloth.api"
@@ -132,7 +133,7 @@ dependencies {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
    }
 
-    modCompileOnly("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 

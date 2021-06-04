@@ -24,7 +24,7 @@ class SmelterRecipe(
 
     companion object {
         val IDENTIFIER = identifier("smelter")
-        val TYPE = IRRecipeType<SmelterRecipe>()
+        val TYPE = IRRecipeType<SmelterRecipe>(IDENTIFIER)
         val SERIALIZER = Serializer()
 
         class Serializer : IRFluidRecipeSerializer<SmelterRecipe>({ id, ingredients, output, _, fluidOutput, ticks -> SmelterRecipe(id, ingredients, output, fluidOutput!!, ticks) })
