@@ -8,7 +8,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
@@ -18,20 +18,20 @@ import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
 import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
-import net.minecraft.util.Tickable
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
 import kotlin.math.floor
 
-abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry) :
-    MachineBlockEntity<BasicMachineConfig>(tier, registry), Tickable, UpgradeProvider {
+abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) :
+    MachineBlockEntity<BasicMachineConfig>(tier, registry, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
@@ -53,21 +53,21 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     override fun getEnergyCapacity(): Double {
-        return Upgrade.getBuffer(this)
+        return Enhancer.getBuffer(this)
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double {
+    override fun getBaseValue(upgrade: Enhancer): Double {
         val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
         return when (upgrade) {
-            Upgrade.ENERGY ->
+            Enhancer.ENERGY ->
                 if (isFullEfficiency) config.energyCost * 1.5
                 else config.energyCost
-            Upgrade.SPEED ->
+            Enhancer.SPEED ->
                 if (isFullEfficiency)
                     ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
                 else
                     config.processSpeed
-            Upgrade.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
     }
@@ -119,47 +119,47 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return destination
     }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(upgrade: Enhancer): Int {
+        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         val craftTags = tag?.getList("craftingComponents", 10)
         craftTags?.forEach { craftTag ->
-            val index = (craftTag as CompoundTag).getInt("index")
-            craftingComponents[index].fromTag(craftTag)
+            val index = (craftTag as NbtCompound).getInt("index")
+            craftingComponents[index].readNbt(craftTag)
         }
         isSplitOn = tag?.getBoolean("split") ?: isSplitOn
-        super.fromTag(state, tag)
+        super.readNbt(tag)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
-        val craftTags = ListTag()
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+        val craftTags = NbtList()
         craftingComponents.forEachIndexed { index, crafting ->
-            val craftTag = CompoundTag()
-            craftTags.add(crafting.toTag(craftTag))
+            val craftTag = NbtCompound()
+            craftTags.add(crafting.writeNbt(craftTag))
             craftTag.putInt("index", index)
         }
         tag?.put("craftingComponents", craftTags)
         tag?.putBoolean("split", isSplitOn)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         val craftTags = tag?.getList("craftingComponents", 10)
         craftTags?.forEach { craftTag ->
-            val index = (craftTag as CompoundTag).getInt("index")
-            craftingComponents[index].fromTag(craftTag)
+            val index = (craftTag as NbtCompound).getInt("index")
+            craftingComponents[index].readNbt(craftTag)
         }
         isSplitOn = tag?.getBoolean("split") ?: isSplitOn
         super.fromClientTag(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        val craftTags = ListTag()
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
+        val craftTags = NbtList()
         craftingComponents.forEachIndexed { index, crafting ->
-            val craftTag = CompoundTag()
-            craftTags.add(crafting.toTag(craftTag))
+            val craftTag = NbtCompound()
+            craftTags.add(crafting.writeNbt(craftTag))
             craftTag.putInt("index", index)
         }
         tag?.putBoolean("split", isSplitOn)

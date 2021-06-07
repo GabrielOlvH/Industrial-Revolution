@@ -7,10 +7,12 @@
     "common.AccessorAbstractCookingRecipe",
     "common.AccessorAnimalEntity",
     "common.AccessorEnchantmentPredicate",
+    "common.AccessorFluidBlock",
     "common.AccessorRecipeManager",
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
     "common.AccessorWeightedListEntry",
+    "common.DeleteMe",
     "common.MixinAbstractCookingRecipe",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",
@@ -20,15 +22,15 @@
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
     "common.MixinServerPlayerEntity"
+    "common.MixinPlayerInventory",
+    "common.MixinServerPlayerEntity"
   ],
   "client": [
     "client.MixinBuiltChunk",
     "client.MixinClientPlayerInteractionManager",
     "client.MixinClientRecipeBook",
     "client.MixinGameRenderer",
-    "client.MixinItemRenderer",
     "client.MixinLivingEntityClient",
-    "client.MixinPlayerEntityRenderer",
     "client.MixinWItemSlot"
   ],
   "injectors": {

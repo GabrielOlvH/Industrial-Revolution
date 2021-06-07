@@ -19,7 +19,7 @@ class SolidInfuserFactoryScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.INFUSER_FACTORY_HANDLER,
+        IndustrialRevolution.SOLID_INFUSER_FACTORY_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -27,7 +27,7 @@ class SolidInfuserFactoryScreenHandler(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser_factory", ctx, playerInventory, blockInventory)
+        configure("block.indrev.solid_infuser_factory", ctx, playerInventory, blockInventory)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? SolidInfuserFactoryBlockEntity ?: return@run
             val offset = 2.6

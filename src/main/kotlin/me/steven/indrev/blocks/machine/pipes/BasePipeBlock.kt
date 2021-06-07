@@ -32,7 +32,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.shape.VoxelShape
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 
@@ -63,7 +62,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         )
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CoverableBlockEntity(tier)
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = CoverableBlockEntity(tier, pos, state)
 
     override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
         if (world?.isClient == false && state[COVERED]) {
@@ -131,11 +130,10 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
-            val fluidState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?
+            val netState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?
             if (state.isOf(newState.block)) {
                 Network.handleUpdate(type, world, pos)
-                fluidState?.recentlyRemoved?.forEach { e -> fluidState.endpointData[e.key] = e.value }
-                fluidState?.recentlyRemoved?.clear()
+                netState?.clearCachedData(true)
             } else {
                 (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
                     Direction.values().forEach { dir ->
@@ -152,7 +150,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 }
 
                 Network.handleBreak(type, world, pos)
-                fluidState?.recentlyRemoved?.clear()
+                netState?.clearCachedData(false)
             }
         }
     }
@@ -169,7 +167,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
             Network.handleUpdate(type, world as ServerWorld, pos)
-            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.recentlyRemoved?.clear()
+            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.clearCachedData(false)
         }
     }
 

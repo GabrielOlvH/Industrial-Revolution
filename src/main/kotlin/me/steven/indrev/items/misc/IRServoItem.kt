@@ -29,7 +29,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
     ) {
         tooltip.add(TranslatableText("$translationKey.tooltip"))
         tooltip.add(LiteralText.EMPTY)
-        val modeString = getMode(stack).toString().toLowerCase()
+        val modeString = getMode(stack).toString().lowercase()
         tooltip.add(TranslatableText("item.indrev.servo.mode")
             .append(TranslatableText("item.indrev.servo.mode.$modeString").formatted(Formatting.BLUE)))
         tooltip.add(TranslatableText("item.indrev.servo.mode.$modeString.tooltip").formatted(Formatting.DARK_GRAY))
@@ -41,7 +41,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         val newMode = getMode(stack).next()
         stack.orCreateTag.putString("mode", newMode.toString())
         user.sendMessage(TranslatableText("item.indrev.servo.mode")
-            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().toLowerCase()}").formatted(Formatting.BLUE)), true)
+            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().lowercase()}").formatted(Formatting.BLUE)), true)
         return TypedActionResult.consume(stack)
     }
 
@@ -92,7 +92,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         fun getMode(itemStack: ItemStack): EndpointData.Mode {
             val m = itemStack.orCreateTag.getString("mode")
             if (m.isNullOrEmpty()) return EndpointData.Mode.NEAREST_FIRST
-            return EndpointData.Mode.valueOf(m.toUpperCase())
+            return EndpointData.Mode.valueOf(m.uppercase())
         }
     }
 }

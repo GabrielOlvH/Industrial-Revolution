@@ -4,12 +4,11 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.multiblock.AbstractMultiblockMatcher
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.BlockRotation
 
-open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>>(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<T>(dispatcher) {
+open class MultiblockBlockEntityRenderer<T : MachineBlockEntity<*>> : BlockEntityRenderer<T> {
     override fun render(
         entity: T,
         tickDelta: Float,

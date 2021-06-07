@@ -12,36 +12,21 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Tickable
 import net.minecraft.util.collection.DefaultedList
+import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 
-class DrillBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE), BlockEntityClientSerializable, ExtendedScreenHandlerFactory, Tickable {
+class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, pos, state), BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
     var position: Double = 1.0
-
-    override fun tick() {
-        if (world?.isClient == true) return
-
-        if (inventory[0].isEmpty) {
-            position = 1.0
-            markDirty()
-            sync()
-        } else if (cachedState[DrillBlock.WORKING]) {
-            if (position > 0) position -= 0.01
-
-            else return
-            markDirty()
-            sync()
-        }
-    }
 
     fun setWorkingState(working: Boolean) {
         if (cachedState[DrillBlock.WORKING] != working)
@@ -62,35 +47,35 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOC
         inventory = list
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, inventory)
+            Inventories.readNbt(tag, inventory)
         }
         position = tag?.getDouble("Position") ?: position
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag? {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+        super.writeNbt(tag)
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, inventory)
+            Inventories.writeNbt(tag, inventory)
         }
         tag?.putDouble("Position", position)
         return tag
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
         if (!deserializeLootTable(tag)) {
-            Inventories.fromTag(tag, inventory)
+            Inventories.readNbt(tag, inventory)
         }
         position = tag?.getDouble("Position") ?: position
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
         if (!serializeLootTable(tag)) {
-            Inventories.toTag(tag, inventory)
+            Inventories.writeNbt(tag, inventory)
         }
         tag.putDouble("Position", position)
         return tag
@@ -117,5 +102,20 @@ class DrillBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOC
                     || item == IRItemRegistry.IRON_DRILL_HEAD
                     || item == IRItemRegistry.DIAMOND_DRILL_HEAD
                     || item == IRItemRegistry.NETHERITE_DRILL_HEAD
+
+        fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: DrillBlockEntity) {
+
+            if (blockEntity.inventory[0].isEmpty) {
+                blockEntity.position = 1.0
+                blockEntity.markDirty()
+                blockEntity.sync()
+            } else if (state[DrillBlock.WORKING]) {
+                if (blockEntity.position > 0) blockEntity.position -= 0.01
+
+                else return
+                blockEntity.markDirty()
+                blockEntity.sync()
+            }
+        }
     }
 }

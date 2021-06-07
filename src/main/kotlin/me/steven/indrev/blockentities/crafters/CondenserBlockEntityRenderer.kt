@@ -4,12 +4,11 @@ import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.Direction
 
-class CondenserBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<CondenserBlockEntity>(dispatcher) {
+class CondenserBlockEntityRenderer : BlockEntityRenderer<CondenserBlockEntity> {
 
     override fun render(
         entity: CondenserBlockEntity?,

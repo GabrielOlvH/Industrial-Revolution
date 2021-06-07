@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:blast_furnace_enhancer"
+    },
+    "title": {
+      "translate": "advancements.indrev.blast_furnace_enhancer"
+    },
+    "description": {
+      "translate": "advancements.indrev.blast_furnace_enhancer.description"
+    }
+  },
+  "parent": "indrev:empty_enhancer",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:blast_furnace_enhancer"
+          }
+        ]
+      }
+    }
+  }
+}

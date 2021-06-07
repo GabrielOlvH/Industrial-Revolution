@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier
 
 class SolidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.INFUSER_HANDLER,
+        IndustrialRevolution.SOLID_INFUSER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -24,7 +24,7 @@ class SolidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.infuser", ctx, playerInventory, blockInventory)
+        configure("block.indrev.solid_infuser", ctx, playerInventory, blockInventory)
 
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 3.0, 1.8)

@@ -7,9 +7,12 @@
   "authors": [
     "Gabriel Henrique de Oliveira"
   ],
+  "contributors": [
+    "Marcus (MCrafterzz)"
+  ],
   "contact": {
-    "homepage": "https://github.com/StupPlayer/Industrial-Revolution",
-    "sources": "https://github.com/StupPlayer/Industrial-Revolution"
+    "homepage": "https://github.com/GabrielOlvH/Industrial-Revolution",
+    "sources": "https://github.com/GabrielOlvH/Industrial-Revolution"
   },
   "license": "Apache-2.0",
   "icon": "assets/indrev/icon.png",
@@ -27,7 +30,7 @@
         "value": "me.steven.indrev.IndustrialRevolutionClient"
       }
     ],
-    "rei_plugins_v0": [
+    "rei": [
       {
         "adapter": "kotlin",
         "value": "me.steven.indrev.compat.rei.REIPlugin"
@@ -41,8 +44,8 @@
     "fabricloader": ">=0.7.1",
     "fabric": ">=0.32.0",
     "fabric-language-kotlin": ">=1.6.0",
-    "minecraft": "1.16.x",
-    "patchouli": "*",
+    "minecraft": "1.17.x",
+
     "libgui": "*"
   },
   "suggests": {

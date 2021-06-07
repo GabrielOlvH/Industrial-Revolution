@@ -7,10 +7,8 @@ import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.LFCConfig
 import net.minecraft.client.gui.screen.Screen
-import net.minecraft.client.options.KeyBinding
-import net.minecraft.client.render.BufferRenderer
-import net.minecraft.client.render.Tessellator
-import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.option.KeyBinding
+import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 import net.minecraft.text.LiteralText
@@ -20,8 +18,8 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 
 val UPGRADE_SLOT_PANEL_PAINTER: BackgroundPainter = BackgroundPainter.createLightDarkVariants(
-    BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png"), 4),
-    BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_dark.png"), 4)
+    BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(4),
+    BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(4)
 )
 
 fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {
@@ -55,18 +53,19 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     val h2 = (color2 shr 8 and 255) / 255.0f
     val k2 = (color2 and 255) / 255.0f
 
+    RenderSystem.setShader { GameRenderer.getPositionColorShader() }
     RenderSystem.enableBlend()
     RenderSystem.disableTexture()
     RenderSystem.defaultBlendFunc()
     Tessellator.getInstance().buffer.run {
-        begin(7, VertexFormats.POSITION_COLOR)
+        begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
         vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
         vertex(matrix, xx1, yy2, 0.0f).color(g1, h1, k1, f1).next()
         vertex(matrix, xx2, yy2, 0.0f).color(g1, h1, k1, f1).next()
         vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
         end()
         BufferRenderer.draw(this)
-        begin(7, VertexFormats.POSITION_COLOR)
+        begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
         vertex(matrix, xx1, yy1, 0.0f).color(g2, h2, k2, f2).next()
         vertex(matrix, xx2, yy2, 0.0f).color(g2, h2, k2, f2).next()
         vertex(matrix, xx2, yy1, 0.0f).color(g2, h2, k2, f2).next()

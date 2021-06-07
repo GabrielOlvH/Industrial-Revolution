@@ -6,27 +6,29 @@ import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.model.Dilation
+import net.minecraft.client.model.TexturedModelData
 import net.minecraft.client.network.AbstractClientPlayerEntity
 import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.entity.model.BipedEntityModel
+import net.minecraft.client.render.entity.model.ElytraEntityModel
+import net.minecraft.client.render.entity.model.PlayerEntityModel
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.Vec3f
 
-class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) :
-    MultiblockBlockEntityRenderer<ModularWorkbenchBlockEntity>(dispatcher) {
+class ModularWorkbenchBlockEntityRenderer : MultiblockBlockEntityRenderer<ModularWorkbenchBlockEntity>() {
 
-    private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(0.5f)
-    private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(1.0f)
+    private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64).createModel())
+    private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64).createModel())
 
     init {
         bodyModel.setVisible(false)
@@ -41,6 +43,7 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
         light: Int,
         overlay: Int
     ) {
+        ElytraEntityModel.getTexturedModelData().createModel()
         super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay)
         val itemStack = entity.inventoryComponent?.inventory?.getStack(2)
         if (itemStack?.item is IRModularArmorItem) {
@@ -57,8 +60,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                 } else 0.0
                 val time = entity.world?.time ?: 1
                 translate(0.5, yOffset, 0.5)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
-                multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180f))
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
+                multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180f))
                 val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos)
                 renderArmor(this, vertexConsumers, itemStack, lightMapCoords)
                 pop()
@@ -69,8 +72,8 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
                 push()
                 val time = entity.world?.time ?: 1
                 translate(0.5, 0.35, 0.5)
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
-                MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, lightCoord, overlay, matrices, vertexConsumers)
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
+                MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, lightCoord, overlay, matrices, vertexConsumers, 0)
                 pop()
             }
         }
@@ -137,13 +140,13 @@ class ModularWorkbenchBlockEntityRenderer(dispatcher: BlockEntityRenderDispatche
 
     private fun setVisible(slot: EquipmentSlot) {
         bodyModel.head.visible = slot == EquipmentSlot.HEAD
-        bodyModel.helmet.visible = slot == EquipmentSlot.HEAD
+        bodyModel.hat.visible = slot == EquipmentSlot.HEAD
 
-        bodyModel.torso.visible = slot == EquipmentSlot.CHEST
+        bodyModel.body.visible = slot == EquipmentSlot.CHEST
         bodyModel.rightArm.visible = slot == EquipmentSlot.CHEST
         bodyModel.leftArm.visible = slot == EquipmentSlot.CHEST
 
-        leggingsModel.torso.visible = slot == EquipmentSlot.LEGS
+        leggingsModel.body.visible = slot == EquipmentSlot.LEGS
         leggingsModel.rightLeg.visible = slot == EquipmentSlot.LEGS
         leggingsModel.leftLeg.visible = slot == EquipmentSlot.LEGS
 

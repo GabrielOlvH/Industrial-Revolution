@@ -20,9 +20,9 @@ class CompressorRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<CompressorRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("compress")
+        val TYPE = IRRecipeType<CompressorRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<CompressorRecipe>({ id, input, output, ticks -> CompressorRecipe(id,  input, output, ticks) })
     }

@@ -2,10 +2,10 @@ package me.steven.indrev.gui.screenhandlers
 
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
-import io.github.cottonmc.cotton.gui.client.NinePatch
 import io.netty.buffer.Unpooled
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.utils.properties
+import me.steven.indrev.utils.trackedPropertyValues
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -16,7 +16,6 @@ import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
-
 open class IRGuiScreenHandler(
     type: ScreenHandlerType<*>?,
     syncId: Int,
@@ -25,7 +24,8 @@ open class IRGuiScreenHandler(
 ) : SyncedGuiDescription(type, syncId, playerInventory, getBlockInventory(ctx), getBlockPropertyDelegate(ctx)) {
 
     init {
-        (properties as ArrayList).clear()
+        properties.clear()
+        trackedPropertyValues.clear()
     }
 
     private val values = Array(propertyDelegate.size()) { -1 }
@@ -36,9 +36,9 @@ open class IRGuiScreenHandler(
         val offset = 170 - rootPanel.width
         rootPanel.backgroundPainter =
             BackgroundPainter.createLightDarkVariants(
-                NinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8)
                     .setRightPadding(offset),
-                NinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
                     .setRightPadding(offset)
             )
     }

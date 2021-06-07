@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.models
 
 import com.mojang.datafixers.util.Pair
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.blockSpriteId
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
@@ -21,7 +21,7 @@ import java.util.function.Supplier
 
 class MinerBakedModel(id: String) : MachineBakedModel(id) {
 
-    private val screenSpriteId = blockSpriteId("block/miner_screen_emissive")
+    private val screenSpriteId = blockSpriteId("block/mining_rig_screen_emissive")
     private var screenSprite: Sprite? = null
 
     override fun bake(
@@ -54,7 +54,7 @@ class MinerBakedModel(id: String) : MachineBakedModel(id) {
         super.emitBlockQuads(blockView, state, pos, randomSupplier, ctx)
         val block = state.block as? MachineBlock ?: return
         val direction = block.getFacing(state)
-        val blockEntity = blockView.getBlockEntity(pos) as? MinerBlockEntity ?: return
+        val blockEntity = blockView.getBlockEntity(pos) as? MiningRigBlockEntity ?: return
 
         if (blockEntity.workingState)
             ctx.emitter.draw(direction, screenSprite!!)

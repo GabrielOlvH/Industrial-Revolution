@@ -3,10 +3,10 @@ package me.steven.indrev.blockentities.farms
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.map
 import me.steven.indrev.utils.toVec3d
@@ -22,11 +22,12 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 
-class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY), UpgradeProvider {
+class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(14, 15, 16, 17)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancerSlots: IntArray = intArrayOf(14, 15, 16, 17)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -45,11 +46,11 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getUpgrades(inventory)
-        cooldown += Upgrade.getSpeed(upgrades, this)
+        val upgrades = getEnhancers(inventory)
+        cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
-        val energyCost = Upgrade.getEnergyCost(upgrades, this)
+        val energyCost = Enhancer.getEnergyCost(upgrades, this)
         if (!canUse(energyCost)) return
         if (nextBlocks.hasNext()) {
             while (nextBlocks.hasNext()) {
@@ -123,7 +124,7 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
             }
         } ?: false
         if (performedAction)
-            use(Upgrade.getEnergyCost(getUpgrades(inventory!!), this))
+            use(Enhancer.getEnergyCost(getEnhancers(inventory!!), this))
         return performedAction
     }
 
@@ -146,16 +147,16 @@ class FarmerBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(upgrade: Enhancer): Int {
+        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double = when (upgrade) {
-        Upgrade.ENERGY -> config.energyCost
-        Upgrade.SPEED -> 1.0
-        Upgrade.BUFFER -> config.maxEnergyStored
+    override fun getBaseValue(upgrade: Enhancer): Double = when (upgrade) {
+        Enhancer.ENERGY -> config.energyCost
+        Enhancer.SPEED -> 1.0
+        Enhancer.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
 
-    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 }

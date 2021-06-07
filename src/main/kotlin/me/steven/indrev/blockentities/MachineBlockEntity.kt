@@ -10,7 +10,6 @@ import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
@@ -19,7 +18,6 @@ import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
-import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
@@ -30,7 +28,6 @@ import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.energyOf
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
@@ -41,22 +38,19 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
-import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
-import net.minecraft.world.explosion.Explosion
-import org.apache.logging.log4j.LogManager
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
 import kotlin.math.roundToInt
 
-abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier)), PropertyDelegateHolder, InventoryProvider, Tickable, EnergyIo,
+abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
+    : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegateHolder, InventoryProvider, EnergyIo,
     Configurable, ComponentProvider {
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
@@ -110,32 +104,14 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     @Environment(EnvType.CLIENT)
     protected open fun machineClientTick() {}
 
-    final override fun tick() {
+    fun tick() {
         if (world?.isClient == false) {
             ticks++
             propertyDelegate[1] = energyCapacity.toInt()
             multiblockComponent?.tick(world!!, pos, cachedState)
             if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
             IREnergyMovement.spreadNeighbors(this, pos)
-            if (explode) {
-                val power = temperatureComponent!!.explosionPower
-                world?.createExplosion(
-                    null,
-                    pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
-                    power,
-                    false,
-                    Explosion.DestructionType.DESTROY)
-                LogManager.getLogger("Industrial Revolution")
-                    .debug("Exploded machine $this with temperature ${this.temperatureComponent?.temperature}")
-                return
-            }
-            val inventory = inventoryComponent?.inventory
-            if (inventoryComponent != null && inventory!!.size() > 1 && this !is LazuliFluxContainerBlockEntity) {
-                val stack = inventory.getStack(0)
-                val itemIo = energyOf(stack)
-                if (itemIo != null)
-                    EnergyMovement.move(itemIo, this, maxInput)
-            }
+
             transferItems()
             transferFluids()
             machineTick()
@@ -250,41 +226,41 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         else -> FluidAmount.BUCKET
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
-        inventoryComponent?.fromTag(tag)
-        temperatureComponent?.fromTag(tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
+        inventoryComponent?.readNbt(tag)
+        temperatureComponent?.readNbt(tag)
         fluidComponent?.fromTag(tag)
-        multiblockComponent?.fromTag(tag)
+        multiblockComponent?.readNbt(tag)
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Energy", energy)
         if (tag != null) {
-            inventoryComponent?.toTag(tag)
-            temperatureComponent?.toTag(tag)
+            inventoryComponent?.writeNbt(tag)
+            temperatureComponent?.writeNbt(tag)
             fluidComponent?.toTag(tag)
-            multiblockComponent?.toTag(tag)
+            multiblockComponent?.writeNbt(tag)
         }
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
-        inventoryComponent?.fromTag(tag)
-        temperatureComponent?.fromTag(tag)
+    override fun fromClientTag(tag: NbtCompound?) {
+        inventoryComponent?.readNbt(tag)
+        temperatureComponent?.readNbt(tag)
         fluidComponent?.fromTag(tag)
-        multiblockComponent?.fromTag(tag)
+        multiblockComponent?.readNbt(tag)
         workingState = tag?.getBoolean("WorkingState") ?: workingState
         energy = tag?.getDouble("Energy") ?: 0.0
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        if (tag == null) return CompoundTag()
-        inventoryComponent?.toTag(tag)
-        temperatureComponent?.toTag(tag)
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
+        if (tag == null) return NbtCompound()
+        inventoryComponent?.writeNbt(tag)
+        temperatureComponent?.writeNbt(tag)
         fluidComponent?.toTag(tag)
-        multiblockComponent?.toTag(tag)
+        multiblockComponent?.writeNbt(tag)
         tag.putDouble("Energy", energy)
         tag.putBoolean("WorkingState", workingState)
         return tag
@@ -364,7 +340,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         val block = blockState?.block
         return when {
             block is InventoryProvider -> block.getInventory(blockState, world, pos)
-            block?.hasBlockEntity() == true -> {
+            blockState?.hasBlockEntity() == true -> {
                 val blockEntity = world?.getBlockEntity(pos) as? Inventory ?: return null
                 if (blockEntity is ChestBlockEntity && block is ChestBlock)
                     ChestBlock.getInventory(block, blockState, world, pos, true)

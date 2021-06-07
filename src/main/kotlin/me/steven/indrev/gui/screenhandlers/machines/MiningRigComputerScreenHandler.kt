@@ -8,7 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
@@ -26,7 +26,7 @@ import net.minecraft.util.Identifier
 
 class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.MINER_HANDLER,
+        IndustrialRevolution.MINING_RIG_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -34,7 +34,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.miner", ctx, playerInventory, blockInventory)
+        configure("block.indrev.mining_rig", ctx, playerInventory, blockInventory)
 
         val outputSlots = WTooltipedItemSlot.of(blockInventory, 1, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlots.isInsertingAllowed = false
@@ -44,7 +44,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
         root.add(scanSlot, 7.0, 4.3)
 
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? MinerBlockEntity ?: return@run
+            val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
             val bg = WStaticTooltip()
             root.add(bg, 1.5, 1.0)
@@ -76,12 +76,12 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                 }
             }
             root.add(WText({
-                val totalMultiplier = activeDrills.sumByDouble { it.getSpeedMultiplier() }
+                val totalMultiplier = activeDrills.sumOf { it.getSpeedMultiplier() }
                 TranslatableText("block.indrev.drill.faster", totalMultiplier)
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.2)
         }
         root.add(WText({
-            TranslatableText("block.indrev.miner.mined", "${propertyDelegate[3]}%")
+            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[3]}%")
         }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.9)
 
         root.validate(this)
@@ -105,11 +105,11 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
 
     override fun canUse(player: PlayerEntity?): Boolean = true
 
-    override fun getEntry(): Identifier = identifier("machines/miner")
+    override fun getEntry(): Identifier = identifier("machines/mining_rig")
 
     override fun getPage(): Int = 0
 
     companion object {
-        val SCREEN_ID = identifier("miner")
+        val SCREEN_ID = identifier("mining_rig")
     }
 }

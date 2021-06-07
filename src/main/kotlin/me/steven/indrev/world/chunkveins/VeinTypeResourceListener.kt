@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class VeinTypeResourceListener : SimpleSynchronousResourceReloadListener {
-    override fun apply(manager: ResourceManager?) {
+    override fun reload(manager: ResourceManager?) {
         val jankson = Jankson.builder().build()
         val ids = manager?.findResources("veintypes") { r -> r.endsWith(".json") || r.endsWith(".json5") }
         ids?.forEach { id ->

@@ -32,6 +32,12 @@ class IRPortableChargerItem(
         buildEnergyTooltip(stack, tooltip)
     }
 
+    override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
+
+    override fun isItemBarVisible(stack: ItemStack?): Boolean = hasDurabilityBar(stack)
+
+    override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
+
     override fun inventoryTick(stack: ItemStack, world: World?, entity: Entity?, slot: Int, selected: Boolean) {
 
         val player = entity as? PlayerEntity ?: return

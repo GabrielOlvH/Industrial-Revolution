@@ -14,7 +14,7 @@ import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.config.IRConfig
@@ -27,7 +27,6 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.item.ItemEndpointData
 import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.tools.modular.ArmorModule
@@ -182,21 +181,16 @@ object PacketRegistry {
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
             server.execute {
-                val cursorStack = player.inventory.cursorStack
+                val cursorStack = player.currentScreenHandler.cursorStack
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir)
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
                 state.markDirty()
-                val buf = PacketByteBufs.create()
-                buf.writeInt(slotIndex)
-                buf.writeItemStack(data.filter[slotIndex])
-                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
+                val syncPacket = PacketByteBufs.create()
+                syncPacket.writeInt(slotIndex)
+                syncPacket.writeItemStack(data.filter[slotIndex])
+                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, syncPacket)
             }
         }
 
@@ -208,12 +202,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir, true)
                 when (field) {
                     0 -> data.whitelist = value
                     1 -> data.matchDurability = value
@@ -231,7 +220,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()][dir] as? ItemEndpointData ?: return@execute
+                val data = state.getEndpointData(pos, dir, true) ?: return@execute
                 data.mode = mode
                 state.markDirty()
             }
@@ -295,7 +284,7 @@ object PacketRegistry {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(MinerBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
+        ClientPlayNetworking.registerGlobalReceiver(MiningRigBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
             val pos = buf.readBlockPos().down()
             val blockRawId = buf.readInt()
             val block = Registry.BLOCK.get(blockRawId)
@@ -369,12 +358,12 @@ object PacketRegistry {
                 val pos = buf.readLong()
                 for (m in 0 until buf.readByte()) {
                     val dir = Direction.values()[buf.readByte().toInt()]
-                    val type = EndpointData.Type.values()[buf.readByte().toInt()]
+                    val endpointType = EndpointData.Type.values()[buf.readByte().toInt()]
                     val hasMode = buf.readBoolean()
                     val mode = if (hasMode) EndpointData.Mode.values()[buf.readByte().toInt()] else null
                     client.execute {
                         val data = new.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
-                        data[dir] = EndpointData(type, mode)
+                        data[dir] = EndpointData(endpointType, mode)
 
                         if (before[pos]?.size != data?.size || before[pos]?.any { it.value.mode != data[it.key]?.mode || it.value.type != data[it.key]?.type } == true) {
                             positions.add(BlockPos.fromLong(pos))

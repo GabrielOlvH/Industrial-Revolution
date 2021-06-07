@@ -1,8 +1,6 @@
 package me.steven.indrev.gui.screenhandlers.pipes
 
-import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.item.ItemEndpointData
 import me.steven.indrev.networks.item.ItemNetworkState
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.entity.player.PlayerEntity
@@ -26,15 +24,16 @@ class PipeFilterScreenFactory(
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {
         (Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState)?.let { state ->
-            val data = state.getEndpointData(pos, dir, true) as ItemEndpointData
+            val data = state.getEndpointData(pos, dir, false)
+            val filterData = state.getFilterData(pos, dir, true)
             buf.writeEnumConstant(dir)
             buf.writeBlockPos(pos)
-            data.filter.forEach { buf.writeItemStack(it) }
-            buf.writeBoolean(data.whitelist)
-            buf.writeBoolean(data.matchDurability)
-            buf.writeBoolean(data.matchTag)
-            buf.writeBoolean(data.type != EndpointData.Type.INPUT)
-            if (data.type != EndpointData.Type.INPUT) {
+            filterData.filter.forEach { buf.writeItemStack(it) }
+            buf.writeBoolean(filterData.whitelist)
+            buf.writeBoolean(filterData.matchDurability)
+            buf.writeBoolean(filterData.matchTag)
+            buf.writeBoolean(data != null)
+            if (data != null) {
                 buf.writeEnumConstant(data.type)
                 buf.writeEnumConstant(data.mode)
             }

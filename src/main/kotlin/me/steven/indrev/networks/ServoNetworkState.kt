@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.IndustrialRevolution
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -15,9 +15,9 @@ import net.minecraft.util.math.Direction
 import java.util.*
 import java.util.function.LongFunction
 
-abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: ServerWorld) : NetworkState<T>(type, world, type.key) {
+abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: ServerWorld) : NetworkState<T>(type, world) {
     val endpointData = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
-    val recentlyRemoved = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
+    private val recentlyRemoved = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
 
     private val syncedMaps = Object2IntOpenHashMap<UUID>()
 
@@ -75,7 +75,8 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
 
     fun getEndpointData(pos: BlockPos, direction: Direction, createIfAbsent: Boolean = false): EndpointData? {
         return if (createIfAbsent)
-            endpointData.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() }).computeIfAbsent(direction) { createEndpointData(EndpointData.Type.INPUT, null) }
+            endpointData.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() })
+                .computeIfAbsent(direction) { EndpointData(EndpointData.Type.INPUT, null) }
         else
             endpointData.get(pos.asLong())?.get(direction)
     }
@@ -88,45 +89,56 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         return d
     }
 
-    open fun createEndpointData(type: EndpointData.Type, mode: EndpointData.Mode?): EndpointData = EndpointData(type, mode)
+    open fun clearCachedData(importCache: Boolean) {
+        if (importCache) {
+            recentlyRemoved.forEach { e -> endpointData[e.key] = e.value }
+        }
+        this.recentlyRemoved.clear()
+    }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        val modesTag = ListTag()
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        val modesTag = NbtList()
         endpointData.forEach { (pos, modes) ->
-            val sidesTag = ListTag()
+            val sidesTag = NbtList()
             modes.forEach { (dir, mode) ->
-                val t = CompoundTag()
-                t.put(dir.ordinal.toString(), mode.toTag(CompoundTag()))
+                val t = NbtCompound()
+                t.put(dir.ordinal.toString(), mode.writeNbt(NbtCompound()))
                 sidesTag.add(t)
             }
-            val posTag = CompoundTag()
+            val posTag = NbtCompound()
             posTag.putLong("pos", pos)
             posTag.put("sides", sidesTag)
             modesTag.add(posTag)
 
         }
         tag.put("modes", modesTag)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(tag: CompoundTag) {
-        val modesTag = tag.getList("modes", 10)
-        modesTag.forEach { posTag ->
-            posTag as CompoundTag
-            val pos = posTag.getLong("pos")
-            val map = Object2ObjectOpenHashMap<Direction, EndpointData>()
-            val sidesTag = posTag.getList("sides", 10)
-            sidesTag.forEach { t ->
-                t as CompoundTag
-                t.keys.forEach { id ->
-                    val data = createEndpointData(EndpointData.Type.INPUT, EndpointData.Mode.NEAREST_FIRST).fromTag(t.getCompound(id))
-                    val dir = Direction.values()[id.toInt()]
-                    map[dir] = data
+    companion object {
+        fun <T : Network, P : ServoNetworkState<T>> readNbt(tag: NbtCompound, supplier: () -> P): P {
+            val state = supplier()
+            val modesTag = tag.getList("modes", 10)
+            modesTag.forEach { posTag ->
+                posTag as NbtCompound
+                val pos = posTag.getLong("pos")
+                val map = Object2ObjectOpenHashMap<Direction, EndpointData>()
+                val sidesTag = posTag.getList("sides", 10)
+                sidesTag.forEach { t ->
+                    t as NbtCompound
+                    t.keys.forEach { id ->
+                        val data = EndpointData(EndpointData.Type.INPUT, EndpointData.Mode.NEAREST_FIRST).readNbt(t.getCompound(id))
+                        val dir = Direction.values()[id.toInt()]
+                        map[dir] = data
+                    }
                 }
+
+                state.endpointData[pos] = map
             }
 
-            endpointData[pos] = map
+            NetworkState.readNbt(tag, supplier)
+
+            return state
         }
-        super.fromTag(tag)
     }
 }

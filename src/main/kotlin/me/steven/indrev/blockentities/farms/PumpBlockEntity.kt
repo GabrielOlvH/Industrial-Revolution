@@ -11,6 +11,7 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.drainFluid
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -18,7 +19,7 @@ import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.FlowableFluid
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -30,7 +31,8 @@ import kotlin.coroutines.resume
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
-class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY), BlockEntityClientSerializable {
+class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
         this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
@@ -89,7 +91,7 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
                 val blockState = world.getBlockState(currentTarget)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
-                    val drained = block.tryDrainFluid(world, currentTarget, blockState)
+                    val drained = block.drainFluid(world, currentTarget, blockState)
                     if (drained != Fluids.EMPTY) {
                         val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
                         fluidComponent.insert(toInsert)
@@ -150,22 +152,22 @@ class PumpBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier,
 
     override fun isFixed(type: ConfigurationType): Boolean = true
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("MovingTicks", movingTicks)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        super.fromTag(state, tag)
+        super.readNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
         super.fromClientTag(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("MovingTicks", movingTicks)
         return super.toClientTag(tag)
     }

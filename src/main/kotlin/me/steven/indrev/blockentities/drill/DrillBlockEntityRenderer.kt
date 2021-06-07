@@ -8,13 +8,12 @@ import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
+import net.minecraft.util.math.Vec3f
 
-class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<DrillBlockEntity>(dispatcher) {
+class DrillBlockEntityRenderer : BlockEntityRenderer<DrillBlockEntity> {
     override fun render(
         entity: DrillBlockEntity,
         tickDelta: Float,
@@ -37,7 +36,7 @@ class DrillBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockE
             val entry = peek()
             translate(0.5, 0.0, 0.5)
             if (entity.position <= 0.0 && entity.cachedState[DrillBlock.WORKING]) {
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion( (entity.world!!.time + tickDelta) * 12))
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion( (entity.world!!.time + tickDelta) * 12))
             }
             translate(-0.5, entity.position, -0.5)
             MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(

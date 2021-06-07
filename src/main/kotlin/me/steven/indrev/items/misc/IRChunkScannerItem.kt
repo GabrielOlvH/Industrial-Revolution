@@ -1,7 +1,8 @@
 package me.steven.indrev.items.misc
 
 import me.steven.indrev.registry.IRItemRegistry
-import me.steven.indrev.utils.asString
+import me.steven.indrev.utils.pickRandom
+import me.steven.indrev.utils.toNbt
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
@@ -10,7 +11,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
@@ -34,11 +35,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
             val rnd = world.random.asKotlinRandom()
             val chunkPos = world.getChunk(user?.blockPos)?.pos
             if (chunkPos != null) {
-                val state =
-                    (world as ServerWorld).persistentStateManager.getOrCreate(
-                        { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                        ChunkVeinState.STATE_OVERWORLD_KEY
-                    )
+                val state = ChunkVeinState.getState(world as ServerWorld)
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
                 val default = BuiltinRegistries.BIOME.getKey(BuiltinBiomes.PLAINS).get()
@@ -46,16 +43,16 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                     .getKey(world.getBiome(user?.blockPos))
                     .orElse(default)
                 val picker = VeinType.BIOME_VEINS.getOrDefault(biomeKey, VeinType.BIOME_VEINS[default])
-                val identifier = info?.veinIdentifier ?: picker?.pickRandom(world.random)!!
+                val identifier = info?.veinIdentifier ?: picker?.pickRandom()!!
                 val type = VeinType.REGISTERED[identifier]
                 if (!isPresent) {
                     val data = ChunkVeinData(identifier, type!!.sizeRange.random(rnd))
                     state.veins[chunkPos] = data
                     state.markDirty()
                 }
-                val tag = CompoundTag()
+                val tag = NbtCompound()
                 tag.putString("VeinIdentifier", identifier.toString())
-                tag.putString("ChunkPos", chunkPos.asString())
+                tag.put("ChunkPos", chunkPos.toNbt())
                 tag.putString("Dimension", world.registryKey.value.path)
                 val infoStack = ItemStack(IRItemRegistry.SCAN_OUTPUT_ITEM)
                 infoStack.tag = tag

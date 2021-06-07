@@ -5,21 +5,20 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.item.filter.ItemFilter
 import me.steven.indrev.utils.groupedFluidInv
 import me.steven.indrev.utils.groupedItemInv
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.world.World
-import java.util.*
 import kotlin.random.Random
 
-open class EndpointData(var type: Type, var mode: Mode?) {
+data class EndpointData(var type: Type, var mode: Mode?) {
 
-    open fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putInt("t", type.ordinal)
         if (mode != null)
             tag.putInt("m", mode!!.ordinal)
         return tag
     }
 
-    open fun fromTag(tag: CompoundTag): EndpointData {
+    fun readNbt(tag: NbtCompound): EndpointData {
         val type = Type.VALUES[tag.getInt("t")]
         val mode = if (tag.contains("m")) Mode.VALUES[tag.getInt("m")] else null
         return EndpointData(type, mode)

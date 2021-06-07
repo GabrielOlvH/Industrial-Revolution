@@ -26,5 +26,11 @@ class IRBatteryItem(settings: Settings, maxStored: Double) :
         buildEnergyTooltip(stack, tooltip)
     }
 
+    override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
+
+    override fun isItemBarVisible(stack: ItemStack?): Boolean = hasDurabilityBar(stack)
+
+    override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
+
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 }

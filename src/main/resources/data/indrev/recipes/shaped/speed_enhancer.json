@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "OCO",
+    " O "
+  ],
+  "key": {
+    "O": {
+      "item": "indrev:cooler_cell"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "E": {
+      "item": "indrev:empty_enhancer"
+    }
+  },
+  "result": {
+    "item": "indrev:speed_enhancer"
+  }
+}

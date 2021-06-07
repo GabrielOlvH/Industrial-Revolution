@@ -10,8 +10,9 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.RecipeType
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.Identifier
 
-class IRRecipeType<T : IRRecipe> : IRecipeGetter<T>, RecipeType<T> {
+class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeType<T> {
 
     private val recipeCache: Multimap<Item, T> = HashMultimap.create()
     private val fluidOnlyRecipeCache:  Multimap<FluidKey, T> = HashMultimap.create()
@@ -40,4 +41,6 @@ class IRRecipeType<T : IRRecipe> : IRecipeGetter<T>, RecipeType<T> {
         recipeCache.clear()
         fluidOnlyRecipeCache.clear()
     }
+
+    companion object
 }

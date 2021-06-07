@@ -5,22 +5,23 @@ import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtOps
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 
-class CoverableBlockEntity(tier: Tier) :
+class CoverableBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     BlockEntity(when (tier) {
         Tier.MK1 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK1
         Tier.MK2 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK2
         Tier.MK3 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK3
         Tier.MK4 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK4
         Tier.CREATIVE -> error("no creative cable")
-    }), BlockEntityClientSerializable {
+    }, pos, state), BlockEntityClientSerializable {
     var coverState: BlockState? = null
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         if (tag?.contains("cover") == true)
             Registry.BLOCK.getOrEmpty(Identifier(tag.getString("cover")))
                 .ifPresent { block -> this.coverState = block.defaultState }
@@ -29,19 +30,19 @@ class CoverableBlockEntity(tier: Tier) :
                 this.coverState = pair.first
             }
         }
-        super.fromTag(state, tag)
+        super.readNbt(tag)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         if (this.coverState != null) {
-            BlockState.CODEC.encode(this.coverState, NbtOps.INSTANCE, CompoundTag()).result().ifPresent { t ->
+            BlockState.CODEC.encode(this.coverState, NbtOps.INSTANCE, NbtCompound()).result().ifPresent { t ->
                 tag?.put("coverState", t)
             }
         }
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         if (tag?.contains("cover") == true)
             Registry.BLOCK.getOrEmpty(Identifier(tag.getString("cover")))
                 .ifPresent { block -> this.coverState = block.defaultState }
@@ -52,9 +53,9 @@ class CoverableBlockEntity(tier: Tier) :
         }
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
         if (this.coverState != null) {
-            BlockState.CODEC.encode(this.coverState, NbtOps.INSTANCE, CompoundTag()).result().ifPresent { t ->
+            BlockState.CODEC.encode(this.coverState, NbtOps.INSTANCE, NbtCompound()).result().ifPresent { t ->
                 tag.put("coverState", t)
             }
         }

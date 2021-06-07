@@ -18,7 +18,7 @@ import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -50,7 +50,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
         val stackTag = stack.orCreateTag
 
-        val volume = fromTag(stackTag) ?: return
+        val volume = readNbt(stackTag) ?: return
 
         val player = MinecraftClient.getInstance().player
         val world = player?.world
@@ -118,7 +118,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun isBuiltin(): Boolean = false
 
-    private fun fromTag(tag: CompoundTag?): FluidVolume? {
+    private fun readNbt(tag: NbtCompound?): FluidVolume? {
         val tanksTag = tag?.getCompound("tanks")
         tanksTag?.keys?.forEach { key ->
             val tankTag = tanksTag.getCompound(key)

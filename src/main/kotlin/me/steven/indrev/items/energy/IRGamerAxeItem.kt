@@ -65,6 +65,12 @@ class IRGamerAxeItem(
         buildEnergyTooltip(stack, tooltip)
     }
 
+    override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
+
+    override fun isItemBarVisible(stack: ItemStack?): Boolean = hasDurabilityBar(stack)
+
+    override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
+
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
@@ -109,7 +115,7 @@ class IRGamerAxeItem(
         if (!isActive(stack)) return false
         val energyHandler = energyOf(stack) ?: return false
         val canStart = energyHandler.use(1.0)
-        if (canStart && !miner.isSneaking && state.block.isIn(BlockTags.LOGS)) {
+        if (canStart && !miner.isSneaking && state.isIn(BlockTags.LOGS)) {
             val scanned = mutableSetOf<BlockPos>()
             Direction.values().forEach { dir ->
                 scanTree(scanned, world, energyHandler, pos.offset(dir))
@@ -120,8 +126,8 @@ class IRGamerAxeItem(
 
     fun scanTree(scanned: MutableSet<BlockPos>, world: World, energyHandler: EnergyIo, pos: BlockPos) {
         if (!scanned.add(pos)) return
-        val block = world.getBlockState(pos).block
-        if (block.isIn(BlockTags.LOGS) || block.isIn(BlockTags.LEAVES)) {
+        val state = world.getBlockState(pos)
+        if (state.isIn(BlockTags.LOGS) || state.isIn(BlockTags.LEAVES)) {
             if (energyHandler.use(1.0)) {
                 world.breakBlock(pos, true)
                 if (scanned.size < 40)

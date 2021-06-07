@@ -5,8 +5,8 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import me.shedaniel.math.Point
-import me.shedaniel.rei.api.widgets.Widgets
-import me.shedaniel.rei.gui.widget.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.IREntityExtension
 import me.steven.indrev.gui.widgets.machines.WFluid
@@ -23,6 +23,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -30,11 +31,13 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.OrderedText
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
+import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
+
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -73,14 +76,12 @@ fun <T : ScreenHandler> Identifier.registerScreenHandler(
 
 fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
-fun ChunkPos.asString() = "$x,$z"
-
-fun getChunkPos(s: String): ChunkPos? {
-    val split = s.split(",")
-    val x = split[0].toIntOrNull() ?: return null
-    val z = split[1].toIntOrNull() ?: return null
-    return ChunkPos(x, z)
+fun ChunkPos.toNbt() = NbtCompound().also {
+    it.putInt("x", x)
+    it.putInt("z", z)
 }
+
+fun getChunkPos(nbt: NbtCompound) = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
 fun getFluidFromJson(json: JsonObject): FluidVolume {
     val fluidId = json.get("fluid").asString
@@ -117,6 +118,10 @@ fun World.setBlockState(pos: BlockPos, state: BlockState, condition: (BlockState
 }
 fun World.isLoaded(pos: BlockPos): Boolean {
     return chunkManager.isChunkLoaded(pos.x shr 4, pos.z shr 4)
+}
+
+fun <E> WeightedList<E>.pickRandom(): E {
+    return this.shuffle().entries.first().element
 }
 
 

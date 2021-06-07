@@ -8,6 +8,7 @@ import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
+import net.minecraft.world.gen.YOffset
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig
 import net.minecraft.world.gen.decorator.Decorator
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
@@ -72,9 +73,9 @@ object WorldGeneration {
                 10
             )
         )
-            .rangeOf(64)
-            .spreadHorizontally()
-            .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(64))
+                .spreadHorizontally()
+                .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
     private val tinFeature =
         IRConfiguredFeature(
@@ -83,7 +84,7 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TIN_ORE().defaultState, 10)
             )
-                .rangeOf(48)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(48))
                 .spreadHorizontally()
                 .repeat(14),
             IRConfiguredFeature.IS_OVERWORLD
@@ -96,7 +97,7 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.LEAD_ORE().defaultState, 6)
             )
-                .rangeOf(32)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(32))
                 .spreadHorizontally()
                 .repeat(12),
             IRConfiguredFeature.IS_OVERWORLD
@@ -109,7 +110,7 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.SILVER_ORE().defaultState, 8)
             )
-                .rangeOf(32)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(32))
                 .spreadHorizontally()
                 .repeat(8),
             IRConfiguredFeature.IS_OVERWORLD
@@ -122,7 +123,7 @@ object WorldGeneration {
             Feature.ORE.configure(
                 OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TUNGSTEN_ORE().defaultState, 5)
             )
-                .rangeOf(16)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(0))
                 .spreadHorizontally()
                 .repeat(5),
             IRConfiguredFeature.IS_OVERWORLD
@@ -139,7 +140,7 @@ object WorldGeneration {
                     7
                 )
             )
-                .rangeOf(16)
+                .uniformRange(YOffset.getBottom(), YOffset.fixed(16))
                 .spreadHorizontally()
                 .repeat(6),
             IRConfiguredFeature.IS_OVERWORLD
@@ -155,7 +156,7 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_overworld"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).rangeOf(16).repeat(10),
+            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).uniformRange(YOffset.getBottom(), YOffset.fixed(8)).repeat(10),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
@@ -163,7 +164,7 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_nether"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).rangeOf(100).repeat(20),
+            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE).uniformRange(YOffset.getBottom(), YOffset.getTop()).repeat(20),
             IRConfiguredFeature.IS_NETHER
         )
 
@@ -172,6 +173,6 @@ object WorldGeneration {
         GenerationStep.Feature.LAKES,
         Feature.LAKE.configure(
             SingleStateFeatureConfig(IRFluidRegistry.SULFURIC_ACID.defaultState)
-        ).decorate(Decorator.WATER_LAKE.configure(ChanceDecoratorConfig(60)))
+        ).decorate(Decorator.LAVA_LAKE.configure(ChanceDecoratorConfig(60)))
     ) { biome -> biome.category == Biome.Category.SWAMP }
 }

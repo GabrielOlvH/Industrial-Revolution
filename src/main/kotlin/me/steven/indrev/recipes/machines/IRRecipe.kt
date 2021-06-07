@@ -32,11 +32,16 @@ interface IRRecipe : Recipe<Inventory> {
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("output"), DeprecationLevel.ERROR)
     override fun getOutput(): ItemStack = outputs.firstOrNull()?.stack ?: ItemStack.EMPTY
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("input"), DeprecationLevel.ERROR)
-    override fun getPreviewInputs(): DefaultedList<Ingredient> = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
+    override fun getIngredients(): DefaultedList<Ingredient> = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("matches(Inventory, FluidVolume?)"), DeprecationLevel.ERROR)
     override fun matches(inv: Inventory?, world: World?): Boolean = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
 
     override fun getType(): IRRecipeType<*>
+
+    override fun isEmpty(): Boolean {
+        return input.isEmpty() || input
+            .any { entry -> entry.ingredient.matchingStacksClient.isEmpty() }
+    }
 
     fun craft(random: Random?): List<ItemStack> {
         val produced = ArrayList<ItemStack>(outputs.size)

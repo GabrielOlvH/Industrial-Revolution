@@ -42,12 +42,12 @@ class RechargeableRecipe(id: Identifier, group: String, width: Int, height: Int,
             override fun read(identifier: Identifier?, jsonObject: JsonObject?): RechargeableRecipe {
                 val shaped = super.read(identifier, jsonObject)
                 val group = JsonHelper.getString(jsonObject, "group", "")
-                return RechargeableRecipe(shaped.id, group, shaped.width, shaped.height, shaped.previewInputs, shaped.output)
+                return RechargeableRecipe(shaped.id, group, shaped.width, shaped.height, shaped.ingredients, shaped.output)
             }
 
             override fun read(identifier: Identifier?, packetByteBuf: PacketByteBuf?): RechargeableRecipe {
                 val shaped = super.read(identifier, packetByteBuf)
-                return RechargeableRecipe(shaped.id, shaped.group, shaped.width, shaped.height, shaped.previewInputs, shaped.output)
+                return RechargeableRecipe(shaped.id, shaped.group, shaped.width, shaped.height, shaped.ingredients, shaped.output)
             }
         }
     }

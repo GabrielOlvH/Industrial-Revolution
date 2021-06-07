@@ -126,10 +126,10 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
 
     override fun getPage(): Int = 0
 
-    private fun getSlotPainter(slot: Int, identifier: Identifier) = BackgroundPainter { left, top, panel ->
-        BackgroundPainter.SLOT.paintBackground(left, top, panel)
+    private fun getSlotPainter(slot: Int, identifier: Identifier) = BackgroundPainter { matrices, left, top, panel ->
+        BackgroundPainter.SLOT.paintBackground(matrices, left, top, panel)
         if (playerInventory.getStack(slot).isEmpty)
-            ScreenDrawing.texturedRect(left + 1, top + 1, 16, 16, identifier, -1)
+            ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
     }
 
     companion object {

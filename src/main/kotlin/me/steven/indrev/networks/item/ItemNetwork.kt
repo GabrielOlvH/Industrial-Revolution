@@ -12,7 +12,7 @@ import me.steven.indrev.utils.isLoaded
 import me.steven.indrev.utils.itemExtractableOf
 import me.steven.indrev.utils.itemInsertableOf
 import net.minecraft.block.Block
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -47,39 +47,41 @@ class ItemNetwork(
                 val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
 
                 directions.forEach inner@{ dir ->
-                    val data = state.getEndpointData(pos.offset(dir), dir.opposite) as? ItemEndpointData? ?: return@inner
+                    val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
+                    val filterData = state.getFilterData(pos.offset(dir), dir.opposite)
                     if (data.type == EndpointData.Type.INPUT) return@inner
                     val queue =
                         PriorityQueue(sortedQueues.computeIfAbsent(data.mode!!) {
                             if (data.mode == EndpointData.Mode.NEAREST_FIRST)
                                 PriorityQueue(originalQueue)
                             else
-                                PriorityQueue(data.mode!!.getItemComparator(world, data.type) { data.matches(it) }).also { q -> q.addAll(originalQueue) }
+                                PriorityQueue(data.mode!!.getItemComparator(world, data.type) { filterData.matches(it) }).also { q -> q.addAll(originalQueue) }
                         })
 
 
                     if (data.type == EndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir, queue, state, data)
+                        tickOutput(pos, dir, queue, state, data, filterData)
                     else if (data.type == EndpointData.Type.RETRIEVER)
-                        tickRetriever(pos, dir, queue, state, data)
+                        tickRetriever(pos, dir, queue, state, data, filterData)
                 }
             }
         }
     }
 
-    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: ItemEndpointData) {
+    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
         val extractable = itemExtractableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.poll()
             val (_, targetPos, _, targetDir) = node
             if (!world.isLoaded(targetPos)) continue
-            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
+            val targetFilterData = state.getFilterData(targetPos.offset(targetDir), targetDir.opposite)
 
             val insertable = itemInsertableOf(world, targetPos, targetDir.opposite)
-            val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) && targetData?.matches(it) != false }, remaining)
+            val moved = ItemInvUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining)
             remaining -= moved
             if (moved > 0) {
                 queue.offer(node)
@@ -87,19 +89,20 @@ class ItemNetwork(
         }
     }
 
-    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: ItemEndpointData) {
+    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
         val insertable = itemInsertableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.poll()
             val (_, targetPos, _, targetDir) = node
             if (!world.isLoaded(targetPos)) continue
-            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite) as? ItemEndpointData
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue
+            val targetFilterData = state.getFilterData(targetPos.offset(targetDir), targetDir.opposite)
 
             val extractable = itemExtractableOf(world, targetPos, targetDir.opposite)
-            val moved = ItemInvUtil.move(extractable, insertable, { data.matches(it) && targetData?.matches(it) != false }, remaining)
+            val moved = ItemInvUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining)
             remaining -= moved
             if (moved > 0)
                 queue.offer(node)
@@ -112,22 +115,22 @@ class ItemNetwork(
         super.appendPipe(state, block, blockPos)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        super.writeNbt(tag)
         tag.putInt("tier", tier.ordinal)
         return tag
     }
 
-    override fun fromTag(world: ServerWorld, tag: CompoundTag) {
-        super.fromTag(world, tag)
+    override fun readNbt(world: ServerWorld, tag: NbtCompound) {
+        super.readNbt(world, tag)
         val tier = Tier.values()[tag.getInt("tier")]
         this.tier = tier
     }
 
     companion object {
 
-        fun fromTag(world: ServerWorld, tag: CompoundTag): ItemNetwork {
-            val network = Network.fromTag(world, tag) as ItemNetwork
+        fun readNbt(world: ServerWorld, tag: NbtCompound): ItemNetwork {
+            val network = Network.readNbt(world, tag) as ItemNetwork
             val tier = Tier.values()[tag.getInt("tier")]
             network.tier = tier
             return network

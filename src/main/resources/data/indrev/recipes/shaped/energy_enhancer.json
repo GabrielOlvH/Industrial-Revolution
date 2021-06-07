@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PEP",
+    "NCN",
+    " N "
+  ],
+  "key": {
+    "P": {
+      "tag": "c:copper_plates"
+    },
+    "C": {
+      "item": "indrev:circuit_mk3"
+    },
+    "E": {
+      "item": "indrev:empty_enhancer"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_dust"
+    }
+  },
+  "result": {
+    "item": "indrev:energy_enhancer"
+  }
+}

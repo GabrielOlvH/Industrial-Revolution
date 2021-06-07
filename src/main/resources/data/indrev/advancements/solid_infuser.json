@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:solid_infuser_mk1"
+    },
+    "title": {
+      "translate": "advancements.indrev.infuser"
+    },
+    "description": {
+      "translate": "advancements.indrev.infuser.description"
+    }
+  },
+  "parent": "indrev:machine_block",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "indrev:solid_infuser_mk1"
+          }
+        ]
+      }
+    }
+  }
+}

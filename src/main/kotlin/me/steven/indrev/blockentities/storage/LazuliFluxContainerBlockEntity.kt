@@ -14,13 +14,14 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import kotlin.math.floor
 
-class LazuliFluxContainerBlockEntity(tier: Tier) :
-    MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY) {
+class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY, pos, state) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(2)
@@ -80,24 +81,24 @@ class LazuliFluxContainerBlockEntity(tier: Tier) :
         }
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
-        transferConfig.toTag(tag)
-        return super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+        transferConfig.writeNbt(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
-        transferConfig.fromTag(tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
+        transferConfig.readNbt(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
-        transferConfig.toTag(tag)
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
+        transferConfig.writeNbt(tag)
         return super.toClientTag(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         super.fromClientTag(tag)
-        transferConfig.fromTag(tag)
+        transferConfig.readNbt(tag)
     }
 
     class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {

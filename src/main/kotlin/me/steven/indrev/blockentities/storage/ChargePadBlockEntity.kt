@@ -9,8 +9,10 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
+import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 
-class ChargePadBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY) {
+class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state) {
     init {
         this.inventoryComponent = inventory(this) {}
     }

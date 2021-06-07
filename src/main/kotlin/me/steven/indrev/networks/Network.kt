@@ -17,10 +17,10 @@ import me.steven.indrev.utils.groupedFluidInv
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.LongTag
-import net.minecraft.nbt.StringTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
+import net.minecraft.nbt.NbtLong
+import net.minecraft.nbt.NbtString
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -58,12 +58,12 @@ abstract class Network(
 
     abstract fun tick(world: ServerWorld)
 
-    open fun toTag(tag: CompoundTag): CompoundTag {
+    open fun writeNbt(tag: NbtCompound): NbtCompound {
         writePositions(tag)
         return tag
     }
 
-    open fun fromTag(world: ServerWorld, tag: CompoundTag) {
+    open fun readNbt(world: ServerWorld, tag: NbtCompound) {
         readPositions(tag)
     }
 
@@ -83,18 +83,18 @@ abstract class Network(
         containers.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
     }
 
-    fun writePositions(tag: CompoundTag) {
-        val pipesList = ListTag()
+    fun writePositions(tag: NbtCompound) {
+        val pipesList = NbtList()
         pipes.forEach { pos ->
-            pipesList.add(LongTag.of(pos.asLong()))
+            pipesList.add(NbtLong.of(pos.asLong()))
         }
-        val containersList = ListTag()
+        val containersList = NbtList()
         containers.forEach { (pos, directions) ->
-            val machineTag = CompoundTag()
+            val machineTag = NbtCompound()
             machineTag.putLong("pos", pos.asLong())
-            val dirList = ListTag()
+            val dirList = NbtList()
             directions.forEach { dir ->
-                dirList.add(StringTag.of(dir.toString()))
+                dirList.add(NbtString.of(dir.toString()))
             }
             machineTag.put("dir", dirList)
             containersList.add(machineTag)
@@ -103,21 +103,21 @@ abstract class Network(
         tag.put("machines", containersList)
     }
 
-    fun readPositions(tag: CompoundTag) {
+    fun readPositions(tag: NbtCompound) {
         val pipesList = tag.getList("cables", 4)
         val containersList = tag.getList("machines", 10)
         pipesList.forEach { cableTag ->
-            cableTag as LongTag
-            this.pipes.add(BlockPos.fromLong(cableTag.long).toImmutable())
+            cableTag as NbtLong
+            this.pipes.add(BlockPos.fromLong(cableTag.longValue()).toImmutable())
         }
         containersList.forEach { machineTag ->
-            machineTag as CompoundTag
+            machineTag as NbtCompound
             val posLong = machineTag.getLong("pos")
             val pos = BlockPos.fromLong(posLong)
             val dirList = machineTag.getList("dir", 8)
             dirList.forEach { dirTag ->
-                dirTag as StringTag
-                val dir = Direction.valueOf(dirTag.asString().toUpperCase())
+                dirTag as NbtString
+                val dir = Direction.valueOf(dirTag.asString().uppercase())
                 appendContainer(pos, dir)
             }
         }
@@ -189,8 +189,8 @@ abstract class Network(
             }
         }
 
-        fun fromTag(world: ServerWorld, tag: CompoundTag): Network {
-            val type = if (tag.contains("type")) Type.valueOf(tag.getString("type").toUpperCase()) else Type.ENERGY
+        fun readNbt(world: ServerWorld, tag: NbtCompound): Network {
+            val type = if (tag.contains("type")) Type.valueOf(tag.getString("type").uppercase(Locale.getDefault())) else Type.ENERGY
             val network = type.createEmpty(world)
             network.readPositions(tag)
             return network
@@ -208,7 +208,7 @@ abstract class Network(
         abstract fun isPipe(blockState: BlockState): Boolean
 
         open fun getNetworkState(world: ServerWorld): NetworkState<T> {
-            return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ NetworkState(this, world, key) }, key) }
+            return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ NetworkState.readNbt(it) { NetworkState(this, world) } }, { NetworkState(this, world) }, key) }
         }
 
         companion object {
@@ -229,7 +229,7 @@ abstract class Network(
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is FluidPipeBlock
 
                 override fun getNetworkState(world: ServerWorld): FluidNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ FluidNetworkState(world) }, key) } as FluidNetworkState
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ServoNetworkState.readNbt(it) { FluidNetworkState(world) } }, { FluidNetworkState(world) }, key) } as FluidNetworkState
                 }
             }
             val ITEM = object : Type<ItemNetwork>(NetworkState.ITEM_KEY) {
@@ -241,7 +241,7 @@ abstract class Network(
                 override fun isPipe(blockState: BlockState): Boolean = blockState.block is ItemPipeBlock
 
                 override fun getNetworkState(world: ServerWorld): ItemNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState(world) }, key) } as ItemNetworkState
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
                 }
             }
 

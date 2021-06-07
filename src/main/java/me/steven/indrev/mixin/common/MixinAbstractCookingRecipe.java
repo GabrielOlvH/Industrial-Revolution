@@ -9,6 +9,7 @@ import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -81,5 +82,11 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     @Override
     public Identifier getId() {
         return id;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        DefaultedList<Ingredient> defaultedList = this.getIngredients();
+        return defaultedList.isEmpty() || defaultedList.stream().anyMatch((ingredient) -> ingredient.getMatchingStacksClient().length == 0);
     }
 }

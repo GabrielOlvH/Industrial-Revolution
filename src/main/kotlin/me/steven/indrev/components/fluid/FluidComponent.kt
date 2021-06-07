@@ -7,7 +7,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.IRSyncableBlockEntity
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.collection.DefaultedList
 
 open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit: FluidAmount, tankCount: Int = 1) : SimpleFixedFluidInv(tankCount, limit) {
@@ -29,19 +29,19 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
 
     open fun getInteractInventory(tank: Int): FluidTransferable = super.getTank(tank)
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        val tanksTag = CompoundTag()
+    override fun toTag(tag: NbtCompound): NbtCompound {
+        val tanksTag = NbtCompound()
         tanks.forEachIndexed { index, tank ->
-            val tankTag = CompoundTag()
+            val tankTag = NbtCompound()
             tankTag.put("fluids", tank.toTag())
             tanksTag.put(index.toString(), tankTag)
         }
         tag.put("tanks", tanksTag)
-        transferConfig.toTag(tag)
+        transferConfig.writeNbt(tag)
         return tag
     }
 
-    override fun fromTag(tag: CompoundTag?) {
+    override fun fromTag(tag: NbtCompound?) {
         super.fromTag(tag)
         val tanksTag = tag?.getCompound("tanks")
         tanksTag?.keys?.forEach { key ->
@@ -51,6 +51,6 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
             tanks[index] = volume
         }
 
-        transferConfig.fromTag(tag)
+        transferConfig.readNbt(tag)
     }
 }
