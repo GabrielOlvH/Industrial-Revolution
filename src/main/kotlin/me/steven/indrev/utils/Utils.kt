@@ -31,6 +31,7 @@ import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
@@ -120,3 +121,16 @@ fun World.isLoaded(pos: BlockPos): Boolean {
 fun <E> WeightedList<E>.pickRandom(): E {
     return this.shuffle().entries.first().element
 }
+
+fun pack(dirs: Collection<Direction>): Byte {
+    var i = 0
+    dirs.forEach { dir -> i = i or (1 shl dir.id) }
+    return i.toByte()
+}
+
+fun unpack(byte: Byte): List<Direction> {
+    val i = byte.toInt()
+    return DIRECTIONS.filter { dir -> i and (1 shl dir.id) != 0 }
+}
+
+val DIRECTIONS = Direction.values()

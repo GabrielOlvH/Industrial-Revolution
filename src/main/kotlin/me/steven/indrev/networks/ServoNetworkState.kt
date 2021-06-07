@@ -25,16 +25,14 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         syncedMaps.defaultReturnValue(-1)
     }
 
-    var version = 0
-
     fun sync(world: ServerWorld) {
         world.players.forEach { player ->
             val v = syncedMaps.getInt(player.uuid)
-            if (version > v) {
+            if (type.version > v) {
                 val buf = PacketByteBufs.create()
                 write(buf)
                 ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_NETWORK_SERVOS, buf)
-                syncedMaps[player.uuid] = version
+                syncedMaps[player.uuid] = type.version
             }
         }
     }
@@ -54,16 +52,15 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         }
     }
 
-    override fun remove(pos: BlockPos) {
-        version++
-        super.remove(pos)
+    override fun onRemoved(pos: BlockPos) {
+        type.version++
+        super.onRemoved(pos)
         if (endpointData.containsKey(pos.asLong()))
             recentlyRemoved[pos.asLong()] = endpointData.remove(pos.asLong())
     }
 
-    override fun set(blockPos: BlockPos, network: T) {
-        version++
-        super.set(blockPos, network)
+    open fun onSet(blockPos: BlockPos, network: T) {
+        type.version++
         if (recentlyRemoved.containsKey(blockPos.asLong())) {
             endpointData[blockPos.asLong()] = recentlyRemoved.remove(blockPos.asLong())
         }
@@ -74,15 +71,19 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
     }
 
     fun getEndpointData(pos: BlockPos, direction: Direction, createIfAbsent: Boolean = false): EndpointData? {
+        return getEndpointData(pos.asLong(), direction, createIfAbsent)
+    }
+
+    fun getEndpointData(pos: Long, direction: Direction, createIfAbsent: Boolean = false): EndpointData? {
         return if (createIfAbsent)
-            endpointData.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() })
+            endpointData.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
                 .computeIfAbsent(direction) { EndpointData(EndpointData.Type.INPUT, null) }
         else
-            endpointData.get(pos.asLong())?.get(direction)
+            endpointData.get(pos)?.get(direction)
     }
 
     fun removeEndpointData(pos: BlockPos, direction: Direction): EndpointData? {
-        version++
+        type.version++
         val datas = endpointData.get(pos.asLong()) ?: return null
         val d = datas.remove(direction)
         if (datas.isEmpty()) endpointData.remove(pos.asLong())
@@ -135,8 +136,6 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
 
                 state.endpointData[pos] = map
             }
-
-            NetworkState.readNbt(tag, supplier)
 
             return state
         }

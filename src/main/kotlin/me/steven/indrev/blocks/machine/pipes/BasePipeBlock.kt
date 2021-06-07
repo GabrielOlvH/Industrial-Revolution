@@ -102,7 +102,8 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 blockEntity.coverState = result
                 blockEntity.markDirty()
                 world.setBlockState(pos, state.with(COVERED, true))
-                handStack.count--
+                if (!player.abilities.creativeMode)
+                    handStack.decrement(1)
                 return ActionResult.SUCCESS
             }
         }
@@ -132,7 +133,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         if (!world.isClient) {
             val netState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?
             if (state.isOf(newState.block)) {
-                Network.handleUpdate(type, world, pos)
+                Network.handleUpdate(type, pos)
                 netState?.clearCachedData(true)
             } else {
                 (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
@@ -149,7 +150,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                     }
                 }
 
-                Network.handleBreak(type, world, pos)
+                Network.handleBreak(type, pos)
                 netState?.clearCachedData(false)
             }
         }
@@ -166,7 +167,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
-            Network.handleUpdate(type, world as ServerWorld, pos)
+            Network.handleUpdate(type, pos)
             (type.getNetworkState(world) as? ServoNetworkState<*>?)?.clearCachedData(false)
         }
     }

@@ -16,14 +16,14 @@ class ItemNetworkState(world: ServerWorld) : ServoNetworkState<ItemNetwork>(Netw
     val filters = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, ItemFilterData>>()
     private val recentlyRemovedFilters = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, ItemFilterData>>()
 
-    override fun remove(pos: BlockPos) {
-        super.remove(pos)
+    override fun onRemoved(pos: BlockPos) {
+        super.onRemoved(pos)
         if (filters.containsKey(pos.asLong()))
             recentlyRemovedFilters[pos.asLong()] = filters.remove(pos.asLong())
     }
 
-    override fun set(blockPos: BlockPos, network: ItemNetwork) {
-        super.set(blockPos, network)
+    override fun onSet(blockPos: BlockPos, network: ItemNetwork) {
+        super.onSet(blockPos, network)
         if (recentlyRemovedFilters.containsKey(blockPos.asLong())) {
             filters[blockPos.asLong()] = recentlyRemovedFilters.remove(blockPos.asLong())
         }
@@ -41,7 +41,7 @@ class ItemNetworkState(world: ServerWorld) : ServoNetworkState<ItemNetwork>(Netw
         return if (createIfAbsent)
             filters.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() }).computeIfAbsent(direction) { ItemFilterData() }
         else
-            filters.get(pos.asLong())?.get(direction) ?: ItemFilterData.REJECTING_FILTER_DATA
+            filters.get(pos.asLong())?.get(direction) ?: ItemFilterData.ACCEPTING_FILTER_DATA
     }
 
     override fun writeNbt(tag: NbtCompound): NbtCompound {
@@ -49,9 +49,11 @@ class ItemNetworkState(world: ServerWorld) : ServoNetworkState<ItemNetwork>(Netw
         filters.forEach { (pos, modes) ->
             val sidesTag = NbtList()
             modes.forEach { (dir, filterData) ->
-                val t = NbtCompound()
-                t.put(dir.ordinal.toString(), filterData.writeNbt(NbtCompound()))
-                sidesTag.add(t)
+                if (filterData != ItemFilterData.ACCEPTING_FILTER_DATA) {
+                    val t = NbtCompound()
+                    t.put(dir.ordinal.toString(), filterData.writeNbt(NbtCompound()))
+                    sidesTag.add(t)
+                }
             }
             val posTag = NbtCompound()
             posTag.putLong("pos", pos)

@@ -62,7 +62,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
             if (dir != null && state[BasePipeBlock.getProperty(dir)]) {
                 val network = block.type.getNetworkState(world) as? ServoNetworkState?
                 network?.also { networkState ->
-                    if (networkState[pos]?.containers?.containsKey(pos.offset(dir)) == true) {
+                    if (block.type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                         val (x, y, z) = hit
                         if (networkState.hasServo(pos, dir)) {
                             when (networkState.getEndpointData(pos, dir)?.type) {

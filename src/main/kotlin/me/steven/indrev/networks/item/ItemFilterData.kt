@@ -42,6 +42,6 @@ class ItemFilterData(
     }
 
     companion object {
-        val REJECTING_FILTER_DATA = ItemFilterData(true, false, false)
+        val ACCEPTING_FILTER_DATA = ItemFilterData(false, false, false)
     }
 }

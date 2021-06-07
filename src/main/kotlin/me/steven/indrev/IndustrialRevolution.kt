@@ -28,6 +28,7 @@ import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
@@ -111,6 +112,7 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player
