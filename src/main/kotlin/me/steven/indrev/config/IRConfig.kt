@@ -260,7 +260,6 @@ class Upgrades  {
 }
 
 class OreGen  {
-    val copper = true
     val tin = true
     val nikolite = true
     val lead = true

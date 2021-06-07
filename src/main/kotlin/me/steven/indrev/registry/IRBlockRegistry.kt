@@ -76,7 +76,6 @@ object IRBlockRegistry {
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
 
     val NIKOLITE_ORE = { Registry.BLOCK.get(identifier("nikolite_ore")) }
-    val COPPER_ORE = { Registry.BLOCK.get(identifier("copper_ore")) }
     val TIN_ORE = { Registry.BLOCK.get(identifier("tin_ore")) }
     val LEAD_ORE = { Registry.BLOCK.get(identifier("lead_ore")) }
     val SILVER_ORE = { Registry.BLOCK.get(identifier("silver_ore")) }

@@ -21,9 +21,6 @@ object WorldGeneration {
     fun init() {
         val config = IRConfig.oregen
 
-        if (config.copper) {
-            configuredFeatures.add(copperFeature)
-        }
         if (config.tin) {
             configuredFeatures.add(tinFeature)
         }
@@ -63,19 +60,6 @@ object WorldGeneration {
             registeredFeatures.add(Supplier { it.configuredFeature })
         }
     }
-
-    private val copperFeature =
-        IRConfiguredFeature(
-            identifier("copper_ore"), GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(
-            OreFeatureConfig(
-                OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                IRBlockRegistry.COPPER_ORE().defaultState,
-                10
-            )
-        )
-                .uniformRange(YOffset.getBottom(), YOffset.fixed(64))
-                .spreadHorizontally()
-                .repeat(14), IRConfiguredFeature.IS_OVERWORLD)
 
     private val tinFeature =
         IRConfiguredFeature(

@@ -53,9 +53,7 @@ object IRItemRegistry {
         }.register()
 
         MaterialHelper("copper") {
-            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
-            withBlock()
-            withOre()
+            withItems("dust", "plate", "nugget", "chunk", "purified_ore")
             withTools(
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -1.0f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 4.5f, -2.0f, itemSettings()),
