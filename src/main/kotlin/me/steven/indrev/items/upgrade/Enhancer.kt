@@ -5,7 +5,7 @@ import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.IRConfig
 
 enum class Enhancer {
-    ENERGY, SPEED, BUFFER, BLAST_FURNACE, SMOKER;
+    ENERGY, SPEED, BUFFER, BLAST_FURNACE, SMOKER, DAMAGE;
 
     companion object {
         val DEFAULT = arrayOf(SPEED, ENERGY, BUFFER)
@@ -18,6 +18,10 @@ enum class Enhancer {
             val a = (IRConfig.upgrades.energyUpgradeModifier * (upgrades[ENERGY] ?: 0))
             return (provider.getBaseValue(ENERGY) * ((upgrades[SPEED]
                 ?: 0) * 2).coerceAtLeast(1)) / if (a > 0) a else 1.0
+        }
+
+        fun getDamageMultiplier(upgrades: Map<Enhancer, Int>, provider: EnhancerProvider): Double {
+            return IRConfig.upgrades.damageUpgradeModifier * (upgrades[DAMAGE] ?: 0).toDouble()
         }
 
         fun getBuffer(provider: MachineBlockEntity<*>) = getBuffer((provider as EnhancerProvider).getEnhancers(provider.inventoryComponent!!.inventory), provider)

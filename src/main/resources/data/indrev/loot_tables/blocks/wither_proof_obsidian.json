@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "indrev:copper_block"
+          "name": "indrev:wither_proof_obsidian"
         }
       ],
       "conditions": [

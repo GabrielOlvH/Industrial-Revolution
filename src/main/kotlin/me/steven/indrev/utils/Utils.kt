@@ -8,7 +8,9 @@ import me.shedaniel.math.Point
 import me.shedaniel.rei.api.client.gui.widgets.Widget
 import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.IREntityExtension
 import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.inventories.IRInventory
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
@@ -17,6 +19,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.SpriteIdentifier
+import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
@@ -119,4 +122,12 @@ fun World.isLoaded(pos: BlockPos): Boolean {
 
 fun <E> WeightedList<E>.pickRandom(): E {
     return this.shuffle().entries.first().element
+}
+
+
+inline fun Entity.redirectDrops(inv: IRInventory, run: () -> Unit) {
+    this as IREntityExtension
+    this.machineInv = inv
+    run()
+    this.machineInv = null
 }
