@@ -42,10 +42,10 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
-                val upgrades = machine.getEnhancers(inventory)
+                val upgrades = machine.getEnhancers()
                 if (recipe?.matches(inputInventory, fluidComponent?.get(0)) != true)
                     tryStartRecipe(inventory) ?: reset()
-                else if (machine.use(Enhancer.getEnergyCost(upgrades, machine))) {
+                else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
                     processTime = (processTime + ceil(Enhancer.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
                     if (processTime >= totalProcessTime) {

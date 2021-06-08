@@ -8,15 +8,16 @@ import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.inventory.Inventory
 
+//TODO refactor this into an UpgradeComponent, much more flexible
 interface EnhancerProvider {
 
     val backingMap: Object2IntMap<Enhancer>
     val enhancerSlots: IntArray
     val availableEnhancers: Array<Enhancer>
 
-    fun getBaseValue(upgrade: Enhancer): Double
+    fun getBaseValue(enhancer: Enhancer): Double
 
-    fun getEnhancers(inventory: Inventory): Map<Enhancer, Int> {
+    fun updateEnhancers(inventory: Inventory) {
         backingMap.clear()
         enhancerSlots
             .forEach { slot ->
@@ -24,13 +25,16 @@ interface EnhancerProvider {
                 if (item is IREnhancerItem && availableEnhancers.contains(item.enhancer))
                     backingMap.mergeInt(item.enhancer, stack.count) { i, j -> i + j }
             }
+    }
+
+    fun getEnhancers(): Object2IntMap<Enhancer> {
         return backingMap
     }
 
     fun isLocked(slot: Int, tier: Tier) = enhancerSlots.indexOf(slot) > tier.ordinal
 
-    fun getMaxCount(upgrade: Enhancer): Int {
-        return when (upgrade) {
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
             Enhancer.SPEED, Enhancer.BUFFER -> 4
             else -> 1
         }

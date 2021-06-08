@@ -28,7 +28,7 @@ class ElectricFurnaceBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     @Suppress("UNCHECKED_CAST")
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {
-            val upgrades = getEnhancers(inventoryComponent!!.inventory)
+            val upgrades = getEnhancers()
             return when (upgrades.keys.firstOrNull { it == Enhancer.BLAST_FURNACE || it == Enhancer.SMOKER }) {
                 Enhancer.BLAST_FURNACE -> VanillaCookingRecipeCachedGetter.BLASTING
                 Enhancer.SMOKER -> VanillaCookingRecipeCachedGetter.SMOKING
