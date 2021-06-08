@@ -7,23 +7,28 @@
       "output": [
         {
           "id": "techreborn:tungsten_ore",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 8
         },
         {
           "id": "minecraft:endstone",
-          "weight": 20
+          "weight": 20,
+          "infiniteWeight": 80
         },
         {
           "id": "minecraft:obsidian",
-          "weight": 3
+          "weight": 3,
+          "infiniteWeight": 3
         },
         {
           "id": "techreborn:iridium_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         },
         {
           "id": "techreborn:sheldonite_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [

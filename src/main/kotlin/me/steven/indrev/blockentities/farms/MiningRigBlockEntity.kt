@@ -67,11 +67,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         cacheVeinType()
         val upgrades = getEnhancers(inventory)
         requiredPower = Enhancer.getEnergyCost(upgrades, this)
-        if (finished) {
-            workingState = false
-            getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
-            return
-        } else if (isLocationCorrect() && use(requiredPower)) {
+
+        if (isLocationCorrect() && use(requiredPower)) {
             workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Enhancer.getSpeed(upgrades, this)
@@ -91,11 +88,17 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 propertyDelegate[3] = explored * 100 / size
                 if (explored >= size) {
                     finished = true
-                    return
                 }
                 data.explored++
                 mining = 0.0
-                val generatedOre = chunkVeinType!!.outputs.pickRandom()
+
+                val generatedOre : Block
+                if (finished) {
+                    generatedOre = chunkVeinType!!.infiniteOutputs.pickRandom()
+                } else {
+                    generatedOre = chunkVeinType!!.outputs.pickRandom()
+                }
+
                 lastMinedItem = ItemStack(generatedOre)
                 inventory.output(lastMinedItem.copy())
                 sync()
