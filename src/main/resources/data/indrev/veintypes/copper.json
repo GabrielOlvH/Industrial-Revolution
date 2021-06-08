@@ -2,7 +2,7 @@
   "id": "indrev:cuprite",
   "output": [
     {
-      "id": "indrev:copper_ore",
+      "id": "minecraft:copper_ore",
       "weight": 8
     },
     {
