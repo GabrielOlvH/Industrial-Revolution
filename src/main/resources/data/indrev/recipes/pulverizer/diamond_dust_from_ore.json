@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "c:diamond_ores"
+    "tag": "minecraft:diamond_ores"
   },
   "output": {
     "item": "minecraft:diamond",

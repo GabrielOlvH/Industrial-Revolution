@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:buffer_enhancer"
+            "items": ["indrev:buffer_enhancer"]
           }
         ]
       }

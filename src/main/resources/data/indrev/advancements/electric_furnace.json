@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:electric_furnace_mk1"
+            "items": ["indrev:electric_furnace_mk1"]
           }
         ]
       }

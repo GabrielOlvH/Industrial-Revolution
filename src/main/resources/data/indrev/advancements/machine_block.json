@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:machine_block"
+            "items": ["indrev:machine_block"]
           }
         ]
       }

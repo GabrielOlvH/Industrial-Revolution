@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:coal_generator_mk1"
+            "items": ["indrev:coal_generator_mk1"]
           }
         ]
       }

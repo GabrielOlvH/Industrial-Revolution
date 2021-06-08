@@ -1,7 +1,7 @@
 {
   "type": "indrev:smelter",
   "ingredients": {
-    "tag": "c:gold_ores"
+    "tag": "minecraft:gold_ores"
   },
   "fluidOutput": {
     "fluid": "indrev:molten_gold_still",

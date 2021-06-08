@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:cable_mk2"
+            "items": ["indrev:cable_mk2"]
           }
         ]
       }

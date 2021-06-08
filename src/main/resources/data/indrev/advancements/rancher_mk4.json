@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:rancher_mk1"
+            "items": ["indrev:rancher_mk1"]
           }
         ]
       }

@@ -2,7 +2,7 @@
   "type": "indrev:fluid_infuse",
   "ingredients": [
     {
-      "tag": "c:iron_ores"
+      "tag": "minecraft:iron_ores"
     }
   ],
   "fluidInput": {

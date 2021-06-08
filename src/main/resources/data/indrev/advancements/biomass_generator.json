@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:biomass_generator_mk3"
+            "items": ["indrev:biomass_generator_mk3"]
           }
         ]
       }
