@@ -95,7 +95,7 @@ object IRBlockRegistry {
     )
 
     val WITHER_PROOF_OBSIDIAN = Block(
-        FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
+        FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
     )
 
     val CONTROLLER =  HorizontalFacingBlock(

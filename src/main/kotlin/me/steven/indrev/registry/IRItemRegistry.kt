@@ -194,6 +194,7 @@ object IRItemRegistry {
         identifier("energy_enhancer").item(ENERGY_UPGRADE)
         identifier("blast_furnace_enhancer").item(BLAST_FURNACE_UPGRADE)
         identifier("smoker_enhancer").item(SMOKER_UPGRADE)
+        identifier("damage_enhancer").item(DAMAGE_UPGRADE)
 
         identifier("energy_reader").item(ENERGY_READER)
 
@@ -327,7 +328,7 @@ object IRItemRegistry {
     val ENERGY_UPGRADE = IREnhancerItem(itemSettings().maxCount(32), Enhancer.ENERGY)
     val BLAST_FURNACE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.BLAST_FURNACE)
     val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
-    val DAMAGE_UPGRADE = IREnhancereItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
+    val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
     val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
 

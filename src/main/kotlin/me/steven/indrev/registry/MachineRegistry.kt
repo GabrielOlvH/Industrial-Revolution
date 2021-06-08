@@ -532,7 +532,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     }, ::SlaughterScreenHandler
                 )
             }
-            .blockEntityProvider { tier -> { SlaughterBlockEntity(tier) } }
+            .blockEntityProvider { tier -> { pos, state -> SlaughterBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider(hasWorkingState = false)
 

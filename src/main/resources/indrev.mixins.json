@@ -21,7 +21,6 @@
     "common.MixinItemStack",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinServerPlayerEntity"
     "common.MixinPlayerInventory",
     "common.MixinServerPlayerEntity"
   ],
