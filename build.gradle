@@ -1,6 +1,6 @@
 plugins {
-    id 'fabric-loom'
-    id 'maven-publish'
+    id "fabric-loom"
+    id "maven-publish"
     id "org.jetbrains.kotlin.jvm"
 }
 
@@ -85,70 +85,45 @@ repositories {
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
+
+    dependencies.ext.lib = { dep, optional = false ->
+        modImplementation(dep) {
+            if (!dep.contains("dev.technici4n"))
+                exclude group: "net.fabricmc.fabric-api"
+            exclude group: "com.jamieswhiteshirt"
+            exclude group: "io.github.prospector"
+        }
+        if (!optional) {
+            include(dep) {
+                if (!dep.contains("dev.technici4n"))
+                    exclude group: "net.fabricmc.fabric-api"
+                exclude group: "com.jamieswhiteshirt"
+                exclude group: "io.github.prospector"
+            }
+        }
+    }
+
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-    include ("dev.technici4n:FastTransferLib:${project.ftl_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
 
-    modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("io.github.cottonmc:LibGui:${project.libgui_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+    dependencies.ext.lib("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
+    dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
+    dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
+    dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
+    dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
    }
-
-    modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    modCompileOnly("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-
-    modApi("com.github.GabrielOlvH:magna:${project.magna_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
-        exclude group: "io.github.prospector", "module": "modmenu"
-    }
-    include("com.github.GabrielOlvH:magna:${project.magna_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
-        exclude group: "io.github.prospector", "module": "modmenu"
-    }
-
-    modImplementation("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
-        transitive = false
-    }
-    include("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
-        transitive = false
-    }
 }
 
 processResources {

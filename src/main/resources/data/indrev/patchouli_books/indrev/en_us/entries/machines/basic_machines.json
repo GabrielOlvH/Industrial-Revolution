@@ -29,7 +29,7 @@
     {
       "type": "crafting",
       "anchor": "infuser",
-      "recipe": "indrev:shaped/infuser_mk1",
+      "recipe": "indrev:shaped/solid_infuser_mk1",
       "text": "The $(l)$(o)Solid Infuser $()has the capability of mixin two ingredients into a different one."
     },
     {
