@@ -75,31 +75,11 @@ repositories {
         }
     }
     maven {
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
-    maven {
-        name = "dblsaiko"
-        url = "https://maven.dblsaiko.net/"
-        content {
-            includeGroup 'grondag'
-        }
-    }
-    maven {
         name = "Technici4n"
         url = "https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/"
         content {
             includeGroup "net.fabricmc.fabric-api" // FTL needs this too
             includeGroup "dev.technici4n"
-        }
-    }
-    maven {
-        name = "CurseMaven"
-        url = "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
         }
     }
 }
@@ -169,16 +149,6 @@ dependencies {
     include("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
         transitive = false
     }
-
-   // modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
-    //modImplementation "curse.maven:kubejs-395864:3183435"
-    //include "curse.maven:kubejs-395864:3183435"
-    //modRuntime "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
-    //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
-        //exclude group: "teamreborn", module: "energy"
-    //}
-    //modRuntime 'RebornCore:RebornCore-1.16:+'
-    //modRuntime 'TechReborn:TechReborn-1.16:+'
 }
 
 processResources {
