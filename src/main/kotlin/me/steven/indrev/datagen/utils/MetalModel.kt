@@ -242,6 +242,11 @@ class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val 
             return with(Identifier("stone"), -1)
         }
 
+        fun deepslateOre(): Builder {
+            transformationType = TransformationType.BLOCK
+            return with(Identifier("deepslate"), -1)
+        }
+
         fun block(): Builder {
             transformationType = TransformationType.BLOCK
             return this

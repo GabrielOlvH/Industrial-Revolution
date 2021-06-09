@@ -37,8 +37,12 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             Registry.register(Registry.BLOCK, identifier, ore)
             Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
         }
-        if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
-            BlockRenderLayerMap.INSTANCE.putBlock(ore, RenderLayer.getCutout())
+
+        val deepslateOre = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+        val deepslateId = identifier("deepslate_${id}_ore")
+        map[deepslateId] = {
+            Registry.register(Registry.BLOCK, deepslateId, deepslateOre)
+            Registry.register(Registry.ITEM, deepslateId, BlockItem(deepslateOre, itemSettings()))
         }
         return this
     }
