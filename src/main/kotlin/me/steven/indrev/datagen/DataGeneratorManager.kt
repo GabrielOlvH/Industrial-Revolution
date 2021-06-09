@@ -70,6 +70,12 @@ class DataGeneratorManager(namespace: String) {
         itemModelGenerator.register(IRItemRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
         itemModelGenerator.register(IRBlockRegistry.DRILL_BOTTOM.asItem(), JsonFactory.nullFactory())
 
+        Registry.BLOCK.forEach { block ->
+            val id = Registry.BLOCK.getId(block)
+            if (id.namespace == namespace && id.path.contains("ore") && !id.path.contains("purified"))
+                lootTableGenerator.register(block, LootTableGenerator.ORE_DROP(block))
+        }
+
         MetalSpriteRegistry.MATERIAL_PROVIDERS.forEach { (id, model) ->
             val itemId = Identifier(id.namespace, id.path)
             val item = Registry.ITEM.get(itemId)

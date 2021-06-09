@@ -223,6 +223,15 @@ class MetalModel private constructor(val holders: Array<SpriteColorHolder>, val 
             return with(identifier("molten_bucket_highlight"), color)
         }
 
+        fun rawOre(color: Long): Builder {
+            return with(identifier("raw_ore"), color)
+        }
+
+        fun rawOreBlock(color: Long): Builder {
+            transformationType = TransformationType.BLOCK
+            return with(identifier("raw_ore_block"), color)
+        }
+
         fun moltenBucketOutline(color: Long): Builder {
             return with(identifier("molten_bucket_outline"), color)
         }

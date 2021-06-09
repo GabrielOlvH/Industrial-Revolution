@@ -22,6 +22,8 @@ object MetalSpriteRegistry {
             put("lead_nugget", MetalModel.Builder().nuggetBase(LEAD_BASE).nuggetHighlight(LEAD_HIGHLIGHT).build())
             putBlock("lead_ore", MetalModel.Builder().ore().oreBase(LEAD_BASE).oreHighlight(LEAD_HIGHLIGHT).build())
             putBlock("deepslate_lead_ore", MetalModel.Builder().deepslateOre().oreBase(LEAD_BASE).oreHighlight(LEAD_HIGHLIGHT).build())
+            put("raw_lead", MetalModel.Builder().rawOre(LEAD_BASE).build())
+            putBlock("raw_lead_block", MetalModel.Builder().rawOreBlock(LEAD_BASE).build())
             putBlock("lead_block", MetalModel.Builder().block().blockBase(LEAD_BASE).build())
             put("lead_purified_ore", MetalModel.Builder().purifiedOreBase(LEAD_BASE).purifiedOreHighlight(LEAD_HIGHLIGHT).build())
             put("lead_chunk", MetalModel.Builder().chunkBase(LEAD_BASE).chunkHighlight(LEAD_HIGHLIGHT).build())
@@ -57,7 +59,8 @@ object MetalSpriteRegistry {
             put("silver_nugget", MetalModel.Builder().nuggetBase(SILVER_BASE).nuggetHighlight(SILVER_HIGHLIGHT).build())
             putBlock("silver_ore", MetalModel.Builder().ore().oreBase(SILVER_BASE).oreHighlight(SILVER_HIGHLIGHT).build())
             putBlock("deepslate_silver_ore", MetalModel.Builder().deepslateOre().oreBase(SILVER_BASE).oreHighlight(SILVER_HIGHLIGHT).build())
-            putBlock("deepslate_silver_ore", MetalModel.Builder().deepslateOre().oreBase(SILVER_BASE).oreHighlight(SILVER_HIGHLIGHT).build())
+            put("raw_silver", MetalModel.Builder().rawOre(SILVER_BASE).build())
+            putBlock("raw_silver_block", MetalModel.Builder().rawOreBlock(SILVER_BASE).build())
             putBlock("silver_block", MetalModel.Builder().block().blockBase(SILVER_BASE).build())
             put("silver_purified_ore", MetalModel.Builder().purifiedOreBase(SILVER_BASE).purifiedOreHighlight(
                 SILVER_HIGHLIGHT
@@ -143,6 +146,8 @@ object MetalSpriteRegistry {
             putBlock("tungsten_ore", MetalModel.Builder().ore().oreBase(TUNGSTEN_BASE).oreHighlight(
                 TUNGSTEN_HIGHLIGHT
             ).build())
+            put("raw_tungsten", MetalModel.Builder().rawOre(TUNGSTEN_BASE).build())
+            putBlock("raw_tungsten_block", MetalModel.Builder().rawOreBlock(TUNGSTEN_BASE).build())
             putBlock("tungsten_block", MetalModel.Builder().block().blockBase(TUNGSTEN_BASE).build())
             put("tungsten_purified_ore", MetalModel.Builder().purifiedOreBase(TUNGSTEN_BASE).purifiedOreHighlight(
                 TUNGSTEN_HIGHLIGHT
@@ -261,6 +266,8 @@ object MetalSpriteRegistry {
             putBlock("deepslate_tin_ore", MetalModel.Builder().deepslateOre().oreBase(0xFFFFFFFF).oreHighlight(0xFFdedede).build())
             putBlock("tin_ore", MetalModel.Builder().ore().oreBase(0xFFFFFFFF).oreHighlight(0xFFdedede).build())
             putBlock("tin_block", MetalModel.Builder().block().blockBase(TIN_BASE).build())
+            put("raw_tin", MetalModel.Builder().rawOre(TIN_BASE).build())
+            putBlock("raw_tin_block", MetalModel.Builder().rawOreBlock(TIN_BASE).build())
             put("tin_purified_ore", MetalModel.Builder().purifiedOreBase(TIN_BASE).purifiedOreHighlight(TIN_HIGHLIGHT).build())
             put("tin_chunk", MetalModel.Builder().chunkBase(TIN_BASE).chunkHighlight(TIN_HIGHLIGHT).build())
             put("molten_tin_bucket", MetalModel.Builder().bucket().moltenBucketBase(TIN_BASE).moltenBucketHighlight(TIN_HIGHLIGHT).build())

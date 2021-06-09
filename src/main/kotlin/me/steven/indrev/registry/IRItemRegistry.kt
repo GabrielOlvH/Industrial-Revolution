@@ -83,7 +83,7 @@ object IRItemRegistry {
 
         MaterialHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre { settings -> NikoliteOreBlock(settings) }
+            withOre(false) { settings -> NikoliteOreBlock(settings) }
         }.register()
 
         MaterialHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()

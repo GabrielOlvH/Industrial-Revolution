@@ -30,7 +30,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         return this
     }
 
-    fun withOre(supplier: (FabricBlockSettings) -> Block = { Block(it) }): MaterialHelper {
+    fun withOre(rawOre: Boolean = true, supplier: (FabricBlockSettings) -> Block = { Block(it) }): MaterialHelper {
         val ore = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
         val identifier = identifier("${id}_ore")
         map[identifier] = {
@@ -44,6 +44,18 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
             Registry.register(Registry.BLOCK, deepslateId, deepslateOre)
             Registry.register(Registry.ITEM, deepslateId, BlockItem(deepslateOre, itemSettings()))
         }
+
+        if (rawOre) {
+            val rawOreBlock = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+            val rawOreId = identifier("raw_${id}")
+            val rawOreBlockId = identifier("raw_${id}_block")
+            map[rawOreId] = {
+                Registry.register(Registry.BLOCK, rawOreBlockId, rawOreBlock)
+                Registry.register(Registry.ITEM, rawOreBlockId, BlockItem(rawOreBlock, itemSettings()))
+                Registry.register(Registry.ITEM, rawOreId, Item(itemSettings()))
+            }
+        }
+
         return this
     }
 
@@ -102,6 +114,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         fun register() {
             map.entries.sortedWith(
                 compareBy<MutableMap.MutableEntry<Identifier, () -> Unit>> { id -> id.key.path.contains("ore") && !id.key.path.contains("purified") }
+                    .then(compareBy { id -> id.key.path.contains("raw") })
                     .then(compareBy { id -> id.key.path.contains("block") })
                     .then(compareBy { id -> id.key.path.contains("ingot") })
                     .then(compareBy { id -> id.key.path.contains("chunk") })
