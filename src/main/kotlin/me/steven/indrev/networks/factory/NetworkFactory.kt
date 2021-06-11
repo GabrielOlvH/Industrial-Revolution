@@ -1,7 +1,7 @@
 package me.steven.indrev.networks.factory
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
-import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.networks.Network
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
@@ -40,8 +40,9 @@ interface NetworkFactory<T : Network> {
                     oldNetwork?.remove()
             }
             if (type.queuedUpdates.contains(longPos)) type.cancelledUpdates.add(longPos)
+            val blockEntity = chunk.getBlockEntity(blockPos) as? BasePipeBlockEntity ?: return
             DIRECTIONS.forEach { dir ->
-                if (blockState[BasePipeBlock.getProperty(dir)]) {
+                if (blockEntity.connections[dir]!!.isConnected()) {
                     val nPos = blockPos.offset(dir)
                     if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
                         deepScan(scanned, type, network, chunk, world, nPos, source, dir)

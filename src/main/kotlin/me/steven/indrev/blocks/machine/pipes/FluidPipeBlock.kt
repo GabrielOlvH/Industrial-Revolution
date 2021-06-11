@@ -3,13 +3,12 @@ package me.steven.indrev.blocks.machine.pipes
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.utils.fluidExtractableOf
 import me.steven.indrev.utils.fluidInsertableOf
-import net.minecraft.block.BlockState
-import net.minecraft.block.ShapeContext
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -35,21 +34,15 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
         )
     }
 
-    override fun getOutlineShape(
-        state: BlockState,
-        view: BlockView?,
-        pos: BlockPos?,
-        context: ShapeContext?
-    ): VoxelShape {
-        return if (state[COVERED]) VoxelShapes.fullCube()
-        else getShape(state)
-    }
-
-    override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        fluidInsertableOf(world, pos, dir.opposite) != RejectingFluidInsertable.NULL
-                || fluidExtractableOf(world, pos, dir.opposite) != EmptyFluidExtractable.NULL
-                || world.getBlockState(pos).block.let { it is FluidPipeBlock && it.tier == tier }
+    override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
+        if (fluidInsertableOf(world, pos, dir.opposite) != RejectingFluidInsertable.NULL
+            || fluidExtractableOf(world, pos, dir.opposite) != EmptyFluidExtractable.NULL
+        ) return true
+        val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
+        if (!blockEntity.cachedState.isOf(this)) return false
+        return blockEntity.connections[dir.opposite]!!.isConnectable()
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
+    }
 
     private fun getMaxTransferRate() = when(tier) {
         Tier.MK1 -> IRConfig.cables.fluidPipeMk1
@@ -58,13 +51,13 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
         else -> IRConfig.cables.fluidPipeMk4
     }
 
-    override fun getShape(blockState: BlockState): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockState[getProperty(dir)] }.toTypedArray()
+    override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
+        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }.toTypedArray()
         var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
         if (cableShapeCache == null) {
             var shape = CENTER_SHAPE
-            Direction.values().forEach { direction ->
-                if (blockState[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
+            directions.forEach { direction ->
+                shape = VoxelShapes.union(shape, getShape(direction))
             }
             cableShapeCache = PipeShape(directions, shape)
             SHAPE_CACHE.add(cableShapeCache)

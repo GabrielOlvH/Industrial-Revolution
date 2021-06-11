@@ -2,8 +2,7 @@ package me.steven.indrev.blocks.models.pipes
 
 import com.mojang.datafixers.util.Pair
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.cables.CoverableBlockEntity
-import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry
 import net.fabricmc.fabric.api.renderer.v1.Renderer
@@ -14,6 +13,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
+import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.model.*
@@ -109,34 +109,33 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         randSupplier: Supplier<Random>,
         context: RenderContext
     ) {
-        if (state[BasePipeBlock.COVERED]) {
-            val blockEntity = world.getBlockEntity(pos) as? CoverableBlockEntity
-            if (blockEntity?.coverState != null) {
-                val coverState = blockEntity.coverState!!
-                val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
-                val color = 255 shl 24 or (ColorProviderRegistry.BLOCK[coverState.block]?.getColor(coverState, world, pos, 0) ?: -1)
+        val renderData = (world as RenderAttachedBlockView).getBlockEntityRenderAttachment(pos) as BasePipeBlockEntity.PipeRenderData
+        if (renderData.cover != null) {
+            val coverState = renderData.cover
+            val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
+            val color =
+                255 shl 24 or (ColorProviderRegistry.BLOCK[coverState.block]?.getColor(coverState, world, pos, 0) ?: -1)
 
-                val emitter = context.emitter
-                DIRECTIONS.forEach { dir ->
-                    model.getQuads(coverState, dir, randSupplier.get()).forEach { quad ->
-                        emitter.fromVanilla(quad, TRANSLUCENT, dir)
-                        if (quad.hasColor()) {
-                            emitter.spriteColor(0, color, color, color, color)
-                        }
-                        emitter.emit()
+            val emitter = context.emitter
+            DIRECTIONS.forEach { dir ->
+                model.getQuads(coverState, dir, randSupplier.get()).forEach { quad ->
+                    emitter.fromVanilla(quad, TRANSLUCENT, dir)
+                    if (quad.hasColor()) {
+                        emitter.spriteColor(0, color, color, color, color)
                     }
+                    emitter.emit()
                 }
-                if (coverState.isOpaque) return
             }
+            if (coverState.isOpaque) return
         }
 
         context.meshConsumer().accept(meshArray[0])
-        if (state[BasePipeBlock.NORTH]) context.meshConsumer().accept(meshArray[1])
-        if (state[BasePipeBlock.EAST]) context.meshConsumer().accept(meshArray[2])
-        if (state[BasePipeBlock.SOUTH]) context.meshConsumer().accept(meshArray[3])
-        if (state[BasePipeBlock.WEST]) context.meshConsumer().accept(meshArray[4])
-        if (state[BasePipeBlock.UP]) context.meshConsumer().accept(meshArray[5])
-        if (state[BasePipeBlock.DOWN]) context.meshConsumer().accept(meshArray[6])
+        if (renderData.connections.contains(Direction.NORTH)) context.meshConsumer().accept(meshArray[1])
+        if (renderData.connections.contains(Direction.EAST)) context.meshConsumer().accept(meshArray[2])
+        if (renderData.connections.contains(Direction.SOUTH)) context.meshConsumer().accept(meshArray[3])
+        if (renderData.connections.contains(Direction.WEST)) context.meshConsumer().accept(meshArray[4])
+        if (renderData.connections.contains(Direction.UP)) context.meshConsumer().accept(meshArray[5])
+        if (renderData.connections.contains(Direction.DOWN)) context.meshConsumer().accept(meshArray[6])
     }
 
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {

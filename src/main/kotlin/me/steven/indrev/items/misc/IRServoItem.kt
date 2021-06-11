@@ -1,5 +1,6 @@
 package me.steven.indrev.items.misc
 
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.ServoNetworkState
@@ -59,7 +60,8 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
 
         if (world is ServerWorld && hand == Hand.MAIN_HAND) {
             val dir = BasePipeBlock.getSideFromHit(hit, pos!!)
-            if (dir != null && state[BasePipeBlock.getProperty(dir)]) {
+            val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
+            if (dir != null && blockEntity.connections[dir]!!.isConnected()) {
                 val network = block.type.getNetworkState(world) as? ServoNetworkState?
                 network?.also { networkState ->
                     if (block.type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
