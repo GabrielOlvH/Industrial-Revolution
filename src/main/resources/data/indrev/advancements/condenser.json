@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:condenser_mk4"
+            "items": ["indrev:condenser_mk4"]
           }
         ]
       }

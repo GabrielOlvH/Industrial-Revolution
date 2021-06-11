@@ -53,9 +53,7 @@ object IRItemRegistry {
         }.register()
 
         MaterialHelper("copper") {
-            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
-            withBlock()
-            withOre()
+            withItems("dust", "plate", "nugget", "chunk", "purified_ore")
             withTools(
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -1.0f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 4.5f, -2.0f, itemSettings()),
@@ -85,7 +83,7 @@ object IRItemRegistry {
 
         MaterialHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre { settings -> NikoliteOreBlock(settings) }
+            withOre(false) { settings -> NikoliteOreBlock(settings) }
         }.register()
 
         MaterialHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
@@ -191,9 +189,9 @@ object IRItemRegistry {
         identifier("empty_enhancer").item(DEFAULT_ITEM())
         identifier("buffer_enhancer").item(BUFFER_ENHANCER)
         identifier("speed_enhancer").item(SPEED_UPGRADE)
-        identifier("energy_enhancer").item(ENERGY_UPGRADE)
         identifier("blast_furnace_enhancer").item(BLAST_FURNACE_UPGRADE)
         identifier("smoker_enhancer").item(SMOKER_UPGRADE)
+        identifier("damage_enhancer").item(DAMAGE_UPGRADE)
 
         identifier("energy_reader").item(ENERGY_READER)
 
@@ -324,9 +322,9 @@ object IRItemRegistry {
 
     val BUFFER_ENHANCER = IREnhancerItem(itemSettings().maxCount(32), Enhancer.BUFFER)
     val SPEED_UPGRADE = IREnhancerItem(itemSettings().maxCount(32), Enhancer.SPEED)
-    val ENERGY_UPGRADE = IREnhancerItem(itemSettings().maxCount(32), Enhancer.ENERGY)
     val BLAST_FURNACE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.BLAST_FURNACE)
     val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
+    val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
     val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
 

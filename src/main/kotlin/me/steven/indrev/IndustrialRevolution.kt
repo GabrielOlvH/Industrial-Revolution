@@ -178,6 +178,7 @@ object IndustrialRevolution : ModInitializer {
     val CONDENSER_HANDLER = CondenserScreenHandler.SCREEN_ID.registerScreenHandler(::CondenserScreenHandler)
     val FLUID_INFUSER_HANDLER = FluidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::FluidInfuserScreenHandler)
     val FARMER_HANDLER = FarmerScreenHandler.SCREEN_ID.registerScreenHandler(::FarmerScreenHandler)
+    val SLAUGHTER_HANDLER = SlaughterScreenHandler.SCREEN_ID.registerScreenHandler(::SlaughterScreenHandler)
     val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
     val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)
 

@@ -32,8 +32,8 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
     override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 4 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
     }
 
     override fun applyDefault(

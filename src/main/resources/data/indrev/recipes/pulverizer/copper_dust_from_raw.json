@@ -1,0 +1,12 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "minecraft:raw_copper",
+    "count": 2
+  },
+  "output": {
+    "item": "indrev:copper_dust",
+    "count": 3
+  },
+  "processTime": 200
+}

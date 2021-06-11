@@ -45,8 +45,8 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val maxOutput: Double = 0.0
 
     override fun machineTick() {
-        val upgrades = getEnhancers(inventoryComponent!!.inventory)
-        if (!use(Enhancer.getEnergyCost(upgrades, this))) return
+        val upgrades = getEnhancers()
+        if (!use(getEnergyCost())) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
         if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
         cooldown += Enhancer.getSpeed(upgrades, this)
@@ -72,6 +72,11 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return config.energyCost * speedEnhancers
+    }
+
     private fun getIdentifiers(tier: Tier) = when (tier) {
         Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
         Tier.MK3 -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, JUNK_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
@@ -80,15 +85,14 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 
-    override fun getBaseValue(upgrade: Enhancer): Double = when (upgrade) {
-        Enhancer.ENERGY -> config.energyCost
+    override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
         Enhancer.BUFFER -> config.maxEnergyStored
         else -> 0.0
     }
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 4 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
     }
 
     companion object {

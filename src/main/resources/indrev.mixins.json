@@ -12,19 +12,16 @@
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
     "common.AccessorWeightedListEntry",
-    "common.DeleteMe",
     "common.MixinAbstractCookingRecipe",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",
     "common.MixinGenerationSettings",
     "common.MixinItemPredicate",
     "common.MixinItemStack",
-    "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
     "common.MixinPlayerInventory",
-    "common.MixinServerPlayerEntity",
-    "common.MixinSheepEntity"
+    "common.MixinServerPlayerEntity"
   ],
   "client": [
     "client.MixinBuiltChunk",

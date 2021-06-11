@@ -1,0 +1,18 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": [
+    {
+      "item": "minecraft:obsidian"
+    }
+  ],
+  "fluidInput": {
+    "fluid": "indrev:molten_iron_still",
+    "type": "block",
+    "count": 1
+  },
+  "output": {
+    "item": "indrev:wither_proof_obsidian",
+    "count": 1
+  },
+  "processTime": 400
+}

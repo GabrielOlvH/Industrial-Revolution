@@ -16,7 +16,7 @@
       "trigger": "minecraft:item_used_on_block",
       "conditions": {
         "item": {
-          "item": "indrev:tier_upgrade_mk4"
+          "items": ["indrev:tier_upgrade_mk4"]
         }
       }
     }

@@ -2,8 +2,8 @@
   "type": "minecraft:blasting",
   "group": "copper_ingots",
   "ingredient": {
-    "tag": "c:copper_ores"
+    "tag": "minecraft:copper_ores"
   },
-  "result": "indrev:copper_ingot",
+  "result": "minecraft:copper_ingot",
   "cookingTime": 150
 }

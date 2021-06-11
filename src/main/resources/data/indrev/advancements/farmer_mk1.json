@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:farmer_mk1"
+            "items": ["indrev:farmer_mk1"]
           }
         ]
       }

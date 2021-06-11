@@ -17,7 +17,9 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:lazuli_flux_container_mk4"
+            "items": [
+              "indrev:lazuli_flux_container_mk4"
+            ]
           }
         ]
       }

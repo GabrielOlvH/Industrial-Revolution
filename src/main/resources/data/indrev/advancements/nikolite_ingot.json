@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:nikolite_ingot"
+            "items": ["indrev:nikolite_ingot"]
           }
         ]
       }

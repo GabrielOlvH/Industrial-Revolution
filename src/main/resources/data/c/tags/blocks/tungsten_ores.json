@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "indrev:tungsten_ore"
+    "indrev:tungsten_ore",
+    "indrev:deepslate_tungsten_ore"
   ]
 }

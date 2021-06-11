@@ -55,10 +55,9 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getEnhancers(inventory)
+        val upgrades = getEnhancers()
         cooldown += Enhancer.getSpeed(upgrades, this)
-        val energyCost = Enhancer.getEnergyCost(upgrades, this)
-        if (cooldown < config.processSpeed || ticks % 15 != 0 || !canUse(energyCost))
+        if (cooldown < config.processSpeed || ticks % 15 != 0 || !canUse(getEnergyCost()))
             return
         val area = getWorkingArea()
         if (!scheduledBlocks.hasNext()) {
@@ -83,7 +82,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
                     && tryChop(axeStack, pos, blockState, currentChunk)
                 ) {
                     cooldown -= config.processSpeed
-                    if (!use(energyCost)) break
+                    if (!use(getEnergyCost())) break
                     brokenBlocks[pos] = blockState
                     performedActions++
                 }
@@ -92,7 +91,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
                         val stack = inventory.getStack(slot)
                         if (stack.isEmpty || !tryUse(blockState, stack, pos)) continue
                         cooldown -= config.processSpeed
-                        if (!use(energyCost)) break
+                        if (!use(getEnergyCost())) break
                         brokenBlocks[pos] = blockState
                         performedActions++
                     }
@@ -125,12 +124,13 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
             return when {
                 energyOf(toolStack).let { it != null && !it.use(amount.toDouble()) } -> false
                 toolStack.isEmpty -> false
-                else -> {
+                toolStack.isDamageable -> {
                     toolStack.damage(amount, world?.random, null)
                     if (toolStack.damage >= toolStack.maxDamage)
                         toolStack.decrement(1)
                     true
                 }
+                else -> true
             }
         }
         val block = blockState.block
@@ -186,9 +186,13 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         return true
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double =
-        when (upgrade) {
-            Enhancer.ENERGY -> config.energyCost
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return config.energyCost * speedEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
             Enhancer.SPEED -> 1.0
             Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
@@ -199,8 +203,8 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         return box.expand(range.toDouble(), 0.0, range.toDouble()).stretch(0.0, 40.0, 0.0)
     }
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 12 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 12 else super.getMaxCount(enhancer)
     }
 
     override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)

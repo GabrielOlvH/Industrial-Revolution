@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:solid_infuser_mk1"
+            "items": ["indrev:solid_infuser_mk1"]
           }
         ]
       }

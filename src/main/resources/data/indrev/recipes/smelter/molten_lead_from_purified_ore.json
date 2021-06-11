@@ -6,7 +6,7 @@
   "fluidOutput": {
     "fluid": "indrev:molten_lead_still",
     "type": "ingot",
-    "count": 4
+    "count": 5
   },
   "processTime": 600
 }

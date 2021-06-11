@@ -38,6 +38,8 @@ object IRBlockRegistry {
         FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
 
+        identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
+
         identifier("machine_block").block(MACHINE_BLOCK).item(BlockItem(MACHINE_BLOCK, itemSettings()))
 
         identifier("controller").block(CONTROLLER).item(BlockItem(CONTROLLER, itemSettings()))
@@ -76,11 +78,16 @@ object IRBlockRegistry {
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
 
     val NIKOLITE_ORE = { Registry.BLOCK.get(identifier("nikolite_ore")) }
-    val COPPER_ORE = { Registry.BLOCK.get(identifier("copper_ore")) }
     val TIN_ORE = { Registry.BLOCK.get(identifier("tin_ore")) }
     val LEAD_ORE = { Registry.BLOCK.get(identifier("lead_ore")) }
     val SILVER_ORE = { Registry.BLOCK.get(identifier("silver_ore")) }
     val TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("tungsten_ore")) }
+
+    val DEEPSLATE_NIKOLITE_ORE = { Registry.BLOCK.get(identifier("deepslate_nikolite_ore")) }
+    val DEEPSLATE_TIN_ORE = { Registry.BLOCK.get(identifier("deepslate_tin_ore")) }
+    val DEEPSLATE_LEAD_ORE = { Registry.BLOCK.get(identifier("deepslate_lead_ore")) }
+    val DEEPSLATE_SILVER_ORE = { Registry.BLOCK.get(identifier("deepslate_silver_ore")) }
+    val DEEPSLATE_TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("deepslate_tungsten_ore")) }
 
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
@@ -90,6 +97,10 @@ object IRBlockRegistry {
     )
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
+    )
+
+    val WITHER_PROOF_OBSIDIAN = Block(
+        FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
     )
 
     val CONTROLLER =  HorizontalFacingBlock(
