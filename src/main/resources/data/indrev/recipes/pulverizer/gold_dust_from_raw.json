@@ -1,10 +1,11 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "minecraft:copper_ores"
+    "item": "minecraft:raw_gold",
+    "count": 2
   },
   "output": {
-    "item": "indrev:copper_dust",
+    "item": "indrev:gold_dust",
     "count": 3
   },
   "processTime": 200

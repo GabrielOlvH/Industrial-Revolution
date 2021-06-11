@@ -1,7 +1,8 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "minecraft:copper_ores"
+    "item": "minecraft:raw_copper",
+    "count": 2
   },
   "output": {
     "item": "indrev:copper_dust",

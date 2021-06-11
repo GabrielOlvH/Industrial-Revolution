@@ -29,6 +29,11 @@ class DataGeneratorManager(namespace: String) {
     init {
         root.mkdir()
 
+        arrayOf("tin", "lead", "tungsten", "silver").forEach { material ->
+            materialRecipeGenerator.register("raw_${material}", rawOreIntoBlock(material))
+            materialRecipeGenerator.register("raw_${material}_block", rawOreBlockIntoRawItem(material))
+        }
+
         arrayOf("copper", "tin", "lead", "tungsten", "silver").forEach { material ->
             materialRecipeGenerator.register(
                 "${material}_ore",
@@ -170,6 +175,45 @@ class DataGeneratorManager(namespace: String) {
         return pulverizeTagged(inputId, outputId, count, time, fileSuffix)
     }
 
+    private fun rawOreIntoBlock(ore: String): JsonFactory<String> {
+        return object : JsonFactory<String> {
+            override fun generate(): JsonObject {
+                val json = JsonObject()
+                json.addProperty("type", "crafting_shaped")
+                val pattern = JsonArray()
+                repeat(3) { pattern.add("###") }
+                json.add("pattern", pattern)
+                val key = JsonObject()
+                key.add("#", JsonObject().also { it.addProperty("item", "indrev:raw_${ore}") })
+                json.add("key", key)
+                val result = JsonObject()
+                result.addProperty("item", "indrev:raw_${ore}_block")
+                json.add("result", result)
+                return json
+            }
+
+            override fun getFileName(t: String, id: Identifier): String = "shaped/raw_${ore}_block"
+        }
+    }
+
+    private fun rawOreBlockIntoRawItem(ore: String): JsonFactory<String> {
+        return object : JsonFactory<String> {
+            override fun generate(): JsonObject {
+                val json = JsonObject()
+                json.addProperty("type", "crafting_shapeless")
+                val ingredients = JsonObject()
+                ingredients.addProperty("item", "indrev:raw_${ore}_block")
+                json.add("ingredients", ingredients)
+                val output = JsonObject()
+                output.addProperty("item", "indrev:raw_${ore}")
+                output.addProperty("count", 9)
+                json.add("result", output)
+                return json
+            }
+
+            override fun getFileName(t: String, id: Identifier): String = "shapeless/raw_${ore}"
+        }
+    }
     private fun createTag(item: String): JsonFactory<String> {
         return object : JsonFactory<String> {
             override fun generate(): JsonObject {
