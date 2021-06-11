@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:raw_tungsten_block"
+    }
+  ],
+  "result": {
+    "item": "indrev:raw_tungsten",
+    "count": 9
+  }
+}

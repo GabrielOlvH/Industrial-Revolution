@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:blast_furnace_enhancer"
+            "items": ["indrev:blast_furnace_enhancer"]
           }
         ]
       }

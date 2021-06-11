@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "c:coal_ores"
+    "tag": "minecraft:coal_ores"
   },
   "output": {
     "item": "minecraft:coal",

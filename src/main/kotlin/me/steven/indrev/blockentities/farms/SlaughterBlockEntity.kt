@@ -23,7 +23,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
     override val enhancerSlots: IntArray = intArrayOf(11, 12, 13, 14)
-    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.SPEED, Enhancer.ENERGY, Enhancer.BUFFER, Enhancer.DAMAGE)
+    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE)
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -42,13 +42,12 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val enhancers = getEnhancers(inventory)
+        val enhancers = getEnhancers()
         cooldown += Enhancer.getSpeed(enhancers, this)
         if (cooldown < config.processSpeed) return
         val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead) }
             ?: emptyList()
-        val energyCost = Enhancer.getEnergyCost(enhancers, this)
-        if (mobs.isEmpty() || !canUse(energyCost)) {
+        if (mobs.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return
         } else workingState = true
@@ -56,7 +55,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
-            use(energyCost)
+            use(getEnergyCost())
             mobs.forEach { mob ->
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
@@ -70,9 +69,13 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         cooldown = 0.0
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double =
-        when (upgrade) {
-            Enhancer.ENERGY -> config.energyCost
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return config.energyCost * speedEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
             Enhancer.SPEED -> 1.0
             Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0

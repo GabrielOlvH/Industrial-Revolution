@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:pulverizer_mk1"
+            "items": ["indrev:pulverizer_mk1"]
           }
         ]
       }

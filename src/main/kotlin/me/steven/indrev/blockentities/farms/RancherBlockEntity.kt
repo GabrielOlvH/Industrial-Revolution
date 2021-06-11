@@ -55,13 +55,12 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getEnhancers(inventory)
+        val upgrades = getEnhancers()
         cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        val energyCost = Enhancer.getEnergyCost(upgrades, this)
-        if (animals.isEmpty() || !canUse(energyCost)) {
+        if (animals.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return
         } else workingState = true
@@ -70,7 +69,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
-            if (kill.isNotEmpty()) use(energyCost)
+            if (kill.isNotEmpty()) use(getEnergyCost())
             kill.forEach { animal ->
                 if (!animal.isAlive || !animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)) return@forEach
                 swordStack.damage(1, world?.random, null)
@@ -89,7 +88,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     fakePlayer.inventory.selectedSlot = 8
                     fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                     if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
-                        use(energyCost)
+                        use(getEnergyCost())
                     val inserted = inventory.output(fakePlayer.inventory.getStack(0))
                     val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
                     if (!handStack.isEmpty && handStack.item != stack.item) {
@@ -131,16 +130,20 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }.flatten()
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double =
-        when (upgrade) {
-            Enhancer.ENERGY -> config.energyCost
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return config.energyCost * speedEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
             Enhancer.SPEED -> 1.0
             Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
     }
 
     override fun writeNbt(tag: NbtCompound?): NbtCompound {

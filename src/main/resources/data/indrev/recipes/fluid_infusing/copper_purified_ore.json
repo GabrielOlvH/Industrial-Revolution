@@ -2,7 +2,7 @@
   "type": "indrev:fluid_infuse",
   "ingredients": [
     {
-      "tag": "c:copper_ores"
+      "tag": "minecraft:copper_ores"
     }
   ],
   "fluidInput": {

@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:smoker_enhancer"
+            "items": ["indrev:smoker_enhancer"]
           }
         ]
       }

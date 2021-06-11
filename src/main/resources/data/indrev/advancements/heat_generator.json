@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:heat_generator_mk4"
+            "items": ["indrev:heat_generator_mk4"]
           }
         ]
       }

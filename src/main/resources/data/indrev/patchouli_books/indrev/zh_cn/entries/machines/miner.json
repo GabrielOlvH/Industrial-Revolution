@@ -91,14 +91,14 @@
         "anchor": "chalcopryte",
         "type": "spotlight",
         "title": "黄铜",
-        "item": "indrev:copper_ore",
+        "item": "minecraft:copper_ore",
         "text": "主要为$(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()，丰度较高，含量多变，$(#FFA500)$(l)铜$()和$(#666666)$(l)铁$()矿石众多，也有石头，土，沙砾等。$(br)这些矿脉随处可见，但在平原，热带草原和森林更常见。"
       },
       {
         "anchor": "cuprite",
         "type": "spotlight",
         "title": "赤铜",
-        "item": "indrev:copper_ore",
+        "item": "minecraft:copper_ore",
         "text": "主要为$(#FFA500)$(l)铜矿石$()，少数只包含铜矿的矿脉，丰度不高，含量多变。$(br)这些矿脉随处可见，但在热带草原和沙漠更常见。"
       },
       {

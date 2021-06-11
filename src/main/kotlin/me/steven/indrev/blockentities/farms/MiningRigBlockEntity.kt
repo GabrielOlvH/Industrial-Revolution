@@ -39,7 +39,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
     override val enhancerSlots: IntArray = intArrayOf(10, 11, 12, 13)
-    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.BUFFER, Enhancer.ENERGY)
+    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.BUFFER)
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(5)
@@ -65,8 +65,9 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         cacheVeinType()
-        val upgrades = getEnhancers(inventory)
-        requiredPower = Enhancer.getEnergyCost(upgrades, this)
+
+        val upgrades = getEnhancers()
+        requiredPower = getEnergyCost()
 
         if (isLocationCorrect() && use(requiredPower)) {
             workingState = true
@@ -191,10 +192,13 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double {
+    override fun getEnergyCost(): Double {
+        return config.energyCost + (IRConfig.machines.drill * getActiveDrills().size)
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double {
         val activeDrills = getActiveDrills()
-        return when (upgrade) {
-            Enhancer.ENERGY -> config.energyCost + (IRConfig.machines.drill * activeDrills.size)
+        return when (enhancer) {
             Enhancer.SPEED -> activeDrills.sumOf { blockEntity ->
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()

@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:biomass"
+            "items": ["indrev:biomass"]
           }
         ]
       }

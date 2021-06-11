@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:compressor_mk1"
+            "items": ["indrev:compressor_mk1"]
           }
         ]
       }

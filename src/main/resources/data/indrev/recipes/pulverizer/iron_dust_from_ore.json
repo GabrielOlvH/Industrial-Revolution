@@ -1,11 +1,11 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "c:iron_ores"
+    "tag": "minecraft:iron_ores"
   },
   "output": {
     "item": "indrev:iron_dust",
-    "count": 2
+    "count": 3
   },
   "processTime": 200
 }

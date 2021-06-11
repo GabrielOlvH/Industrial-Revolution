@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:gamer_axe"
+            "items": ["indrev:gamer_axe"]
           }
         ]
       }

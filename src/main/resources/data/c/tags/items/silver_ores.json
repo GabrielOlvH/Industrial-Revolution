@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "indrev:silver_ore"
+    "indrev:silver_ore",
+    "indrev:deepslate_silver_ore"
   ]
 }

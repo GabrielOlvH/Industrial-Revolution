@@ -46,11 +46,11 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getEnhancers(inventory)
+        val upgrades = getEnhancers()
         cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
-        val energyCost = Enhancer.getEnergyCost(upgrades, this)
+        val energyCost = config.energyCost
         if (!canUse(energyCost)) return
         if (nextBlocks.hasNext()) {
             while (nextBlocks.hasNext()) {
@@ -124,8 +124,13 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
         } ?: false
         if (performedAction)
-            use(Enhancer.getEnergyCost(getEnhancers(inventory!!), this))
+            use(getEnergyCost())
         return performedAction
+    }
+
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return config.energyCost * speedEnhancers
     }
 
     private fun canPlant(item: Item) =
@@ -147,12 +152,11 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double = when (upgrade) {
-        Enhancer.ENERGY -> config.energyCost
+    override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
         Enhancer.BUFFER -> config.maxEnergyStored
         else -> 0.0

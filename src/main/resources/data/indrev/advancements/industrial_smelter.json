@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:smelter_mk4"
+            "items": ["indrev:smelter_mk4"]
           }
         ]
       }

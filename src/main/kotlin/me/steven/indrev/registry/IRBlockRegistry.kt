@@ -83,6 +83,12 @@ object IRBlockRegistry {
     val SILVER_ORE = { Registry.BLOCK.get(identifier("silver_ore")) }
     val TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("tungsten_ore")) }
 
+    val DEEPSLATE_NIKOLITE_ORE = { Registry.BLOCK.get(identifier("deepslate_nikolite_ore")) }
+    val DEEPSLATE_TIN_ORE = { Registry.BLOCK.get(identifier("deepslate_tin_ore")) }
+    val DEEPSLATE_LEAD_ORE = { Registry.BLOCK.get(identifier("deepslate_lead_ore")) }
+    val DEEPSLATE_SILVER_ORE = { Registry.BLOCK.get(identifier("deepslate_silver_ore")) }
+    val DEEPSLATE_TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("deepslate_tungsten_ore")) }
+
     val MACHINE_BLOCK = Block(
         FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
     )

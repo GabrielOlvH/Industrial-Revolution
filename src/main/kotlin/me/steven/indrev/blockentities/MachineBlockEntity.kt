@@ -18,6 +18,7 @@ import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
@@ -105,6 +106,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     protected open fun machineClientTick() {}
 
     fun tick() {
+        if (this is EnhancerProvider && inventoryComponent != null)
+            this.updateEnhancers(inventoryComponent!!.inventory)
+
         if (world?.isClient == false) {
             ticks++
             propertyDelegate[1] = energyCapacity.toInt()
@@ -127,6 +131,8 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy
 
     override fun getEnergyCapacity(): Double = config.maxEnergyStored
+
+    open fun getEnergyCost(): Double = 0.0
 
     override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
 

@@ -61,69 +61,106 @@ object WorldGeneration {
         }
     }
 
+    private val tinTargets = ImmutableList.of(
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
+            IRBlockRegistry.TIN_ORE().defaultState
+        ),
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+            IRBlockRegistry.DEEPSLATE_TIN_ORE().defaultState
+        )
+    )
+
     private val tinFeature =
         IRConfiguredFeature(
             identifier("tin_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TIN_ORE().defaultState, 10)
-            )
+            Feature.ORE.configure(OreFeatureConfig(tinTargets, 10))
                 .uniformRange(YOffset.getBottom(), YOffset.fixed(48))
                 .spreadHorizontally()
                 .repeat(14),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
+    private val leadTargets = ImmutableList.of(
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
+            IRBlockRegistry.LEAD_ORE().defaultState
+        ),
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+            IRBlockRegistry.DEEPSLATE_LEAD_ORE().defaultState
+        )
+    )
+
     private val leadFeature =
         IRConfiguredFeature(
             identifier("lead_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.LEAD_ORE().defaultState, 6)
-            )
+            Feature.ORE.configure(OreFeatureConfig(leadTargets, 6))
                 .uniformRange(YOffset.getBottom(), YOffset.fixed(32))
                 .spreadHorizontally()
                 .repeat(12),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
+    private val silverTargets = ImmutableList.of(
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
+            IRBlockRegistry.SILVER_ORE().defaultState
+        ),
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+            IRBlockRegistry.DEEPSLATE_SILVER_ORE().defaultState
+        )
+    )
+
     private val silverFeature =
         IRConfiguredFeature(
             identifier("silver_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.SILVER_ORE().defaultState, 8)
-            )
+            Feature.ORE.configure(OreFeatureConfig(silverTargets, 8))
                 .uniformRange(YOffset.getBottom(), YOffset.fixed(32))
                 .spreadHorizontally()
                 .repeat(8),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
+    private val tungstenTargets = ImmutableList.of(
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+            IRBlockRegistry.DEEPSLATE_TUNGSTEN_ORE().defaultState
+        )
+    )
+
     private val tungstenFeature =
         IRConfiguredFeature(
             identifier("tungsten_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(
-                OreFeatureConfig(OreFeatureConfig.Rules.BASE_STONE_OVERWORLD, IRBlockRegistry.TUNGSTEN_ORE().defaultState, 5)
-            )
+            Feature.ORE.configure(OreFeatureConfig(tungstenTargets, 5))
                 .uniformRange(YOffset.getBottom(), YOffset.fixed(0))
                 .spreadHorizontally()
-                .repeat(5),
+                .repeat(6),
             IRConfiguredFeature.IS_OVERWORLD
         )
+
+    private val nikoliteTargets = ImmutableList.of(
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.STONE_ORE_REPLACEABLES,
+            IRBlockRegistry.NIKOLITE_ORE().defaultState
+        ),
+        OreFeatureConfig.createTarget(
+            OreFeatureConfig.Rules.DEEPSLATE_ORE_REPLACEABLES,
+            IRBlockRegistry.DEEPSLATE_NIKOLITE_ORE().defaultState
+        )
+    )
 
     private val nikoliteFeature =
         IRConfiguredFeature(
             identifier("nikolite_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(
-                OreFeatureConfig(
-                    OreFeatureConfig.Rules.BASE_STONE_OVERWORLD,
-                    IRBlockRegistry.NIKOLITE_ORE().defaultState,
-                    7
-                )
-            )
+            Feature.ORE.configure(OreFeatureConfig(nikoliteTargets, 7))
                 .uniformRange(YOffset.getBottom(), YOffset.fixed(16))
                 .spreadHorizontally()
                 .repeat(6),

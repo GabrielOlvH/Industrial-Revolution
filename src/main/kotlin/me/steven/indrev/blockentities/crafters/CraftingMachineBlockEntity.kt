@@ -56,12 +56,15 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return Enhancer.getBuffer(this)
     }
 
-    override fun getBaseValue(upgrade: Enhancer): Double {
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        return (if (temperatureComponent?.isFullEfficiency() == true) config.energyCost * 1.5
+        else config.energyCost) * speedEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double {
         val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
-        return when (upgrade) {
-            Enhancer.ENERGY ->
-                if (isFullEfficiency) config.energyCost * 1.5
-                else config.energyCost
+        return when (enhancer) {
             Enhancer.SPEED ->
                 if (isFullEfficiency)
                     ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
@@ -119,8 +122,8 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return destination
     }
 
-    override fun getMaxCount(upgrade: Enhancer): Int {
-        return if (upgrade == Enhancer.SPEED) return 1 else super.getMaxCount(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
     }
 
     override fun readNbt(tag: NbtCompound?) {

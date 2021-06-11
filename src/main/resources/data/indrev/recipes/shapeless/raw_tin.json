@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:raw_tin_block"
+    }
+  ],
+  "result": {
+    "item": "indrev:raw_tin",
+    "count": 9
+  }
+}

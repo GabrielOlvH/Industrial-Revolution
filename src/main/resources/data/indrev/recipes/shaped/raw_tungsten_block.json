@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "indrev:raw_tungsten"
+    }
+  },
+  "result": {
+    "item": "indrev:raw_tungsten_block"
+  }
+}

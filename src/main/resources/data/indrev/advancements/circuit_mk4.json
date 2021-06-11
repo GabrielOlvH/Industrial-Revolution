@@ -18,7 +18,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:circuit_mk4"
+            "items": ["indrev:circuit_mk4"]
           }
         ]
       }

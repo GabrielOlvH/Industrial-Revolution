@@ -12,7 +12,6 @@
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
     "common.AccessorWeightedListEntry",
-    "common.DeleteMe",
     "common.MixinAbstractCookingRecipe",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",

@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:speed_enhancer"
+            "items": ["indrev:speed_enhancer"]
           }
         ]
       }

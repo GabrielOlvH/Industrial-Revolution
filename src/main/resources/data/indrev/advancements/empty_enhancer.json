@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:empty_enhancer"
+            "items": ["indrev:empty_enhancer"]
           }
         ]
       }
