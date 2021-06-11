@@ -86,7 +86,7 @@ class ItemNetworkState(world: ServerWorld) : ServoNetworkState<ItemNetwork>(Netw
                 state.filters[pos] = map
             }
 
-            ServoNetworkState.readNbt(tag, supplier)
+            ServoNetworkState.readNbt(tag) { state }
 
             return state
 

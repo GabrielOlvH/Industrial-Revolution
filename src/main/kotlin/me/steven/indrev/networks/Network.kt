@@ -4,9 +4,9 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
-import me.steven.indrev.networks.client.ClientEnergyNetworkInfo
 import me.steven.indrev.networks.client.ClientNetworkInfo
 import me.steven.indrev.networks.client.ClientServoNetworkInfo
+import me.steven.indrev.networks.client.node.ClientServoNodeInfo
 import me.steven.indrev.networks.energy.EnergyNetwork
 import me.steven.indrev.networks.factory.ENERGY_NET_FACTORY
 import me.steven.indrev.networks.factory.FLUID_NET_FACTORY
@@ -103,7 +103,7 @@ abstract class Network(
 
         abstract fun getNetworkState(world: ServerWorld): NetworkState<T>?
 
-        abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo
+        abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>?
 
         fun queueUpdate(pos: Long, force: Boolean = false) {
             if (!networksByPos.contains(pos) || force) queuedUpdates.add(pos)
@@ -126,11 +126,18 @@ abstract class Network(
         }
 
         fun tick(world: ServerWorld) {
+            val state = getNetworkState(world)
+
             queuedUpdates.forEach { pos ->
                 if (!cancelledUpdates.contains(pos)) {
                     val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
-                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty())
+                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty()) {
                         networks.add(network)
+                        (state as? ServoNetworkState<T>)?.let {
+                            network.pipes.forEach { pos -> it.onSet(pos, network) }
+                        }
+
+                    }
                     else
                         remove(world, network)
                 }
@@ -142,8 +149,8 @@ abstract class Network(
             world.profiler.pop()
 
 
-            val state = getNetworkState(world)
             (state as? ServoNetworkState<*>)?.sync(world)
+            (state as? ServoNetworkState<*>)?.clearCachedData(false)
         }
 
         fun clear() {
@@ -165,8 +172,8 @@ abstract class Network(
                     return null
                 }
 
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo {
-                    return ClientEnergyNetworkInfo().also { networksByPos.keys.forEach { pos -> it.cables.add(pos) } }
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
+                    return null
                 }
             }
             val FLUID = object : Type<FluidNetwork>(NetworkState.FLUID_KEY) {
@@ -179,14 +186,13 @@ abstract class Network(
                     return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ServoNetworkState.readNbt(it) { FluidNetworkState(world) } }, { FluidNetworkState(world) }, key) } as FluidNetworkState
                 }
 
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo {
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
                     val state = getNetworkState(world)
                     return ClientServoNetworkInfo().also {
-                        networksByPos.keys.forEach { pos ->
-                            val info = Object2ObjectOpenHashMap<Direction, EndpointData.Type>()
-                            DIRECTIONS.forEach { dir ->
-                                val type = state.getEndpointData(pos, dir)?.type
-                                if (type != null) info[dir] = type
+                        state.endpointData.forEach { (pos, data) ->
+                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
+                            data.forEach { (dir, endpointData) ->
+                                info.servos[dir] = endpointData.type
                             }
                             it.pipes[pos] = info
                         }
@@ -203,14 +209,13 @@ abstract class Network(
                     return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
                 }
 
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo {
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
                     val state = getNetworkState(world)
                     return ClientServoNetworkInfo().also {
-                        networksByPos.keys.forEach { pos ->
-                            val info = Object2ObjectOpenHashMap<Direction, EndpointData.Type>()
-                            DIRECTIONS.forEach { dir ->
-                                val type = state.getEndpointData(pos, dir)?.type
-                                if (type != null) info[dir] = type
+                        state.endpointData.forEach { (pos, data) ->
+                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
+                            data.forEach { (dir, endpointData) ->
+                                info.servos[dir] = endpointData.type
                             }
                             it.pipes[pos] = info
                         }

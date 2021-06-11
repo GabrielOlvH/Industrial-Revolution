@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -30,24 +29,10 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
             val v = syncedMaps.getInt(player.uuid)
             if (type.version > v) {
                 val buf = PacketByteBufs.create()
-                write(buf)
+                buf.writeString(type.key)
+                type.createClientNetworkInfo(world)?.write(buf)
                 ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_NETWORK_SERVOS, buf)
                 syncedMaps[player.uuid] = type.version
-            }
-        }
-    }
-
-    private fun write(buf: PacketByteBuf) {
-        buf.writeString(type.key)
-        buf.writeInt(endpointData.size)
-        endpointData.forEach { (pos, info) ->
-            buf.writeLong(pos)
-            buf.writeByte(info.size)
-            info.forEach { (dir, data) ->
-                buf.writeByte(dir.ordinal)
-                buf.writeByte(data.type.ordinal)
-                buf.writeBoolean(data.mode != null)
-                if (data.mode != null) buf.writeByte(data.mode!!.ordinal)
             }
         }
     }

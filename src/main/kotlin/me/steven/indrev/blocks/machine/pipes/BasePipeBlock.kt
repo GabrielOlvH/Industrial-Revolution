@@ -131,12 +131,10 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onStateReplaced(state, world, pos, newState, moved)
         if (!world.isClient) {
-            val netState = type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?
             if (state.isOf(newState.block)) {
                 Network.handleUpdate(type, pos)
-                netState?.clearCachedData(true)
             } else {
-                (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
+                (type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?)?.let { networkState ->
                     Direction.values().forEach { dir ->
                         val data = networkState.removeEndpointData(pos, dir)
                         val (x, y, z) = pos.toVec3d()
@@ -151,7 +149,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 }
 
                 Network.handleBreak(type, pos)
-                netState?.clearCachedData(false)
             }
         }
     }
@@ -168,7 +165,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
             Network.handleUpdate(type, pos)
-            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.clearCachedData(false)
         }
     }
 
