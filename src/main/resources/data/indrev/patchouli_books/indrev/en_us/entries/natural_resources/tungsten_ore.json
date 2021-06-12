@@ -7,7 +7,7 @@
     {
       "type": "spotlight",
       "item": "indrev:tungsten_ore",
-      "text": "$(#686b5b)$(l)Tungsten ore$() is rare and can be found from the layer 0 to 16.$(br)$(#686b5b)$(l)Tungsten$() is used in the crafting of resistant items like the Modular Armor."
+      "text": "$(#686b5b)$(l)Tungsten ore$() is rare and can be found from the layer 0 to 16 just deepslate variant.$(br)$(#686b5b)$(l)Tungsten$() is used in the crafting of resistant items like the Modular Armor."
     }
   ]
 }
