@@ -76,19 +76,22 @@
         },
         {
           "id": "minecraft:stone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:dirt",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 24
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [
@@ -142,19 +145,23 @@
         },
         {
           "id": "minecraft:stone",
-          "weight": 20
+          "weight": 20,
+          "infiniteWeight": 80
         },
         {
           "id": "minecraft:dirt",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [
@@ -199,23 +206,26 @@
         },
         {
           "id": "minecraft:diamond_ore",
-          "weight": 3
+          "weight": 4
         },
         {
           "id": "minecraft:stone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:dirt",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:clay",
-          "weight": 2
+          "weight": 2,
+          "infiniteWeight": 8
         },
         {
           "id": "minecraft:gravel",
-          "weight": 2
+          "infiniteWeight": 8
         }
       ],
       "sizeRange": [

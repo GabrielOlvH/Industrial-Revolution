@@ -81,15 +81,18 @@
         },
         {
           "id": "minecraft:netherrack",
-          "weight": 80
+          "weight": 80,
+          "infiniteWeight": 320
         },
         {
           "id": "minecraft:gravel",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 32
         },
         {
           "id": "minecraft:soul_sand",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 24
         },
         {
           "id": "minecraft:ancient_debris",

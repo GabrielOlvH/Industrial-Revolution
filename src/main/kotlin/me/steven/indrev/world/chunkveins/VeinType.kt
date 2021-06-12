@@ -27,7 +27,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val in
                 element as JsonObject
                 val blockId = Identifier(element.get(String::class.java, "id"))
                 val weight = element.getInt("weight", 1)
-                val infiniteWeight = element.getInt("infiniteWeight", 1)
+                val infiniteWeight = element.getInt("infiniteWeight", weight)
                 if (!Registry.BLOCK.getOrEmpty(blockId).isPresent) {
                     if (optional) {
                         VeinTypeResourceListener.LOGGER.debug("Not loading optional vein type $id because $blockId is missing")
