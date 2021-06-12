@@ -90,7 +90,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 if (explored >= size) {
                     finished = true
                 }
-                data.explored++
+                else
+                    data.explored++
                 mining = 0.0
 
                 val generatedOre : Block
