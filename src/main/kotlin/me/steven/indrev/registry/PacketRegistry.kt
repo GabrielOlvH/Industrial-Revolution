@@ -239,13 +239,18 @@ object PacketRegistry {
         VeinType.REGISTERED.forEach { (identifier, veinType) ->
             buf.writeIdentifier(identifier)
             val entries = veinType.outputs.entries
+            val infiniteEntries = veinType.infiniteOutputs.entries
             buf.writeInt(entries.size)
-            entries.forEach { entry ->
+
+            for (i in 0 until entries.size) {
+                val entry = entries[i]
                 val block = entry.element
                 val weight = entry.weight
+                val infiniteWeight = infiniteEntries[i].weight
                 val rawId = Registry.BLOCK.getRawId(block)
                 buf.writeInt(rawId)
                 buf.writeInt(weight)
+                buf.writeInt(infiniteWeight)
             }
             buf.writeInt(veinType.sizeRange.first)
             buf.writeInt(veinType.sizeRange.last)
@@ -266,15 +271,18 @@ object PacketRegistry {
                 val id = buf.readIdentifier()
                 val entriesSize = buf.readInt()
                 val outputs = WeightedList<Block>()
+                val infiniteOutputs = WeightedList<Block>()
                 for (y in 0 until entriesSize) {
                     val rawId = buf.readInt()
                     val weight = buf.readInt()
+                    val infiniteWeight = buf.readInt()
                     val block = Registry.BLOCK.get(rawId)
                     outputs.add(block, weight)
+                    infiniteOutputs.add(block, infiniteWeight)
                 }
                 val minSize = buf.readInt()
                 val maxSize = buf.readInt()
-                val veinType = VeinType(id, outputs, minSize..maxSize)
+                val veinType = VeinType(id, outputs, infiniteOutputs, minSize..maxSize)
                 VeinType.REGISTERED[id] = veinType
             }
         }

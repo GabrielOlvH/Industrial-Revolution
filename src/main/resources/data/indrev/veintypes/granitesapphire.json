@@ -7,31 +7,38 @@
       "output": [
         {
           "id": "techreborn:sapphire_ore",
-          "weight": 64
+          "weight": 64,
+          "infiniteWeight": 64
         },
         {
           "id": "techreborn:ruby_ore",
-          "weight": 16
+          "weight": 16,
+          "infiniteWeight": 16
         },
         {
           "id": "minecraft:andesite",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 32
         },
         {
           "id": "minecraft:granite",
-          "weight": 64
+          "weight": 64,
+          "infiniteWeight": 256
         },
         {
           "id": "minecraft:stone",
-          "weight": 64
+          "weight": 64,
+          "infiniteWeight": 256
         },
         {
           "id": "minecraft:diorite",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 32
         },
 		{
           "id": "minecraft:emerald_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [

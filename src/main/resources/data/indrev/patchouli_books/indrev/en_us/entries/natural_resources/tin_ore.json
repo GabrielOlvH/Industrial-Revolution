@@ -7,7 +7,7 @@
     {
       "type": "spotlight",
       "item": "indrev:tin_ore",
-      "text": "$(#999999)$(l)Tin ore$() is common and can be found from the layer 0 to 48.$(br)$(#999999)$(l)Tin$() is heavily used in the crafting of machines."
+      "text": "$(#999999)$(l)Tin ore$() is common and can be found from the layer 0 to 48 in both stone and deepslate variants.$(br)$(#999999)$(l)Tin$() is heavily used in the crafting of machines."
     }
   ]
 }

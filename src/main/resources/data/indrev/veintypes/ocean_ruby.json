@@ -7,27 +7,33 @@
       "output": [
         {
           "id": "techreborn:ruby_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         },
         {
           "id": "techreborn:sapphire_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:stone",
-          "weight": 16
+          "weight": 16,
+          "infiniteWeight": 64
         },
         {
           "id": "minecraft:basalt",
-          "weight": 16
+          "weight": 16,
+          "infiniteWeight": 64
         },
         {
           "id": "minecraft:dirt",
-          "weight": 2
+          "weight": 2,
+          "infiniteWeight": 8
         },
         {
           "id": "minecraft:clay",
-          "weight": 2
+          "weight": 2,
+          "infiniteWeight": 8
         }
       ],
       "sizeRange": [

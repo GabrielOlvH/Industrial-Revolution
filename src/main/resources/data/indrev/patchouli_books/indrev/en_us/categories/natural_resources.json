@@ -2,5 +2,5 @@
   "name": "Natural Resources",
   "sortnum": 0,
   "description": "Information about needed natural resources to explore the Industrial Revolution.",
-  "icon": "minecraft:copper_ore"
+  "icon": "indrev:tin_ore"
 }

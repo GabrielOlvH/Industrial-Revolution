@@ -7,23 +7,28 @@
       "output": [
         {
           "id": "modern_industrialization:antimony_ore",
-          "weight": 40
+          "weight": 40,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:stone",
-          "weight": 15
+          "weight": 15,
+          "infiniteWeight": 60
         },
         {
           "id": "minecraft:dirt",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [

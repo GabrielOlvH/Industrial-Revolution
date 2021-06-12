@@ -6,31 +6,38 @@
       "output": [
         {
           "id": "indrev:nikolite_ore",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 8
         },
         {
           "id": "minecraft:lapis_ore",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 6
         },
         {
           "id": "minecraft:redstone_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:stone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:dirt",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 24
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [
