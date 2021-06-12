@@ -73,7 +73,7 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     override fun getEnergyCost(): Double {
-        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
 

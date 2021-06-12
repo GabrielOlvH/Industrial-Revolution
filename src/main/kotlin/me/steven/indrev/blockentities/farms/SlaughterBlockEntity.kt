@@ -12,6 +12,7 @@ import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.boss.WitherEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -45,7 +46,8 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         val enhancers = getEnhancers()
         cooldown += Enhancer.getSpeed(enhancers, this)
         if (cooldown < config.processSpeed) return
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead) }
+        val source = DamageSource.player(fakePlayer)
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) }
             ?: emptyList()
         if (mobs.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
@@ -61,7 +63,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
 
                 mob.redirectDrops(inventory) {
-                    mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
+                    mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
                 }
             }
         }
@@ -70,8 +72,9 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
     }
 
     override fun getEnergyCost(): Double {
-        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
-        return config.energyCost * speedEnhancers
+        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val dmgEnhancers = (getEnhancers().getInt(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
+        return config.energyCost * speedEnhancers * dmgEnhancers
     }
 
     override fun getBaseValue(enhancer: Enhancer): Double =

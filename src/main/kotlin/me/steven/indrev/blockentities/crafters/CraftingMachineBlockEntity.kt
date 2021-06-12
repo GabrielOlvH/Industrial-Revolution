@@ -57,7 +57,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     override fun getEnergyCost(): Double {
-        val speedEnhancers = getEnhancers().getInt(Enhancer.SPEED)
+        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return (if (temperatureComponent?.isFullEfficiency() == true) config.energyCost * 1.5
         else config.energyCost) * speedEnhancers
     }

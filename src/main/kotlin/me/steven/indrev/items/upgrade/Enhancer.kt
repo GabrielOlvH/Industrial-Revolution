@@ -15,7 +15,7 @@ enum class Enhancer {
                 = provider.getBaseValue(SPEED) + (IRConfig.upgrades.speedUpgradeModifier * (enhancers[SPEED] ?: 0))
 
         fun getDamageMultiplier(enhancers: Map<Enhancer, Int>, provider: EnhancerProvider): Double {
-            return IRConfig.upgrades.damageUpgradeModifier * (enhancers[DAMAGE] ?: 0).toDouble()
+            return (IRConfig.upgrades.damageUpgradeModifier * (enhancers[DAMAGE] ?: 0).toDouble()).coerceAtLeast(1.0)
         }
 
         fun getBuffer(provider: MachineBlockEntity<*>) = getBuffer((provider as EnhancerProvider).getEnhancers(), provider)
