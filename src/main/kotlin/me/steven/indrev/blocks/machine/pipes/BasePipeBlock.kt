@@ -50,7 +50,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         pos: BlockPos?,
         context: ShapeContext?
     ): VoxelShape {
-        val blockEntity = view.getBlockEntity(pos) as? BasePipeBlockEntity ?: return VoxelShapes.fullCube()
+        val blockEntity = view.getBlockEntity(pos) as? BasePipeBlockEntity ?: return VoxelShapes.empty()
         return if (blockEntity.coverState != null) VoxelShapes.fullCube()
         else getShape(blockEntity)
     }
@@ -157,10 +157,10 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     ) {
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
-
             DIRECTIONS.forEach { facing ->
                 updateConnection(world as ServerWorld, state, pos, pos.offset(facing), facing)
             }
+
             Network.handleUpdate(type, pos)
         }
     }
@@ -176,7 +176,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val (x, y, z) = pos.subtract(fromPos)
         val facing = Direction.fromVector(x, y, z)!!.opposite
         if (world is ServerWorld) {
-            updateConnection(world, state, pos, fromPos, facing)
+            //updateConnection(world, state, pos, fromPos, facing)
         }
     }
 
@@ -185,7 +185,8 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val before = blockEntity.connections[facing]
         val new = ConnectionType.getType(isConnectable(world, neighborPos, facing))
         val neighborBlockEntity = world.getBlockEntity(neighborPos) as? BasePipeBlockEntity
-        if (before != new && (before != ConnectionType.WRENCHED || neighborBlockEntity != null && neighborBlockEntity.connections[facing.opposite] == ConnectionType.CONNECTED)) {
+        if (before != new && (before != ConnectionType.WRENCHED || neighborBlockEntity != null
+                    && neighborBlockEntity.connections[facing.opposite] == ConnectionType.CONNECTED)) {
             blockEntity.connections[facing] = new
             blockEntity.markDirty()
             blockEntity.sync()
@@ -193,27 +194,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             Network.handleUpdate(type, pos)
         }
     }
-
-    data class PipeShape(val directions: Array<Direction>, val shape: VoxelShape) {
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (javaClass != other?.javaClass) return false
-
-            other as PipeShape
-
-            if (!directions.contentEquals(other.directions)) return false
-            if (shape != other.shape) return false
-
-            return true
-        }
-
-        override fun hashCode(): Int {
-            var result = directions.contentHashCode()
-            result = 31 * result + shape.hashCode()
-            return result
-        }
-    }
-
 
     enum class ConnectionType(val id: Int) {
         NONE(-1), CONNECTED(0), WRENCHED(1);

@@ -1,10 +1,12 @@
 package me.steven.indrev.blocks.machine.pipes
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.pack
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -16,6 +18,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
+import java.util.function.IntFunction
 
 class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier, Network.Type.ENERGY) {
     override fun appendTooltip(
@@ -45,22 +48,19 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }.toTypedArray()
-        var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
-        if (cableShapeCache == null) {
+        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
             }
-            cableShapeCache = PipeShape(directions, shape)
-            SHAPE_CACHE.add(cableShapeCache)
-        }
-        return cableShapeCache.shape
+            shape
+        })
     }
 
     companion object {
 
-        val SHAPE_CACHE = hashSetOf<PipeShape>()
+        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.0, 10.5, 6.0, 10.0, 16.0, 10.0)

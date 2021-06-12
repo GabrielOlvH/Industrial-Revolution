@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.machine.pipes
 
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
@@ -11,6 +12,7 @@ import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.utils.itemExtractableOf
 import me.steven.indrev.utils.itemInsertableOf
+import me.steven.indrev.utils.pack
 import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
@@ -28,6 +30,7 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import java.util.function.IntFunction
 
 class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier, Network.Type.ITEM) {
     override fun appendTooltip(
@@ -81,22 +84,19 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
     }
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }.toTypedArray()
-        var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
-        if (cableShapeCache == null) {
+        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
             }
-            cableShapeCache = PipeShape(directions, shape)
-            SHAPE_CACHE.add(cableShapeCache)
-        }
-        return cableShapeCache.shape
+            shape
+        })
     }
 
     companion object {
 
-        val SHAPE_CACHE = hashSetOf<PipeShape>()
+        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.5, 9.5, 6.5, 9.5, 16.0, 9.5)
