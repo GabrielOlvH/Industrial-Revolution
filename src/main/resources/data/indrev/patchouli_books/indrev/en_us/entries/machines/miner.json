@@ -27,6 +27,10 @@
       "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, the Scanner will give you a result which is required by the Miner to work."
     },
     {
+      "type": "text",
+      "text": "$(l)Note:$()$(br)Once the progress in the Mining Rig Computer hits 100%, the rig will continue more stone, dirt and gravel will be found instead of ore.$(br2)$(br)Not all veins are currently listed here."
+    },
+    {
       "anchor": "vein_types",
       "type": "text",
       "text": "$(br)$(l:machines/miner#peat)$(t:Go to Peat)Peat$()$(br)$(l:machines/miner#lignite)$(t:Go to Lignite)Lignite$()$(br)$(l:machines/miner#bituminous)$(t:Go to Bituminous)Bituminous$()$(br)$(l:machines/miner#anthracite)$(t:Go to Anthracite)Anthracite$()$(br)$(l:machines/miner#siderite)$(t:Go to Siderite)Siderite$()$(br)$(l:machines/miner#limonite)$(t:Go to Limonite)Limonite$()$(br)$(l:machines/miner#hematite)$(t:Go to Hematite)Hematite$()$(br)$(l:machines/miner#magnetite)$(t:Go to Magnetite)Magnetite$()$(br)$(l:machines/miner#chalcopryte)$(t:Go to Chalcopryte)Chalcopryte$()$(br)$(l:machines/miner#cuprite)$(t:Go to Cuprite)Cuprite$()$(br)$(l:machines/miner#cassiterite)$(t:Go to Cassiterite)Cassiterite$()$(br)$(l:machines/miner#stannite)$(t:Go to Stannite)Stannite$()$(br)$(l:machines/miner#cavalerite)$(t:Go to Cavalerite)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:Go to Quartz)Quartz$()$(br)$(l:machines/miner#nikolite)$(t:Go to Nikolite)Nikolite$()"
