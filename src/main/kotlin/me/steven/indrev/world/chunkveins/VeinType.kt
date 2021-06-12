@@ -10,7 +10,6 @@ import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
-import java.lang.IndexOutOfBoundsException
 
 data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val infiniteOutputs: WeightedList<Block>, val sizeRange: IntRange) {
     companion object {
@@ -44,14 +43,15 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val in
                 VeinTypeResourceListener.LOGGER.error("Missing range entry when loading vein type $id")
                 return null
             }
-            val min = range.map { (it as JsonPrimitive).asInt(1) }.minOrNull()!!
-            val max = range.map { (it as JsonPrimitive).asInt(1) }.maxOrNull()!!
+
+            val min = range.minOf { (it as JsonPrimitive).asInt(1) }
+            val max = range.maxOf { (it as JsonPrimitive).asInt(1) }
+
             val biomeArray = json.get(JsonArray::class.java, "biomes")
-            val biomes = mutableMapOf<RegistryKey<Biome>, Pair<Int, Int>>()
+            val biomes = mutableMapOf<RegistryKey<Biome>, Int>()
             biomeArray?.forEach { element ->
                 element as JsonObject
                 val weight = element.getInt("weight", 1)
-                val infiniteWeight = element.getInt("infiniteWeight", 1)
                 if (element.containsKey("category")) {
                     element.get(JsonArray::class.java, "category")?.forEach { e ->
                         val cat = Biome.Category.valueOf((e as JsonPrimitive).asString().uppercase())
@@ -59,7 +59,7 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val in
                             .filter {
                                 BuiltinRegistries.BIOME[it]?.category == cat
                             }.forEach {
-                                biomes[RegistryKey.of(Registry.BIOME_KEY, it)] = Pair(weight, infiniteWeight)
+                                biomes[RegistryKey.of(Registry.BIOME_KEY, it)] = weight
                             }
                     }
                 } else {
@@ -68,11 +68,11 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val in
                         if (!BuiltinRegistries.BIOME.containsId(biomeId)) {
                             VeinTypeResourceListener.LOGGER.error("Expected biome but received unkonwn string $biomeId when loading vein type $id")
                         }
-                        biomes[RegistryKey.of(Registry.BIOME_KEY, biomeId)] = Pair(weight, infiniteWeight)
+                        biomes[RegistryKey.of(Registry.BIOME_KEY, biomeId)] = weight
                     }
                 }
             }
-            biomes.forEach { (biome, weights) -> BIOME_VEINS.computeIfAbsent(biome) { WeightedList() }.add(id, weights.first) }
+            biomes.forEach { (biome, weight) -> BIOME_VEINS.computeIfAbsent(biome) { WeightedList() }.add(id, weight) }
             return arrayOf(VeinType(id, weightedList, infiniteWeightedList, min..max))
         }
     }
