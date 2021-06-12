@@ -7,31 +7,38 @@
       "output": [
         {
           "id": "indrev:nikolite_ore",
-          "weight": 16
+          "weight": 16,
+          "infiniteWeight": 16
         },
         {
           "id": "minecraft:lapis_ore",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 8
         },
         {
           "id": "techreborn:sodalite_ore",
-          "weight": 16
+          "weight": 16,
+          "infiniteWeight": 16
         },
         {
           "id": "minecraft:redstone_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:endstone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:obsidian",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 16
         },
 		{
           "id": "techreborn:sheldonite_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         }
       ],
       "sizeRange": [

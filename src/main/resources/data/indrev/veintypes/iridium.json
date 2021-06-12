@@ -7,27 +7,33 @@
       "output": [
         {
           "id": "techreborn:iridium_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         },
         {
           "id": "techreborn:sheldonite_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         },
         {
           "id": "minecraft:stone",
-          "weight": 20
+          "weight": 20,
+          "infiniteWeight": 80
         },
         {
           "id": "minecraft:dirt",
-          "weight": 15
+          "weight": 15,
+          "infiniteWeight": 60
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 2
+          "weight": 2,
+          "infiniteWeight": 8
         }
       ],
       "sizeRange": [

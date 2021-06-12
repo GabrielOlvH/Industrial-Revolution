@@ -7,15 +7,18 @@
       "output": [
         {
           "id": "techreborn:peridot_ore",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 4
         },
         {
           "id": "techreborn:tungsten_ore",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 1
         },
 		{
           "id": "minecraft:endstone",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 32
         }
       ],
       "sizeRange": [
