@@ -37,7 +37,17 @@ class ResourceReportScreenHandler(
     init {
         val root = object : WGridPanel() {
             override fun setBackgroundPainter(painter: BackgroundPainter?): WPanel {
-                return super.setBackgroundPainter(BACKGROUND_PAINTER)
+                return super.setBackgroundPainter { matrices, left, top, panel ->
+                    ScreenDrawing.texturedRect(
+                        matrices,
+                        left,
+                        top,
+                        panel.width,
+                        panel.height,
+                        identifier("textures/gui/paper.png"),
+                        -1
+                    )
+                }
             }
         }
         setRootPanel(root)
@@ -77,8 +87,5 @@ class ResourceReportScreenHandler(
 
     companion object {
         val SCREEN_ID = identifier("resource_report_screen")
-        val BACKGROUND_PAINTER = BackgroundPainter { matrices, left, top, panel ->
-            ScreenDrawing.texturedRect(matrices, left, top, panel.width, panel.height, identifier("textures/gui/paper.png"), -1)
-        }
     }
 }
