@@ -37,7 +37,9 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.thread.ThreadExecutor
 import net.minecraft.world.World
+import java.util.concurrent.CompletableFuture
 
 
 val EMPTY_INT_ARRAY = intArrayOf()
@@ -143,4 +145,11 @@ inline fun Entity.redirectDrops(inv: IRInventory, run: () -> Unit) {
     this.machineInv = inv
     run()
     this.machineInv = null
+}
+
+fun <V> ThreadExecutor<*>.submitAndGet(task: () -> V): V {
+    return (if (!this.isOnThread)
+        CompletableFuture.supplyAsync(task, this)
+    else
+        CompletableFuture.completedFuture(task())).get()
 }

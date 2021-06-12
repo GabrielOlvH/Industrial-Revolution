@@ -158,7 +158,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         super.onPlaced(world, pos, state, placer, itemStack)
         if (!world.isClient) {
             DIRECTIONS.forEach { facing ->
-                updateConnection(world as ServerWorld, state, pos, pos.offset(facing), facing)
+                updateConnection(world as ServerWorld, pos, pos.offset(facing), facing)
             }
 
             Network.handleUpdate(type, pos)
@@ -176,11 +176,11 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val (x, y, z) = pos.subtract(fromPos)
         val facing = Direction.fromVector(x, y, z)!!.opposite
         if (world is ServerWorld) {
-            //updateConnection(world, state, pos, fromPos, facing)
+            updateConnection(world, pos, fromPos, facing)
         }
     }
 
-    private fun updateConnection(world: ServerWorld, state: BlockState, pos: BlockPos, neighborPos: BlockPos, facing: Direction) {
+    private fun updateConnection(world: ServerWorld, pos: BlockPos, neighborPos: BlockPos, facing: Direction) {
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return
         val before = blockEntity.connections[facing]
         val new = ConnectionType.getType(isConnectable(world, neighborPos, facing))
@@ -190,7 +190,6 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             blockEntity.connections[facing] = new
             blockEntity.markDirty()
             blockEntity.sync()
-            world.updateNeighbors(pos, state.block)
             Network.handleUpdate(type, pos)
         }
     }

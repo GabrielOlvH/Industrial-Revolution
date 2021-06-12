@@ -12,6 +12,7 @@ import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.drainFluid
+import me.steven.indrev.utils.submitAndGet
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -24,8 +25,6 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.thread.ThreadExecutor
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.math.floor
@@ -131,13 +130,6 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             } else if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
                 scan(offset, fluid, server, scanned)
         }
-    }
-
-    fun <V> ThreadExecutor<*>.submitAndGet(task: () -> V): V {
-        return (if (!this.isOnThread)
-            CompletableFuture.supplyAsync(task, this)
-        else
-            CompletableFuture.completedFuture(task())).get()
     }
 
     override fun applyDefault(
