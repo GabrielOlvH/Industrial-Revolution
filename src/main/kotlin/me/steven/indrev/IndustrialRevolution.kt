@@ -31,7 +31,6 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
@@ -44,7 +43,6 @@ import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundEvent
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -60,9 +58,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.PARTICLE_TYPE, identifier("laser_particle"), LASER_PARTICLE)
 
         WorldGeneration.init()
-
-        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
-        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register { _, _, biome -> WorldGeneration.handleBiome(biome) }
+        WorldGeneration.addFeatures()
         
         arrayOf(
             IRFluidRegistry.COOLANT_STILL,

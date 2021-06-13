@@ -5,6 +5,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.features.IRConfiguredFeature
 import me.steven.indrev.world.features.SulfurCrystalFeature
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
@@ -15,7 +16,6 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.OreFeatureConfig
 import net.minecraft.world.gen.feature.SingleStateFeatureConfig
-import java.util.function.Supplier
 
 object WorldGeneration {
     fun init() {
@@ -47,17 +47,9 @@ object WorldGeneration {
 
     private val configuredFeatures = mutableListOf<IRConfiguredFeature>()
 
-    fun handleBiome(biome: Biome) {
-        configuredFeatures.filter { it.biomePredicate(biome) }.forEach {
-            val features = biome.generationSettings.features
-            val stepIndex = it.step.ordinal
-            while (features.size <= stepIndex) features.add(mutableListOf())
-            var registeredFeatures = features[stepIndex]
-            if (registeredFeatures is ImmutableList) {
-                registeredFeatures = registeredFeatures.toMutableList()
-                features[stepIndex] = registeredFeatures
-            }
-            registeredFeatures.add(Supplier { it.configuredFeature })
+    fun addFeatures() {
+        configuredFeatures.forEach { feature ->
+            BiomeModifications.addFeature({ ctx -> feature.biomePredicate(ctx.biome) }, feature.step, feature.key)
         }
     }
 
