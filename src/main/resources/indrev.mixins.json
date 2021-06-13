@@ -11,7 +11,6 @@
     "common.AccessorRecipeManager",
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
-    "common.AccessorWeightedListEntry",
     "common.MixinAbstractCookingRecipe",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",
