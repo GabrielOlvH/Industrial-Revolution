@@ -109,8 +109,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     if (!itemStack.isEmpty) {
                         val speed = drillBlockEntity.getSpeedMultiplier()
                         if (speed > 0) {
-                            itemStack.damage++
-                            if (itemStack.damage >= itemStack.maxDamage) {
+                            val damaged = itemStack.damage(1, world!!.random, null)
+                            if (damaged && itemStack.damage >= itemStack.maxDamage) {
                                 itemStack.decrement(1)
                             }
                             drillBlockEntity.markDirty()
