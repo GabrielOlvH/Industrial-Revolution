@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "indrev:raw_tin",
+    "tag": "c:raw_tins",
     "count": 2
   },
   "output": {

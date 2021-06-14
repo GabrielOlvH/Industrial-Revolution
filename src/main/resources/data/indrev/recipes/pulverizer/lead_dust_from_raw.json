@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "indrev:raw_lead",
+    "tag": "c:raw_leads",
     "count": 2
   },
   "output": {

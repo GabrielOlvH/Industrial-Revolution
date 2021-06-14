@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:raw_gold",
+    "tag": "c:raw_golds",
     "count": 2
   },
   "output": {

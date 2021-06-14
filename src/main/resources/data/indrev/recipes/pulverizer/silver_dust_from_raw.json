@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "indrev:raw_silver",
+    "tag": "c:raw_silvers",
     "count": 2
   },
   "output": {

@@ -213,17 +213,19 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
     return button
 }
 
-fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: BackgroundPainter) {
+fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: () -> BackgroundPainter) {
     ctx.run { world, _ ->
-        if (world.isClient) this.backgroundPainter = painter
+        if (world.isClient) this.backgroundPainter = painter()
     }
 }
 
 fun WItemSlot.setIcon(ctx: ScreenHandlerContext, inventory: Inventory, slot: Int, identifier: Identifier) {
-    setPainterSafe(ctx) { matrices, left, top, widget ->
-        BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
-        if (inventory.getStack(slot).isEmpty)
-            ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
+    setPainterSafe(ctx) {
+        BackgroundPainter { matrices, left, top, widget ->
+            BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
+            if (inventory.getStack(slot).isEmpty)
+                ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
+        }
     }
 }
 

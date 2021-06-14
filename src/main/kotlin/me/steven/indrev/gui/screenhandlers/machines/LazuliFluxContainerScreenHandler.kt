@@ -33,11 +33,11 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
         ctx
     ), PatchouliEntryShortcut {
 
-    val shieldPainter = getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png"))
-    val helmetPainter = getSlotPainter(39, Identifier("minecraft", "textures/item/empty_armor_slot_helmet.png"))
-    val chestplatePainter = getSlotPainter(38, Identifier("minecraft", "textures/item/empty_armor_slot_chestplate.png"))
-    val leggingsPainter = getSlotPainter(37, Identifier("minecraft", "textures/item/empty_armor_slot_leggings.png"))
-    val bootsPainter = getSlotPainter(36, Identifier("minecraft", "textures/item/empty_armor_slot_boots.png"))
+    val shieldPainter by lazy { getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png")) }
+    val helmetPainter by lazy { getSlotPainter(39, Identifier("minecraft", "textures/item/empty_armor_slot_helmet.png")) }
+    val chestplatePainter by lazy { getSlotPainter(38, Identifier("minecraft", "textures/item/empty_armor_slot_chestplate.png")) }
+    val leggingsPainter by lazy { getSlotPainter(37, Identifier("minecraft", "textures/item/empty_armor_slot_leggings.png")) }
+    val bootsPainter by lazy { getSlotPainter(36, Identifier("minecraft", "textures/item/empty_armor_slot_boots.png")) }
 
     init {
         val root = WGridPanel()

@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:raw_copper",
+    "tag": "c:raw_coppers",
     "count": 2
   },
   "output": {

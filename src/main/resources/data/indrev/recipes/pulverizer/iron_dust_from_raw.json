@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "minecraft:raw_iron",
+    "tag": "c:raw_irons",
     "count": 2
   },
   "output": {
