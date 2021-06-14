@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.properties.BooleanProperty
 import me.steven.indrev.api.machines.properties.Property
@@ -10,7 +11,6 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.eat
 import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
@@ -46,7 +46,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
     var feedBabies: Boolean by BooleanProperty(4, true)
     var mateAdults: Boolean by BooleanProperty(5, true)
     var matingLimit: Int by Property(6, 16) { i -> i.coerceAtLeast(0) }

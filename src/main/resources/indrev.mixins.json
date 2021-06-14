@@ -18,7 +18,6 @@
     "common.MixinItemStack",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinPlayerInventory",
     "common.MixinServerPlayerEntity"
   ],
   "client": [

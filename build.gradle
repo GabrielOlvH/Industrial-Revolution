@@ -82,6 +82,13 @@ repositories {
             includeGroup "dev.technici4n"
         }
     }
+    maven {
+        name = "Cafeteria Development"
+        url = 'https://maven.cafeteria.dev'
+        content {
+            includeGroup 'dev.cafeteria'
+        }
+    }
 }
 
 dependencies {
@@ -119,6 +126,7 @@ dependencies {
     dependencies.ext.lib("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
     dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
+    dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {

@@ -2,13 +2,13 @@ package me.steven.indrev.blockentities.farms
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
@@ -38,7 +38,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "slaughter") }
 
     override fun machineTick() {
         if (world?.isClient == true) return
