@@ -3,6 +3,7 @@ package me.steven.indrev.blocks.machine
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.recipes.machines.LaserRecipe
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -22,7 +23,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f)), BlockEntityProvider {
+class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool().nonOpaque().strength(1f, 1f)), BlockEntityProvider {
     override fun onUse(
         state: BlockState?,
         world: World,
