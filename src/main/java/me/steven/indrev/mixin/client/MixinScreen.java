@@ -36,11 +36,9 @@ public abstract class MixinScreen {
 
             // add custom tooltip stuff
             for (CustomTooltipData customData : provider.getData(stack)) {
-                if (customData != null)
-                    list.add(1, customData.toComponent());
+                list.add(1, customData.toComponent());
             }
-
-
+            
             this.renderTooltipFromComponents(matrices, list, x, y);
             ci.cancel();
         }
