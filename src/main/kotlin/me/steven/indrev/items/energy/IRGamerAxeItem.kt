@@ -9,14 +9,16 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.gui.tooltip.CustomTooltipData
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
 import me.steven.indrev.tools.modular.GamerAxeModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
-import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.use
 import net.minecraft.block.BlockState
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
@@ -49,7 +51,7 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider {
+) : AxeItem(material, attackDamage, attackSpeed, settings), IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider, ModularTooltipDataProvider {
 
     init {
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, tier.io, tier.io), this)
@@ -61,8 +63,8 @@ class IRGamerAxeItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        getInstalledTooltip(getInstalled(stack), stack, tooltip)
-        buildEnergyTooltip(stack, tooltip)
+        if (Screen.hasShiftDown())
+            getInstalledTooltip(getInstalled(stack), stack, tooltip)
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
@@ -72,6 +74,10 @@ class IRGamerAxeItem(
     override fun getItemBarStep(stack: ItemStack?): Int = getDurabilityBarProgress(stack)
 
     override fun isEnchantable(stack: ItemStack?): Boolean = false
+
+    override fun getData(stack: ItemStack): List<CustomTooltipData> {
+        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IREnergyItem>.getData(stack)).flatten()
+    }
 
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {

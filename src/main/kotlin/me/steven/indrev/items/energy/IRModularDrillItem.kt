@@ -4,12 +4,15 @@ import draylar.magna.api.BlockProcessor
 import draylar.magna.api.MagnaTool
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.gui.tooltip.CustomTooltipData
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
@@ -28,7 +31,7 @@ class IRModularDrillItem(
     maxStored: Double,
     baseMiningSpeed: Float,
     settings: Settings
-) : IRMiningDrillItem(toolMaterial, tier, maxStored, baseMiningSpeed, settings), MagnaTool, IRModularItem<Module>, CustomEnchantmentProvider {
+) : IRMiningDrillItem(toolMaterial, tier, maxStored, baseMiningSpeed, settings), MagnaTool, IRModularItem<Module>, CustomEnchantmentProvider, ModularTooltipDataProvider {
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
@@ -44,8 +47,8 @@ class IRModularDrillItem(
     }
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        super.appendTooltip(stack, world, tooltip, context)
-        getInstalledTooltip(getInstalled(stack), stack, tooltip)
+        if (Screen.hasShiftDown())
+            getInstalledTooltip(getInstalled(stack), stack, tooltip)
     }
 
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
@@ -87,5 +90,9 @@ class IRModularDrillItem(
         return if (getRadius(mainHandStack) > 0)
             super.attemptBreak(world, pos, player, breakRadius, processor)
         else false
+    }
+
+    override fun getData(stack: ItemStack): List<CustomTooltipData> {
+        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IRMiningDrillItem>.getData(stack)).flatten()
     }
 }

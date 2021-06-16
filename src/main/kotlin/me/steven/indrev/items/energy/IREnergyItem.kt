@@ -1,11 +1,11 @@
 package me.steven.indrev.items.energy
 
-import me.steven.indrev.gui.tooltip.EnergyTooltipData
+import me.steven.indrev.gui.tooltip.energy.EnergyTooltipDataProvider
 import me.steven.indrev.utils.energyOf
 import net.minecraft.item.ItemStack
 import kotlin.math.roundToInt
 
-interface IREnergyItem {
+interface IREnergyItem : EnergyTooltipDataProvider {
     fun getDurabilityBarProgress(stack: ItemStack?): Int {
         val energyIo = energyOf(stack) ?: return 0
         return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity).roundToInt()
@@ -19,10 +19,5 @@ interface IREnergyItem {
         val g = (122 - ((122) * durability)).toInt() shl 8
         val b = 255
         return r or g or b
-    }
-
-    fun getEnergyTooltipData(stack: ItemStack): EnergyTooltipData? {
-        val energyIo = energyOf(stack) ?: return null
-        return EnergyTooltipData(energyIo.energy, energyIo.energyCapacity)
     }
 }

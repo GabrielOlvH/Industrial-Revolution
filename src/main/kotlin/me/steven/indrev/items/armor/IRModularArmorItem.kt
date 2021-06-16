@@ -8,11 +8,13 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
+import me.steven.indrev.gui.tooltip.CustomTooltipData
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
 import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.energyOf
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.attribute.EntityAttribute
@@ -26,7 +28,7 @@ import net.minecraft.world.World
 import java.util.*
 
 class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, ModularTooltipDataProvider {
 
     init {
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
@@ -41,15 +43,15 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        getInstalledTooltip(getInstalled(stack), stack, tooltip)
-        buildEnergyTooltip(stack, tooltip)
+        if (Screen.hasShiftDown())
+            getInstalledTooltip(getInstalled(stack), stack, tooltip)
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
     override fun getColor(stack: ItemStack?): Int {
-        val NbtCompound = stack!!.getSubTag("display")
-        return if (NbtCompound != null && NbtCompound.contains("color", 99)) NbtCompound.getInt("color") else -1
+        val nbt = stack!!.getSubTag("display")
+        return if (nbt != null && nbt.contains("color", 99)) nbt.getInt("color") else -1
     }
 
     fun getMaxShield(protectionLevel: Int) = protectionLevel * 100.0
@@ -112,6 +114,10 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
             return attr.build()
         }
         return getAttributeModifiers(equipmentSlot)
+    }
+
+    override fun getData(stack: ItemStack): List<CustomTooltipData> {
+        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IREnergyItem>.getData(stack)).flatten()
     }
 
     companion object {

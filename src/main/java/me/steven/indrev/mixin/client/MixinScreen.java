@@ -1,8 +1,7 @@
 package me.steven.indrev.mixin.client;
 
-import me.steven.indrev.gui.tooltip.EnergyTooltipComponent;
-import me.steven.indrev.gui.tooltip.EnergyTooltipData;
-import me.steven.indrev.items.energy.IREnergyItem;
+import me.steven.indrev.gui.tooltip.CustomTooltipData;
+import me.steven.indrev.gui.tooltip.CustomTooltipDataProvider;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.client.item.TooltipData;
@@ -28,17 +27,19 @@ public abstract class MixinScreen {
 
     @Inject(method = "renderTooltip(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/item/ItemStack;II)V", at = @At("INVOKE"), cancellable = true)
     private void indrev_tooltipComponent(MatrixStack matrices, ItemStack stack, int x, int y, CallbackInfo ci) {
-        if (stack.getItem() instanceof IREnergyItem energyItem) {
+        if (stack.getItem() instanceof CustomTooltipDataProvider provider) {
             // mimic vanilla behaviour, cursed mixin yes but blame mojang
             List<Text> lines = getTooltipFromItem(stack);
             Optional<TooltipData> data = stack.getTooltipData();
             List<TooltipComponent> list = lines.stream().map(Text::asOrderedText).map(TooltipComponent::of).collect(Collectors.toList());
             data.ifPresent((datax) -> list.add(1, TooltipComponent.of(datax)));
 
-            // add EnergyTooltipComponent
-            EnergyTooltipData energyData = energyItem.getEnergyTooltipData(stack);
-            if (energyData != null)
-                list.add(1, new EnergyTooltipComponent(energyData));
+            // add custom tooltip stuff
+            for (CustomTooltipData customData : provider.getData(stack)) {
+                if (customData != null)
+                    list.add(1, customData.toComponent());
+            }
+
 
             this.renderTooltipFromComponents(matrices, list, x, y);
             ci.cancel();

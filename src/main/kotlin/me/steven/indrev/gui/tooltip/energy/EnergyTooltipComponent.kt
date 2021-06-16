@@ -1,4 +1,4 @@
-package me.steven.indrev.gui.tooltip
+package me.steven.indrev.gui.tooltip.energy
 
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.utils.getEnergyString
@@ -15,7 +15,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.math.Matrix4f
 
 class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
-    override fun getHeight(): Int = 12
+    override fun getHeight(): Int = 18
 
     override fun getWidth(textRenderer: TextRenderer?): Int = 18
 
