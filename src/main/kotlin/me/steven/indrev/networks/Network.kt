@@ -95,7 +95,7 @@ abstract class Network(
         val networks = ObjectOpenHashSet<Network>()
 
         val queuedUpdates = LongOpenHashSet()
-        val cancelledUpdates = LongOpenHashSet()
+        val updatedPositions = LongOpenHashSet()
 
         var version = 0
 
@@ -129,25 +129,23 @@ abstract class Network(
             val state = getNetworkState(world)
 
             queuedUpdates.forEach { pos ->
-                if (!cancelledUpdates.contains(pos)) {
+                if (!updatedPositions.contains(pos)) {
                     val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
                     if (network.pipes.isNotEmpty() && network.containers.isNotEmpty()) {
                         networks.add(network)
                         (state as? ServoNetworkState<T>)?.let {
                             network.pipes.forEach { pos -> it.onSet(pos, network) }
                         }
-
                     }
                     else
                         remove(world, network)
                 }
             }
             queuedUpdates.clear()
-            cancelledUpdates.clear()
+            updatedPositions.clear()
             world.profiler.push("indrev_${key.lowercase()}NetworkTick")
             networks.forEach { network -> network.tick(world) }
             world.profiler.pop()
-
 
             (state as? ServoNetworkState<*>)?.sync(world)
             (state as? ServoNetworkState<*>)?.clearCachedData(false)
@@ -156,7 +154,7 @@ abstract class Network(
         fun clear() {
             this.states.clear()
             this.queuedUpdates.clear()
-            this.cancelledUpdates.clear()
+            this.updatedPositions.clear()
             this.networksByPos.clear()
             this.networks.clear()
         }

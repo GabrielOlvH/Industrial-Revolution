@@ -39,7 +39,7 @@ interface NetworkFactory<T : Network> {
                 if (oldNetwork != network)
                     oldNetwork?.remove()
             }
-            if (type.queuedUpdates.contains(longPos)) type.cancelledUpdates.add(longPos)
+            type.updatedPositions.add(longPos)
             val blockEntity = chunk.getBlockEntity(blockPos) as? BasePipeBlockEntity ?: return
             DIRECTIONS.forEach { dir ->
                 if (blockEntity.connections[dir]!!.isConnected()) {
