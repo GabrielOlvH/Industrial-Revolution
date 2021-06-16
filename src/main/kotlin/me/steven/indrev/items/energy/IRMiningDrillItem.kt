@@ -1,7 +1,6 @@
 package me.steven.indrev.items.energy
 
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.utils.buildEnergyTooltip
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
@@ -44,7 +43,6 @@ open class IRMiningDrillItem(
         tooltip: MutableList<Text>?,
         context: TooltipContext?
     ) {
-        buildEnergyTooltip(stack, tooltip)
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false

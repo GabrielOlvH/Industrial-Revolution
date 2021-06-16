@@ -26,6 +26,7 @@
     "client.MixinClientRecipeBook",
     "client.MixinGameRenderer",
     "client.MixinLivingEntityClient",
+    "client.MixinScreen",
     "client.MixinWItemSlot"
   ],
   "injectors": {

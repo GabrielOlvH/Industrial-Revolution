@@ -1,5 +1,6 @@
 package me.steven.indrev.items.energy
 
+import me.steven.indrev.gui.tooltip.EnergyTooltipData
 import me.steven.indrev.utils.energyOf
 import net.minecraft.item.ItemStack
 import kotlin.math.roundToInt
@@ -18,5 +19,10 @@ interface IREnergyItem {
         val g = (122 - ((122) * durability)).toInt() shl 8
         val b = 255
         return r or g or b
+    }
+
+    fun getEnergyTooltipData(stack: ItemStack): EnergyTooltipData? {
+        val energyIo = energyOf(stack) ?: return null
+        return EnergyTooltipData(energyIo.energy, energyIo.energyCapacity)
     }
 }
