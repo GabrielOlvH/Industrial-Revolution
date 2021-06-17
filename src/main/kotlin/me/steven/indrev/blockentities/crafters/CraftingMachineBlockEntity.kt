@@ -22,6 +22,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.recipe.SmeltingRecipe
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
@@ -194,10 +195,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         if (decimal != 0.0f && Math.random() < decimal.toDouble()) {
             ++n
         }
-        while (n > 0) {
-            val size = ExperienceOrbEntity.roundToOrbSize(n)
-            n -= size
-            world.spawnEntity(ExperienceOrbEntity(world, pos.x, pos.y, pos.z, size))
-        }
+        ExperienceOrbEntity.spawn(world as ServerWorld, pos, n)
     }
 }
