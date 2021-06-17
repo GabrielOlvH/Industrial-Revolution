@@ -19,7 +19,7 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY, pos, state) {
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.8, 7000..9000, 10000.0)
+        this.temperatureComponent = TemperatureComponent(this, 0.8, 7000..9000, 10000)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }

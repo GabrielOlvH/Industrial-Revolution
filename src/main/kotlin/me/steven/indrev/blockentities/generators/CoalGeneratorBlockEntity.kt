@@ -15,7 +15,7 @@ class CoalGeneratorBlockEntity(pos: BlockPos, state: BlockState) :
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(6)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.08, 900..2000, 2500.0)
+        this.temperatureComponent = TemperatureComponent(this, 0.08, 900..2000, 2500)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 2

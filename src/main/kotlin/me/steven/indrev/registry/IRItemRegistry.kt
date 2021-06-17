@@ -284,9 +284,9 @@ object IRItemRegistry {
 
     val BIOMASS = DEFAULT_ITEM()
 
-    val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
-    val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
-    val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
+    val FAN = Item(itemSettings().maxDamage(128))
+    val COOLER_CELL = Item(itemSettings().maxDamage(512))
+    val HEATSINK = Item(itemSettings().maxDamage(1536))
     val HEAT_COIL = object : Item(itemSettings().maxDamage(128)) {
         override fun appendTooltip(
             stack: ItemStack?,

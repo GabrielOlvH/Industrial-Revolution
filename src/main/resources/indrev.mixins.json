@@ -8,6 +8,7 @@
     "common.AccessorAnimalEntity",
     "common.AccessorEnchantmentPredicate",
     "common.AccessorFluidBlock",
+    "common.AccessorItemTags",
     "common.AccessorRecipeManager",
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",

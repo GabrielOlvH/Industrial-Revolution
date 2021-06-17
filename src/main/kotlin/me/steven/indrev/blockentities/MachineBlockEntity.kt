@@ -56,7 +56,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
-    var explode = false
     private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
 
     private var lastEnergyUpdate = 0

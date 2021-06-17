@@ -23,7 +23,7 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.2, 1700..2500, 2700.0)
+        this.temperatureComponent = TemperatureComponent(this, 0.2, 1700..2500, 2700)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }

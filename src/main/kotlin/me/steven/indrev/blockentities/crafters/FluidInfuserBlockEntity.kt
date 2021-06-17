@@ -18,7 +18,7 @@ class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slot = 3 }

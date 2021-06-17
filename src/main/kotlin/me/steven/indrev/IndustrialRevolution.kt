@@ -13,6 +13,7 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
+import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
 import me.steven.indrev.recipes.SelfRemainderRecipe
@@ -37,12 +38,14 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
+import net.minecraft.tag.Tag
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
@@ -214,6 +217,8 @@ object IndustrialRevolution : ModInitializer {
     } as ExtendedScreenHandlerType<ResourceReportScreenHandler>
 
     val CABINET_HANDLER = CabinetScreenHandler.SCREEN_ID.registerScreenHandler(::CabinetScreenHandler)
+
+    val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
