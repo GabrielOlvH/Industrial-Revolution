@@ -9,10 +9,10 @@ import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.items.upgrade.Enhancer
-import me.steven.indrev.recipes.ExperienceRewardRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.getRecipes
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -171,14 +171,18 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     @Suppress("UNCHECKED_CAST")
     fun dropExperience(player: PlayerEntity) {
-        //TODO wtf bro
         val list = mutableListOf<T>()
+
         usedRecipes.forEach { (id, amount) ->
-            world!!.recipeManager[id].ifPresent { recipe ->
-                list.add(recipe as? T ?: return@ifPresent)
-                spawnOrbs(world!!, player.pos, amount, ((recipe as? ExperienceRewardRecipe)?.amount ?: (recipe as? SmeltingRecipe)?.experience ?: return@ifPresent))
+            for (recipes in world!!.recipeManager.getRecipes().values) {
+                val recipe = recipes[id] ?: continue
+                list.add(recipe as? T ?: continue)
+                if (recipe is SmeltingRecipe)
+                    spawnOrbs(world!!, player.pos, amount, recipe.experience)
+                break
             }
         }
+
         player.unlockRecipes(list.toList())
         usedRecipes.clear()
     }
