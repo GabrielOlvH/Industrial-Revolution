@@ -64,7 +64,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                 isCrafting = false
             }
         }
-        temperatureComponent?.tick(isProcessing())
+        temperatureComponent?.tick(isProcessing() && isCrafting)
     }
 
     private fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
