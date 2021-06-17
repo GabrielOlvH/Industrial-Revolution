@@ -44,7 +44,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
             recentlyRemoved[pos.asLong()] = endpointData.remove(pos.asLong())
     }
 
-    open fun onSet(blockPos: BlockPos, network: T) {
+    override fun onSet(blockPos: BlockPos, network: T) {
         type.version++
         if (recentlyRemoved.containsKey(blockPos.asLong())) {
             endpointData[blockPos.asLong()] = recentlyRemoved.remove(blockPos.asLong())

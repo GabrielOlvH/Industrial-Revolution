@@ -131,12 +131,8 @@ abstract class Network(
             queuedUpdates.forEach { pos ->
                 if (!updatedPositions.contains(pos)) {
                     val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
-                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty()) {
+                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty())
                         networks.add(network)
-                        (state as? ServoNetworkState<T>)?.let {
-                            network.pipes.forEach { pos -> it.onSet(pos, network) }
-                        }
-                    }
                     else
                         remove(world, network)
                 }

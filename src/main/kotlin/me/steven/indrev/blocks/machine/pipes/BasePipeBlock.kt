@@ -42,7 +42,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
 
     abstract fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape
 
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = BasePipeBlockEntity(tier, pos, state)
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = BasePipeBlockEntity(type, tier, pos, state)
 
     override fun getOutlineShape(
         state: BlockState,

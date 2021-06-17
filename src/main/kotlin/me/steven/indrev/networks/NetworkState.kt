@@ -10,6 +10,9 @@ open class NetworkState<T : Network>(val type: Network.Type<T>, val world: Serve
     open fun onRemoved(pos: BlockPos) {
     }
 
+    open fun onSet(blockPos: BlockPos, network: T) {
+    }
+
 
     override fun writeNbt(tag: NbtCompound): NbtCompound {
 

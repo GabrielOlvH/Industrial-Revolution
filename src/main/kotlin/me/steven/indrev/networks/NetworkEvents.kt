@@ -1,6 +1,6 @@
 package me.steven.indrev.networks
 
-import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
@@ -22,7 +22,7 @@ object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.Serv
     }
 
     override fun onLoad(blockEntity: BlockEntity, world: ServerWorld) {
-        val pipeBlock = blockEntity.cachedState.block as? BasePipeBlock ?: return
-        pipeBlock.type.queueUpdate(blockEntity.pos.asLong())
+        if (blockEntity is BasePipeBlockEntity)
+            blockEntity.pipeType.queueUpdate(blockEntity.pos.asLong())
     }
 }

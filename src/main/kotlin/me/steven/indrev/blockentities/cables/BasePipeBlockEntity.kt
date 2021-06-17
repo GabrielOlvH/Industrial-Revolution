@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.cables
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
+import me.steven.indrev.networks.Network
 import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity
@@ -15,7 +16,7 @@ import net.minecraft.nbt.NbtOps
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class BasePipeBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+class BasePipeBlockEntity(val pipeType: Network.Type<*>, tier: Tier, pos: BlockPos, state: BlockState) :
     BlockEntity(when (tier) {
         Tier.MK1 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK1
         Tier.MK2 -> IRBlockRegistry.COVERABLE_BLOCK_ENTITY_TYPE_MK2

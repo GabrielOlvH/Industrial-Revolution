@@ -8,6 +8,7 @@ import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
+import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
@@ -160,11 +161,11 @@ object IRBlockRegistry {
     val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK3)
     val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK4)
 
-    val COVERABLE_BLOCK_ENTITY_TYPE_MK1 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity(Tier.MK1, pos, state) }, FLUID_PIPE_MK1, ITEM_PIPE_MK1, CABLE_MK1).build(null)
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK1 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK1, pos, state) }, FLUID_PIPE_MK1, ITEM_PIPE_MK1, CABLE_MK1).build(null)
 
-    val COVERABLE_BLOCK_ENTITY_TYPE_MK2 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity(Tier.MK2, pos, state) }, FLUID_PIPE_MK2, ITEM_PIPE_MK2, CABLE_MK2).build(null)
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK2 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK2, pos, state) }, FLUID_PIPE_MK2, ITEM_PIPE_MK2, CABLE_MK2).build(null)
 
-    val COVERABLE_BLOCK_ENTITY_TYPE_MK3 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity(Tier.MK3, pos, state) }, FLUID_PIPE_MK3, ITEM_PIPE_MK3, CABLE_MK3).build(null)
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK3 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK3, pos, state) }, FLUID_PIPE_MK3, ITEM_PIPE_MK3, CABLE_MK3).build(null)
 
-    val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity(Tier.MK4, pos, state) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
+    val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK4, pos, state) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
 }

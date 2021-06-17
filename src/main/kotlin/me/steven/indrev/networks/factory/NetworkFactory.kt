@@ -54,11 +54,11 @@ interface NetworkFactory<T : Network> {
     }
 
     fun deepScan(
-        type: Network.Type<*>,
+        type: Network.Type<T>,
         world: ServerWorld,
         source: BlockPos
     ): T {
-        type as Network.Type<T>
+        type
         val network = type.createEmpty(world)
         DIRECTIONS.forEach { direction ->
             deepScan(LongOpenHashSet(), type, network, world.getChunk(source), world, source, source, direction)

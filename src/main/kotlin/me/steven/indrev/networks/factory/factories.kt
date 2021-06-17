@@ -7,6 +7,7 @@ import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
+import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.energy.EnergyNetwork
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.item.ItemNetwork
@@ -16,7 +17,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-val ENERGY_NET_FACTORY = object : NetworkFactory<EnergyNetwork> {
+val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<EnergyNetwork> {
     override fun process(
         network: EnergyNetwork,
         world: ServerWorld,
@@ -34,7 +35,7 @@ val ENERGY_NET_FACTORY = object : NetworkFactory<EnergyNetwork> {
     }
 }
 
-val FLUID_NET_FACTORY = object : NetworkFactory<FluidNetwork> {
+val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<FluidNetwork> {
     override fun process(
         network: FluidNetwork,
         world: ServerWorld,
@@ -49,13 +50,14 @@ val FLUID_NET_FACTORY = object : NetworkFactory<FluidNetwork> {
             network.appendContainer(pos, direction)
         } else if (blockState().block is FluidPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
+            Network.Type.FLUID.getNetworkState(world)?.onSet(pos, network)
             return true
         }
         return false
     }
 }
 
-val ITEM_NET_FACTORY = object : NetworkFactory<ItemNetwork> {
+val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<ItemNetwork> {
     override fun process(
         network: ItemNetwork,
         world: ServerWorld,
@@ -70,6 +72,7 @@ val ITEM_NET_FACTORY = object : NetworkFactory<ItemNetwork> {
             network.appendContainer(pos, direction)
         } else if (blockState().block is ItemPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
+            Network.Type.ITEM.getNetworkState(world)?.onSet(pos, network)
             return true
         }
         return false
