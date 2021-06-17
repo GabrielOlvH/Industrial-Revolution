@@ -34,7 +34,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.mining_rig", ctx, playerInventory, blockInventory)
+        configure("block.indrev.mining_rig", ctx, playerInventory, blockInventory, invPos = 5.0, widgetPos = 0.7)
 
         val outputSlots = WTooltipedItemSlot.of(blockInventory, 1, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
         outputSlots.isInsertingAllowed = false
@@ -47,7 +47,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
             val bg = WStaticTooltip()
-            root.add(bg, 1.5, 1.0)
+            root.add(bg, 1.5, 0.9)
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
             when {
@@ -61,28 +61,28 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                             )
                         }
                     }
-                    root.add(sprite, 3.1, 1.6)
+                    root.add(sprite, 3.1, 1.5)
                     sprite.setSize(16, 16)
                 }
                 activeDrills.isEmpty() -> {
                     val noDrillsText = TranslatableText("block.indrev.drill.no_drills")
-                    root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.45, 1.85)
+                    root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.45, 1.75)
                 }
                 else -> {
                     activeDrills.forEachIndexed { index, drill ->
                         val panel = getDrillInfo(drill)
-                        root.add(panel, 1.5 + if (index > 3) index - 4 else index, 1.5 + if (index > 3) 0.75 else 0.0)
+                        root.add(panel, 1.6 + if (index > 3) index - 4 else index, 1.4 + if (index > 3) 0.75 else 0.0)
                     }
                 }
             }
             root.add(WText({
                 val totalMultiplier = activeDrills.sumOf { it.getSpeedMultiplier() }
                 TranslatableText("block.indrev.drill.faster", totalMultiplier)
-            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.2)
+            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.1)
         }
         root.add(WText({
             TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[3]}%")
-        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.9)
+        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
 
         root.validate(this)
     }

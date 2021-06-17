@@ -27,25 +27,25 @@ class ElectricFurnaceFactoryScreenHandler(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.electric_furnace_factory", ctx, playerInventory, blockInventory)
+        configure("block.indrev.electric_furnace_factory", ctx, playerInventory, blockInventory, widgetPos = 0.15)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? ElectricFurnaceFactoryBlockEntity ?: return@run
             val slotsAmount = 5
-            val offset = 2.6
+            val offset = 2.2
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.inputSlots.withIndex()) {
                 val inputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(inputSlot, offset + (index * 1.2), 1.0)
+                root.add(inputSlot, offset + (index * 1.4), 0.6)
             }
 
             for (i in 0 until slotsAmount) {
                 val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
-                root.add(processWidget, offset + (i * 1.2), 2.2)
+                root.add(processWidget, offset + (i * 1.4), 1.7)
             }
 
             for ((index, slot) in blockEntity.inventoryComponent!!.inventory.outputSlots.withIndex()) {
                 val outputSlot = WItemSlot.of(blockInventory, slot)
-                root.add(outputSlot, offset + (index * 1.2), 3.5)
+                root.add(outputSlot, offset + (index * 1.4), 2.9)
                 outputSlot.addChangeListener { _, _, _, _ ->
                     val player = playerInventory.player
                     if (!player.world.isClient) {

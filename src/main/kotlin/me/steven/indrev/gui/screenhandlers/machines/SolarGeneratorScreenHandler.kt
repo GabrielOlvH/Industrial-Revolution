@@ -43,7 +43,7 @@ class SolarGeneratorScreenHandler(
                 if (blockEntity.shouldGenerate()) TranslatableText("gui.indrev.solar.on")
                 else TranslatableText("gui.indrev.heatgen.idle")
             }, HorizontalAlignment.CENTER, 0x404040)
-            root.add(text, 4.5, 2.7)
+            root.add(text, 5.0, 2.7)
         }
 
         root.validate(this)

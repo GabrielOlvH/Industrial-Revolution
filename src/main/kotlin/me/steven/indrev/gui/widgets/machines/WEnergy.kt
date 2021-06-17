@@ -10,7 +10,7 @@ import net.minecraft.util.Formatting
 
 class WEnergy : WBar(ENERGY_EMPTY, ENERGY_FULL, 0, 1, Direction.UP) {
     init {
-        this.setSize(16, 64)
+        this.setSize(10, 64)
     }
 
     override fun addTooltip(information: TooltipBuilder?) {
@@ -18,7 +18,6 @@ class WEnergy : WBar(ENERGY_EMPTY, ENERGY_FULL, 0, 1, Direction.UP) {
         val maxEnergy = getEnergyString(properties[1].toDouble())
         information?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
         information?.add(LiteralText("$energy / $maxEnergy LF"))
-
     }
 
     override fun canResize(): Boolean = false

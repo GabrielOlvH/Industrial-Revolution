@@ -164,7 +164,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     private fun buildInstallPanel(): WGridPanel {
         val root = WGridPanel()
-        configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, root)
+        configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, root, invPos = 5.0, widgetPos = 0.9)
 
         val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.modular_armor_slot_type"))
         root.add(armorSlot, 1.5, 3.5)

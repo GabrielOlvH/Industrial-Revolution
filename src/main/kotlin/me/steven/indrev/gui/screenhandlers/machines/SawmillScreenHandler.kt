@@ -25,14 +25,14 @@ class SawmillScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         configure("block.indrev.sawmill", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.2, 2.0)
+        root.add(inputSlot, 3.0, 1.8)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.35, 2.0)
+        root.add(processWidget, 4.15, 1.8)
 
         val outputSlots = WItemSlot.of(blockInventory, 3, 2, 2)
         outputSlots.isInsertingAllowed = false
-        root.add(outputSlots, 5.7, 1.5)
+        root.add(outputSlots, 5.5, 1.3)
 
         root.validate(this)
     }

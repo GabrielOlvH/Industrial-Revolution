@@ -53,15 +53,17 @@ fun SyncedGuiDescription.configure(
     ctx: ScreenHandlerContext,
     playerInventory: PlayerInventory,
     blockInventory: Inventory,
-    panel: WGridPanel = rootPanel as WGridPanel
+    panel: WGridPanel = rootPanel as WGridPanel,
+    invPos: Double = 4.0,
+    widgetPos: Double = 0.15
 ) {
     panel.setSize(150, 120)
-    panel.add(createPlayerInventoryPanel(), 0, 5)
+    panel.add(createPlayerInventoryPanel(), 0.0, invPos)
     val title = WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040)
-    var titlePos = 5.0
+    var titlePos = 4.7
 
     val energyWidget = WEnergy()
-    panel.add(energyWidget, 0.1, 0.0)
+    panel.add(energyWidget, 0.1, widgetPos)
 
     ctx.run { world, blockPos ->
         val blockEntity = world.getBlockEntity(blockPos)
@@ -72,7 +74,7 @@ fun SyncedGuiDescription.configure(
 
         if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
             titlePos += 0.5
-            addTemperatureWidget(blockEntity, panel, blockInventory, world)
+            addTemperatureWidget(blockEntity, panel, blockInventory, world, widgetPos)
         }
 
         if (blockEntity is AOEMachineBlockEntity<*>) {
@@ -145,14 +147,14 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
     panel.add(slotPanel, 9.7, -0.25)
 }
 
-fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World) {
+fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World, widgetPos: Double) {
     val controller = blockEntity.temperatureComponent!!
-    panel.add(WTemperature(controller), 1.1, 0.0)
+    panel.add(WTemperature(controller), 0.95, widgetPos)
     val coolerSlot =
         WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
     if (world.isClient)
         coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
-    panel.add(coolerSlot, 1.0, 3.7)
+    panel.add(coolerSlot, 0.75, widgetPos + 2.6)
 }
 
 fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WGridPanel) {

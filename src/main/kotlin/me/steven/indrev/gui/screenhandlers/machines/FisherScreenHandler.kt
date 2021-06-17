@@ -27,11 +27,11 @@ class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
         setRootPanel(root)
         configure("block.indrev.fisher", ctx, playerInventory, blockInventory)
 
-        root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.95, 0.7)
+        root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.7, 0.7)
 
         val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod"))
         fishingRodSlot.setIcon(ctx, blockInventory, 1, FISHING_ROD_ICON)
-        root.add(fishingRodSlot, 4.45, 3.5)
+        root.add(fishingRodSlot, 4.2, 3.0)
 
         root.validate(this)
     }

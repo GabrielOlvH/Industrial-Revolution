@@ -63,7 +63,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
     private fun buildMainPanel(): WWidget {
         val mainPanel = WGridPanel()
-        configure("block.indrev.rancher", ctx, playerInventory, blockInventory, mainPanel)
+        configure("block.indrev.rancher", ctx, playerInventory, blockInventory, mainPanel, invPos = 4.45)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         mainPanel.add(inputFrame, 1.9, 0.7)
@@ -84,7 +84,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         )
 
         val slider = WSlider(1, 9, Axis.HORIZONTAL)
-        mainPanel.add(slider, 1.6, 4.0)
+        mainPanel.add(slider, 1.6, 3.6)
         slider.setSize(50, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
@@ -95,7 +95,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val text = WText({
             TranslatableText("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
-        mainPanel.add(text, 1.8, 3.7)
+        mainPanel.add(text, 1.8, 3.3)
 
         return mainPanel
     }

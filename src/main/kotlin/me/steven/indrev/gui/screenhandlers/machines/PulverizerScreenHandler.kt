@@ -27,18 +27,18 @@ class PulverizerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx
         configure("block.indrev.pulverizer", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.5, 1.8)
+        root.add(inputSlot, 3.3, 1.2)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.65, 1.8)
+        root.add(processWidget, 4.4, 1.2)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.14, 1.8)
+        root.add(outputSlot, 5.84, 1.2)
 
         val extraOutputSlot = WItemSlot.of(blockInventory, 4)
         extraOutputSlot.isInsertingAllowed = false
-        root.add(extraOutputSlot, 6.14, 3.1)
+        root.add(extraOutputSlot, 5.84, 2.5)
 
         root.validate(this)
     }

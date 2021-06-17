@@ -33,10 +33,10 @@ class HeatGeneratorScreenHandler(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.heat_generator", ctx, playerInventory, blockInventory)
+        configure("block.indrev.heat_generator", ctx, playerInventory, blockInventory, invPos = 4.25)
 
         val info = WStaticTooltip()
-        root.add(info, 2.5, 1.25)
+        root.add(info, 2.3, 0.9)
         info.setSize(90, 55)
 
         ctx.run { world, pos ->
@@ -45,20 +45,20 @@ class HeatGeneratorScreenHandler(
                 val consumptionRate = blockEntity.getConsumptionRate(propertyDelegate[2].toDouble()).div(10).asInt(1000).toString()
                 TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
             }, HorizontalAlignment.LEFT)
-            root.add(generatingText, 2.5, 1.4)
+            root.add(generatingText, 2.5, 1.0)
         }
-        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 2.0)
+        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
 
         val amount = WText({
             val ratio = propertyDelegate[6]
             TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
-        root.add(amount, 2.5, 3.0)
+        root.add(amount, 2.5, 2.6)
 
-        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.6)
+        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.2)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 8, 1)
+        root.add(fluid, 8.0, 0.6)
 
         root.validate(this)
     }

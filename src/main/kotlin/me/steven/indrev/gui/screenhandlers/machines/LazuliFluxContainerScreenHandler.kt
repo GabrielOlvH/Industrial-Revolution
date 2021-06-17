@@ -46,23 +46,23 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
 
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER, 0x404040),
-            5.95,
+            5.95 + 0.3,
             0.0
         )
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040),
-            5.95,
+            5.95 + 0.3,
             0.7
         )
 
         val wEnergy = WEnergy()
-        root.add(wEnergy, 8.0, 0.5)
+        root.add(wEnergy, 8.4, 0.4)
 
         ctx.run { world, _ ->
             val itemSlot = WItemSlot.of(blockInventory, 0)
             if (world.isClient)
                 itemSlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
-            root.add(itemSlot, 5.4, 1.3)
+            root.add(itemSlot, 5.7, 1.3)
 
             root.add(createPlayerInventoryPanel(), 0.0, 4.2)
 

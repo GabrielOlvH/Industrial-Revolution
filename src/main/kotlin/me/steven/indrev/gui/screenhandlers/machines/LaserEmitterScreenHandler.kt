@@ -3,6 +3,7 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WLabel
+import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WEnergy
@@ -26,15 +27,15 @@ class LaserEmitterScreenHandler(
     init {
         val root = WGridPanel()
         setRootPanel(root)
+        root.insets = Insets.ROOT_PANEL
 
-        val label = WLabel(TranslatableText("block.indrev.laser_mk4"))
+        val label = WLabel(TranslatableText("block.indrev.laser_emitter_mk4"))
         root.add(label, 0, 0)
-        label.setLocation(3, 0)
-        label.setSize(70, 0)
+        label.setSize(75, 0)
 
         val energy = WEnergy()
         root.add(energy, 1, 1)
-        energy.setLocation(9 + 18, 18)
+        energy.setLocation(9 + 16 + root.insets.left, 16 + root.insets.top)
 
         root.validate(this)
     }
