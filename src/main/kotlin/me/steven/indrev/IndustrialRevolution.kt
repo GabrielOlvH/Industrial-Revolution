@@ -15,8 +15,6 @@ import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
-import me.steven.indrev.recipes.CopyNBTShapedRecipe
-import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
@@ -101,9 +99,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, LaserRecipe.IDENTIFIER, LaserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, LaserRecipe.IDENTIFIER, LaserRecipe.TYPE)
 
-        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
         PacketRegistry.registerServer()
 
