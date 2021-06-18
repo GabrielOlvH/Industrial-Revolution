@@ -43,13 +43,13 @@ open class EnergyNetwork(
                 val q = PriorityQueue(queue[pos] ?: return@forEach)
                 if (!world.isLoaded(pos)) return@forEach
                 directions.forEach inner@{ dir ->
-                    val energyIo = energyOf(world, pos, dir) ?: return@inner
+                    val energyIo = energyOf(world, pos, dir.opposite) ?: return@inner
                     var remaining = energyIo.maxOutput
 
                     while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
                         val (_, targetPos, _, targetDir) = q.poll()
                         if (!world.isLoaded(targetPos)) continue
-                        val target = energyOf(world, targetPos, targetDir) ?: continue
+                        val target = energyOf(world, targetPos, targetDir.opposite) ?: continue
                         if (!target.supportsInsertion()) continue
                         val maxInput = remainingInputs.computeIfAbsent(targetPos) { target.maxInput }
                         if (maxInput < 1e-9) continue

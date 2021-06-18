@@ -77,7 +77,7 @@ class FluidNetwork(
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
-        val extractable = fluidExtractableOf(world, pos, dir)
+        val extractable = fluidExtractableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
@@ -95,7 +95,7 @@ class FluidNetwork(
     }
 
     private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
-        val insertable = fluidInsertableOf(world, pos, dir)
+        val insertable = fluidInsertableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.poll()
@@ -104,7 +104,7 @@ class FluidNetwork(
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue
 
-            val extractable = fluidExtractableOf(world, targetPos, targetDir)
+            val extractable = fluidExtractableOf(world, targetPos, targetDir.opposite)
             val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, Simulation.ACTION)
             if (!moved.isEmpty)
                 lastTransferred = moved.fluidKey

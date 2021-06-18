@@ -1,6 +1,7 @@
 package me.steven.indrev.networks.factory
 
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
@@ -26,7 +27,7 @@ val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<
         blockState: () -> BlockState
     ): Boolean {
         if (energyOf(world, pos, direction) != null) {
-            network.appendContainer(pos, direction)
+            network.appendContainer(pos, direction.opposite)
         } else if (blockState().block is CableBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
             return true
@@ -46,8 +47,9 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
         if (
             fluidInsertableOf(world, pos, direction) != RejectingFluidInsertable.NULL
             || fluidExtractableOf(world, pos, direction) != EmptyFluidExtractable.NULL
+            || groupedFluidInv(world, pos, direction) != EmptyGroupedFluidInv.INSTANCE
         ) {
-            network.appendContainer(pos, direction)
+            network.appendContainer(pos, direction.opposite)
         } else if (blockState().block is FluidPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
             Network.Type.FLUID.getNetworkState(world)?.onSet(pos, network)
@@ -69,7 +71,7 @@ val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<Item
             itemInsertableOf(world, pos, direction) != RejectingItemInsertable.NULL
             || itemExtractableOf(world, pos, direction) != EmptyItemExtractable.NULL
         ) {
-            network.appendContainer(pos, direction)
+            network.appendContainer(pos, direction.opposite)
         } else if (blockState().block is ItemPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
             Network.Type.ITEM.getNetworkState(world)?.onSet(pos, network)
