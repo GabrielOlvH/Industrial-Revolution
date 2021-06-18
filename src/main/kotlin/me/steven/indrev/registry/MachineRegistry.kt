@@ -606,12 +606,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
             .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
-            .blockEntityProvider { { SteamTurbineBlockEntity() } }
+            .blockEntityProvider { { pos, state -> SteamTurbineBlockEntity(pos, state) } }
             .defaultModelProvider(true)
 
         val DISTILLER_REGISTRY = MachineRegistry("distiller", false, Tier.MK4)
             .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.machines.distiller, ::DistillerScreenHandler) }
-            .blockEntityProvider { { DistillerBlockEntity() } }
+            .blockEntityProvider { { pos, state -> DistillerBlockEntity(pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider(true)
     }

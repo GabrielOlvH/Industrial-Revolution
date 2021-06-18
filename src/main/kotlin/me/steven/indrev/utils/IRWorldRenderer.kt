@@ -7,7 +7,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.nbt.LongTag
+import net.minecraft.nbt.NbtLong
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
@@ -20,7 +20,7 @@ object IRWorldRenderer : WorldRenderEvents.BeforeBlockOutline {
         val stack = player.mainHandStack ?: return true
         if (stack.item !is IRWrenchItem || stack.tag?.contains("SelectedHeliostats") != true) return true
 
-        val positions = stack.tag?.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as LongTag).long) } ?: return true
+        val positions = stack.tag?.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) } ?: return true
         val vcp = context.consumers() as VertexConsumerProvider.Immediate
         val vc = vcp.getBuffer(RenderLayer.getLines()) ?: return true
         val (cX, cY, cZ) = MinecraftClient.getInstance().gameRenderer.camera.pos

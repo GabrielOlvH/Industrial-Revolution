@@ -17,6 +17,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtLong
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -97,7 +98,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
                         positions.add(pos.asLong())
                         HeliostatBlock.findConnectingHeliostats(pos, world, LongOpenHashSet(), positions)
                         val tagList = stack.orCreateTag.getList("SelectedHeliostats", 4)
-                        positions.forEach { long -> tagList.add(LongTag.of(long)) }
+                        positions.forEach { long -> tagList.add(NbtLong.of(long)) }
                         stack.orCreateTag.put("SelectedHeliostats", tagList)
                         player?.sendMessage(LiteralText("Click on Solar Power Plant Tower to link the Heliostats."), true)
                     } else if (blockEntity is MachineBlockEntity<*>) {

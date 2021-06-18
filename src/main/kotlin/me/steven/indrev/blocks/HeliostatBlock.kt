@@ -6,17 +6,29 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockRenderType
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 class HeliostatBlock(settings: Settings) : Block(settings), BlockEntityProvider {
 
     override fun getRenderType(state: BlockState?): BlockRenderType = BlockRenderType.ENTITYBLOCK_ANIMATED
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = HeliostatBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = HeliostatBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else return BlockEntityTicker { world, pos, state, blockEntity ->
+            HeliostatBlockEntity.tick(world, pos, state, blockEntity as? HeliostatBlockEntity ?: return@BlockEntityTicker)
+        }
+    }
 
     companion object {
         private const val RAD2DEG = 57.2957763671875
@@ -28,11 +40,11 @@ class HeliostatBlock(settings: Settings) : Block(settings), BlockEntityProvider 
         }
 
         fun getPitch(origin: BlockPos, target: BlockPos): Float {
-            val xOffset = target.x + 0.5 - origin.x.toDouble() + 0.5
-            val yOffset = target.y + 0.5 - origin.y.toDouble() + 0.5
-            val zOffset = target.z + 0.5 - origin.z.toDouble() + 0.5
+            val xOffset = target.x + 0.5f - origin.x.toFloat() + 0.5f
+            val yOffset = target.y + 0.5f - origin.y.toFloat() + 0.5f
+            val zOffset = target.z + 0.5f - origin.z.toFloat() + 0.5f
             val g = MathHelper.sqrt(xOffset * xOffset + zOffset * zOffset).toDouble()
-            return MathHelper.wrapDegrees((-(MathHelper.atan2(yOffset, g) * RAD2DEG)).toFloat())
+            return MathHelper.wrapDegrees((-(MathHelper.atan2(yOffset.toDouble(), g) * RAD2DEG)).toFloat())
         }
 
 

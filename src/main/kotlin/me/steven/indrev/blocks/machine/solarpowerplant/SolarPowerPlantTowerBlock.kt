@@ -10,20 +10,30 @@ import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.nbt.LongTag
+import net.minecraft.nbt.NbtLong
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(settings), BlockEntityProvider {
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = SolarPowerPlantTowerBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = SolarPowerPlantTowerBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else return BlockEntityTicker { world, pos, state, blockEntity -> SolarPowerPlantTowerBlockEntity.tick(world, pos, state, blockEntity as? SolarPowerPlantTowerBlockEntity ?: return@BlockEntityTicker) }
+    }
 
     override fun onUse(
         state: BlockState,
@@ -36,7 +46,7 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
         if (!world.isClient) {
             val stack = player.getStackInHand(hand)
             if (stack.item == IRItemRegistry.WRENCH && stack.orCreateTag.contains("SelectedHeliostats")) {
-                val positions = stack.tag!!.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as LongTag).long) }
+                val positions = stack.tag!!.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) }
                 val receivers = SolarPowerPlantTowerStructureDefinition.getSolarReceiverPositions(pos, state)
 
                 positions?.forEach { p ->

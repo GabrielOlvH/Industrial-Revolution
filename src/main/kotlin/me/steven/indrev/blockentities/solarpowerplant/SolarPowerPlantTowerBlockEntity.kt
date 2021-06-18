@@ -12,34 +12,36 @@ import me.steven.indrev.registry.IRBlockRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
-import net.minecraft.util.Tickable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class SolarPowerPlantTowerBlockEntity
-    : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY),
-    BlockEntityClientSerializable, Tickable, PropertyDelegateHolder, ComponentProvider {
+class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
+    : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state),
+    BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
-    val temperatureComponent = TemperatureComponent({ null }, 0.2, 1100..1300, 1500.0, { this })
+    val temperatureComponent = TemperatureComponent(this, 0.2, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
     val fluidComponent = FluidComponent(this, FluidAmount.ofWhole(16))
 
     var heliostats = 0
 
-    override fun tick() {
-        multiblockComponent.tick(world!!, pos, cachedState)
-        if (multiblockComponent.isBuilt(world!!, pos, cachedState)) {
-            SolarPowerPlantTowerStructureDefinition.getSmelterPositions(pos, cachedState).forEach { smelterPos ->
-                val blockEntity = world!!.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
-                blockEntity.tickStacks(this)
+    companion object {
+        fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: SolarPowerPlantTowerBlockEntity) {
+            blockEntity.multiblockComponent.tick(world, pos, state)
+            if (blockEntity.multiblockComponent.isBuilt(world, pos, state)) {
+                SolarPowerPlantTowerStructureDefinition.getSmelterPositions(pos, state).forEach { smelterPos ->
+                    val smelterBlockEntity =
+                        world.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
+                    smelterBlockEntity.tickStacks(blockEntity)
+                }
+                val limit = blockEntity.heliostats * 3
+                blockEntity.temperatureComponent.tick(blockEntity.temperatureComponent.temperature < limit)
+                blockEntity.heliostats = 0
             }
-            val limit = heliostats * 3
-            temperatureComponent.tick(temperatureComponent.temperature < limit)
-            heliostats = 0
         }
     }
 
@@ -52,30 +54,30 @@ class SolarPowerPlantTowerBlockEntity
         }
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag) {
-        super.fromTag(state, tag)
-        temperatureComponent.fromTag(tag)
+    override fun readNbt(tag: NbtCompound) {
+        super.readNbt(tag)
+        temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
-        multiblockComponent.fromTag(tag)
+        multiblockComponent.readNbt(tag)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        temperatureComponent.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
-        multiblockComponent.toTag(tag)
-        return super.toTag(tag)
+        multiblockComponent.writeNbt(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag) {
-        temperatureComponent.fromTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
+        temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
-        multiblockComponent.fromTag(tag)
+        multiblockComponent.readNbt(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
-        temperatureComponent.toTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
-        multiblockComponent.toTag(tag)
+        multiblockComponent.writeNbt(tag)
         return tag
     }
 

@@ -28,62 +28,68 @@ import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.util.Tickable
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
-class BoilerBlockEntity
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY), BlockEntityClientSerializable, Tickable, PropertyDelegateHolder, ComponentProvider {
+class BoilerBlockEntity(pos: BlockPos, state: BlockState)
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
     val multiblockComponent = BoilerMultiblockComponent()
     val fluidComponent = BoilerFluidComponent()
-    val temperatureComponent = TemperatureComponent({ null }, 0.1, 700..1000, 1200.0, { this })
+    val temperatureComponent = TemperatureComponent(this,0.1, 700..1000, 1200)
     var inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
     var solidifiedSalt = 0.0
 
-    override fun tick() {
-        multiblockComponent.tick(world!!, pos, cachedState)
-        if (multiblockComponent.isBuilt(world!!, pos, cachedState)) {
-            interactWithTanks()
+    companion object {
 
-            val moltenSaltVolume = fluidComponent.getTank(0)
-            val hasMoltenSalt = moltenSaltVolume.get().fluidKey.rawFluid!!.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL)
-            temperatureComponent.tick(hasMoltenSalt)
-            solidifiedSalt += moltenSaltVolume.extract(MB.div(3)).amount().asInexactDouble()
+        val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
+        val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(8)
+        val MOLTEN_SALT_AMOUNT: FluidAmount = SolarPowerPlantSmelterBlockEntity.MOLTEN_SALT_AMOUNT
 
-            if (solidifiedSalt >= MOLTEN_SALT_AMOUNT.asInexactDouble() * 2.5) {
-                solidifiedSalt = 0.0
-                val stack = inventory[0]
-                if (stack.isEmpty) inventory[0] = ItemStack(IRItemRegistry.SALT, 1)
-                else if (stack.count < maxCountPerStack) stack.increment(1)
+        fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: BoilerBlockEntity) {
+            blockEntity.multiblockComponent.tick(world, pos, state)
+            if (blockEntity.multiblockComponent.isBuilt(world, pos, state)) {
+                blockEntity.interactWithTanks()
+
+                val moltenSaltVolume = blockEntity.fluidComponent.getTank(0)
+                val hasMoltenSalt = moltenSaltVolume.get().fluidKey.rawFluid!!.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL)
+                blockEntity.temperatureComponent.tick(hasMoltenSalt)
+                blockEntity.solidifiedSalt += moltenSaltVolume.extract(MB.div(3)).amount().asInexactDouble()
+
+                if (blockEntity.solidifiedSalt >= MOLTEN_SALT_AMOUNT.asInexactDouble() * 2.5) {
+                    blockEntity.solidifiedSalt = 0.0
+                    val stack = blockEntity.inventory[0]
+                    if (stack.isEmpty) blockEntity.inventory[0] = ItemStack(IRItemRegistry.SALT, 1)
+                    else if (stack.count < blockEntity.maxCountPerStack) stack.increment(1)
+                }
+
+                val waterVolume = blockEntity.fluidComponent.getTank(1)
+                val steamVolume = blockEntity.fluidComponent.getTank(2)
+
+                if (waterVolume.get().isEmpty || steamVolume.get().amount() >= blockEntity.fluidComponent.getMaxAmount_F(2)) return
+
+                val waterSteamConversionRate = FluidAmount.ofWhole(blockEntity.temperatureComponent.temperature.toLong()).sub(100L).div(2500L)
+                if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
+                val amountToConvert = waterVolume.get().amount()
+                    .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
+                    .coerceAtMost(waterSteamConversionRate)
+
+                waterVolume.extract(amountToConvert)
+
+                val volumeToConvert = FluidKeys.get(IRFluidRegistry.STEAM_STILL).withAmount(amountToConvert)
+                steamVolume.insert(volumeToConvert)
+
             }
-
-            val waterVolume = fluidComponent.getTank(1)
-            val steamVolume = fluidComponent.getTank(2)
-
-            if (waterVolume.get().isEmpty || steamVolume.get().amount() >= fluidComponent.getMaxAmount_F(2)) return
-
-            val waterSteamConversionRate = FluidAmount.ofWhole(temperatureComponent.temperature.toLong()).sub(100L).div(2500L)
-            if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
-            val amountToConvert = waterVolume.get().amount()
-                .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
-                .coerceAtMost(waterSteamConversionRate)
-
-            waterVolume.extract(amountToConvert)
-
-            val volumeToConvert = FluidKeys.get(IRFluidRegistry.STEAM_STILL).withAmount(amountToConvert)
-            steamVolume.insert(volumeToConvert)
-
         }
     }
 
@@ -123,34 +129,34 @@ class BoilerBlockEntity
         }
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag) {
-        super.fromTag(state, tag)
-        temperatureComponent.fromTag(tag)
+    override fun readNbt(tag: NbtCompound) {
+        super.readNbt(tag)
+        temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
-        multiblockComponent.fromTag(tag)
-        Inventories.fromTag(tag, inventory)
+        multiblockComponent.readNbt(tag)
+        Inventories.readNbt(tag, inventory)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        temperatureComponent.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
-        multiblockComponent.toTag(tag)
-        Inventories.toTag(tag, inventory)
-        return super.toTag(tag)
+        multiblockComponent.writeNbt(tag)
+        Inventories.writeNbt(tag, inventory)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag) {
-        temperatureComponent.fromTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
+        temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
-        multiblockComponent.fromTag(tag)
-        Inventories.fromTag(tag, inventory)
+        multiblockComponent.readNbt(tag)
+        Inventories.readNbt(tag, inventory)
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
-        temperatureComponent.toTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
-        multiblockComponent.toTag(tag)
-        Inventories.toTag(tag, inventory)
+        multiblockComponent.writeNbt(tag)
+        Inventories.writeNbt(tag, inventory)
         return tag
     }
 
@@ -189,11 +195,5 @@ class BoilerBlockEntity
         override fun getInteractInventory(tank: Int): FluidTransferable {
             return createWrapper(tank, tank)
         }
-    }
-
-    companion object {
-        val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
-        val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(8)
-        val MOLTEN_SALT_AMOUNT: FluidAmount = SolarPowerPlantSmelterBlockEntity.MOLTEN_SALT_AMOUNT
     }
 }

@@ -24,7 +24,7 @@ class DistillerRecipe(
 
     companion object {
         val IDENTIFIER = identifier("distiller")
-        val TYPE = IRRecipeType<DistillerRecipe>()
+        val TYPE = IRRecipeType<DistillerRecipe>(IDENTIFIER)
         val SERIALIZER = Serializer()
 
         class Serializer : IRFluidRecipeSerializer<DistillerRecipe>({ id, ingredients, output, fluidInput, _, ticks -> DistillerRecipe(id, ingredients, output, fluidInput!!, ticks) })

@@ -17,11 +17,11 @@ import me.steven.indrev.utils.plus
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.STEAM_TURBINE_REGISTRY) {
+class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlockEntity(Tier.MK4, MachineRegistry.STEAM_TURBINE_REGISTRY, pos, state) {
 
     init {
         this.multiblockComponent = SteamTurbineMultiblockComponent()
@@ -105,24 +105,24 @@ class SteamTurbineBlockEntity : GeneratorBlockEntity(Tier.MK4, MachineRegistry.S
         }
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Efficiency", efficiency)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         efficiency = tag?.getDouble("Efficiency") ?: efficiency
-        super.fromTag(state, tag)
+        super.readNbt( tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Efficiency", efficiency)
         tag?.putDouble("Generating", getGenerationRatio())
         tag?.put("Consuming", getConsumptionRatio().toNbt())
         return super.toClientTag(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         efficiency = tag?.getDouble("Efficiency") ?: efficiency
         generating = tag?.getDouble("Generating") ?: generating
         consuming = FluidAmount.fromNbt(tag?.getCompound("Consuming")) ?: consuming

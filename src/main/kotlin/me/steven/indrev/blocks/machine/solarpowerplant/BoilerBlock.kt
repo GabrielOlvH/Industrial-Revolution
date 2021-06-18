@@ -8,13 +8,14 @@ import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 class BoilerBlock(settings: Settings) : HorizontalFacingBlock(settings), BlockEntityProvider {
@@ -28,7 +29,18 @@ class BoilerBlock(settings: Settings) : HorizontalFacingBlock(settings), BlockEn
         super.onStateReplaced(state, world, pos, newState, moved)
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = BoilerBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = BoilerBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else BlockEntityTicker { world, pos, state, blockEntity ->
+            BoilerBlockEntity.tick(world, pos, state, blockEntity as? BoilerBlockEntity ?: return@BlockEntityTicker)
+        }
+    }
 
     override fun onUse(
         state: BlockState,

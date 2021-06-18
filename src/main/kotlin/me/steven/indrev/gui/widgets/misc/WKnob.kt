@@ -2,13 +2,14 @@ package me.steven.indrev.gui.widgets.misc
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Vec3f
 import kotlin.math.atan2
 
 class WKnob(var angle: Float = 30.0f, val pos: BlockPos) : WWidget() {
@@ -17,7 +18,7 @@ class WKnob(var angle: Float = 30.0f, val pos: BlockPos) : WWidget() {
         matrices?.run {
             push()
             translate(x.toDouble() + width / 2.0, y.toDouble() + width / 2.0, 0.0)
-            multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(angle))
+            multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(angle))
             translate(-x.toDouble() - width / 2.0, -y.toDouble() - width / 2.0, 0.0)
             ScreenDrawing.texturedRect(matrices, x, y, width, height, KNOB_TEXTURE_ID, -1)
             pop()
@@ -42,17 +43,18 @@ class WKnob(var angle: Float = 30.0f, val pos: BlockPos) : WWidget() {
         return angle.coerceIn(30f, 330f)
     }
 
-    override fun onMouseDrag(x: Int, y: Int, button: Int) {
+    override fun onMouseDrag(x: Int, y: Int, button: Int, deltaX: Double, deltaY: Double): InputResult {
         angle = calculateAngle(x.toFloat(), y.toFloat())
+        return InputResult.PROCESSED
     }
 
-    override fun onMouseUp(x: Int, y: Int, button: Int): WWidget {
+    override fun onMouseUp(x: Int, y: Int, button: Int): InputResult {
         val buf = PacketByteBufs.create()
 
         buf.writeBlockPos(pos)
         buf.writeFloat((angle - 30) / 300f)
         ClientPlayNetworking.send(UPDATE_EFFICIENCY_PACKET, buf)
-        return super.onMouseUp(x, y, button)
+        return InputResult.PROCESSED
     }
 
     companion object {

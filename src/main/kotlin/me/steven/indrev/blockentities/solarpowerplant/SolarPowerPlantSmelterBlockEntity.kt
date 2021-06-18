@@ -13,16 +13,17 @@ import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY),
+class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state),
     BlockEntityClientSerializable, SidedInventory {
 
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(12, ItemStack.EMPTY)
@@ -74,22 +75,22 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
         this.inventory = list
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag) {
-        super.fromTag(state, tag)
-        fromTag(tag, inventory, stackTemperatures)
+    override fun readNbt(tag: NbtCompound) {
+        super.readNbt(tag)
+        readNbt(tag, inventory, stackTemperatures)
     }
 
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        toTag(tag, inventory, stackTemperatures)
-        return super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        writeNbt(tag, inventory, stackTemperatures)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag) {
-        fromTag(tag, inventory, stackTemperatures)
+    override fun fromClientTag(tag: NbtCompound) {
+        readNbt(tag, inventory, stackTemperatures)
     }
 
-    override fun toClientTag(tag: CompoundTag): CompoundTag {
-        toTag(tag, inventory, stackTemperatures)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        writeNbt(tag, inventory, stackTemperatures)
         return tag
     }
 
@@ -97,32 +98,32 @@ class SolarPowerPlantSmelterBlockEntity : LootableContainerBlockEntity(IRBlockRe
 
         val MOLTEN_SALT_AMOUNT: FluidAmount = FluidAmount.of(1, 4)
 
-        fun fromTag(tag: CompoundTag, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
+        fun readNbt(tag: NbtCompound, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
             val listTag = tag.getList("Items", 10)
             for (i in listTag.indices) {
-                val compoundTag = listTag.getCompound(i)
-                val j: Int = compoundTag.getByte("Slot").toInt() and 255
+                val NbtCompound = listTag.getCompound(i)
+                val j: Int = NbtCompound.getByte("Slot").toInt() and 255
                 if (j >= 0 && j < stacks.size) {
-                    stacks[j] = ItemStack.fromTag(compoundTag)
-                    temps[j] = Pair(stacks[j].copy(), compoundTag.getDouble("Temp"))
+                    stacks[j] = ItemStack.fromNbt(NbtCompound)
+                    temps[j] = Pair(stacks[j].copy(), NbtCompound.getDouble("Temp"))
                 }
             }
         }
 
-        fun toTag(
-            tag: CompoundTag,
+        fun writeNbt(
+            tag: NbtCompound,
             stacks: DefaultedList<ItemStack>,
             temps: Array<Pair<ItemStack, Double>>
-        ): CompoundTag {
-            val listTag = ListTag()
+        ): NbtCompound {
+            val listTag = NbtList()
             for (i in stacks.indices) {
                 val itemStack = stacks[i]
                 if (!itemStack.isEmpty) {
-                    val compoundTag = CompoundTag()
-                    compoundTag.putByte("Slot", i.toByte())
-                    itemStack.toTag(compoundTag)
-                    compoundTag.putDouble("Temp", temps[i].second)
-                    listTag.add(compoundTag)
+                    val NbtCompound = NbtCompound()
+                    NbtCompound.putByte("Slot", i.toByte())
+                    itemStack.writeNbt(NbtCompound)
+                    NbtCompound.putDouble("Temp", temps[i].second)
+                    listTag.add(NbtCompound)
                 }
             }
             tag.put("Items", listTag)

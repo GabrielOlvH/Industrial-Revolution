@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier
 
 class ComponentKey<T>(val id: Identifier) {
 
+    @Suppress("UNCHECKED_CAST")
     fun get(provider: ComponentProvider): T? = provider.get(this) as T?
 
     companion object {

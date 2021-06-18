@@ -12,11 +12,10 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
-import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
 class SolarPowerPlantSmelterBlock(settings: Settings) : Block(settings), BlockEntityProvider {
-    override fun createBlockEntity(world: BlockView?): BlockEntity = SolarPowerPlantSmelterBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = SolarPowerPlantSmelterBlockEntity(pos, state)
 
     override fun onUse(
         state: BlockState?,

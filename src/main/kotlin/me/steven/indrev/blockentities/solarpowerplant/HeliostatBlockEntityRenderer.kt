@@ -5,12 +5,11 @@ import net.minecraft.block.HorizontalConnectingBlock
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
+import net.minecraft.util.math.Vec3f
 
-class HeliostatBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<HeliostatBlockEntity>(dispatcher) {
+class HeliostatBlockEntityRenderer : BlockEntityRenderer<HeliostatBlockEntity> {
     override fun render(
         entity: HeliostatBlockEntity?,
         tickDelta: Float,
@@ -25,8 +24,8 @@ class HeliostatBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : Bl
             push()
             val state = Blocks.GLASS_PANE.defaultState.with(HorizontalConnectingBlock.WEST, true).with(HorizontalConnectingBlock.EAST, true)
             matrices.translate(0.5, 0.5, 0.5)
-            matrices.multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(entity.yaw))
-            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.pitch))
+            matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(entity.yaw))
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.pitch))
             matrices.translate(-0.5, -0.5, -0.5)
             val buffer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state))
             MinecraftClient.getInstance().blockRenderManager.renderBlock(state, entity.pos, entity.world, this, buffer, false, entity.world!!.random)

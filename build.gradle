@@ -132,9 +132,9 @@ dependencies {
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-    modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
-        exclude module: "fabric-loader"
-    }
+    //modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
+       // exclude module: "fabric-loader"
+    //}
 }
 
 processResources {
