@@ -69,10 +69,11 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         if (itemInsertableOf(world, pos, dir.opposite) != RejectingItemInsertable.NULL
             || itemExtractableOf(world, pos, dir.opposite) != EmptyItemExtractable.NULL
         ) return true
+        if ((type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir))
+            return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
         if (!blockEntity.cachedState.isOf(this)) return false
         return blockEntity.connections[dir.opposite]!!.isConnectable()
-                || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
     }
 
 

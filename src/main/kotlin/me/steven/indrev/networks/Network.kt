@@ -128,10 +128,10 @@ abstract class Network(
         fun tick(world: ServerWorld) {
             val state = getNetworkState(world)
 
-            queuedUpdates.forEach { pos ->
+            LongOpenHashSet(queuedUpdates).forEach { pos ->
                 if (!updatedPositions.contains(pos)) {
                     val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
-                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty())
+                    if (network.pipes.isNotEmpty())
                         networks.add(network)
                     else
                         remove(world, network)

@@ -225,7 +225,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     val blockEntity = be as? LazuliFluxContainerBlockEntity
                     if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(
                         blockEntity,
-                        dir.opposite
+                        dir
                     ) else null
                 }
             }
