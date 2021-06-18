@@ -28,10 +28,10 @@ class SmelterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         configure("block.indrev.smelter", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.5, 2.5)
+        root.add(inputSlot, 3.5, 1.8)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.8, 2.5)
+        root.add(processWidget, 4.8, 1.8)
 
         val fluid = WFluid(ctx, 0)
         root.add(fluid, 6.2, 1.0)

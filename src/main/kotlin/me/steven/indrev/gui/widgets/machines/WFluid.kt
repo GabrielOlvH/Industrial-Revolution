@@ -1,5 +1,6 @@
 package me.steven.indrev.gui.widgets.machines
 
+import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
@@ -16,11 +17,11 @@ import net.minecraft.text.LiteralText
 
 class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     init {
-        this.setSize(16, 64)
+        this.setSize(16, 43)
     }
 
-    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(matrices, x, y, width, height, ENERGY_EMPTY, -1)
+    override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_BOTTOM, -1)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos)
             if (blockEntity is ComponentProvider) {
@@ -32,7 +33,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
                     percent = (percent * height).toInt() / height.toFloat()
                     val barSize = (height * percent).toInt()
                     if (barSize > 0) {
-                        val offset = 2.0
+                        val offset = 1.0
                         fluid.tanks[tank].renderGuiRect(
                             x + offset,
                             y.toDouble() + height - barSize + offset,
@@ -43,6 +44,10 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
                 }
             }
         }
+        RenderSystem.disableDepthTest()
+        RenderSystem.enableBlend()
+        RenderSystem.defaultBlendFunc()
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_TOP,-1)
     }
 
     override fun addTooltip(information: TooltipBuilder?) {
@@ -72,8 +77,10 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
     override fun canResize(): Boolean = false
 
     companion object {
-        val ENERGY_EMPTY =
-            identifier("textures/gui/widget_energy_empty.png")
+        val TANK_BOTTOM =
+            identifier("textures/gui/tank_bottom.png")
+        val TANK_TOP =
+            identifier("textures/gui/tank_top.png")
         val FLUID_CLICK_PACKET = identifier("fluid_widget_click")
     }
 }

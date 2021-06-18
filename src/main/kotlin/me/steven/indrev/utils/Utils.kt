@@ -103,7 +103,7 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
 }
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
-    widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    widgets.add(Widgets.createTexturedWidget(WFluid.TANK_BOTTOM, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
     widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
         fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
