@@ -7,12 +7,13 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PropertyDelegate
 
 class TemperatureComponent(
-    private val machine: MachineBlockEntity<*>,
+    private val blockEntity: BlockEntity,
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
     limit: Int
@@ -20,6 +21,8 @@ class TemperatureComponent(
 
     var temperature: Double by Property(2, 25.0)
     var cooling = true
+
+    private var ticks = 0
 
     init {
         propertyDelegate[3] = limit
@@ -37,21 +40,25 @@ class TemperatureComponent(
     }
 
     fun isFullEfficiency(): Boolean {
-        return (!cooling || machine.inventoryComponent?.inventory?.coolerStack?.isEmpty != true)
+        val inventoryComponent = ComponentKey.ITEM.get(blockEntity)
+        return (!cooling || inventoryComponent?.inventory?.coolerStack?.isEmpty != true)
                 && temperature.toInt() in optimalRange
     }
 
     fun tick(shouldHeatUp: Boolean) {
-        val random = machine.world!!.random
-        val inv = machine.inventoryComponent?.inventory
+        ticks++
+        val inventoryComponent = ComponentKey.ITEM.get(blockEntity)
+        val machine = blockEntity as? MachineBlockEntity<*>
+        val random = blockEntity.world!!.random
+        val inv = inventoryComponent?.inventory
         val (coolerStack, coolerItem) = inv?.coolerStack ?: ItemStack.EMPTY
-        val isHeatingUp = shouldHeatUp || (coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
+        val isHeatingUp = shouldHeatUp || (machine != null && coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
 
         if (cooling) {
-            val modifier = (machine as? CraftingMachineBlockEntity<*>)?.craftingComponents?.size ?: 0
+            val modifier = (blockEntity as? CraftingMachineBlockEntity<*>)?.craftingComponents?.size ?: 0
             temperature -= heatingSpeed / if (isHeatingUp) 3 + modifier else 1
 
-            if (coolerStack.isDamageable && machine.ticks % 120 == 0)
+            if (coolerStack.isDamageable && ticks % 120 == 0)
                 coolerStack.damage(1, random, null)
 
             if (temperature <= optimalRange.first + (2 * random.nextFloat() - 1) * 10) {
@@ -65,10 +72,10 @@ class TemperatureComponent(
             }
         } else if (temperature > 35.0) {
             temperature -= heatingSpeed / 1.5
-        } else if (machine.ticks % 15 == 0) {
+        } else if (ticks % 15 == 0) {
             temperature = (temperature + (2 * random.nextFloat() - 1) / 2).coerceIn(20.0, 35.0)
         }
     }
 
-    override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
+    override fun getPropertyDelegate(): PropertyDelegate = ComponentKey.PROPERTY_HOLDER.get(blockEntity)!!.propertyDelegate
 }

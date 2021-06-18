@@ -7,7 +7,6 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.netty.buffer.Unpooled
 import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
@@ -23,24 +22,22 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
     override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_BOTTOM, -1)
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is ComponentProvider) {
-                val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
-                val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
-                val maxEnergy = fluid.getMaxAmount_F(tank).asInexactDouble() * 1000
-                if (energy > 0) {
-                    var percent = energy.toFloat() / maxEnergy.toFloat()
-                    percent = (percent * height).toInt() / height.toFloat()
-                    val barSize = (height * percent).toInt()
-                    if (barSize > 0) {
-                        val offset = 1.0
-                        fluid.tanks[tank].renderGuiRect(
-                            x + offset,
-                            y.toDouble() + height - barSize + offset,
-                            x.toDouble() + width - offset,
-                            y.toDouble() + height - offset
-                        )
-                    }
+            val blockEntity = world.getBlockEntity(pos) ?: return@run
+            val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
+            val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
+            val maxEnergy = fluid.limit.asInexactDouble() * 1000
+            if (energy > 0) {
+                var percent = energy.toFloat() / maxEnergy.toFloat()
+                percent = (percent * height).toInt() / height.toFloat()
+                val barSize = (height * percent).toInt()
+                if (barSize > 0) {
+                    val offset = 1.0
+                    fluid.tanks[tank].renderGuiRect(
+                        x + offset,
+                        y.toDouble() + height - barSize + offset,
+                        x.toDouble() + width - offset,
+                        y.toDouble() + height - offset
+                    )
                 }
             }
         }
@@ -52,16 +49,14 @@ open class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidge
 
     override fun addTooltip(information: TooltipBuilder?) {
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos)
-            if (blockEntity is ComponentProvider) {
-                val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
-                val tank = fluid.tanks[tank]
-                val energy = tank.amount_F.asInt(1000)
-                val maxEnergy = fluid.getMaxAmount_F(this.tank).asInt(1000)
-                information?.add(*tank.fluidKey.fullTooltip.toTypedArray())
-                information?.add(LiteralText("$energy / $maxEnergy mB"))
-                super.addTooltip(information)
-            }
+            val blockEntity = world.getBlockEntity(pos) ?: return@run
+            val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
+            val tank = fluid.tanks[tank]
+            val energy = tank.amount_F.asInt(1000)
+            val maxEnergy = fluid.limit.asInt(1000)
+            information?.add(*tank.fluidKey.fullTooltip.toTypedArray())
+            information?.add(LiteralText("$energy / $maxEnergy mB"))
+            super.addTooltip(information)
         }
     }
 
