@@ -1,6 +1,6 @@
 {
   "name": "Nikolite Ore",
-  "category": "natural_resources",
+  "category": "indrev:natural_resources",
   "sortnum": 5,
   "icon": "indrev:nikolite_ore",
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "Items",
-  "category": "transportation",
+  "category": "indrev:transportation",
   "sortnum": 1,
   "icon": "indrev:item_pipe_mk1",
   "pages": [

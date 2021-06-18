@@ -1,6 +1,6 @@
 {
   "name": "Chopper",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 5,
   "icon": "indrev:chopper_mk1",
   "pages": [

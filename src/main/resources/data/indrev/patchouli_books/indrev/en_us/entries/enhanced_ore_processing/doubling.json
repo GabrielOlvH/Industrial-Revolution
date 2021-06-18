@@ -1,6 +1,6 @@
 {
   "name": "Doubling Ores",
-  "category": "enhanced_ore_processing",
+  "category": "indrev:enhanced_ore_processing",
   "sortnum": 0,
   "icon": "indrev:pulverizer_mk1",
   "pages": [

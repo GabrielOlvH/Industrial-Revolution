@@ -1,6 +1,6 @@
 {
   "name": "Servos",
-  "category": "transportation",
+  "category": "indrev:transportation",
   "sortnum": 3,
   "icon": "indrev:servo_retriever",
   "pages": [

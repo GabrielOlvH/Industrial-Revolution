@@ -1,6 +1,6 @@
 {
   "name": "Factories",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 9,
   "icon": "indrev:electric_furnace_factory_mk4",
   "pages": [

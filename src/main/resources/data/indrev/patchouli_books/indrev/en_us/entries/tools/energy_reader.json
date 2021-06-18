@@ -1,6 +1,6 @@
 {
   "name": "Energy Reader",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 3,
   "icon": "indrev:energy_reader",
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "Farmer",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 7,
   "icon": "indrev:farmer_mk1",
   "pages": [

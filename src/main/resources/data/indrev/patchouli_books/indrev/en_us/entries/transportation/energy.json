@@ -1,6 +1,6 @@
 {
   "name": "Energy",
-  "category": "transportation",
+  "category": "indrev:transportation",
   "sortnum": 0,
   "icon": "indrev:cable_mk1",
   "pages": [

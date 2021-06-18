@@ -1,6 +1,6 @@
 {
   "name": "Core of Modularity",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 6,
   "icon": "indrev:modular_core",
   "pages": [
@@ -16,7 +16,7 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/laser",
+      "recipe": "indrev:shaped/laser_emitter_mk4",
       "text": "Laser Emitters should be placed facing the capsule with $(l)AN EXACT 3 BLOCKS DISTANCE$(). They store up to 2,5M LF and require a redstone signal to be toggled on."
     },
     {

@@ -1,6 +1,6 @@
 {
   "name": "Tungsten Ore",
-  "category": "natural_resources",
+  "category": "indrev:natural_resources",
   "sortnum": 4,
   "icon": "indrev:deepslate_tungsten_ore",
   "pages": [

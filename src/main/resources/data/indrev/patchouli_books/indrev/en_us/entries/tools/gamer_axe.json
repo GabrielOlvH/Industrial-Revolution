@@ -1,6 +1,6 @@
 {
   "name": "Gamer Axe",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 5,
   "icon": "indrev:gamer_axe",
   "pages": [

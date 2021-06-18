@@ -1,6 +1,6 @@
 {
   "name": "How does it work?",
-  "category": "temperature",
+  "category": "indrev:temperature",
   "sortnum": 0,
   "icon": "indrev:fan",
   "pages": [
