@@ -50,6 +50,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
             ComponentKey.FLUID -> fluidComponent
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
+            ComponentKey.PROPERTY_HOLDER -> this
             else -> null
         }
     }
