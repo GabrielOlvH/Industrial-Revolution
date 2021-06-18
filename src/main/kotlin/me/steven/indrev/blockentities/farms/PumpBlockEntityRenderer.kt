@@ -7,7 +7,7 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayers
+import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
@@ -63,7 +63,6 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 FluidVolumeRenderer.VCPS.draw()
             }
             pop()
-
             val currentY = floor(entity.movingTicks).toInt()
             for (y in 1..currentY) {
                 push()
@@ -83,7 +82,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
 
     private fun MatrixStack.renderModel(vertexConsumers: VertexConsumerProvider, entity: PumpBlockEntity) {
         val model = MinecraftClient.getInstance().bakedModelManager.getModel(ModelIdentifier(identifier("pump_pipe"), ""))
-        val buffer = vertexConsumers.getBuffer(RenderLayers.getBlockLayer(entity.cachedState))
+        val buffer = vertexConsumers.getBuffer(RenderLayer.getSolid())
         val light = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos)
         MinecraftClient.getInstance().blockRenderManager.modelRenderer.render(
             peek(), buffer, null, model, -1f, -1f, -1f, light, OverlayTexture.DEFAULT_UV

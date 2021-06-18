@@ -224,7 +224,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     val blockEntity = be as? LazuliFluxContainerBlockEntity
                     if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(
                         blockEntity,
-                        dir.opposite
+                        dir
                     ) else null
                 }
             }
@@ -459,7 +459,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.DOWN) be as? MachineBlockEntity<*> else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.UP) be as? MachineBlockEntity<*> else null } }
             .noModelProvider()
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry("fluid_infuser", true)
@@ -595,7 +595,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> ChargePadBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.UP) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.DOWN) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
             .noModelProvider()
 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)

@@ -67,7 +67,7 @@ class ItemNetwork(
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
-        val extractable = itemExtractableOf(world, pos, dir.opposite)
+        val extractable = itemExtractableOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.poll()
@@ -88,7 +88,7 @@ class ItemNetwork(
     }
 
     private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
-        val insertable = itemInsertableOf(world, pos, dir.opposite)
+        val insertable = itemInsertableOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.poll()

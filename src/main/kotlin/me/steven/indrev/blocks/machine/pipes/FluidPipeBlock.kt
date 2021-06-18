@@ -41,10 +41,11 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
         if (fluidInsertableOf(world, pos, dir.opposite) != RejectingFluidInsertable.NULL
             || fluidExtractableOf(world, pos, dir.opposite) != EmptyFluidExtractable.NULL
         ) return true
+        if ((type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir))
+            return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
         if (!blockEntity.cachedState.isOf(this)) return false
         return blockEntity.connections[dir.opposite]!!.isConnectable()
-                || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
     }
 
     private fun getMaxTransferRate() = when(tier) {
