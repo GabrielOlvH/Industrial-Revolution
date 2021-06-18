@@ -41,7 +41,7 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
         val fluidComponent = blockEntity.fluidComponent ?: return
         val dir = to.searchDirection
         val facing = blockState!![HORIZONTAL_FACING]
-        if (facing == dir?.opposite && (to.attribute == FluidAttributes.EXTRACTABLE || to.attribute == FluidAttributes.GROUPED_INV))
+        if (facing == dir && (to.attribute == FluidAttributes.EXTRACTABLE || to.attribute == FluidAttributes.GROUPED_INV))
             to.offer(fluidComponent)
     }
 
