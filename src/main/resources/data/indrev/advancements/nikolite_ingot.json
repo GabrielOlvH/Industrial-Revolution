@@ -10,14 +10,14 @@
       "translate": "advancements.indrev.nikolite_ingot.description"
     }
   },
-  "parent": "indrev:infuser",
+  "parent": "indrev:solid_infuser",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "indrev:nikolite_ingot"
+            "items": ["indrev:nikolite_ingot"]
           }
         ]
       }

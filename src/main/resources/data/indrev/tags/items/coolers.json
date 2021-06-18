@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "indrev:fan",
+    "indrev:cooler_cell",
+    "indrev:heatsink",
+    "indrev:heat_coil"
+  ]
+}

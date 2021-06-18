@@ -3,10 +3,10 @@ package me.steven.indrev.gui.screenhandlers.machines
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.ValidatedSlot
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
-import io.github.cottonmc.cotton.gui.client.NinePatch
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
@@ -164,7 +164,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     private fun buildInstallPanel(): WGridPanel {
         val root = WGridPanel()
-        configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, root)
+        configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, root, invPos = 5.0, widgetPos = 0.9)
 
         val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.modular_armor_slot_type"))
         root.add(armorSlot, 1.5, 3.5)
@@ -252,9 +252,9 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val offset = 178 - rootPanel.width
         (rootPanel as WCustomTabPanel).setForceBackgroundPainter(
             BackgroundPainter.createLightDarkVariants(
-                NinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8).setLeftPadding(0)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(8).setLeftPadding(0)
                     .setRightPadding(offset).setTopPadding(-25),
-                NinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
+                BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8)
                     .setRightPadding(offset)
             ))
     }
@@ -265,8 +265,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             val hovered = mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height
-            ScreenDrawing.drawBeveledPanel(x, y, width, height)
-            if (hovered) ScreenDrawing.coloredRect(x, y, width, height, 0x887d88ff.toInt())
+            ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height)
+            if (hovered) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x887d88ff.toInt())
             MinecraftClient.getInstance().itemRenderer.renderInGui(itemStack, x + 1, y + 1)
         }
 
@@ -276,9 +276,10 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             tooltip?.add(*texts.toTypedArray())
         }
 
-        override fun onClick(x: Int, y: Int, button: Int) {
+        override fun onClick(x: Int, y: Int, button: Int): InputResult {
             MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f))
             clickAction()
+            return InputResult.PROCESSED
         }
     }
 
@@ -301,7 +302,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                     val renderer = MinecraftClient.getInstance().itemRenderer
                     renderer.renderInGui(preview, x + 1, y + 1)
                     RenderSystem.disableDepthTest()
-                    ScreenDrawing.coloredRect(x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
+                    ScreenDrawing.coloredRect(matrices, x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
                 }
             }
         }
@@ -332,7 +333,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                 renderer.renderInGui(selected!!.outputs[0].stack, x + 1, y + 1)
                 RenderSystem.disableDepthTest()
                 val a = 255 - ((cur / max.toDouble()) * 255).toInt()
-                ScreenDrawing.coloredRect(x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
+                ScreenDrawing.coloredRect(matrices, x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
                 RenderSystem.enableDepthTest()
 
                 if (cur > 0 && max > 0 && cur != max) {
@@ -341,7 +342,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                     MinecraftClient.getInstance().textRenderer.draw(matrices, txt, x.toFloat() + 10 - (width / 2), y.toFloat() + 25, 0x404040)
 
                     val s = sin(world.time.toDouble() / 5) * 10
-                    ScreenDrawing.coloredRect(x - 3, (y + s).toInt() + 8, this.width + 6, 2, 0x99578bfa.toInt())
+                    ScreenDrawing.coloredRect(matrices, x - 3, (y + s).toInt() + 8, this.width + 6, 2, 0x99578bfa.toInt())
                 }
             }
         }
@@ -360,7 +361,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }
     }
 
-    inner class WToggleableSlot(inventory: Inventory, private val index: Int, x: Int, y: Int, val hidden: () -> Boolean) : ValidatedSlot(inventory, index, x, y) {
+    inner class WToggleableSlot(inventory: Inventory, index: Int, x: Int, y: Int, val hidden: () -> Boolean) : ValidatedSlot(inventory, index, x, y) {
 
         override fun getMaxItemCount(): Int {
             return selected?.input?.get(index - 3)?.count ?: 0
@@ -370,9 +371,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             return !hidden() && super.canInsert(stack)
         }
 
-        @Environment(EnvType.CLIENT)
-        override fun doDrawHoveringEffect(): Boolean {
-            return !hidden() && super.doDrawHoveringEffect()
+        override fun isEnabled(): Boolean {
+            return !hidden() && super.isEnabled()
         }
     }
 

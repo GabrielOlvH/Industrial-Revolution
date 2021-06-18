@@ -2,17 +2,18 @@ package me.steven.indrev.blocks.machine.pipes
 
 import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
 import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
-import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.utils.itemExtractableOf
 import me.steven.indrev.utils.itemInsertableOf
+import me.steven.indrev.utils.pack
 import net.minecraft.block.BlockState
-import net.minecraft.block.ShapeContext
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
@@ -29,6 +30,7 @@ import net.minecraft.util.shape.VoxelShape
 import net.minecraft.util.shape.VoxelShapes
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
+import java.util.function.IntFunction
 
 class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier, Network.Type.ITEM) {
     override fun appendTooltip(
@@ -43,16 +45,6 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         )
     }
 
-    override fun getOutlineShape(
-        state: BlockState,
-        view: BlockView?,
-        pos: BlockPos?,
-        context: ShapeContext?
-    ): VoxelShape {
-        return if (state[COVERED]) VoxelShapes.fullCube()
-        else getShape(state)
-    }
-
     override fun onUse(
         state: BlockState,
         world: World,
@@ -62,9 +54,10 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         hit: BlockHitResult
     ): ActionResult {
         val dir = getSideFromHit(hit.pos, pos)
-        if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && state[getProperty(dir)]) {
-            val state = Network.Type.ITEM.getNetworkState(world as ServerWorld) as ItemNetworkState
-            if (state[pos]?.containers?.containsKey(pos.offset(dir)) == true) {
+        val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
+        if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
+            val type = Network.Type.ITEM
+            if (type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                 player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterScreenHandler, pos, dir))
                 return ActionResult.SUCCESS
             }
@@ -72,11 +65,15 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         return super.onUse(state, world, pos, player, hand, hit)
     }
 
-    override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction) =
-        itemInsertableOf(world, pos, dir.opposite) != RejectingItemInsertable.NULL
-                || itemExtractableOf(world, pos, dir.opposite) != EmptyItemExtractable.NULL
-                || world.getBlockState(pos).block.let { it is ItemPipeBlock && it.tier == tier }
+    override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
+        if (itemInsertableOf(world, pos, dir.opposite) != RejectingItemInsertable.NULL
+            || itemExtractableOf(world, pos, dir.opposite) != EmptyItemExtractable.NULL
+        ) return true
+        val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
+        if (!blockEntity.cachedState.isOf(this)) return false
+        return blockEntity.connections[dir.opposite]!!.isConnectable()
                 || (type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir), dir.opposite)
+    }
 
 
     private fun getMaxTransferRate() = when(tier) {
@@ -86,28 +83,25 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         else -> IRConfig.cables.itemPipeMk4
     }
 
-    override fun getShape(blockState: BlockState): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockState[getProperty(dir)] }.toTypedArray()
-        var cableShapeCache = SHAPE_CACHE.firstOrNull { shape -> shape.directions.contentEquals(directions) }
-        if (cableShapeCache == null) {
+    override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
+        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
-            Direction.values().forEach { direction ->
-                if (blockState[getProperty(direction)]) shape = VoxelShapes.union(shape, getShape(direction))
+            directions.forEach { direction ->
+                shape = VoxelShapes.union(shape, getShape(direction))
             }
-            cableShapeCache = PipeShape(directions, shape)
-            SHAPE_CACHE.add(cableShapeCache)
-        }
-        return cableShapeCache.shape
+            shape
+        })
     }
 
     companion object {
 
-        val SHAPE_CACHE = hashSetOf<PipeShape>()
+        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.5, 9.5, 6.5, 9.5, 16.0, 9.5)
         val SOUTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 9.5, 9.5, 9.5, 16.0)
-        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 6.5, 9.5, 9.5, 0.0)
+        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 0.0, 9.5, 9.5, 6.5)
         val EAST_SHAPE: VoxelShape = createCuboidShape(9.5, 6.5, 6.5, 16.0, 9.5, 9.5)
         val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 6.5, 6.5, 6.5, 9.5, 9.5)
 

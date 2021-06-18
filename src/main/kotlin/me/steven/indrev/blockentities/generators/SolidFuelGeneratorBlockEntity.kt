@@ -9,10 +9,12 @@ import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegistry) : GeneratorBlockEntity(tier, registry) {
+abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState)
+    : GeneratorBlockEntity(tier, registry, pos, state) {
     private var burnTime: Int by Property(4, 0)
     private var maxBurnTime: Int by Property(5, 0)
 
@@ -55,25 +57,25 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
         }
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         super.fromClientTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
         return super.toClientTag(tag)

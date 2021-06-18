@@ -7,18 +7,19 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class CondenserBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY) {
+class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY, pos, state) {
 
-    override val upgradeSlots: IntArray = intArrayOf(3, 4, 5, 6)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancerSlots: IntArray = intArrayOf(3, 4, 5, 6)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -30,8 +31,8 @@ class CondenserBlockEntity(tier: Tier) :
 
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 4 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
     }
 
     override fun applyDefault(

@@ -7,6 +7,6 @@ import net.minecraft.util.Identifier
 
 class WDynamicSprite(val provider: () -> Identifier) : WWidget() {
     override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(x, y, width, height, provider(), -1)
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, provider(), -1)
     }
 }

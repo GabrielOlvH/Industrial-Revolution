@@ -4,11 +4,11 @@ import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -41,7 +41,7 @@ open class MultiBlockComponent(
         else
             variant++
     }
-    
+
     @Environment(EnvType.CLIENT)
     fun render(entity: BlockEntity, matrices: MatrixStack, vertexConsumers: VertexConsumerProvider, overlay: Int) {
         if (!shouldRenderHologram) return
@@ -63,12 +63,12 @@ open class MultiBlockComponent(
         }
     }
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         shouldRenderHologram = tag?.getBoolean("ShouldRenderHologram") ?: false
         variant = tag?.getInt("Variant") ?: 0
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putBoolean("ShouldRenderHologram", shouldRenderHologram)
         tag.putInt("Variant", variant)
         return tag

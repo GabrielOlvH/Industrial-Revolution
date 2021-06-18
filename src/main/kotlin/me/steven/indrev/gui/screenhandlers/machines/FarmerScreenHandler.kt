@@ -36,7 +36,7 @@ class FarmerScreenHandler(
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.farmer", ctx, playerInventory, blockInventory)
+        configure("block.indrev.farmer", ctx, playerInventory, blockInventory, invPos = 4.45)
 
         val inputFrame = WSprite(identifier("textures/gui/input_frame.png"))
         root.add(inputFrame, 1.9, 0.7)
@@ -52,7 +52,7 @@ class FarmerScreenHandler(
         root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
-        root.add(slider, 1.6, 4.0)
+        root.add(slider, 1.6, 3.6)
         slider.setSize(50, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
@@ -63,7 +63,7 @@ class FarmerScreenHandler(
         val text = WText({
             TranslatableText("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
-        root.add(text, 1.8, 3.7)
+        root.add(text, 1.8, 3.3)
 
         root.validate(this)
     }

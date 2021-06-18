@@ -10,7 +10,7 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.WEnergy
@@ -19,7 +19,7 @@ import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
-import me.steven.indrev.items.upgrade.IRUpgradeItem
+import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
@@ -33,7 +33,6 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import vazkii.patchouli.client.book.ClientBookRegistry
-import java.util.function.Predicate
 
 fun WGridPanel.add(w: WWidget, x: Double, y: Double, width: Double, height: Double) {
     this.add(w, x.toInt(), y.toInt(), width.toInt(), height.toInt())
@@ -54,32 +53,28 @@ fun SyncedGuiDescription.configure(
     ctx: ScreenHandlerContext,
     playerInventory: PlayerInventory,
     blockInventory: Inventory,
-    panel: WGridPanel = rootPanel as WGridPanel
+    panel: WGridPanel = rootPanel as WGridPanel,
+    invPos: Double = 4.0,
+    widgetPos: Double = 0.15
 ) {
     panel.setSize(150, 120)
-    panel.add(createPlayerInventoryPanel(), 0, 5)
+    panel.add(createPlayerInventoryPanel(), 0.0, invPos)
     val title = WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040)
-    var titlePos = 5.0
+    var titlePos = 4.7
 
     val energyWidget = WEnergy()
-    panel.add(energyWidget, 0.1, 0.0)
-
-    val batterySlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.battery_slot_type"))
-    batterySlot.filter = Predicate { stack -> energyOf(stack) != null }
+    panel.add(energyWidget, 0.1, widgetPos)
 
     ctx.run { world, blockPos ->
-        if (world.isClient)
-            batterySlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
-        panel.add(batterySlot, 0.0, 3.7)
         val blockEntity = world.getBlockEntity(blockPos)
 
-        if (blockEntity is MachineBlockEntity<*> && blockEntity is UpgradeProvider) {
+        if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {
             addUpgradeSlots(blockEntity, blockInventory, world, panel)
         }
 
         if (blockEntity is MachineBlockEntity<*> && blockEntity.temperatureComponent != null) {
             titlePos += 0.5
-            addTemperatureWidget(blockEntity, panel, blockInventory, world)
+            addTemperatureWidget(blockEntity, panel, blockInventory, world, widgetPos)
         }
 
         if (blockEntity is AOEMachineBlockEntity<*>) {
@@ -126,16 +121,16 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
 }
 
 fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
-    blockEntity as UpgradeProvider
+    blockEntity as EnhancerProvider
     val slotPanel = WGridPanel()
-    for ((i, slot) in blockEntity.upgradeSlots.withIndex()) {
+    for ((i, slot) in blockEntity.enhancerSlots.withIndex()) {
         val s =
             object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
                 override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
                     return object : ValidatedSlot(inventory, index, x, y) {
                         override fun getMaxItemCount(stack: ItemStack): Int {
-                            val upgrade = (stack.item as? IRUpgradeItem)?.upgrade ?: return 0
-                            return blockEntity.getMaxUpgrade(upgrade)
+                            val upgrade = (stack.item as? IREnhancerItem)?.enhancer ?: return 0
+                            return blockEntity.getMaxCount(upgrade)
                         }
                     }
                 }
@@ -152,14 +147,14 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
     panel.add(slotPanel, 9.7, -0.25)
 }
 
-fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World) {
+fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World, widgetPos: Double) {
     val controller = blockEntity.temperatureComponent!!
-    panel.add(WTemperature(controller), 1.1, 0.0)
+    panel.add(WTemperature(controller), 0.95, widgetPos)
     val coolerSlot =
         WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
     if (world.isClient)
         coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
-    panel.add(coolerSlot, 1.0, 3.7)
+    panel.add(coolerSlot, 0.75, widgetPos + 2.6)
 }
 
 fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WGridPanel) {
@@ -220,50 +215,52 @@ fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory
     return button
 }
 
-fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: BackgroundPainter) {
+fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: () -> BackgroundPainter) {
     ctx.run { world, _ ->
-        if (world.isClient) this.backgroundPainter = painter
+        if (world.isClient) this.backgroundPainter = painter()
     }
 }
 
 fun WItemSlot.setIcon(ctx: ScreenHandlerContext, inventory: Inventory, slot: Int, identifier: Identifier) {
-    setPainterSafe(ctx) { left, top, widget ->
-        BackgroundPainter.SLOT.paintBackground(left, top, widget)
-        if (inventory.getStack(slot).isEmpty)
-            ScreenDrawing.texturedRect(left + 1, top + 1, 16, 16, identifier, -1)
+    setPainterSafe(ctx) {
+        BackgroundPainter { matrices, left, top, widget ->
+            BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
+            if (inventory.getStack(slot).isEmpty)
+                ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
+        }
     }
 }
 
 val POWER_ICON_ID = identifier("textures/gui/power_icon.png")
 
-fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getEnergySlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, POWER_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, POWER_ICON_ID, -1)
 }
 
 val VENT_ICON_ID = identifier("textures/gui/vent_icon.png")
 
-fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getCoolerSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, VENT_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, VENT_ICON_ID, -1)
 }
 
 val UPGRADE_ICON_ID = identifier("textures/gui/upgrade_icon.png")
 
-fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getUpgradeSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, UPGRADE_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, UPGRADE_ICON_ID, -1)
 }
 
 val LOCKED_ICON_ID = identifier("textures/gui/locked_icon.png")
 
-fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { left, top, widget ->
-    BackgroundPainter.SLOT.paintBackground(left, top, widget)
+fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { matrices, left, top, widget ->
+    BackgroundPainter.SLOT.paintBackground(matrices, left, top, widget)
     if (inventory.getStack(slot).isEmpty)
-        ScreenDrawing.texturedRect(left, top, 18, 18, LOCKED_ICON_ID, -1)
+        ScreenDrawing.texturedRect(matrices, left, top, 18, 18, LOCKED_ICON_ID, -1)
 }
 
 val PROCESS_EMPTY =

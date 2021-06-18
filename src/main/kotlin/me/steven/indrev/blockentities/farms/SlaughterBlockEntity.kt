@@ -2,26 +2,29 @@ package me.steven.indrev.blockentities.farms
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.redirectDrops
+import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.boss.WitherEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.SwordItem
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.BlockPos
 
-class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY), UpgradeProvider {
+class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(11, 12, 13, 14)
-    override val availableUpgrades: Array<Upgrade> = arrayOf(Upgrade.SPEED, Upgrade.ENERGY, Upgrade.BUFFER, Upgrade.DAMAGE)
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancerSlots: IntArray = intArrayOf(11, 12, 13, 14)
+    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE)
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -35,18 +38,18 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "slaughter") }
 
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getUpgrades(inventory)
-        cooldown += Upgrade.getSpeed(upgrades, this)
+        val enhancers = getEnhancers()
+        cooldown += Enhancer.getSpeed(enhancers, this)
         if (cooldown < config.processSpeed) return
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> (e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead) }
+        val source = DamageSource.player(fakePlayer)
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) }
             ?: emptyList()
-        val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (mobs.isEmpty() || !canUse(energyCost)) {
+        if (mobs.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return
         } else workingState = true
@@ -54,13 +57,13 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
-            use(energyCost)
+            use(getEnergyCost())
             mobs.forEach { mob ->
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
 
                 mob.redirectDrops(inventory) {
-                    mob.damage(DamageSource.player(fakePlayer), (swordItem.attackDamage * Upgrade.getDamageMultiplier(upgrades, this)).toFloat())
+                    mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
                 }
             }
         }
@@ -68,17 +71,22 @@ class SlaughterBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfi
         cooldown = 0.0
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double =
-        when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost
-            Upgrade.SPEED -> 1.0
-            Upgrade.BUFFER -> config.maxEnergyStored
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val dmgEnhancers = (getEnhancers().getInt(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
+        return config.energyCost * speedEnhancers * dmgEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
+            Enhancer.SPEED -> 1.0
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED || upgrade == Upgrade.DAMAGE) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED || enhancer == Enhancer.DAMAGE) return 1 else super.getMaxCount(enhancer)
     }
 
-    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 }

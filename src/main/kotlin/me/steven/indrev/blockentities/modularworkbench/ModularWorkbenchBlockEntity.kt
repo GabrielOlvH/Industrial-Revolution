@@ -17,11 +17,13 @@ import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.getAllOfType
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.BlockPos
 
-class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY) {
+class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY, pos, state) {
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
@@ -153,28 +155,28 @@ class ModularWorkbenchBlockEntity(tier: Tier) : MachineBlockEntity<BasicMachineC
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
+    override fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         if (tag?.contains("SelectedRecipe") == true)
             selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
-        super.fromTag(state, tag)
+        super.readNbt(tag)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putInt("ProcessTime", processTime)
         if (selectedRecipe != null)
             tag?.putString("SelectedRecipe", selectedRecipe!!.toString())
-        return super.toTag(tag)
+        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         if (tag?.contains("SelectedRecipe") == true)
             selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
         super.fromClientTag(tag)
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putInt("ProcessTime", processTime)
         if (selectedRecipe != null)
             tag?.putString("SelectedRecipe", selectedRecipe!!.toString())

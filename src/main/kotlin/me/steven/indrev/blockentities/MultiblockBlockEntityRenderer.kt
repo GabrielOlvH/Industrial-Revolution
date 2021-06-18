@@ -4,11 +4,10 @@ import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
-open class MultiblockBlockEntityRenderer<T : BlockEntity>(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<T>(dispatcher) {
+open class MultiblockBlockEntityRenderer<T : BlockEntity> : BlockEntityRenderer<T> {
     override fun render(
         entity: T,
         tickDelta: Float,

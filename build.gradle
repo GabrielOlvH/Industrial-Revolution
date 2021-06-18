@@ -1,11 +1,11 @@
 plugins {
-    id 'fabric-loom'
-    id 'maven-publish'
+    id "fabric-loom"
+    id "maven-publish"
     id "org.jetbrains.kotlin.jvm"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -27,13 +27,14 @@ repositories {
     maven {
         url "https://maven.shedaniel.me/"
         content {
+            includeGroup "dev.architectury"
             includeGroup "me.shedaniel"
             includeGroup "me.shedaniel.cloth"
             includeGroup "me.shedaniel.cloth.api"
         }
     }
     maven {
-        url = "http://maven.fabricmc.net/"
+        url = "https://maven.fabricmc.net/"
         content {
             includeGroup "net.fabricmc"
         }
@@ -71,20 +72,6 @@ repositories {
             includeGroup "com.github.Technici4n"
             includeGroup "com.github.GabrielOlvH"
             includeGroup "com.github.emilyploszaj"
-            includeGroup "com.github.SuperCoder7979"
-        }
-    }
-    maven {
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
-    maven {
-        name = "dblsaiko"
-        url = "https://maven.dblsaiko.net/"
-        content {
-            includeGroup 'grondag'
         }
     }
     maven {
@@ -96,104 +83,65 @@ repositories {
         }
     }
     maven {
-        name = "CurseMaven"
-        url = "https://www.cursemaven.com"
+        name = "Cafeteria Development"
+        url = 'https://maven.cafeteria.dev'
         content {
-            includeGroup "curse.maven"
+            includeGroup 'dev.cafeteria'
         }
     }
 }
 
 dependencies {
-    //to change the versions see the gradle.properties file
+
+    dependencies.ext.lib = { dep, optional = false ->
+        modImplementation(dep) {
+            if (!dep.contains("dev.technici4n"))
+                exclude group: "net.fabricmc.fabric-api"
+            exclude group: "com.jamieswhiteshirt"
+            exclude group: "io.github.prospector"
+        }
+        if (!optional) {
+            include(dep) {
+                if (!dep.contains("dev.technici4n"))
+                    exclude group: "net.fabricmc.fabric-api"
+                exclude group: "com.jamieswhiteshirt"
+                exclude group: "io.github.prospector"
+            }
+        }
+    }
+
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
-    modApi ("dev.technici4n:FastTransferLib:${project.ftl_version}")
-    include ("dev.technici4n:FastTransferLib:${project.ftl_version}")
 
-    modImplementation("io.github.cottonmc:LibGui:${project.libgui_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("io.github.cottonmc:LibGui:${project.libgui_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
+    dependencies.ext.lib("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
+    dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
+    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
+    dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
+    dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
+    dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
+    dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-   }
-
-    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
-
-    modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    include("vazkii.patchouli:Patchouli:${project.patchouli_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-    }
-
-    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
-    include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-
-    modApi("com.github.GabrielOlvH:magna:${project.magna_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
-        exclude group: "io.github.prospector", "module": "modmenu"
-    }
-    include("com.github.GabrielOlvH:magna:${project.magna_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-        exclude group: "com.jamieswhiteshirt", module: "reach-entity-attributes"
-        exclude group: "io.github.prospector", "module": "modmenu"
-    }
-
-    modImplementation("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
-        transitive = false
-    }
-    include("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1") {
-        transitive = false
-    }
-
-    modApi "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
-    include "me.shedaniel.cloth.api:cloth-durability-bar-api-v1:${project.cloth_api_version}"
-
     modRuntime ("com.github.SuperCoder7979:databreaker:0.2.6") {
         exclude module: "fabric-loader"
     }
-
-   // modImplementation ("grondag:jmx-${project.mc_tag}:${project.jmx_version}.+") { transitive = false }
-    //modImplementation "curse.maven:kubejs-395864:3183435"
-    //include "curse.maven:kubejs-395864:3183435"
-    //modRuntime "com.github.Technici4n:KubeJS-Fabric:${project.kubejs_version}"
-    //modRuntime ("appeng:appliedenergistics2-fabric:8.1.0-alpha.9") {
-        //exclude group: "teamreborn", module: "energy"
-    //}
-    //modRuntime 'RebornCore:RebornCore-1.16:+'
-    //modRuntime 'TechReborn:TechReborn-1.16:+'
 }
 
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
         expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
     }
 }
 
@@ -201,19 +149,22 @@ processResources {
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+    it.options.encoding = "UTF-8"
+    it.options.release = 16
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
-    from sourceSets.main.allSource
+
+java {
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
 }
 
 jar {
-    from "LICENSE"
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}"}
+    }
 }
 
 // configure the maven publication
@@ -245,4 +196,4 @@ publishing {
     }
 }
 
-compileKotlin.kotlinOptions.jvmTarget = "1.8"
+compileKotlin.kotlinOptions.jvmTarget = "16"

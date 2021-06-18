@@ -11,6 +11,8 @@ import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -46,7 +48,16 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         builder?.add(UP, DOWN)
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = TankBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = TankBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else BlockEntityTicker { world, pos, state, blockEntity -> TankBlockEntity.tick(world, pos, state, blockEntity as TankBlockEntity) }
+    }
 
     override fun getOutlineShape(
         state: BlockState,
@@ -89,7 +100,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         if (world?.isClient == true) return
         player?.incrementStat(Stats.MINED.getOrCreateStat(this))
         player?.addExhaustion(0.005f)
-        toTagComponents(world, player, pos, state, blockEntity, toolStack)
+        writeNbtComponents(world, player, pos, state, blockEntity, toolStack)
     }
 
     override fun onStateReplaced(
@@ -102,7 +113,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         super.onStateReplaced(state, world, pos, newState, moved)
     }
 
-    fun toTagComponents(
+    fun writeNbtComponents(
         world: World?,
         player: PlayerEntity?,
         pos: BlockPos?,

@@ -8,22 +8,24 @@ import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
+import net.minecraft.block.BlockState
 import net.minecraft.screen.ArrayPropertyDelegate
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SolidInfuserFactoryBlockEntity(tier: Tier) :
-    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY) {
+class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
+    CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY, pos, state) {
 
-    override val upgradeSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val enhancerSlots: IntArray = intArrayOf(2, 3, 4, 5)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(15)
-        this.temperatureComponent = TemperatureComponent({ this }, 0.06, 700..1100, 1400.0)
+        this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19)

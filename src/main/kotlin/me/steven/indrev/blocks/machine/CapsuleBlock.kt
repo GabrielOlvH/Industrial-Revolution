@@ -3,11 +3,14 @@ package me.steven.indrev.blocks.machine
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.recipes.machines.LaserRecipe
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.block.entity.BlockEntityTicker
+import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -20,7 +23,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().strength(1f, 1f)), BlockEntityProvider {
+class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool().nonOpaque().strength(1f, 1f)), BlockEntityProvider {
     override fun onUse(
         state: BlockState?,
         world: World,
@@ -82,5 +85,16 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).nonOpaque().st
         else 0
     }
 
-    override fun createBlockEntity(world: BlockView?): BlockEntity = CapsuleBlockEntity()
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity = CapsuleBlockEntity(pos, state)
+
+    override fun <T : BlockEntity?> getTicker(
+        world: World,
+        state: BlockState?,
+        type: BlockEntityType<T>?
+    ): BlockEntityTicker<T>? {
+        return if (world.isClient) null
+        else BlockEntityTicker { world, pos, state, blockEntity ->
+            CapsuleBlockEntity.tick(world, pos, state, blockEntity as CapsuleBlockEntity)
+        }
+    }
 }

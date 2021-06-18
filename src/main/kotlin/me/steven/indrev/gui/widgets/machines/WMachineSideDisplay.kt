@@ -15,6 +15,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
+import java.util.*
 
 class WMachineSideDisplay(
     private val side: Configurable.MachineSide,
@@ -33,7 +34,7 @@ class WMachineSideDisplay(
     }
 
     override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(x, y, width, height, TEXTURE_ID, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, TEXTURE_ID, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
         if (mode == TransferMode.INPUT_OUTPUT)
             draw2Colors(matrices, x, y, x + width, y + height, TransferMode.INPUT.rgb, TransferMode.OUTPUT.rgb)
         else if (mode != TransferMode.NONE)
@@ -44,11 +45,11 @@ class WMachineSideDisplay(
 
     override fun addTooltip(tooltip: TooltipBuilder?) {
         val modeText = TranslatableText("item.indrev.wrench.mode",
-            TranslatableText("item.indrev.wrench.${mode.toString().toLowerCase()}").formatted(Formatting.WHITE)
+            TranslatableText("item.indrev.wrench.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.WHITE)
         ).formatted(Formatting.BLUE)
-        val side = TranslatableText("item.indrev.wrench.side.${side.toString().toLowerCase()}")
+        val side = TranslatableText("item.indrev.wrench.side.${side.toString().lowercase(Locale.getDefault())}")
             .append(LiteralText(" (")
-                .append(TranslatableText("item.indrev.wrench.side.${direction.toString().toLowerCase()}"))
+                .append(TranslatableText("item.indrev.wrench.side.${direction.toString().lowercase(Locale.getDefault())}"))
                 .append(LiteralText(")"))).formatted(Formatting.WHITE)
         tooltip?.add(modeText, side)
         val blockState = world.getBlockState(blockPos.offset(direction))

@@ -11,7 +11,6 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.weight
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
@@ -38,7 +37,17 @@ class ResourceReportScreenHandler(
     init {
         val root = object : WGridPanel() {
             override fun setBackgroundPainter(painter: BackgroundPainter?): WPanel {
-                return super.setBackgroundPainter(BACKGROUND_PAINTER)
+                return super.setBackgroundPainter { matrices, left, top, panel ->
+                    ScreenDrawing.texturedRect(
+                        matrices,
+                        left,
+                        top,
+                        panel.width,
+                        panel.height,
+                        identifier("textures/gui/paper.png"),
+                        -1
+                    )
+                }
             }
         }
         setRootPanel(root)
@@ -47,14 +56,14 @@ class ResourceReportScreenHandler(
         root.add(titleText, 3.0, 0.3)
 
         val outputs = VeinType.REGISTERED[veinData.veinIdentifier]!!.outputs
-        val sum = outputs.entries.sumBy { it.weight }
+        val sum = outputs.entries.sumOf { it.weight }
         outputs.entries.sortedByDescending { it.weight }
             .forEachIndexed { index, entry ->
                 val block = (entry.element as Block)
                 val weight = entry.weight
                 val text = LiteralText("${String.format("%.1f", (weight / sum.toDouble()) * 100)}% ").formatted(Formatting.DARK_GRAY)
                     .append(
-                        TranslatableText(block.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(block.defaultMaterialColor.color)))
+                        TranslatableText(block.translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(block.defaultMapColor.color)))
                     )
                 root.add(WText(text, HorizontalAlignment.LEFT), 0.2, 1.5 + index)
             }
@@ -78,8 +87,5 @@ class ResourceReportScreenHandler(
 
     companion object {
         val SCREEN_ID = identifier("resource_report_screen")
-        val BACKGROUND_PAINTER = BackgroundPainter { left, top, panel ->
-            ScreenDrawing.texturedRect(left, top, panel.width, panel.height, identifier("textures/gui/paper.png"), -1)
-        }
     }
 }

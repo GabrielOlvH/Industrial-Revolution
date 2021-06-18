@@ -1,7 +1,7 @@
 package me.steven.indrev.api.sideconfigs
 
 import me.steven.indrev.api.machines.TransferMode
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.Direction
 import java.util.*
 
@@ -15,27 +15,27 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
         Direction.values().forEach { dir -> this[dir] = TransferMode.NONE }
     }
 
-    fun toTag(tag: CompoundTag?) {
+    fun writeNbt(tag: NbtCompound?) {
         var transferConfigTag = tag?.getCompound("TransferConfig")
         if (tag?.contains("TransferConfig") == false) {
-            transferConfigTag = CompoundTag()
+            transferConfigTag = NbtCompound()
             tag.put("TransferConfig", transferConfigTag)
         }
-        val configTag = CompoundTag()
+        val configTag = NbtCompound()
         forEach { (dir, mode) ->
             configTag.putString(dir.toString(), mode.toString())
         }
-        transferConfigTag?.put(type.toString().toLowerCase(), configTag)
+        transferConfigTag?.put(type.toString().lowercase(Locale.getDefault()), configTag)
         configTag.putBoolean("AutoPush", autoPush)
         configTag.putBoolean("AutoPull", autoPull)
     }
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         if (tag?.contains("TransferConfig") == true) {
             val transferConfigTag = tag.getCompound("TransferConfig")
-            val configTag = transferConfigTag.getCompound(type.toString().toLowerCase())
+            val configTag = transferConfigTag.getCompound(type.toString().lowercase(Locale.getDefault()))
             Direction.values().forEach { dir ->
-                val value = configTag.getString(dir.toString()).toUpperCase()
+                val value = configTag.getString(dir.toString()).uppercase(Locale.getDefault())
                 if (value.isNotEmpty()) {
                     val mode = TransferMode.valueOf(value)
                     this[dir] = mode

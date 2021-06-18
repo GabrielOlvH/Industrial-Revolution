@@ -10,8 +10,8 @@ import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
 import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
-import me.steven.indrev.items.upgrade.IRUpgradeItem
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
+import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.tools.IRToolMaterial
 import me.steven.indrev.tools.modular.ArmorModule
@@ -53,9 +53,7 @@ object IRItemRegistry {
         }.register()
 
         MaterialHelper("copper") {
-            withItems("dust", "ingot", "plate", "nugget", "chunk", "purified_ore")
-            withBlock()
-            withOre()
+            withItems("dust", "plate", "nugget", "chunk", "purified_ore")
             withTools(
                 IRBasicPickaxe(IRToolMaterial.COPPER, 1, -1.0f, itemSettings()),
                 IRBasicAxe(IRToolMaterial.COPPER, 4.5f, -2.0f, itemSettings()),
@@ -85,7 +83,7 @@ object IRItemRegistry {
 
         MaterialHelper("nikolite") {
             withItems("dust", "ingot")
-            withOre { settings -> NikoliteOreBlock(settings) }
+            withOre(false) { settings -> NikoliteOreBlock(settings) }
         }.register()
 
         MaterialHelper("enriched_nikolite") { withItems("dust", "ingot") }.register()
@@ -190,13 +188,12 @@ object IRItemRegistry {
         identifier("chunk_scanner").item(CHUNK_SCANNER_ITEM)
         identifier("scan_output").item(SCAN_OUTPUT_ITEM)
 
-        identifier("empty_upgrade").item(DEFAULT_ITEM())
-        identifier("buffer_upgrade").item(BUFFER_UPGRADE)
-        identifier("speed_upgrade").item(SPEED_UPGRADE)
-        identifier("energy_upgrade").item(ENERGY_UPGRADE)
-        identifier("blast_furnace_upgrade").item(BLAST_FURNACE_UPGRADE)
-        identifier("smoker_upgrade").item(SMOKER_UPGRADE)
-        identifier("damage_upgrade").item(DAMAGE_UPGRADE)
+        identifier("empty_enhancer").item(DEFAULT_ITEM())
+        identifier("buffer_enhancer").item(BUFFER_ENHANCER)
+        identifier("speed_enhancer").item(SPEED_UPGRADE)
+        identifier("blast_furnace_enhancer").item(BLAST_FURNACE_UPGRADE)
+        identifier("smoker_enhancer").item(SMOKER_UPGRADE)
+        identifier("damage_enhancer").item(DAMAGE_UPGRADE)
 
         identifier("energy_reader").item(ENERGY_READER)
 
@@ -289,9 +286,9 @@ object IRItemRegistry {
 
     val BIOMASS = DEFAULT_ITEM()
 
-    val FAN = IRCoolerItem(itemSettings().maxDamage(512), 0.07)
-    val COOLER_CELL = IRCoolerItem(itemSettings().maxDamage(256), 0.1)
-    val HEATSINK = IRCoolerItem(itemSettings().maxDamage(128), 3.9)
+    val FAN = Item(itemSettings().maxDamage(128))
+    val COOLER_CELL = Item(itemSettings().maxDamage(512))
+    val HEATSINK = Item(itemSettings().maxDamage(1536))
     val HEAT_COIL = object : Item(itemSettings().maxDamage(128)) {
         override fun appendTooltip(
             stack: ItemStack?,
@@ -327,12 +324,11 @@ object IRItemRegistry {
     val DIAMOND_DRILL_HEAD = Item(itemSettings().maxDamage(2048))
     val NETHERITE_DRILL_HEAD = Item(itemSettings().maxDamage(4096))
 
-    val BUFFER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(32), Upgrade.BUFFER)
-    val SPEED_UPGRADE = IRUpgradeItem(itemSettings().maxCount(32), Upgrade.SPEED)
-    val ENERGY_UPGRADE = IRUpgradeItem(itemSettings().maxCount(32), Upgrade.ENERGY)
-    val BLAST_FURNACE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.BLAST_FURNACE)
-    val SMOKER_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.SMOKER)
-    val DAMAGE_UPGRADE = IRUpgradeItem(itemSettings().maxCount(1), Upgrade.DAMAGE)
+    val BUFFER_ENHANCER = IREnhancerItem(itemSettings().maxCount(32), Enhancer.BUFFER)
+    val SPEED_UPGRADE = IREnhancerItem(itemSettings().maxCount(32), Enhancer.SPEED)
+    val BLAST_FURNACE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.BLAST_FURNACE)
+    val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
+    val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
     val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
 

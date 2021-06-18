@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "indrev:block/raw_lead_block"
+    }
+  }
+}

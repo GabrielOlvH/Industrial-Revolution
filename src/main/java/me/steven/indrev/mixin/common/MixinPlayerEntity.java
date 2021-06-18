@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,13 +41,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
     @Inject(method = "getBlockBreakingSpeed", at = @At("HEAD"), cancellable = true)
     private void indrev_checkEnergyTool(BlockState block, CallbackInfoReturnable<Float> cir) {
         PlayerEntity player = (PlayerEntity) (Object) this;
-        PlayerInventory inventory = player.inventory;
+        PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.main.get(inventory.selectedSlot);
         Item item = itemStack.getItem();
         EnergyIo itemIo = EnergyApiUtilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
-                CompoundTag tag = itemStack.getOrCreateTag();
+                NbtCompound tag = itemStack.getOrCreateTag();
                 if (tag.contains("Active") && !tag.getBoolean("Active")) {
                     cir.setReturnValue(0.2F);
                     return;
@@ -57,13 +57,13 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         }
     }
 
-    @Inject(method = "writeCustomDataToTag", at = @At("RETURN"))
-    private void indrev_writeShieldToPlayerTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "writeCustomDataToNbt", at = @At("RETURN"))
+    private void indrev_writeShieldToPlayerTag(NbtCompound tag, CallbackInfo ci) {
         tag.putDouble("indrev:shield", indrev_shield);
     }
 
-    @Inject(method = "readCustomDataFromTag", at = @At("RETURN"))
-    private void indrev_readShieldToPlayerTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "readCustomDataFromNbt", at = @At("RETURN"))
+    private void indrev_readShieldToPlayerTag(NbtCompound tag, CallbackInfo ci) {
         indrev_shield = tag.getDouble("indrev:shield");
     }
 

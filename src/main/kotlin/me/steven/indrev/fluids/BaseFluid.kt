@@ -36,7 +36,7 @@ abstract class BaseFluid(
     private val color: Int
 ) : FlowableFluid() {
     override fun toBlockState(state: FluidState?): BlockState? = block().defaultState.with(
-        FluidBlock.LEVEL, method_15741(state)
+        FluidBlock.LEVEL, getBlockStateLevel(state)
     )
 
     override fun getBucketItem(): Item? = bucketItem()
@@ -60,7 +60,7 @@ abstract class BaseFluid(
     override fun getBlastResistance(): Float = 100F
 
     override fun beforeBreakingBlock(world: WorldAccess, pos: BlockPos?, state: BlockState) {
-        val blockEntity = if (state.block.hasBlockEntity()) world.getBlockEntity(pos) else null
+        val blockEntity = if (state.hasBlockEntity()) world.getBlockEntity(pos) else null
         Block.dropStacks(state, world, pos, blockEntity)
     }
 

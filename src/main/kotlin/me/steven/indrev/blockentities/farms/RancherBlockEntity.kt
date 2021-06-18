@@ -2,15 +2,15 @@ package me.steven.indrev.blockentities.farms
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.properties.BooleanProperty
 import me.steven.indrev.api.machines.properties.Property
-import me.steven.indrev.blockentities.crafters.UpgradeProvider
+import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.FakePlayerEntity
 import me.steven.indrev.utils.eat
 import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
@@ -18,17 +18,19 @@ import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.SwordItem
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
+import net.minecraft.util.math.BlockPos
 
-class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY), UpgradeProvider {
+class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
+    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY, pos, state), EnhancerProvider {
 
-    override val backingMap: Object2IntMap<Upgrade> = Object2IntArrayMap()
-    override val upgradeSlots: IntArray = intArrayOf(15, 16, 17, 18)
-    override val availableUpgrades: Array<Upgrade> = Upgrade.DEFAULT
+    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    override val enhancerSlots: IntArray = intArrayOf(15, 16, 17, 18)
+    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(8)
@@ -44,7 +46,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { FakePlayerEntity(world as ServerWorld, pos) }
+    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
     var feedBabies: Boolean by BooleanProperty(4, true)
     var mateAdults: Boolean by BooleanProperty(5, true)
     var matingLimit: Int by Property(6, 16) { i -> i.coerceAtLeast(0) }
@@ -53,13 +55,12 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getUpgrades(inventory)
-        cooldown += Upgrade.getSpeed(upgrades, this)
+        val upgrades = getEnhancers()
+        cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
             ?: mutableListOf()
-        val energyCost = Upgrade.getEnergyCost(upgrades, this)
-        if (animals.isEmpty() || !canUse(energyCost)) {
+        if (animals.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return
         } else workingState = true
@@ -68,8 +69,9 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
             val kill = filterAnimalsToKill(animals)
-            if (kill.isNotEmpty()) use(energyCost)
+            if (kill.isNotEmpty()) use(getEnergyCost())
             kill.forEach { animal ->
+                if (!animal.isAlive || !animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)) return@forEach
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
 
@@ -86,7 +88,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
                     fakePlayer.inventory.selectedSlot = 8
                     fakePlayer.setStackInHand(Hand.MAIN_HAND, stack)
                     if (animal.interactMob(fakePlayer, Hand.MAIN_HAND).isAccepted)
-                        use(energyCost)
+                        use(getEnergyCost())
                     val inserted = inventory.output(fakePlayer.inventory.getStack(0))
                     val handStack = fakePlayer.getStackInHand(Hand.MAIN_HAND)
                     if (!handStack.isEmpty && handStack.item != stack.item) {
@@ -107,11 +109,11 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         if (animalEntity.isBreedingItem(stack)) {
             val breedingAge: Int = animalEntity.breedingAge
             if (!world!!.isClient && breedingAge == 0 && animalEntity.canEat() && size <= matingLimit && mateAdults) {
-                animalEntity.eat(fakePlayer, stack)
+                animalEntity.eat(fakePlayer, Hand.MAIN_HAND, stack)
                 animalEntity.lovePlayer(fakePlayer)
             }
             if (animalEntity.isBaby && feedBabies) {
-                animalEntity.eat(fakePlayer, stack)
+                animalEntity.eat(fakePlayer, Hand.MAIN_HAND, stack)
                 animalEntity.growUp(((-breedingAge / 20f) * 0.1f).toInt(), true)
             }
             return ActionResult.SUCCESS
@@ -128,20 +130,24 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         }.flatten()
     }
 
-    override fun getBaseValue(upgrade: Upgrade): Double =
-        when (upgrade) {
-            Upgrade.ENERGY -> config.energyCost
-            Upgrade.SPEED -> 1.0
-            Upgrade.BUFFER -> config.maxEnergyStored
+    override fun getEnergyCost(): Double {
+        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        return config.energyCost * speedEnhancers
+    }
+
+    override fun getBaseValue(enhancer: Enhancer): Double =
+        when (enhancer) {
+            Enhancer.SPEED -> 1.0
+            Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
         }
 
-    override fun getMaxUpgrade(upgrade: Upgrade): Int {
-        return if (upgrade == Upgrade.SPEED) return 1 else super.getMaxUpgrade(upgrade)
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
     }
 
-    override fun toTag(tag: CompoundTag?): CompoundTag {
-        super.toTag(tag)
+    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+        super.writeNbt(tag)
         tag?.putBoolean("feedBabies", feedBabies)
         tag?.putBoolean("mateAdults", mateAdults)
         tag?.putInt("matingLimit", matingLimit)
@@ -149,15 +155,15 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         return tag!!
     }
 
-    override fun fromTag(state: BlockState?, tag: CompoundTag?) {
-        super.fromTag(state, tag)
+    override fun readNbt(tag: NbtCompound?) {
+        super.readNbt(tag)
         feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
         mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults
         matingLimit = tag?.getInt("matingLimit") ?: matingLimit
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun toClientTag(tag: CompoundTag?): CompoundTag {
+    override fun toClientTag(tag: NbtCompound?): NbtCompound {
         super.toClientTag(tag)
         tag?.putBoolean("feedBabies", feedBabies)
         tag?.putBoolean("mateAdults", mateAdults)
@@ -166,7 +172,7 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         return tag!!
     }
 
-    override fun fromClientTag(tag: CompoundTag?) {
+    override fun fromClientTag(tag: NbtCompound?) {
         super.fromClientTag(tag)
         feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
         mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults
@@ -174,5 +180,5 @@ class RancherBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun getEnergyCapacity(): Double = Upgrade.getBuffer(this)
+    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
 }

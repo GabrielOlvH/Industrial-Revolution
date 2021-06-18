@@ -1,12 +1,12 @@
 {
   "type": "indrev:smelter",
   "ingredients": {
-    "tag": "c:copper_ores"
+    "tag": "minecraft:copper_ores"
   },
   "fluidOutput": {
     "fluid": "indrev:molten_copper_still",
     "type": "ingot",
-    "count": 3
+    "count": 4
   },
   "processTime": 600
 }

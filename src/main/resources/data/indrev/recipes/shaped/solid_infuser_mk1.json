@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GCG",
+    "NMN",
+    "NBN"
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "N": {
+      "tag": "c:copper_plates"
+    },
+    "B": {
+      "item": "indrev:battery"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "indrev:solid_infuser_mk1"
+  }
+}

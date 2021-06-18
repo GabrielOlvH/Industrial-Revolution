@@ -3,10 +3,9 @@ package me.steven.indrev.blockentities.farms
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.util.math.MatrixStack
 
-class ChopperBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : AOEMachineBlockEntityRenderer(dispatcher) {
+class ChopperBlockEntityRenderer : AOEMachineBlockEntityRenderer() {
     override fun render(
         blockEntity: AOEMachineBlockEntity<*>,
         tickDelta: Float,

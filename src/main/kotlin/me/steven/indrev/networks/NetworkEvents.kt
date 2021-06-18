@@ -1,35 +1,28 @@
 package me.steven.indrev.networks
 
-import me.steven.indrev.networks.fluid.FluidNetwork
-import me.steven.indrev.networks.item.ItemNetwork
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.world.ServerWorld
 
-object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.ServerStopped {
+object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.ServerStopped, ServerBlockEntityEvents.Load {
     override fun onEndTick(world: ServerWorld) {
-        val energyNetworkState = Network.Type.ENERGY.getNetworkState(world)
-        world.profiler.push("indrev_energyNetworkTick")
-        energyNetworkState.networks.forEach { network -> network.tick(world) }
-        world.profiler.pop()
-
-        val fluidNetworkState = Network.Type.FLUID.getNetworkState(world)
-        world.profiler.push("indrev_fluidNetworkTick")
-        fluidNetworkState.networks.forEach { network -> network.tick(world) }
-        (fluidNetworkState as ServoNetworkState<FluidNetwork>).sync(world)
-        world.profiler.pop()
-
-        val itemNetworkState = Network.Type.ITEM.getNetworkState(world)
-        world.profiler.push("indrev_itemNetworkTick")
-        itemNetworkState.networks.forEach { network -> network.tick(world) }
-        (itemNetworkState as ServoNetworkState<ItemNetwork>).sync(world)
-        world.profiler.pop()
+        Network.Type.ENERGY.tick(world)
+        Network.Type.FLUID.tick(world)
+        Network.Type.ITEM.tick(world)
     }
 
     override fun onServerStopped(server: MinecraftServer?) {
-        Network.Type.ENERGY.states.clear()
-        Network.Type.FLUID.states.clear()
-        Network.Type.ITEM.states.clear()
+        Network.Type.ENERGY.clear()
+        Network.Type.FLUID.clear()
+        Network.Type.ITEM.clear()
+    }
+
+    override fun onLoad(blockEntity: BlockEntity, world: ServerWorld) {
+        if (blockEntity is BasePipeBlockEntity)
+            blockEntity.pipeType.queueUpdate(blockEntity.pos.asLong())
     }
 }

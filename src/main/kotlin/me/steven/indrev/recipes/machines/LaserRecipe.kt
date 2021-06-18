@@ -20,9 +20,9 @@ class LaserRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<LaserRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("laser")
+        val TYPE = IRRecipeType<LaserRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<LaserRecipe>({ id, input, output, ticks -> LaserRecipe(id,  input, output, ticks) })
     }

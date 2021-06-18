@@ -1,5 +1,7 @@
 package me.steven.indrev
 
+import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder
+import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -11,10 +13,9 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
+import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
-import me.steven.indrev.recipes.CopyNBTShapedRecipe
-import me.steven.indrev.recipes.RechargeableRecipe
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
@@ -29,22 +30,24 @@ import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.event.registry.RegistryEntryAddedCallback
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
+import net.minecraft.tag.Tag
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
@@ -60,10 +63,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.PARTICLE_TYPE, identifier("laser_particle"), LASER_PARTICLE)
 
         WorldGeneration.init()
-
-        BuiltinRegistries.BIOME.forEach { biome -> WorldGeneration.handleBiome(biome) }
-        RegistryEntryAddedCallback.event(BuiltinRegistries.BIOME).register { _, _, biome -> WorldGeneration.handleBiome(biome) }
-
+        WorldGeneration.addFeatures()
+        
         arrayOf(
             IRFluidRegistry.COOLANT_STILL,
             IRFluidRegistry.MOLTEN_NETHERITE_STILL,
@@ -104,9 +105,7 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_SERIALIZER, LaserRecipe.IDENTIFIER, LaserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, LaserRecipe.IDENTIFIER, LaserRecipe.TYPE)
 
-        Registry.register(Registry.RECIPE_SERIALIZER, RechargeableRecipe.IDENTIFIER, RechargeableRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_SERIALIZER, CopyNBTShapedRecipe.IDENTIFIER, CopyNBTShapedRecipe.SERIALIZER)
 
         PacketRegistry.registerServer()
 
@@ -114,6 +113,7 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
+        ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player
@@ -167,12 +167,12 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceScreenHandler)
     val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)
     val COMPRESSOR_HANDLER = CompressorScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorScreenHandler)
-    val INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
+    val SOLID_INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
     val RECYCLER_HANDLER = RecyclerScreenHandler.SCREEN_ID.registerScreenHandler(::RecyclerScreenHandler)
     val CHOPPER_HANDLER = ChopperScreenHandler.SCREEN_ID.registerScreenHandler(::ChopperScreenHandler)
     val RANCHER_HANDLER = RancherScreenHandler.SCREEN_ID.registerScreenHandler(::RancherScreenHandler)
-    val MINER_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)
-    val FISHING_FARM_HANDLER = FishingFarmScreenHandler.SCREEN_ID.registerScreenHandler(::FishingFarmScreenHandler)
+    val MINING_RIG_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)
+    val FISHER_HANDLER = FisherScreenHandler.SCREEN_ID.registerScreenHandler(::FisherScreenHandler)
     val MODULAR_WORKBENCH_HANDLER =
         ModularWorkbenchScreenHandler.SCREEN_ID.registerScreenHandler(::ModularWorkbenchScreenHandler)
     val SMELTER_HANDLER = SmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SmelterScreenHandler)
@@ -191,7 +191,7 @@ object IndustrialRevolution : ModInitializer {
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)
     val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorFactoryScreenHandler)
-    val INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
+    val SOLID_INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
 
     val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterScreenHandler.SCREEN_ID) { syncId, inv, buf ->
         val dir = buf.readEnumConstant(Direction::class.java)
@@ -226,9 +226,20 @@ object IndustrialRevolution : ModInitializer {
 
     val CABINET_HANDLER = CabinetScreenHandler.SCREEN_ID.registerScreenHandler(::CabinetScreenHandler)
 
+    val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
+
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
     val LASER_PARTICLE = FabricParticleTypes.simple()
+
+    val FAKE_PLAYER_BUILDER = FakePlayerBuilder(identifier("default_fake_player")) { builder, server, world, profile ->
+        object : FakeServerPlayer(builder, server, world, profile) {
+            override fun isCreative(): Boolean = false
+            override fun isSpectator(): Boolean = false
+            override fun playSound(sound: SoundEvent?, volume: Float, pitch: Float) {}
+            override fun playSound(event: SoundEvent?, category: SoundCategory?, volume: Float, pitch: Float) {}
+        }
+    }
 
     val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
     val SYNC_CONFIG_PACKET = identifier("sync_config_packet")

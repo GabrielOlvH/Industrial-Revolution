@@ -59,7 +59,7 @@ class SlaughterScreenHandler(
         root.add(swordSlot, 2.5, 1.5)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
-        root.add(slider, 1.6, 4.0)
+        root.add(slider, 1.6, 3.1)
         slider.setSize(50, 20)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? AOEMachineBlockEntity<*> ?: return@run
@@ -70,7 +70,7 @@ class SlaughterScreenHandler(
         val text = WText({
             TranslatableText("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
-        root.add(text, 1.8, 3.7)
+        root.add(text, 1.8, 2.8)
 
         root.validate(this)
     }

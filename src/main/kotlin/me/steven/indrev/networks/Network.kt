@@ -1,31 +1,26 @@
 package me.steven.indrev.networks
 
-import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
-import alexiil.mc.lib.attributes.item.impl.EmptyGroupedItemInv
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
-import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
-import me.steven.indrev.blocks.machine.pipes.CableBlock
-import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
-import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
+import me.steven.indrev.networks.client.ClientNetworkInfo
+import me.steven.indrev.networks.client.ClientServoNetworkInfo
+import me.steven.indrev.networks.client.node.ClientServoNodeInfo
 import me.steven.indrev.networks.energy.EnergyNetwork
+import me.steven.indrev.networks.factory.ENERGY_NET_FACTORY
+import me.steven.indrev.networks.factory.FLUID_NET_FACTORY
+import me.steven.indrev.networks.factory.ITEM_NET_FACTORY
+import me.steven.indrev.networks.factory.NetworkFactory
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.fluid.FluidNetworkState
 import me.steven.indrev.networks.item.ItemNetwork
 import me.steven.indrev.networks.item.ItemNetworkState
-import me.steven.indrev.utils.energyOf
-import me.steven.indrev.utils.groupedFluidInv
-import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.block.Block
-import net.minecraft.block.BlockState
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.LongTag
-import net.minecraft.nbt.StringTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
-import net.minecraft.world.chunk.Chunk
 import java.util.*
 
 abstract class Network(
@@ -58,190 +53,167 @@ abstract class Network(
 
     abstract fun tick(world: ServerWorld)
 
-    open fun toTag(tag: CompoundTag): CompoundTag {
-        writePositions(tag)
-        return tag
-    }
-
-    open fun fromTag(world: ServerWorld, tag: CompoundTag) {
-        readPositions(tag)
-    }
-
     open fun remove() {
-        val state = type.getNetworkState(world)
-        state.networks.remove(this)
-        pipes.forEach { state.remove(it) }
+        type.remove(world, this)
     }
 
     @Suppress("UNCHECKED_CAST")
-    open fun <V : Network> appendPipe(state: NetworkState<V>, block: Block, blockPos: BlockPos) {
+    open fun appendPipe(block: Block, blockPos: BlockPos) {
         pipes.add(blockPos)
-        state[blockPos] = this as V
+        type[blockPos] = this
     }
 
     open fun appendContainer(blockPos: BlockPos, direction: Direction) {
         containers.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
-    }
-
-    fun writePositions(tag: CompoundTag) {
-        val pipesList = ListTag()
-        pipes.forEach { pos ->
-            pipesList.add(LongTag.of(pos.asLong()))
-        }
-        val containersList = ListTag()
-        containers.forEach { (pos, directions) ->
-            val machineTag = CompoundTag()
-            machineTag.putLong("pos", pos.asLong())
-            val dirList = ListTag()
-            directions.forEach { dir ->
-                dirList.add(StringTag.of(dir.toString()))
-            }
-            machineTag.put("dir", dirList)
-            containersList.add(machineTag)
-        }
-        tag.put("cables", pipesList)
-        tag.put("machines", containersList)
-    }
-
-    fun readPositions(tag: CompoundTag) {
-        val pipesList = tag.getList("cables", 4)
-        val containersList = tag.getList("machines", 10)
-        pipesList.forEach { cableTag ->
-            cableTag as LongTag
-            this.pipes.add(BlockPos.fromLong(cableTag.long).toImmutable())
-        }
-        containersList.forEach { machineTag ->
-            machineTag as CompoundTag
-            val posLong = machineTag.getLong("pos")
-            val pos = BlockPos.fromLong(posLong)
-            val dirList = machineTag.getList("dir", 8)
-            dirList.forEach { dirTag ->
-                dirTag as StringTag
-                val dir = Direction.valueOf(dirTag.asString().toUpperCase())
-                appendContainer(pos, dir)
-            }
-        }
+        type[blockPos] = this
     }
 
     companion object {
 
         val DIRECTIONS = Direction.values()
 
-        fun <T : Network> handleBreak(type: Type<T>, world: ServerWorld, pos: BlockPos) {
-            val state = type.getNetworkState(world)
-            if (state.contains(pos))
-                state[pos]?.remove()
+        fun <T : Network> handleBreak(type: Type<T>, pos: BlockPos) {
+            type.networksByPos[pos.asLong()]?.remove()
             DIRECTIONS.forEach {
                 val offset = pos.offset(it)
-                handleUpdate(type, world, offset)
+                handleUpdate(type, offset)
             }
         }
 
-        fun <T : Network> handleUpdate(type: Type<T>, world: ServerWorld, pos: BlockPos) {
-            val state = type.getNetworkState(world)
-            if (state.contains(pos))
-                state[pos]?.remove()
-            val network = type.createEmpty(world)
-            state.networks.add(network)
-            val scanned = hashSetOf<BlockPos>()
-            DIRECTIONS.forEach { dir ->
-                buildNetwork(scanned, state, network, world.getChunk(pos), world, pos, pos, dir)
-            }
-            if (network.containers.isEmpty() || network.pipes.isEmpty())
-                network.remove()
-            state.markDirty()
-        }
-
-        private fun <T : Network> buildNetwork(
-            scanned: MutableSet<BlockPos>,
-            state: NetworkState<T>,
-            network: Network,
-            chunk: Chunk,
-            world: ServerWorld,
-            blockPos: BlockPos,
-            source: BlockPos,
-            direction: Direction
-        ) {
-            if (network.type.isContainer(world, blockPos, direction.opposite)) {
-                network.appendContainer(blockPos, direction.opposite)
-            }
-            if (blockPos != source && !scanned.add(blockPos)) return
-            val blockState = chunk.getBlockState(blockPos) ?: return
-            val block = blockState.block
-            if (network.type.isPipe(blockState)) {
-                if (state.contains(blockPos)) {
-                    val oldNetwork = state[blockPos]
-                    if (state.networks.contains(oldNetwork) && oldNetwork != network) {
-                        oldNetwork?.remove()
-                    }
-                }
-                DIRECTIONS.forEach { dir ->
-                    if (blockState[BasePipeBlock.getProperty(dir)]) {
-                        val nPos = blockPos.offset(dir)
-                        if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
-                            buildNetwork(scanned, state, network, chunk, world, nPos, source, dir)
-                        else
-                            buildNetwork(scanned, state, network, world.getChunk(nPos), world, nPos, source, dir)
-                    }
-                }
-                if (blockState[BasePipeBlock.getProperty(direction.opposite)])
-                    network.appendPipe(state, block, blockPos.toImmutable())
-            }
-        }
-
-        fun fromTag(world: ServerWorld, tag: CompoundTag): Network {
-            val type = if (tag.contains("type")) Type.valueOf(tag.getString("type").toUpperCase()) else Type.ENERGY
-            val network = type.createEmpty(world)
-            network.readPositions(tag)
-            return network
+        fun <T : Network> handleUpdate(type: Type<T>, pos: BlockPos) {
+            type.networksByPos[pos.asLong()]?.remove()
+            type.queueUpdate(pos.asLong(), true)
         }
     }
     abstract class Type<T : Network>(val key: String) {
 
+        abstract val factory: NetworkFactory<T>
+
         val states: WeakHashMap<World, NetworkState<T>> = WeakHashMap()
 
+        val networksByPos = Long2ObjectOpenHashMap<T>()
+        val networks = ObjectOpenHashSet<Network>()
+
+        val queuedUpdates = LongOpenHashSet()
+        val updatedPositions = LongOpenHashSet()
+
+        var version = 0
 
         abstract fun createEmpty(world: ServerWorld): T
 
-        abstract fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean
+        abstract fun getNetworkState(world: ServerWorld): NetworkState<T>?
 
-        abstract fun isPipe(blockState: BlockState): Boolean
+        abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>?
 
-        open fun getNetworkState(world: ServerWorld): NetworkState<T> {
-            return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ NetworkState(this, world, key) }, key) }
+        fun queueUpdate(pos: Long, force: Boolean = false) {
+            if (!networksByPos.contains(pos) || force) queuedUpdates.add(pos)
+        }
+
+        operator fun set(pos: BlockPos, network: Network) {
+            networksByPos[pos.asLong()] = network as T
+        }
+
+        fun remove(world: ServerWorld, network: Network) {
+            network.pipes.forEach { pos ->
+                networksByPos.remove(pos.asLong())
+                getNetworkState(world)?.onRemoved(pos)
+            }
+            network.containers.forEach { (pos, _) ->
+                networksByPos.remove(pos.asLong())
+                getNetworkState(world)?.onRemoved(pos)
+            }
+            networks.remove(network)
+        }
+
+        fun tick(world: ServerWorld) {
+            val state = getNetworkState(world)
+
+            queuedUpdates.forEach { pos ->
+                if (!updatedPositions.contains(pos)) {
+                    val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
+                    if (network.pipes.isNotEmpty() && network.containers.isNotEmpty())
+                        networks.add(network)
+                    else
+                        remove(world, network)
+                }
+            }
+            queuedUpdates.clear()
+            updatedPositions.clear()
+            world.profiler.push("indrev_${key.lowercase()}NetworkTick")
+            networks.forEach { network -> network.tick(world) }
+            world.profiler.pop()
+
+            (state as? ServoNetworkState<*>)?.sync(world)
+            (state as? ServoNetworkState<*>)?.clearCachedData(false)
+        }
+
+        fun clear() {
+            this.states.clear()
+            this.queuedUpdates.clear()
+            this.updatedPositions.clear()
+            this.networksByPos.clear()
+            this.networks.clear()
         }
 
         companion object {
             val ENERGY = object : Type<EnergyNetwork>(NetworkState.ENERGY_KEY) {
 
+                override val factory: NetworkFactory<EnergyNetwork> = ENERGY_NET_FACTORY
+
                 override fun createEmpty(world: ServerWorld): EnergyNetwork = EnergyNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = energyOf(world, pos, direction.opposite) != null
+                override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork>? {
+                    return null
+                }
 
-                override fun isPipe(blockState: BlockState): Boolean = blockState.block is CableBlock
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
+                    return null
+                }
             }
             val FLUID = object : Type<FluidNetwork>(NetworkState.FLUID_KEY) {
 
+                override val factory: NetworkFactory<FluidNetwork> = FLUID_NET_FACTORY
+
                 override fun createEmpty(world: ServerWorld): FluidNetwork = FluidNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedFluidInv(world, pos, direction.opposite) != EmptyGroupedFluidInv.INSTANCE
-
-                override fun isPipe(blockState: BlockState): Boolean = blockState.block is FluidPipeBlock
-
                 override fun getNetworkState(world: ServerWorld): FluidNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ FluidNetworkState(world) }, key) } as FluidNetworkState
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ServoNetworkState.readNbt(it) { FluidNetworkState(world) } }, { FluidNetworkState(world) }, key) } as FluidNetworkState
+                }
+
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
+                    val state = getNetworkState(world)
+                    return ClientServoNetworkInfo().also {
+                        state.endpointData.forEach { (pos, data) ->
+                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
+                            data.forEach { (dir, endpointData) ->
+                                info.servos[dir] = endpointData.type
+                            }
+                            it.pipes[pos] = info
+                        }
+                    }
                 }
             }
             val ITEM = object : Type<ItemNetwork>(NetworkState.ITEM_KEY) {
 
+                override val factory: NetworkFactory<ItemNetwork> = ITEM_NET_FACTORY
+
                 override fun createEmpty(world: ServerWorld): ItemNetwork = ItemNetwork(world)
 
-                override fun isContainer(world: ServerWorld, pos: BlockPos, direction: Direction): Boolean = groupedItemInv(world, pos, direction.opposite) != EmptyGroupedItemInv.INSTANCE
-
-                override fun isPipe(blockState: BlockState): Boolean = blockState.block is ItemPipeBlock
-
                 override fun getNetworkState(world: ServerWorld): ItemNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState(world) }, key) } as ItemNetworkState
+                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
+                }
+
+                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
+                    val state = getNetworkState(world)
+                    return ClientServoNetworkInfo().also {
+                        state.endpointData.forEach { (pos, data) ->
+                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
+                            data.forEach { (dir, endpointData) ->
+                                info.servos[dir] = endpointData.type
+                            }
+                            it.pipes[pos] = info
+                        }
+                    }
                 }
             }
 

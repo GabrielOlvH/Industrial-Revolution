@@ -1,55 +1,56 @@
 package me.steven.indrev.compat.rei.plugins
 
-import me.shedaniel.rei.api.EntryStack
-import me.shedaniel.rei.api.TransferRecipeDisplay
-import me.shedaniel.rei.server.ContainerInfo
+import me.shedaniel.rei.api.common.category.CategoryIdentifier
+import me.shedaniel.rei.api.common.display.Display
+import me.shedaniel.rei.api.common.entry.EntryIngredient
+import me.shedaniel.rei.api.common.util.EntryIngredients
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.ScreenHandler
 import net.minecraft.util.Identifier
 import java.util.*
 
-open class IRMachinePlugin(val recipe: IRRecipe, private val category: Identifier) : TransferRecipeDisplay {
+open class IRMachinePlugin(val recipe: IRRecipe)
+    : Display {
 
-    private val outputPreview: MutableList<EntryStack> = mutableListOf()
-    private val output: MutableList<EntryStack> = mutableListOf()
-    private val input: MutableList<MutableList<EntryStack>> = mutableListOf()
 
-    init {
-        input.addAll(recipe.input.map { (ingredient, count) ->
-            ingredient.matchingStacksClient.map { stack -> EntryStack.create(ItemStack(stack.item, count)) }.toMutableList()
-        })
-        outputPreview.addAll(recipe.outputs.map { (stack, _) -> EntryStack.create(stack) }.toMutableList())
-        if (recipe is IRFluidRecipe) {
-            val fluidInput = recipe.fluidInput
-            if (fluidInput != null)
-                input.addAll(mutableListOf(mutableListOf(EntryStack.create(fluidInput.rawFluid, fluidInput.amount().asInt(1000)))))
-            val fluidOutput = recipe.fluidOutput
-            if (fluidOutput != null)
-                output.add(EntryStack.create(fluidOutput.rawFluid, fluidOutput.amount().asInt(1000)))
-        }
-        output.addAll(outputPreview)
+    override fun getInputEntries(): List<EntryIngredient> = getInputs(recipe)
+
+    override fun getOutputEntries(): List<EntryIngredient> = getOutputs(recipe)
+
+    override fun getCategoryIdentifier(): CategoryIdentifier<*> {
+        return CategoryIdentifier.of<IRMachinePlugin>(recipe.type.id)
     }
 
-    override fun getRecipeCategory(): Identifier = category
+    override fun getDisplayLocation(): Optional<Identifier> {
+        return Optional.of(recipe.id)
+    }
 
-    override fun getRecipeLocation(): Optional<Identifier> = Optional.ofNullable(recipe).map { it.id }
+    companion object {
+        fun getInputs(recipe: IRRecipe): List<EntryIngredient> {
+            val list = mutableListOf<EntryIngredient>()
+            if (recipe is IRFluidRecipe) {
+                val fluidInput = recipe.fluidInput
+                if (fluidInput != null)
+                    list.addAll(mutableListOf(EntryIngredients.of(fluidInput.rawFluid, 81000)))
+            }
+            list.addAll(recipe.input.map { (ingredient, count) ->
+                ingredient.matchingStacksClient.map { stack -> EntryIngredients.of(ItemStack(stack.item, count)) }.toMutableList()
+            }.flatten())
+            return list
+        }
 
-    override fun getRequiredEntries(): MutableList<MutableList<EntryStack>> = input
+        fun getOutputs(recipe: IRRecipe): List<EntryIngredient> {
+            val list = mutableListOf<EntryIngredient>()
+            list.addAll(recipe.outputs.map { (stack, _) -> EntryIngredients.of(stack) }.toMutableList())
+            if (recipe is IRFluidRecipe) {
+                val fluidOutput = recipe.fluidOutput
+                if (fluidOutput != null)
+                    list.add(EntryIngredients.of(fluidOutput.rawFluid, 81000))
+            }
 
-    override fun getOrganisedInputEntries(
-        p0: ContainerInfo<ScreenHandler>?,
-        p1: ScreenHandler?
-    ): MutableList<MutableList<EntryStack>> = input
+            return list
+        }
+    }
 
-    override fun getInputEntries(): MutableList<MutableList<EntryStack>> = input
-
-    override fun getOutputEntries(): MutableList<EntryStack> = outputPreview
-
-    override fun getResultingEntries(): MutableList<MutableList<EntryStack>> = output.map { mutableListOf(it) }.toMutableList()
-
-    override fun getWidth(): Int = 1
-
-    override fun getHeight(): Int = 1
 }

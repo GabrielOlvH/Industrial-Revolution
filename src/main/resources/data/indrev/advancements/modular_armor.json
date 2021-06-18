@@ -22,16 +22,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:modular_armor_helmet"
-          },
-          {
-            "item": "indrev:modular_armor_chest"
-          },
-          {
-            "item": "indrev:modular_armor_legs"
-          },
-          {
-            "item": "indrev:modular_armor_boots"
+            "items": ["indrev:modular_armor_helmet","indrev:modular_armor_chest", "indrev:modular_armor_legs", "indrev:modular_armor_boots"]
           }
         ]
       }

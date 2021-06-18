@@ -89,7 +89,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
 
     private void applyArmorEffects() {
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        PlayerInventory inventory = player.inventory;
+        PlayerInventory inventory = player.getInventory();
         getAppliedModules().clear();
         for (ItemStack itemStack : inventory.armor) {
             if (itemStack.getItem() instanceof IRModularArmorItem) {
@@ -123,7 +123,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                             }
                             break;
                         case CHARGER:
-                                IRPortableChargerItem.Companion.chargeItemsInInv(itemStack, player.inventory.main);
+                                IRPortableChargerItem.Companion.chargeItemsInInv(itemStack, player.getInventory().main);
                             break;
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {

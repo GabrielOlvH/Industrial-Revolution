@@ -28,13 +28,13 @@ class CondenserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx:
         configure("block.indrev.condenser", ctx, playerInventory, blockInventory)
 
         val fluid = WFluid(ctx, 0)
-        root.add(fluid, 2.8, 0.7)
+        root.add(fluid, 2.8, 1.0)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.0, 2.2)
+        root.add(processWidget, 4.0, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 2)
-        root.add(outputSlot, 5.7, 2.2)
+        root.add(outputSlot, 5.7, 1.8)
 
         root.validate(this)
     }

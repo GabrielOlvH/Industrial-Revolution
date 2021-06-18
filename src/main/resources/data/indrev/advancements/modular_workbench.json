@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:modular_workbench_mk4"
+            "items": ["indrev:modular_workbench_mk4"]
           }
         ]
       }

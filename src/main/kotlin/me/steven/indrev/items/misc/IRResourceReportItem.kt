@@ -22,7 +22,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         val tag = stack?.tag ?: return
         val type = Identifier(tag.getString("VeinIdentifier"))
-        val pos = getChunkPos(tag.getString("ChunkPos")) ?: return
+        val pos = getChunkPos(tag.getCompound("ChunkPos"))
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip2",
             TranslatableText("vein.${type.namespace}.${type.path}").formatted(Formatting.WHITE)).formatted(Formatting.BLUE))
         tooltip?.add(TranslatableText("item.indrev.chunk_scanner.tooltip3",
@@ -35,13 +35,9 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
         if (world !is ServerWorld) return super.use(world, user, hand)
-        val state =
-            world.persistentStateManager.getOrCreate(
-                { ChunkVeinState(ChunkVeinState.STATE_OVERWORLD_KEY) },
-                ChunkVeinState.STATE_OVERWORLD_KEY
-            )
+        val state = ChunkVeinState.getState(world)
         val tag = user.getStackInHand(hand).tag ?: return super.use(world, user, hand)
-        val chunkPos = getChunkPos(tag.getString("ChunkPos")) ?: return super.use(world, user, hand)
+        val chunkPos = getChunkPos(tag.getCompound("ChunkPos"))
         val veinData = state.veins[chunkPos]!!
         user.openHandledScreen(
             ResourceReportScreenHandlerFactory(

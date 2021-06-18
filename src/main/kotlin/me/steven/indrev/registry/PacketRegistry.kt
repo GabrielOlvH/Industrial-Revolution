@@ -2,8 +2,6 @@ package me.steven.indrev.registry
 
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import io.netty.buffer.Unpooled
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.IRPlayerEntityExtension
@@ -14,7 +12,7 @@ import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.MinerBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
@@ -31,11 +29,14 @@ import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.misc.WKnob
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.item.ItemEndpointData
+import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.networks.item.ItemNetworkState
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.tools.modular.ArmorModule
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.SPLIT_STACKS_PACKET
+import me.steven.indrev.utils.entries
+import me.steven.indrev.utils.getAllOfType
+import me.steven.indrev.utils.isLoaded
 import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
@@ -48,10 +49,14 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.sound.SoundCategory
 import net.minecraft.util.collection.WeightedList
-import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
-import java.util.function.LongFunction
+import kotlin.collections.MutableMap
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.hashMapOf
+import kotlin.collections.set
 
 object PacketRegistry {
     fun registerServer() {
@@ -186,21 +191,16 @@ object PacketRegistry {
             val dir = buf.readEnumConstant(Direction::class.java)
             val pos = buf.readBlockPos()
             server.execute {
-                val cursorStack = player.inventory.cursorStack
+                val cursorStack = player.currentScreenHandler.cursorStack
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir)
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
                 state.markDirty()
-                val buf = PacketByteBufs.create()
-                buf.writeInt(slotIndex)
-                buf.writeItemStack(data.filter[slotIndex])
-                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, buf)
+                val syncPacket = PacketByteBufs.create()
+                syncPacket.writeInt(slotIndex)
+                syncPacket.writeItemStack(data.filter[slotIndex])
+                ServerPlayNetworking.send(player, PipeFilterScreenHandler.UPDATE_FILTER_SLOT_S2C_PACKET, syncPacket)
             }
         }
 
@@ -212,12 +212,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()].computeIfAbsent(dir) {
-                    state.createEndpointData(
-                        EndpointData.Type.INPUT,
-                        null
-                    )
-                } as ItemEndpointData
+                val data = state.getFilterData(pos, dir, true)
                 when (field) {
                     0 -> data.whitelist = value
                     1 -> data.matchDurability = value
@@ -235,7 +230,7 @@ object PacketRegistry {
 
             server.execute {
                 val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
-                val data = state.endpointData[pos.asLong()][dir] as? ItemEndpointData ?: return@execute
+                val data = state.getEndpointData(pos, dir, true) ?: return@execute
                 data.mode = mode
                 state.markDirty()
             }
@@ -262,13 +257,18 @@ object PacketRegistry {
         VeinType.REGISTERED.forEach { (identifier, veinType) ->
             buf.writeIdentifier(identifier)
             val entries = veinType.outputs.entries
+            val infiniteEntries = veinType.infiniteOutputs.entries
             buf.writeInt(entries.size)
-            entries.forEach { entry ->
+
+            for (i in 0 until entries.size) {
+                val entry = entries[i]
                 val block = entry.element
                 val weight = entry.weight
+                val infiniteWeight = infiniteEntries[i].weight
                 val rawId = Registry.BLOCK.getRawId(block)
                 buf.writeInt(rawId)
                 buf.writeInt(weight)
+                buf.writeInt(infiniteWeight)
             }
             buf.writeInt(veinType.sizeRange.first)
             buf.writeInt(veinType.sizeRange.last)
@@ -289,15 +289,18 @@ object PacketRegistry {
                 val id = buf.readIdentifier()
                 val entriesSize = buf.readInt()
                 val outputs = WeightedList<Block>()
+                val infiniteOutputs = WeightedList<Block>()
                 for (y in 0 until entriesSize) {
                     val rawId = buf.readInt()
                     val weight = buf.readInt()
+                    val infiniteWeight = buf.readInt()
                     val block = Registry.BLOCK.get(rawId)
                     outputs.add(block, weight)
+                    infiniteOutputs.add(block, infiniteWeight)
                 }
                 val minSize = buf.readInt()
                 val maxSize = buf.readInt()
-                val veinType = VeinType(id, outputs, minSize..maxSize)
+                val veinType = VeinType(id, outputs, infiniteOutputs, minSize..maxSize)
                 VeinType.REGISTERED[id] = veinType
             }
         }
@@ -313,7 +316,7 @@ object PacketRegistry {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(MinerBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
+        ClientPlayNetworking.registerGlobalReceiver(MiningRigBlockEntity.BLOCK_BREAK_PACKET) { client, _, buf, _ ->
             val pos = buf.readBlockPos().down()
             val blockRawId = buf.readInt()
             val block = Registry.BLOCK.get(blockRawId)
@@ -378,41 +381,8 @@ object PacketRegistry {
 
         ClientPlayNetworking.registerGlobalReceiver(IndustrialRevolution.SYNC_NETWORK_SERVOS) { client, _, buf, _ ->
             val type = Network.Type.valueOf(buf.readString())
-            val servoData = IndustrialRevolutionClient.CLIENT_RENDER_SERVO_DATA.computeIfAbsent(type) { Long2ObjectOpenHashMap() }
-            val before = Long2ObjectOpenHashMap(servoData)
-            val new = Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>()
-            val positions = hashSetOf<BlockPos>()
-            val size = buf.readInt()
-            for (i in 0 until size) {
-                val pos = buf.readLong()
-                for (m in 0 until buf.readByte()) {
-                    val dir = Direction.values()[buf.readByte().toInt()]
-                    val type = EndpointData.Type.values()[buf.readByte().toInt()]
-                    val hasMode = buf.readBoolean()
-                    val mode = if (hasMode) EndpointData.Mode.values()[buf.readByte().toInt()] else null
-                    client.execute {
-                        val data = new.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
-                        data[dir] = EndpointData(type, mode)
-
-                        if (before[pos]?.size != data?.size || before[pos]?.any { it.value.mode != data[it.key]?.mode || it.value.type != data[it.key]?.type } == true) {
-                            positions.add(BlockPos.fromLong(pos))
-                        }
-                    }
-                }
-            }
-            client.execute {
-
-                servoData.clear()
-                servoData.putAll(new)
-                positions.forEach { (x, y, z) ->
-                    MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x, y, z, x, y, z)
-                }
-
-                before.filterKeys { !positions.contains(BlockPos.fromLong(it)) }.forEach {
-                    val (x, y, z) = BlockPos.fromLong(it.key)
-                    MinecraftClient.getInstance().worldRenderer.scheduleBlockRenders(x, y, z, x, y, z)
-                }
-            }
+            val state = IndustrialRevolutionClient.CLIENT_NETWORK_STATE.computeIfAbsent(type) { ClientNetworkState(type) }
+            state.processPacket(buf, client)
         }
     }
 }

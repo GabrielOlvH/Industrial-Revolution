@@ -19,7 +19,7 @@ class AcidFluidBlock(fluid: FlowableFluid, settings: Settings) : FluidBlock(flui
             val neighbor = pos?.offset(dir)
             val blockState = world?.getBlockState(neighbor)
             val block = blockState?.block
-            if (block == Blocks.DIRT || block == Blocks.GRASS_BLOCK || block == Blocks.FARMLAND || block == Blocks.GRASS_PATH)
+            if (block == Blocks.DIRT || block == Blocks.GRASS_BLOCK || block == Blocks.FARMLAND || block == Blocks.DIRT_PATH)
                 world?.setBlockState(pos, Blocks.COARSE_DIRT.defaultState)
         }
     }

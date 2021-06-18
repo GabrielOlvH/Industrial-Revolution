@@ -2,11 +2,11 @@
   "name": "Mining Rig Computer",
   "category": "machines",
   "sortnum": 4,
-  "icon": "indrev:miner_mk4",
+  "icon": "indrev:mining_rig_mk4",
   "pages": [
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/miner_mk4",
+      "recipe": "indrev:shaped/mining_rig_mk4",
       "text": "The $(l)$(o)Mining Rig Computer$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks.$(br)The Computer costs $(#1111FF)64LF/tick$() and each Drill will increase energy usage in $(#1111FF)256LF/tick$()"
     },
     {
@@ -25,6 +25,10 @@
       "type": "crafting",
       "recipe": "indrev:shaped/chunk_scanner",
       "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, the Scanner will give you a result which is required by the Miner to work."
+    },
+    {
+      "type": "text",
+      "text": "$(l)Note:$()$(br)Once the progress in the Mining Rig Computer hits 100%, the rig will continue more stone, dirt and gravel will be found instead of ore.$(br2)$(br)Not all veins are currently listed here."
     },
     {
       "anchor": "vein_types",
@@ -91,14 +95,14 @@
       "anchor": "chalcopryte",
       "type": "spotlight",
       "title": "Chalcopryte",
-      "item": "indrev:copper_ore",
+      "item": "minecraft:copper_ore",
       "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), it's the quite rich and very variable vein, with lots of $(#FFA500)$(l)copper$() and $(#666666)$(l)iron$() ores alongside stone, dirt and gravel.$(br)It can be found in many places but more commonly on plains, savannas and forests."
     },
     {
       "anchor": "cuprite",
       "type": "spotlight",
       "title": "Cuprite",
-      "item": "indrev:copper_ore",
+      "item": "minecraft:copper_ore",
       "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size.$(br)It can be found in many places but more commonly on savannas and deserts."
     },
     {

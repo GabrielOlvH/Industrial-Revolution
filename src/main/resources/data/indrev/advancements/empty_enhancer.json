@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "indrev:empty_enhancer"
+    },
+    "title": {
+      "translate": "advancements.indrev.empty_enhancer"
+    },
+    "description": {
+      "translate": "advancements.indrev.empty_enhancer.description"
+    }
+  },
+  "parent": "indrev:nikolite",
+  "criteria": {
+    "checkInv": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": ["indrev:empty_enhancer"]
+          }
+        ]
+      }
+    }
+  }
+}

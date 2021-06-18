@@ -13,13 +13,13 @@
       "item": "minecraft:diamond_sword"
     },
     "E": {
-      "item": "indrev:empty_upgrade"
+      "item": "indrev:empty_enhancer"
     },
     "N": {
       "item": "indrev:enriched_nikolite_dust"
     }
   },
   "result": {
-    "item": "indrev:damage_upgrade"
+    "item": "indrev:damage_enhancer"
   }
 }

@@ -10,14 +10,12 @@ import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.Node
 import me.steven.indrev.utils.fluidExtractableOf
 import me.steven.indrev.utils.fluidInsertableOf
 import me.steven.indrev.utils.isLoaded
 import me.steven.indrev.utils.minus
 import net.minecraft.block.Block
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -114,31 +112,9 @@ class FluidNetwork(
         }
     }
 
-    override fun <T : Network> appendPipe(state: NetworkState<T>, block: Block, blockPos: BlockPos) {
+    override fun appendPipe(block: Block, blockPos: BlockPos) {
         val cable = block as? FluidPipeBlock ?: return
         this.tier = cable.tier
-        super.appendPipe(state, block, blockPos)
-    }
-
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        super.toTag(tag)
-        tag.putInt("tier", tier.ordinal)
-        return tag
-    }
-
-    override fun fromTag(world: ServerWorld, tag: CompoundTag) {
-        super.fromTag(world, tag)
-        val tier = Tier.values()[tag.getInt("tier")]
-        this.tier = tier
-    }
-
-    companion object {
-
-        fun fromTag(world: ServerWorld, tag: CompoundTag): FluidNetwork {
-            val network = Network.fromTag(world, tag) as FluidNetwork
-            val tier = Tier.values()[tag.getInt("tier")]
-            network.tier = tier
-            return network
-        }
+        super.appendPipe(block, blockPos)
     }
 }

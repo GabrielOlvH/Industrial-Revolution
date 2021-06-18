@@ -27,14 +27,14 @@ class CompressorScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx
         configure("block.indrev.compressor", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.5, 2.0)
+        root.add(inputSlot, 3.3, 1.8)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.65, 2.0)
+        root.add(processWidget, 4.45, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 6.14, 2.0)
+        root.add(outputSlot, 5.94, 1.8)
 
         root.validate(this)
     }

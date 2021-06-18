@@ -8,11 +8,9 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
-import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.isLoaded
 import net.minecraft.block.Block
-import net.minecraft.nbt.CompoundTag
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -70,22 +68,10 @@ open class EnergyNetwork(
         }
     }
 
-    override fun <K : Network> appendPipe(state: NetworkState<K>, block: Block, blockPos: BlockPos) {
+    override fun appendPipe(block: Block, blockPos: BlockPos) {
         val cable = block as? CableBlock ?: return
         this.tier = cable.tier
-        super.appendPipe(state, block, blockPos)
-    }
-
-    override fun toTag(tag: CompoundTag): CompoundTag {
-        super.toTag(tag)
-        tag.putInt("tier", tier.ordinal)
-        return tag
-    }
-
-    override fun fromTag(world: ServerWorld, tag: CompoundTag) {
-        super.fromTag(world, tag)
-        val tier = Tier.values()[tag.getInt("tier")]
-        this.tier = tier
+        super.appendPipe(block, blockPos)
     }
 
     companion object {
@@ -96,12 +82,5 @@ open class EnergyNetwork(
             get() = MAX_VALUE - insert(MAX_VALUE, Simulation.SIMULATE)
         private val EnergyIo.maxOutput: Double
             get() = extract(MAX_VALUE, Simulation.SIMULATE)
-
-        fun fromTag(world: ServerWorld, tag: CompoundTag): EnergyNetwork {
-            val network = Network.fromTag(world, tag) as EnergyNetwork
-            val tier = Tier.values()[tag.getInt("tier")]
-            network.tier = tier
-            return network
-        }
     }
 }

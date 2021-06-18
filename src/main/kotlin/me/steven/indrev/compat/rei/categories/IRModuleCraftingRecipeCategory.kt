@@ -2,15 +2,16 @@ package me.steven.indrev.compat.rei.categories
 
 import me.shedaniel.math.Point
 import me.shedaniel.math.Rectangle
-import me.shedaniel.rei.api.EntryStack
-import me.shedaniel.rei.api.widgets.Widgets
-import me.shedaniel.rei.gui.widget.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widgets
+import me.shedaniel.rei.api.common.entry.EntryStack
+import me.shedaniel.rei.api.common.util.EntryStacks
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import net.minecraft.util.Identifier
 
 class IRModuleCraftingRecipeCategory(
     identifier: Identifier,
-    logo: EntryStack,
+    logo: EntryStack<*>,
     categoryName: String
 ) : IRMachineRecipeCategory(identifier, logo, categoryName) {
 
@@ -56,7 +57,7 @@ class IRModuleCraftingRecipeCategory(
         val startPoint = Point(bounds.centerX - 43, bounds.centerY - 45)
         val widgets: MutableList<Widget> = listOf(Widgets.createCategoryBase(bounds)).toMutableList()
         val input = recipeDisplay.inputEntries
-        val outputs = recipe.outputs.map { EntryStack.create(it.stack) }
+        val outputs = recipe.outputs.map { EntryStacks.of(it.stack) }
         slotLayout[input.size]?.forEachIndexed { index, point ->
             widgets.add(Widgets.createSlot(startPoint + point).entries(input[index]))
         }

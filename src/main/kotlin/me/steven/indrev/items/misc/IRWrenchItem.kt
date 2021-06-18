@@ -16,14 +16,14 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.LongTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
+import java.util.*
 
 class IRWrenchItem(settings: Settings) : Item(settings) {
 
@@ -32,7 +32,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
             val stack = user.getStackInHand(hand)
             if (stack.item != this) return TypedActionResult.pass(stack)
             val mode = getMode(stack).next()
-            val tag = stack.tag ?: CompoundTag()
+            val tag = stack.tag ?: NbtCompound()
             tag.putString("TransferMode", mode.toString())
             stack.tag = tag
             user.sendMessage(TranslatableText("item.indrev.wrench.switch_mode", mode), true)
@@ -47,8 +47,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
         val pos = context.blockPos
         val player = context.player
         val state = world?.getBlockState(pos) ?: return ActionResult.FAIL
-        val block = state.block
-        val blockEntity = if (block.hasBlockEntity()) world.getBlockEntity(pos) else null
+        val blockEntity = if (state.hasBlockEntity()) world.getBlockEntity(pos) else null
         return getMode(stack).useOnBlock(world, pos, state, blockEntity, player, stack)
     }
 
@@ -61,7 +60,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
         tooltip?.add(
             TranslatableText(
                 "item.indrev.wrench.tooltip1",
-                TranslatableText("item.indrev.wrench.tooltip1.${getMode(stack).toString().toLowerCase()}").formatted(
+                TranslatableText("item.indrev.wrench.tooltip1.${getMode(stack).toString().lowercase(Locale.getDefault())}").formatted(
                     Formatting.WHITE
                 )
             ).formatted(Formatting.GOLD)
@@ -72,7 +71,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
     private fun getMode(stack: ItemStack?): Mode {
         val tag = stack?.tag
         if (tag != null && tag.contains("TransferMode")) {
-            val s = tag.getString("TransferMode").toUpperCase()
+            val s = tag.getString("TransferMode").uppercase(Locale.getDefault())
             return Mode.valueOf(s)
         }
         return Mode.ROTATE
@@ -121,7 +120,7 @@ class IRWrenchItem(settings: Settings) : Item(settings) {
                 ): ActionResult {
                     val block = blockState.block
                     if (player?.isSneaking == true && block is MachineBlock) {
-                        block.toTagComponents(world, player, pos, blockState, blockEntity, stack)
+                        block.writeNbtComponents(world, player, pos, blockState, blockEntity, stack)
                         world.breakBlock(pos, false, player)
                     } else {
                         val rotated = blockState.rotate(BlockRotation.CLOCKWISE_90)

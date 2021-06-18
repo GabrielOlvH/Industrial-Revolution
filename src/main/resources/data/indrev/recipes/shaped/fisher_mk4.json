@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "NCN",
+    "LML",
+    "LBL"
+  ],
+  "key": {
+    "M": {
+      "item": "indrev:fisher_mk3"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "L": {
+      "tag": "c:lead_plates"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:fisher_mk4"
+  }
+}

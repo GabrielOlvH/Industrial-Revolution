@@ -33,11 +33,11 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
         ctx
     ), PatchouliEntryShortcut {
 
-    val shieldPainter = getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png"))
-    val helmetPainter = getSlotPainter(39, Identifier("minecraft", "textures/item/empty_armor_slot_helmet.png"))
-    val chestplatePainter = getSlotPainter(38, Identifier("minecraft", "textures/item/empty_armor_slot_chestplate.png"))
-    val leggingsPainter = getSlotPainter(37, Identifier("minecraft", "textures/item/empty_armor_slot_leggings.png"))
-    val bootsPainter = getSlotPainter(36, Identifier("minecraft", "textures/item/empty_armor_slot_boots.png"))
+    val shieldPainter by lazy { getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png")) }
+    val helmetPainter by lazy { getSlotPainter(39, Identifier("minecraft", "textures/item/empty_armor_slot_helmet.png")) }
+    val chestplatePainter by lazy { getSlotPainter(38, Identifier("minecraft", "textures/item/empty_armor_slot_chestplate.png")) }
+    val leggingsPainter by lazy { getSlotPainter(37, Identifier("minecraft", "textures/item/empty_armor_slot_leggings.png")) }
+    val bootsPainter by lazy { getSlotPainter(36, Identifier("minecraft", "textures/item/empty_armor_slot_boots.png")) }
 
     init {
         val root = WGridPanel()
@@ -46,23 +46,23 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
 
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER, 0x404040),
-            5.95,
+            5.95 + 0.3,
             0.0
         )
         root.add(
             WText(TranslatableText("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040),
-            5.95,
+            5.95 + 0.3,
             0.7
         )
 
         val wEnergy = WEnergy()
-        root.add(wEnergy, 8.0, 0.5)
+        root.add(wEnergy, 8.4, 0.4)
 
         ctx.run { world, _ ->
             val itemSlot = WItemSlot.of(blockInventory, 0)
             if (world.isClient)
                 itemSlot.backgroundPainter = getEnergySlotPainter(blockInventory, 0)
-            root.add(itemSlot, 5.4, 1.3)
+            root.add(itemSlot, 5.7, 1.3)
 
             root.add(createPlayerInventoryPanel(), 0.0, 4.2)
 
@@ -126,10 +126,10 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
 
     override fun getPage(): Int = 0
 
-    private fun getSlotPainter(slot: Int, identifier: Identifier) = BackgroundPainter { left, top, panel ->
-        BackgroundPainter.SLOT.paintBackground(left, top, panel)
+    private fun getSlotPainter(slot: Int, identifier: Identifier) = BackgroundPainter { matrices, left, top, panel ->
+        BackgroundPainter.SLOT.paintBackground(matrices, left, top, panel)
         if (playerInventory.getStack(slot).isEmpty)
-            ScreenDrawing.texturedRect(left + 1, top + 1, 16, 16, identifier, -1)
+            ScreenDrawing.texturedRect(matrices, left + 1, top + 1, 16, 16, identifier, -1)
     }
 
     companion object {

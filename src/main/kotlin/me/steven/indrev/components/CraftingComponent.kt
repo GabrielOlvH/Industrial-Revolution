@@ -6,14 +6,14 @@ import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.IRInventory
-import me.steven.indrev.items.upgrade.Upgrade
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.utils.minus
 import me.steven.indrev.utils.plus
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
@@ -42,12 +42,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
-                val upgrades = machine.getUpgrades(inventory)
+                val upgrades = machine.getEnhancers()
                 if (recipe?.matches(inputInventory, fluidComponent?.get(0)) != true)
                     tryStartRecipe(inventory) ?: reset()
-                else if (machine.use(Upgrade.getEnergyCost(upgrades, machine))) {
+                else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
-                    processTime = (processTime + ceil(Upgrade.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
+                    processTime = (processTime + ceil(Enhancer.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
                         machine.usedRecipes.addTo(recipe.id, 1)
@@ -64,7 +64,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
                 isCrafting = false
             }
         }
-        temperatureComponent?.tick(isProcessing())
+        temperatureComponent?.tick(isProcessing() && isCrafting)
     }
 
     private fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
@@ -163,12 +163,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
 
     override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
 
-    fun fromTag(tag: CompoundTag?) {
+    fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
+    fun writeNbt(tag: NbtCompound): NbtCompound {
         tag.putInt("ProcessTime", processTime)
         tag.putInt("MaxProcessTime", totalProcessTime)
         return tag

@@ -26,6 +26,8 @@ class IRInventory(
         availableSlots = availableSlots.distinct().toIntArray()
     }
 
+    val coolerStack: ItemStack get() = if (coolerSlot == null) ItemStack.EMPTY else getStack(coolerSlot)
+
     override fun getAvailableSlots(var1: Direction?): IntArray = availableSlots
 
     override fun canExtract(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =

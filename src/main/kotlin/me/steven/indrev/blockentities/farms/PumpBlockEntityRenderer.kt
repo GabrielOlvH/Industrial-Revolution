@@ -10,15 +10,14 @@ import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.client.util.math.Vector3f
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3f
 import kotlin.math.floor
 
-class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<PumpBlockEntity>(dispatcher) {
+class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
     override fun render(
         entity: PumpBlockEntity,
         tickDelta: Float,
@@ -36,26 +35,26 @@ class PumpBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEn
                 translate(0.5, 0.5, 0.5)
                 var direction = entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
                 if (direction.axis == Direction.Axis.X) direction = direction.opposite
-                multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
+                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
                 translate(-0.5, -0.5, -0.5)
                 push()
-                multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(22.5f))
+                multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(22.5f))
                 renderFluid(inputVolume)
                 pop()
 
                 push()
-                multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(22.5f))
+                multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(22.5f))
                 translate(0.5, 0.5, 0.5)
-                multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(90f))
+                multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(90f))
                 translate(-0.5, -0.5, -0.5)
                 matrices.translate(0.0, 0.38, 0.0765)
                 renderFluid(inputVolume)
                 pop()
 
                 push()
-                multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(22.5f))
+                multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(22.5f))
                 translate(0.5, 0.5, 0.5)
-                multiply(Vector3f.NEGATIVE_Y.getDegreesQuaternion(180f))
+                multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180f))
                 translate(-0.5, -0.5, -0.5)
                 matrices.translate(0.1284, 0.0, 0.1285)
                 renderFluid(inputVolume)

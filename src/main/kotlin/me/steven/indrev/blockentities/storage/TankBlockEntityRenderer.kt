@@ -5,11 +5,10 @@ import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.utils.IRFluidVolumeRenderer
 import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
-class TankBlockEntityRenderer(dispatcher: BlockEntityRenderDispatcher) : BlockEntityRenderer<TankBlockEntity>(dispatcher) {
+class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
     override fun render(
         entity: TankBlockEntity,
         tickDelta: Float,

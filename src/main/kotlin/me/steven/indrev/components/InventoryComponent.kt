@@ -7,8 +7,8 @@ import me.steven.indrev.inventories.IRInventory
 import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.InventoryChangedListener
 import net.minecraft.item.ItemStack
-import net.minecraft.nbt.CompoundTag
-import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtList
 
 class InventoryComponent(val syncable: MachineBlockEntity<*>, supplier: InventoryComponent.() -> IRInventory) : InventoryChangedListener {
     val inventory: IRInventory = supplier()
@@ -24,25 +24,25 @@ class InventoryComponent(val syncable: MachineBlockEntity<*>, supplier: Inventor
         syncable.markForUpdate()
     }
 
-    fun fromTag(tag: CompoundTag?) {
-        val tagList = tag?.get("Inventory") as ListTag? ?: ListTag()
+    fun readNbt(tag: NbtCompound?) {
+        val tagList = tag?.get("Inventory") as NbtList? ?: NbtList()
         tagList.indices.forEach { i ->
             val stackTag = tagList.getCompound(i)
             val slot = stackTag.getInt("Slot")
-            inventory.setStack(slot, ItemStack.fromTag(stackTag))
+            inventory.setStack(slot, ItemStack.fromNbt(stackTag))
         }
-        itemConfig.fromTag(tag)
+        itemConfig.readNbt(tag)
     }
 
-    fun toTag(tag: CompoundTag): CompoundTag {
-        val tagList = ListTag()
+    fun writeNbt(tag: NbtCompound): NbtCompound {
+        val tagList = NbtList()
         for (i in 0 until inventory.size()) {
-            val stackTag = CompoundTag()
+            val stackTag = NbtCompound()
             stackTag.putInt("Slot", i)
-            tagList.add(inventory.getStack(i).toTag(stackTag))
+            tagList.add(inventory.getStack(i).writeNbt(stackTag))
         }
         tag.put("Inventory", tagList)
-        itemConfig.toTag(tag)
+        itemConfig.writeNbt(tag)
         return tag
     }
 

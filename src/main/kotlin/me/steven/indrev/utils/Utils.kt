@@ -5,8 +5,8 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import me.shedaniel.math.Point
-import me.shedaniel.rei.api.widgets.Widgets
-import me.shedaniel.rei.gui.widget.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widget
+import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.IREntityExtension
 import me.steven.indrev.gui.widgets.machines.WFluid
@@ -23,6 +23,7 @@ import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
 import net.minecraft.item.Item
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -30,11 +31,16 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.OrderedText
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
+import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3d
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.thread.ThreadExecutor
 import net.minecraft.world.World
+import java.util.concurrent.CompletableFuture
+
 
 val EMPTY_INT_ARRAY = intArrayOf()
 
@@ -73,14 +79,12 @@ fun <T : ScreenHandler> Identifier.registerScreenHandler(
 
 fun BlockPos.toVec3d() = Vec3d(x.toDouble(), y.toDouble(), z.toDouble())
 
-fun ChunkPos.asString() = "$x,$z"
-
-fun getChunkPos(s: String): ChunkPos? {
-    val split = s.split(",")
-    val x = split[0].toIntOrNull() ?: return null
-    val z = split[1].toIntOrNull() ?: return null
-    return ChunkPos(x, z)
+fun ChunkPos.toNbt() = NbtCompound().also {
+    it.putInt("x", x)
+    it.putInt("z", z)
 }
+
+fun getChunkPos(nbt: NbtCompound) = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
 fun getFluidFromJson(json: JsonObject): FluidVolume {
     val fluidId = json.get("fluid").asString
@@ -99,7 +103,7 @@ fun getFluidFromJson(json: JsonObject): FluidVolume {
 }
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
-    widgets.add(Widgets.createTexturedWidget(WFluid.ENERGY_EMPTY, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    widgets.add(Widgets.createTexturedWidget(WFluid.TANK_BOTTOM, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
     widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
         fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
@@ -119,10 +123,33 @@ fun World.isLoaded(pos: BlockPos): Boolean {
     return chunkManager.isChunkLoaded(pos.x shr 4, pos.z shr 4)
 }
 
+fun <E> WeightedList<E>.pickRandom(): E {
+    return this.shuffle().entries.first().element
+}
+
+fun pack(dirs: Collection<Direction>): Byte {
+    var i = 0
+    dirs.forEach { dir -> i = i or (1 shl dir.id) }
+    return i.toByte()
+}
+
+fun unpack(byte: Byte): List<Direction> {
+    val i = byte.toInt()
+    return DIRECTIONS.filter { dir -> i and (1 shl dir.id) != 0 }
+}
+
+val DIRECTIONS = Direction.values()
 
 inline fun Entity.redirectDrops(inv: IRInventory, run: () -> Unit) {
     this as IREntityExtension
     this.machineInv = inv
     run()
     this.machineInv = null
+}
+
+fun <V> ThreadExecutor<*>.submitAndGet(task: () -> V): V {
+    return (if (!this.isOnThread)
+        CompletableFuture.supplyAsync(task, this)
+    else
+        CompletableFuture.completedFuture(task())).get()
 }

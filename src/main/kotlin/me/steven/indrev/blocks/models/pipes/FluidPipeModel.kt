@@ -4,6 +4,8 @@ import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.client.node.ClientServoNodeInfo
+import me.steven.indrev.networks.client.node.to
 import me.steven.indrev.utils.blockSpriteId
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
@@ -25,8 +27,8 @@ import java.util.function.Supplier
 
 class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
     override val spriteIdCollection: MutableList<SpriteIdentifier> = mutableListOf(
-        blockSpriteId("block/fluid_pipe_center_${tier.toString().toLowerCase()}"),
-        blockSpriteId("block/fluid_pipe_side_${tier.toString().toLowerCase()}"),
+        blockSpriteId("block/fluid_pipe_center_${tier.toString().lowercase()}"),
+        blockSpriteId("block/fluid_pipe_side_${tier.toString().lowercase()}"),
         blockSpriteId("block/servo_retriever"),
         blockSpriteId("block/servo_output")
     )
@@ -70,8 +72,8 @@ class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
         context: RenderContext
     ) {
         super.emitBlockQuads(world, state, pos, randSupplier, context)
-        IndustrialRevolutionClient.CLIENT_RENDER_SERVO_DATA[Network.Type.FLUID]?.get(pos.asLong())?.forEach { (dir, data) ->
-            val index = when (dir) {
+        IndustrialRevolutionClient.CLIENT_NETWORK_STATE[Network.Type.FLUID]?.get(pos)?.to<ClientServoNodeInfo>()?.servos?.forEach { (dir, type) ->
+            val index = when (dir!!) {
                 Direction.DOWN -> 5
                 Direction.UP -> 4
                 Direction.NORTH -> 0
@@ -80,7 +82,7 @@ class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
                 Direction.EAST -> 1
             }
 
-            val model = when (data.type) {
+            val model = when (type) {
                 EndpointData.Type.RETRIEVER -> retrieverServoModels
                 EndpointData.Type.OUTPUT -> outputServoModels
                 else -> return

@@ -1,10 +1,10 @@
 package me.steven.indrev.registry
 
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
-import net.minecraft.loot.ConstantLootTableRange
 import net.minecraft.loot.LootPool
 import net.minecraft.loot.condition.RandomChanceLootCondition
 import net.minecraft.loot.entry.ItemEntry
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider
 import net.minecraft.util.Identifier
 
 object IRLootTables {
@@ -19,7 +19,7 @@ object IRLootTables {
                     else -> return@LootTableLoadingCallback
                 }
                 val builder = LootPool.builder()
-                builder.rolls(ConstantLootTableRange.create(1))
+                builder.rolls(ConstantLootNumberProvider.create(1f))
                 colorModules.forEach { builder.with(ItemEntry.builder(it)) }
                 builder.conditionally(RandomChanceLootCondition.builder(chance))
                 supplier.withPool(builder.build())

@@ -20,9 +20,9 @@ class ModuleRecipe(
     override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
 
     companion object {
-        val TYPE = IRRecipeType<ModuleRecipe>()
-        val SERIALIZER = Serializer()
         val IDENTIFIER = identifier("modules")
+        val TYPE = IRRecipeType<ModuleRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
 
         class Serializer : IRRecipe.IRRecipeSerializer<ModuleRecipe>({ id, input, output, ticks -> ModuleRecipe(id,  input, output, ticks) })
     }

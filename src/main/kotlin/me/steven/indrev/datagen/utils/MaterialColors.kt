@@ -8,8 +8,8 @@ const val SILVER_BASE = 0xFFc6e9e3
 const val SILVER_HIGHLIGHT = 0xFFd9f2e3
 //const val SILVER_SHADOW = 0xFF989890
 
-const val COPPER_BASE = 0xFFf3a565
-const val COPPER_HIGHLIGHT = 0xFFf3cd81
+const val COPPER_BASE = 0xFFe77c56
+const val COPPER_HIGHLIGHT = 0xFFfc9982
 //const val COPPER_SHADOW = 0xFFd1613f
 
 const val TUNGSTEN_BASE = 0xFF686b5b

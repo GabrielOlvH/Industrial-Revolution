@@ -28,11 +28,11 @@ package me.steven.indrev;
 
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter;
 import io.github.cottonmc.cotton.gui.client.LibGui;
-import io.github.cottonmc.cotton.gui.client.NinePatch;
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing;
 import io.github.cottonmc.cotton.gui.widget.*;
 import io.github.cottonmc.cotton.gui.widget.data.Axis;
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment;
+import io.github.cottonmc.cotton.gui.widget.data.InputResult;
 import io.github.cottonmc.cotton.gui.widget.icon.Icon;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,8 +77,8 @@ public class WCustomTabPanel extends WPanel {
     public WPanel setBackgroundPainter(BackgroundPainter painter) {
         return super.setBackgroundPainter(
                 BackgroundPainter.createLightDarkVariants(
-                        new NinePatch(new Identifier("libgui", "textures/widget/panel_light.png")).setPadding(0).setTopPadding(-25),
-                        new NinePatch(new Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8).setTopPadding(-25)
+                        BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/panel_light.png")).setPadding(0).setTopPadding(-25),
+                        BackgroundPainter.createNinePatch(new Identifier("libgui", "textures/widget/panel_dark.png")).setPadding(8).setTopPadding(-25)
                 ));
     }
 
@@ -306,7 +306,7 @@ public class WCustomTabPanel extends WPanel {
 
         @Environment(EnvType.CLIENT)
         @Override
-        public void onClick(int x, int y, int button) {
+        public InputResult onClick(int x, int y, int button) {
             super.onClick(x, y, button);
 
             MinecraftClient.getInstance().getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -317,6 +317,7 @@ public class WCustomTabPanel extends WPanel {
 
             mainPanel.setSelectedCard(data.getWidget());
             WCustomTabPanel.this.layout();
+            return InputResult.PROCESSED;
         }
 
         @Environment(EnvType.CLIENT)
@@ -344,9 +345,9 @@ public class WCustomTabPanel extends WPanel {
                 }
             }
 
-            (selected ? WCustomTabPanel.Painters.SELECTED_TAB : WCustomTabPanel.Painters.UNSELECTED_TAB).paintBackground(x, y, this);
+            (selected ? WCustomTabPanel.Painters.SELECTED_TAB : WCustomTabPanel.Painters.UNSELECTED_TAB).paintBackground(matrices, x, y, this);
             if (isFocused()) {
-                (selected ? WCustomTabPanel.Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(x, y, this);
+                (selected ? WCustomTabPanel.Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(matrices, x, y, this);
             }
 
             int iconX = 6;

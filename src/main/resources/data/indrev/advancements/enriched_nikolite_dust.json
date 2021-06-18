@@ -17,7 +17,7 @@
       "conditions": {
         "items": [
           {
-            "item": "indrev:enriched_nikolite_dust"
+            "items": ["indrev:enriched_nikolite_dust"]
           }
         ]
       }

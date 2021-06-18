@@ -1,7 +1,7 @@
 package me.steven.indrev
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -25,8 +25,8 @@ import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
 import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScreenHandler
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
-import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.IRWorldRenderer
@@ -40,16 +40,20 @@ import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.options.KeyBinding
+import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.entity.LivingEntityRenderer
+import net.minecraft.client.render.entity.model.BipedEntityModel
+import net.minecraft.client.render.entity.model.EntityModelLayers
 import net.minecraft.client.util.InputUtil
+import net.minecraft.entity.LivingEntity
 import net.minecraft.screen.PlayerScreenHandler
-import net.minecraft.util.math.Direction
 import org.lwjgl.glfw.GLFW
 
 @Suppress("UNCHECKED_CAST")
@@ -83,13 +87,13 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.ELECTRIC_FURNACE_HANDLER,
             IndustrialRevolution.PULVERIZER_HANDLER,
             IndustrialRevolution.COMPRESSOR_HANDLER,
-            IndustrialRevolution.INFUSER_HANDLER,
+            IndustrialRevolution.SOLID_INFUSER_HANDLER,
             IndustrialRevolution.RECYCLER_HANDLER,
             IndustrialRevolution.CHOPPER_HANDLER,
             IndustrialRevolution.RANCHER_HANDLER,
-            IndustrialRevolution.MINER_HANDLER,
+            IndustrialRevolution.MINING_RIG_HANDLER,
             IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
-            IndustrialRevolution.FISHING_FARM_HANDLER,
+            IndustrialRevolution.FISHER_HANDLER,
             IndustrialRevolution.WRENCH_HANDLER,
             IndustrialRevolution.SMELTER_HANDLER,
             IndustrialRevolution.CONDENSER_HANDLER,
@@ -101,7 +105,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
             IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
             IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
-            IndustrialRevolution.INFUSER_FACTORY_HANDLER,
+            IndustrialRevolution.SOLID_INFUSER_FACTORY_HANDLER,
             IndustrialRevolution.CABINET_HANDLER,
             IndustrialRevolution.DRILL_HANDLER,
             IndustrialRevolution.LASER_HANDLER,
@@ -127,21 +131,22 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.MINER_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
+        MachineRegistry.MINING_RIG_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
-        MachineRegistry.LASER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
+        MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
         MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY, ::TankBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, ::DrillBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, ::CapsuleBlockEntityRenderer)
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, ::MultiblockBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, ::HeliostatBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY, ::MultiblockBlockEntityRenderer)
 
+
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
-        MachineRegistry.FISHING_FARM_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
+        MachineRegistry.FISHER_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
         BlockRenderLayerMap.INSTANCE.putBlock(IRBlockRegistry.TANK_BLOCK, RenderLayer.getCutout())
@@ -162,7 +167,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         FabricModelPredicateProviderRegistry.register(
             IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
-        ) { stack, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
+        ) { stack, _, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
 
         PacketRegistry.registerClient()
 
@@ -203,6 +208,17 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRConfig.readConfigs()
         }
 
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(LivingEntityFeatureRendererRegistrationCallback { _, renderer, helper, ctx ->
+            val slim = false
+            helper.register(
+                ModuleFeatureRenderer(
+                    renderer as LivingEntityRenderer<LivingEntity, BipedEntityModel<LivingEntity>>,
+                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_INNER_ARMOR else EntityModelLayers.PLAYER_INNER_ARMOR)),
+                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR))
+                )
+            )
+        })
+
         AprilFools.init()
     }
 
@@ -215,5 +231,5 @@ object IndustrialRevolutionClient : ClientModInitializer {
         )
     )
 
-    val CLIENT_RENDER_SERVO_DATA = Object2ObjectOpenHashMap<Network.Type<*>, Long2ObjectOpenHashMap<Object2ObjectOpenHashMap<Direction, EndpointData>>>()
+    val CLIENT_NETWORK_STATE = Object2ObjectOpenHashMap<Network.Type<*>, ClientNetworkState<*>>()
 }

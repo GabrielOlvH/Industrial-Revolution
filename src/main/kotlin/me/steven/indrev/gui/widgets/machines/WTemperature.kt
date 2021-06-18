@@ -11,7 +11,7 @@ import net.minecraft.util.Formatting
 class WTemperature(private val temperatureComponent: TemperatureComponent) : WBar(
     EMPTY_HEAT, FULL_HEAT, 2, 3, Direction.UP) {
     init {
-        this.setSize(16, 64)
+        this.setSize(10, 43)
     }
 
     override fun addTooltip(information: TooltipBuilder?) {
@@ -34,8 +34,8 @@ class WTemperature(private val temperatureComponent: TemperatureComponent) : WBa
 
     companion object {
         private val EMPTY_HEAT =
-            identifier("textures/gui/widget_energy_empty.png")
+            identifier("textures/gui/widget_temperature_empty.png")
         private val FULL_HEAT =
-            identifier("textures/gui/widget_heat_full.png")
+            identifier("textures/gui/widget_temperature_full.png")
     }
 }

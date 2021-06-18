@@ -1,5 +1,6 @@
 package me.steven.indrev.items.misc
 
+import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.ServoNetworkState
@@ -29,7 +30,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
     ) {
         tooltip.add(TranslatableText("$translationKey.tooltip"))
         tooltip.add(LiteralText.EMPTY)
-        val modeString = getMode(stack).toString().toLowerCase()
+        val modeString = getMode(stack).toString().lowercase()
         tooltip.add(TranslatableText("item.indrev.servo.mode")
             .append(TranslatableText("item.indrev.servo.mode.$modeString").formatted(Formatting.BLUE)))
         tooltip.add(TranslatableText("item.indrev.servo.mode.$modeString.tooltip").formatted(Formatting.DARK_GRAY))
@@ -41,7 +42,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         val newMode = getMode(stack).next()
         stack.orCreateTag.putString("mode", newMode.toString())
         user.sendMessage(TranslatableText("item.indrev.servo.mode")
-            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().toLowerCase()}").formatted(Formatting.BLUE)), true)
+            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().lowercase()}").formatted(Formatting.BLUE)), true)
         return TypedActionResult.consume(stack)
     }
 
@@ -59,10 +60,11 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
 
         if (world is ServerWorld && hand == Hand.MAIN_HAND) {
             val dir = BasePipeBlock.getSideFromHit(hit, pos!!)
-            if (dir != null && state[BasePipeBlock.getProperty(dir)]) {
+            val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
+            if (dir != null && blockEntity.connections[dir]!!.isConnected()) {
                 val network = block.type.getNetworkState(world) as? ServoNetworkState?
                 network?.also { networkState ->
-                    if (networkState[pos]?.containers?.containsKey(pos.offset(dir)) == true) {
+                    if (block.type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                         val (x, y, z) = hit
                         if (networkState.hasServo(pos, dir)) {
                             when (networkState.getEndpointData(pos, dir)?.type) {
@@ -76,7 +78,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                         val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(LiteralText("Failed to put servo"), true)
                         data.type = type
                         data.mode = getMode(stack)
-                        networkState.version++
+                        block.type.version++
                         stack.decrement(1)
 
                         networkState.markDirty()
@@ -92,7 +94,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         fun getMode(itemStack: ItemStack): EndpointData.Mode {
             val m = itemStack.orCreateTag.getString("mode")
             if (m.isNullOrEmpty()) return EndpointData.Mode.NEAREST_FIRST
-            return EndpointData.Mode.valueOf(m.toUpperCase())
+            return EndpointData.Mode.valueOf(m.uppercase())
         }
     }
 }

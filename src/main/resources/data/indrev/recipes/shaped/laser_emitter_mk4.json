@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PCP",
+    "BMB",
+    "NBN"
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_ingot"
+    },
+    "M": {
+      "item": "indrev:machine_block"
+    },
+    "B": {
+      "item": "indrev:battery"
+    },
+    "P": {
+      "tag": "c:tungsten_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:laser_emitter_mk4"
+  }
+}

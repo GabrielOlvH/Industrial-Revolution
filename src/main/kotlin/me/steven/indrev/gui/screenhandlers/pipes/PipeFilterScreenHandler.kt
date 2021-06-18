@@ -3,6 +3,8 @@ package me.steven.indrev.gui.screenhandlers.pipes
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
+import io.github.cottonmc.cotton.gui.widget.data.InputResult
+import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.registry.IRItemRegistry
@@ -22,6 +24,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import java.util.*
 import java.util.function.Consumer
 
 class PipeFilterScreenHandler(
@@ -40,6 +43,7 @@ class PipeFilterScreenHandler(
     init {
         val root = WGridPanel()
         this.rootPanel = root
+        root.insets = Insets.ROOT_PANEL
 
         (0 until backingList.size).forEach { index ->
             val slot = WFilterSlot(index)
@@ -66,7 +70,7 @@ class PipeFilterScreenHandler(
         }
         whitelistButton.toggle = whitelist
         root.add(whitelistButton, 2, 2)
-        whitelistButton.setLocation(2 * 18, (2.2 * 18).toInt())
+        whitelistButton.setLocation(2 * 18 + root.insets.left, 3 * 18)
 
         val matchDurabilityButton = object : WToggleButton(MATCH_DURABILITY_ICON, IGNORE_DURABILITY_ICON) {
 
@@ -88,7 +92,7 @@ class PipeFilterScreenHandler(
         }
         matchDurabilityButton.toggle = matchDurability
         root.add(matchDurabilityButton, 4, 2)
-        matchDurabilityButton.setLocation(4 * 18, (2.2 * 18).toInt())
+        matchDurabilityButton.setLocation(4 * 18 + root.insets.left, 3 * 18)
 
         val matchTagButton = object : WToggleButton(MATCH_NBT_ICON, IGNORE_NBT_ICON) {
 
@@ -109,18 +113,17 @@ class PipeFilterScreenHandler(
             ClientPlayNetworking.send(CHANGE_FILTER_MODE_PACKET, buf)
         }
         matchTagButton.toggle = matchTag
-        root.add(matchTagButton, 6, 2)
-        matchTagButton.setLocation(6 * 18, (2.2 * 18).toInt())
+        root.add(matchTagButton, 6, 3)
+        matchTagButton.setLocation(6 * 18 + root.insets.left, 3 * 18)
 
         if (mode != null && type != null) {
             val modeWidget = WServoMode()
             root.add(modeWidget, 8, 0)
-            modeWidget.setLocation(8 * 18, -3)
+            modeWidget.setSize(18, 9)
         }
 
         val panel = createPlayerInventoryPanel()
         root.add(panel, 0, 4)
-        panel.setLocation(0, 18 * 3 + 9)
 
         root.validate(this)
     }
@@ -133,18 +136,20 @@ class PipeFilterScreenHandler(
     inner class WFilterSlot(val index: Int) : WWidget() {
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-            ScreenDrawing.drawBeveledPanel(x, y, height, width, -1207959552, 1275068416, -1191182337)
+            ScreenDrawing.drawBeveledPanel(matrices, x, y, height, width, -1207959552, 1275068416, -1191182337)
             MinecraftClient.getInstance().itemRenderer.renderInGui(backingList[index], x + 1, y + 1)
             MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
             if (mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height)
                 DrawableHelper.fill(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433)
         }
 
-        override fun onClick(x: Int, y: Int, button: Int) {
+        override fun onClick(x: Int, y: Int, button: Int): InputResult {
             val buf = PacketByteBufs.create()
             buf.writeInt(index)
             writeIdentifyingData(buf)
             ClientPlayNetworking.send(CLICK_FILTER_SLOT_PACKET, buf)
+
+            return InputResult.PROCESSED
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -158,24 +163,25 @@ class PipeFilterScreenHandler(
 
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (type == EndpointData.Type.OUTPUT)
-                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y + 1)
+                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y - 2)
             else if (type == EndpointData.Type.RETRIEVER)
-                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y + 1)
+                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y - 2)
         }
 
-        override fun onClick(x: Int, y: Int, button: Int) {
-            mode = mode?.next() ?: return
+        override fun onClick(x: Int, y: Int, button: Int): InputResult {
+            mode = mode?.next() ?: return InputResult.IGNORED
             MinecraftClient.getInstance().soundManager.play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0f))
             val buf = PacketByteBufs.create()
             writeIdentifyingData(buf)
             buf.writeEnumConstant(mode)
             ClientPlayNetworking.send(CHANGE_SERVO_MODE_PACKET, buf)
+            return InputResult.PROCESSED
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             tooltip?.add(
                 TranslatableText("item.indrev.servo.mode")
-                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().toLowerCase()}").formatted(Formatting.BLUE)))
+                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.BLUE)))
         }
     }
 

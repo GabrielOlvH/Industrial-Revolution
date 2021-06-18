@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " E ",
+    "NCN",
+    " B "
+  ],
+  "key": {
+    "C": {
+      "item": "indrev:circuit_mk1"
+    },
+    "B": {
+      "item": "minecraft:blast_furnace"
+    },
+    "E": {
+      "item": "indrev:empty_enhancer"
+    },
+    "N": {
+      "item": "indrev:enriched_nikolite_dust"
+    }
+  },
+  "result": {
+    "item": "indrev:blast_furnace_enhancer"
+  }
+}

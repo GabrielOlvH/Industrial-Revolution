@@ -27,14 +27,14 @@ class RecyclerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: 
         configure("block.indrev.recycler", ctx, playerInventory, blockInventory)
 
         val inputSlot = WItemSlot.of(blockInventory, 2)
-        root.add(inputSlot, 3.0, 2.0)
+        root.add(inputSlot, 2.8, 1.8)
 
         val processWidget = createProcessBar()
-        root.add(processWidget, 4.15, 2.0)
+        root.add(processWidget, 3.95, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)
         outputSlot.isInsertingAllowed = false
-        root.add(outputSlot, 5.64, 2.0)
+        root.add(outputSlot, 5.44, 1.8)
 
         root.validate(this)
     }

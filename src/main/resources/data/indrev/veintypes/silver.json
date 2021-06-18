@@ -6,27 +6,33 @@
       "output": [
         {
           "id": "indrev:silver_ore",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 6
         },
         {
           "id": "minecraft:gold_ore",
-          "weight": 3
+          "weight": 3,
+          "infiniteWeight": 3
         },
         {
           "id": "minecraft:stone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:dirt",
-          "weight": 5
+          "weight": 5,
+          "infiniteWeight": 20
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [
@@ -63,19 +69,23 @@
         },
         {
           "id": "minecraft:stone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:dirt",
-          "weight": 5
+          "weight": 5,
+          "infiniteWeight": 20
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [

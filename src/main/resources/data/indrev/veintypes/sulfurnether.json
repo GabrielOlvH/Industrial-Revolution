@@ -7,27 +7,33 @@
       "output": [
         {
           "id": "minecraft:netherrack",
-          "weight": 40
+          "weight": 40,
+          "infiniteWeight": 160
         },
         {
           "id": "minecraft:nether_gold_ore",
-          "weight": 20
+          "weight": 20,
+          "infiniteWeight": 20
         },
         {
           "id": "minecraft:glowstone",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 10
         },
         {
           "id": "minecraft:soul_sand",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 24
         },
         {
           "id": "indrev:sulfur_crystal",
-          "weight": 6
+          "weight": 6,
+          "infiniteWeight": 6
         },
         {
           "id": "minecraft:ancient_debris",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         }
       ],
       "sizeRange": [

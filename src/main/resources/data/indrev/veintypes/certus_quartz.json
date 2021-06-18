@@ -7,27 +7,33 @@
       "output": [
         {
           "id": "appliedenergistics2:quartz_ore",
-          "weight": 8
+          "weight": 8,
+          "infiniteWeight": 8
         },
         {
           "id": "appliedenergistics2:charged_quartz_ore",
-          "weight": 3
+          "weight": 3,
+          "infiniteWeight": 3
         },
         {
           "id": "minecraft:stone",
-          "weight": 20
+          "weight": 20,
+          "infiniteWeight": 80
         },
         {
           "id": "minecraft:dirt",
-          "weight": 10
+          "weight": 10,
+          "infiniteWeight": 40
         },
         {
           "id": "minecraft:clay",
-          "weight": 1
+          "weight": 1,
+          "infiniteWeight": 4
         },
         {
           "id": "minecraft:gravel",
-          "weight": 4
+          "weight": 4,
+          "infiniteWeight": 16
         }
       ],
       "sizeRange": [

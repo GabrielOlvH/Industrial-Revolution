@@ -24,7 +24,7 @@ class CondenserRecipe(
 
     companion object {
         val IDENTIFIER = identifier("condenser")
-        val TYPE = IRRecipeType<CondenserRecipe>()
+        val TYPE = IRRecipeType<CondenserRecipe>(IDENTIFIER)
         val SERIALIZER = Serializer()
 
         class Serializer : IRFluidRecipeSerializer<CondenserRecipe>({ id, ingredients, output, fluidInput, _, ticks -> CondenserRecipe(id, ingredients, output, fluidInput!!, ticks) })

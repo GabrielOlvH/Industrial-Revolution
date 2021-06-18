@@ -1,5 +1,6 @@
 package me.steven.indrev.mixin.common;
 
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,4 +12,7 @@ import java.util.List;
 public interface AccessorScreenHandler {
     @Accessor
     List<Property> getProperties();
+
+    @Accessor
+    IntList getTrackedPropertyValues();
 }

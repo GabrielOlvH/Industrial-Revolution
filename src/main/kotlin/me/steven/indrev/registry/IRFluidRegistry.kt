@@ -7,8 +7,8 @@ import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricMaterialBuilder
 import net.minecraft.block.FluidBlock
+import net.minecraft.block.MapColor
 import net.minecraft.block.Material
-import net.minecraft.block.MaterialColor
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Items
 
@@ -134,10 +134,10 @@ object IRFluidRegistry {
     val MOLTEN_SILVER = object : FluidBlock(MOLTEN_SILVER_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val ACID_MATERIAL: Material =
-        FabricMaterialBuilder(MaterialColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+        FabricMaterialBuilder(MapColor.GREEN).allowsMovement().lightPassesThrough().notSolid().replaceable()
             .liquid().build()
     val MUD_MATERIAL: Material =
-        FabricMaterialBuilder(MaterialColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable()
+        FabricMaterialBuilder(MapColor.BROWN).allowsMovement().lightPassesThrough().notSolid().replaceable()
             .liquid().build()
 
     val SULFURIC_ACID_IDENTIFIER = identifier("sulfuric_acid")
