@@ -30,7 +30,7 @@ interface NetworkFactory<T : Network> {
         direction: Direction
     ) {
         val blockState by lazy { chunk.getBlockState(blockPos) }
-        val shouldContinue = process(network, world, blockPos, direction.opposite) { blockState }
+        val shouldContinue = process(network, world, blockPos, direction) { blockState }
         val longPos = blockPos.asLong()
         if (blockPos != source && !scanned.add(longPos)) return
         if (shouldContinue) {

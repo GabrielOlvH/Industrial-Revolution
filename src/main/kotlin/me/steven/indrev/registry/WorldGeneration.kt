@@ -131,7 +131,7 @@ object WorldGeneration {
             identifier("tungsten_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(OreFeatureConfig(tungstenTargets, 5))
-                .uniformRange(YOffset.getBottom(), YOffset.fixed(0))
+                .uniformRange(YOffset.getBottom(), YOffset.aboveBottom(16))
                 .spreadHorizontally()
                 .repeat(6),
             IRConfiguredFeature.IS_OVERWORLD

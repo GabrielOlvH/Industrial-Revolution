@@ -1,6 +1,6 @@
 {
   "name": "Tin Ore",
-  "category": "natural_resources",
+  "category": "indrev:natural_resources",
   "sortnum": 1,
   "icon": "indrev:tin_ore",
   "pages": [

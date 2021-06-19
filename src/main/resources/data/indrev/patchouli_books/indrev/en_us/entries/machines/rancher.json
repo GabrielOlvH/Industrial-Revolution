@@ -1,6 +1,6 @@
 {
   "name": "Rancher",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 6,
   "icon": "indrev:rancher_mk1",
   "pages": [

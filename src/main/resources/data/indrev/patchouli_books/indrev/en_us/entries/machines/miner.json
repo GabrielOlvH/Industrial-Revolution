@@ -1,6 +1,6 @@
 {
   "name": "Mining Rig Computer",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 4,
   "icon": "indrev:mining_rig_mk4",
   "pages": [

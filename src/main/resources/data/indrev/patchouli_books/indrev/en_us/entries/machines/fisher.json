@@ -1,6 +1,6 @@
 {
   "name": "Fisher",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 8,
   "icon": "indrev:fisher_mk2",
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "Enhancers",
-  "category": "upgrades",
+  "category": "indrev:upgrades",
   "sortnum": 0,
   "icon": "indrev:speed_enhancer",
   "pages": [

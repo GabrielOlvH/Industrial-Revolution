@@ -1,6 +1,6 @@
 {
   "name": "Fluids",
-  "category": "transportation",
+  "category": "indrev:transportation",
   "sortnum": 2,
   "icon": "indrev:fluid_pipe_mk1",
   "pages": [

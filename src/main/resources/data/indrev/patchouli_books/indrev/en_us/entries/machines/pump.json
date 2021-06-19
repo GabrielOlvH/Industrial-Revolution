@@ -1,6 +1,6 @@
 {
   "name": "Pump",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 10,
   "icon": "indrev:pump_mk1",
   "pages": [

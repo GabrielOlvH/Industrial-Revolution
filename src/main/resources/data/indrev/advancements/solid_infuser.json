@@ -4,10 +4,10 @@
       "item": "indrev:solid_infuser_mk1"
     },
     "title": {
-      "translate": "advancements.indrev.infuser"
+      "translate": "advancements.indrev.solid_infuser"
     },
     "description": {
-      "translate": "advancements.indrev.infuser.description"
+      "translate": "advancements.indrev.solid_infuser.description"
     }
   },
   "parent": "indrev:machine_block",

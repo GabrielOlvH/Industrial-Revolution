@@ -1,6 +1,6 @@
 {
   "name": "Generators",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 0,
   "icon": "indrev:coal_generator_mk1",
   "pages": [

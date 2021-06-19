@@ -1,6 +1,6 @@
 {
   "name": "Basic Machines",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 1,
   "icon": "indrev:electric_furnace_mk1",
   "pages": [

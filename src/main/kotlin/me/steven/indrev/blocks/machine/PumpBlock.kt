@@ -39,7 +39,7 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
     override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
         val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
         val fluidComponent = blockEntity.fluidComponent ?: return
-        val dir = to.searchDirection
+        val dir = to.searchDirection?.opposite
         val facing = blockState!![HORIZONTAL_FACING]
         if (facing == dir && (to.attribute == FluidAttributes.EXTRACTABLE || to.attribute == FluidAttributes.GROUPED_INV))
             to.offer(fluidComponent)

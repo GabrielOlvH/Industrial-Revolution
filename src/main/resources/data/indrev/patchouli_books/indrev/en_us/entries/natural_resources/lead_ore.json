@@ -1,6 +1,6 @@
 {
   "name": "Lead Ore",
-  "category": "natural_resources",
+  "category": "indrev:natural_resources",
   "sortnum": 3,
   "icon": "indrev:lead_ore",
   "pages": [

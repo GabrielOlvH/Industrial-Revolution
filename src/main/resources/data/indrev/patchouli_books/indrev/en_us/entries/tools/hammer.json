@@ -1,6 +1,6 @@
 {
   "name": "Hammer",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 0,
   "icon": "indrev:hammer",
   "pages": [

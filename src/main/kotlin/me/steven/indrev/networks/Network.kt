@@ -41,12 +41,12 @@ abstract class Network(
 
     protected fun find(source: BlockPos, blockPos: BlockPos, count: Short, s: LongOpenHashSet) {
         DIRECTIONS.forEach { dir ->
-            val offset = blockPos.offset(dir)
+            val offset = blockPos.offset(dir.opposite)
             if (pipes.contains(offset) && s.add(offset.asLong())) {
                 find(source, offset, (count + 1).toShort(), s)
             }
-            if (source != offset && containers.contains(offset) && containers[offset]!!.contains(dir.opposite)) {
-                queue.computeIfAbsent(source) { PriorityQueue(containers.size) }.add(Node(source, offset, count, dir.opposite))
+            if (source != offset && containers.contains(offset) && containers[offset]!!.contains(dir)) {
+                queue.computeIfAbsent(source) { PriorityQueue(containers.size) }.add(Node(source, offset, count, dir))
             }
         }
     }

@@ -1,6 +1,6 @@
 {
   "name": "Sulfur Crystal",
-  "category": "natural_resources",
+  "category": "indrev:natural_resources",
   "sortnum": 6,
   "icon": "indrev:sulfur_crystal",
   "pages": [
