@@ -23,7 +23,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
-    val temperatureComponent = TemperatureComponent(this, 0.2, 1100..1300, 1500)
+    val temperatureComponent = TemperatureComponent(this, 0.06, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
     val fluidComponent = FluidComponent(this, FluidAmount.ofWhole(16))
 
@@ -39,7 +39,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
                     smelterBlockEntity.tickStacks(blockEntity)
                 }
                 val limit = blockEntity.heliostats * 3
-                blockEntity.temperatureComponent.tick(blockEntity.temperatureComponent.temperature < limit)
+                blockEntity.temperatureComponent.tick(blockEntity.temperatureComponent.temperature < limit + (world.random.nextFloat() * 2 - 1) * 10)
                 blockEntity.heliostats = 0
             }
         }

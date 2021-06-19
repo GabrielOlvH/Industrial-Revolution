@@ -26,10 +26,10 @@ import net.minecraft.util.math.Direction
 class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state),
     BlockEntityClientSerializable, SidedInventory {
 
-    var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(12, ItemStack.EMPTY)
+    var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(4, ItemStack.EMPTY)
 
     //i know its bad i'll fix it someday sorry
-    var stackTemperatures = Array<Pair<ItemStack, Double>>(12) { Pair(ItemStack.EMPTY, 12.0) }
+    var stackTemperatures = Array<Pair<ItemStack, Double>>(4) { Pair(ItemStack.EMPTY, 12.0) }
 
     fun tickStacks(blockEntity: SolarPowerPlantTowerBlockEntity) {
         stackTemperatures.forEachIndexed { slot, (meltingStack, temp) ->
@@ -37,7 +37,7 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
             if (!ItemStack.areEqual(meltingStack, stack)) {
                 stackTemperatures[slot] = Pair(stack.copy(), 12.0)
             } else if (!meltingStack.isEmpty) {
-                val modifier = ((blockEntity.temperatureComponent.temperature - 700) / (1200.0 - 700.0)).coerceAtMost(1.0)
+                val modifier = ((blockEntity.temperatureComponent.temperature - 700) / (1200.0 - 700.0)).coerceIn(0.0, 1.0)
                 stackTemperatures[slot] = Pair(meltingStack, (temp + modifier).coerceAtMost(800.0))
 
                 val temp = stackTemperatures[slot].second
@@ -96,16 +96,16 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
 
     companion object {
 
-        val MOLTEN_SALT_AMOUNT: FluidAmount = FluidAmount.of(1, 4)
+        val MOLTEN_SALT_AMOUNT: FluidAmount = FluidAmount.of(1, 10)
 
         fun readNbt(tag: NbtCompound, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
             val listTag = tag.getList("Items", 10)
             for (i in listTag.indices) {
-                val NbtCompound = listTag.getCompound(i)
-                val j: Int = NbtCompound.getByte("Slot").toInt() and 255
+                val nbt = listTag.getCompound(i)
+                val j: Int = nbt.getByte("Slot").toInt() and 255
                 if (j >= 0 && j < stacks.size) {
-                    stacks[j] = ItemStack.fromNbt(NbtCompound)
-                    temps[j] = Pair(stacks[j].copy(), NbtCompound.getDouble("Temp"))
+                    stacks[j] = ItemStack.fromNbt(nbt)
+                    temps[j] = Pair(stacks[j].copy(), nbt.getDouble("Temp"))
                 }
             }
         }
@@ -118,13 +118,11 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
             val listTag = NbtList()
             for (i in stacks.indices) {
                 val itemStack = stacks[i]
-                if (!itemStack.isEmpty) {
-                    val NbtCompound = NbtCompound()
-                    NbtCompound.putByte("Slot", i.toByte())
-                    itemStack.writeNbt(NbtCompound)
-                    NbtCompound.putDouble("Temp", temps[i].second)
-                    listTag.add(NbtCompound)
-                }
+                val nbt = NbtCompound()
+                nbt.putByte("Slot", i.toByte())
+                itemStack.writeNbt(nbt)
+                nbt.putDouble("Temp", temps[i].second)
+                listTag.add(nbt)
             }
             tag.put("Items", listTag)
             return tag

@@ -729,5 +729,6 @@
   "vein.indrev.denseice": "Dense Ice Deposit",
   "attribute.indrev.shield": "Shield",
   "subtitles.indrev.laser": "Laser beam",
-  "block.indrev.boiler": "Boiler"
+  "block.indrev.boiler": "Boiler",
+  "block.indrev.steam_turbine_mk4": "Steam Turbine"
 }

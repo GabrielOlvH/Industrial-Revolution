@@ -34,15 +34,15 @@ class HeliostatBlock(settings: Settings) : Block(settings), BlockEntityProvider 
         private const val RAD2DEG = 57.2957763671875
 
         fun getYaw(origin: BlockPos, target: BlockPos): Float {
-            val xOffset = target.x + 0.5 - origin.x.toDouble() + 0.5
-            val zOffset = target.z + 0.5 - origin.z.toDouble() + 0.5
+            val xOffset = target.x + 0.0 - origin.x.toDouble() + 0.0
+            val zOffset = target.z + 0.0 - origin.z.toDouble() + 0.0
             return MathHelper.wrapDegrees((MathHelper.atan2(zOffset, xOffset) * RAD2DEG).toFloat() - 90.0f)
         }
 
         fun getPitch(origin: BlockPos, target: BlockPos): Float {
-            val xOffset = target.x + 0.5f - origin.x.toFloat() + 0.5f
-            val yOffset = target.y + 0.5f - origin.y.toFloat() + 0.5f
-            val zOffset = target.z + 0.5f - origin.z.toFloat() + 0.5f
+            val xOffset = target.x + 0.0f - origin.x.toFloat() + 0.0f
+            val yOffset = target.y + 0.0f - origin.y.toFloat() + 0.0f
+            val zOffset = target.z + 0.0f - origin.z.toFloat() + 0.0f
             val g = MathHelper.sqrt(xOffset * xOffset + zOffset * zOffset).toDouble()
             return MathHelper.wrapDegrees((-(MathHelper.atan2(yOffset.toDouble(), g) * RAD2DEG)).toFloat())
         }

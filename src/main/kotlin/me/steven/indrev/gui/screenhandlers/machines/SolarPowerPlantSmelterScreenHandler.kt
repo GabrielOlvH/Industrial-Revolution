@@ -39,10 +39,10 @@ class SolarPowerPlantSmelterScreenHandler(
                 val wSlot = WItemSlot.of(blockInventory, slot)
 
                 root.add(wSlot, 0, 0)
-                wSlot.setLocation((slot % 4) * 28 + 7, (slot / 4) * 20 + 18)
+                wSlot.setLocation((slot % 2) * 28 + 7, (slot / 2) * 20 + 18)
                 val w = WSlotTemperature { blockEntity.stackTemperatures[slot].second.toFloat() }
                 root.add(w, 0, 0)
-                w.setLocation((slot % 4) * 28, (slot / 4) * 20 + 18)
+                w.setLocation((slot % 2) * 28, (slot / 2) * 20 + 18)
             }
         }
 

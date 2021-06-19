@@ -51,7 +51,7 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
 
                 positions?.forEach { p ->
                     val heliostat = world.getBlockEntity(p) as HeliostatBlockEntity
-                    val target = receivers.minByOrNull { it.getSquaredDistance(p) } ?: return@forEach
+                    val target = receivers.minByOrNull { it.getManhattanDistance(p) } ?: return@forEach
                     heliostat.targetBlock = target
                     heliostat.markDirty()
                     heliostat.sync()

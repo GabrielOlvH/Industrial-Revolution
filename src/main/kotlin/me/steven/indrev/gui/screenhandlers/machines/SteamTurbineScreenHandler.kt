@@ -40,12 +40,11 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
 
             //root.add(WFluid(ctx, 0), -1, 0)
 
-
             val wKnob = WKnob((blockEntity.efficiency.toFloat() * 300f) + 30f, pos)
             root.add(wKnob, 7, 4)
 
-            wKnob.setSize(30, 30)
-            wKnob.setLocation(7 * 18, 3 * 18 + 9)
+            wKnob.setSize(32, 32)
+            wKnob.setLocation(7 * 18, 2 * 18 + 9)
         }
         root.validate(this)
     }
