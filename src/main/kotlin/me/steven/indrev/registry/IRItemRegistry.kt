@@ -364,7 +364,7 @@ object IRItemRegistry {
     val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings().maxCount(1))
     val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings().maxCount(1))
 
-    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings().maxDamage(250000), 250000.0)
+    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings(), 250000.0)
 
     val GAMER_AXE_ITEM =
         IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
