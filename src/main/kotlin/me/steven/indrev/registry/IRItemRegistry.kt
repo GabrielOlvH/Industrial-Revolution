@@ -131,7 +131,7 @@ object IRItemRegistry {
             withOre()
             withTools(
                 IRBasicPickaxe(IRToolMaterial.SILVER, 1, -1.0f, itemSettings()),
-                IRBasicAxe(IRToolMaterial.SILVER, 3.5f, -1.0f, itemSettings()),
+                IRBasicAxe(IRToolMaterial.SILVER, 3.5f, -2.5f, itemSettings()),
                 IRBasicShovel(IRToolMaterial.SILVER, 1.5f, -0.7f, itemSettings()),
                 IRBasicSword(IRToolMaterial.SILVER, 3, -1.5f, itemSettings()),
                 IRBasicHoe(IRToolMaterial.SILVER, 2, -0.5f, itemSettings())
