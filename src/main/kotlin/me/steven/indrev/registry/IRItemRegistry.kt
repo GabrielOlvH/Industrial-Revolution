@@ -220,6 +220,7 @@ object IRItemRegistry {
         identifier("module_charger").item(CHARGER_MODULE_ITEM)
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
+        identifier("module_elytra").item(ELYTRA_MODULE_ITEM)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
         identifier("module_range").item(RANGE_MODULE_ITEM)
         identifier("module_efficiency").item(EFFICIENCY_MODULE_ITEM)
