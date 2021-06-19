@@ -15,7 +15,7 @@ class ReinforcedElytraItem : ArmorItem(IRArmorMaterial.STEEL_ELYTRA, EquipmentSl
         fun canFallFly(itemStack: ItemStack): Boolean {
             return (itemStack.isOf(IRItemRegistry.REINFORCED_ELYTRA) && ElytraItem.isUsable(itemStack))
                     || (itemStack.isOf(IRItemRegistry.MODULAR_ARMOR_CHEST)
-                    && IRItemRegistry.MODULAR_ARMOR_CHEST.getInstalled(itemStack).contains(ArmorModule.ELYTRA)
+                    && ArmorModule.ELYTRA.getLevel(itemStack) > 0
                     && energyOf(itemStack)!!.energy > 0)
         }
 
