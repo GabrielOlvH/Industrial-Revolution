@@ -1,0 +1,11 @@
+{
+  "type": "indrev:pulverize",
+  "ingredients": {
+    "item": "terrestria:basalt"
+  },
+  "output": {
+    "item": "terrestria:basalt_cobblestone",
+    "count": 1
+  },
+  "processTime": 200
+}
