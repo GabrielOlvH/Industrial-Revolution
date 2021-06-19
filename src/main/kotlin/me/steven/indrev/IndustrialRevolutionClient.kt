@@ -2,6 +2,7 @@ package me.steven.indrev
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.armor.ModuleFeatureRenderer
+import me.steven.indrev.armor.ReinforcedElytraFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
@@ -201,6 +202,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR))
                 )
             )
+
+            helper.register(ReinforcedElytraFeatureRenderer(renderer, ctx.modelLoader))
         })
 
         AprilFools.init()

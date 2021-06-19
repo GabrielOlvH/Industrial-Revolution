@@ -2,6 +2,8 @@ package me.steven.indrev
 
 import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer
+import io.github.ladysnake.pal.AbilitySource
+import io.github.ladysnake.pal.Pal
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
@@ -13,6 +15,7 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
+import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
@@ -26,7 +29,10 @@ import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.registerScreenHandler
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
+import net.adriantodt.fallflyinglib.FallFlyingLib
+import net.adriantodt.fallflyinglib.event.PreFallFlyingCallback
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
@@ -38,6 +44,8 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.ElytraItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
@@ -146,8 +154,29 @@ object IndustrialRevolution : ModInitializer {
             })
         }
 
+        PreFallFlyingCallback.EVENT.register { player ->
+            if (player.world.isClient) return@register
+            val armorStack = player.inventory.getArmorStack(EquipmentSlot.CHEST.entitySlotId)
+            val tracker = FallFlyingLib.ABILITY.getTracker(player)
+            if (ReinforcedElytraItem.canFallFly(armorStack)) {
+                tracker.addSource(REINFORCED_ELYTRA_SOURCE)
+                val i = player.roll + 1
+                if (i % 10 == 0 && (i / 10) % 2 == 0) {
+                    armorStack.damage(1, player) { player -> player.sendEquipmentBreakStatus(EquipmentSlot.CHEST) }
+                }
+            } else {
+                tracker.removeSource(REINFORCED_ELYTRA_SOURCE)
+            }
+        }
+
+        FabricModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
+            if (ElytraItem.isUsable(stack)) 0.0f else 1.0f
+        }
+
         LOGGER.info("Industrial Revolution has initialized.")
     }
+
+
 
     val LOGGER: Logger = LogManager.getLogger("Industrial Revolution")
 
@@ -239,4 +268,6 @@ object IndustrialRevolution : ModInitializer {
     val SYNC_PROPERTY = identifier("sync_property")
     val SYNC_MODULE_PACKET = identifier("sync_module")
     val SYNC_NETWORK_SERVOS = identifier("sync_network_servos")
+
+    val REINFORCED_ELYTRA_SOURCE: AbilitySource = Pal.getAbilitySource(identifier("reinforced_elytra"))
 }

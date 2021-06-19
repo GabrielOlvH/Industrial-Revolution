@@ -8,6 +8,7 @@ import me.steven.indrev.blocks.misc.NikoliteOreBlock
 import me.steven.indrev.items.armor.IRColorModuleItem
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
+import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.upgrade.Enhancer
@@ -265,6 +266,8 @@ object IRItemRegistry {
 
         identifier("servo_retriever").item(SERVO_RETRIEVER)
         identifier("servo_output").item(SERVO_OUTPUT)
+
+        identifier("reinforced_elytra").item(REINFORCED_ELYTRA)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -276,6 +279,7 @@ object IRItemRegistry {
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
     val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
+    val STEEL_PLATE = { Registry.ITEM.get(identifier("steel_plate")) }
     val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
     val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
     val LEAD_INGOT = { Registry.ITEM.get(identifier("lead_ingot")) }
@@ -343,6 +347,7 @@ object IRItemRegistry {
     val CHARGER_MODULE_ITEM = IRModuleItem(ArmorModule.CHARGER, itemSettings().maxCount(1))
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
     val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
+    val ELYTRA_MODULE_ITEM = IRModuleItem(ArmorModule.ELYTRA, itemSettings().maxCount(1))
     val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
     val SILK_TOUCH_MODULE_ITEM = IRModuleItem(DrillModule.SILK_TOUCH, itemSettings().maxCount(1))
     val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
@@ -404,4 +409,6 @@ object IRItemRegistry {
 
     val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.RETRIEVER)
     val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.OUTPUT)
+
+    val REINFORCED_ELYTRA = ReinforcedElytraItem()
 }
