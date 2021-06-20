@@ -17,6 +17,7 @@
     "common.MixinEntity",
     "common.MixinItemPredicate",
     "common.MixinItemStack",
+    "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
     "common.MixinServerPlayerEntity"
