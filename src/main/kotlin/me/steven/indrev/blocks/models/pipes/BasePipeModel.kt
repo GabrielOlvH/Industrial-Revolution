@@ -109,7 +109,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         randSupplier: Supplier<Random>,
         context: RenderContext
     ) {
-        val renderData = (world as RenderAttachedBlockView).getBlockEntityRenderAttachment(pos) as BasePipeBlockEntity.PipeRenderData
+        val renderData = (world as RenderAttachedBlockView).getBlockEntityRenderAttachment(pos) as? BasePipeBlockEntity.PipeRenderData ?: return
         if (renderData.cover != null) {
             val coverState = renderData.cover
             val model = MinecraftClient.getInstance().bakedModelManager.blockModels.getModel(coverState)
