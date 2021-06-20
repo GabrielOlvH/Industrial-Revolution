@@ -79,6 +79,7 @@ object IRHudRender : HudRenderCallback {
         val b = (color and 255).toFloat() / 255.0f
         RenderSystem.disableDepthTest()
         RenderSystem.depthMask(false)
+        RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         RenderSystem.setShader { GameRenderer.getPositionTexShader() }
         RenderSystem.setShaderColor(r, g, b, opacity)
