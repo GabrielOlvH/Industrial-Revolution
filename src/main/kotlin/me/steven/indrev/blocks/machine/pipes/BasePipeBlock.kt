@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.machine.pipes
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
+import me.steven.indrev.items.misc.IRServoItem
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
@@ -101,6 +102,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             Network.handleUpdate(type, pos)
         }
         val item = handStack.item
+        if (item is IRServoItem) return ActionResult.FAIL
         if (
             !world.isClient
             && blockEntity.coverState == null
