@@ -10,9 +10,9 @@ import net.minecraft.server.world.ServerWorld
 
 object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.ServerStopped, ServerBlockEntityEvents.Load {
     override fun onEndTick(world: ServerWorld) {
-        Network.Type.ENERGY.tick(world)
-        Network.Type.FLUID.tick(world)
-        Network.Type.ITEM.tick(world)
+        Network.Type.ENERGY.getNetworkState(world).tick(world)
+        Network.Type.FLUID.getNetworkState(world).tick(world)
+        Network.Type.ITEM.getNetworkState(world).tick(world)
     }
 
     override fun onServerStopped(server: MinecraftServer?) {
@@ -22,7 +22,9 @@ object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.Serv
     }
 
     override fun onLoad(blockEntity: BlockEntity, world: ServerWorld) {
-        if (blockEntity is BasePipeBlockEntity)
-            blockEntity.pipeType.queueUpdate(blockEntity.pos.asLong())
+        if (blockEntity is BasePipeBlockEntity) {
+            val networkState = blockEntity.pipeType.getNetworkState(world)
+            networkState.queueUpdate(blockEntity.pos.asLong())
+        }
     }
 }

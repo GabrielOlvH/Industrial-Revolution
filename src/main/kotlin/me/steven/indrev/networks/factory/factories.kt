@@ -8,7 +8,7 @@ import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
-import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.energy.EnergyNetwork
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.item.ItemNetwork
@@ -21,6 +21,7 @@ import net.minecraft.util.math.Direction
 val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<EnergyNetwork> {
     override fun process(
         network: EnergyNetwork,
+        state: NetworkState<EnergyNetwork>,
         world: ServerWorld,
         pos: BlockPos,
         direction: Direction,
@@ -39,6 +40,7 @@ val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<
 val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<FluidNetwork> {
     override fun process(
         network: FluidNetwork,
+        state: NetworkState<FluidNetwork>,
         world: ServerWorld,
         pos: BlockPos,
         direction: Direction,
@@ -52,7 +54,7 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
             network.appendContainer(pos, direction.opposite)
         } else if (blockState().block is FluidPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
-            Network.Type.FLUID.getNetworkState(world)?.onSet(pos, network)
+            state.onSet(pos, network)
             return true
         }
         return false
@@ -62,6 +64,7 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
 val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<ItemNetwork> {
     override fun process(
         network: ItemNetwork,
+        state: NetworkState<ItemNetwork>,
         world: ServerWorld,
         pos: BlockPos,
         direction: Direction,
@@ -74,7 +77,7 @@ val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<Item
             network.appendContainer(pos, direction.opposite)
         } else if (blockState().block is ItemPipeBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
-            Network.Type.ITEM.getNetworkState(world)?.onSet(pos, network)
+            state.onSet(pos, network)
             return true
         }
         return false

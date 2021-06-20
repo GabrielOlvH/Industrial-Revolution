@@ -1,9 +1,7 @@
 package me.steven.indrev.networks
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.networks.client.ClientNetworkInfo
 import me.steven.indrev.networks.client.ClientServoNetworkInfo
 import me.steven.indrev.networks.client.node.ClientServoNodeInfo
@@ -30,6 +28,8 @@ abstract class Network(
     val containers: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
 ) {
 
+    private val state = type.getNetworkState(world)
+
     protected val queue = hashMapOf<BlockPos, PriorityQueue<Node>>()
 
     protected fun buildQueue() {
@@ -54,35 +54,36 @@ abstract class Network(
     abstract fun tick(world: ServerWorld)
 
     open fun remove() {
-        type.remove(world, this)
+        state.remove(this)
     }
 
     @Suppress("UNCHECKED_CAST")
     open fun appendPipe(block: Block, blockPos: BlockPos) {
         pipes.add(blockPos)
-        type[blockPos] = this
+
+        state[blockPos] = this
     }
 
     open fun appendContainer(blockPos: BlockPos, direction: Direction) {
         containers.computeIfAbsent(blockPos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
-        type[blockPos] = this
+        state[blockPos] = this
     }
 
     companion object {
 
         val DIRECTIONS = Direction.values()
 
-        fun <T : Network> handleBreak(type: Type<T>, pos: BlockPos) {
-            type.networksByPos[pos.asLong()]?.remove()
+        fun <T : Network> handleBreak(state: NetworkState<T>, pos: BlockPos) {
+            state.networksByPos[pos.asLong()]?.remove()
             DIRECTIONS.forEach {
                 val offset = pos.offset(it)
-                handleUpdate(type, offset)
+                handleUpdate(state, offset)
             }
         }
 
-        fun <T : Network> handleUpdate(type: Type<T>, pos: BlockPos) {
-            type.networksByPos[pos.asLong()]?.remove()
-            type.queueUpdate(pos.asLong(), true)
+        fun <T : Network> handleUpdate(state: NetworkState<T>, pos: BlockPos) {
+            state.networksByPos[pos.asLong()]?.remove()
+            state.queueUpdate(pos.asLong(), true)
         }
     }
     abstract class Type<T : Network>(val key: String) {
@@ -91,68 +92,17 @@ abstract class Network(
 
         val states: WeakHashMap<World, NetworkState<T>> = WeakHashMap()
 
-        val networksByPos = Long2ObjectOpenHashMap<T>()
-        val networks = ObjectOpenHashSet<Network>()
-
-        val queuedUpdates = LongOpenHashSet()
-        val updatedPositions = LongOpenHashSet()
-
         var version = 0
 
         abstract fun createEmpty(world: ServerWorld): T
 
-        abstract fun getNetworkState(world: ServerWorld): NetworkState<T>?
+        abstract fun getNetworkState(world: ServerWorld): NetworkState<T>
 
         abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>?
 
-        fun queueUpdate(pos: Long, force: Boolean = false) {
-            if (!networksByPos.contains(pos) || force) queuedUpdates.add(pos)
-        }
-
-        operator fun set(pos: BlockPos, network: Network) {
-            networksByPos[pos.asLong()] = network as T
-        }
-
-        fun remove(world: ServerWorld, network: Network) {
-            network.pipes.forEach { pos ->
-                networksByPos.remove(pos.asLong())
-                getNetworkState(world)?.onRemoved(pos)
-            }
-            network.containers.forEach { (pos, _) ->
-                networksByPos.remove(pos.asLong())
-                getNetworkState(world)?.onRemoved(pos)
-            }
-            networks.remove(network)
-        }
-
-        fun tick(world: ServerWorld) {
-            val state = getNetworkState(world)
-
-            LongOpenHashSet(queuedUpdates).forEach { pos ->
-                if (!updatedPositions.contains(pos)) {
-                    val network = factory.deepScan(this, world, BlockPos.fromLong(pos))
-                    if (network.pipes.isNotEmpty())
-                        networks.add(network)
-                    else
-                        remove(world, network)
-                }
-            }
-            queuedUpdates.clear()
-            updatedPositions.clear()
-            world.profiler.push("indrev_${key.lowercase()}NetworkTick")
-            networks.forEach { network -> network.tick(world) }
-            world.profiler.pop()
-
-            (state as? ServoNetworkState<*>)?.sync(world)
-            (state as? ServoNetworkState<*>)?.clearCachedData(false)
-        }
-
         fun clear() {
+            this.states.forEach { (_, state) -> state.clear() }
             this.states.clear()
-            this.queuedUpdates.clear()
-            this.updatedPositions.clear()
-            this.networksByPos.clear()
-            this.networks.clear()
         }
 
         companion object {
@@ -162,8 +112,8 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): EnergyNetwork = EnergyNetwork(world)
 
-                override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork>? {
-                    return null
+                override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork> {
+                    return states.computeIfAbsent(world) { NetworkState(this, world) }
                 }
 
                 override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
