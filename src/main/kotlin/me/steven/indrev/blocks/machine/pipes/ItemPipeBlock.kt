@@ -57,7 +57,8 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
         if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
             val type = Network.Type.ITEM
-            if (type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
+            val networkState = type.getNetworkState(world as ServerWorld)
+            if (networkState.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                 player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterScreenHandler, pos, dir))
                 return ActionResult.SUCCESS
             }

@@ -24,6 +24,13 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         syncedMaps.defaultReturnValue(-1)
     }
 
+    override fun tick(world: ServerWorld) {
+        super.tick(world)
+
+        sync(world)
+        clearCachedData(false)
+    }
+
     fun sync(world: ServerWorld) {
         world.players.forEach { player ->
             val v = syncedMaps.getInt(player.uuid)
