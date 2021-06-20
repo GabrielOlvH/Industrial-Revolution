@@ -101,17 +101,24 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             Network.handleUpdate(type, pos)
         }
         val item = handStack.item
-        if (blockEntity.coverState != null && !handStack.isEmpty && !player.isSneaking) {
-            if (item is BlockItem && item.block !is BlockEntityProvider && item.block.defaultState.isFullCube(world, pos)) {
-                val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
-                blockEntity.coverState = result
-                blockEntity.markDirty()
-                if (!player.abilities.creativeMode)
-                    handStack.decrement(1)
-                return ActionResult.SUCCESS
-            }
+        if (
+            !world.isClient
+            && blockEntity.coverState == null
+            && !handStack.isEmpty
+            && !player.isSneaking
+            && item is BlockItem
+            && item.block !is BlockEntityProvider
+            && item.block.defaultState.isFullCube(world, pos)
+        ) {
+            val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
+            blockEntity.coverState = result
+            blockEntity.markDirty()
+            blockEntity.sync()
+            if (!player.abilities.creativeMode)
+                handStack.decrement(1)
+            return ActionResult.SUCCESS
         }
-        return ActionResult.FAIL
+        return ActionResult.SUCCESS
     }
 
     @Suppress("DEPRECATION")
