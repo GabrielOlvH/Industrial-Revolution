@@ -12,7 +12,10 @@ import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
 import me.steven.indrev.utils.EnergyApiUtilsKt;
+import me.steven.indrev.utils.UtilsKt;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +26,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -56,6 +62,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         if (ticks % 15 == 0) {
             applyArmorEffects();
         }
+        indrev_tickMagnet();
         setShieldDurability(Math.min(getShieldDurability(), getMaxShieldDurability()));
     }
 
@@ -145,6 +152,31 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                 }
             }
         }
+    }
+
+    private void indrev_tickMagnet() {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        PlayerInventory inventory = player.getInventory();
+        for (ItemStack itemStack : inventory.armor) {
+            if (itemStack.getItem() instanceof IRModularArmorItem) {
+                int level = ArmorModule.MAGNET.getLevel(itemStack);
+                if (level > 0) {
+                    Vec3i offset = new Vec3i(8, 8, 8);
+                    Box area = new Box(getBlockPos().subtract(offset), getBlockPos().add(offset));
+                    Vec3d blockCenter = UtilsKt.toVec3d(getBlockPos()).add(0.5, 0.5, 0.5);
+                    world.getOtherEntities(this, area, (entity) -> entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity).forEach(entity -> {
+                        if ((entity instanceof ItemEntity itemEntity && !itemEntity.cannotPickup())
+                                || (entity instanceof ExperienceOrbEntity xpEntity && xpEntity.age > 40)) {
+                            Vec3d v = entity.getPos().relativize(blockCenter).normalize().multiply(0.2);
+                            entity.addVelocity(v.x, v.y, v.z);
+                            //applyModule(ArmorModule.MAGNET, 1);
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+        //getAppliedModules().remove(ArmorModule.MAGNET);
     }
 
     private void regenerateShield() {

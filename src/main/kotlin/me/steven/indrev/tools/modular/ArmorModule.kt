@@ -28,6 +28,7 @@ enum class ArmorModule(
     FIRE_RESISTANCE("fire_resistance", arrayOf(EquipmentSlot.CHEST),1, { IRItemRegistry.FIRE_RESISTANCE_MODULE_ITEM }, false, false),
     PIGLIN_TRICKER("piglin_tricker", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, { IRItemRegistry.PIGLIN_TRICKER_MODULE_ITEM },false, false),
     ELYTRA("elytra", arrayOf(EquipmentSlot.CHEST), 1, { IRItemRegistry.ELYTRA_MODULE_ITEM }, false, false),
+    MAGNET("magnet", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, { IRItemRegistry.MAGNET_MODULE }, false, false),
     COLOR("color", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), -1, { null },false, false);
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
