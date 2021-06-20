@@ -112,6 +112,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case FIRE_RESISTANCE:
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
+                        case WATER_AFFINITY:
                             if (EnergyApiUtilsKt.extract(itemStack, 20.0))
                                 applyModule(module, level);
                             break;
