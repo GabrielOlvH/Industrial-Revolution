@@ -10,6 +10,7 @@ import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Items
+import net.minecraft.util.DyeColor
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import java.io.File
@@ -70,6 +71,11 @@ class DataGeneratorManager(namespace: String) {
             )
             materialTagGenerator.register("${material}_dust", createTag("indrev:${material}_dust"))
             materialTagGenerator.register("${material}_ore", createTag("minecraft:${material}_ore"))
+        }
+
+        DyeColor.values().forEach {
+            val name = it.getName()
+            materialRecipeGenerator.register("harden_${name}_concrete_powder", hardenConcretePowder(name))
         }
 
         itemModelGenerator.register(IRItemRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
@@ -226,6 +232,35 @@ class DataGeneratorManager(namespace: String) {
             }
 
             override fun getFileName(t: String, id: Identifier): String = "${super.getFileName(t, id)}s"
+        }
+    }
+
+    private fun hardenConcretePowder(color: String): JsonFactory<String> {
+        return object : JsonFactory<String> {
+            override fun generate(): JsonObject {
+                val json = JsonObject()
+                json.addProperty("type", "indrev:fluid_infuse")
+                val ingredients = JsonObject()
+                ingredients.addProperty("item", "minecraft:${color}_concrete_powder")
+                json.add("ingredients", ingredients)
+
+                val fluidInput = JsonObject()
+                fluidInput.addProperty("fluid", "minecraft:water")
+                fluidInput.addProperty("type", "mb")
+                fluidInput.addProperty("count", 100)
+                json.add("fluidInput", fluidInput)
+
+
+                val output = JsonObject()
+                output.addProperty("item", "minecraft:${color}_concrete")
+                output.addProperty("count", 1)
+                json.add("output", output)
+
+                json.addProperty("processTime", 200)
+                return json
+            }
+
+            override fun getFileName(t: String, id: Identifier): String = "fluid_infusing/harden_${color}_concrete_powder"
         }
     }
 }
