@@ -249,8 +249,7 @@ class DataGeneratorManager(namespace: String) {
                 fluidInput.addProperty("type", "mb")
                 fluidInput.addProperty("count", 100)
                 json.add("fluidInput", fluidInput)
-
-
+                
                 val output = JsonObject()
                 output.addProperty("item", "minecraft:${color}_concrete")
                 output.addProperty("count", 1)
