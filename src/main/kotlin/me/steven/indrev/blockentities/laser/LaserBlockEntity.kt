@@ -91,7 +91,7 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
                     it.shrink(0.3, 0.3, 0.0)
             }
         }
-        world?.getEntitiesByClass(Entity::class.java, damageArea, null)?.forEach {
+        world?.getEntitiesByClass(Entity::class.java, damageArea) { true }?.forEach {
             it.setOnFireFor(1000)
             it.damage(LaserBlock.LASER_DAMAGE_SOURCE, 2f)
         }
