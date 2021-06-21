@@ -22,12 +22,10 @@ import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.item.ToolMaterials
+import net.minecraft.item.*
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
@@ -334,8 +332,19 @@ object IRItemRegistry {
     val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
     val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
-    val WRENCH = Item(itemSettings().maxCount(1))
-    val SCREWDRIVER = Item(itemSettings().maxCount(1))
+    val WRENCH = object : Item(itemSettings().maxCount(1)) {
+        override fun useOnBlock(context: ItemUsageContext): ActionResult {
+            val state = context.world.getBlockState(context.blockPos)
+            val blockEntity = context.world.getBlockEntity(context.blockPos)
+            return wrench(context.world, context.blockPos, state, blockEntity, context.player, context.stack)
+        }
+    }
+    val SCREWDRIVER = object : Item(itemSettings().maxCount(1)) {
+        override fun useOnBlock(context: ItemUsageContext): ActionResult {
+            val blockEntity = context.world.getBlockEntity(context.blockPos)
+            return screwdriver(context.world, context.blockPos, blockEntity, context.player)
+        }
+    }
 
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
