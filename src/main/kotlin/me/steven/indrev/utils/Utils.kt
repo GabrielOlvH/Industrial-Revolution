@@ -20,8 +20,10 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.Entity
+import net.minecraft.entity.effect.StatusEffectType
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
+import net.minecraft.item.FoodComponent
 import net.minecraft.item.Item
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PlayerScreenHandler
@@ -126,6 +128,11 @@ fun World.isLoaded(pos: BlockPos): Boolean {
 fun <E> WeightedList<E>.pickRandom(): E {
     return this.shuffle().entries.first().element
 }
+
+fun FoodComponent.hasNegativeEffects(): Boolean {
+    return statusEffects.any { it.first.effectType.type == StatusEffectType.HARMFUL }
+}
+
 
 fun pack(dirs: Collection<Direction>): Byte {
     var i = 0

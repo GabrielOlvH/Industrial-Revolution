@@ -122,7 +122,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
+                                    if (food != null && !UtilsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
                                         stack.finishUsing(world, player);
                                         player.eatFood(world, stack);
                                     }
