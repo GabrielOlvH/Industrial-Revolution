@@ -11,18 +11,18 @@ object NetworkEvents : ServerTickEvents.EndWorldTick, ServerLifecycleEvents.Serv
     override fun onEndTick(world: ServerWorld) {
         val energyNetworkState = Network.Type.ENERGY.getNetworkState(world)
         world.profiler.push("indrev_energyNetworkTick")
-        energyNetworkState.networks.forEach { network -> network.tick(world) }
+        HashSet(energyNetworkState.networks).forEach { network -> network.tick(world) }
         world.profiler.pop()
 
         val fluidNetworkState = Network.Type.FLUID.getNetworkState(world)
         world.profiler.push("indrev_fluidNetworkTick")
-        fluidNetworkState.networks.forEach { network -> network.tick(world) }
+        HashSet(fluidNetworkState.networks).forEach { network -> network.tick(world) }
         (fluidNetworkState as ServoNetworkState<FluidNetwork>).sync(world)
         world.profiler.pop()
 
         val itemNetworkState = Network.Type.ITEM.getNetworkState(world)
         world.profiler.push("indrev_itemNetworkTick")
-        itemNetworkState.networks.forEach { network -> network.tick(world) }
+        HashSet(itemNetworkState.networks).forEach { network -> network.tick(world) }
         (itemNetworkState as ServoNetworkState<ItemNetwork>).sync(world)
         world.profiler.pop()
     }
