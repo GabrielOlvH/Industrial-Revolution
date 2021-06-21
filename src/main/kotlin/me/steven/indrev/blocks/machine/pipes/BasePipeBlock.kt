@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks.machine.pipes
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.items.misc.IRServoItem
@@ -74,7 +75,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult): ActionResult {
         val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.FAIL
-        if (handStack.item == IRItemRegistry.WRENCH && world is ServerWorld) {
+        if (handStack.isIn(IndustrialRevolution.WRENCH_TAG) && world is ServerWorld) {
             val dir = getSideFromHit(hit.pos, pos)
             val (x, y, z) = hit.pos
             val networkState = type.getNetworkState(world)

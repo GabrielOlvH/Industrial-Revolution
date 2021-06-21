@@ -333,6 +333,7 @@
   "item.indrev.netherite_scrap_chunk": "Ancient Debris Chunk",
   "item.indrev.netherite_scrap_dust": "Netherite Scrap Dust",
   "item.indrev.hammer": "Hammer",
+  "item.indrev.screwdriver": "Screwdriver",
   "item.indrev.wrench": "Wrench",
   "item.indrev.wrench.switch_mode": "Wrench Mode: %s",
   "item.indrev.wrench.title": "Configure Machine",

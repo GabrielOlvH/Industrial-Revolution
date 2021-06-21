@@ -91,7 +91,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.MINING_RIG_HANDLER,
             IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
             IndustrialRevolution.FISHER_HANDLER,
-            IndustrialRevolution.WRENCH_HANDLER,
+            IndustrialRevolution.SCREWDRIVER_HANDLER,
             IndustrialRevolution.SMELTER_HANDLER,
             IndustrialRevolution.CONDENSER_HANDLER,
             IndustrialRevolution.FLUID_INFUSER_HANDLER,

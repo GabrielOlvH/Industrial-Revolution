@@ -27,7 +27,7 @@ interface Configurable {
     fun getCurrentConfiguration(type: ConfigurationType): SideConfiguration
     fun applyDefault(state: BlockState, type: ConfigurationType, configuration: MutableMap<Direction, TransferMode>)
 
-    fun getWrenchConfigurationPanel(world: World, pos: BlockPos, playerInventory: PlayerInventory, type: ConfigurationType): WWidget? {
+    fun getConfigurationPanel(world: World, pos: BlockPos, playerInventory: PlayerInventory, type: ConfigurationType): WWidget? {
         val root = WGridPanel()
         root.setSize(100, 128)
 
@@ -57,7 +57,7 @@ interface Configurable {
                 buf.writeBoolean(v)
                 ClientPlayNetworking.send(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
-            root.add(autoPullBtn, 0, 5)
+            root.add(autoPullBtn, 0.0, 4.8)
         }
 
         val blockState = world.getBlockState(pos)
@@ -91,7 +91,7 @@ interface Configurable {
             }
             machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
         }
-        root.add(machineVisualizerPanel, 1.0, 0.5)
+        root.add(machineVisualizerPanel, 0.5, 0.0)
         return root
     }
 

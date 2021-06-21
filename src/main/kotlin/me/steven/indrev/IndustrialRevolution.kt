@@ -14,7 +14,7 @@ import me.steven.indrev.gui.screenhandlers.machines.*
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
-import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
+import me.steven.indrev.gui.screenhandlers.wrench.ScrewdriverScreenHandler
 import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.EndpointData
@@ -234,7 +234,7 @@ object IndustrialRevolution : ModInitializer {
 
     val DRILL_HANDLER = MiningRigDrillScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigDrillScreenHandler)
 
-    val WRENCH_HANDLER = WrenchScreenHandler.SCREEN_ID.registerScreenHandler(::WrenchScreenHandler)
+    val SCREWDRIVER_HANDLER = ScrewdriverScreenHandler.SCREEN_ID.registerScreenHandler(::ScrewdriverScreenHandler)
 
     val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportScreenHandler.SCREEN_ID) { syncId, inv, buf ->
         val pos = buf.readBlockPos()
@@ -248,6 +248,8 @@ object IndustrialRevolution : ModInitializer {
     val CABINET_HANDLER = CabinetScreenHandler.SCREEN_ID.registerScreenHandler(::CabinetScreenHandler)
 
     val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
+    val WRENCH_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:wrenches")
+    val SCREWDRIVER_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:screwdrivers")
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)

@@ -204,6 +204,7 @@ object IRItemRegistry {
         identifier("untanned_leather").item(DEFAULT_ITEM())
 
         identifier("wrench").item(WRENCH)
+        identifier("screwdriver").item(SCREWDRIVER)
 
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
@@ -333,7 +334,8 @@ object IRItemRegistry {
     val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
     val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
-    val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
+    val WRENCH = Item(itemSettings().maxCount(1))
+    val SCREWDRIVER = Item(itemSettings().maxCount(1))
 
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))

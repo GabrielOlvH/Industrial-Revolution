@@ -5,6 +5,7 @@ import alexiil.mc.lib.attributes.AttributeProvider
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import alexiil.mc.lib.attributes.fluid.FluidInvUtil
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -14,9 +15,10 @@ import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
-import me.steven.indrev.items.misc.IRWrenchItem
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.screwdriver
+import me.steven.indrev.utils.wrench
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.Block
@@ -82,17 +84,23 @@ open class MachineBlock(
             val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent as FixedFluidInv, player as ServerPlayerEntity, hand)
             if (result.asActionResult().isAccepted) return result.asActionResult()
         }
-        val stack = player?.mainHandStack
-        val item = stack?.item
-        if (item is IRWrenchItem || item is IRMachineUpgradeItem) return ActionResult.PASS
+        val stack = player?.mainHandStack!!
+        val item = stack.item
+        if (item is IRMachineUpgradeItem) {
+            return ActionResult.PASS
+        } else if (stack.isIn(IndustrialRevolution.WRENCH_TAG)) {
+            return wrench(world, pos!!, state!!, blockEntity, player, stack)
+        } else if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG)) {
+            return screwdriver(world, pos!!, blockEntity, player)
+        }
         else if (blockEntity.multiblockComponent != null
             && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
-            player?.sendMessage(TranslatableText("text.multiblock.not_built"), true)
+            player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender()
             blockEntity.markDirty()
             blockEntity.sync()
         } else if (screenHandler != null) {
-            player?.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
+            player.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         } else return ActionResult.PASS
         return ActionResult.SUCCESS
     }
