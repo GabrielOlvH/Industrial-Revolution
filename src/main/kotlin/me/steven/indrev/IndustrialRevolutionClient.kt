@@ -60,10 +60,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
         FluidType.WATER.registerReloadListener()
         FluidType.LAVA.registerReloadListener()
+        FluidType.GAS.registerReloadListener()
         arrayOf(
             IRFluidRegistry.COOLANT_STILL,
             IRFluidRegistry.SULFURIC_ACID_STILL,
-            IRFluidRegistry.TOXIC_MUD_STILL
+            IRFluidRegistry.TOXIC_MUD_STILL,
         ).forEach { it.registerRender(FluidType.WATER) }
         arrayOf(
             IRFluidRegistry.MOLTEN_NETHERITE_STILL,
@@ -74,6 +75,11 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRFluidRegistry.MOLTEN_LEAD_STILL,
             IRFluidRegistry.MOLTEN_SILVER_STILL
         ).forEach { it.registerRender(FluidType.LAVA) }
+        arrayOf(
+            IRFluidRegistry.HYDROGEN_STILL,
+            IRFluidRegistry.OXYGEN_STILL,
+            IRFluidRegistry.METHANE_STILL,
+        ).forEach { it.registerRender(FluidType.GAS) }
         IRHudRender
         arrayOf(
             IndustrialRevolution.COAL_GENERATOR_HANDLER,
@@ -106,6 +112,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.CABINET_HANDLER,
             IndustrialRevolution.DRILL_HANDLER,
             IndustrialRevolution.LASER_HANDLER,
+            IndustrialRevolution.ELECTROLYTIC_SEPARATOR_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }

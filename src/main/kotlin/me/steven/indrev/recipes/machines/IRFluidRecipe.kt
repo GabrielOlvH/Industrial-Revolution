@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
+import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.getFluidFromJson
@@ -24,6 +25,15 @@ abstract class IRFluidRecipe : IRRecipe {
             fluidInput != null -> fluidVolume.fluidKey == fluidInput!!.fluidKey && fluidVolume.amount() >= fluidInput!!.amount() && super.matches(inv, fluidVolume)
             else -> super.matches(inv, fluidVolume)
         }
+    }
+
+    override fun canStart(component: CraftingComponent<*>): Boolean {
+        val outputTankVolume = component.fluidComponent!!.tanks.last()
+        if (fluidOutput != null && !outputTankVolume.isEmpty && (outputTankVolume.fluidKey != fluidOutput!!.fluidKey || outputTankVolume.amount()
+                .add(fluidOutput!!.amount()) > component.fluidComponent!!.limit)
+        )
+            return false
+        return super.canStart(component)
     }
 
     open class IRFluidRecipeSerializer<T : IRFluidRecipe>(private val factory: (Identifier, Array<InputEntry>, Array<OutputEntry>, FluidVolume?, FluidVolume?, Int) -> T) : RecipeSerializer<T> {

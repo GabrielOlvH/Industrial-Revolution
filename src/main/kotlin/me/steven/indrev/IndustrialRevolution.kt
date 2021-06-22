@@ -109,6 +109,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, ModuleRecipe.IDENTIFIER, ModuleRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, LaserRecipe.IDENTIFIER, LaserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, LaserRecipe.IDENTIFIER, LaserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, ElectrolysisRecipe.IDENTIFIER, ElectrolysisRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, ElectrolysisRecipe.IDENTIFIER, ElectrolysisRecipe.TYPE)
 
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
 
@@ -208,6 +210,7 @@ object IndustrialRevolution : ModInitializer {
     val SLAUGHTER_HANDLER = SlaughterScreenHandler.SCREEN_ID.registerScreenHandler(::SlaughterScreenHandler)
     val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
     val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)
+    val ELECTROLYTIC_SEPARATOR_HANDLER = ElectrolyticSeparatorScreenHandler.SCREEN_ID.registerScreenHandler(::ElectrolyticSeparatorScreenHandler)
 
     val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
     val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)

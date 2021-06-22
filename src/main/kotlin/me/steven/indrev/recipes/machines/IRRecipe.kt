@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import net.minecraft.inventory.Inventory
@@ -37,6 +38,10 @@ interface IRRecipe : Recipe<Inventory> {
     override fun matches(inv: Inventory?, world: World?): Boolean = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
 
     override fun getType(): IRRecipeType<*>
+
+    fun canStart(component: CraftingComponent<*>): Boolean {
+        return component.outputSlots!!.isEmpty() || outputs.all { component.fits(it.stack) }
+    }
 
     override fun isEmpty(): Boolean {
         return input.isEmpty() || input

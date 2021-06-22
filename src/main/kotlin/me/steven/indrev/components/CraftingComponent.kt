@@ -19,7 +19,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
 import kotlin.math.ceil
 
-class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
+open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
     var processTime: Int by Property(4 + (index * 2), 0)
     var totalProcessTime: Int by Property(5 + (index * 2), 0)
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
@@ -67,7 +67,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         temperatureComponent?.tick(isProcessing() && isCrafting)
     }
 
-    private fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
+    protected open fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
         val output = recipe.craft(machine.world!!.random)
         inputSlots!!.forEachIndexed { index, slot ->
             recipe.input.forEach { (ingredient, count) ->
@@ -133,21 +133,14 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
             else inputStacks.flatMap {
                 type.getMatchingRecipe(world as ServerWorld, it, inputFluid?.fluidKey)
             }).firstOrNull { it.matches(inputStacks, inputFluid) } ?: return null
-        if (recipe is IRFluidRecipe && recipe.fluidOutput != null) {
+        if (recipe is IRFluidRecipe) {
             val tanks = if (recipe.fluidInput != null) 2 else 1
             if (fluidComponent!!.tankCount < tanks) {
                 IndustrialRevolution.LOGGER.error("Attempted to start recipe ${recipe.id} which has a fluid output but machine $this is missing tank! Report this issue")
                 return null
             }
-            val outputTankVolume = fluidComponent!!.tanks.last()
-            val recipeFluidOutput = recipe.fluidOutput!!
-            if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount()
-                    .add(recipeFluidOutput.amount()) > fluidComponent!!.limit)
-            )
-                return null
         }
-        if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !fits(it.stack) })
-            return null
+        if (!recipe.canStart(this)) return null
         processTime = 0
         totalProcessTime = recipe.ticks
         this.currentRecipe = recipe

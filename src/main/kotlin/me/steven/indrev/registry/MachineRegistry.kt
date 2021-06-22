@@ -481,6 +481,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { pos, state -> FluidInfuserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
+        
+        val ELECTROLYTIC_SEPARATOR_REGISTRY = MachineRegistry("electrolytic_separator", true)
+            .blockProvider { tier ->
+                ElectrolyticSeparatorBlock(this, SETTINGS(), tier)
+            }
+            .blockEntityProvider { tier -> { pos, state -> ElectrolyticSeparatorBlockEntity(tier, pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider()
 
         val CHOPPER_REGISTRY = MachineRegistry("chopper", true)
             .blockProvider { tier ->

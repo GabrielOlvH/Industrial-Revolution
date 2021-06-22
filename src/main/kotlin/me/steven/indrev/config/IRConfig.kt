@@ -200,6 +200,14 @@ class Machines {
 
     val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
 
+    val electrolyticSeparatorMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
+
+    val electrolyticSeparatorMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
+
+    val electrolyticSeparatorMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
+
+    val electrolyticSeparatorMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
+
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
