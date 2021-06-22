@@ -31,12 +31,14 @@ import java.math.RoundingMode
 class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : CraftingMachineBlockEntity<ElectrolysisRecipe>(tier, MachineRegistry.ELECTROLYTIC_SEPARATOR_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(0, 1, 2, 3)
+    override val enhancerSlots: IntArray = intArrayOf(1, 2, 3, 4)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 500..700, 900)
-        this.inventoryComponent = inventory(this) {}
+        this.inventoryComponent = inventory(this) {
+            coolerSlot = 0
+        }
         this.fluidComponent = ElectrolyticSeparatorFluidComponent()
         this.craftingComponents = arrayOf(ElectrolyticSeparatorCraftingComponent())
     }
