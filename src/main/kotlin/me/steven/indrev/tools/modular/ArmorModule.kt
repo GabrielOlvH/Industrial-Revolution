@@ -31,6 +31,7 @@ enum class ArmorModule(
     PIGLIN_TRICKER("piglin_tricker", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, { IRItemRegistry.PIGLIN_TRICKER_MODULE_ITEM },false, false),
     ELYTRA("elytra", arrayOf(EquipmentSlot.CHEST), 1, { IRItemRegistry.ELYTRA_MODULE_ITEM }, false, false),
     MAGNET("magnet", arrayOf(EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET), 1, { IRItemRegistry.MAGNET_MODULE }, false, false),
+    JETPACK("jetpack", arrayOf(EquipmentSlot.CHEST), 1, { IRItemRegistry.JETPACK_MODULE_ITEM }, false, false),
     WATER_AFFINITY("water_affinity", arrayOf(EquipmentSlot.CHEST, EquipmentSlot.LEGS), 1, { IRItemRegistry.WATER_AFFINITY_MODULE }, false, false) {
         override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
             val chestplate = TranslatableText("item.indrev.module_water_affinity.on", TranslatableText("item.indrev.module_water_affinity.chestplate").formatted(Formatting.GOLD))

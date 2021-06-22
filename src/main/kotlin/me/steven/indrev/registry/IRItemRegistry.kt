@@ -5,10 +5,7 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blocks.misc.NikoliteOreBlock
-import me.steven.indrev.items.armor.IRColorModuleItem
-import me.steven.indrev.items.armor.IRModularArmorItem
-import me.steven.indrev.items.armor.IRModuleItem
-import me.steven.indrev.items.armor.ReinforcedElytraItem
+import me.steven.indrev.items.armor.*
 import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.upgrade.Enhancer
@@ -204,6 +201,11 @@ object IRItemRegistry {
         identifier("wrench").item(WRENCH)
         identifier("screwdriver").item(SCREWDRIVER)
 
+        identifier("jetpack_mk1").item(JETPACK_MK1)
+        identifier("jetpack_mk2").item(JETPACK_MK2)
+        identifier("jetpack_mk3").item(JETPACK_MK3)
+        identifier("jetpack_mk4").item(JETPACK_MK4)
+
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
@@ -220,6 +222,7 @@ object IRItemRegistry {
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
         identifier("module_elytra").item(ELYTRA_MODULE_ITEM)
+        identifier("module_jetpack").item(JETPACK_MODULE_ITEM)
         identifier("module_magnet").item(MAGNET_MODULE)
         identifier("module_water_affinity").item(WATER_AFFINITY_MODULE)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
@@ -346,6 +349,11 @@ object IRItemRegistry {
         }
     }
 
+    val JETPACK_MK1 = JetpackItem(Tier.MK1)
+    val JETPACK_MK2 = JetpackItem(Tier.MK2)
+    val JETPACK_MK3 = JetpackItem(Tier.MK3)
+    val JETPACK_MK4 = JetpackItem(Tier.MK4)
+
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
@@ -362,6 +370,7 @@ object IRItemRegistry {
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
     val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
     val ELYTRA_MODULE_ITEM = IRModuleItem(ArmorModule.ELYTRA, itemSettings().maxCount(1))
+    val JETPACK_MODULE_ITEM = IRModuleItem(ArmorModule.JETPACK, itemSettings().maxCount(1))
     val MAGNET_MODULE = IRModuleItem(ArmorModule.MAGNET, itemSettings().maxCount(1))
     val WATER_AFFINITY_MODULE = IRModuleItem(ArmorModule.WATER_AFFINITY, itemSettings().maxCount(1))
     val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))

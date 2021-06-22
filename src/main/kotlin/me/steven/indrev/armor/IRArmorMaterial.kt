@@ -25,6 +25,10 @@ enum class IRArmorMaterial(
         "reinforced_elytra", 30, intArrayOf(1, 1, 1, 1), 15,
         SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, { Ingredient.ofItems(IRItemRegistry.STEEL_PLATE()) }
     ),
+    JETPACK(
+        "jetpack", 30, intArrayOf(1, 1, 1, 1), 15,
+        SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, { null }
+    ),
     STEEL(
         "steel", 30, intArrayOf(2, 6, 7, 2), 15,
         SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, 0F, { Ingredient.ofItems(IRItemRegistry.STEEL_INGOT()) }

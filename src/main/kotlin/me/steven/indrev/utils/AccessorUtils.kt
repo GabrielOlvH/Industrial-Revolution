@@ -3,6 +3,7 @@ package me.steven.indrev.utils
 import it.unimi.dsi.fastutil.ints.IntList
 import me.steven.indrev.mixin.common.*
 import net.minecraft.block.FluidBlock
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.fluid.FlowableFluid
@@ -38,3 +39,5 @@ fun AnimalEntity.eat(player: PlayerEntity, hand: Hand, stack: ItemStack) = (this
 
 val FluidBlock.fluid: FlowableFluid
     get() = (this as AccessorFluidBlock).fluid
+
+val LivingEntity.isJumping: Boolean get() = (this as AccessorLivingEntity).isJumping

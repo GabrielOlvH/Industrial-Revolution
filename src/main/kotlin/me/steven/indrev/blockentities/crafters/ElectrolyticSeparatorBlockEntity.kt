@@ -54,7 +54,7 @@ class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockSt
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
         return when (type) {
-            ConfigurationType.FLUID -> arrayOf(TransferMode.OUTPUT_FIRST, TransferMode.OUTPUT_SECOND, TransferMode.NONE)
+            ConfigurationType.FLUID -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT_FIRST, TransferMode.OUTPUT_SECOND, TransferMode.NONE)
             else -> return super.getValidConfigurations(type)
         }
     }
