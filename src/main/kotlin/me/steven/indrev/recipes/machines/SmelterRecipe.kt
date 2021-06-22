@@ -11,10 +11,10 @@ class SmelterRecipe(
     override val identifier: Identifier,
     override val input: Array<InputEntry>,
     override val outputs: Array<OutputEntry>,
-    override val fluidOutput: FluidVolume,
+    override val fluidOutput: Array<FluidVolume>,
     override val ticks: Int,
 ) : IRFluidRecipe() {
-    override val fluidInput: FluidVolume? = null
+    override val fluidInput: Array<FluidVolume> = emptyArray()
 
     override fun getType(): IRRecipeType<*> = TYPE
 
@@ -27,6 +27,7 @@ class SmelterRecipe(
         val TYPE = IRRecipeType<SmelterRecipe>(IDENTIFIER)
         val SERIALIZER = Serializer()
 
-        class Serializer : IRFluidRecipeSerializer<SmelterRecipe>({ id, ingredients, output, _, fluidOutput, ticks -> SmelterRecipe(id, ingredients, output, fluidOutput!!, ticks) })
+        class Serializer : IRFluidRecipeSerializer<SmelterRecipe>({ id, ingredients, output, _, fluidOutput, ticks -> SmelterRecipe(id, ingredients, output,
+            fluidOutput, ticks) })
     }
 }

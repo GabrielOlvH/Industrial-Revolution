@@ -34,8 +34,8 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).breakByTool(Fa
     ): ActionResult {
         if (!world.isClient && hand == Hand.MAIN_HAND) {
             val stack = player.getStackInHand(hand)
-            val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
-                .firstOrNull { it.matches(stack, null) }
+            val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack)
+                .firstOrNull { it.matches(stack, emptyList()) }
             val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity ?: return ActionResult.PASS
             if (recipe != null && blockEntity.inventory[0].isEmpty) {
                 player.setStackInHand(hand, ItemStack.EMPTY)
@@ -79,8 +79,8 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).breakByTool(Fa
         val blockEntity = world.getBlockEntity(pos) as? CapsuleBlockEntity ?: return 0
         if (blockEntity.world!!.isClient) return 0
         val stack = blockEntity.inventory[0]
-        val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
-            .firstOrNull { it.matches(stack, null) }
+        val recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack)
+            .firstOrNull { it.matches(stack, emptyList()) }
         return if (recipe == null) 15
         else 0
     }

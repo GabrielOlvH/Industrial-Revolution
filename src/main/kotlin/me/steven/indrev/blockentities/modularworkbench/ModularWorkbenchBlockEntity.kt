@@ -75,7 +75,7 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         if (!inventory.getStack(15).isEmpty) return
         val inputStacks = inventory.inputSlots.map { inventory.getStack(it) }
         when {
-            recipe?.matches(inputStacks, null) != true -> {
+            recipe?.matches(inputStacks, emptyList()) != true -> {
                 moduleMaxProcessTime = 0
                 moduleProcessTime = 0
             }

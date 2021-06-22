@@ -3,7 +3,7 @@ package me.steven.indrev.utils
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import com.google.gson.JsonObject
+import com.google.gson.JsonElement
 import me.shedaniel.math.Point
 import me.shedaniel.rei.api.client.gui.widgets.Widget
 import me.shedaniel.rei.api.client.gui.widgets.Widgets
@@ -88,21 +88,26 @@ fun ChunkPos.toNbt() = NbtCompound().also {
 
 fun getChunkPos(nbt: NbtCompound) = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
-fun getFluidFromJson(json: JsonObject): FluidVolume {
-    val fluidId = json.get("fluid").asString
-    val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
-    val amount = JsonHelper.getLong(json, "count", 1)
-    val fluidAmount = when (val type = json.get("type").asString) {
-        "nugget" -> NUGGET_AMOUNT
-        "ingot" -> INGOT_AMOUNT
-        "block" -> BLOCK_AMOUNT
-        "bucket" -> FluidAmount.BUCKET
-        "scrap" -> SCRAP_AMOUNT
-        "bottle" -> FluidAmount.BOTTLE
-        "mb" -> MB
-        else -> throw IllegalArgumentException("unknown amount type $type")
-    }.mul(amount)
-    return fluidKey.withAmount(fluidAmount)
+fun getFluidFromJson(json: JsonElement): Array<FluidVolume> {
+    if (json.isJsonArray) {
+        return json.asJsonArray.map { getFluidFromJson(it.asJsonObject).toList() }.flatten().toTypedArray()
+    } else {
+        val json = json.asJsonObject
+        val fluidId = json.get("fluid").asString
+        val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
+        val amount = JsonHelper.getLong(json, "count", 1)
+        val fluidAmount = when (val type = json.get("type").asString) {
+            "nugget" -> NUGGET_AMOUNT
+            "ingot" -> INGOT_AMOUNT
+            "block" -> BLOCK_AMOUNT
+            "bucket" -> FluidAmount.BUCKET
+            "scrap" -> SCRAP_AMOUNT
+            "bottle" -> FluidAmount.BOTTLE
+            "mb" -> MB
+            else -> throw IllegalArgumentException("unknown amount type $type")
+        }.mul(amount)
+        return arrayOf(fluidKey.withAmount(fluidAmount))
+    }
 }
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {

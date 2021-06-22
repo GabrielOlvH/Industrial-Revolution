@@ -10,6 +10,10 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.utils.createWrapper
 
 class FluidInfuserFluidComponent(machine: () -> MachineBlockEntity<*>) : FluidComponent(machine, FluidAmount.ofWhole(8) , 2) {
+    init {
+        this.inputTanks = intArrayOf(0)
+        this.outputTanks = intArrayOf(1)
+    }
 
     private val grouped = this.createWrapper(1, 0)
 

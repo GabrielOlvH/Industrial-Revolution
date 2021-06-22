@@ -56,7 +56,7 @@ interface IRRecipe : Recipe<Inventory> {
         return produced
     }
 
-    fun matches(inv: List<ItemStack>, fluidVolume: FluidVolume?): Boolean {
+    fun matches(inv: List<ItemStack>, fluidVolume: List<FluidVolume>): Boolean {
         if (inv.isEmpty()) return true
         else if (inv.size == 1 && input.size == 1) return matches(inv.first(), fluidVolume)
         val remainder = input.map { it.copy() }.let { it as? ArrayList<InputEntry> ?: it.toMutableList() }
@@ -68,7 +68,7 @@ interface IRRecipe : Recipe<Inventory> {
         return remainder.isEmpty()
     }
 
-    fun matches(stack: ItemStack, fluidVolume: FluidVolume?): Boolean {
+    fun matches(stack: ItemStack, fluidVolume: List<FluidVolume>): Boolean {
         assert(input.size == 1)
         val (ingredient, count) = input.first()
         if (ingredient.test(stack) && stack.count >= count) return true

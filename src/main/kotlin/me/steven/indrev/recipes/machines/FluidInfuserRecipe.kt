@@ -11,8 +11,8 @@ class FluidInfuserRecipe(
     override val identifier: Identifier,
     override val input: Array<InputEntry>,
     override val outputs: Array<OutputEntry>,
-    override val fluidInput: FluidVolume,
-    override val fluidOutput: FluidVolume,
+    override val fluidInput: Array<FluidVolume>,
+    override val fluidOutput: Array<FluidVolume>,
     override val ticks: Int,
 ) : IRFluidRecipe() {
 
@@ -27,6 +27,6 @@ class FluidInfuserRecipe(
         val TYPE = IRRecipeType<FluidInfuserRecipe>(IDENTIFIER)
         val SERIALIZER = Serializer()
 
-        class Serializer : IRFluidRecipeSerializer<FluidInfuserRecipe>({ id, ingredients, output, fluidInput, fluidOutput, ticks -> FluidInfuserRecipe(id, ingredients, output, fluidInput!!, fluidOutput!!, ticks) })
+        class Serializer : IRFluidRecipeSerializer<FluidInfuserRecipe>({ id, ingredients, output, fluidInput, fluidOutput, ticks -> FluidInfuserRecipe(id, ingredients, output, fluidInput, fluidOutput, ticks) })
     }
 }

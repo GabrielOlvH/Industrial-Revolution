@@ -63,13 +63,13 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
 
         val stack = container.inventory[0]
         if (recipe == null) {
-            recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
-                .firstOrNull { it.matches(stack, null) }
+            recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack)
+                .firstOrNull { it.matches(stack, emptyList()) }
         } else if (ItemStack.areItemsEqual(recipe!!.outputs.first().stack, stack)) {
             return
         }
 
-        if (recipe?.matches(stack, null) != true) {
+        if (recipe?.matches(stack, emptyList()) != true) {
             world?.breakBlock(containerPos, false)
             recipe = null
             return

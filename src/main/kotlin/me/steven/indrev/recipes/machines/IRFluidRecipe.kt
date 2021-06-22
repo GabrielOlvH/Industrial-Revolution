@@ -16,43 +16,50 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
 abstract class IRFluidRecipe : IRRecipe {
-    abstract val fluidInput: FluidVolume?
-    abstract val fluidOutput: FluidVolume?
+    abstract val fluidInput: Array<FluidVolume>
+    abstract val fluidOutput: Array<FluidVolume>
 
-    override fun matches(inv: List<ItemStack>, fluidVolume: FluidVolume?): Boolean {
+    override fun matches(inv: List<ItemStack>, fluidVolume: List<FluidVolume>): Boolean {
         return when {
-            fluidVolume == null -> false
-            fluidInput != null -> fluidVolume.fluidKey == fluidInput!!.fluidKey && fluidVolume.amount() >= fluidInput!!.amount() && super.matches(inv, fluidVolume)
+            fluidInput.isNotEmpty() -> fluidVolume.isNotEmpty() && fluidInput.indices.all { index ->
+                val vol = fluidVolume[index]
+                vol.fluidKey == fluidInput[index].fluidKey && vol.amount() >= fluidInput[index].amount() } && super.matches(inv, fluidVolume)
             else -> super.matches(inv, fluidVolume)
         }
     }
 
     override fun canStart(component: CraftingComponent<*>): Boolean {
-        val outputTankVolume = component.fluidComponent!!.tanks.last()
-        if (fluidOutput != null && !outputTankVolume.isEmpty && (outputTankVolume.fluidKey != fluidOutput!!.fluidKey || outputTankVolume.amount()
-                .add(fluidOutput!!.amount()) > component.fluidComponent!!.limit)
+        val fluidComponent = component.fluidComponent!!
+        val outputTankVolume = fluidComponent.outputTanks
+        if (fluidOutput.isNotEmpty() && fluidOutput.indices.any { index ->
+                val vol = fluidComponent.tanks[outputTankVolume[index]]
+                !vol.isEmpty && (vol.fluidKey != fluidOutput[index].fluidKey || vol.amount().add(fluidOutput[index].amount()) > fluidComponent.limit)
+            }
         )
             return false
         return super.canStart(component)
     }
 
-    open class IRFluidRecipeSerializer<T : IRFluidRecipe>(private val factory: (Identifier, Array<InputEntry>, Array<OutputEntry>, FluidVolume?, FluidVolume?, Int) -> T) : RecipeSerializer<T> {
+    open class IRFluidRecipeSerializer<T : IRFluidRecipe>(private val factory: (Identifier, Array<InputEntry>, Array<OutputEntry>, Array<FluidVolume>, Array<FluidVolume>, Int) -> T) : RecipeSerializer<T> {
         override fun read(id: Identifier, buf: PacketByteBuf): T {
             val ticks = buf.readInt()
-            val hasInputFluid = buf.readBoolean()
-            val fluidInput = if (hasInputFluid) {
+            val inputFluidsSize = buf.readInt()
+            val inputFluids = mutableListOf<FluidVolume>()
+            (0 until inputFluidsSize).forEach { _ ->
                 val fluidId = buf.readIdentifier()
                 val fluidAmount = FluidAmount.fromMcBuffer(buf)
                 val fluidKey = FluidKeys.get(Registry.FLUID.get(fluidId))
-                fluidKey.withAmount(fluidAmount)
-            } else null
-            val hasOutputFluid = buf.readBoolean()
-            val fluidOutput = if (hasOutputFluid) {
+                inputFluids.add(fluidKey.withAmount(fluidAmount))
+            }
+
+            val outputFluidsSize = buf.readInt()
+            val outputFluids = mutableListOf<FluidVolume>()
+            (0 until outputFluidsSize).forEach { _ ->
                 val fluidId = buf.readIdentifier()
                 val fluidAmount = FluidAmount.fromMcBuffer(buf)
                 val fluidKey = FluidKeys.get(Registry.FLUID.get(fluidId))
-                fluidKey.withAmount(fluidAmount)
-            } else null
+                outputFluids.add(fluidKey.withAmount(fluidAmount))
+            }
             val size = buf.readInt()
             val ingredients = mutableListOf<InputEntry>()
             (0 until size).forEach { _ ->
@@ -67,33 +74,33 @@ abstract class IRFluidRecipe : IRRecipe {
                 val chance = buf.readDouble()
                 output.add(OutputEntry(stack, chance))
             }
-            return factory(id, ingredients.toTypedArray(), output.toTypedArray(), fluidInput, fluidOutput, ticks)
+            return factory(id, ingredients.toTypedArray(), output.toTypedArray(), inputFluids.toTypedArray(), outputFluids.toTypedArray(), ticks)
         }
 
         override fun read(id: Identifier, json: JsonObject): T {
             val ingredients = IRRecipe.ingredientsFromElement(json["ingredients"])
             val ticks = json.get("processTime").asInt
             val output = IRRecipe.itemStacksFromElement(json["output"])
-            val fluidInputJson = json.getAsJsonObject("fluidInput")
-            val fluidInput = if (fluidInputJson == null) null else getFluidFromJson(fluidInputJson)
+            val fluidInputJson = json.get("fluidInput")
+            val fluidInput = if (fluidInputJson == null) emptyArray() else getFluidFromJson(fluidInputJson)
 
-            val fluidOutputJson = json.getAsJsonObject("fluidOutput")
-            val fluidOutput = if (fluidOutputJson == null) FluidKeys.EMPTY.withAmount(FluidAmount.ZERO) else getFluidFromJson(fluidOutputJson)
+            val fluidOutputJson = json.get("fluidOutput")
+            val fluidOutput = if (fluidOutputJson == null) emptyArray() else getFluidFromJson(fluidOutputJson)
 
             return factory(id, ingredients, output, fluidInput, fluidOutput, ticks)
         }
 
         override fun write(buf: PacketByteBuf, recipe: T) {
             buf.writeInt(recipe.ticks)
-            buf.writeBoolean(recipe.fluidInput != null)
-            if (recipe.fluidInput != null) {
-                buf.writeIdentifier(recipe.fluidInput!!.fluidKey.entry.id)
-                recipe.fluidInput!!.amount().toMcBuffer(buf)
+            buf.writeInt(recipe.fluidInput.size)
+            recipe.fluidInput.forEach { fluidInput ->
+                buf.writeIdentifier(fluidInput.fluidKey.entry.id)
+                fluidInput.amount().toMcBuffer(buf)
             }
-            buf.writeBoolean(recipe.fluidOutput != null)
-            if (recipe.fluidOutput != null) {
-                buf.writeIdentifier(recipe.fluidOutput!!.fluidKey.entry.id)
-                recipe.fluidOutput!!.amount().toMcBuffer(buf)
+            buf.writeInt(recipe.fluidOutput.size)
+            recipe.fluidOutput.forEach { fluidOutput ->
+                buf.writeIdentifier(fluidOutput.fluidKey.entry.id)
+                fluidOutput.amount().toMcBuffer(buf)
             }
             buf.writeInt(recipe.input.size)
             recipe.input.forEach { (ingredient, count) ->

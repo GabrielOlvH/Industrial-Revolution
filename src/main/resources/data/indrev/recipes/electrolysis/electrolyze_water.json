@@ -5,15 +5,17 @@
     "type": "bucket",
     "count": 1
   },
-  "fluidOutput": {
-    "fluid": "indrev:hydrogen_still",
-    "type": "mb",
-    "count": 500
-  },
-  "secondFluidOutput": {
-    "fluid": "indrev:oxygen_still",
-    "type": "mb",
-    "count": 500
-  },
+  "fluidOutput": [
+    {
+      "fluid": "indrev:hydrogen_still",
+      "type": "mb",
+      "count": 500
+    },
+    {
+      "fluid": "indrev:oxygen_still",
+      "type": "mb",
+      "count": 500
+    }
+  ],
   "processTime": 350
 }

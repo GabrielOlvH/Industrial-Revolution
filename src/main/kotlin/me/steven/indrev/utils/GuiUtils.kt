@@ -151,7 +151,7 @@ fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, 
     val controller = blockEntity.temperatureComponent!!
     panel.add(WTemperature(controller), 0.95, widgetPos)
     val coolerSlot =
-        WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.cooler_slot_type"))
+        WTooltipedItemSlot.of(blockInventory, blockEntity.inventoryComponent!!.inventory.coolerSlot!!, TranslatableText("gui.indrev.cooler_slot_type"))
     if (world.isClient)
         coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
     panel.add(coolerSlot, 0.75, widgetPos + 2.6)

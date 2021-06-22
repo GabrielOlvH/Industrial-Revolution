@@ -16,6 +16,9 @@ open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit:
         addListener({_, _, _, _ -> syncable()?.markForUpdate() }, {})
     }
 
+    var inputTanks = intArrayOf()
+    var outputTanks = intArrayOf()
+
     val tanks: DefaultedList<FluidVolume>
         get() = tanks
 

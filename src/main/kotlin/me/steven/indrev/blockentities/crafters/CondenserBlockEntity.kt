@@ -26,7 +26,11 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             output { slot = 2 }
             coolerSlot = 1
         }
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
+        this.fluidComponent = object : FluidComponent({ this }, FluidAmount.ofWhole(8)) {
+            init {
+                this.inputTanks = intArrayOf(0)
+            }
+        }
     }
 
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
