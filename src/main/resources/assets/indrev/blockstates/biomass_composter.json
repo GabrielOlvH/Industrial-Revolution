@@ -1,0 +1,17 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "block/composter"
+      }
+    },
+    {
+      "when": {
+        "closed": true
+      },
+      "apply": {
+        "model": "indrev:block/plank_block"
+      }
+    }
+  ]
+}

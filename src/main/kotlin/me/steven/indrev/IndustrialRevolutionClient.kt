@@ -8,10 +8,7 @@ import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.AOEMachineBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.ChopperBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.MinerBlockEntityRenderer
-import me.steven.indrev.blockentities.farms.PumpBlockEntityRenderer
+import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
@@ -138,6 +135,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.FISHER_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())

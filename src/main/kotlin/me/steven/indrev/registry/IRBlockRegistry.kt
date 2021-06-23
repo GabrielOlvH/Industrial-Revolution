@@ -3,6 +3,7 @@ package me.steven.indrev.registry
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
@@ -38,6 +39,8 @@ object IRBlockRegistry {
         identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
         FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
+
+        identifier("biomass_composter").block(BIOMASS_COMPOSTER_BLOCK).item(BIOMASS_COMPOSTER_ITEM).blockEntityType(BIOMASS_COMPOSTER_BLOCK_ENTITY)
 
         identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
 
@@ -99,6 +102,10 @@ object IRBlockRegistry {
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
     )
+
+    val BIOMASS_COMPOSTER_BLOCK = BiomassComposterBlock()
+    val BIOMASS_COMPOSTER_ITEM = BlockItem(BIOMASS_COMPOSTER_BLOCK, itemSettings())
+    val BIOMASS_COMPOSTER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(::BiomassComposterBlockEntity, BIOMASS_COMPOSTER_BLOCK).build()
 
     val WITHER_PROOF_OBSIDIAN = Block(
         FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
