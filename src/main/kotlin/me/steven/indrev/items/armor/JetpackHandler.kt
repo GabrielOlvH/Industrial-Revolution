@@ -8,6 +8,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import alexiil.mc.lib.attributes.misc.AbstractItemBasedAttribute
 import alexiil.mc.lib.attributes.misc.LimitedConsumer
@@ -48,7 +49,10 @@ interface JetpackHandler : AttributeProviderItem, ItemConvertible {
         }
     }
 
-    fun getFuelStored(stack: ItemStack): FluidVolume = FluidVolume.fromTag(stack.tag?.getCompound("Tank"))
+    fun getFuelStored(stack: ItemStack): FluidVolume {
+        val tag = stack.tag ?: return FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+        return FluidVolume.fromTag(tag.getCompound("Tank"))
+    }
 
     //TODO oxyhydrogen
     private fun getConsumptionRatio(stack: ItemStack) = FluidAmount.BUCKET.div(500)
