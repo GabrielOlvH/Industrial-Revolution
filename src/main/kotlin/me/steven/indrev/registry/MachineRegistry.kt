@@ -340,16 +340,6 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .defaultModelProvider()
 
-        val RECYCLER_REGISTRY = MachineRegistry("recycler", false, Tier.MK2)
-            .blockProvider { tier ->
-                HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerScreenHandler
-                )
-            }
-            .blockEntityProvider { tier -> { pos, state -> RecyclerBlockEntity(tier, pos, state) } }
-            .defaultEnergyProvider()
-            .defaultModelProvider()
-
         val SMELTER_REGISTRY = MachineRegistry("smelter", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(

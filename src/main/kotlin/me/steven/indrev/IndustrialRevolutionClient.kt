@@ -89,7 +89,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.PULVERIZER_HANDLER,
             IndustrialRevolution.COMPRESSOR_HANDLER,
             IndustrialRevolution.SOLID_INFUSER_HANDLER,
-            IndustrialRevolution.RECYCLER_HANDLER,
             IndustrialRevolution.CHOPPER_HANDLER,
             IndustrialRevolution.RANCHER_HANDLER,
             IndustrialRevolution.MINING_RIG_HANDLER,
