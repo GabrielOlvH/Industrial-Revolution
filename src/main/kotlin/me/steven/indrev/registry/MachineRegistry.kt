@@ -6,10 +6,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
-import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
@@ -216,6 +213,16 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { pos, state -> HeatGeneratorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .noModelProvider()
+
+        val GAS_BURNING_GENERATOR_REGISTRY = MachineRegistry("gas_generator", false, Tier.MK4)
+            .blockProvider { tier ->
+                HorizontalFacingMachineBlock(
+                    this, SETTINGS().nonOpaque(), tier, IRConfig.generators.gasGenerator, ::GasBurningGeneratorScreenHandler
+                )
+            }
+            .blockEntityProvider { { pos, state -> GasBurningGeneratorBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider()
 
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
             .blockProvider { tier -> LazuliFluxContainerBlock(this, SETTINGS(), tier) }

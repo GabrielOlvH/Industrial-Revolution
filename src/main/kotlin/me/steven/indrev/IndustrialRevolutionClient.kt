@@ -83,6 +83,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
             IndustrialRevolution.BIOMASS_GENERATOR_HANDLER,
             IndustrialRevolution.HEAT_GENERATOR_HANDLER,
+            IndustrialRevolution.GAS_BURNING_GENERATOR_HANDLER,
             IndustrialRevolution.BATTERY_HANDLER,
             IndustrialRevolution.ELECTRIC_FURNACE_HANDLER,
             IndustrialRevolution.PULVERIZER_HANDLER,

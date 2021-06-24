@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.SearchOptions
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FixedFluidInv
 import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.fluid.FluidExtractable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
@@ -87,4 +88,12 @@ fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid
     } else {
         Fluids.EMPTY
     }
+}
+
+fun FluidExtractable.use(vol: FluidVolume): Boolean {
+    if (attemptExtraction({ key -> key == vol.fluidKey }, vol.amount(), Simulation.SIMULATE).amount() == vol.amount()) {
+        assert(attemptExtraction({ key -> key == vol.fluidKey }, vol.amount(), Simulation.ACTION).amount() == vol.amount())
+        return true
+    }
+    return false
 }

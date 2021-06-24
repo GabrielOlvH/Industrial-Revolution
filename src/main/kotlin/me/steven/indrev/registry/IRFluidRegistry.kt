@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blocks.misc.AcidFluidBlock
 import me.steven.indrev.datagen.utils.*
 import me.steven.indrev.fluids.BaseFluid
@@ -70,6 +71,7 @@ object IRFluidRegistry {
         identifier("${HYDROGEN_IDENTIFIER.path}_still").fluid(HYDROGEN_STILL)
         identifier("${HYDROGEN_IDENTIFIER.path}_flowing").fluid(HYDROGEN_FLOWING)
         identifier("${HYDROGEN_IDENTIFIER.path}_bucket").item(HYDROGEN_BUCKET)
+        IRFluidFuelRegistry.register(HYDROGEN_STILL, 10, 900, 4, FluidAmount.of(1, 10))
 
         OXYGEN_IDENTIFIER.block(OXYGEN)
         identifier("${OXYGEN_IDENTIFIER.path}_still").fluid(OXYGEN_STILL)
@@ -80,6 +82,7 @@ object IRFluidRegistry {
         identifier("${METHANE_IDENTIFIER.path}_still").fluid(METHANE_STILL)
         identifier("${METHANE_IDENTIFIER.path}_flowing").fluid(METHANE_FLOWING)
         identifier("${METHANE_IDENTIFIER.path}_bucket").item(METHANE_BUCKET)
+        IRFluidFuelRegistry.register(METHANE_STILL, 100, 900, 128, FluidAmount.of(1, 4))
     }
 
     val COOLANT_IDENTIFIER = identifier("coolant")

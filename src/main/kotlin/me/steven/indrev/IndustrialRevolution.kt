@@ -192,6 +192,7 @@ object IndustrialRevolution : ModInitializer {
     val SOLAR_GENERATOR_HANDLER = SolarGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::SolarGeneratorScreenHandler)
     val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::BiomassGeneratorScreenHandler)
     val HEAT_GENERATOR_HANDLER = HeatGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::HeatGeneratorScreenHandler)
+    val GAS_BURNING_GENERATOR_HANDLER = GasBurningGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::GasBurningGeneratorScreenHandler)
     val BATTERY_HANDLER = LazuliFluxContainerScreenHandler.SCREEN_ID.registerScreenHandler(::LazuliFluxContainerScreenHandler)
     val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceScreenHandler)
     val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)

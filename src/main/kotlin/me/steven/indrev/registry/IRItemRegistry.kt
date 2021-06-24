@@ -195,6 +195,8 @@ object IRItemRegistry {
         identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
         identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
 
+        identifier("soot").item(SOOT)
+
         identifier("biomass").item(BIOMASS)
         identifier("untanned_leather").item(DEFAULT_ITEM())
 
@@ -263,7 +265,6 @@ object IRItemRegistry {
         identifier("item_pipe_mk3").item(ITEM_PIPE_ITEM_MK3)
         identifier("item_pipe_mk4").item(ITEM_PIPE_ITEM_MK4)
 
-
         identifier("cable_mk1").item(CABLE_ITEM_MK1)
         identifier("cable_mk2").item(CABLE_ITEM_MK2)
         identifier("cable_mk3").item(CABLE_ITEM_MK3)
@@ -321,6 +322,8 @@ object IRItemRegistry {
     val SCAN_OUTPUT_ITEM = IRResourceReportItem(itemSettings().maxCount(1))
 
     val ENERGY_READER = IREnergyReaderItem(itemSettings())
+
+    val SOOT = DEFAULT_ITEM()
 
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
     
