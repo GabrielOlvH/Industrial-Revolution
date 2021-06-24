@@ -83,7 +83,7 @@ class Generators {
 
     val gasGenerator: GeneratorConfig = GeneratorConfig(1.0, 1.5, 10000.0, Tier.MK4.io)
 
-    val biomassGenerator: GeneratorConfig = GeneratorConfig(128.0, 1.5, 10000.0, Tier.MK3.io)
+    val biomassGenerator: GeneratorConfig = GeneratorConfig(64.0, 1.5, 10000.0, Tier.MK3.io)
 }
 
 class GeneratorConfig(
