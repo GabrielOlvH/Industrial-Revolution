@@ -765,5 +765,11 @@
   "item.indrev.jetpack_mk4": "Jetpack MK4",
   "block.indrev.gas_generator": "Gas Burning Generator",
   "block.indrev.gas_generator_mk4": "Gas Burning Generator",
-  "item.indrev.soot": "Soot"
+  "item.indrev.soot": "Soot",
+  "item.indrev.carbon_fiber_plate": "Carbon Fiber Plate",
+  "item.indrev.carbon_fiber_rod": "Carbon Fiber Rod",
+  "item.indrev.carbon_fiber_helmet_frame": "Carbon Fiber Chestplate Frame",
+  "item.indrev.carbon_fiber_chest_frame": "Carbon Fiber Helmet Frame",
+  "item.indrev.carbon_fiber_legs_frame": "Carbon Fiber Leggings Frame",
+  "item.indrev.carbon_fiber_boots_frame": "Carbon Fiber Boots Frame"
 }

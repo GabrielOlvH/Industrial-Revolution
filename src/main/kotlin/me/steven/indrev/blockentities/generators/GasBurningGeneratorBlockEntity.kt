@@ -22,7 +22,7 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
 
     init {
         this.propertyDelegate = ArrayPropertyDelegate(7)
-        this.temperatureComponent = TemperatureComponent(this, 0.3, 900..2000, 2500)
+        this.temperatureComponent = TemperatureComponent(this, 0.3, 2200..2400, 2500)
         this.inventoryComponent = inventory(this) {
             coolerSlot = 0
             output {

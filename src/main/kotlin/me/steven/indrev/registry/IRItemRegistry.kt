@@ -148,6 +148,10 @@ object IRItemRegistry {
 
         MaterialHelper.register()
 
+        identifier("soot").item(SOOT)
+        identifier("carbon_fiber_plate").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_rod").item(DEFAULT_ITEM())
+
         identifier("sawdust").item(DEFAULT_ITEM())
 
         identifier("hammer").item(HAMMER)
@@ -195,8 +199,6 @@ object IRItemRegistry {
         identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
         identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
 
-        identifier("soot").item(SOOT)
-
         identifier("biomass").item(BIOMASS)
         identifier("untanned_leather").item(DEFAULT_ITEM())
 
@@ -207,6 +209,11 @@ object IRItemRegistry {
         identifier("jetpack_mk2").item(JETPACK_MK2)
         identifier("jetpack_mk3").item(JETPACK_MK3)
         identifier("jetpack_mk4").item(JETPACK_MK4)
+
+        identifier("carbon_fiber_helmet_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_chest_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_legs_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_boots_frame").item(DEFAULT_ITEM())
 
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
