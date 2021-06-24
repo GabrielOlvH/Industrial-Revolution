@@ -762,5 +762,8 @@
   "item.indrev.jetpack_mk1": "Jetpack MK1",
   "item.indrev.jetpack_mk2": "Jetpack MK2",
   "item.indrev.jetpack_mk3": "Jetpack MK3",
-  "item.indrev.jetpack_mk4": "Jetpack MK4"
+  "item.indrev.jetpack_mk4": "Jetpack MK4",
+  "block.indrev.gas_generator": "Gas Burning Generator",
+  "block.indrev.gas_generator_mk4": "Gas Burning Generator",
+  "item.indrev.soot": "Soot"
 }
