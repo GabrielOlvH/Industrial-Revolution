@@ -5,12 +5,12 @@ import io.github.cottonmc.cotton.gui.widget.WButton
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.data.Insets
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SCREWDRIVER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.addBookEntryShortcut
@@ -24,7 +24,7 @@ import net.minecraft.util.Identifier
 
 class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SCREWDRIVER_HANDLER,
+        SCREWDRIVER_HANDLER,
         syncId,
         playerInventory,
         ctx

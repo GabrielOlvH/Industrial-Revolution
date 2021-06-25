@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.data.Insets
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.screenhandlers.PIPE_FILTER_HANDLER
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.identifier
@@ -34,7 +34,7 @@ class PipeFilterScreenHandler(
     matchTag: Boolean = false,
     var mode: EndpointData.Mode? = null,
     val type: EndpointData.Type? = null
-) : SyncedGuiDescription(IndustrialRevolution.PIPE_FILTER_HANDLER, syncId, playerInventory) {
+) : SyncedGuiDescription(PIPE_FILTER_HANDLER, syncId, playerInventory) {
 
     val backingList = DefaultedList.ofSize(9, ItemStack.EMPTY)
     lateinit var direction: Direction

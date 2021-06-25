@@ -20,6 +20,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.IRModularControllerScreen
+import me.steven.indrev.gui.screenhandlers.*
 import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScreenHandler
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
 import me.steven.indrev.networks.Network
@@ -79,41 +80,41 @@ object IndustrialRevolutionClient : ClientModInitializer {
         ).forEach { it.registerRender(FluidType.GAS) }
         IRHudRender
         arrayOf(
-            IndustrialRevolution.COAL_GENERATOR_HANDLER,
-            IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
-            IndustrialRevolution.BIOMASS_GENERATOR_HANDLER,
-            IndustrialRevolution.HEAT_GENERATOR_HANDLER,
-            IndustrialRevolution.GAS_BURNING_GENERATOR_HANDLER,
-            IndustrialRevolution.BATTERY_HANDLER,
-            IndustrialRevolution.ELECTRIC_FURNACE_HANDLER,
-            IndustrialRevolution.PULVERIZER_HANDLER,
-            IndustrialRevolution.COMPRESSOR_HANDLER,
-            IndustrialRevolution.SOLID_INFUSER_HANDLER,
-            IndustrialRevolution.CHOPPER_HANDLER,
-            IndustrialRevolution.RANCHER_HANDLER,
-            IndustrialRevolution.MINING_RIG_HANDLER,
-            IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
-            IndustrialRevolution.FISHER_HANDLER,
-            IndustrialRevolution.SCREWDRIVER_HANDLER,
-            IndustrialRevolution.SMELTER_HANDLER,
-            IndustrialRevolution.CONDENSER_HANDLER,
-            IndustrialRevolution.FLUID_INFUSER_HANDLER,
-            IndustrialRevolution.FARMER_HANDLER,
-            IndustrialRevolution.SLAUGHTER_HANDLER,
-            IndustrialRevolution.RESOURCE_REPORT_HANDLER,
-            IndustrialRevolution.SAWMILL_HANDLER,
-            IndustrialRevolution.ELECTRIC_FURNACE_FACTORY_HANDLER,
-            IndustrialRevolution.PULVERIZER_FACTORY_HANDLER,
-            IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
-            IndustrialRevolution.SOLID_INFUSER_FACTORY_HANDLER,
-            IndustrialRevolution.CABINET_HANDLER,
-            IndustrialRevolution.DRILL_HANDLER,
-            IndustrialRevolution.LASER_HANDLER,
-            IndustrialRevolution.ELECTROLYTIC_SEPARATOR_HANDLER
+            COAL_GENERATOR_HANDLER,
+            SOLAR_GENERATOR_HANDLER,
+            BIOMASS_GENERATOR_HANDLER,
+            HEAT_GENERATOR_HANDLER,
+            GAS_BURNING_GENERATOR_HANDLER,
+            BATTERY_HANDLER,
+            ELECTRIC_FURNACE_HANDLER,
+            PULVERIZER_HANDLER,
+            COMPRESSOR_HANDLER,
+            SOLID_INFUSER_HANDLER,
+            CHOPPER_HANDLER,
+            RANCHER_HANDLER,
+            MINING_RIG_HANDLER,
+            MODULAR_WORKBENCH_HANDLER,
+            FISHER_HANDLER,
+            SCREWDRIVER_HANDLER,
+            SMELTER_HANDLER,
+            CONDENSER_HANDLER,
+            FLUID_INFUSER_HANDLER,
+            FARMER_HANDLER,
+            SLAUGHTER_HANDLER,
+            RESOURCE_REPORT_HANDLER,
+            SAWMILL_HANDLER,
+            ELECTRIC_FURNACE_FACTORY_HANDLER,
+            PULVERIZER_FACTORY_HANDLER,
+            COMPRESSOR_FACTORY_HANDLER,
+            SOLID_INFUSER_FACTORY_HANDLER,
+            CABINET_HANDLER,
+            DRILL_HANDLER,
+            LASER_HANDLER,
+            ELECTROLYTIC_SEPARATOR_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
-        ScreenRegistry.register(IndustrialRevolution.PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
+        ScreenRegistry.register(PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
 
         MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::ChopperBlockEntityRenderer)
         MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)

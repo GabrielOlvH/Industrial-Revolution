@@ -6,12 +6,12 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
 import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -30,7 +30,7 @@ import net.minecraft.util.Identifier
 
 class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.RANCHER_HANDLER,
+        RANCHER_HANDLER,
         syncId,
         playerInventory,
         ctx

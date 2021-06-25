@@ -2,8 +2,8 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.ELECTROLYTIC_SEPARATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.utils.add
@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier
 
 class ElectrolyticSeparatorScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.ELECTROLYTIC_SEPARATOR_HANDLER,
+        ELECTROLYTIC_SEPARATOR_HANDLER,
         syncId,
         playerInventory,
         ctx

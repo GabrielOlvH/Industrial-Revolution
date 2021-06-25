@@ -6,11 +6,11 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItem
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.MINING_RIG_HANDLER
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -26,7 +26,7 @@ import net.minecraft.util.Identifier
 
 class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.MINING_RIG_HANDLER,
+        MINING_RIG_HANDLER,
         syncId,
         playerInventory,
         ctx

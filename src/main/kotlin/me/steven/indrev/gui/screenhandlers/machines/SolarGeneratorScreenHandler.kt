@@ -2,10 +2,10 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SOLAR_GENERATOR_HANDLER
 import me.steven.indrev.gui.widgets.misc.WDynamicSprite
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
@@ -23,7 +23,7 @@ class SolarGeneratorScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SOLAR_GENERATOR_HANDLER,
+        SOLAR_GENERATOR_HANDLER,
         syncId,
         playerInventory,
         ctx

@@ -8,11 +8,11 @@ import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.MODULAR_WORKBENCH_HANDLER
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -49,7 +49,7 @@ import kotlin.math.sin
 // All the `index + 3` are because the slot numbers changed and it was easier to do this, if you don't like it don't read it :)
 class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
+        MODULAR_WORKBENCH_HANDLER,
         syncId,
         playerInventory,
         ctx

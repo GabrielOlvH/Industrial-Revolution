@@ -11,8 +11,8 @@ import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.tools.modular.ArmorModule;
-import me.steven.indrev.utils.EnergyApiUtilsKt;
-import me.steven.indrev.utils.UtilsKt;
+import me.steven.indrev.utils.EnergyutilsKt;
+import me.steven.indrev.utils.HelperextensionsKt;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
@@ -113,7 +113,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
                         case WATER_AFFINITY:
-                            if (EnergyApiUtilsKt.extract(itemStack, 20.0))
+                            if (EnergyutilsKt.extract(itemStack, 20.0))
                                 applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
@@ -122,7 +122,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && !UtilsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
+                                    if (food != null && !HelperextensionsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyutilsKt.extract(itemStack, 30.0)) {
                                         stack.finishUsing(world, player);
                                         player.eatFood(world, stack);
                                     }
@@ -136,14 +136,14 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
                                 for (ItemStack stackToCharge : inventory.armor) {
-                                    EnergyIo toCharge = EnergyApiUtilsKt.energyOf(stackToCharge);
+                                    EnergyIo toCharge = EnergyutilsKt.energyOf(stackToCharge);
                                     if (toCharge != null)
                                         toCharge.insert(75.0 * level, Simulation.ACT);
                                 }
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyutilsKt.extract(itemStack, 30.0)) {
                                 regenerateShield();
                             }
                             break;
@@ -164,7 +164,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                 if (level > 0) {
                     Vec3i offset = new Vec3i(8, 8, 8);
                     Box area = new Box(getBlockPos().subtract(offset), getBlockPos().add(offset));
-                    Vec3d blockCenter = UtilsKt.toVec3d(getBlockPos()).add(0.5, 0.5, 0.5);
+                    Vec3d blockCenter = HelperextensionsKt.toVec3d(getBlockPos()).add(0.5, 0.5, 0.5);
                     world.getOtherEntities(this, area, (entity) -> entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity).forEach(entity -> {
                         if ((entity instanceof ItemEntity itemEntity && !itemEntity.cannotPickup())
                                 || (entity instanceof ExperienceOrbEntity xpEntity && xpEntity.age > 40)) {

@@ -3,9 +3,9 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.crafters.CompressorFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.COMPRESSOR_FACTORY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerEntity
@@ -19,7 +19,7 @@ class CompressorFactoryScreenHandler (
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.COMPRESSOR_FACTORY_HANDLER,
+        COMPRESSOR_FACTORY_HANDLER,
         syncId,
         playerInventory,
         ctx

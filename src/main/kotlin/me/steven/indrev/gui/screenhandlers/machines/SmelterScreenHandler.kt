@@ -2,9 +2,9 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SMELTER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier
 
 class SmelterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SMELTER_HANDLER,
+        SMELTER_HANDLER,
         syncId,
         playerInventory,
         ctx

@@ -3,8 +3,8 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WSprite
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.GAS_BURNING_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.misc.WFuel
@@ -21,7 +21,7 @@ class GasBurningGeneratorScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.GAS_BURNING_GENERATOR_HANDLER,
+        GAS_BURNING_GENERATOR_HANDLER,
         syncId,
         playerInventory,
         ctx
