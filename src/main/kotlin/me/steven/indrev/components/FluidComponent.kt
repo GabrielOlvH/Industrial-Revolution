@@ -1,4 +1,4 @@
-package me.steven.indrev.components.fluid
+package me.steven.indrev.components
 
 import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount

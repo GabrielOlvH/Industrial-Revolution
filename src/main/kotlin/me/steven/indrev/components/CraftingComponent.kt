@@ -4,7 +4,6 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter

@@ -9,8 +9,8 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.ElectrolysisRecipe

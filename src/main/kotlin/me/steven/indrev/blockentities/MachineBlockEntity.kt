@@ -20,11 +20,7 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
-import me.steven.indrev.components.InventoryComponent
-import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.networks.energy.IREnergyMovement
