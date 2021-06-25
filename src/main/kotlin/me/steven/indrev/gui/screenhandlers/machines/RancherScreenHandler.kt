@@ -13,6 +13,7 @@ import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.packets.common.UpdateRancherConfigPacket
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.add
@@ -159,7 +160,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
                 buf.writeBoolean(mateAdults)
                 buf.writeInt(matingLimitText.text.toIntOrNull() ?: matingLimit)
                 buf.writeInt(killAfterText.text.toIntOrNull() ?: killAfter)
-                ClientPlayNetworking.send(SYNC_RANCHER_CONFIG, buf)
+                ClientPlayNetworking.send(UpdateRancherConfigPacket.SYNC_RANCHER_CONFIG, buf)
             }
         }
     }
@@ -172,7 +173,6 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
     companion object {
         val SCREEN_ID = identifier("rancher_screen")
-        val SYNC_RANCHER_CONFIG = identifier("rancher_sync_config")
         val RANCHER_MK4 by lazy { MachineRegistry.RANCHER_REGISTRY.block(Tier.MK4) }
     }
 }

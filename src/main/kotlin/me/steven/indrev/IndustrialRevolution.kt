@@ -14,11 +14,12 @@ import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.NetworkEvents
+import me.steven.indrev.packets.PacketRegistry
+import me.steven.indrev.packets.client.SyncConfigPacket
+import me.steven.indrev.packets.client.SyncVeinTypesPacket
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
-import me.steven.indrev.registry.PacketRegistry.syncConfig
-import me.steven.indrev.registry.PacketRegistry.syncVeinData
 import me.steven.indrev.utils.getRecipes
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
@@ -118,8 +119,8 @@ object IndustrialRevolution : ModInitializer {
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player
-            syncVeinData(player)
-            syncConfig(player)
+            SyncVeinTypesPacket.sendVeinTypes(player)
+            SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
                 (player as IRServerPlayerEntityExtension).sync()
             }
@@ -195,13 +196,6 @@ object IndustrialRevolution : ModInitializer {
             override fun playSound(event: SoundEvent?, category: SoundCategory?, volume: Float, pitch: Float) {}
         }
     }
-
-    val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
-    val SYNC_CONFIG_PACKET = identifier("sync_config_packet")
-    val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
-    val SYNC_PROPERTY = identifier("sync_property")
-    val SYNC_MODULE_PACKET = identifier("sync_module")
-    val SYNC_NETWORK_SERVOS = identifier("sync_network_servos")
 
     val REINFORCED_ELYTRA_SOURCE: AbilitySource = Pal.getAbilitySource(identifier("reinforced_elytra"))
 }

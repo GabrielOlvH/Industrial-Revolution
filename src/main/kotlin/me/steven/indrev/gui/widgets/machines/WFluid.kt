@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.netty.buffer.Unpooled
 import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.packets.common.FluidGuiHandInteractionPacket
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
@@ -65,7 +66,7 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
         val packet = PacketByteBuf(Unpooled.buffer())
         ctx.run { _, pos -> packet.writeBlockPos(pos) }
         packet.writeInt(tank)
-        ClientPlayNetworking.send(FLUID_CLICK_PACKET, packet)
+        ClientPlayNetworking.send(FluidGuiHandInteractionPacket.FLUID_CLICK_PACKET, packet)
         return InputResult.PROCESSED
     }
 
@@ -76,6 +77,5 @@ class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
             identifier("textures/gui/tank_bottom.png")
         val TANK_TOP =
             identifier("textures/gui/tank_top.png")
-        val FLUID_CLICK_PACKET = identifier("fluid_widget_click")
     }
 }

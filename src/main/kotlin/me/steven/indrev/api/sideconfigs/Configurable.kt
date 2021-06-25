@@ -8,8 +8,8 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.gui.widgets.machines.WMachineSideDisplay
+import me.steven.indrev.packets.common.ConfigureIOPackets
 import me.steven.indrev.utils.add
-import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerInventory
@@ -43,7 +43,7 @@ interface Configurable {
                 buf.writeByte(0)
                 buf.writeBlockPos(pos)
                 buf.writeBoolean(v)
-                ClientPlayNetworking.send(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
+                ClientPlayNetworking.send(ConfigureIOPackets.UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
             root.add(autoPushBtn, 0, 4)
             val autoPullBtn = WToggleButton(TranslatableText("item.indrev.wrench.autopull"))
@@ -55,7 +55,7 @@ interface Configurable {
                 buf.writeByte(1)
                 buf.writeBlockPos(pos)
                 buf.writeBoolean(v)
-                ClientPlayNetworking.send(UPDATE_AUTO_OPERATION_PACKET_ID, buf)
+                ClientPlayNetworking.send(ConfigureIOPackets.UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
             root.add(autoPullBtn, 0.0, 4.8)
         }
@@ -87,7 +87,7 @@ interface Configurable {
                 buf.writeBlockPos(pos)
                 buf.writeInt(direction.id)
                 buf.writeInt(widget.mode.ordinal)
-                ClientPlayNetworking.send(UPDATE_MACHINE_SIDE_PACKET_ID, buf)
+                ClientPlayNetworking.send(ConfigureIOPackets.UPDATE_MACHINE_SIDE_PACKET_ID, buf)
             }
             machineVisualizerPanel.add(widget, (side.x) * 1.2, (side.y) * 1.2)
         }
@@ -115,9 +115,6 @@ interface Configurable {
         BOTTOM(1, 2, Direction.DOWN, 5.333f, 10.667f, 10.666f, 15.998f)
     }
 
-    companion object {
-        val UPDATE_MACHINE_SIDE_PACKET_ID = identifier("update_machine_side")
-        val UPDATE_AUTO_OPERATION_PACKET_ID = identifier("update_auto_pull_push")
-    }
+    companion object
 
 }

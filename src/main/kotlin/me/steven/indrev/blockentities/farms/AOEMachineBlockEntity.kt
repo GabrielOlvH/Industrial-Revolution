@@ -4,8 +4,8 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.packets.common.UpdateAOEMachineRangePacket
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
@@ -48,10 +48,10 @@ abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineR
                 val packet = PacketByteBuf(Unpooled.buffer())
                 packet.writeInt(value)
                 ctx.run { _, pos -> packet.writeBlockPos(pos) }
-                ClientPlayNetworking.send(UPDATE_VALUE_PACKET_ID, packet)
+                ClientPlayNetworking.send(UpdateAOEMachineRangePacket.UPDATE_VALUE_PACKET_ID, packet)
             }
         }
 
-        val UPDATE_VALUE_PACKET_ID = identifier("update_value_packet")
+
     }
 }

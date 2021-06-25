@@ -3,7 +3,7 @@ package me.steven.indrev.gui.screenhandlers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.packets.client.IntPropertyDelegateSyncPacket
 import me.steven.indrev.utils.properties
 import me.steven.indrev.utils.trackedPropertyValues
 import net.fabricmc.api.EnvType
@@ -53,7 +53,7 @@ open class IRGuiScreenHandler(
                     buf.writeInt(syncId)
                     buf.writeInt(i)
                     buf.writeInt(values[i])
-                    ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_PROPERTY, buf)
+                    ServerPlayNetworking.send(player, IntPropertyDelegateSyncPacket.SYNC_PROPERTY, buf)
                 }
             }
         }

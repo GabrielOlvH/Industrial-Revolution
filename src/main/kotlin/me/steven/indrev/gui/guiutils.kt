@@ -20,6 +20,7 @@ import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.upgrade.IREnhancerItem
+import me.steven.indrev.packets.common.ToggleFactoryStackSplittingPacket
 import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
@@ -44,7 +45,6 @@ fun WGridPanel.add(w: WWidget, x: Double, y: Double) {
     w.setLocation((x * 18).toInt(), (y * 18).toInt())
 }
 
-val SPLIT_STACKS_PACKET = identifier("split_stacks_packet")
 val SPLIT_ON_ICON = identifier("textures/gui/split_on.png")
 val SPLIT_OFF_ICON = identifier("textures/gui/split_off.png")
 
@@ -111,7 +111,7 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
         blockEntity.isSplitOn = !blockEntity.isSplitOn
         val buf = PacketByteBuf(Unpooled.buffer())
         buf.writeBlockPos(blockPos)
-        ClientPlayNetworking.send(SPLIT_STACKS_PACKET, buf)
+        ClientPlayNetworking.send(ToggleFactoryStackSplittingPacket.SPLIT_STACKS_PACKET, buf)
     }
     if (world.isClient)
         buttonPanel.backgroundPainter = UPGRADE_SLOT_PANEL_PAINTER

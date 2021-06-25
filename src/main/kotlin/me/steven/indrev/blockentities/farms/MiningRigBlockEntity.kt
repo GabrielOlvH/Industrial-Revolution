@@ -16,6 +16,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Enhancer
+import me.steven.indrev.packets.client.MiningRigSpawnBlockParticlesPacket
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
@@ -140,7 +141,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeBlockPos(pos)
                     buf.writeInt(Registry.BLOCK.getRawId(block))
-                    ServerPlayNetworking.send(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
+                    ServerPlayNetworking.send(serverPlayerEntity, MiningRigSpawnBlockParticlesPacket.BLOCK_BREAK_PACKET, buf)
                 }
             }
         }
@@ -261,7 +262,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     companion object {
-        val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
 
         val VALID_DRILL_POSITIONS = arrayOf(
             BlockPos(-1, 0, 0),

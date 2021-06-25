@@ -7,6 +7,7 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.gui.screenhandlers.PIPE_FILTER_HANDLER
 import me.steven.indrev.networks.EndpointData
+import me.steven.indrev.packets.common.ItemPipePackets
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -66,7 +67,7 @@ class PipeFilterScreenHandler(
             writeIdentifyingData(buf)
             buf.writeInt(0)
             buf.writeBoolean(value)
-            ClientPlayNetworking.send(CHANGE_FILTER_MODE_PACKET, buf)
+            ClientPlayNetworking.send(ItemPipePackets.CHANGE_FILTER_MODE_PACKET, buf)
         }
         whitelistButton.toggle = whitelist
         root.add(whitelistButton, 2, 2)
@@ -88,7 +89,7 @@ class PipeFilterScreenHandler(
             writeIdentifyingData(buf)
             buf.writeInt(1)
             buf.writeBoolean(value)
-            ClientPlayNetworking.send(CHANGE_FILTER_MODE_PACKET, buf)
+            ClientPlayNetworking.send(ItemPipePackets.CHANGE_FILTER_MODE_PACKET, buf)
         }
         matchDurabilityButton.toggle = matchDurability
         root.add(matchDurabilityButton, 4, 2)
@@ -110,7 +111,7 @@ class PipeFilterScreenHandler(
             writeIdentifyingData(buf)
             buf.writeInt(2)
             buf.writeBoolean(value)
-            ClientPlayNetworking.send(CHANGE_FILTER_MODE_PACKET, buf)
+            ClientPlayNetworking.send(ItemPipePackets.CHANGE_FILTER_MODE_PACKET, buf)
         }
         matchTagButton.toggle = matchTag
         root.add(matchTagButton, 6, 3)
@@ -147,7 +148,7 @@ class PipeFilterScreenHandler(
             val buf = PacketByteBufs.create()
             buf.writeInt(index)
             writeIdentifyingData(buf)
-            ClientPlayNetworking.send(CLICK_FILTER_SLOT_PACKET, buf)
+            ClientPlayNetworking.send(ItemPipePackets.CLICK_FILTER_SLOT_PACKET, buf)
 
             return InputResult.PROCESSED
         }
@@ -174,7 +175,7 @@ class PipeFilterScreenHandler(
             val buf = PacketByteBufs.create()
             writeIdentifyingData(buf)
             buf.writeEnumConstant(mode)
-            ClientPlayNetworking.send(CHANGE_SERVO_MODE_PACKET, buf)
+            ClientPlayNetworking.send(ItemPipePackets.CHANGE_SERVO_MODE_PACKET, buf)
             return InputResult.PROCESSED
         }
 
@@ -186,10 +187,6 @@ class PipeFilterScreenHandler(
     }
 
     companion object {
-        val CLICK_FILTER_SLOT_PACKET = identifier("click_filter_slot")
-        val UPDATE_FILTER_SLOT_S2C_PACKET = identifier("update_filter_s2c")
-        val CHANGE_FILTER_MODE_PACKET = identifier("change_whitelist_mode")
-        val CHANGE_SERVO_MODE_PACKET = identifier("change_servo_mode")
 
         val WHITELIST_ICON = identifier("textures/gui/filter_whitelist.png")
         val BLACKLIST_ICON = identifier("textures/gui/filter_blacklist.png")

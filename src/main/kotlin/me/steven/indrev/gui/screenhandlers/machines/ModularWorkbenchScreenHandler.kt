@@ -18,6 +18,7 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
+import me.steven.indrev.packets.common.SelectModuleOnWorkbenchPacket
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -127,7 +128,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                     buf.writeInt(syncId)
                     buf.writeIdentifier(id)
                     buf.writeBlockPos(pos)
-                    ClientPlayNetworking.send(MODULE_SELECT_PACKET, buf)
+                    ClientPlayNetworking.send(SelectModuleOnWorkbenchPacket.MODULE_SELECT_PACKET, buf)
                     layoutSlots(recipe)
                     slotsPanel.addPainters()
                 }
@@ -378,7 +379,6 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     companion object {
         val SCREEN_ID = identifier("modular_workbench_screen")
-        val MODULE_SELECT_PACKET = identifier("module_select_packet")
         val SHIELD_TEXT = { TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE) }
         val PROGRESS_TEXT = { TranslatableText("gui.indrev.progress").formatted(Formatting.BLUE) }
         val MODULE_COUNT = { TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE) }

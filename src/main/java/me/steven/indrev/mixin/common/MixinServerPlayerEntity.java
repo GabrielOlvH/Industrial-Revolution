@@ -6,10 +6,10 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import me.steven.indrev.IndustrialRevolution;
 import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
+import me.steven.indrev.packets.client.SyncAppliedModulesPacket;
 import me.steven.indrev.tools.modular.ArmorModule;
 import me.steven.indrev.utils.EnergyutilsKt;
 import me.steven.indrev.utils.HelperextensionsKt;
@@ -209,7 +209,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         });
         buf.writeDouble(getShieldDurability());
         buf.writeBoolean(ticks - 120 > lastDamageTick);
-        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, SyncAppliedModulesPacket.INSTANCE.getSYNC_MODULE_PACKET(), buf);
     }
 
     @Override

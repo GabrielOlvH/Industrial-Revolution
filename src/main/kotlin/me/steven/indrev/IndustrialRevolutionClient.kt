@@ -25,6 +25,7 @@ import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScree
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.client.ClientNetworkState
+import me.steven.indrev.packets.PacketRegistry
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier
