@@ -125,12 +125,13 @@ class ChopperBlockEntity(tier: Tier) : AOEMachineBlockEntity<BasicMachineConfig>
             return when {
                 energyOf(toolStack).let { it != null && !it.use(amount.toDouble()) } -> false
                 toolStack.isEmpty -> false
-                else -> {
+                toolStack.isDamageable -> {
                     toolStack.damage(amount, world?.random, null)
-                    if (toolStack.damage >= toolStack.maxDamage)
+                    if (toolStack.damage >= toolStack.maxDamage && toolStack.maxDamage > 0)
                         toolStack.decrement(1)
                     true
                 }
+                else -> true
             }
         }
         val block = blockState.block
