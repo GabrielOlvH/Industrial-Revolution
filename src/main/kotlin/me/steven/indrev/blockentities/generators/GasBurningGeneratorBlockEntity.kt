@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
@@ -82,6 +83,10 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
     inner class GasBurningGeneratorFluidComponent : FluidComponent({ this }, FluidAmount.ofWhole(2), 1) {
         override fun isFluidValidForTank(tank: Int, fluid: FluidKey): Boolean {
             return IRFluidFuelRegistry.isFuel(fluid.rawFluid!!)
+        }
+
+        override fun getFilterForTank(tank: Int): FluidFilter {
+            return FluidFilter { IRFluidFuelRegistry.isFuel(it.rawFluid!!) }
         }
     }
 }
