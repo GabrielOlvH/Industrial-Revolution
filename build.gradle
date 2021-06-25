@@ -172,6 +172,8 @@ jar {
     from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
+
+    exclude("me/steven/indrev/datagen")
 }
 
 // configure the maven publication
