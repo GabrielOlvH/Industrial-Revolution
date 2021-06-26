@@ -7,7 +7,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
