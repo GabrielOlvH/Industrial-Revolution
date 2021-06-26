@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "c:raw_leads",
+    "tag": "c:raw_lead_ores",
     "count": 2
   },
   "output": {

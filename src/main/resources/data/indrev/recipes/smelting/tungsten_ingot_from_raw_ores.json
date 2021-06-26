@@ -2,7 +2,7 @@
   "type": "minecraft:smelting",
   "group": "tungsten_ingots",
   "ingredient": {
-    "tag": "c:raw_tungstens"
+    "tag": "c:raw_tungsten_ores"
   },
   "result": "indrev:tungsten_ingot",
   "cookingTime": 200

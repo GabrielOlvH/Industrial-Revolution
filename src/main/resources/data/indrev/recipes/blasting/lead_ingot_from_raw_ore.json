@@ -2,7 +2,7 @@
   "type": "minecraft:smelting",
   "group": "lead_ingots",
   "ingredient": {
-    "tag": "c:raw_leads"
+    "tag": "c:raw_lead_ores"
   },
   "result": "indrev:lead_ingot",
   "cookingTime": 150
