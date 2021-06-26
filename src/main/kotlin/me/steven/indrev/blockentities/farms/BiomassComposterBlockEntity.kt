@@ -29,21 +29,23 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
     companion object {
         fun tick(state: BlockState, blockEntity: BiomassComposterBlockEntity) {
             val vol = blockEntity.fluidInv.getTank(0)
-            if ((blockEntity.level >= 7
-                        && (vol.get().isEmpty
-                        || state[BiomassComposterBlock.CLOSED]
-                        && vol.get().amount() >= vol.maxAmount_F))
-                && blockEntity.ticks < 20)
+            if (blockEntity.isInProgress()) {
                 blockEntity.ticks++
-            blockEntity.done = false
+            }
+            if (blockEntity.isReady() && state[BiomassComposterBlock.CLOSED] && !vol.get().isEmpty && vol.get().fluidKey == FluidKeys.WATER) {
+                blockEntity.fluidInv.setInvFluid(0, FluidKeys.get(IRFluidRegistry.METHANE_STILL).withAmount(vol.get().amount()), Simulation.ACTION)
+                blockEntity.reset()
+            }
+
+            blockEntity.doneInsertionThisTick = false
         }
     }
 
     private val simulated: ThreadLocal<Int> = ThreadLocal.withInitial { 0 }
-    private var done = false
+    private var doneInsertionThisTick = false
 
     override fun attemptInsertion(stack: ItemStack, simulation: Simulation): ItemStack {
-        if (done || level >= 7 || !ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.contains(stack.item)) return stack
+        if (doneInsertionThisTick || level >= 7 || !ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.contains(stack.item)) return stack
         var inserted = 0
         val chance = ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.getValue(stack.item)
         if (simulation.isSimulate) {
@@ -61,7 +63,7 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
             if (!world!!.isClient)
                 sync()
             simulated.set(0)
-            done = true
+            doneInsertionThisTick = true
         }
         return stack.copy().also { it.decrement(inserted) }
     }
@@ -77,7 +79,7 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
 
     private fun hasFluids() = !fluidInv.getTank(0).get().isEmpty
 
-    fun isReady() = level >= 7 && ticks >= 20
+    fun isReady() = level >= 7 && ticks >= getProgressTime()
 
     fun reset() {
         level = 0
@@ -87,7 +89,17 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
             sync()
     }
 
-    inner class BiomassComposterFluidInv : SimpleFixedFluidInv(1, FluidAmount.BUCKET) {
+    fun isInProgress(): Boolean {
+        return when {
+            level < 7 -> false
+            cachedState[BiomassComposterBlock.CLOSED] -> fluidInv.getInvFluid(0).fluidKey == FluidKeys.WATER
+            else -> fluidInv.getInvFluid(0).isEmpty
+        } && ticks < getProgressTime()
+    }
+
+    fun getProgressTime() = if (!cachedState[BiomassComposterBlock.CLOSED]) 120 else 440
+
+    inner class BiomassComposterFluidInv : SimpleFixedFluidInv(1, FluidAmount.of(1, 2)) {
         override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
             return if (fluid.fluidKey == FluidKeys.WATER) super.attemptInsertion(fluid, simulation)
             else fluid
@@ -98,15 +110,10 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
             maxAmount: FluidAmount?,
             simulation: Simulation?
         ): FluidVolume {
-            return if (ticks >= 20 && cachedState[BiomassComposterBlock.CLOSED]) {
-                if (simulation == Simulation.ACTION)
-                    reset()
-                getTank(0).set(FluidKeys.get(IRFluidRegistry.METHANE_STILL).withAmount(FluidAmount.BUCKET))
+            return if (getInvFluid(0).rawFluid == IRFluidRegistry.METHANE_STILL)
                 super.attemptExtraction(filter, maxAmount, simulation)
-            } else if (getInvFluid(0).rawFluid == IRFluidRegistry.METHANE_STILL) {
-                super.attemptExtraction(filter, maxAmount, simulation)
-            }
-            else FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+            else
+                FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
         }
     }
 
