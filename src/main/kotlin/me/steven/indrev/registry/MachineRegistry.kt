@@ -584,6 +584,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .noModelProvider()
 
+        val DIRT_OXYGENATOR_REGISTRY = MachineRegistry("dirt_oxygenator", false, Tier.MK1)
+            .blockProvider { DirtOxygenatorBlock(this, SETTINGS()) }
+            .blockEntityProvider { { pos, state -> DirtOxygenatorBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(hasWorkingState = false)
+
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry("modular_workbench", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
