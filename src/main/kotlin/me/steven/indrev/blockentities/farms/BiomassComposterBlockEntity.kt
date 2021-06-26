@@ -103,7 +103,10 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
                     reset()
                 getTank(0).set(FluidKeys.get(IRFluidRegistry.METHANE_STILL).withAmount(FluidAmount.BUCKET))
                 super.attemptExtraction(filter, maxAmount, simulation)
-            } else FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+            } else if (getInvFluid(0).rawFluid == IRFluidRegistry.METHANE_STILL) {
+                super.attemptExtraction(filter, maxAmount, simulation)
+            }
+            else FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
         }
     }
 
