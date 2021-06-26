@@ -82,7 +82,7 @@ object IRFluidRegistry {
         identifier("${METHANE_IDENTIFIER.path}_still").fluid(METHANE_STILL)
         identifier("${METHANE_IDENTIFIER.path}_flowing").fluid(METHANE_FLOWING)
         identifier("${METHANE_IDENTIFIER.path}_bucket").item(METHANE_BUCKET)
-        IRFluidFuelRegistry.register(METHANE_STILL, 50, 900, 128, FluidAmount.of(1, 4))
+        IRFluidFuelRegistry.register(METHANE_STILL, 70, 900, 128, FluidAmount.of(1, 6))
     }
 
     val COOLANT_IDENTIFIER = identifier("coolant")
