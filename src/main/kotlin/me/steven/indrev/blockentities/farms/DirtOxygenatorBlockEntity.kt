@@ -34,16 +34,13 @@ class DirtOxygenatorBlockEntity(pos: BlockPos, state: BlockState) : MachineBlock
                 streak = 0
             return
         }
-        val attempts = 1 + world!!.random.nextInt(2)
-        val chance = (streak / 300.0).coerceIn(0.0, 0.7)
-        repeat(attempts) {
-            if (world!!.random.nextDouble() < chance) {
-                if (
-                    block.isFertilizable(world, pos, targetState, false)
-                    && block.canGrow(world, world!!.random, target, targetState)
-                ) {
-                    block.grow(world as ServerWorld, world!!.random, target, targetState)
-                }
+        val chance = (streak / 300.0).coerceIn(0.0, 1.0) * 0.6
+        if (world!!.random.nextDouble() < chance) {
+            if (
+                block.isFertilizable(world, pos, targetState, false)
+                && block.canGrow(world, world!!.random, target, targetState)
+            ) {
+                block.grow(world as ServerWorld, world!!.random, target, targetState)
             }
         }
 
