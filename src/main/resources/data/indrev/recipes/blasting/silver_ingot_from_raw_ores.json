@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "group": "silver_ingots",
+  "ingredient": {
+    "tag": "c:raw_silvers"
+  },
+  "result": "indrev:silver_ingot",
+  "cookingTime": 150
+}
