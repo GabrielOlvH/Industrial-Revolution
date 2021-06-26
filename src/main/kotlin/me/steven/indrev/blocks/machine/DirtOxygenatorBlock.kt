@@ -14,7 +14,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class DirtOxygenatorBlock(registry: MachineRegistry, settings: FabricBlockSettings)
-    : FacingMachineBlock(registry, settings, Tier.MK1, IRConfig.machines.chopperMk1, null), AttributeProvider {
+    : FacingMachineBlock(registry, settings, Tier.MK1, IRConfig.machines.dirtOxygenator, null), AttributeProvider {
 
     override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
         if (to.attribute != FluidAttributes.INSERTABLE || blockState!![FACING] == to.searchDirection?.opposite) return

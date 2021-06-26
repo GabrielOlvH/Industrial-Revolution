@@ -184,6 +184,8 @@ class Machines {
 
     val fishingMk4: MachineConfig = MachineConfig(64.0, 500.0, 50000.0, Tier.MK4.io)
 
+    val dirtOxygenator: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
+
     val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
 
     val pump: MachineConfig = MachineConfig(4.0, 20.0, 50.0, Tier.MK1.io)

@@ -19,9 +19,6 @@ import net.minecraft.util.math.BlockPos
 
 class DirtOxygenatorBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK1, MachineRegistry.DIRT_OXYGENATOR_REGISTRY, pos, state), FluidInsertable {
 
-    init {
-    }
-
     private var inserted: FluidAmount = FluidAmount.ZERO
     private var streak = 0
     private var ticksUntilReset = 40
@@ -37,16 +34,14 @@ class DirtOxygenatorBlockEntity(pos: BlockPos, state: BlockState) : MachineBlock
                 streak = 0
             return
         }
-
-        val attempts = (streak % 200).coerceIn(0, 2)
-        val chance = (streak / 100.0).coerceIn(0.0, 0.7)
+        val attempts = 1 + world!!.random.nextInt(2)
+        val chance = (streak / 300.0).coerceIn(0.0, 0.7)
         repeat(attempts) {
             if (world!!.random.nextDouble() < chance) {
                 if (
                     block.isFertilizable(world, pos, targetState, false)
                     && block.canGrow(world, world!!.random, target, targetState)
                 ) {
-
                     block.grow(world as ServerWorld, world!!.random, target, targetState)
                 }
             }
