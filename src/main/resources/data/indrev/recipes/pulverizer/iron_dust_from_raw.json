@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "tag": "c:raw_irons",
+    "tag": "c:raw_iron_ores",
     "count": 2
   },
   "output": {
