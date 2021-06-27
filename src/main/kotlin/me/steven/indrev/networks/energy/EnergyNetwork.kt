@@ -10,6 +10,8 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.Node
+import me.steven.indrev.utils.ReusableArrayDeque
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.isLoaded
 import net.minecraft.block.Block
@@ -34,6 +36,8 @@ open class EnergyNetwork(
             else -> IRConfig.cables.cableMk4
         }
 
+    var deques = Object2ObjectOpenHashMap<BlockPos, ReusableArrayDeque<Node>>()
+
     override fun tick(world: ServerWorld) {
         if (machines.isEmpty()) return
         else if (queue.isEmpty()) {
@@ -42,14 +46,18 @@ open class EnergyNetwork(
         if (queue.isNotEmpty()) {
             val remainingInputs = Long2DoubleOpenHashMap()
             machines.forEach { (pos, directions) ->
-                val q = PriorityQueue(queue[pos] ?: return@forEach)
+                var q = deques[pos]
+                if (q == null) {
+                    q = ReusableArrayDeque(queue[pos] ?: return@forEach)
+                    deques[pos] = q
+                }
                 if (!world.isLoaded(pos)) return@forEach
                 directions.forEach inner@{ dir ->
                     val energyIo = energyOf(world, pos, dir.opposite) ?: return@inner
                     var remaining = energyIo.maxOutput
 
                     while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
-                        val (_, targetPos, _, targetDir) = q.poll()
+                        val (_, targetPos, _, targetDir) = q.removeFirst()
                         if (!world.isLoaded(targetPos)) continue
                         val target = energyOf(world, targetPos, targetDir.opposite) ?: continue
                         if (!target.supportsInsertion()) continue
@@ -65,6 +73,8 @@ open class EnergyNetwork(
                             remainingInputs.addTo(targetPos.asLong(), -moved)
                         }
                     }
+
+                    q.resetHead()
                 }
             }
         }
