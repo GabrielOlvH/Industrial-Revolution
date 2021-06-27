@@ -14,6 +14,7 @@ import me.steven.indrev.blockentities.IRSyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.utils.plus
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
@@ -88,6 +89,12 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : IRSyncableBlockEntity(
 
         override fun getStatistics(filter: FluidFilter?): GroupedFluidInvView.FluidInvStatistic {
             return GroupedFluidInvView.FluidInvStatistic.emptyOf(filter)
+        }
+
+        override fun getAmount_F(filter: FluidFilter): FluidAmount {
+            return if (!filter.matches(initialFluid)) FluidAmount.ZERO
+            else
+                tanks.map { it.getInvFluid(0).amount() }.reduce { first, second -> first + second }
         }
 
         override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
