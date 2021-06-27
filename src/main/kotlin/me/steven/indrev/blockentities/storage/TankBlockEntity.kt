@@ -78,7 +78,7 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : IRSyncableBlockEntity(
             if (initialFluid.isEmpty && !invFluid.isEmpty) {
                 initialFluid = invFluid.fluidKey
             } else if (!invFluid.isEmpty && initialFluid != invFluid.fluidKey) {
-                IndustrialRevolution.LOGGER.warn("Found connected tanks with mismatching fluids @ ${tank.pos}")
+                IndustrialRevolution.LOGGER.debug("Found connected tanks with mismatching fluids @ ${tank.pos}")
                 return false
             }
             tanks.add(tank.fluidComponent)
