@@ -1,7 +1,15 @@
 package me.steven.indrev.utils
 
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import it.unimi.dsi.fastutil.ints.IntList
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import me.steven.indrev.api.ServerWorldExtension
 import me.steven.indrev.mixin.common.*
+import me.steven.indrev.networks.NetworkState
+import me.steven.indrev.networks.energy.EnergyNetwork
+import me.steven.indrev.networks.fluid.FluidNetworkState
+import me.steven.indrev.networks.item.ItemNetworkState
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.minecraft.block.FluidBlock
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -11,9 +19,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.recipe.*
 import net.minecraft.screen.Property
 import net.minecraft.screen.ScreenHandler
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
+import net.minecraft.util.math.Direction
 
 @Suppress("UNCHECKED_CAST")
 val <T> WeightedList<T>.entries: MutableList<WeightedList.Entry<T>>
@@ -38,3 +48,15 @@ fun AnimalEntity.eat(player: PlayerEntity, hand: Hand, stack: ItemStack) = (this
 
 val FluidBlock.fluid: FlowableFluid
     get() = (this as AccessorFluidBlock).fluid
+
+val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>>
+    get() = (this as ServerWorldExtension).indrev_getEnergyCache()
+
+val ServerWorld.energyNetworkState: NetworkState<EnergyNetwork>
+    get() = (this as ServerWorldExtension).indrev_getEnergyNetworkState()
+
+val ServerWorld.fluidNetworkState: FluidNetworkState
+    get() = (this as ServerWorldExtension).indrev_getFluidNetworkState()
+
+val ServerWorld.itemNetworkState: ItemNetworkState
+    get() = (this as ServerWorldExtension).indrev_getItemNetworkState()

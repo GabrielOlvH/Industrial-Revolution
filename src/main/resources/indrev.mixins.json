@@ -19,7 +19,8 @@
     "common.MixinItemStack",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinServerPlayerEntity"
+    "common.MixinServerPlayerEntity",
+    "common.MixinServerWorld"
   ],
   "client": [
     "client.MixinBuiltChunk",

@@ -1,6 +1,8 @@
 package me.steven.indrev.networks.item
 
 import alexiil.mc.lib.attributes.item.ItemInvUtil
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.config.IRConfig
@@ -18,8 +20,8 @@ import java.util.*
 
 class ItemNetwork(
     world: ServerWorld,
-    pipes: MutableSet<BlockPos> = hashSetOf(),
-    containers: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
+    pipes: MutableSet<BlockPos> = ObjectOpenHashSet(),
+    containers: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
 ) : Network(Type.ITEM, world, pipes, containers) {
 
     var tier = Tier.MK1

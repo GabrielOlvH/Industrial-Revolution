@@ -5,6 +5,8 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.config.IRConfig
@@ -25,8 +27,8 @@ import kotlin.collections.component2
 
 class FluidNetwork(
     world: ServerWorld,
-    pipes: MutableSet<BlockPos> = hashSetOf(),
-    containers: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
+    pipes: MutableSet<BlockPos> = ObjectOpenHashSet(),
+    containers: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
 ) : Network(Type.FLUID, world, pipes, containers) {
 
     var tier = Tier.MK1

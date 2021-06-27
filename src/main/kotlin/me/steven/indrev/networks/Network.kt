@@ -2,6 +2,7 @@ package me.steven.indrev.networks
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.networks.client.ClientNetworkInfo
 import me.steven.indrev.networks.client.ClientServoNetworkInfo
 import me.steven.indrev.networks.client.node.ClientServoNodeInfo
@@ -14,18 +15,20 @@ import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.fluid.FluidNetworkState
 import me.steven.indrev.networks.item.ItemNetwork
 import me.steven.indrev.networks.item.ItemNetworkState
+import me.steven.indrev.utils.energyNetworkState
+import me.steven.indrev.utils.fluidNetworkState
+import me.steven.indrev.utils.itemNetworkState
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.World
 import java.util.*
 
 abstract class Network(
     val type: Type<*>,
     val world: ServerWorld,
-    val pipes: MutableSet<BlockPos> = hashSetOf(),
-    val containers: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
+    val pipes: MutableSet<BlockPos> = ObjectOpenHashSet(),
+    val containers: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
 ) {
 
     private val state = type.getNetworkState(world)
@@ -90,8 +93,6 @@ abstract class Network(
 
         abstract val factory: NetworkFactory<T>
 
-        val states: WeakHashMap<World, NetworkState<T>> = WeakHashMap()
-
         var version = 0
 
         abstract fun createEmpty(world: ServerWorld): T
@@ -100,11 +101,6 @@ abstract class Network(
 
         abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>?
 
-        fun clear() {
-            this.states.forEach { (_, state) -> state.clear() }
-            this.states.clear()
-        }
-
         companion object {
             val ENERGY = object : Type<EnergyNetwork>(NetworkState.ENERGY_KEY) {
 
@@ -112,9 +108,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): EnergyNetwork = EnergyNetwork(world)
 
-                override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork> {
-                    return states.computeIfAbsent(world) { NetworkState(this, world) }
-                }
+                override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork> = world.energyNetworkState
 
                 override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
                     return null
@@ -126,9 +120,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): FluidNetwork = FluidNetwork(world)
 
-                override fun getNetworkState(world: ServerWorld): FluidNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ServoNetworkState.readNbt(it) { FluidNetworkState(world) } }, { FluidNetworkState(world) }, key) } as FluidNetworkState
-                }
+                override fun getNetworkState(world: ServerWorld): FluidNetworkState = world.fluidNetworkState
 
                 override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
                     val state = getNetworkState(world)
@@ -149,9 +141,7 @@ abstract class Network(
 
                 override fun createEmpty(world: ServerWorld): ItemNetwork = ItemNetwork(world)
 
-                override fun getNetworkState(world: ServerWorld): ItemNetworkState {
-                    return states.computeIfAbsent(world) { world.persistentStateManager.getOrCreate({ ItemNetworkState.readNbt(it) { ItemNetworkState(world) } },{ ItemNetworkState(world) }, key) } as ItemNetworkState
-                }
+                override fun getNetworkState(world: ServerWorld): ItemNetworkState = world.itemNetworkState
 
                 override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
                     val state = getNetworkState(world)
