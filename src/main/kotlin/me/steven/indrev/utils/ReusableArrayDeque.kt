@@ -8,7 +8,7 @@ import java.util.*
  * When finished, you can reset the head and start again
  * Used by IR's networks
  */
-class ReusableArrayDeque<E>(elements: PriorityQueue<E>) : AbstractMutableList<E>() {
+class ReusableArrayDeque<E : Comparable<E>>(elements: PriorityQueue<E>) : AbstractMutableList<E>() {
     private var head: Int = 0
     private var elementData: Array<Any?>
 
@@ -16,7 +16,8 @@ class ReusableArrayDeque<E>(elements: PriorityQueue<E>) : AbstractMutableList<E>
         private set
 
     init {
-        elementData = elements.sortedWith(elements.comparator()).toTypedArray()
+        val comparator = elements.comparator() ?: Comparator { o1, o2 -> o1.compareTo(o2) }
+        elementData = elements.sortedWith(comparator).toTypedArray()
         size = elementData.size
         if (elementData.isEmpty()) elementData = emptyElementData
     }
