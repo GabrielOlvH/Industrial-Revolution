@@ -67,6 +67,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(cover.block)))
                 blockEntity.coverState = null
                 blockEntity.markDirty()
+                blockEntity.sync()
             }
         }
     }
