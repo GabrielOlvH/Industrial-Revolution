@@ -80,7 +80,7 @@ open class MachineBlock(
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
         if (blockEntity.fluidComponent != null) {
             val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent as FixedFluidInv, player as ServerPlayerEntity, hand)
-            if (result.asActionResult().isAccepted) return result.asActionResult()
+            if (result.didMoveAny()) return result.asActionResult()
         }
         val stack = player?.mainHandStack
         val item = stack?.item

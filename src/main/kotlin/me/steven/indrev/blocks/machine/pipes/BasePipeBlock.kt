@@ -72,44 +72,14 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         }
     }
 
-    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult): ActionResult {
-        val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
+    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
+        val handStack = player.getStackInHand(hand) ?: return ActionResult.FAIL
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.FAIL
-        if (handStack.item == IRItemRegistry.WRENCH && world is ServerWorld) {
-            val dir = getSideFromHit(hit.pos, pos)
-            val (x, y, z) = hit.pos
-            val networkState = type.getNetworkState(world)
-            if (networkState is ServoNetworkState<*>) {
-                if (dir != null) {
-                    val data = networkState.removeEndpointData(pos, dir)
-                    when (data?.type) {
-                        EndpointData.Type.OUTPUT -> {
-                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
-                            return ActionResult.CONSUME
-                        }
-                        EndpointData.Type.RETRIEVER -> {
-                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
-                            return ActionResult.CONSUME
-                        }
-                        else -> {}
-                    }
-                }
-            }
 
-            if (blockEntity.connections[dir]!!.isConnected())
-                blockEntity.connections[dir] = ConnectionType.WRENCHED
-            else
-                blockEntity.connections[hit.side] =
-                    if (isConnectable(world, pos, hit.side)) ConnectionType.CONNECTED else ConnectionType.NONE
-            blockEntity.markDirty()
-            blockEntity.sync()
-            world.updateNeighbors(pos, state.block)
-            Network.handleUpdate(networkState, pos)
-
-
-        }
+        val tryWrench = onWrench(state, world, pos, player, hand, hit)
+        if (tryWrench.isAccepted) return tryWrench
+        else if (handStack.item is IRServoItem) return ActionResult.PASS
         val item = handStack.item
-        if (item is IRServoItem) return ActionResult.FAIL
         if (
             !world.isClient
             && blockEntity.coverState == null
@@ -127,7 +97,42 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 handStack.decrement(1)
             return ActionResult.SUCCESS
         }
-        return ActionResult.SUCCESS
+        return ActionResult.PASS
+    }
+
+    private fun onWrench(state: BlockState,world: World, pos: BlockPos,player: PlayerEntity,   hand: Hand, hit: BlockHitResult): ActionResult {
+        val handStack = player.getStackInHand(hand) ?: return ActionResult.FAIL
+        val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.FAIL
+        if (handStack.item == IRItemRegistry.WRENCH && world is ServerWorld) {
+            val dir = getSideFromHit(hit.pos, pos)
+            val (x, y, z) = hit.pos
+            val networkState = type.getNetworkState(world)
+            if (networkState is ServoNetworkState<*>) {
+                if (dir != null) {
+                    val data = networkState.removeEndpointData(pos, dir)
+                    when (data?.type) {
+                        EndpointData.Type.OUTPUT ->
+                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
+                        EndpointData.Type.RETRIEVER ->
+                            ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
+                        else -> return ActionResult.PASS
+                    }
+                    return ActionResult.SUCCESS
+                }
+            }
+
+            if (blockEntity.connections[dir]!!.isConnected())
+                blockEntity.connections[dir] = ConnectionType.WRENCHED
+            else
+                blockEntity.connections[hit.side] =
+                    if (isConnectable(world, pos, hit.side)) ConnectionType.CONNECTED else ConnectionType.NONE
+            blockEntity.markDirty()
+            blockEntity.sync()
+            world.updateNeighbors(pos, state.block)
+            Network.handleUpdate(networkState, pos)
+            return ActionResult.success(world.isClient)
+        }
+        return ActionResult.PASS
     }
 
     @Suppress("DEPRECATION")

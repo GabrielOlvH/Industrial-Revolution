@@ -85,10 +85,11 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         hand: Hand,
         hit: BlockHitResult?
     ): ActionResult {
-        if (world.isClient) return ActionResult.SUCCESS
+        if (world.isClient) return ActionResult.CONSUME
         val insertable = FluidAttributes.INSERTABLE.get(world, pos)
         val extractable = FluidAttributes.EXTRACTABLE.get(world, pos)
-        return FluidInvUtil.interactHandWithTank(insertable, extractable, player, hand).asActionResult()
+        val res = FluidInvUtil.interactHandWithTank(insertable, extractable, player, hand)
+        return if (res.didMoveAny()) res.asActionResult() else ActionResult.PASS
     }
 
     override fun afterBreak(
