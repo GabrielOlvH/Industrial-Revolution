@@ -114,7 +114,6 @@ object IndustrialRevolution : ModInitializer {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
-        ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->

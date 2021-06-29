@@ -82,7 +82,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                         stack.decrement(1)
 
                         networkState.markDirty()
-                        return ActionResult.CONSUME
+                        return ActionResult.SUCCESS
                     }
                 }
             }

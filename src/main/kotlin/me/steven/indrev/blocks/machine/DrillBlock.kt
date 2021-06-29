@@ -26,7 +26,6 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
 import net.minecraft.world.WorldView
-import java.util.*
 
 open class DrillBlock private constructor(settings: Settings, val part: DrillPart) : Block(settings) {
 
@@ -93,8 +92,8 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
         builder?.add(WORKING)
     }
 
-    enum class DrillPart : StringIdentifiable {
-        TOP {
+    enum class DrillPart(val str: String) : StringIdentifiable {
+        TOP("top") {
             override fun test(world: WorldView, pos: BlockPos): Boolean {
                 return world.getBlockState(pos.down()).isOf(DRILL_MIDDLE)
                         && world.getBlockState(pos.down(2)).isOf(DRILL_BOTTOM)
@@ -102,14 +101,14 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
 
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos.down(2)
         },
-        MIDDLE {
+        MIDDLE("middle") {
             override fun test(world: WorldView, pos: BlockPos): Boolean {
                 return world.getBlockState(pos.up()).isOf(DRILL_TOP)
                         && world.getBlockState(pos.down()).isOf(DRILL_BOTTOM)
             }
             override fun getBlockEntityPos(pos: BlockPos): BlockPos = pos.down()
         },
-        BOTTOM {
+        BOTTOM("bottom") {
             override fun test(world: WorldView, pos: BlockPos): Boolean {
                 return world.getBlockState(pos.up()).isOf(DRILL_MIDDLE)
                         && world.getBlockState(pos.up(2)).isOf(DRILL_TOP)
@@ -122,7 +121,7 @@ open class DrillBlock private constructor(settings: Settings, val part: DrillPar
 
         abstract fun getBlockEntityPos(pos: BlockPos): BlockPos
 
-        override fun asString(): String = toString().lowercase(Locale.getDefault())
+        override fun asString(): String = str
     }
 
     class TopDrillBlock(settings: Settings) : DrillBlock(settings, DrillPart.TOP)

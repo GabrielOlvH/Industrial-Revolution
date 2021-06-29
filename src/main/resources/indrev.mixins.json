@@ -21,8 +21,9 @@
     "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinPlayerInventory",
-    "common.MixinServerPlayerEntity"
+    "common.MixinServerPlayerEntity",
+    "common.MixinServerWorld",
+    "common.MixinPlayerInventory"
   ],
   "client": [
     "client.MixinBuiltChunk",

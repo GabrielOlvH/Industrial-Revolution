@@ -98,29 +98,26 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     protected open fun machineTick() {}
 
     @Environment(EnvType.CLIENT)
-    protected open fun machineClientTick() {}
+    open fun machineClientTick() {}
 
     fun tick() {
         if (this is EnhancerProvider && inventoryComponent != null)
             this.updateEnhancers(inventoryComponent!!.inventory)
+        ticks++
+        propertyDelegate[1] = energyCapacity.toInt()
+        multiblockComponent?.tick(world!!, pos, cachedState)
+        if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
+        IREnergyMovement.spreadNeighbors(this, pos)
 
-        if (world?.isClient == false) {
-            ticks++
-            propertyDelegate[1] = energyCapacity.toInt()
-            multiblockComponent?.tick(world!!, pos, cachedState)
-            if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
-            IREnergyMovement.spreadNeighbors(this, pos)
-
-            transferItems()
-            transferFluids()
-            machineTick()
-            if (isMarkedForUpdate) {
-                lastEnergyUpdate = energy.roundToInt()
-                markDirty()
-                sync()
-                isMarkedForUpdate = false
-            }
-        } else machineClientTick()
+        transferItems()
+        transferFluids()
+        machineTick()
+        if (isMarkedForUpdate) {
+            lastEnergyUpdate = energy.roundToInt()
+            markDirty()
+            sync()
+            isMarkedForUpdate = false
+        }
     }
 
     override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy

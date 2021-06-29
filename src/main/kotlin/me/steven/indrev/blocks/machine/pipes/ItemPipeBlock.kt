@@ -49,13 +49,13 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         state: BlockState,
         world: World,
         pos: BlockPos,
-        player: PlayerEntity?,
-        hand: Hand?,
+        player: PlayerEntity,
+        hand: Hand,
         hit: BlockHitResult
     ): ActionResult {
         val dir = getSideFromHit(hit.pos, pos)
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
-        if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
+        if (hand == Hand.MAIN_HAND && !world.isClient && player.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
             val type = Network.Type.ITEM
             val networkState = type.getNetworkState(world as ServerWorld)
             if (networkState.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {

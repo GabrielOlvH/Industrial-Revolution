@@ -62,7 +62,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             val blockItem =
                 if (block is MachineBlock) MachineBlockItem(block, itemSettings())
                 else BlockItem(block, itemSettings())
-            identifier("${key}_${tier.toString().lowercase(Locale.ROOT)}").apply {
+            identifier("${key}_${tier.id}").apply {
                 block(block)
                 item(blockItem)
                 if (block is MachineBlock) {
@@ -79,7 +79,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         tiers.forEach { tier ->
             val blockEntityType =
                 FabricBlockEntityTypeBuilder.create(entityProvider(tier), block(tier)).build(null)
-            identifier("${key}_${tier.toString().lowercase()}").apply {
+            identifier("${key}_${tier.id}").apply {
                 blockEntityType(blockEntityType)
             }
             blockEntities[tier] = blockEntityType

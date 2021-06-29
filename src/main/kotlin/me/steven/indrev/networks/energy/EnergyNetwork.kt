@@ -3,7 +3,9 @@ package me.steven.indrev.networks.energy
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap
+import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.config.IRConfig
@@ -19,8 +21,8 @@ import kotlin.math.absoluteValue
 
 open class EnergyNetwork(
     world: ServerWorld,
-    val cables: MutableSet<BlockPos> = hashSetOf(),
-    val machines: MutableMap<BlockPos, EnumSet<Direction>> = hashMapOf()
+    val cables: MutableSet<BlockPos> = ObjectOpenHashSet(),
+    val machines: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
 ) : Network(Type.ENERGY, world, cables, machines) {
 
     var tier = Tier.MK1
@@ -38,7 +40,7 @@ open class EnergyNetwork(
             buildQueue()
         }
         if (queue.isNotEmpty()) {
-            val remainingInputs = Object2DoubleOpenHashMap<BlockPos>()
+            val remainingInputs = Long2DoubleOpenHashMap()
             machines.forEach { (pos, directions) ->
                 val q = PriorityQueue(queue[pos] ?: return@forEach)
                 if (!world.isLoaded(pos)) return@forEach
@@ -51,7 +53,7 @@ open class EnergyNetwork(
                         if (!world.isLoaded(targetPos)) continue
                         val target = energyOf(world, targetPos, targetDir.opposite) ?: continue
                         if (!target.supportsInsertion()) continue
-                        val maxInput = remainingInputs.computeIfAbsent(targetPos) { target.maxInput }
+                        val maxInput = remainingInputs.computeIfAbsent(targetPos.asLong()) { target.maxInput }
                         if (maxInput < 1e-9) continue
 
                         val amount = remaining.coerceAtMost(maxInput).coerceAtMost(maxCableTransfer)
@@ -60,7 +62,7 @@ open class EnergyNetwork(
                         val after = target.energy
                         if (moved > 1e-9 && (after - before).absoluteValue > 1e-9) {
                             remaining -= moved
-                            remainingInputs.addTo(targetPos, -moved)
+                            remainingInputs.addTo(targetPos.asLong(), -moved)
                         }
                     }
                 }
