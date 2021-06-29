@@ -61,11 +61,14 @@ open class MachineBlock(
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = registry.blockEntityType(tier).instantiate(pos, state)
 
     override fun <T : BlockEntity?> getTicker(
-        world: World?,
+        world: World,
         state: BlockState?,
         type: BlockEntityType<T>?
     ): BlockEntityTicker<T>? {
-        return BlockEntityTicker { _, _, _, blockEntity -> (blockEntity as? MachineBlockEntity<*>)?.tick() }
+        return if (world.isClient)
+            BlockEntityTicker { _, _, _, blockEntity -> (blockEntity as? MachineBlockEntity<*>)?.machineClientTick() }
+        else
+            BlockEntityTicker { _, _, _, blockEntity -> (blockEntity as? MachineBlockEntity<*>)?.tick() }
     }
 
     override fun onUse(
