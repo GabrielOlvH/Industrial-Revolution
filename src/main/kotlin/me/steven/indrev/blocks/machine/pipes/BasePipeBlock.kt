@@ -253,5 +253,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 else -> null
             }
         }
+
+        val DIRECTIONS = Direction.values()
     }
 }
