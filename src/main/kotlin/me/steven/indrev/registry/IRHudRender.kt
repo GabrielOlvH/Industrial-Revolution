@@ -4,8 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.api.IRPlayerEntityExtension
+import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.items.armor.IRModularArmorItem
+import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -17,7 +19,9 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.EquipmentSlot.*
 import net.minecraft.item.ArmorItem
+import net.minecraft.item.ItemStack
 import net.minecraft.screen.PlayerScreenHandler
+import net.minecraft.util.hit.BlockHitResult
 
 object IRHudRender : HudRenderCallback {
 
@@ -25,7 +29,12 @@ object IRHudRender : HudRenderCallback {
         HudRenderCallback.EVENT.register(this)
     }
 
-    override fun onHudRender(matrices: MatrixStack?, tickDelta: Float) {
+    override fun onHudRender(matrices: MatrixStack, tickDelta: Float) {
+        renderModularArmorHud(matrices)
+        renderTierUpgrade(matrices)
+    }
+
+    private fun renderModularArmorHud(matrices: MatrixStack) {
         val client = MinecraftClient.getInstance()
         val player = client.player
         if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
@@ -64,6 +73,67 @@ object IRHudRender : HudRenderCallback {
             }
         }
     }
+
+    private fun renderTierUpgrade(matrices: MatrixStack) {
+        val client = MinecraftClient.getInstance()
+        val world = client.world ?: return
+        val player = client.player ?: return
+        val hit = MinecraftClient.getInstance().crosshairTarget as? BlockHitResult ?: return
+        val x = client.window.scaledWidth / 2
+        val y = (client.window.scaledHeight / 2) + 8
+
+        val stack = player.mainHandStack
+        val item = stack.item as? IRMachineUpgradeItem ?: return
+        val state = world.getBlockState(hit.blockPos)
+        val block = state?.block as? MachineBlock
+        when {
+            block == null -> {
+                client.itemRenderer.renderInGui(stack, x, y)
+                RenderSystem.disableDepthTest()
+                ScreenDrawing.texturedRect(matrices, x + 5, y + 5, 16, 16, X, -1)
+                RenderSystem.enableDepthTest()
+                matrices.push()
+                matrices.scale(0.5f, 0.5f, 0.5f)
+                client.textRenderer.draw(matrices, "This is not a machine",  x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+                matrices.pop()
+            }
+            !block.registry.upgradeable -> {
+                client.itemRenderer.renderInGui(stack, x, y)
+                RenderSystem.disableDepthTest()
+                ScreenDrawing.texturedRect(matrices, x + 5, y + 5, 16, 16, X, -1)
+                RenderSystem.enableDepthTest()
+                matrices.push()
+                matrices.scale(0.5f, 0.5f, 0.5f)
+                client.textRenderer.draw(matrices, "This machine does not accept tier upgrades", x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+                matrices.pop()
+            }
+            block.tier != item.from -> {
+                client.itemRenderer.renderInGui(stack, x, y)
+                RenderSystem.disableDepthTest()
+                ScreenDrawing.texturedRect(matrices, x + 5, y + 5, 16, 16, X, -1)
+                RenderSystem.enableDepthTest()
+                matrices.push()
+                matrices.scale(0.5f, 0.5f, 0.5f)
+                client.textRenderer.draw(matrices, "This is not the right tier",  x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+                matrices.pop()
+            }
+            else -> {
+                client.itemRenderer.renderInGui(stack, x, y)
+                matrices.push()
+                matrices.scale(0.5f, 0.5f, 0.5f)
+                client.textRenderer.draw(matrices, "Right Click to upgrade machine", x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+                matrices.pop()
+
+                client.itemRenderer.renderInGui(ItemStack(block), x + 8, y + 16)
+                RenderSystem.disableDepthTest()
+                ScreenDrawing.texturedRect(matrices, x + 8 + 16 + 2, y + 16, 16, 16, ARROW, -1)
+                ScreenDrawing.texturedRect(matrices, x + 8 + 16 + 6, y + 18, 16, 16, CHECKMARK, -1)
+                client.itemRenderer.renderInGui(ItemStack(block.registry.block(item.to)), x + 8 + 32 + 4, y + 16)
+            }
+        }
+
+    }
+
 
     fun texturedRect(
         x: Int,
@@ -106,9 +176,7 @@ object IRHudRender : HudRenderCallback {
     private val HUD_MAIN = identifier("textures/gui/hud_main.png")
     private val HOLDER = identifier("textures/gui/hud_armor_holder.png")
 
-    private val SHIELD_ICON_FULL = identifier("textures/gui/shield_icon.png")
-    private val HELMET_ICON = identifier("textures/item/modular_armor_helmet.png")
-    private val CHEST_ICON = identifier("textures/item/modular_armor_chest.png")
-    private val LEGS_ICON = identifier("textures/item/modular_armor_legs.png")
-    private val BOOTS_ICON = identifier("textures/item/modular_armor_boots.png")
+    private val CHECKMARK = identifier("textures/gui/checkmark.png")
+    private val X = identifier("textures/gui/x.png")
+    private val ARROW = identifier("textures/gui/widget_processing_empty.png")
 }

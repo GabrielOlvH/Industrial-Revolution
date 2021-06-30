@@ -53,7 +53,7 @@ import net.minecraft.world.WorldAccess
 import java.util.*
 
 open class MachineBlock(
-    private val registry: MachineRegistry,
+    val registry: MachineRegistry,
     settings: Settings,
     val tier: Tier,
     val config: IConfig?,

@@ -17,7 +17,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import java.util.*
 
-class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private val to: Tier) : Item(settings) {
+class IRMachineUpgradeItem(settings: Settings, val from: Tier, val to: Tier) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         tooltip?.add(TranslatableText("item.indrev.tier_upgrade_${to.toString().lowercase(Locale.getDefault())}.tooltip").formatted(Formatting.GREEN))
         super.appendTooltip(stack, world, tooltip, context)
