@@ -59,7 +59,6 @@ object IRConfig {
         buf.writeString(gson.toJson(cables))
         buf.writeString(gson.toJson(upgrades))
         buf.writeString(gson.toJson(oregen))
-        buf.writeString(gson.toJson(hud))
     }
     
     fun readFromServer(buf: PacketByteBuf) {
@@ -68,7 +67,6 @@ object IRConfig {
         cables = gson.fromJson(buf.readString(), Cables::class.java)
         upgrades = gson.fromJson(buf.readString(), Upgrades::class.java)
         oregen = gson.fromJson(buf.readString(), OreGen::class.java)
-        hud = gson.fromJson(buf.readString(), Hud::class.java)
     }
 }
 
