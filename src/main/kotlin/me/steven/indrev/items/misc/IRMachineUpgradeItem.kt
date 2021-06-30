@@ -54,7 +54,7 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
             upgradedBlockEntity.temperatureComponent?.readNbt(temperatureTag)
 
             context.player?.getStackInHand(context.hand)?.decrement(1)
-            return ActionResult.CONSUME
+            return ActionResult.SUCCESS
         }
         return super.useOnBlock(context)
     }
