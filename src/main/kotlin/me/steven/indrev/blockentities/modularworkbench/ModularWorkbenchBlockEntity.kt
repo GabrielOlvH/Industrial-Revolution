@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
@@ -15,18 +14,17 @@ import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.getAllOfType
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 
 class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY, pos, state) {
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(7)
         this.inventoryComponent = inventory(this) {
 
             maxStackCount = 1
@@ -38,21 +36,17 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             input {
                 slots = (1 until 15).map { it }.toIntArray()
             }
-
             output { slot = 15 }
-
         }
+
+        this.propertiesSize = 7
     }
 
     override val maxOutput: Double = 0.0
 
-    private var processTime: Int by Property(2, 0)
-    private var maxProcessTime: Int by Property(3, 0)
+    private var processTime = 0
+    private var maxProcessTime = 0
     private var state: State = State.IDLE
-        set(value) {
-            field = value
-            propertyDelegate[4] = value.ordinal
-        }
 
     var selectedRecipe: Identifier? = null
     var recipe: ModuleRecipe? = null
@@ -62,8 +56,8 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             return field
         }
 
-    var moduleProcessTime: Int by Property(5, 0)
-    var moduleMaxProcessTime: Int by Property(6, 0)
+    var moduleProcessTime = 0
+    var moduleMaxProcessTime = 0
 
     override fun machineTick() {
         tickModuleInstall()
@@ -155,6 +149,17 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
+    override fun get(index: Int): Int {
+        return when(index) {
+            PROCESS_TIME_ID -> moduleProcessTime
+            MAX_PROCESS_TIME_ID -> moduleMaxProcessTime
+            INSTALL_TIME_ID -> processTime
+            MAX_INSTALL_TIME_ID -> maxProcessTime
+            STATE_ID -> state.ordinal
+            else -> super.get(index)
+        }
+    }
+
     override fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         if (tag?.contains("SelectedRecipe") == true)
@@ -169,18 +174,17 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        processTime = tag?.getInt("ProcessTime") ?: 0
-        if (tag?.contains("SelectedRecipe") == true)
+    override fun fromClientTag(tag: NbtCompound) {
+        if (tag.contains("SelectedRecipe"))
             selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
-        super.fromClientTag(tag)
+        inventoryComponent!!.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putInt("ProcessTime", processTime)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
         if (selectedRecipe != null)
-            tag?.putString("SelectedRecipe", selectedRecipe!!.toString())
-        return super.toClientTag(tag)
+            tag.putString("SelectedRecipe", selectedRecipe!!.toString())
+        inventoryComponent!!.writeNbt(tag)
+        return tag
     }
 
     enum class State {
@@ -188,5 +192,13 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         INSTALLING,
         INCOMPATIBLE,
         MAX_LEVEL;
+    }
+
+    companion object {
+        const val PROCESS_TIME_ID = 2
+        const val MAX_PROCESS_TIME_ID = 3
+        const val INSTALL_TIME_ID = 4
+        const val MAX_INSTALL_TIME_ID = 5
+        const val STATE_ID = 6
     }
 }

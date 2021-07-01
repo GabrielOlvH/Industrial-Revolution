@@ -15,6 +15,7 @@ import me.steven.indrev.recipes.machines.FluidInfuserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.createWrapper
+import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 
@@ -31,9 +32,21 @@ class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             output { slot = 3 }
         }
         this.fluidComponent = FluidInfuserFluidComponent()
+        this.propertiesSize = 11
     }
 
     override val type: IRRecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE
+
+    override fun get(index: Int): Int {
+        return when (index) {
+            TANK_SIZE_ID -> fluidComponent!!.limit.asInt(1000)
+            INPUT_TANK_ID -> fluidComponent!![0].amount().asInt(1000)
+            INPUT_TANK_FLUID_ID -> fluidComponent!![0].rawFluid.rawId
+            OUTPUT_TANK_ID -> fluidComponent!![1].amount().asInt(1000)
+            OUTPUT_TANK_FLUID_ID -> fluidComponent!![1].rawFluid.rawId
+            else -> super.get(index)
+        }
+    }
 
     inner class FluidInfuserFluidComponent : FluidComponent({ this }, FluidAmount.ofWhole(8) , 2) {
         init {
@@ -72,5 +85,13 @@ class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         override fun getInteractInventory(tank: Int): FluidTransferable {
             return createWrapper(tank, tank)
         }
+    }
+
+    companion object {
+        const val TANK_SIZE_ID = 6
+        const val INPUT_TANK_ID = 7
+        const val INPUT_TANK_FLUID_ID = 8
+        const val OUTPUT_TANK_FLUID_ID = 9
+        const val OUTPUT_TANK_ID = 10
     }
 }

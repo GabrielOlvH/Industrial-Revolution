@@ -154,14 +154,13 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         super.readNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        super.fromClientTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
+        movingTicks = tag.getDouble("MovingTicks")
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("MovingTicks", movingTicks)
-        return super.toClientTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.putDouble("MovingTicks", movingTicks)
+        return tag
     }
 
     companion object {

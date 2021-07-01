@@ -24,7 +24,6 @@ object ConfigureIOPackets  {
                 val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@execute
                 blockEntity.getCurrentConfiguration(type)[dir] = mode
                 blockEntity.markDirty()
-                blockEntity.sync()
                 GlobalStateController.update(world, pos, false)
             }
         }

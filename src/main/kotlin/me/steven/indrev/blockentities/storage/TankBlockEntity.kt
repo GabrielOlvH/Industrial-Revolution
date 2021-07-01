@@ -15,13 +15,14 @@ import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.plus
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.math.RoundingMode
 
-class TankBlockEntity(pos: BlockPos, state: BlockState) : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state) {
+class TankBlockEntity(pos: BlockPos, state: BlockState) : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
     val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
 
     companion object {

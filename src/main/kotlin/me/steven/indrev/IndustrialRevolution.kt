@@ -6,11 +6,9 @@ import io.github.ladysnake.pal.AbilitySource
 import io.github.ladysnake.pal.Pal
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
-import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.NetworkEvents
@@ -132,11 +130,11 @@ object IndustrialRevolution : ModInitializer {
                     player.sync()
                 }
 
-                val handler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
-                handler.ctx.run { world, pos ->
-                    val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
-                    blockEntity.sync()
-                }
+                //val handler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
+                //handler.ctx.run { world, pos ->
+                    //val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
+                    //blockEntity.sync()
+                //}
             }
         }
 

@@ -17,6 +17,7 @@ import me.steven.indrev.recipes.machines.ElectrolysisRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.createWrapper
+import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -34,9 +35,23 @@ class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockSt
             coolerSlot = 0
         }
         this.fluidComponent = ElectrolyticSeparatorFluidComponent()
+        this.propertiesSize = 13
     }
 
     override val type: IRRecipeType<ElectrolysisRecipe> = ElectrolysisRecipe.TYPE
+
+    override fun get(index: Int): Int {
+        return when (index) {
+            TANK_SIZE_ID -> fluidComponent!!.limit.asInt(1000)
+            FIRST_INPUT_TANK_ID -> fluidComponent!![0].amount().asInt(1000)
+            FIRST_INPUT_TANK_FLUID_ID -> fluidComponent!![0].rawFluid.rawId
+            SECOND_INPUT_TANK_ID -> fluidComponent!![1].amount().asInt(1000)
+            SECOND_INPUT_TANK_FLUID_ID -> fluidComponent!![1].rawFluid.rawId
+            OUTPUT_TANK_ID -> fluidComponent!![2].amount().asInt(1000)
+            OUTPUT_TANK_FLUID_ID -> fluidComponent!![2].rawFluid.rawId
+            else -> super.get(index)
+        }
+    }
 
     override fun applyDefault(
         state: BlockState,
@@ -96,5 +111,15 @@ class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockSt
         override fun getInteractInventory(tank: Int): FluidTransferable {
             return createWrapper(tank, tank)
         }
+    }
+
+    companion object {
+        const val TANK_SIZE_ID = 6
+        const val FIRST_INPUT_TANK_ID = 7
+        const val FIRST_INPUT_TANK_FLUID_ID = 8
+        const val SECOND_INPUT_TANK_ID = 9
+        const val SECOND_INPUT_TANK_FLUID_ID = 10
+        const val OUTPUT_TANK_ID = 11
+        const val OUTPUT_TANK_FLUID_ID = 12
     }
 }

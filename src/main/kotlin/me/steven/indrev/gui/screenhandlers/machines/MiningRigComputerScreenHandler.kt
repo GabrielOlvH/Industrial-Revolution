@@ -50,13 +50,15 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             root.add(bg, 1.5, 0.9)
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
+
+            val requiredPower = propertyDelegate[MiningRigBlockEntity.ENERGY_REQUIRED_ID].toDouble()
             when {
-                blockEntity.extract(blockEntity.requiredPower, Simulation.SIMULATE) != blockEntity.requiredPower -> {
+                blockEntity.extract(requiredPower, Simulation.SIMULATE) != requiredPower -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(
                                 TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED),
-                                TranslatableText("block.indrev.drill.power_required", blockEntity.requiredPower)
+                                TranslatableText("block.indrev.drill.power_required", requiredPower)
                                     .formatted(Formatting.DARK_RED)
                             )
                         }
@@ -81,7 +83,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.1)
         }
         root.add(WText({
-            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[3]}%")
+            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[MiningRigBlockEntity.EXPLORED_PERCENTAGE_ID]}%")
         }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
 
         root.validate(this)

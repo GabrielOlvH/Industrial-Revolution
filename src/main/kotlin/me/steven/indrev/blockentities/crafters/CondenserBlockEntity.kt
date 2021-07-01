@@ -11,6 +11,7 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -31,9 +32,19 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
                 this.inputTanks = intArrayOf(0)
             }
         }
+        this.propertiesSize = 5
     }
 
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
+
+    override fun get(index: Int): Int {
+        return when(index) {
+            INPUT_TANK_ID -> fluidComponent!![0].amount().asInt(1000)
+            INPUT_TANK_SIZE_ID -> fluidComponent!!.limit.asInt(1000)
+            INPUT_TANK_FLUID_ID -> fluidComponent!![0].rawFluid.rawId
+            else -> super.get(index)
+        }
+    }
 
     override fun getMaxCount(enhancer: Enhancer): Int {
         return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
@@ -58,5 +69,11 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             ConfigurationType.ITEM -> arrayOf(TransferMode.OUTPUT, TransferMode.NONE)
             else -> return super.getValidConfigurations(type)
         }
+    }
+
+    companion object {
+        const val INPUT_TANK_ID = 2
+        const val INPUT_TANK_SIZE_ID = 3
+        const val INPUT_TANK_FLUID_ID = 4
     }
 }

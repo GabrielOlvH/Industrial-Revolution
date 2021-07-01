@@ -101,7 +101,6 @@ open class MachineBlock(
             player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender()
             blockEntity.markDirty()
-            blockEntity.sync()
         } else if (screenHandler != null) {
             player.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         } else return ActionResult.PASS
@@ -131,7 +130,6 @@ open class MachineBlock(
                 update(EnumMap(blockEntity.transferConfig).clone(), blockEntity.transferConfig, rotation)
             }
             blockEntity.markDirty()
-            blockEntity.sync()
         } else if (oldBlockEntity?.inventoryComponent != null) {
             ItemScatterer.spawn(world, pos, oldBlockEntity.inventoryComponent!!.inventory)
             world.updateComparators(pos, this)
@@ -199,7 +197,6 @@ open class MachineBlock(
                     blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
             }
             blockEntity.markDirty()
-            blockEntity.sync()
         }
     }
 

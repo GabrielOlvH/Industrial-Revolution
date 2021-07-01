@@ -1,7 +1,5 @@
 package me.steven.indrev.components
 
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.registry.IRItemRegistry
@@ -10,23 +8,18 @@ import me.steven.indrev.utils.component2
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.PropertyDelegate
 
 class TemperatureComponent(
     private val blockEntity: BlockEntity,
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
-    limit: Int
-) : PropertyDelegateHolder {
+    val limit: Int
+) {
 
-    var temperature: Double by Property(2, 25.0)
+    var temperature: Double = 25.0
     var cooling = true
 
     private var ticks = 0
-
-    init {
-        propertyDelegate[3] = limit
-    }
 
     fun readNbt(tag: NbtCompound?) {
         temperature = tag?.getDouble("Temperature") ?: 0.0
@@ -76,6 +69,4 @@ class TemperatureComponent(
             temperature = (temperature + (2 * random.nextFloat() - 1) / 2).coerceIn(20.0, 35.0)
         }
     }
-
-    override fun getPropertyDelegate(): PropertyDelegate = ComponentKey.PROPERTY_HOLDER.get(blockEntity)!!.propertyDelegate
 }

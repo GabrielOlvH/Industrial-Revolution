@@ -2,6 +2,7 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
+import me.steven.indrev.blockentities.crafters.ElectrolyticSeparatorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.ELECTROLYTIC_SEPARATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -27,7 +28,11 @@ class ElectrolyticSeparatorScreenHandler(syncId: Int, playerInventory: PlayerInv
         setRootPanel(root)
         configure("block.indrev.electrolytic_separator", ctx, playerInventory, blockInventory)
 
-        val fluid = WFluid(ctx, 0)
+        val fluid = WFluid(ctx, propertyDelegate, 0,
+            ElectrolyticSeparatorBlockEntity.TANK_SIZE_ID,
+            ElectrolyticSeparatorBlockEntity.FIRST_INPUT_TANK_ID,
+            ElectrolyticSeparatorBlockEntity.FIRST_INPUT_TANK_FLUID_ID
+        )
         root.add(fluid, 5.0, 1.0)
 
         val processWidget = createProcessBar()
@@ -36,10 +41,18 @@ class ElectrolyticSeparatorScreenHandler(syncId: Int, playerInventory: PlayerInv
         val leftProcessWidget = createProcessBar(WBar.Direction.LEFT, EMPTY_BAR, FULL_BAR)
         root.add(leftProcessWidget, 3.7, 1.8)
 
-        val firstOutputFluid = WFluid(ctx, 1)
+        val firstOutputFluid = WFluid(ctx, propertyDelegate, 1,
+            ElectrolyticSeparatorBlockEntity.TANK_SIZE_ID,
+            ElectrolyticSeparatorBlockEntity.SECOND_INPUT_TANK_ID,
+            ElectrolyticSeparatorBlockEntity.SECOND_INPUT_TANK_FLUID_ID
+        )
         root.add(firstOutputFluid, 2.5, 1.0)
 
-        val secondOutputFluid = WFluid(ctx, 2)
+        val secondOutputFluid = WFluid(ctx, propertyDelegate, 2,
+            ElectrolyticSeparatorBlockEntity.TANK_SIZE_ID,
+            ElectrolyticSeparatorBlockEntity.OUTPUT_TANK_ID,
+            ElectrolyticSeparatorBlockEntity.OUTPUT_TANK_FLUID_ID
+        )
         root.add(secondOutputFluid, 7.5, 1.0)
 
         root.validate(this)

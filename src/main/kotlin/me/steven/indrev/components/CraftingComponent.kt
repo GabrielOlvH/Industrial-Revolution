@@ -2,7 +2,6 @@ package me.steven.indrev.components
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Enhancer
@@ -19,8 +18,8 @@ import net.minecraft.world.World
 import kotlin.math.ceil
 
 open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
-    var processTime: Int by Property(4 + (index * 2), 0)
-    var totalProcessTime: Int by Property(5 + (index * 2), 0)
+    var processTime: Int = 0
+    var totalProcessTime: Int = 0
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
     val inventoryComponent: InventoryComponent get() = machine.inventoryComponent!!
     val temperatureComponent: TemperatureComponent? get() = machine.temperatureComponent

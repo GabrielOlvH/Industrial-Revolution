@@ -9,10 +9,12 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 
-class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state) {
+class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state), BlockEntityClientSerializable {
     init {
         this.inventoryComponent = inventory(this) {}
     }
@@ -29,6 +31,15 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
     }
 
     override fun getEnergyCapacity(): Double = 1000000.0
+
+    override fun fromClientTag(tag: NbtCompound) {
+        inventoryComponent!!.readNbt(tag)
+    }
+
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        inventoryComponent!!.writeNbt(tag)
+        return tag
+    }
 
     class ChargePadEnergyIo(val blockEntity: ChargePadBlockEntity) : EnergyIo {
         override fun getEnergy(): Double = blockEntity.energy

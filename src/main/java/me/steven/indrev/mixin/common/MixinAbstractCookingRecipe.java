@@ -1,6 +1,7 @@
 package me.steven.indrev.mixin.common;
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import me.steven.indrev.components.CraftingComponent;
 import me.steven.indrev.recipes.machines.IRRecipe;
 import me.steven.indrev.recipes.machines.entries.InputEntry;
 import me.steven.indrev.recipes.machines.entries.OutputEntry;
@@ -87,5 +88,10 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     public boolean isEmpty() {
         DefaultedList<Ingredient> defaultedList = this.getIngredients();
         return defaultedList.isEmpty() || defaultedList.stream().anyMatch((ingredient) -> ingredient.getMatchingStacksClient().length == 0);
+    }
+
+    @Override
+    public boolean canStart(@NotNull CraftingComponent<?> component) {
+        return component.fits(output);
     }
 }

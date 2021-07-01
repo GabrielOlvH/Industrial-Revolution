@@ -14,7 +14,6 @@ import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.Configurable
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
@@ -44,28 +43,32 @@ import net.minecraft.world.WorldAccess
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.collections.set
-import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegateHolder, InventoryProvider, EnergyIo,
+    : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegate, PropertyDelegateHolder, InventoryProvider, EnergyIo,
     Configurable, ComponentProvider {
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
-    private var propertyDelegate: PropertyDelegate = ArrayPropertyDelegate(4)
+    var propertiesSize = 4
 
-    private var lastEnergyUpdate = 0
+    /**
+     * This is used for the client's properties. It's a bit of a hack yes I know
+     */
+    private val clientProperties by lazy { ArrayPropertyDelegate(propertiesSize) }
 
-    internal var energy: Double by Property(0, 0.0) { i ->
-        when {
-            i.isNaN() -> {
-                IndustrialRevolution.LOGGER.error("Received NaN energy! $pos, $this", IllegalArgumentException())
-                if (energy.isNaN()) 0.0 else energy
+    internal var energy: Double = 0.0
+        set(value) {
+            field = when {
+                value.isNaN() -> {
+                    IndustrialRevolution.LOGGER.error("Received NaN energy! $pos, $this", IllegalArgumentException())
+                    if (energy.isNaN()) 0.0 else energy
+                }
+                tier == Tier.CREATIVE -> energyCapacity
+                else -> value.coerceIn(0.0, energyCapacity)
             }
-            tier == Tier.CREATIVE -> energyCapacity
-            else -> i.coerceIn(0.0, energyCapacity)
         }
-    }
+
     open val maxInput: Double = tier.io
     open val maxOutput: Double = tier.io
 
@@ -104,7 +107,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         if (this is EnhancerProvider && inventoryComponent != null)
             this.updateEnhancers(inventoryComponent!!.inventory)
         ticks++
-        propertyDelegate[1] = energyCapacity.toInt()
         multiblockComponent?.tick(world!!, pos, cachedState)
         if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
         IREnergyMovement.spreadNeighbors(this, pos)
@@ -112,10 +114,10 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         transferItems()
         transferFluids()
         machineTick()
+
         if (isMarkedForUpdate) {
-            lastEnergyUpdate = energy.roundToInt()
             markDirty()
-            sync()
+            //TODO sync()
             isMarkedForUpdate = false
         }
     }
@@ -126,11 +128,23 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     open fun getEnergyCost(): Double = 0.0
 
-    override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
-
-    fun setPropertyDelegate(propertyDelegate: PropertyDelegate) {
-        this.propertyDelegate = propertyDelegate
+    override fun get(index: Int): Int {
+        return when (index) {
+            ENERGY_ID -> energy.toInt()
+            MAX_ENERGY_ID -> energyCapacity.toInt()
+            TEMPERATURE_ID -> temperatureComponent?.temperature?.toInt() ?: -1
+            MAX_TEMPERATURE_ID -> temperatureComponent?.limit ?: -1
+            else -> -1
+        }
     }
+
+    override fun set(index: Int, value: Int) {
+        error("Unsupported")
+    }
+
+    override fun size(): Int = propertiesSize
+
+    final override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) clientProperties else this
 
     override fun insert(amount: Double, simulation: Simulation?): Double {
         val inserted = amount.coerceAtMost(this.maxInput).coerceAtMost(this.energyCapacity - energy)
@@ -244,26 +258,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        inventoryComponent?.readNbt(tag)
-        temperatureComponent?.readNbt(tag)
-        fluidComponent?.fromTag(tag)
-        multiblockComponent?.readNbt(tag)
-        workingState = tag?.getBoolean("WorkingState") ?: workingState
-        energy = tag?.getDouble("Energy") ?: 0.0
-    }
-
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        if (tag == null) return NbtCompound()
-        inventoryComponent?.writeNbt(tag)
-        temperatureComponent?.writeNbt(tag)
-        fluidComponent?.toTag(tag)
-        multiblockComponent?.writeNbt(tag)
-        tag.putDouble("Energy", energy)
-        tag.putBoolean("WorkingState", workingState)
-        return tag
-    }
-
     private fun transferItems() {
         itemTransferCooldown--
         if (itemTransferCooldown <= 0) {
@@ -365,5 +359,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             if (extractable != null && insertable != null)
                 FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
         }
+    }
+
+    companion object {
+        const val ENERGY_ID = 0
+        const val MAX_ENERGY_ID = 1
+        const val TEMPERATURE_ID = 2
+        const val MAX_TEMPERATURE_ID = 3
     }
 }

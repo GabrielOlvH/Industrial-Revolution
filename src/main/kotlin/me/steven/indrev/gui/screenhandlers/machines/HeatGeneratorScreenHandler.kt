@@ -2,6 +2,7 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.HEAT_GENERATOR_HANDLER
@@ -42,7 +43,7 @@ class HeatGeneratorScreenHandler(
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return@run
             val generatingText = WText({
-                val consumptionRate = blockEntity.getConsumptionRate(propertyDelegate[2].toDouble()).div(10).asInt(1000).toString()
+                val consumptionRate = blockEntity.getConsumptionRate(propertyDelegate[MachineBlockEntity.TEMPERATURE_ID].toDouble()).div(10).asInt(1000).toString()
                 TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
             }, HorizontalAlignment.LEFT)
             root.add(generatingText, 2.5, 1.0)
@@ -50,14 +51,18 @@ class HeatGeneratorScreenHandler(
         root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
 
         val amount = WText({
-            val ratio = propertyDelegate[6]
+            val ratio = propertyDelegate[HeatGeneratorBlockEntity.GENERATION_RATIO_ID]
             TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
         root.add(amount, 2.5, 2.6)
 
         root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.2)
 
-        val fluid = WFluid(ctx, 0)
+        val fluid = WFluid(ctx, propertyDelegate, 0,
+            HeatGeneratorBlockEntity.FLUID_TANK_SIZE_ID,
+            HeatGeneratorBlockEntity.FLUID_TANK_AMOUNT_ID,
+            HeatGeneratorBlockEntity.FLUID_TANK_FLUID_ID
+        )
         root.add(fluid, 8.0, 0.6)
 
         root.validate(this)

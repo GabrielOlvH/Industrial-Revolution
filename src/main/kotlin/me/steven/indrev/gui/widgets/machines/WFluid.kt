@@ -1,71 +1,68 @@
 package me.steven.indrev.gui.widgets.machines
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.netty.buffer.Unpooled
-import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.packets.common.FluidGuiHandInteractionPacket
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
+import net.minecraft.util.registry.Registry
 
-class WFluid(private val ctx: ScreenHandlerContext, val tank: Int) : WWidget() {
+class WFluid(val ctx: ScreenHandlerContext, val delegate: PropertyDelegate, val tankId: Int, val tankSizeId: Int, val amountId: Int, val fluidId: Int) : WWidget() {
     init {
         this.setSize(16, 43)
     }
 
     override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_BOTTOM, -1)
-        ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) ?: return@run
-            val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
-            val energy = fluid.tanks[tank].amount().asInexactDouble() * 1000
-            val maxEnergy = fluid.limit.asInexactDouble() * 1000
-            if (energy > 0) {
-                var percent = energy.toFloat() / maxEnergy.toFloat()
-                percent = (percent * height).toInt() / height.toFloat()
-                val barSize = (height * percent).toInt()
-                if (barSize > 0) {
-                    val offset = 1.0
-                    fluid.tanks[tank].renderGuiRect(
-                        x + offset,
-                        y.toDouble() + height - barSize + offset,
-                        x.toDouble() + width - offset,
-                        y.toDouble() + height - offset
-                    )
-                }
+
+        val fluid = Registry.FLUID.get(delegate[fluidId])
+        val amount = delegate[amountId]
+        val maxAmount = delegate[tankSizeId]
+        if (amount > 0) {
+            var percent = amount.toFloat() / maxAmount.toFloat()
+            percent = (percent * height).toInt() / height.toFloat()
+            val barSize = (height * percent).toInt()
+            if (barSize > 0) {
+                val offset = 1.0
+                val vol = FluidKeys.get(fluid).withAmount(FluidAmount.of(amount.toLong(), 1000))
+                vol.renderGuiRect(
+                    x + offset,
+                    y.toDouble() + height - barSize + offset,
+                    x.toDouble() + width - offset,
+                    y.toDouble() + height - offset
+                )
             }
         }
         RenderSystem.disableDepthTest()
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
-        ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_TOP,-1)
+        ScreenDrawing.texturedRect(matrices, x, y, width, height, TANK_TOP, -1)
     }
 
     override fun addTooltip(information: TooltipBuilder?) {
-        ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) ?: return@run
-            val fluid = ComponentKey.FLUID.get(blockEntity) ?: return@run
-            val tank = fluid.tanks[tank]
-            val energy = tank.amount_F.asInt(1000)
-            val maxEnergy = fluid.limit.asInt(1000)
-            information?.add(*tank.fluidKey.fullTooltip.toTypedArray())
-            information?.add(LiteralText("$energy / $maxEnergy mB"))
-            super.addTooltip(information)
-        }
+        val energy = delegate[amountId]
+        val maxEnergy = delegate[tankSizeId]
+        val fluid = Registry.FLUID.get(delegate[fluidId])
+        information?.add(*FluidKeys.get(fluid).fullTooltip.toTypedArray())
+        information?.add(LiteralText("$energy / $maxEnergy mB"))
     }
 
     override fun onClick(x: Int, y: Int, button: Int): InputResult {
         super.onClick(x, y, button)
         val packet = PacketByteBuf(Unpooled.buffer())
         ctx.run { _, pos -> packet.writeBlockPos(pos) }
-        packet.writeInt(tank)
+        packet.writeInt(tankId)
         ClientPlayNetworking.send(FluidGuiHandInteractionPacket.FLUID_CLICK_PACKET, packet)
         return InputResult.PROCESSED
     }

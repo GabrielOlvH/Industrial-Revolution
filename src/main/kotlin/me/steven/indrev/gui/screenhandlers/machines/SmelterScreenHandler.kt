@@ -2,6 +2,7 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SMELTER_HANDLER
@@ -33,7 +34,7 @@ class SmelterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val processWidget = createProcessBar()
         root.add(processWidget, 4.8, 1.8)
 
-        val fluid = WFluid(ctx, 0)
+        val fluid = WFluid(ctx, propertyDelegate, 0, SmelterBlockEntity.TANK_SIZE, SmelterBlockEntity.TANK_AMOUNT_ID, SmelterBlockEntity.TANK_FLUID_ID)
         root.add(fluid, 6.2, 1.0)
 
         root.validate(this)

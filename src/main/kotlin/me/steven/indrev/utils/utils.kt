@@ -122,3 +122,6 @@ fun unpack(byte: Byte): List<Direction> {
 }
 
 private val DIRECTIONS = Direction.values()
+
+val Fluid?.rawId: Int
+    get() = Registry.FLUID.getRawId(this)

@@ -12,6 +12,7 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -31,6 +32,16 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             init {
                 this.outputTanks = intArrayOf(0)
             }
+        }
+        this.propertiesSize = 6
+    }
+
+    override fun get(index: Int): Int {
+        return when (index) {
+            TANK_SIZE -> fluidComponent!!.limit.asInt(1000)
+            TANK_AMOUNT_ID -> fluidComponent!![0].amount().asInt(1000)
+            TANK_FLUID_ID -> fluidComponent!![0].rawFluid.rawId
+            else -> super.get(index)
         }
     }
 
@@ -59,5 +70,11 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             ConfigurationType.ITEM -> arrayOf(TransferMode.INPUT, TransferMode.NONE)
             else -> return super.getValidConfigurations(type)
         }
+    }
+
+    companion object {
+        const val TANK_SIZE = 4
+        const val TANK_AMOUNT_ID = 5
+        const val TANK_FLUID_ID = 6
     }
 }

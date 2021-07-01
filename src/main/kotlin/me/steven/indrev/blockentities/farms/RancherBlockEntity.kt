@@ -4,8 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
 import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.api.machines.properties.BooleanProperty
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
@@ -19,7 +17,6 @@ import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.SwordItem
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -33,7 +30,6 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(8)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(2, 3, 4, 5) }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
@@ -47,10 +43,10 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     var cooldown = 0.0
     override var range = 5
     private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
-    var feedBabies: Boolean by BooleanProperty(4, true)
-    var mateAdults: Boolean by BooleanProperty(5, true)
-    var matingLimit: Int by Property(6, 16) { i -> i.coerceAtLeast(0) }
-    var killAfter: Int by Property(7, 8) { i -> i.coerceAtLeast(0) }
+    var feedBabies: Boolean = true
+    var mateAdults: Boolean = true
+    var matingLimit: Int = 16
+    var killAfter: Int = 8
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -130,6 +126,16 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }.flatten()
     }
 
+    override fun get(index: Int): Int {
+        return when(index) {
+            FEED_BABIES_ID -> if (feedBabies) 1 else 0
+            MATE_ADULTS -> if (mateAdults) 1 else 0
+            MATING_LIMIT -> matingLimit
+            KILL_AFTER -> killAfter
+            else -> super.get(index)
+        }
+    }
+
     override fun getEnergyCost(): Double {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
@@ -163,22 +169,12 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        super.toClientTag(tag)
-        tag?.putBoolean("feedBabies", feedBabies)
-        tag?.putBoolean("mateAdults", mateAdults)
-        tag?.putInt("matingLimit", matingLimit)
-        tag?.putInt("killAfter", killAfter)
-        return tag!!
-    }
-
-    override fun fromClientTag(tag: NbtCompound?) {
-        super.fromClientTag(tag)
-        feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
-        mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults
-        matingLimit = tag?.getInt("matingLimit") ?: matingLimit
-        killAfter = tag?.getInt("killAfter") ?: killAfter
-    }
-
     override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+
+    companion object {
+        const val FEED_BABIES_ID = 2
+        const val MATE_ADULTS = 3
+        const val MATING_LIMIT = 4
+        const val KILL_AFTER = 5
+    }
 }

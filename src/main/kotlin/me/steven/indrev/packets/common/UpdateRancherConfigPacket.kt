@@ -25,7 +25,6 @@ object UpdateRancherConfigPacket  {
                     blockEntity.matingLimit = matingLimit
                     blockEntity.killAfter = killAfter
                     blockEntity.markDirty()
-                    blockEntity.sync()
                 }
             }
         }

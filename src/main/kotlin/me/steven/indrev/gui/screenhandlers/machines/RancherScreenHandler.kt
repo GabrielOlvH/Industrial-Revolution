@@ -9,6 +9,7 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
@@ -51,10 +52,10 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         setRootPanel(root)
 
-        feedBabies = propertyDelegate[4] == 1
-        mateAdults = propertyDelegate[5] == 1
-        matingLimit = propertyDelegate[6]
-        killAfter = propertyDelegate[7]
+        feedBabies = propertyDelegate[RancherBlockEntity.FEED_BABIES_ID] == 1
+        mateAdults = propertyDelegate[RancherBlockEntity.MATE_ADULTS] == 1
+        matingLimit = propertyDelegate[RancherBlockEntity.MATING_LIMIT]
+        killAfter = propertyDelegate[RancherBlockEntity.KILL_AFTER]
 
         root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
         root.add(buildConfigPanel()) { it.icon(ItemIcon(IRItemRegistry.WRENCH)) }
