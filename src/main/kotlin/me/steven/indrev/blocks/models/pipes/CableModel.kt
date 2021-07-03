@@ -23,7 +23,7 @@ class CableModel(tier: Tier) : BasePipeModel(tier, "cable") {
         val builder: MeshBuilder = renderer.meshBuilder()
         val emitter = builder.emitter
         if (index == 0) {
-
+            modelArray[index] = model
             val sprite = spriteArray[1]!!
             model.getQuads(null, null, null).forEach { q ->
                 emitter.fromVanilla(q, null, null)

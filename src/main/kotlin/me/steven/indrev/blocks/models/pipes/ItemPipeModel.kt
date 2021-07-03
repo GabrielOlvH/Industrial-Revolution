@@ -32,8 +32,8 @@ class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
         blockSpriteId("block/servo_output")
     )
 
-    private val retrieverServoModels = arrayOfNulls<BakedModel>(6)
-    private val outputServoModels = arrayOfNulls<BakedModel>(6)
+    val retrieverServoModels = arrayOfNulls<BakedModel>(6)
+    val outputServoModels = arrayOfNulls<BakedModel>(6)
 
     override fun bake(
         loader: ModelLoader,

@@ -36,21 +36,21 @@ import java.util.function.Function
 import java.util.function.Supplier
 
 
-open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBakedModel {
+open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricBakedModel {
 
-    var baseSprite = SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/${id.replace(Regex("_mk[0-4]"), "")}"))
+    var baseSpriteId = SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier("block/${id.replace(Regex("_mk[0-4]"), "")}"))
 
     var overlayIds: MutableList<SpriteIdentifier> = mutableListOf()
     var workingOverlayIds: MutableList<SpriteIdentifier> = mutableListOf()
 
-    private var sprite: Sprite? = null
-    protected val overlays: Array<Sprite?> by lazy { arrayOfNulls(overlayIds.size) }
-    protected val workingOverlays: Array<Sprite?> by lazy { arrayOfNulls(workingOverlayIds.size) }
+    var baseSprite: Sprite? = null
+    val overlays: Array<Sprite?> by lazy { arrayOfNulls(overlayIds.size) }
+    val workingOverlays: Array<Sprite?> by lazy { arrayOfNulls(workingOverlayIds.size) }
 
-    protected val emissives = hashSetOf<Sprite>()
+    val emissives = hashSetOf<Sprite>()
 
     var defaultMesh: Mesh? = null
-    private var workingStateMesh: Mesh? = null
+    var workingStateMesh: Mesh? = null
 
     fun factoryOverlay() {
         overlayIds.add(blockSpriteId("block/factory_overlay"))
@@ -66,10 +66,10 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
     ): BakedModel {
-        sprite = textureGetter.apply(baseSprite)
+        baseSprite = textureGetter.apply(baseSpriteId)
         overlayIds.processSprites(overlays, textureGetter)
         workingOverlayIds.processSprites(workingOverlays, textureGetter)
-        if (isEmissive(sprite)) emissives.add(sprite!!)
+        if (isEmissive(baseSprite)) emissives.add(baseSprite!!)
 
         buildDefaultMesh()
         buildWorkingStateMesh()
@@ -77,25 +77,25 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         return this
     }
 
-    protected open fun buildDefaultMesh() {
+    open fun buildDefaultMesh() {
         val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
         val builder: MeshBuilder = renderer.meshBuilder()
         val emitter = builder.emitter
 
         for (direction in Direction.values()) {
-            emitter.draw(direction, sprite!!, -1)
+            emitter.draw(direction, baseSprite!!, -1)
             overlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
         }
         defaultMesh = builder.build()
     }
 
-    private fun buildWorkingStateMesh() {
+     fun buildWorkingStateMesh() {
         val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
         val builder: MeshBuilder = renderer.meshBuilder()
         val emitter = builder.emitter
 
         for (direction in Direction.values()) {
-            emitter.draw(direction, sprite!!, -1)
+            emitter.draw(direction, baseSprite!!, -1)
             workingOverlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
             overlays.forEach { overlay -> emitter.draw(direction, overlay!!, -1) }
         }
@@ -114,7 +114,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
     }
 
     //don't judge me
-    private fun isEmissive(sprite: Sprite?) = sprite?.id?.toString()?.contains("emissive") == true
+    fun isEmissive(sprite: Sprite?) = sprite?.id?.toString()?.contains("emissive") == true
 
     override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
 
@@ -122,7 +122,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): MutableCollection<SpriteIdentifier> {
-        val list = mutableListOf(baseSprite)
+        val list = mutableListOf(baseSpriteId)
         list.addAll(overlayIds)
         list.addAll(workingOverlayIds)
         return list
@@ -139,7 +139,7 @@ open class MachineBakedModel(id: String) : UnbakedModel, BakedModel, FabricBaked
 
     override fun isBuiltin(): Boolean = false
 
-    override fun getSprite(): Sprite? = sprite
+    override fun getSprite(): Sprite? = baseSprite
 
     override fun getTransformation(): ModelTransformation = TRANSFORM
 
