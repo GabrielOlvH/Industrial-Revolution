@@ -85,8 +85,8 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
         val fluidToPump = world.getFluidState(currentTarget)
 
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
-            if (!fluidToPump.isEmpty && canUse(config.energyCost)) {
+        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost)) {
+            if (!fluidToPump.isEmpty && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
                 val blockState = world.getBlockState(currentTarget)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
@@ -101,7 +101,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         } else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
             isDescending = false
             movingTicks = movingTicks.roundToInt().toDouble()
-        } else if (use(2.0) && (lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false))) {
+        } else if ((lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false)) && use(2.0)) {
             movingTicks += 0.01
             sync()
         }

@@ -1,13 +1,6 @@
 package me.steven.indrev.blockentities
 
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidExtractable
-import alexiil.mc.lib.attributes.fluid.FluidInsertable
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.item.ItemAttributes
-import alexiil.mc.lib.attributes.item.ItemInvUtil
-import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
@@ -22,27 +15,24 @@ import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
-import me.steven.indrev.networks.energy.IREnergyMovement
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.transferEnergy
+import me.steven.indrev.utils.transferFluids
+import me.steven.indrev.utils.transferItems
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
-import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
-import net.minecraft.block.entity.ChestBlockEntity
 import net.minecraft.client.MinecraftClient
-import net.minecraft.inventory.Inventory
 import net.minecraft.inventory.SidedInventory
-import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
-import kotlin.collections.component1
-import kotlin.collections.component2
 import kotlin.collections.set
+import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegate, PropertyDelegateHolder, InventoryProvider, EnergyIo,
@@ -109,12 +99,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         ticks++
         multiblockComponent?.tick(world!!, pos, cachedState)
         if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
-        IREnergyMovement.spreadNeighbors(this, pos)
 
+        transferEnergy()
         transferItems()
         transferFluids()
-        machineTick()
 
+        machineTick()
         if (isMarkedForUpdate) {
             markDirty()
             //TODO sync()
@@ -174,10 +164,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     fun canUse(amount: Double): Boolean {
         val extracted = amount.coerceAtMost(energy)
-        if (extracted == amount) {
-            return true
-        }
-        return false
+        return extracted == amount
     }
 
     override fun getInventory(state: BlockState?, world: WorldAccess?, pos: BlockPos?): SidedInventory? = inventoryComponent?.inventory
@@ -256,115 +243,5 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             multiblockComponent?.writeNbt(tag)
         }
         return super.writeNbt(tag)
-    }
-
-    private fun transferItems() {
-        itemTransferCooldown--
-        if (itemTransferCooldown <= 0) {
-            itemTransferCooldown = 0
-            inventoryComponent?.itemConfig?.forEach { (direction, mode) ->
-                val pos = pos.offset(direction)
-                val inventory = inventoryComponent?.inventory ?: return@forEach
-                if (mode.output && inventoryComponent!!.itemConfig.autoPush) {
-                    val neighborInv = getInventory(pos)
-                    if (neighborInv != null) {
-                        inventory.outputSlots.forEach { slot ->
-                            transferItems(inventory, neighborInv, slot, direction)
-                        }
-                        return@forEach
-                    }
-                    val insertable = ItemAttributes.INSERTABLE.getFromNeighbour(this, direction)
-                    val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
-                    ItemInvUtil.move(extractable, insertable, 64)
-                }
-                if (mode.input && inventoryComponent!!.itemConfig.autoPull) {
-                    val neighborInv = getInventory(pos)
-                    if (neighborInv != null) {
-                        getAvailableSlots(neighborInv, direction.opposite).forEach { slot ->
-                            transferItems(neighborInv, inventory, slot, direction.opposite)
-                        }
-                        return@forEach
-                    }
-                    val extractable = ItemAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
-                    val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
-                    ItemInvUtil.move(extractable, insertable, 64)
-                }
-            }
-        }
-    }
-
-    protected open fun transferItems(from: Inventory, to: Inventory, slot: Int, direction: Direction) {
-        val toTransfer = from.getStack(slot)
-        while (!toTransfer.isEmpty) {
-            val firstSlot = (0 until to.size()).firstOrNull { firstSlot ->
-                val firstStack = to.getStack(firstSlot)
-                (canMergeItems(firstStack, toTransfer) || firstStack.isEmpty)
-                    && (to !is SidedInventory || to.canInsert(firstSlot, toTransfer, direction.opposite))
-            } ?: break
-            val targetStack = to.getStack(firstSlot)
-            if (from is SidedInventory && !from.canExtract(slot, toTransfer, direction))
-                break
-            val availableSize = (toTransfer.maxCount - targetStack.count).coerceAtMost(toTransfer.count)
-            if (!targetStack.isEmpty) {
-                toTransfer.count -= availableSize
-                targetStack.count += availableSize
-            } else {
-                from.setStack(slot, ItemStack.EMPTY)
-                to.setStack(firstSlot, toTransfer)
-                break
-            }
-            itemTransferCooldown = 12
-        }
-    }
-
-    private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
-        if (inventory is SidedInventory) inventory.getAvailableSlots(side)
-        else (0 until inventory.size()).map { it }.toIntArray()
-
-    private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
-        first.item == second.item
-            && first.damage == second.damage
-            && first.count < first.maxCount
-            && ItemStack.areTagsEqual(first, second)
-
-    private fun getInventory(pos: BlockPos): Inventory? {
-        val blockState = world?.getBlockState(pos)
-        val block = blockState?.block
-        return when {
-            block is InventoryProvider -> block.getInventory(blockState, world, pos)
-            blockState?.hasBlockEntity() == true -> {
-                val blockEntity = world?.getBlockEntity(pos) as? Inventory ?: return null
-                if (blockEntity is ChestBlockEntity && block is ChestBlock)
-                    ChestBlock.getInventory(block, blockState, world, pos, true)
-                else blockEntity
-            }
-            else -> null
-        }
-    }
-
-    private fun transferFluids() {
-        fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
-            if (mode == TransferMode.NONE) return@innerForEach
-            var extractable: FluidExtractable? = null
-            var insertable: FluidInsertable? = null
-            if (mode.output) {
-                insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, direction)
-                extractable = fluidComponent?.extractable
-            }
-            if (mode.input) {
-                extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
-                insertable = fluidComponent?.insertable
-
-            }
-            if (extractable != null && insertable != null)
-                FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
-        }
-    }
-
-    companion object {
-        const val ENERGY_ID = 0
-        const val MAX_ENERGY_ID = 1
-        const val TEMPERATURE_ID = 2
-        const val MAX_TEMPERATURE_ID = 3
     }
 }
