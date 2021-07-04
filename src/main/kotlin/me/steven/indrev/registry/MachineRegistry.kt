@@ -375,7 +375,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id ->
                     MachineBakedModel(id).also {
-                        it.baseSprite = blockSpriteId("block/electric_furnace")
+                        it.baseSpriteId = blockSpriteId("block/electric_furnace")
                         it.factoryOverlay()
                     }
                 }
@@ -396,7 +396,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id ->
                     MachineBakedModel(id).also {
-                        it.baseSprite = blockSpriteId("block/pulverizer")
+                        it.baseSpriteId = blockSpriteId("block/pulverizer")
                         it.factoryOverlay()
                     }
                 }
@@ -417,7 +417,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id ->
                     MachineBakedModel(id).also {
-                        it.baseSprite = blockSpriteId("block/compressor")
+                        it.baseSpriteId = blockSpriteId("block/compressor")
                         it.overlayIds.add(blockSpriteId("block/factory_overlay_compressor"))
                     }
                 }
@@ -438,7 +438,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id ->
                     MachineBakedModel(id).also {
-                        it.baseSprite = blockSpriteId("block/solid_infuser")
+                        it.baseSpriteId = blockSpriteId("block/solid_infuser")
                         it.factoryOverlay()
                     }
                 }

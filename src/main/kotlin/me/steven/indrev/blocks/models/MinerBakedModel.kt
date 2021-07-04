@@ -22,7 +22,7 @@ import java.util.function.Supplier
 class MinerBakedModel(id: String) : MachineBakedModel(id) {
 
     private val screenSpriteId = blockSpriteId("block/mining_rig_screen_emissive")
-    private var screenSprite: Sprite? = null
+    var screenSprite: Sprite? = null
 
     override fun bake(
         loader: ModelLoader,

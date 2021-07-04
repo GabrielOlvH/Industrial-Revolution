@@ -11,6 +11,8 @@ import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
 import me.steven.indrev.packets.client.SyncAppliedModulesPacket;
 import me.steven.indrev.tools.modular.ArmorModule;
+import me.steven.indrev.utils.AccessorUtilsKt;
+import me.steven.indrev.utils.EnergyApiUtilsKt;
 import me.steven.indrev.utils.EnergyutilsKt;
 import me.steven.indrev.utils.HelperextensionsKt;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -44,6 +46,8 @@ import java.util.Map;
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
 
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
+
+    @Shadow public abstract ServerWorld getServerWorld();
 
     private int ticks = 0;
     private int lastDamageTick = 0;
@@ -86,6 +90,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     @Inject(method = "worldChanged", at = @At("TAIL"))
     private void indrev_syncOnDimChange(ServerWorld origin, CallbackInfo ci) {
         sync();
+        AccessorUtilsKt.getFluidNetworkState(origin).onDimChange(this);
+        AccessorUtilsKt.getItemNetworkState(origin).onDimChange(this);
     }
 
     private boolean shouldApplyToShield(DamageSource source) {

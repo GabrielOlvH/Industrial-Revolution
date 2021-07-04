@@ -37,6 +37,17 @@
       }
     ]
   },
+  "custom": {
+    "dashloader:customfactory":  [
+      "me.steven.indrev.compat.dashloader.factories.DashMachineFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashMinerFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashLazuliFluxContainerFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashCableFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashFluidPipeFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashItemPipeFactory",
+      "me.steven.indrev.compat.dashloader.factories.DashTankFactory"
+    ]
+  },
   "mixins": [
     "indrev.mixins.json"
   ],

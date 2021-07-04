@@ -93,8 +93,6 @@ abstract class Network(
 
         abstract val factory: NetworkFactory<T>
 
-        var version = 0
-
         abstract fun createEmpty(world: ServerWorld): T
 
         abstract fun getNetworkState(world: ServerWorld): NetworkState<T>
