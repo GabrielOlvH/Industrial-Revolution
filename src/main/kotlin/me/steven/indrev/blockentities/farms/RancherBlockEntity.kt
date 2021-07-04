@@ -54,8 +54,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         val upgrades = getEnhancers()
         cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
-        val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true }?.toMutableList()
-            ?: mutableListOf()
+        val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true } ?: emptyList()
         if (animals.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return

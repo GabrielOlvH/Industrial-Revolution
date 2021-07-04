@@ -8,6 +8,8 @@ import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.misc.IRMachineUpgradeItem
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -39,10 +41,10 @@ object IRHudRender : HudRenderCallback {
         val player = client.player
         if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
 
-            val color = player.armorItems.toList().firstOrNull { (it.item as? IRModularArmorItem)?.slotType == HEAD }?.let {
-                val item = it.item as IRModularArmorItem
-                item.getColor(it)
-            } ?: -1
+            val color = player.inventory.getArmorStack(HEAD.entitySlotId).let { (stack, item) ->
+                if ((item as? IRModularArmorItem)?.slotType != HEAD) -1
+                else item.getColor(stack)
+            }
             val x = IRConfig.hud.renderPosX + 2
             val y = IRConfig.hud.renderPosY + 2
 

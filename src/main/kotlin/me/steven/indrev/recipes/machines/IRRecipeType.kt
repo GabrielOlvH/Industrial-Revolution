@@ -22,7 +22,7 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
         else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
         val matches = ImmutableList.copyOf(
             world.recipeManager.getAllOfType(this).values
-                .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }.toList()
+                .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }
         )
         recipeCache.putAll(itemStack.item, matches)
         return matches

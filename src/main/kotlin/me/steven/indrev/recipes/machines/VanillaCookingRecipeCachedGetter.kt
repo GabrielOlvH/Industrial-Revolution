@@ -19,7 +19,7 @@ class VanillaCookingRecipeCachedGetter<T : AbstractCookingRecipe>(private val ty
     override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
         if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
         val matches = world.recipeManager.getAllOfType(type).values
-            .filter { recipe -> recipe.input.test(itemStack) }.toSet()
+            .filter { recipe -> recipe.input.test(itemStack) }
         recipeCache.putAll(itemStack.item, matches)
         return matches
     }

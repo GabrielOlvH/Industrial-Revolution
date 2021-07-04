@@ -2,6 +2,7 @@ package me.steven.indrev.recipes
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.utils.asMutableList
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.Recipe
@@ -13,9 +14,13 @@ interface IRecipeGetter<T : Recipe<Inventory>>  {
     fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidKey): Collection<T>
 
     fun getMatchingRecipe(world: ServerWorld, stacks: List<ItemStack>, fluids: List<FluidVolume>): Collection<T> {
-        if (stacks.isEmpty() && fluids.isEmpty()) return emptyList()
-        else if (stacks.isEmpty()) return fluids.flatMap { getMatchingRecipe(world, it.fluidKey) }
-        else if (fluids.isEmpty()) return stacks.flatMap { getMatchingRecipe(world, it) }
-        else return listOf(fluids.flatMap { getMatchingRecipe(world, it.fluidKey) }, stacks.flatMap { getMatchingRecipe(world, it) }).flatten()
+        return when {
+            stacks.isEmpty() && fluids.isEmpty() -> emptyList()
+            stacks.isEmpty() -> fluids.flatMap { getMatchingRecipe(world, it.fluidKey) }
+            fluids.isEmpty() -> stacks.flatMap { getMatchingRecipe(world, it) }
+            else -> stacks.flatMap { getMatchingRecipe(world, it) }.asMutableList().also { results ->
+                results.addAll(fluids.flatMap { getMatchingRecipe(world, it.fluidKey) })
+            }
+        }
     }
 }

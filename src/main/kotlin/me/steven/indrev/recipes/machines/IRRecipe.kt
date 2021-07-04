@@ -7,6 +7,7 @@ import com.google.gson.JsonObject
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
+import me.steven.indrev.utils.asMutableList
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
@@ -59,7 +60,7 @@ interface IRRecipe : Recipe<Inventory> {
     fun matches(inv: List<ItemStack>, fluidVolume: List<FluidVolume>): Boolean {
         if (inv.isEmpty()) return true
         else if (inv.size == 1 && input.size == 1) return matches(inv.first(), fluidVolume)
-        val remainder = input.map { it.copy() }.let { it as? ArrayList<InputEntry> ?: it.toMutableList() }
+        val remainder = input.map { it.copy() }.asMutableList()
         for (stack in inv) {
             val result = remainder.firstOrNull { (ingredient, count) -> ingredient.test(stack) && stack.count >= count } ?: continue
             result.count -= stack.count
