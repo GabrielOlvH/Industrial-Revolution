@@ -32,7 +32,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
 import kotlin.collections.set
-import kotlin.math.roundToInt
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegate, PropertyDelegateHolder, InventoryProvider, EnergyIo,
@@ -243,5 +242,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             multiblockComponent?.writeNbt(tag)
         }
         return super.writeNbt(tag)
+    }
+
+    companion object {
+        const val ENERGY_ID = 0
+        const val MAX_ENERGY_ID = 1
+        const val TEMPERATURE_ID = 2
+        const val MAX_TEMPERATURE_ID = 3
     }
 }
