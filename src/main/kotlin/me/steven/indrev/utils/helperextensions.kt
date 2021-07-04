@@ -91,3 +91,7 @@ operator fun Vec3f.component3() = this.z
 
 operator fun ItemStack.component1(): ItemStack = this
 operator fun ItemStack.component2(): Item = item
+
+fun <T> Collection<T>.asMutableList(): MutableList<T> {
+    return this as? MutableList<T> ?: ArrayList(this)
+}

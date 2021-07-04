@@ -1,7 +1,5 @@
 package me.steven.indrev.blocks.machine
 
-import com.google.common.collect.Iterables
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.registry.MachineRegistry
@@ -72,17 +70,9 @@ class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
     }
 
     override fun onEntityCollision(state: BlockState?, world: World?, pos: BlockPos?, entity: Entity?) {
-        val blockEntity = world?.getBlockEntity(pos) as? ChargePadBlockEntity ?: return
-        val items = when (entity) {
-            is PlayerEntity ->
-                Iterables.concat(entity.inventory.armor, mutableListOf(entity.mainHandStack, entity.offHandStack))
-            is ArmorStandEntity -> entity.itemsEquipped
-            else -> return
-        }.mapNotNull { stack -> energyOf(stack) }
-        var rem = blockEntity.maxOutput
-        items.forEach { handler ->
-            if (rem > 0)
-                rem -= EnergyMovement.move(blockEntity, handler, rem)
+        if (entity is PlayerEntity || entity is ArmorStandEntity) {
+            val blockEntity = world?.getBlockEntity(pos) as? ChargePadBlockEntity ?: return
+            blockEntity.hasCollided = true
         }
     }
 

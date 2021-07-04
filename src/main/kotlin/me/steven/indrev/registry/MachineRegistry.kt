@@ -607,7 +607,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> ChargePadBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.UP) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.UP) (be as? ChargePadBlockEntity)?.energyIo else null } }
             .noModelProvider()
 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
