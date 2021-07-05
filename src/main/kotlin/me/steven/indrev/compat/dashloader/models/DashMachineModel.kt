@@ -5,10 +5,11 @@ import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.utils.blockSpriteId
 import net.minecraft.client.render.model.BakedModel
-import net.quantumfusion.dashloader.DashRegistry
-import net.quantumfusion.dashloader.model.DashModel
+import net.oskarstrom.dashloader.DashRegistry
+import net.oskarstrom.dashloader.api.annotation.DashObject
+import net.oskarstrom.dashloader.model.DashModel
 
-class DashMachineModel : DashModel {
+@DashObject(MachineBakedModel::class) class DashMachineModel : DashModel {
 
 
     var id: String @Serialize(order = 0) get
