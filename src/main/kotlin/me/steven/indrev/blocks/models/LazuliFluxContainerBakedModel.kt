@@ -15,7 +15,7 @@ import net.minecraft.world.BlockRenderView
 import java.util.*
 import java.util.function.Supplier
 
-class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_flux_container") {
+class LazuliFluxContainerBakedModel(id: String) : MachineBakedModel("lazuli_flux_container") {
 
     init {
         overlayIds.addAll(
@@ -42,7 +42,7 @@ class LazuliFluxContainerBakedModel(val id: String) : MachineBakedModel("lazuli_
         val emitter = builder.emitter
 
         for (direction in Direction.values()) {
-            emitter.draw(direction, sprite!!, -1)
+            emitter.draw(direction, baseSprite!!, -1)
             emitter.draw(direction, overlays[4]!!, -1)
         }
         defaultMesh = builder.build()

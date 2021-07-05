@@ -41,6 +41,7 @@ class BasePipeBlockEntity(val pipeType: Network.Type<*>, tier: Tier, pos: BlockP
     }
 
     override fun readNbt(tag: NbtCompound?) {
+        this.coverState = null
         if (tag?.contains("coverState") == true) {
             BlockState.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("coverState")).result().ifPresent { pair ->
                 this.coverState = pair.first
@@ -78,6 +79,7 @@ class BasePipeBlockEntity(val pipeType: Network.Type<*>, tier: Tier, pos: BlockP
     }
 
     override fun fromClientTag(tag: NbtCompound?) {
+        this.coverState = null
         if (tag?.contains("coverState") == true) {
             BlockState.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("coverState")).result().ifPresent { pair ->
                 if (pair.first != null) this.coverState = pair.first

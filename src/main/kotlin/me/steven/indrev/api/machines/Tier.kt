@@ -9,5 +9,7 @@ enum class Tier(val io: Double, val id: String) {
 
     companion object {
         val VALUES = arrayOf(MK1, MK2, MK3, MK4)
+
+        val ALL_VALUES = values()
     }
 }

@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachedBlockView
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.model.*
 import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
@@ -37,9 +38,10 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         identifier("block/${type}_center_${tier.toString().lowercase()}"),
         identifier("block/${type}_side_${tier.toString().lowercase()}")
     )
-    protected val spriteArray = arrayOfNulls<Sprite>(4)
+    val modelArray = arrayOfNulls<BakedModel>(7)
+    val spriteArray = arrayOfNulls<Sprite>(4)
     protected val meshArray = arrayOfNulls<Mesh>(7)
-    private lateinit var transformation: ModelTransformation
+    lateinit var transform: ModelTransformation
 
     override fun bake(
         loader: ModelLoader,
@@ -53,7 +55,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
         val center = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)!!
         meshArray[0] = buildDefaultMesh(0, center)
-        transformation = center.transformation
+        transform = center.transformation
         val sideModel = loader.getOrLoadModel(modelIdCollection[1])
         meshArray[1] = buildDefaultMesh(1, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
         meshArray[2] = buildDefaultMesh(2, sideModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
@@ -65,7 +67,8 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         return this
     }
 
-    protected open fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {
+    open fun buildDefaultMesh(index: Int, model: BakedModel): Mesh {
+        modelArray[index] = model
         val renderer: Renderer = RendererAccess.INSTANCE.renderer!!
         val builder: MeshBuilder = renderer.meshBuilder()
         val emitter = builder.emitter
@@ -76,6 +79,12 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
         return builder.build()
     }
 
+    /**
+     * Used for DashLoader compat
+     */
+    fun buildMeshes() {
+        modelArray.forEachIndexed { index, model -> meshArray[index] = buildDefaultMesh(index, model!!) }
+    }
 
     override fun getModelDependencies(): MutableCollection<Identifier> = modelIdCollection
 
@@ -96,7 +105,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
     override fun getSprite(): Sprite = spriteArray[0]!!
 
-    override fun getTransformation(): ModelTransformation = transformation
+    override fun getTransformation(): ModelTransformation = transform
 
     override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
 
@@ -117,9 +126,13 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
                 255 shl 24 or (ColorProviderRegistry.BLOCK[coverState.block]?.getColor(coverState, world, pos, 0) ?: -1)
 
             val emitter = context.emitter
+            val renderLayer = BlendMode.fromRenderLayer(RenderLayers.getBlockLayer(coverState))
+            val material = RENDER_LAYER_MATERIAL_MAP.computeIfAbsent(renderLayer) {
+                RendererAccess.INSTANCE.renderer!!.materialFinder().blendMode(0, renderLayer).find()
+            }
             DIRECTIONS.forEach { dir ->
                 model.getQuads(coverState, dir, randSupplier.get()).forEach { quad ->
-                    emitter.fromVanilla(quad, TRANSLUCENT, dir)
+                    emitter.fromVanilla(quad, material, dir)
                     if (quad.hasColor()) {
                         emitter.spriteColor(0, color, color, color, color)
                     }
@@ -143,9 +156,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
     }
 
     companion object {
-        val TRANSLUCENT: RenderMaterial by lazy {
-            RendererAccess.INSTANCE.renderer!!.materialFinder().blendMode(0, BlendMode.TRANSLUCENT).find()
-        }
+        val RENDER_LAYER_MATERIAL_MAP = hashMapOf<BlendMode, RenderMaterial>()
         val DIRECTIONS = Direction.values()
     }
 }

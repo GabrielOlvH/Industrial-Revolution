@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.IndustrialRevolution
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.server.world.ServerWorld
@@ -24,6 +25,8 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
         syncedMaps.defaultReturnValue(-1)
     }
 
+    var version = 1
+
     override fun tick(world: ServerWorld) {
         super.tick(world)
 
@@ -34,25 +37,29 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
     fun sync(world: ServerWorld) {
         world.players.forEach { player ->
             val v = syncedMaps.getInt(player.uuid)
-            if (type.version > v) {
+            if (version > v) {
                 val buf = PacketByteBufs.create()
                 buf.writeString(type.key)
                 type.createClientNetworkInfo(world)?.write(buf)
                 ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_NETWORK_SERVOS, buf)
-                syncedMaps[player.uuid] = type.version
+                syncedMaps[player.uuid] =version
             }
         }
     }
 
+    fun onDimChange(playerEntity: PlayerEntity) {
+        syncedMaps.removeInt(playerEntity.uuid)
+    }
+
     override fun onRemoved(pos: BlockPos) {
-        type.version++
+        version++
         super.onRemoved(pos)
         if (endpointData.containsKey(pos.asLong()))
             recentlyRemoved[pos.asLong()] = endpointData.remove(pos.asLong())
     }
 
     override fun onSet(blockPos: BlockPos, network: T) {
-        type.version++
+        version++
         if (recentlyRemoved.containsKey(blockPos.asLong())) {
             endpointData[blockPos.asLong()] = recentlyRemoved.remove(blockPos.asLong())
         }
@@ -75,7 +82,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
     }
 
     fun removeEndpointData(pos: BlockPos, direction: Direction): EndpointData? {
-        type.version++
+        version++
         val datas = endpointData.get(pos.asLong()) ?: return null
         val d = datas.remove(direction)
         if (datas.isEmpty()) endpointData.remove(pos.asLong())

@@ -34,8 +34,8 @@ class FluidPipeModel(tier: Tier) : BasePipeModel(tier, "fluid_pipe") {
     )
 
 
-    private val retrieverServoModels = arrayOfNulls<BakedModel>(6)
-    private val outputServoModels = arrayOfNulls<BakedModel>(6)
+    val retrieverServoModels = arrayOfNulls<BakedModel>(6)
+    val outputServoModels = arrayOfNulls<BakedModel>(6)
 
     override fun bake(
         loader: ModelLoader,
