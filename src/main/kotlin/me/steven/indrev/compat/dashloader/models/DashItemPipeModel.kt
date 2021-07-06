@@ -3,12 +3,15 @@ package me.steven.indrev.compat.dashloader.models
 import io.activej.serializer.annotations.Deserialize
 import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.blocks.models.pipes.CableModel
 import me.steven.indrev.blocks.models.pipes.ItemPipeModel
 import net.minecraft.client.render.model.BakedModel
-import net.quantumfusion.dashloader.DashRegistry
-import net.quantumfusion.dashloader.model.DashModel
+import net.oskarstrom.dashloader.DashRegistry
+import net.oskarstrom.dashloader.api.annotation.DashObject
+import net.oskarstrom.dashloader.model.DashModel
 
-class DashItemPipeModel: DashModel {
+
+@DashObject(ItemPipeModel::class) class DashItemPipeModel: DashModel {
 
     var tier: Int @Serialize(order = 0) get
     var models: IntArray @Serialize(order = 1) get

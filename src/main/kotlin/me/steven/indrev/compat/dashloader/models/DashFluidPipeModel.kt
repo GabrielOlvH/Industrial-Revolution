@@ -5,10 +5,11 @@ import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.models.pipes.FluidPipeModel
 import net.minecraft.client.render.model.BakedModel
-import net.quantumfusion.dashloader.DashRegistry
-import net.quantumfusion.dashloader.model.DashModel
+import net.oskarstrom.dashloader.DashRegistry
+import net.oskarstrom.dashloader.api.annotation.DashObject
+import net.oskarstrom.dashloader.model.DashModel
 
-class DashFluidPipeModel : DashModel {
+@DashObject(FluidPipeModel::class) class DashFluidPipeModel : DashModel {
 
     var tier: Int @Serialize(order = 0) get
     var models: IntArray @Serialize(order = 1) get

@@ -5,10 +5,12 @@ import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.blocks.models.MinerBakedModel
 import me.steven.indrev.utils.blockSpriteId
 import net.minecraft.client.render.model.BakedModel
-import net.quantumfusion.dashloader.DashRegistry
-import net.quantumfusion.dashloader.model.DashModel
+import net.oskarstrom.dashloader.DashRegistry
+import net.oskarstrom.dashloader.api.annotation.DashObject
+import net.oskarstrom.dashloader.model.DashModel
 
-class DashMinerModel : DashModel {
+
+@DashObject(MinerBakedModel::class) class DashMinerModel : DashModel {
 
     var id: String @Serialize(order = 0) get
     var defaultSprite: Int @Serialize(order = 1) get
