@@ -87,7 +87,7 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
         val directions = DIRECTIONS.filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
-        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
+        return SHAPE_CACHE.get().computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
@@ -98,8 +98,10 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
 
     companion object {
 
-        val SHAPE_CACHE = object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
-            override fun rehash(newN: Int) {
+        val SHAPE_CACHE: ThreadLocal<Int2ObjectOpenHashMap<VoxelShape>> = ThreadLocal.withInitial {
+            object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
+                override fun rehash(newN: Int) {
+                }
             }
         }
 
