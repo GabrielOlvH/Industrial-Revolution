@@ -72,7 +72,12 @@ repositories {
             includeGroup "com.github.Technici4n"
             includeGroup "com.github.GabrielOlvH"
             includeGroup "com.github.emilyploszaj"
-            includeGroup "com.github.alphaqu"
+        }
+    }
+    maven {
+        url "https://oskarstrom.net/maven"
+        content {
+            includeGroup "net.oskarstrom"
         }
     }
     maven {
@@ -128,7 +133,7 @@ dependencies {
     dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
-    dependencies.ext.lib("com.github.alphaqu:DashLoader:2.0-dev6", true)
+    dependencies.ext.lib("net.oskarstrom:DashLoader:2.0-dev9", true)
     dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
