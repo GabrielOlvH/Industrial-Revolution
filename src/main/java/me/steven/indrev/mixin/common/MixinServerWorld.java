@@ -7,6 +7,7 @@ import me.steven.indrev.networks.Network;
 import me.steven.indrev.networks.NetworkState;
 import me.steven.indrev.networks.ServoNetworkState;
 import me.steven.indrev.networks.energy.EnergyNetwork;
+import me.steven.indrev.networks.energy.EnergyNetworkState;
 import me.steven.indrev.networks.fluid.FluidNetworkState;
 import me.steven.indrev.networks.item.ItemNetworkState;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
@@ -24,7 +25,7 @@ public abstract class MixinServerWorld implements ServerWorldExtension {
 
     private ItemNetworkState indrev_itemNetworkState = null;
     private FluidNetworkState indrev_fluidNetworkState = null;
-    private NetworkState<EnergyNetwork> indrev_energyNetworkState = null;
+    private EnergyNetworkState indrev_energyNetworkState = null;
 
     @Shadow
     public abstract PersistentStateManager getPersistentStateManager();
@@ -37,10 +38,10 @@ public abstract class MixinServerWorld implements ServerWorldExtension {
 
     @NotNull
     @Override
-    public NetworkState<EnergyNetwork> indrev_getEnergyNetworkState() {
+    public EnergyNetworkState indrev_getEnergyNetworkState() {
         ServerWorld world = (ServerWorld) (Object) this;
         if (indrev_energyNetworkState == null) {
-            indrev_energyNetworkState = new NetworkState<>(Network.Type.Companion.getENERGY(), world);
+            indrev_energyNetworkState = new EnergyNetworkState(world);
         }
         return indrev_energyNetworkState;
     }

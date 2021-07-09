@@ -27,11 +27,15 @@ val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<
         direction: Direction,
         blockState: () -> BlockState
     ): Boolean {
-        if (energyOf(world, pos, direction) != null) {
-            network.appendContainer(pos, direction.opposite)
-        } else if (blockState().block is CableBlock) {
+        if (blockState().block is CableBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
             return true
+        } else {
+            val energyOf = energyOf(world, pos, direction)
+            if (energyOf != null) {
+                network.appendContainer(pos, direction.opposite)
+                if (energyOf.supportsInsertion()) network.insertables.add(pos)
+            }
         }
         return false
     }

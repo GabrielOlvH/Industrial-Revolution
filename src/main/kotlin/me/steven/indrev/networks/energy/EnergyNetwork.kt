@@ -4,6 +4,7 @@ import dev.technici4n.fasttransferlib.api.Simulation
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
@@ -28,7 +29,8 @@ open class EnergyNetwork(
 ) : Network(Type.ENERGY, world, cables, machines) {
 
     var tier = Tier.MK1
-    private val maxCableTransfer: Double
+
+    val maxCableTransfer: Double
         get() = when (tier) {
             Tier.MK1 -> IRConfig.cables.cableMk1
             Tier.MK2 -> IRConfig.cables.cableMk2
@@ -36,46 +38,36 @@ open class EnergyNetwork(
             else -> IRConfig.cables.cableMk4
         }
 
-    var deques = Object2ObjectOpenHashMap<BlockPos, ReusableArrayDeque<Node>>()
+    val insertables = ObjectOpenHashSet<BlockPos>()
+
+    var energy = 0.0
+    val capacity: Double get() = pipes.size * maxCableTransfer
 
     override fun tick(world: ServerWorld) {
-        if (machines.isEmpty()) return
-        else if (queue.isEmpty()) {
-            buildQueue()
-        }
-        if (queue.isNotEmpty()) {
-            val remainingInputs = Long2DoubleOpenHashMap()
-            machines.forEach { (pos, directions) ->
-                var q = deques[pos]
-                if (q == null) {
-                    q = ReusableArrayDeque(queue[pos] ?: return@forEach)
-                    deques[pos] = q
-                }
-                if (!world.isLoaded(pos)) return@forEach
-                directions.forEach inner@{ dir ->
-                    val energyIo = energyOf(world, pos, dir.opposite) ?: return@inner
-                    var remaining = energyIo.maxOutput
+        val totalInput = insertables.sumOf { pos -> energyOf(world, pos, machines[pos]!!.first())?.maxInput ?: 0.0 }
+        var remainders = 0.0
+        insertables.forEachIndexed { index, pos ->
+            machines[pos]!!.forEach { direction ->
+                val energyIo = energyOf(world, pos, direction)?: return@forEach
+                var leftoverToInsert = remainders / (insertables.size - index)
+                if (leftoverToInsert < 1e-9) // to small to split
+                    leftoverToInsert = remainders
 
-                    while (q.isNotEmpty() && energyIo.supportsExtraction() && remaining > 1e-9) {
-                        val (_, targetPos, _, targetDir) = q.removeFirst()
-                        if (!world.isLoaded(targetPos)) continue
-                        val target = energyOf(world, targetPos, targetDir.opposite) ?: continue
-                        if (!target.supportsInsertion()) continue
-                        val maxInput = remainingInputs.computeIfAbsent(targetPos.asLong()) { target.maxInput }
-                        if (maxInput < 1e-9) continue
+                remainders -= leftoverToInsert
 
-                        val amount = remaining.coerceAtMost(maxInput).coerceAtMost(maxCableTransfer)
-                        val before = target.energy
-                        val moved = EnergyMovement.move(energyIo, target, amount)
-                        val after = target.energy
-                        if (moved > 1e-9 && (after - before).absoluteValue > 1e-9) {
-                            remaining -= moved
-                            remainingInputs.addTo(targetPos.asLong(), -moved)
-                        }
-                    }
+                val toTransfer = (energyIo.maxInput / totalInput) * energy + leftoverToInsert
+                val leftover = energyIo.insert(toTransfer, Simulation.ACT)
 
-                    q.resetHead()
-                }
+                energy -= toTransfer - leftover
+
+                assert(energy >= 0)
+                assert(leftover >= 0)
+
+                remainders += leftover
+
+                assert(remainders >= leftover)
+
+                if (remainders < 1e-9) remainders = 0.0
             }
         }
     }
@@ -92,7 +84,5 @@ open class EnergyNetwork(
 
         private val EnergyIo.maxInput: Double
             get() = MAX_VALUE - insert(MAX_VALUE, Simulation.SIMULATE)
-        private val EnergyIo.maxOutput: Double
-            get() = extract(MAX_VALUE, Simulation.SIMULATE)
     }
 }

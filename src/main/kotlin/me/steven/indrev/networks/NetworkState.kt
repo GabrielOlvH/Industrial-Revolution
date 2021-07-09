@@ -24,7 +24,7 @@ open class NetworkState<T : Network>(val type: Network.Type<T>, val world: Serve
         networksByPos[pos.asLong()] = network as T
     }
 
-    fun remove(network: Network) {
+    open fun remove(network: Network) {
         network.pipes.forEach { pos ->
             networksByPos.remove(pos.asLong())
             onRemoved(pos)
@@ -34,6 +34,10 @@ open class NetworkState<T : Network>(val type: Network.Type<T>, val world: Serve
             onRemoved(pos)
         }
         networks.remove(network)
+    }
+
+    open fun add(network: Network) {
+        this.networks.add(network)
     }
 
     open fun tick(world: ServerWorld) {
@@ -47,7 +51,7 @@ open class NetworkState<T : Network>(val type: Network.Type<T>, val world: Serve
             if (!updatedPositions.contains(pos)) {
                 val network = type.factory.deepScan(type, world, BlockPos.fromLong(pos))
                 if (network.pipes.isNotEmpty())
-                    networks.add(network)
+                    add(network)
                 else
                     remove(network)
             }
@@ -56,7 +60,6 @@ open class NetworkState<T : Network>(val type: Network.Type<T>, val world: Serve
         world.profiler.push("indrev_${type.key}NetworkTick")
         networks.forEach { network -> network.tick(world) }
         world.profiler.pop()
-
     }
 
     open fun onRemoved(pos: BlockPos) {

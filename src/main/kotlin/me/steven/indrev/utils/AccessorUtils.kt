@@ -7,6 +7,7 @@ import me.steven.indrev.api.ServerWorldExtension
 import me.steven.indrev.mixin.common.*
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.energy.EnergyNetwork
+import me.steven.indrev.networks.energy.EnergyNetworkState
 import me.steven.indrev.networks.fluid.FluidNetworkState
 import me.steven.indrev.networks.item.ItemNetworkState
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
@@ -52,7 +53,7 @@ val FluidBlock.fluid: FlowableFluid
 val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>>
     get() = (this as ServerWorldExtension).indrev_getEnergyCache()
 
-val ServerWorld.energyNetworkState: NetworkState<EnergyNetwork>
+val ServerWorld.energyNetworkState: EnergyNetworkState
     get() = (this as ServerWorldExtension).indrev_getEnergyNetworkState()
 
 val ServerWorld.fluidNetworkState: FluidNetworkState
