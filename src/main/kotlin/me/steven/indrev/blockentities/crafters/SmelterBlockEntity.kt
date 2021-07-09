@@ -1,5 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
+import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
@@ -12,6 +13,7 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.createWrapper
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -27,13 +29,15 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
+        this.fluidComponent = object : FluidComponent({ this }, FluidAmount.ofWhole(8)) {
+            override fun getInteractInventory(tank: Int): FluidTransferable = createWrapper(0, -1)
+        }
     }
 
     override val type: IRRecipeType<SmelterRecipe> = SmelterRecipe.TYPE
 
     override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
+        return if (enhancer == Enhancer.SPEED) 4 else super.getMaxCount(enhancer)
     }
 
     override fun applyDefault(

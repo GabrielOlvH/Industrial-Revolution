@@ -53,7 +53,7 @@ fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Grou
             throw IllegalArgumentException("maxAmount cannot be negative! (was $maxAmount)")
 
         var fluid = FluidVolumeUtil.EMPTY
-        if (maxAmount.isZero)
+        if (maxAmount.isZero || outputTank < 0)
             return fluid
 
         val thisMax = maxAmount.roundedSub(fluid.amount(), RoundingMode.DOWN)
@@ -65,7 +65,9 @@ fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Grou
 
     override fun attemptInsertion(immutableFluid: FluidVolume, simulation: Simulation?): FluidVolume {
         var fluid = immutableFluid
-        if (fluid.isEmpty)
+        if (inputTank < 0)
+            return fluid
+        else if (fluid.isEmpty)
             return FluidVolumeUtil.EMPTY
         fluid = insertFluid(inputTank, fluid.copy(), simulation)
         if (fluid.isEmpty)
