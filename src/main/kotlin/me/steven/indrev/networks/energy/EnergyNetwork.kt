@@ -44,11 +44,12 @@ open class EnergyNetwork(
     val capacity: Double get() = pipes.size * maxCableTransfer
 
     override fun tick(world: ServerWorld) {
-        val totalInput = insertables.sumOf { pos -> energyOf(world, pos, machines[pos]!!.first())?.maxInput ?: 0.0 }
+        val totalInput = insertables.sumOf { pos -> energyOf(world, pos, machines[pos]!!.first().opposite)?.maxInput ?: 0.0 }
+        if (totalInput <= 0) return
         var remainders = 0.0
         insertables.forEachIndexed { index, pos ->
             machines[pos]!!.forEach { direction ->
-                val energyIo = energyOf(world, pos, direction)?: return@forEach
+                val energyIo = energyOf(world, pos, direction.opposite)?: return@forEach
                 var leftoverToInsert = remainders / (insertables.size - index)
                 if (leftoverToInsert < 1e-9) // to small to split
                     leftoverToInsert = remainders
@@ -60,12 +61,7 @@ open class EnergyNetwork(
 
                 energy -= toTransfer - leftover
 
-                assert(energy >= 0)
-                assert(leftover >= 0)
-
                 remainders += leftover
-
-                assert(remainders >= leftover)
 
                 if (remainders < 1e-9) remainders = 0.0
             }

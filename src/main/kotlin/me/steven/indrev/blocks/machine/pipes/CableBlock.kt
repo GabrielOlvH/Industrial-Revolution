@@ -5,6 +5,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.energy.CableEnergyIo
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.pack
 import net.minecraft.client.item.TooltipContext
@@ -34,7 +35,8 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        if (energyOf(world, pos, dir) != null) return true
+        val handler = energyOf(world, pos, dir)
+        if (handler != null && handler !is CableEnergyIo) return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
         if (!blockEntity.cachedState.isOf(this)) return false
         return blockEntity.connections[dir.opposite]!!.isConnectable()
