@@ -13,10 +13,7 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.Node
-import me.steven.indrev.utils.fluidExtractableOf
-import me.steven.indrev.utils.fluidInsertableOf
-import me.steven.indrev.utils.isLoaded
-import me.steven.indrev.utils.minus
+import me.steven.indrev.utils.*
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -42,6 +39,8 @@ class FluidNetwork(
 
     var lastTransferred: FluidKey? = null
 
+    private val deques = Object2ObjectOpenHashMap<BlockPos, EnumMap<EndpointData.Mode, ReusableArrayDeque<Node>>>()
+
     override fun tick(world: ServerWorld) {
         if (world.time % 20 != 0L) return
         val state = Type.FLUID.getNetworkState(world) as FluidNetworkState
@@ -54,35 +53,47 @@ class FluidNetwork(
 
                 val originalQueue = queue[pos] ?: return@forEach
 
-                val sortedQueues = hashMapOf<EndpointData.Mode, PriorityQueue<Node>>()
-
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
 
-                    val filter = lastTransferred?.exactFilter ?: FluidFilter { true }
-                    val queue =
-                        PriorityQueue(sortedQueues.computeIfAbsent(data.mode!!) {
+                    var deques = deques[pos]
+                    if (deques == null) {
+                        deques = EnumMap(EndpointData.Mode::class.java)
+                        this.deques[pos] = deques
+                    }
+                    var deque = deques[data.mode]
+
+                    val filter = lastTransferred?.exactFilter ?: NO_FLUID_FILTER
+                    if (deque == null) {
+                        deque = ReusableArrayDeque(
                             if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                                PriorityQueue(originalQueue)
+                                originalQueue
                             else
-                                PriorityQueue(data.mode!!.getFluidComparator(world, data.type, filter)).also { q -> q.addAll(originalQueue) }
-                        })
+                                PriorityQueue(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) }).also { q -> q.addAll(originalQueue) }
+                        )
+                        deques[data.mode] = deque
+                    }
+                    if (data.mode == EndpointData.Mode.ROUND_ROBIN) {
+                        deque.apply(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) })
+                    }
 
                     if (data.type == EndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir, queue, state, filter)
+                        tickOutput(pos, dir, deque, state, filter)
                     else if (data.type == EndpointData.Type.RETRIEVER)
-                        tickRetriever(pos, dir, queue, state, filter)
+                        tickRetriever(pos, dir, deque, state, filter)
+
+                    deque.resetHead()
                 }
             }
         }
         lastTransferred = null
     }
 
-    private fun tickOutput(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
+    private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val extractable = fluidExtractableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
-            val (_, targetPos, _, targetDir) = queue.poll()
+            val (_, targetPos, _, targetDir) = queue.removeFirst()
             if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
@@ -96,11 +107,11 @@ class FluidNetwork(
         }
     }
 
-    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: PriorityQueue<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
+    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val insertable = fluidInsertableOf(world, pos, dir.opposite)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
-            val (_, targetPos, _, targetDir) = queue.poll()
+            val (_, targetPos, _, targetDir) = queue.removeFirst()
             if (!world.isLoaded(targetPos)) continue
             val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
@@ -118,5 +129,9 @@ class FluidNetwork(
         val cable = block as? FluidPipeBlock ?: return
         this.tier = cable.tier
         super.appendPipe(block, blockPos)
+    }
+
+    companion object {
+        private val NO_FLUID_FILTER = FluidFilter { true }
     }
 }

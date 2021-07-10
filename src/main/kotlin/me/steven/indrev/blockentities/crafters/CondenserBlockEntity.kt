@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
+import alexiil.mc.lib.attributes.fluid.FluidTransferable
+import alexiil.mc.lib.attributes.fluid.SingleFluidTank
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
@@ -11,6 +13,7 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.createWrapper
 import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
@@ -47,7 +50,7 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     }
 
     override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
+        return if (enhancer == Enhancer.SPEED) 4 else super.getMaxCount(enhancer)
     }
 
     override fun applyDefault(

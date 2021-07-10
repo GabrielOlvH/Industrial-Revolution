@@ -53,6 +53,9 @@ class TemperatureComponent(
 
             if (coolerStack.isDamageable && ticks % 120 == 0)
                 coolerStack.damage(1, random, null)
+            if (coolerStack.damage >= coolerStack.maxDamage) {
+                coolerStack.decrement(1)
+            }
 
             if (temperature <= optimalRange.first + (2 * random.nextFloat() - 1) * 10) {
                 cooling = false

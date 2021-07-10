@@ -4,10 +4,12 @@ import io.activej.serializer.annotations.Deserialize
 import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import net.minecraft.client.render.model.BakedModel
-import net.quantumfusion.dashloader.DashRegistry
-import net.quantumfusion.dashloader.model.DashModel
+import net.oskarstrom.dashloader.DashRegistry
+import net.oskarstrom.dashloader.api.annotation.DashObject
+import net.oskarstrom.dashloader.model.DashModel
 
-class DashLazuliFluxContainerModel : DashModel {
+
+@DashObject(LazuliFluxContainerBakedModel::class) class DashLazuliFluxContainerModel : DashModel {
     var id: String @Serialize(order = 0) get
     var defaultSprite: Int @Serialize(order = 1) get
     var overlays: IntArray @Serialize(order = 2) get
