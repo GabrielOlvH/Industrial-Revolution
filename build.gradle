@@ -147,7 +147,7 @@ dependencies {
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
     dependencies.ext.lib("net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}")
 
-    modCompileOnly("com.github.alphaqu:DashLoader:2.0-dev6")
+    modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
 
     modRuntime("org.yaml:snakeyaml:1.27")
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
