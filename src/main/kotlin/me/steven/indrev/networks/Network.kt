@@ -31,7 +31,7 @@ abstract class Network(
     val containers: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
 ) {
 
-    private val state = type.getNetworkState(world)
+    val state = type.getNetworkState(world)
 
     protected val queue = hashMapOf<BlockPos, PriorityQueue<Node>>()
 
