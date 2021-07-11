@@ -46,9 +46,9 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun machineTick() {
         val upgrades = getEnhancers()
-        if (!use(getEnergyCost())) return
+        if (!canUse(getEnergyCost())) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
-        if (rodStack.isEmpty || rodStack.item !is FishingRodItem) return
+        if (rodStack.isEmpty || rodStack.item !is FishingRodItem || !use(getEnergyCost())) return
         cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
         cooldown = 0.0
