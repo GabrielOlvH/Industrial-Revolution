@@ -26,6 +26,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -47,6 +50,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     @Shadow public abstract ServerWorld getServerWorld();
+
+    @Shadow public abstract void playSound(SoundEvent event, SoundCategory category, float volume, float pitch);
 
     private int ticks = 0;
     private int lastDamageTick = 0;
@@ -80,9 +85,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         }
         lastDamageTick = ticks;
         lastDmg = initial;
-        if (shouldApplyToShield(source))
-            return (float) applyDamageToShield(amount);
-        else
+        if (shouldApplyToShield(source)) {
+            float leftover = (float) applyDamageToShield(amount);
+            if (amount > leftover)
+                world.playSoundFromEntity(null, this, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.PLAYERS, 1f, 0.0001f);
+            return leftover;
+        } else
             return amount;
     }
 
