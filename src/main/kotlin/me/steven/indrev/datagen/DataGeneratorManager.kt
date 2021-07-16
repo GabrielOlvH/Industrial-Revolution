@@ -3,11 +3,14 @@ package me.steven.indrev.datagen
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.datagen.generators.*
 import me.steven.indrev.datagen.utils.MetalModel
 import me.steven.indrev.datagen.utils.MetalSpriteRegistry
+import me.steven.indrev.items.misc.IRMachineUpgradeItem
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
+import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Items
 import net.minecraft.util.DyeColor
@@ -76,6 +79,14 @@ class DataGeneratorManager(namespace: String) {
         DyeColor.values().forEach {
             val name = it.getName()
             materialRecipeGenerator.register("harden_${name}_concrete_powder", hardenConcretePowder(name))
+        }
+
+        MachineRegistry.MAP.values.distinct().forEach { registry ->
+            if (registry.upgradeable) {
+                arrayOf(Tier.MK1, Tier.MK2, Tier.MK3).forEach { tier ->
+                    materialRecipeGenerator.register("${Registry.ITEM.getId(registry.block(Tier.MK1).asItem()).toString().replace("_mk1", "")}_${tier.id}_to_${tier.next().id}", upgradeMachineRecipe(registry, tier, tier.next()))
+                }
+            }
         }
 
         itemModelGenerator.register(IRItemRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
@@ -260,6 +271,25 @@ class DataGeneratorManager(namespace: String) {
             }
 
             override fun getFileName(t: String, id: Identifier): String = "fluid_infusing/harden_${color}_concrete_powder"
+        }
+    }
+
+    private fun upgradeMachineRecipe(registry: MachineRegistry, from: Tier, to: Tier) : JsonFactory<String> {
+        return object : JsonFactory<String> {
+            override fun generate(): JsonObject {
+                val json = JsonObject()
+                json.addProperty("type", "crafting_shapeless")
+                val ingredients = JsonArray()
+                ingredients.add(JsonObject().also { it.addProperty("item", Registry.ITEM.getId(registry.block(from).asItem()).toString()) })
+                ingredients.add(JsonObject().also { it.addProperty("item", Registry.ITEM.getId(IRMachineUpgradeItem.fromTier(from)).toString()) })
+                json.add("ingredients", ingredients)
+                val output = JsonObject()
+                output.addProperty("item", Registry.ITEM.getId(registry.block(to).asItem()).toString())
+                json.add("result", output)
+                return json
+            }
+
+            override fun getFileName(t: String, id: Identifier): String = "upgrade/${super.getFileName(t, id)}"
         }
     }
 }

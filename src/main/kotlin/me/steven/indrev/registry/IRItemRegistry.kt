@@ -195,9 +195,9 @@ object IRItemRegistry {
 
         identifier("energy_reader").item(ENERGY_READER)
 
-        identifier("tier_upgrade_mk2").item(IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2))
-        identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
-        identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
+        identifier("tier_upgrade_mk2").item(TIER_UPGRADE_MK2)
+        identifier("tier_upgrade_mk3").item(TIER_UPGRADE_MK3)
+        identifier("tier_upgrade_mk4").item(TIER_UPGRADE_MK4)
 
         identifier("biomass").item(BIOMASS)
         identifier("untanned_leather").item(DEFAULT_ITEM())
@@ -314,6 +314,10 @@ object IRItemRegistry {
             tooltip?.add(TranslatableText("item.indrev.heat_coil.tooltip").formatted(Formatting.BLUE))
         }
     }
+
+    val TIER_UPGRADE_MK2 = IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2)
+    val TIER_UPGRADE_MK3 = IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3)
+    val TIER_UPGRADE_MK4 = IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4)
 
     val MINING_DRILL_MK1 =
         IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().customDamage(EnergyDamageHandler))

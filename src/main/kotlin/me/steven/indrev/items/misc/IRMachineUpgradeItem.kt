@@ -5,6 +5,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -57,5 +58,16 @@ class IRMachineUpgradeItem(settings: Settings, val from: Tier, val to: Tier) : I
             return ActionResult.SUCCESS
         }
         return super.useOnBlock(context)
+    }
+
+    companion object {
+        fun fromTier(tier: Tier): IRMachineUpgradeItem {
+            return when (tier) {
+                Tier.MK1 -> IRItemRegistry.TIER_UPGRADE_MK2
+                Tier.MK2 -> IRItemRegistry.TIER_UPGRADE_MK3
+                Tier.MK3 -> IRItemRegistry.TIER_UPGRADE_MK4
+                else -> error("no upgrade available")
+            }
+        }
     }
 }

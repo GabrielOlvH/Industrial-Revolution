@@ -7,6 +7,15 @@ enum class Tier(val io: Double, val id: String) {
     MK4(4096.0, "mk4"),
     CREATIVE(4096.0, "creative");
 
+    fun next(): Tier {
+        return when (this) {
+            MK1 -> MK2
+            MK2 -> MK3
+            MK3 -> MK4
+            else -> error("no tier after $this")
+        }
+    }
+
     companion object {
         val VALUES = arrayOf(MK1, MK2, MK3, MK4)
 
