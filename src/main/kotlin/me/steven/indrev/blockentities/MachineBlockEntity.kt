@@ -184,7 +184,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
         return when (type) {
             ConfigurationType.ITEM -> TransferMode.DEFAULT
-            ConfigurationType.FLUID, ConfigurationType.ENERGY -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT)
+            ConfigurationType.FLUID, ConfigurationType.ENERGY -> arrayOf(TransferMode.INPUT, TransferMode.OUTPUT, TransferMode.NONE)
         }
     }
 
