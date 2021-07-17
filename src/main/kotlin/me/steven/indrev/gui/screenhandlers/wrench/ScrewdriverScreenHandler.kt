@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
@@ -21,8 +22,9 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
+import java.util.*
 
-class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
+class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext, val configs: EnumMap<ConfigurationType, SideConfiguration>) :
     IRGuiScreenHandler(
         SCREWDRIVER_HANDLER,
         syncId,
@@ -45,7 +47,7 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
 
             val availableTypes = ConfigurationType.getTypes(blockEntity)
             currentType = availableTypes.first()
-            var widget = blockEntity.getConfigurationPanel(world, pos, playerInventory, currentType) ?: return@run
+            var widget = configs[currentType]?.getConfigurationPanel(world, pos, blockEntity, playerInventory, currentType) ?: return@run
             val configY = if (availableTypes.size > 1) 2 else 1
             root.add(widget, 0, configY)
             val configTypeButton = WButton(currentType.title)
@@ -53,7 +55,7 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
                 currentType = currentType.next(availableTypes)
                 configTypeButton.label = currentType.title
                 root.remove(widget)
-                widget = blockEntity.getConfigurationPanel(world, pos, playerInventory, currentType) ?: return@setOnClick
+                widget = configs[currentType]?.getConfigurationPanel(world, pos, blockEntity, playerInventory, currentType) ?: return@setOnClick
                 root.add(widget, 0, configY)
                 root.validate(this)
             }

@@ -1,5 +1,7 @@
 package me.steven.indrev.gui.screenhandlers
 
+import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.gui.screenhandlers.machines.*
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
@@ -12,6 +14,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.math.Direction
+import java.util.*
 
 val COAL_GENERATOR_HANDLER = CoalGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::CoalGeneratorScreenHandler)
 val SOLAR_GENERATOR_HANDLER = SolarGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::SolarGeneratorScreenHandler)
@@ -63,7 +66,24 @@ val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterScree
 
 val DRILL_HANDLER = MiningRigDrillScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigDrillScreenHandler)
 
-val SCREWDRIVER_HANDLER = ScrewdriverScreenHandler.SCREEN_ID.registerScreenHandler(::ScrewdriverScreenHandler)
+val SCREWDRIVER_HANDLER = ScreenHandlerRegistry.registerExtended(ScrewdriverScreenHandler.SCREEN_ID) { syncId, inv, buf ->
+    val pos = buf.readBlockPos()
+    val itemConfig = SideConfiguration(ConfigurationType.ITEM)
+    if (buf.readBoolean())
+        itemConfig.readBuf(buf)
+    val fluidConfig = SideConfiguration(ConfigurationType.FLUID)
+    if (buf.readBoolean())
+        fluidConfig.readBuf(buf)
+    val energyConfig = SideConfiguration(ConfigurationType.ENERGY)
+    if (buf.readBoolean())
+        energyConfig.readBuf(buf)
+
+    val map = EnumMap<ConfigurationType, SideConfiguration>(ConfigurationType::class.java)
+    map[ConfigurationType.ITEM] = itemConfig
+    map[ConfigurationType.FLUID] = fluidConfig
+    map[ConfigurationType.ENERGY] = energyConfig
+    ScrewdriverScreenHandler(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), map)
+} as ExtendedScreenHandlerType<ScrewdriverScreenHandler>
 
 val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportScreenHandler.SCREEN_ID) { syncId, inv, buf ->
     val pos = buf.readBlockPos()
