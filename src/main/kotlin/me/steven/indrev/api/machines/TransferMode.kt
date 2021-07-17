@@ -35,6 +35,8 @@ enum class TransferMode(val rgb: Long, val input: Boolean, val output: Boolean) 
 
     companion object {
         val DEFAULT = arrayOf(INPUT, OUTPUT, INPUT_OUTPUT, NONE)
+        val SOLID_INFUSER = arrayOf(INPUT, OUTPUT, INPUT_OUTPUT, INPUT_FIRST, INPUT_SECOND, NONE)
+        val ELECTROLYTIC_SEPARATOR = arrayOf(TransferMode.INPUT, TransferMode.OUTPUT_FIRST, TransferMode.OUTPUT_SECOND, TransferMode.NONE)
     }
 
 }

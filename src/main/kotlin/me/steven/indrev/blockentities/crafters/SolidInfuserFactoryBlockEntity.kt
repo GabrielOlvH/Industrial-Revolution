@@ -57,7 +57,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
         return when (type) {
-            ConfigurationType.ITEM -> TransferMode.values()
+            ConfigurationType.ITEM -> TransferMode.SOLID_INFUSER
             else -> super.getValidConfigurations(type)
         }
     }
