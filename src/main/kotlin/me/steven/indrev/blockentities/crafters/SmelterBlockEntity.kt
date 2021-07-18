@@ -15,7 +15,9 @@ import me.steven.indrev.recipes.machines.SmelterRecipe
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.rawId
 import me.steven.indrev.utils.createWrapper
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
@@ -36,7 +38,7 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             }
             override fun getInteractInventory(tank: Int): FluidTransferable = createWrapper(0, -1)
         }
-        this.propertiesSize = 6
+        this.propertiesSize = 9
     }
 
     override fun get(index: Int): Int {
@@ -76,8 +78,8 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     }
 
     companion object {
-        const val TANK_SIZE = 4
-        const val TANK_AMOUNT_ID = 5
-        const val TANK_FLUID_ID = 6
+        const val TANK_SIZE = 6
+        const val TANK_AMOUNT_ID = 7
+        const val TANK_FLUID_ID = 8
     }
 }

@@ -16,11 +16,13 @@ import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.createWrapper
 import me.steven.indrev.utils.rawId
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 
 class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY, pos, state) {
+    : CraftingMachineBlockEntity<FluidInfuserRecipe>(tier, MachineRegistry.FLUID_INFUSER_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     override val enhancerSlots: IntArray = intArrayOf(4, 5, 6, 7)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
@@ -46,6 +48,15 @@ class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             OUTPUT_TANK_FLUID_ID -> fluidComponent!![1].rawFluid.rawId
             else -> super.get(index)
         }
+    }
+
+    override fun fromClientTag(tag: NbtCompound) {
+        fluidComponent!!.fromTag(tag)
+    }
+
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        fluidComponent!!.toTag(tag)
+        return tag
     }
 
     inner class FluidInfuserFluidComponent : FluidComponent({ this }, FluidAmount.ofWhole(8) , 2) {

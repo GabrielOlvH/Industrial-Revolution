@@ -6,11 +6,11 @@ import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
-import me.steven.indrev.blockentities.IRSyncableBlockEntity
+import me.steven.indrev.blockentities.SyncableBlockEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.collection.DefaultedList
 
-open class FluidComponent(val syncable: () -> IRSyncableBlockEntity?, val limit: FluidAmount, tankCount: Int = 1) : SimpleFixedFluidInv(tankCount, limit) {
+open class FluidComponent(val syncable: () -> SyncableBlockEntity?, val limit: FluidAmount, tankCount: Int = 1) : SimpleFixedFluidInv(tankCount, limit) {
 
     init {
         addListener({_, _, _, _ -> syncable()?.markForUpdate() }, {})

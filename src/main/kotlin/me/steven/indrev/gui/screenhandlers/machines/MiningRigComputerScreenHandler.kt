@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItem
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
@@ -53,7 +54,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
 
             val requiredPower = propertyDelegate[MiningRigBlockEntity.ENERGY_REQUIRED_ID].toDouble()
             when {
-                blockEntity.extract(requiredPower, Simulation.SIMULATE) != requiredPower -> {
+                 propertyDelegate[MachineBlockEntity.ENERGY_ID] < requiredPower -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(

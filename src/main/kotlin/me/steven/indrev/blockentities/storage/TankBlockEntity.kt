@@ -10,7 +10,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.IRSyncableBlockEntity
+import me.steven.indrev.blockentities.SyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
@@ -22,7 +22,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.math.RoundingMode
 
-class TankBlockEntity(pos: BlockPos, state: BlockState) : IRSyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
+class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
     val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
 
     companion object {

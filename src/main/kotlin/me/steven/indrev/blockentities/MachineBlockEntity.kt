@@ -21,6 +21,7 @@ import me.steven.indrev.utils.transferFluids
 import me.steven.indrev.utils.transferItems
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.InventoryProvider
 import net.minecraft.client.MinecraftClient
@@ -34,8 +35,7 @@ import net.minecraft.world.WorldAccess
 import kotlin.collections.set
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
-    : IRSyncableBlockEntity(registry.blockEntityType(tier), pos, state), PropertyDelegate, PropertyDelegateHolder, InventoryProvider, EnergyIo,
-    Configurable, ComponentProvider {
+    : BaseMachineBlockEntity(registry.blockEntityType(tier), pos, state) {
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
@@ -106,7 +106,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         machineTick()
         if (isMarkedForUpdate) {
             markDirty()
-            //TODO sync()
+            if (this is BlockEntityClientSerializable) sync()
             isMarkedForUpdate = false
         }
     }
