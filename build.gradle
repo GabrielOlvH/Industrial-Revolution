@@ -133,14 +133,16 @@ dependencies {
     dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
-    dependencies.ext.lib("net.oskarstrom:DashLoader:2.0-dev12", true)
-    dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
-    modRuntime("org.yaml:snakeyaml:1.27")
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
-   }
+    }
+
+    // DashLoader Stuff
+    modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
+    dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
+    modRuntime("org.yaml:snakeyaml:1.27")
 }
 
 processResources {
