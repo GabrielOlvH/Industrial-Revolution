@@ -107,6 +107,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         override fun getEnergyCapacity(): Double = blockEntity.energyCapacity
 
         override fun extract(maxAmount: Double, simulation: Simulation?): Double {
+            if (blockEntity.transferConfig[direction]?.output != true) return 0.0
             val extracted = maxAmount.coerceAtMost(blockEntity.maxOutput).coerceAtMost(energy)
             if (simulation?.isActing == true) {
                 blockEntity.energy -= extracted
@@ -116,6 +117,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         }
 
         override fun insert(amount: Double, simulation: Simulation?): Double {
+            if (blockEntity.transferConfig[direction]?.input != true) return amount
             val inserted = amount.coerceAtMost(blockEntity.maxInput).coerceAtMost(this.energyCapacity - energy)
             if (simulation?.isActing == true) {
                 blockEntity.energy += inserted
@@ -124,8 +126,8 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
             return amount - inserted
         }
 
-        override fun supportsExtraction(): Boolean = blockEntity.transferConfig[direction]?.output == true
+        override fun supportsExtraction(): Boolean = true
 
-        override fun supportsInsertion(): Boolean = blockEntity.transferConfig[direction]?.input == true
+        override fun supportsInsertion(): Boolean = true
     }
 }
