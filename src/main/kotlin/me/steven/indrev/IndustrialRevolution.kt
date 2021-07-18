@@ -125,16 +125,9 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
-
                 if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
                     player.sync()
                 }
-
-                //val handler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
-                //handler.ctx.run { world, pos ->
-                    //val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run
-                    //blockEntity.sync()
-                //}
             }
         }
 
