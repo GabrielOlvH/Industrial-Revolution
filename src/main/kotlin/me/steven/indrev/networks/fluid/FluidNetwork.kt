@@ -29,6 +29,7 @@ class FluidNetwork(
 ) : Network(Type.FLUID, world, pipes, containers) {
 
     var tier = Tier.MK1
+
     private val maxCableTransfer: FluidAmount
         get() = FluidAmount.ofWhole(when (tier) {
             Tier.MK1 -> IRConfig.cables.fluidPipeMk1
@@ -44,38 +45,18 @@ class FluidNetwork(
     override fun tick(world: ServerWorld) {
         if (world.time % 20 != 0L) return
         val state = Type.FLUID.getNetworkState(world) as FluidNetworkState
-        if (containers.isEmpty()) return
-        else if (queue.isEmpty())
-            buildQueue()
-        if (queue.isNotEmpty()) {
+        if (isQueueValid()) {
             containers.forEach { (pos, directions) ->
                 if (!world.isLoaded(pos)) return@forEach
 
-                val originalQueue = queue[pos] ?: return@forEach
+                val nodes = queue[pos] ?: return@forEach
 
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
 
-                    var deques = deques[pos]
-                    if (deques == null) {
-                        deques = EnumMap(EndpointData.Mode::class.java)
-                        this.deques[pos] = deques
-                    }
-                    var deque = deques[data.mode]
-
                     val filter = lastTransferred?.exactFilter ?: NO_FLUID_FILTER
-                    if (deque == null) {
-                        deque = ReusableArrayDeque(
-                            if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                                originalQueue
-                            else
-                                PriorityQueue(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) }).also { q -> q.addAll(originalQueue) }
-                        )
-                        deques[data.mode] = deque
-                    }
-                    if (data.mode == EndpointData.Mode.ROUND_ROBIN) {
-                        deque.apply(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) })
-                    }
+
+                    val deque = getQueue(pos, data, filter, nodes)
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, deque, state, filter)
@@ -87,6 +68,25 @@ class FluidNetwork(
             }
         }
         lastTransferred = null
+    }
+
+    private fun getQueue(pos: BlockPos, data: EndpointData, filter: FluidFilter, nodes: List<Node>): ReusableArrayDeque<Node> {
+        var queuesByNodes = deques[pos]
+        if (queuesByNodes == null) {
+            queuesByNodes = EnumMap(EndpointData.Mode::class.java)
+            this.deques[pos] = queuesByNodes
+        }
+        var queue = queuesByNodes[data.mode]
+        if (queue == null) {
+            queue = ReusableArrayDeque(nodes)
+            queue.apply(data.mode!!.getFluidSorter(world, data.type) { filter.matches(it) })
+            queuesByNodes[data.mode] = queue
+        }
+        if (data.mode == EndpointData.Mode.ROUND_ROBIN || data.mode == EndpointData.Mode.RANDOM) {
+            queue.apply(data.mode!!.getFluidSorter(world, data.type) { filter.matches(it) })
+        }
+
+        return queue
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {

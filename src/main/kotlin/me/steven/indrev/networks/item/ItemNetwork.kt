@@ -45,32 +45,14 @@ class ItemNetwork(
         if (queue.isNotEmpty()) {
             containers.forEach { (pos, directions) ->
                 if (!world.isLoaded(pos)) return@forEach
-                val originalQueue = queue[pos] ?: return@forEach
+                val nodes = queue[pos] ?: return@forEach
 
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
                     val filterData = state.getFilterData(pos.offset(dir), dir.opposite)
                     if (data.type == EndpointData.Type.INPUT) return@inner
-                    var deques = deques[pos]
-                    if (deques == null) {
-                        deques = EnumMap(EndpointData.Mode::class.java)
-                        this.deques[pos] = deques
-                    }
-                    var deque = deques[data.mode]
 
-                    // Round robin sadly forces you to rebuild the ReusableArrayDeque
-                    if (deque == null) {
-                        deque = ReusableArrayDeque(
-                            if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                                originalQueue
-                            else
-                                PriorityQueue(data.mode!!.getItemComparator(world, data.type) { filterData.matches(it) }).also { q -> q.addAll(originalQueue) }
-                        )
-                        deques[data.mode] = deque
-                    }
-                    if (data.mode == EndpointData.Mode.ROUND_ROBIN) {
-                        deque.apply(data.mode!!.getItemComparator(world, data.type) { filterData.matches(it) })
-                    }
+                    val deque = getQueue(pos, data, filterData, nodes)
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, deque, state, data, filterData)
@@ -81,6 +63,26 @@ class ItemNetwork(
                 }
             }
         }
+    }
+
+    private fun getQueue(pos: BlockPos, data: EndpointData, filter: ItemFilterData, nodes: List<Node>): ReusableArrayDeque<Node> {
+        var queuesByNodes = deques[pos]
+        if (queuesByNodes == null) {
+            queuesByNodes = EnumMap(EndpointData.Mode::class.java)
+            this.deques[pos] = queuesByNodes
+        }
+        var queue = queuesByNodes[data.mode]
+        if (queue == null) {
+            queue = ReusableArrayDeque(nodes)
+            queue.apply(data.mode!!.getItemSorter(world, data.type) { filter.matches(it) })
+            queuesByNodes[data.mode] = queue
+        }
+
+        if (data.mode == EndpointData.Mode.ROUND_ROBIN || data.mode == EndpointData.Mode.RANDOM) {
+            queue.apply(data.mode!!.getItemSorter(world, data.type) { filter.matches(it) })
+        }
+
+        return queue
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
