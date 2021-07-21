@@ -111,13 +111,16 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 if (dir != null) {
                     val data = networkState.removeEndpointData(pos, dir)
                     when (data?.type) {
-                        EndpointData.Type.OUTPUT ->
+                        EndpointData.Type.OUTPUT -> {
                             ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
-                        EndpointData.Type.RETRIEVER ->
+                            return ActionResult.SUCCESS
+                        }
+                        EndpointData.Type.RETRIEVER -> {
                             ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
-                        else -> return ActionResult.PASS
+                            return ActionResult.SUCCESS
+                        }
+                        else -> { }
                     }
-                    return ActionResult.SUCCESS
                 }
             }
 
