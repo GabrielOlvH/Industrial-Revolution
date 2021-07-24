@@ -7,6 +7,7 @@ import me.steven.indrev.utils.groupedFluidInv
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.world.World
+import java.util.*
 import kotlin.random.Random
 
 data class EndpointData(var type: Type, var mode: Mode?) {
@@ -36,71 +37,90 @@ data class EndpointData(var type: Type, var mode: Mode?) {
 
     enum class Mode {
         ROUND_ROBIN {
-            override fun getFluidComparator(world: World, type: Type, filter: FluidFilter): Comparator<Node> {
-                return if (type == Type.RETRIEVER)
-                    Comparator.comparing<Node, FluidAmount> { node ->
-                        groupedFluidInv(world, node.target, node.direction).getAmount_F(filter)
-                    }.reversed()
-                else
-                    Comparator.comparing {
-                        groupedFluidInv(world, it.target, it.direction).getAmount_F(filter)
-                    }
+            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+                return { array ->
+                    Arrays.sort(array,
+                        if (type == Type.RETRIEVER)
+                            Comparator.comparing<Any?, FluidAmount> { node ->
+                                node as Node
+                                groupedFluidInv(world, node.target, node.direction).getAmount_F(filter)
+                            }.reversed()
+                        else
+                            Comparator.comparing {
+                                it as Node
+                                groupedFluidInv(world, it.target, it.direction).getAmount_F(filter)
+                            })
+                }
             }
 
-            override fun getItemComparator(world: World, type: Type, filter: ItemFilter): Comparator<Node> {
-                return if (type == Type.RETRIEVER)
-                    Comparator.comparing<Node, Int> { node ->
-                        groupedItemInv(world, node.target, node.direction).getAmount(filter)
-                    }.reversed()
-                else
-                    Comparator.comparing {
-                        groupedItemInv(world, it.target, it.direction).getAmount(filter)
-                    }
+            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+                return { array ->
+                    Arrays.sort(array,
+                        (if (type == Type.RETRIEVER)
+                            Comparator.comparing<Any, Int> { node ->
+                                node as Node
+                                groupedItemInv(world, node.target, node.direction).getAmount(filter)
+                            }.reversed()
+                        else
+                            Comparator.comparing {
+                                it as Node
+                                groupedItemInv(world, it.target, it.direction).getAmount(filter)
+                            })
+                    )
+                }
             }
         },
         FURTHEST_FIRST {
-            override fun getFluidComparator(world: World, type: Type, filter: FluidFilter): Comparator<Node> {
-                return Comparator { first, second ->
-                    when {
-                        first.dist > second.dist -> -1
-                        first.dist < second.dist -> 1
-                        else -> 0
+            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+                return { array ->
+                    Arrays.sort(array) { first, second ->
+                        first as Node
+                        second as Node
+                        when {
+                            first.dist > second.dist -> -1
+                            first.dist < second.dist -> 1
+                            else -> 0
+                        }
                     }
                 }
             }
 
-            override fun getItemComparator(world: World, type: Type, filter: ItemFilter): Comparator<Node> {
-                return Comparator { first, second ->
-                    when {
-                        first.dist > second.dist -> -1
-                        first.dist < second.dist -> 1
-                        else -> 0
+            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+                return { array ->
+                    Arrays.sort(array) { first, second ->
+                        first as Node
+                        second as Node
+                        when {
+                            first.dist > second.dist -> -1
+                            first.dist < second.dist -> 1
+                            else -> 0
+                        }
                     }
                 }
             }
         },
         NEAREST_FIRST {
-            override fun getFluidComparator(world: World, type: Type, filter: FluidFilter): Comparator<Node> {
-                return Comparator.comparing { it }
+            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+                return { array -> Arrays.sort(array) }
             }
 
-            override fun getItemComparator(world: World, type: Type, filter: ItemFilter): Comparator<Node> {
-                return Comparator.comparing { it }
+            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+                return { array -> Arrays.sort(array) }
             }
         },
         RANDOM {
-            override fun getFluidComparator(world: World, type: Type, filter: FluidFilter): Comparator<Node> {
-                return Comparator.comparing { R.nextInt(3) - 1 }
+            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+                return { array -> array.shuffle() }
             }
 
-            override fun getItemComparator(world: World, type: Type, filter: ItemFilter): Comparator<Node> {
-                return Comparator.comparing { R.nextInt(3) - 1 }
+            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+                return { array -> array.shuffle() }
             }
         };
 
-        abstract fun getFluidComparator(world: World, type: Type, filter: FluidFilter): Comparator<Node>
+        abstract fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit
 
-        abstract fun getItemComparator(world: World, type: Type, filter: ItemFilter): Comparator<Node>
+        abstract fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit
 
         fun next(): Mode {
             return when (this) {

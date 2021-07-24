@@ -23,6 +23,8 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 abstract class Network(
     val type: Type<*>,
@@ -33,7 +35,14 @@ abstract class Network(
 
     val state = type.getNetworkState(world)
 
-    protected val queue = hashMapOf<BlockPos, PriorityQueue<Node>>()
+    protected val queue = Object2ObjectOpenHashMap<BlockPos, MutableList<Node>>(containers.size)
+
+    protected fun isQueueValid(): Boolean {
+        if (queue.isEmpty() && containers.isNotEmpty()) {
+            buildQueue()
+        }
+        return queue.isNotEmpty()
+    }
 
     protected fun buildQueue() {
         queue.clear()
@@ -42,14 +51,14 @@ abstract class Network(
         }
     }
 
-    protected fun find(source: BlockPos, blockPos: BlockPos, count: Short, s: LongOpenHashSet) {
+    protected fun find(source: BlockPos, blockPos: BlockPos, count: Int, s: LongOpenHashSet) {
         DIRECTIONS.forEach { dir ->
             val offset = blockPos.offset(dir.opposite)
             if (pipes.contains(offset) && s.add(offset.asLong())) {
-                find(source, offset, (count + 1).toShort(), s)
+                find(source, offset, count + 1, s)
             }
             if (source != offset && containers.contains(offset) && containers[offset]!!.contains(dir)) {
-                queue.computeIfAbsent(source) { PriorityQueue(containers.size) }.add(Node(source, offset, count, dir))
+                queue.computeIfAbsent(source) { ArrayList(containers.size) }.add(Node(source, offset, count, dir))
             }
         }
     }

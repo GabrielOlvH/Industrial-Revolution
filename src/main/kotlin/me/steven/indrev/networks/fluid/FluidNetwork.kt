@@ -5,8 +5,6 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
@@ -31,7 +29,8 @@ class FluidNetwork(
 ) : Network(Type.FLUID, world, pipes, containers) {
 
     var tier = Tier.MK1
-    val maxCableTransfer: FluidAmount
+
+    private val maxCableTransfer: FluidAmount
         get() = FluidAmount.ofWhole(when (tier) {
             Tier.MK1 -> IRConfig.cables.fluidPipeMk1
             Tier.MK2 -> IRConfig.cables.fluidPipeMk2
@@ -46,20 +45,18 @@ class FluidNetwork(
     override fun tick(world: ServerWorld) {
         if (world.time % 20 != 0L) return
         val state = Type.FLUID.getNetworkState(world) as FluidNetworkState
-        if (containers.isEmpty()) return
-        else if (queue.isEmpty())
-            buildQueue()
-        if (queue.isNotEmpty()) {
+        if (isQueueValid()) {
             containers.forEach { (pos, directions) ->
                 if (!world.isLoaded(pos)) return@forEach
+
+                val nodes = queue[pos] ?: return@forEach
+
                 directions.forEach inner@{ dir ->
                     val data = state.getEndpointData(pos.offset(dir), dir.opposite) ?: return@inner
+
                     val filter = lastTransferred?.exactFilter ?: NO_FLUID_FILTER
 
-                    val deque = getQueue(pos, data, filter) ?: return@inner
-                    if (data.mode == EndpointData.Mode.ROUND_ROBIN) {
-                        deque.apply(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) })
-                    }
+                    val deque = getQueue(pos, data, filter, nodes)
 
                     if (data.type == EndpointData.Type.OUTPUT)
                         tickOutput(pos, dir, deque, state, filter)
@@ -73,30 +70,28 @@ class FluidNetwork(
         lastTransferred = null
     }
 
-    fun getQueue(pos: BlockPos, data: EndpointData, filter: FluidFilter): ReusableArrayDeque<Node>? {
-        var deques = deques[pos]
-        if (deques == null) {
-            deques = EnumMap(EndpointData.Mode::class.java)
-            this.deques[pos] = deques
+    private fun getQueue(pos: BlockPos, data: EndpointData, filter: FluidFilter, nodes: List<Node>): ReusableArrayDeque<Node> {
+        var queuesByNodes = deques[pos]
+        if (queuesByNodes == null) {
+            queuesByNodes = EnumMap(EndpointData.Mode::class.java)
+            this.deques[pos] = queuesByNodes
         }
-        var deque = deques[data.mode]
+        var queue = queuesByNodes[data.mode]
+        if (queue == null) {
+            queue = ReusableArrayDeque(nodes)
+            queue.apply(data.mode!!.getFluidSorter(world, data.type) { filter.matches(it) })
+            queuesByNodes[data.mode] = queue
+        }
+        if (data.mode == EndpointData.Mode.ROUND_ROBIN || data.mode == EndpointData.Mode.RANDOM) {
+            queue.apply(data.mode!!.getFluidSorter(world, data.type) { filter.matches(it) })
+        }
 
-        if (deque == null) {
-            val originalQueue = queue[pos] ?: return null
-            deque = ReusableArrayDeque(
-                if (data.mode == EndpointData.Mode.NEAREST_FIRST)
-                    originalQueue
-                else
-                    PriorityQueue(data.mode!!.getFluidComparator(world, data.type) { filter.matches(it) }).also { q -> q.addAll(originalQueue) }
-            )
-            deques[data.mode] = deque
-        }
-        return deque
+        return queue
     }
 
-    private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter, maxAmount: FluidAmount = maxCableTransfer, simulation: Simulation = Simulation.ACTION): FluidAmount {
+    private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val extractable = fluidExtractableOf(world, pos, dir.opposite)
-        var remaining = maxAmount
+        var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.removeFirst()
             if (!world.isLoaded(targetPos)) continue
@@ -105,19 +100,16 @@ class FluidNetwork(
             if (!input) continue
 
             val insertable = fluidInsertableOf(world, targetPos, targetDir.opposite)
-            val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, simulation)
+            val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, Simulation.ACTION)
             if (!moved.isEmpty)
                 lastTransferred = moved.fluidKey
             remaining -= moved.amount()
         }
-        return remaining
     }
 
-    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter, maxAmount: FluidAmount = maxCableTransfer, simulation: Simulation = Simulation.ACTION): FluidVolume {
+    private fun tickRetriever(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: FluidFilter) {
         val insertable = fluidInsertableOf(world, pos, dir.opposite)
-        var remaining = maxAmount
-        var filter = fluidFilter
-        var fluidKey = FluidKeys.EMPTY
+        var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining.asInexactDouble() > 1e-9) {
             val (_, targetPos, _, targetDir) = queue.removeFirst()
             if (!world.isLoaded(targetPos)) continue
@@ -126,15 +118,11 @@ class FluidNetwork(
             if (isRetriever) continue
 
             val extractable = fluidExtractableOf(world, targetPos, targetDir.opposite)
-            val moved = FluidVolumeUtil.move(extractable, insertable, filter, remaining, simulation)
-            if (!moved.isEmpty) {
+            val moved = FluidVolumeUtil.move(extractable, insertable, fluidFilter, remaining, Simulation.ACTION)
+            if (!moved.isEmpty)
                 lastTransferred = moved.fluidKey
-                filter = moved.fluidKey.exactFilter
-                fluidKey = moved.fluidKey
-            }
             remaining -= moved.amount()
         }
-        return if (fluidKey.isEmpty) FluidKeys.EMPTY.withAmount(FluidAmount.ZERO) else fluidKey.withAmount(maxCableTransfer - remaining)
     }
 
     override fun appendPipe(block: Block, blockPos: BlockPos) {

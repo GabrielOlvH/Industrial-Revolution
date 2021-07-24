@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import java.util.*
+import javax.lang.model.type.UnionType
 
 /**
  * Limited simple re-implementation of a reusable ArrayDeque
@@ -8,23 +9,22 @@ import java.util.*
  * When finished, you can reset the head and start again
  * Used by IR's networks
  */
-class ReusableArrayDeque<E : Comparable<E>>(elements: PriorityQueue<E>) : AbstractMutableList<E>() {
+class ReusableArrayDeque<E : Comparable<E>>(elements: Collection<E>) : AbstractMutableList<E>() {
     private var head: Int = 0
-    private var elementData: Array<Any?>
+    var elementData: Array<Any?>
 
     override var size: Int = 0
         private set
 
     init {
-        val comparator = elements.comparator() ?: Comparator { o1, o2 -> o1.compareTo(o2) }
-        elementData = elements.sortedWith(comparator).toTypedArray()
+        elementData = elements.toTypedArray()
         size = elementData.size
         if (elementData.isEmpty()) elementData = emptyElementData
     }
 
-    fun apply(comparator: Comparator<E>) {
+    inline fun apply(transform: (Array<Any?>) -> Unit) {
         @Suppress("UNCHECKED_CAST")
-        Arrays.sort(elementData, comparator as Comparator<Any?>)
+        transform(elementData)
     }
 
     override fun add(index: Int, element: E) = throw NotImplementedError()

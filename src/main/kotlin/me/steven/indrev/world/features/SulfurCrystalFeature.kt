@@ -25,11 +25,13 @@ class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
         val mutablePos = BlockPos.Mutable()
         val coveredArea = Box(blockPos).expand(8.0, 8.0, 8.0)
         val isNearLava = coveredArea.any { x, y, z ->
+            if (context.world.isOutOfHeightLimit(y)) return@any false
             mutablePos.set(x, y, z)
             world?.getBlockState(mutablePos)?.isOf(Blocks.LAVA) == true
         }
         if (!isNearLava) return false
         coveredArea.forEach { x, y, z ->
+            if (context.world.isOutOfHeightLimit(y)) return@forEach
             mutablePos.set(x, y, z)
             DIRECTIONS_LIST.shuffled(random).forEach { dir ->
                 val blockState = world?.getBlockState(mutablePos)
