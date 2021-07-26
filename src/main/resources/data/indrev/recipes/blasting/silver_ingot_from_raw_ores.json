@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "group": "silver_ingots",
   "ingredient": {
     "tag": "c:raw_silver_ores"

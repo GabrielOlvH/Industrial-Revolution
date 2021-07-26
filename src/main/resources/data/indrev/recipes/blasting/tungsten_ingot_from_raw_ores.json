@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smelting",
+  "type": "minecraft:blasting",
   "group": "tungsten_ingots",
   "ingredient": {
     "tag": "c:raw_tungsten_ores"
