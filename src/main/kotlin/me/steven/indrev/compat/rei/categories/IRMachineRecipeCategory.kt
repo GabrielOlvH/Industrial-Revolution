@@ -17,6 +17,7 @@ import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
@@ -33,17 +34,17 @@ open class IRMachineRecipeCategory(
         val widgets = super.setupDisplay(recipeDisplay, bounds).toMutableList()
         widgets.add(Widgets.createArrow(Point(startPoint.x + 24, startPoint.y + 18)))
         if (recipe.input.isNotEmpty()) {
-            val input = recipeDisplay.inputEntries.flatten().filter { it.type == VanillaEntryTypes.ITEM }
-            widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entry(input[0]))
+            val input = recipeDisplay.inputEntries.filter { it.all { it.type == VanillaEntryTypes.ITEM } }
+            widgets.add(Widgets.createSlot(Point(startPoint.x + 1, startPoint.y + 19)).entries(input[0]))
             if (recipe.input.size > 1)
                 widgets.add(
-                    Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entry(input[1])
+                    Widgets.createSlot(Point(startPoint.x - 17, startPoint.y + 19)).entries(input[1])
                 )
         }
         if (recipe.outputs.isNotEmpty()) {
             widgets.add(Widgets.createResultSlotBackground(Point(startPoint.x + 61, startPoint.y + 19)))
             widgets.add(
-                Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries.flatten().filter { it.type == VanillaEntryTypes.ITEM }).disableBackground().markOutput()
+                Widgets.createSlot(Point(startPoint.x + 61, startPoint.y + 19)).entries(recipeDisplay.outputEntries.filter { it.all { it.type == VanillaEntryTypes.ITEM } }[0]).disableBackground().markOutput()
             )
         }
 
