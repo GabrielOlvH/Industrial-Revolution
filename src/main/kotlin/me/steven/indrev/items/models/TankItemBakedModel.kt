@@ -48,7 +48,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
         )
         context.fallbackConsumer().accept(tankModel)
 
-        val stackTag = stack.orCreateTag
+        val stackTag = stack.orCreateNbt
 
         val volume = readNbt(stackTag) ?: return
 
@@ -106,7 +106,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> = mutableListOf()
 
-    override fun getSprite() = null
+    override fun getParticleSprite() = null
 
     override fun hasDepth(): Boolean = false
 

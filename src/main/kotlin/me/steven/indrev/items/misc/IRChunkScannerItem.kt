@@ -55,7 +55,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 tag.put("ChunkPos", chunkPos.toNbt())
                 tag.putString("Dimension", world.registryKey.value.path)
                 val infoStack = ItemStack(IRItemRegistry.SCAN_OUTPUT_ITEM)
-                infoStack.tag = tag
+                infoStack.nbt = tag
 
                 if (user is PlayerEntity) {
                     if (!user.inventory.insertStack(infoStack)) ItemScatterer.spawn(user.world, user.x, user.y, user.z, infoStack)
@@ -80,5 +80,5 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
 
     override fun getMaxUseTime(stack: ItemStack?): Int = 100
 
-    override fun getUseAction(stack: ItemStack?): UseAction = if (stack?.tag == null) UseAction.BOW else UseAction.NONE
+    override fun getUseAction(stack: ItemStack?): UseAction = if (stack?.nbt == null) UseAction.BOW else UseAction.NONE
 }

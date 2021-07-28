@@ -40,7 +40,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         if (world?.isClient == true) return TypedActionResult.pass(user.getStackInHand(hand))
         val stack = user.getStackInHand(hand)
         val newMode = getMode(stack).next()
-        stack.orCreateTag.putString("mode", newMode.toString())
+        stack.orCreateNbt.putString("mode", newMode.toString())
         user.sendMessage(TranslatableText("item.indrev.servo.mode")
             .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().lowercase()}").formatted(Formatting.BLUE)), true)
         return TypedActionResult.consume(stack)
@@ -92,7 +92,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
 
     companion object {
         fun getMode(itemStack: ItemStack): EndpointData.Mode {
-            val m = itemStack.orCreateTag.getString("mode")
+            val m = itemStack.orCreateNbt.getString("mode")
             if (m.isNullOrEmpty()) return EndpointData.Mode.NEAREST_FIRST
             return EndpointData.Mode.valueOf(m.uppercase())
         }

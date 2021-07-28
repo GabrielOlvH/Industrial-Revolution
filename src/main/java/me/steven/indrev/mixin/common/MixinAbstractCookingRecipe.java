@@ -7,6 +7,7 @@ import me.steven.indrev.recipes.machines.entries.OutputEntry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -85,8 +86,21 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     }
 
     @Override
+    public boolean isIgnoredInRecipeBook() {
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public DefaultedList<Ingredient> getIngredients() {
+        DefaultedList<Ingredient> defaultedList = DefaultedList.of();
+        defaultedList.add(this.input);
+        return defaultedList;
+    }
+
+    @Override
     public boolean isEmpty() {
         DefaultedList<Ingredient> defaultedList = this.getIngredients();
-        return defaultedList.isEmpty() || defaultedList.stream().anyMatch((ingredient) -> ingredient.getMatchingStacksClient().length == 0);
+        return defaultedList.isEmpty() || defaultedList.stream().anyMatch((ingredient) -> ingredient.getMatchingStacks().length == 0);
     }
 }

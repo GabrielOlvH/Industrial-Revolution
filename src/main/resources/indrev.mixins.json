@@ -25,7 +25,6 @@
   "client": [
     "client.MixinBuiltChunk",
     "client.MixinClientPlayerInteractionManager",
-    "client.MixinClientRecipeBook",
     "client.MixinGameRenderer",
     "client.MixinLivingEntityClient",
     "client.MixinScreen",

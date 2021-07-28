@@ -3,16 +3,16 @@ package me.steven.indrev.compat.rei.plugins
 import me.shedaniel.rei.api.common.category.CategoryIdentifier
 import me.shedaniel.rei.api.common.display.Display
 import me.shedaniel.rei.api.common.entry.EntryIngredient
+import me.shedaniel.rei.api.common.entry.EntryStack
 import me.shedaniel.rei.api.common.util.EntryIngredients
+import me.shedaniel.rei.api.common.util.EntryStacks
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import java.util.*
 
-open class IRMachinePlugin(val recipe: IRRecipe)
-    : Display {
-
+open class IRMachinePlugin(val recipe: IRRecipe) : Display {
 
     override fun getInputEntries(): List<EntryIngredient> = getInputs(recipe)
 
@@ -35,8 +35,10 @@ open class IRMachinePlugin(val recipe: IRRecipe)
                     list.addAll(mutableListOf(EntryIngredients.of(fluidInput.rawFluid, 81000)))
             }
             list.addAll(recipe.input.map { (ingredient, count) ->
-                ingredient.matchingStacksClient.map { stack -> EntryIngredients.of(ItemStack(stack.item, count)) }.toMutableList()
-            }.flatten())
+                val builder = EntryIngredient.builder()
+                ingredient.matchingStacks.map { stack -> builder.add(EntryStacks.of(ItemStack(stack.item, count))) }
+                builder.build()
+            })
             return list
         }
 

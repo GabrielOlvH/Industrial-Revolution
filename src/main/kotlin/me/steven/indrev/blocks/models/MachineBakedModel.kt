@@ -139,7 +139,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
 
     override fun isBuiltin(): Boolean = false
 
-    override fun getSprite(): Sprite? = baseSprite
+    override fun getParticleSprite(): Sprite? = baseSprite
 
     override fun getTransformation(): ModelTransformation = TRANSFORM
 

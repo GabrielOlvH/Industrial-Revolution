@@ -50,7 +50,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
 
     override fun getColor(stack: ItemStack?): Int {
-        val nbt = stack!!.getSubTag("display")
+        val nbt = stack!!.getSubNbt("display")
         return if (nbt != null && nbt.contains("color", 99)) nbt.getInt("color") else -1
     }
 
@@ -68,7 +68,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     }
 
     override fun getInstalled(stack: ItemStack): List<ArmorModule> {
-        val tag = stack.tag ?: return emptyList()
+        val tag = stack.nbt ?: return emptyList()
         return getCompatibleModules(stack).filter { module -> module != ArmorModule.COLOR }.mapNotNull { module ->
             if (tag.contains(module.key)) module
             else null

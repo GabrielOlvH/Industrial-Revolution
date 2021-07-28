@@ -35,7 +35,7 @@ object REIPlugin : REIClientPlugin {
         fun registerCharged(vararg items: Item) {
             items.forEach { item ->
                 entryRegistry?.addEntriesAfter(EntryStacks.of(item),
-                    EntryStacks.of(ItemStack(item).also { it.orCreateTag.putDouble("energy", energyOf(it)!!.energyCapacity) }))
+                    EntryStacks.of(ItemStack(item).also { it.orCreateNbt.putDouble("energy", energyOf(it)!!.energyCapacity) }))
             }
         }
 
@@ -54,7 +54,7 @@ object REIPlugin : REIClientPlugin {
 
         entryRegistry?.addEntriesAfter(EntryStacks.of(IRItemRegistry.GAMER_AXE_ITEM),
             EntryStacks.of(ItemStack(IRItemRegistry.GAMER_AXE_ITEM).also {
-                val tag = it.orCreateTag
+                val tag = it.orCreateNbt
                 tag.putDouble("energy", energyOf(it)!!.energyCapacity)
                 tag.putBoolean("Active", true)
                 tag.putFloat("Progress", 1f)

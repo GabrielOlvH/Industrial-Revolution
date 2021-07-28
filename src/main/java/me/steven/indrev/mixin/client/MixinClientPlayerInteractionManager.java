@@ -9,10 +9,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ClientPlayerInteractionManager.class)
 public class MixinClientPlayerInteractionManager {
-    @Redirect(method = "isCurrentlyBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;areTagsEqual(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
+    @Redirect(method = "isCurrentlyBreaking", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;areNbtEqual(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
     private boolean indrev_fixGamerAxe(ItemStack left, ItemStack right) {
         if (left.getItem() == IRItemRegistry.INSTANCE.getGAMER_AXE_ITEM() && left.getItem() == right.getItem())
             return true;
-        return ItemStack.areTagsEqual(left, right);
+        return ItemStack.areNbtEqual(left, right);
     }
 }

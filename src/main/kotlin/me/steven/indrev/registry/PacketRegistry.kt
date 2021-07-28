@@ -125,7 +125,7 @@ object PacketRegistry {
             server.execute {
                 val stack = player.inventory.getStack(slot)
                 if (!stack.isEmpty) {
-                    val tag = stack.getOrCreateSubTag("selected")
+                    val tag = stack.getOrCreateSubNbt("selected")
                     tag.putInt(key, value)
                 }
             }

@@ -117,7 +117,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     private inline fun <M : Object2IntArrayMap<Item>> IntArray.associateToStacks(destination: M, transform: (Int) -> ItemStack): M {
         for (element in this) {
             val stack = transform(element)
-            if (!stack.isEmpty && stack.tag?.isEmpty != false)
+            if (!stack.isEmpty && stack.nbt?.isEmpty != false)
                 destination.mergeInt(stack.item, stack.count) { old, new -> old + new }
         }
         return destination

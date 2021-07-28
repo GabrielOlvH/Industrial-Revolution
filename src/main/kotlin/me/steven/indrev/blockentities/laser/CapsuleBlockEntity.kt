@@ -50,7 +50,7 @@ class CapsuleBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlock
     companion object {
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: CapsuleBlockEntity) {
             if (world.isClient) return
-            val tag = blockEntity.inventory[0].orCreateTag
+            val tag = blockEntity.inventory[0].orCreateNbt
             val progress = tag.getInt("Progress")
             if (tag.contains("Progress") && progress == blockEntity.lastProgress) {
                 tag.remove("Progress")

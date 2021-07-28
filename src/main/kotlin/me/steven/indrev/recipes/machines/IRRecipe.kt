@@ -39,9 +39,10 @@ interface IRRecipe : Recipe<Inventory> {
     override fun getType(): IRRecipeType<*>
 
     override fun isEmpty(): Boolean {
-        return input.isEmpty() || input
-            .any { entry -> entry.ingredient.matchingStacksClient.isEmpty() }
+        return input.isEmpty() || input.any { entry -> entry.ingredient.matchingStacks.isEmpty() }
     }
+
+    override fun isIgnoredInRecipeBook(): Boolean = true
 
     fun craft(random: Random?): List<ItemStack> {
         val produced = ArrayList<ItemStack>(outputs.size)

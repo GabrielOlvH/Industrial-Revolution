@@ -103,7 +103,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
     override fun isBuiltin(): Boolean = false
 
-    override fun getSprite(): Sprite = spriteArray[0]!!
+    override fun getParticleSprite(): Sprite = spriteArray[0]!!
 
     override fun getTransformation(): ModelTransformation = transform
 

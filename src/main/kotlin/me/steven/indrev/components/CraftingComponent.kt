@@ -106,7 +106,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         val inventory = inventoryComponent.inventory
         for (outputSlot in outputSlots!!) {
             val outStack = inventory.getStack(outputSlot)
-            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount)
+            if (stack.item == outStack.item && stack.nbt == outStack.nbt && stack.count + outStack.count <= stack.maxCount)
                 outStack.increment(stack.count)
             else if (outStack.isEmpty)
                 inventory.setStack(outputSlot, stack)
@@ -118,7 +118,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     fun fits(stack: ItemStack): Boolean {
         for (outputSlot in outputSlots!!) {
             val outStack = inventoryComponent.inventory.getStack(outputSlot)
-            if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount))
+            if (outStack.isEmpty || (stack.item == outStack.item && stack.nbt == outStack.nbt && stack.count + outStack.count <= stack.maxCount))
                 return true
         }
         return false

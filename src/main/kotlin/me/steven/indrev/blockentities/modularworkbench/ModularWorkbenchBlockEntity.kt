@@ -118,7 +118,7 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 processTime += config.processSpeed.toInt()
                 if (processTime >= maxProcessTime) {
                     inventory.setStack(1, ItemStack.EMPTY)
-                    val tag = targetStack.orCreateTag
+                    val tag = targetStack.orCreateNbt
                     when {
                         module == ArmorModule.COLOR -> {
                             if (targetItem !is IRModularArmorItem) return
@@ -135,7 +135,7 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     state = State.IDLE
                 }
             } else if (energy > 0 && !targetStack.isEmpty && !moduleStack.isEmpty && compatible.contains(module)) {
-                val tag = targetStack.orCreateTag
+                val tag = targetStack.orCreateNbt
                 if (tag.contains(module.key)) {
                     val level = module.getMaxInstalledLevel(targetStack)
                     if (module != ArmorModule.COLOR && level >= module.maxLevel) {
