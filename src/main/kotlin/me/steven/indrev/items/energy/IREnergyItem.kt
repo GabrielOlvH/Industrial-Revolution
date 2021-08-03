@@ -4,11 +4,12 @@ import me.steven.indrev.gui.tooltip.energy.EnergyTooltipDataProvider
 import me.steven.indrev.utils.energyOf
 import net.minecraft.item.ItemStack
 import kotlin.math.roundToInt
+import net.minecraft.util.math.MathHelper.clamp
 
 interface IREnergyItem : EnergyTooltipDataProvider {
     fun getDurabilityBarProgress(stack: ItemStack?): Int {
         val energyIo = energyOf(stack) ?: return 0
-        return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity).roundToInt()
+        return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity).roundToInt() / stack.count
     }
 
     fun hasDurabilityBar(stack: ItemStack?): Boolean = (energyOf(stack)?.energy ?: 0.0) > 0
