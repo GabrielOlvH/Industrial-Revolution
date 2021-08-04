@@ -36,6 +36,7 @@ class IRPortableChargerItem(
             .mapNotNull { s -> energyOf(s) }
         var rem = 16384.0
         items.forEach { h ->
+            if (rem <= 0) return
             rem -= EnergyMovement.move(energyOf(stack) ?: return, h, rem)
         }
     }
@@ -48,6 +49,7 @@ class IRPortableChargerItem(
                 .mapNotNull { s -> energyOf(s) }
             var rem = 16384.0
             items.forEach { h ->
+                if (rem <= 0) return
                 rem -= EnergyMovement.move(energyOf(itemStack) ?: return, h, rem)
             }
         }
