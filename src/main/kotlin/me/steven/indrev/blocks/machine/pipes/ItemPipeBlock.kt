@@ -49,15 +49,16 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         state: BlockState,
         world: World,
         pos: BlockPos,
-        player: PlayerEntity?,
-        hand: Hand?,
+        player: PlayerEntity,
+        hand: Hand,
         hit: BlockHitResult
     ): ActionResult {
         val dir = getSideFromHit(hit.pos, pos)
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.PASS
-        if (hand == Hand.MAIN_HAND && !world.isClient && player!!.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
+        if (hand == Hand.MAIN_HAND && !world.isClient && player.getStackInHand(hand).isEmpty && dir != null && blockEntity.connections[dir]!!.isConnected()) {
             val type = Network.Type.ITEM
-            if (type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
+            val networkState = type.getNetworkState(world as ServerWorld)
+            if (networkState.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                 player.openHandledScreen(PipeFilterScreenFactory(::PipeFilterScreenHandler, pos, dir))
                 return ActionResult.SUCCESS
             }
@@ -85,8 +86,8 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
     }
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
-        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
+        val directions = DIRECTIONS.filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.get().computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
@@ -97,7 +98,12 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
 
     companion object {
 
-        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
+        val SHAPE_CACHE: ThreadLocal<Int2ObjectOpenHashMap<VoxelShape>> = ThreadLocal.withInitial {
+            object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
+                override fun rehash(newN: Int) {
+                }
+            }
+        }
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.5, 9.5, 6.5, 9.5, 16.0, 9.5)

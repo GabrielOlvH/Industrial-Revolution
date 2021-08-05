@@ -6,13 +6,17 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import me.steven.indrev.IndustrialRevolution;
 import me.steven.indrev.api.IRServerPlayerEntityExtension;
 import me.steven.indrev.items.armor.IRModularArmorItem;
 import me.steven.indrev.items.energy.IRPortableChargerItem;
+import me.steven.indrev.packets.client.SyncAppliedModulesPacket;
 import me.steven.indrev.tools.modular.ArmorModule;
-import me.steven.indrev.utils.EnergyApiUtilsKt;
+import me.steven.indrev.utils.AccessorextensionsKt;
+import me.steven.indrev.utils.EnergyutilsKt;
+import me.steven.indrev.utils.HelperextensionsKt;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +26,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,6 +48,10 @@ import java.util.Map;
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
 
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
+
+    @Shadow public abstract ServerWorld getServerWorld();
+
+    @Shadow public abstract void playSound(SoundEvent event, SoundCategory category, float volume, float pitch);
 
     private int ticks = 0;
     private int lastDamageTick = 0;
@@ -56,6 +70,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         if (ticks % 15 == 0) {
             applyArmorEffects();
         }
+        indrev_tickMagnet();
         setShieldDurability(Math.min(getShieldDurability(), getMaxShieldDurability()));
     }
 
@@ -70,15 +85,20 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         }
         lastDamageTick = ticks;
         lastDmg = initial;
-        if (shouldApplyToShield(source))
-            return (float) applyDamageToShield(amount);
-        else
+        if (shouldApplyToShield(source)) {
+            float leftover = (float) applyDamageToShield(amount);
+            if (amount > leftover)
+                world.playSoundFromEntity(null, this, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.PLAYERS, 1f, 0.0001f);
+            return leftover;
+        } else
             return amount;
     }
 
     @Inject(method = "worldChanged", at = @At("TAIL"))
     private void indrev_syncOnDimChange(ServerWorld origin, CallbackInfo ci) {
         sync();
+        AccessorextensionsKt.getFluidNetworkState(origin).onDimChange(this);
+        AccessorextensionsKt.getItemNetworkState(origin).onDimChange(this);
     }
 
     private boolean shouldApplyToShield(DamageSource source) {
@@ -105,7 +125,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case FIRE_RESISTANCE:
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
-                            if (EnergyApiUtilsKt.extract(itemStack, 20.0))
+                        case WATER_AFFINITY:
+                            if (EnergyutilsKt.extract(itemStack, 20.0))
                                 applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
@@ -114,7 +135,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
+                                    if (food != null && !HelperextensionsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyutilsKt.extract(itemStack, 30.0)) {
                                         stack.finishUsing(world, player);
                                         player.eatFood(world, stack);
                                     }
@@ -128,14 +149,14 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
                                 for (ItemStack stackToCharge : inventory.armor) {
-                                    EnergyIo toCharge = EnergyApiUtilsKt.energyOf(stackToCharge);
+                                    EnergyIo toCharge = EnergyutilsKt.energyOf(stackToCharge);
                                     if (toCharge != null)
                                         toCharge.insert(75.0 * level, Simulation.ACT);
                                 }
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyApiUtilsKt.extract(itemStack, 30.0)) {
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyutilsKt.extract(itemStack, 30.0)) {
                                 regenerateShield();
                             }
                             break;
@@ -145,6 +166,31 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                 }
             }
         }
+    }
+
+    private void indrev_tickMagnet() {
+        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+        PlayerInventory inventory = player.getInventory();
+        for (ItemStack itemStack : inventory.armor) {
+            if (itemStack.getItem() instanceof IRModularArmorItem) {
+                int level = ArmorModule.MAGNET.getLevel(itemStack);
+                if (level > 0) {
+                    Vec3i offset = new Vec3i(8, 8, 8);
+                    Box area = new Box(getBlockPos().subtract(offset), getBlockPos().add(offset));
+                    Vec3d blockCenter = HelperextensionsKt.toVec3d(getBlockPos()).add(0.5, 0.5, 0.5);
+                    world.getOtherEntities(this, area, (entity) -> entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity).forEach(entity -> {
+                        if ((entity instanceof ItemEntity itemEntity && !itemEntity.cannotPickup())
+                                || (entity instanceof ExperienceOrbEntity xpEntity && xpEntity.age > 40)) {
+                            Vec3d v = entity.getPos().relativize(blockCenter).normalize().multiply(0.2);
+                            entity.addVelocity(v.x, v.y, v.z);
+                            //applyModule(ArmorModule.MAGNET, 1);
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+        //getAppliedModules().remove(ArmorModule.MAGNET);
     }
 
     private void regenerateShield() {
@@ -176,7 +222,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         });
         buf.writeDouble(getShieldDurability());
         buf.writeBoolean(ticks - 120 > lastDamageTick);
-        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, IndustrialRevolution.INSTANCE.getSYNC_MODULE_PACKET(), buf);
+        ServerPlayNetworking.send((ServerPlayerEntity) (Object) this, SyncAppliedModulesPacket.INSTANCE.getSYNC_MODULE_PACKET(), buf);
     }
 
     @Override

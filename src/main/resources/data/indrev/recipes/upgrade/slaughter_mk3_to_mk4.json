@@ -1,0 +1,14 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:slaughter_mk3"
+    },
+    {
+      "item": "indrev:tier_upgrade_mk4"
+    }
+  ],
+  "result": {
+    "item": "indrev:slaughter_mk4"
+  }
+}

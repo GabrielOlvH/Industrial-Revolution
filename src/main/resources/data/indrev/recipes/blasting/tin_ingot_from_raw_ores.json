@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "group": "tin_ingots",
+  "ingredient": {
+    "tag": "c:raw_tin_ores"
+  },
+  "result": "indrev:tin_ingot",
+  "cookingTime": 150
+}

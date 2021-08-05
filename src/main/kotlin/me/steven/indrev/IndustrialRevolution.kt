@@ -2,31 +2,29 @@ package me.steven.indrev
 
 import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder
 import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer
+import io.github.ladysnake.pal.AbilitySource
+import io.github.ladysnake.pal.Pal
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
-import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.screenhandlers.machines.*
-import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
-import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
-import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
-import me.steven.indrev.gui.screenhandlers.wrench.WrenchScreenHandler
+import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
+import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
-import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.NetworkEvents
+import me.steven.indrev.packets.PacketRegistry
+import me.steven.indrev.packets.client.SyncConfigPacket
+import me.steven.indrev.packets.client.SyncVeinTypesPacket
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
-import me.steven.indrev.registry.PacketRegistry.syncConfig
-import me.steven.indrev.registry.PacketRegistry.syncVeinData
 import me.steven.indrev.utils.getRecipes
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.registerScreenHandler
-import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
+import net.adriantodt.fallflyinglib.FallFlyingLib
+import net.adriantodt.fallflyinglib.event.PreFallFlyingCallback
 import net.fabricmc.api.ModInitializer
+import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
@@ -36,24 +34,26 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.ElytraItem
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
-import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.tag.Tag
-import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 object IndustrialRevolution : ModInitializer {
     override fun onInitialize() {
+
+        //load the screenhandlers.kt class
+        COAL_GENERATOR_HANDLER
+
         IRConfig
         IRItemRegistry.registerAll()
         IRBlockRegistry.registerAll()
@@ -75,7 +75,10 @@ object IndustrialRevolution : ModInitializer {
             IRFluidRegistry.MOLTEN_SILVER_STILL,
             IRFluidRegistry.MOLTEN_LEAD_STILL,
             IRFluidRegistry.SULFURIC_ACID_STILL,
-            IRFluidRegistry.TOXIC_MUD_STILL
+            IRFluidRegistry.TOXIC_MUD_STILL,
+            IRFluidRegistry.HYDROGEN_STILL,
+            IRFluidRegistry.OXYGEN_STILL,
+            IRFluidRegistry.METHANE_STILL,
         ).forEach { it.registerFluidKey() }
 
         IRLootTables.register()
@@ -90,8 +93,6 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, InfuserRecipe.IDENTIFIER, InfuserRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, FluidInfuserRecipe.IDENTIFIER, FluidInfuserRecipe.TYPE)
-        Registry.register(Registry.RECIPE_SERIALIZER, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.SERIALIZER)
-        Registry.register(Registry.RECIPE_TYPE, RecyclerRecipe.IDENTIFIER, RecyclerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, SmelterRecipe.IDENTIFIER, SmelterRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)
@@ -104,6 +105,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, ModuleRecipe.IDENTIFIER, ModuleRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, LaserRecipe.IDENTIFIER, LaserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, LaserRecipe.IDENTIFIER, LaserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, ElectrolysisRecipe.IDENTIFIER, ElectrolysisRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, ElectrolysisRecipe.IDENTIFIER, ElectrolysisRecipe.TYPE)
 
         Registry.register(Registry.RECIPE_SERIALIZER, SelfRemainderRecipe.IDENTIFIER, SelfRemainderRecipe.SERIALIZER)
 
@@ -112,13 +115,12 @@ object IndustrialRevolution : ModInitializer {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
-        ServerLifecycleEvents.SERVER_STOPPED.register(NetworkEvents)
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player
-            syncVeinData(player)
-            syncConfig(player)
+            SyncVeinTypesPacket.sendVeinTypes(player)
+            SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
                 (player as IRServerPlayerEntityExtension).sync()
             }
@@ -126,15 +128,8 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
-
                 if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
                     player.sync()
-                }
-
-                val handler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
-                handler.ctx.run { world, pos ->
-                    val blockEntity = world.getBlockEntity(pos) as? BlockEntityClientSerializable ?: return@run
-                    blockEntity.sync()
                 }
             }
         }
@@ -149,6 +144,25 @@ object IndustrialRevolution : ModInitializer {
             })
         }
 
+        PreFallFlyingCallback.EVENT.register { player ->
+            if (player.world.isClient) return@register
+            val armorStack = player.inventory.getArmorStack(EquipmentSlot.CHEST.entitySlotId)
+            val tracker = FallFlyingLib.ABILITY.getTracker(player)
+            if (ReinforcedElytraItem.canFallFly(armorStack)) {
+                tracker.addSource(REINFORCED_ELYTRA_SOURCE)
+                val i = player.roll + 1
+                if (i % 10 == 0 && (i / 10) % 2 == 0) {
+                    armorStack.damage(1, player) { player -> player.sendEquipmentBreakStatus(EquipmentSlot.CHEST) }
+                }
+            } else {
+                tracker.removeSource(REINFORCED_ELYTRA_SOURCE)
+            }
+        }
+
+        FabricModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
+            if (ElytraItem.isUsable(stack)) 0.0f else 1.0f
+        }
+
         LOGGER.info("Industrial Revolution has initialized.")
     }
 
@@ -159,74 +173,14 @@ object IndustrialRevolution : ModInitializer {
     val MOD_GROUP: ItemGroup =
         FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK4).asItem() } }
 
-    val COAL_GENERATOR_HANDLER = CoalGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::CoalGeneratorScreenHandler)
-    val SOLAR_GENERATOR_HANDLER = SolarGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::SolarGeneratorScreenHandler)
-    val BIOMASS_GENERATOR_HANDLER = BiomassGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::BiomassGeneratorScreenHandler)
-    val HEAT_GENERATOR_HANDLER = HeatGeneratorScreenHandler.SCREEN_ID.registerScreenHandler(::HeatGeneratorScreenHandler)
-    val BATTERY_HANDLER = LazuliFluxContainerScreenHandler.SCREEN_ID.registerScreenHandler(::LazuliFluxContainerScreenHandler)
-    val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceScreenHandler)
-    val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)
-    val COMPRESSOR_HANDLER = CompressorScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorScreenHandler)
-    val SOLID_INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
-    val RECYCLER_HANDLER = RecyclerScreenHandler.SCREEN_ID.registerScreenHandler(::RecyclerScreenHandler)
-    val CHOPPER_HANDLER = ChopperScreenHandler.SCREEN_ID.registerScreenHandler(::ChopperScreenHandler)
-    val RANCHER_HANDLER = RancherScreenHandler.SCREEN_ID.registerScreenHandler(::RancherScreenHandler)
-    val MINING_RIG_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)
-    val FISHER_HANDLER = FisherScreenHandler.SCREEN_ID.registerScreenHandler(::FisherScreenHandler)
-    val MODULAR_WORKBENCH_HANDLER =
-        ModularWorkbenchScreenHandler.SCREEN_ID.registerScreenHandler(::ModularWorkbenchScreenHandler)
-    val SMELTER_HANDLER = SmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SmelterScreenHandler)
-    val CONDENSER_HANDLER = CondenserScreenHandler.SCREEN_ID.registerScreenHandler(::CondenserScreenHandler)
-    val FLUID_INFUSER_HANDLER = FluidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::FluidInfuserScreenHandler)
-    val FARMER_HANDLER = FarmerScreenHandler.SCREEN_ID.registerScreenHandler(::FarmerScreenHandler)
-    val SLAUGHTER_HANDLER = SlaughterScreenHandler.SCREEN_ID.registerScreenHandler(::SlaughterScreenHandler)
-    val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
-    val DISTILLER_HANDLER = DistillerScreenHandler.SCREEN_ID.registerScreenHandler(::DistillerScreenHandler)
-    val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)
+    val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
+    val WRENCH_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:wrenches")
+    val SCREWDRIVER_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:screwdrivers")
+
     val STEAM_TURBINE_HANDLER = SteamTurbineScreenHandler.SCREEN_ID.registerScreenHandler(::SteamTurbineScreenHandler)
     val SOLAR_POWER_PLANT_TOWER_HANDLER = SolarPowerPlantTowerScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantTowerScreenHandler)
     val SOLAR_POWER_PLANT_SMELTER_HANDLER = SolarPowerPlantSmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantSmelterScreenHandler)
     val BOILER_HANDLER = BoilerScreenHandler.SCREEN_ID.registerScreenHandler(::BoilerScreenHandler)
-
-    val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
-    val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)
-    val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorFactoryScreenHandler)
-    val SOLID_INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
-
-    val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterScreenHandler.SCREEN_ID) { syncId, inv, buf ->
-        val dir = buf.readEnumConstant(Direction::class.java)
-        val pos = buf.readBlockPos()
-        val list = (0 until 9).map { buf.readItemStack() }
-        val whitelist = buf.readBoolean()
-        val matchDurability = buf.readBoolean()
-        val matchTag = buf.readBoolean()
-        val hasServo = buf.readBoolean()
-        val type = if (hasServo) buf.readEnumConstant(EndpointData.Type::class.java) else null
-        val mode = if (hasServo) buf.readEnumConstant(EndpointData.Mode::class.java) else null
-
-        val controller = PipeFilterScreenHandler(syncId, inv, whitelist, matchDurability, matchTag, mode, type)
-        controller.direction = dir
-        controller.blockPos = pos
-        list.forEachIndexed { index, itemStack -> controller.backingList[index] = itemStack }
-        controller
-    } as ExtendedScreenHandlerType<PipeFilterScreenHandler>
-
-    val DRILL_HANDLER = MiningRigDrillScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigDrillScreenHandler)
-
-    val WRENCH_HANDLER = WrenchScreenHandler.SCREEN_ID.registerScreenHandler(::WrenchScreenHandler)
-
-    val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportScreenHandler.SCREEN_ID) { syncId, inv, buf ->
-        val pos = buf.readBlockPos()
-        val id = buf.readIdentifier()
-        val explored = buf.readInt()
-        val size = buf.readInt()
-        val veinData = ChunkVeinData(id, size, explored)
-        ResourceReportScreenHandler(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
-    } as ExtendedScreenHandlerType<ResourceReportScreenHandler>
-
-    val CABINET_HANDLER = CabinetScreenHandler.SCREEN_ID.registerScreenHandler(::CabinetScreenHandler)
-
-    val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)
@@ -241,10 +195,5 @@ object IndustrialRevolution : ModInitializer {
         }
     }
 
-    val SYNC_VEINS_PACKET = identifier("sync_veins_packet")
-    val SYNC_CONFIG_PACKET = identifier("sync_config_packet")
-    val UPDATE_MODULAR_TOOL_LEVEL = identifier("update_modular_level")
-    val SYNC_PROPERTY = identifier("sync_property")
-    val SYNC_MODULE_PACKET = identifier("sync_module")
-    val SYNC_NETWORK_SERVOS = identifier("sync_network_servos")
+    val REINFORCED_ELYTRA_SOURCE: AbilitySource = Pal.getAbilitySource(identifier("reinforced_elytra"))
 }

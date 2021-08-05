@@ -42,10 +42,9 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override var range: Int = 5
 
     var cooldown = 0.0
-    var nextBlocks = mutableListOf<BlockPos>().iterator()
+    private var nextBlocks = emptyList<BlockPos>().iterator()
 
     override fun machineTick() {
-        val inventory = inventoryComponent?.inventory ?: return
         val upgrades = getEnhancers()
         cooldown += Enhancer.getSpeed(upgrades, this)
         if (cooldown < config.processSpeed) return
@@ -81,9 +80,9 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         val performedAction = inventory?.inputSlots?.any { slot ->
             val stack = inventory.getStack(slot)
             val item = stack.item
-            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock || block is CocoaBlock
+            val isCropBlock = block is CropBlock || block is StemBlock || block is SweetBerryBushBlock || block is CocoaBlock || block is NetherWartBlock
             when {
-                item is BoneMealItem && isCropBlock && (block as Fertilizable).isFertilizable(world, pos, state, false) && block.canGrow(world, world.random, pos, state) -> {
+                item is BoneMealItem && isCropBlock && (block as? Fertilizable)?.isFertilizable(world, pos, state, false) == true && block.canGrow(world, world.random, pos, state) -> {
                     stack.decrement(1)
                     block.grow(world, world.random, pos, state)
                     world.syncWorldEvent(2005, pos, 0)
@@ -140,6 +139,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                         || item.block == Blocks.SUGAR_CANE
                         || item.block is SweetBerryBushBlock
                         || item.block is CocoaBlock
+                        || item.block is NetherWartBlock
                 )
 
     private fun canHarvest(slot: Int, state: BlockState, block: Block, item: Item): Boolean =
@@ -149,11 +149,12 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 || block is GourdBlock
                 || block == Blocks.SUGAR_CANE
                 || (block is CocoaBlock && state[CocoaBlock.AGE] == 2)
+                || (block is NetherWartBlock && state[NetherWartBlock.AGE] == 3)
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 
     override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
+        return if (enhancer == Enhancer.SPEED) 1 else super.getMaxCount(enhancer)
     }
 
     override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {

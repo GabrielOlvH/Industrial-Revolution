@@ -64,7 +64,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
             if (dir != null && blockEntity.connections[dir]!!.isConnected()) {
                 val network = block.type.getNetworkState(world) as? ServoNetworkState?
                 network?.also { networkState ->
-                    if (block.type.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
+                    if (networkState.networksByPos.get(pos.asLong())?.containers?.containsKey(pos.offset(dir)) == true) {
                         val (x, y, z) = hit
                         if (networkState.hasServo(pos, dir)) {
                             when (networkState.getEndpointData(pos, dir)?.type) {
@@ -78,11 +78,11 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                         val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(LiteralText("Failed to put servo"), true)
                         data.type = type
                         data.mode = getMode(stack)
-                        block.type.version++
+                        networkState.version++
                         stack.decrement(1)
 
                         networkState.markDirty()
-                        return ActionResult.CONSUME
+                        return ActionResult.SUCCESS
                     }
                 }
             }

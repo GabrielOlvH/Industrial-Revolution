@@ -1,7 +1,9 @@
 package me.steven.indrev.blocks.machine.pipes
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
+import me.steven.indrev.items.misc.IRServoItem
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
@@ -66,31 +68,64 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(cover.block)))
                 blockEntity.coverState = null
                 blockEntity.markDirty()
+                blockEntity.sync()
             }
         }
     }
 
-    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity?, hand: Hand?, hit: BlockHitResult): ActionResult {
-        val handStack = player?.getStackInHand(hand) ?: return ActionResult.FAIL
+    override fun onUse(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity, hand: Hand, hit: BlockHitResult): ActionResult {
+        val handStack = player.getStackInHand(hand) ?: return ActionResult.FAIL
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.FAIL
-        if (handStack.item == IRItemRegistry.WRENCH && world is ServerWorld) {
+
+        val tryWrench = onWrench(state, world, pos, player, hand, hit)
+        if (tryWrench.isAccepted) return tryWrench
+        else if (handStack.item is IRServoItem) return ActionResult.PASS
+        val item = handStack.item
+        if (
+            !world.isClient
+            && blockEntity.coverState == null
+            && !handStack.isEmpty
+            && !player.isSneaking
+            && item is BlockItem
+            && item.block !is BlockEntityProvider
+            && item.block.defaultState.isFullCube(world, pos)
+        ) {
+            val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
+            blockEntity.coverState = result
+            blockEntity.markDirty()
+            blockEntity.sync()
+            if (!player.abilities.creativeMode)
+                handStack.decrement(1)
+            return ActionResult.SUCCESS
+        }
+        return ActionResult.PASS
+    }
+
+    private fun onWrench(state: BlockState,world: World, pos: BlockPos,player: PlayerEntity,   hand: Hand, hit: BlockHitResult): ActionResult {
+        val handStack = player.getStackInHand(hand) ?: return ActionResult.FAIL
+        val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return ActionResult.FAIL
+        if (handStack.isIn(IndustrialRevolution.WRENCH_TAG) && world is ServerWorld) {
             val dir = getSideFromHit(hit.pos, pos)
             val (x, y, z) = hit.pos
-            (type.getNetworkState(world) as? ServoNetworkState<*>?)?.let { networkState ->
+            val networkState = type.getNetworkState(world)
+            if (networkState is ServoNetworkState<*>) {
                 if (dir != null) {
                     val data = networkState.removeEndpointData(pos, dir)
                     when (data?.type) {
-                        EndpointData.Type.OUTPUT ->
+                        EndpointData.Type.OUTPUT -> {
                             ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
-                        EndpointData.Type.RETRIEVER ->
+                            return ActionResult.SUCCESS
+                        }
+                        EndpointData.Type.RETRIEVER -> {
                             ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
-                        else -> return@let
+                            return ActionResult.SUCCESS
+                        }
+                        else -> { }
                     }
-                    return ActionResult.CONSUME
                 }
             }
 
-            if (dir != null && blockEntity.connections[dir]!!.isConnected())
+            if (blockEntity.connections[dir]!!.isConnected())
                 blockEntity.connections[dir] = ConnectionType.WRENCHED
             else
                 blockEntity.connections[hit.side] =
@@ -98,36 +133,27 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             blockEntity.markDirty()
             blockEntity.sync()
             world.updateNeighbors(pos, state.block)
-            Network.handleUpdate(type, pos)
+            Network.handleUpdate(networkState, pos)
+            return ActionResult.success(world.isClient)
         }
-        val item = handStack.item
-        if (blockEntity.coverState != null && !handStack.isEmpty && !player.isSneaking) {
-            if (item is BlockItem && item.block !is BlockEntityProvider && item.block.defaultState.isFullCube(world, pos)) {
-                val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
-                blockEntity.coverState = result
-                blockEntity.markDirty()
-                if (!player.abilities.creativeMode)
-                    handStack.decrement(1)
-                return ActionResult.SUCCESS
-            }
-        }
-        return ActionResult.FAIL
+        return ActionResult.PASS
     }
 
     @Suppress("DEPRECATION")
     override fun onStateReplaced(
-        state: BlockState,
+        blockState: BlockState,
         world: World,
         pos: BlockPos,
         newState: BlockState,
         moved: Boolean
     ) {
-        super.onStateReplaced(state, world, pos, newState, moved)
+        super.onStateReplaced(blockState, world, pos, newState, moved)
         if (!world.isClient) {
-            if (state.isOf(newState.block)) {
-                Network.handleUpdate(type, pos)
-            } else {
-                (type.getNetworkState(world as ServerWorld) as? ServoNetworkState<*>?)?.let { networkState ->
+            val networkState = type.getNetworkState(world as ServerWorld)
+            if (networkState is ServoNetworkState<*>) {
+                if (blockState.isOf(newState.block)) {
+                    Network.handleUpdate(networkState, pos)
+                } else {
                     Direction.values().forEach { dir ->
                         val data = networkState.removeEndpointData(pos, dir)
                         val (x, y, z) = pos.toVec3d()
@@ -136,13 +162,13 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                                 ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_OUTPUT))
                             EndpointData.Type.RETRIEVER ->
                                 ItemScatterer.spawn(world, x, y, z, ItemStack(IRItemRegistry.SERVO_RETRIEVER))
-                            else -> {}
+                            else -> {
+                            }
                         }
                     }
                 }
-
-                Network.handleBreak(type, pos)
             }
+            Network.handleBreak(networkState, pos)
         }
     }
 
@@ -160,8 +186,8 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             DIRECTIONS.forEach { facing ->
                 updateConnection(world as ServerWorld, pos, pos.offset(facing), facing)
             }
-
-            Network.handleUpdate(type, pos)
+            val networkState = type.getNetworkState(world as ServerWorld)
+            Network.handleUpdate(networkState, pos)
         }
     }
 
@@ -181,6 +207,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
     }
 
     private fun updateConnection(world: ServerWorld, pos: BlockPos, neighborPos: BlockPos, facing: Direction) {
+        val networkState = type.getNetworkState(world)
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return
         val before = blockEntity.connections[facing]
         val new = ConnectionType.getType(isConnectable(world, neighborPos, facing))
@@ -190,7 +217,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
             blockEntity.connections[facing] = new
             blockEntity.markDirty()
             blockEntity.sync()
-            Network.handleUpdate(type, pos)
+            Network.handleUpdate(networkState, pos)
         }
     }
 
@@ -230,5 +257,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
                 else -> null
             }
         }
+
+        val DIRECTIONS = Direction.values()
     }
 }

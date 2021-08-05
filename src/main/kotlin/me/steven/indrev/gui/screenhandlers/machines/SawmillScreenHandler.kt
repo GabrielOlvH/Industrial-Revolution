@@ -2,8 +2,8 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SAWMILL_HANDLER
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.createProcessBar
@@ -13,7 +13,7 @@ import net.minecraft.screen.ScreenHandlerContext
 
 class SawmillScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SAWMILL_HANDLER,
+        SAWMILL_HANDLER,
         syncId,
         playerInventory,
         ctx

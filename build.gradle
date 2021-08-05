@@ -75,6 +75,12 @@ repositories {
         }
     }
     maven {
+        url "https://oskarstrom.net/maven"
+        content {
+            includeGroup "net.oskarstrom"
+        }
+    }
+    maven {
         name = "Technici4n"
         url = "https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/"
         content {
@@ -87,6 +93,15 @@ repositories {
         url = 'https://maven.cafeteria.dev'
         content {
             includeGroup 'dev.cafeteria'
+            includeGroup 'net.adriantodt.fabricmc'
+        }
+    }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+        content {
+            includeGroup 'io.github.ladysnake'
+            includeGroupByRegex 'io\\.github\\.onyxstudios.*'
         }
     }
 }
@@ -128,10 +143,16 @@ dependencies {
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
+    dependencies.ext.lib("net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}")
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
+
+    // DashLoader Stuff
+    modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
+    dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
+    modRuntime("org.yaml:snakeyaml:1.27")
 }
 
 processResources {
@@ -152,16 +173,18 @@ tasks.withType(JavaCompile) {
 
 
 java {
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
 }
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
+		rename { "${it}_${project.archivesBaseName}"}
+	}
+
+    exclude("me/steven/indrev/datagen")
 }
 
 // configure the maven publication

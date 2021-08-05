@@ -6,6 +6,7 @@ import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
+import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.*
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
@@ -19,6 +20,7 @@ import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.blocks.machine.solarpowerplant.*
 import me.steven.indrev.blocks.misc.*
+import me.steven.indrev.networks.energy.CableEnergyIo
 import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -30,6 +32,7 @@ import net.minecraft.block.MapColor
 import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.registry.Registry
 
@@ -44,6 +47,8 @@ object IRBlockRegistry {
         identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
         FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
+
+        identifier("biomass_composter").block(BIOMASS_COMPOSTER_BLOCK).item(BIOMASS_COMPOSTER_ITEM).blockEntityType(BIOMASS_COMPOSTER_BLOCK_ENTITY)
 
         identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
 
@@ -80,6 +85,14 @@ object IRBlockRegistry {
         identifier("cable_mk2").block(CABLE_MK2).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK2)
         identifier("cable_mk3").block(CABLE_MK3).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK3)
         identifier("cable_mk4").block(CABLE_MK4).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK4)
+
+        EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
+            if (world is ServerWorld) {
+                val energyNetwork = world.energyNetworkState.networksByPos[pos.asLong()]
+                if (energyNetwork != null) return@registerForBlocks CableEnergyIo(energyNetwork)
+            }
+            CableEnergyIo.NO_NETWORK
+        }, CABLE_MK1, CABLE_MK2, CABLE_MK3, CABLE_MK4)
 
         identifier("heliostat")
             .block(HELIOSTAT_BLOCK)
@@ -153,6 +166,10 @@ object IRBlockRegistry {
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
     )
+
+    val BIOMASS_COMPOSTER_BLOCK = BiomassComposterBlock()
+    val BIOMASS_COMPOSTER_ITEM = BlockItem(BIOMASS_COMPOSTER_BLOCK, itemSettings())
+    val BIOMASS_COMPOSTER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(::BiomassComposterBlockEntity, BIOMASS_COMPOSTER_BLOCK).build()
 
     val WITHER_PROOF_OBSIDIAN = Block(
         FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)

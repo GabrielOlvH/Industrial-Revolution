@@ -37,6 +37,17 @@
       }
     ]
   },
+  "custom": {
+    "dashloader:customobject":  [
+      "me.steven.indrev.compat.dashloader.models.DashCableModel",
+      "me.steven.indrev.compat.dashloader.models.DashFluidPipeModel",
+      "me.steven.indrev.compat.dashloader.models.DashItemPipeModel",
+      "me.steven.indrev.compat.dashloader.models.DashLazuliFluxContainerModel",
+      "me.steven.indrev.compat.dashloader.models.DashMachineModel",
+      "me.steven.indrev.compat.dashloader.models.DashMinerModel",
+      "me.steven.indrev.compat.dashloader.models.DashTankModel"
+    ]
+  },
   "mixins": [
     "indrev.mixins.json"
   ],
@@ -44,7 +55,7 @@
     "fabricloader": ">=0.7.1",
     "fabric": ">=0.32.0",
     "fabric-language-kotlin": ">=1.6.0",
-    "minecraft": "1.17.x",
+    "minecraft": ">=1.17.1",
 
     "libgui": "*"
   },

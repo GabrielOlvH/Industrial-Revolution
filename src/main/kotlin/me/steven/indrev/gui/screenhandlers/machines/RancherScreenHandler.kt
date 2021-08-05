@@ -6,13 +6,15 @@ import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
 import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
+import me.steven.indrev.packets.common.UpdateRancherConfigPacket
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.add
@@ -30,7 +32,7 @@ import net.minecraft.util.Identifier
 
 class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.RANCHER_HANDLER,
+        RANCHER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -50,10 +52,10 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         setRootPanel(root)
 
-        feedBabies = propertyDelegate[4] == 1
-        mateAdults = propertyDelegate[5] == 1
-        matingLimit = propertyDelegate[6]
-        killAfter = propertyDelegate[7]
+        feedBabies = propertyDelegate[RancherBlockEntity.FEED_BABIES_ID] == 1
+        mateAdults = propertyDelegate[RancherBlockEntity.MATE_ADULTS] == 1
+        matingLimit = propertyDelegate[RancherBlockEntity.MATING_LIMIT]
+        killAfter = propertyDelegate[RancherBlockEntity.KILL_AFTER]
 
         root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
         root.add(buildConfigPanel()) { it.icon(ItemIcon(IRItemRegistry.WRENCH)) }
@@ -159,7 +161,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
                 buf.writeBoolean(mateAdults)
                 buf.writeInt(matingLimitText.text.toIntOrNull() ?: matingLimit)
                 buf.writeInt(killAfterText.text.toIntOrNull() ?: killAfter)
-                ClientPlayNetworking.send(SYNC_RANCHER_CONFIG, buf)
+                ClientPlayNetworking.send(UpdateRancherConfigPacket.SYNC_RANCHER_CONFIG, buf)
             }
         }
     }
@@ -172,7 +174,6 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
     companion object {
         val SCREEN_ID = identifier("rancher_screen")
-        val SYNC_RANCHER_CONFIG = identifier("rancher_sync_config")
         val RANCHER_MK4 by lazy { MachineRegistry.RANCHER_REGISTRY.block(Tier.MK4) }
     }
 }

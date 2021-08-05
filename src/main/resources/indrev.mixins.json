@@ -9,6 +9,7 @@
     "common.AccessorEnchantmentPredicate",
     "common.AccessorFluidBlock",
     "common.AccessorItemTags",
+    "common.AccessorLivingEntity",
     "common.AccessorRecipeManager",
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
@@ -17,15 +18,19 @@
     "common.MixinEntity",
     "common.MixinItemPredicate",
     "common.MixinItemStack",
+    "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
-    "common.MixinServerPlayerEntity"
+    "common.MixinServerPlayerEntity",
+    "common.MixinServerWorld",
+    "common.MixinPlayerInventory"
   ],
   "client": [
     "client.MixinBuiltChunk",
     "client.MixinClientPlayerInteractionManager",
     "client.MixinClientRecipeBook",
     "client.MixinGameRenderer",
+    "client.MixinItemRenderer",
     "client.MixinLivingEntityClient",
     "client.MixinScreen",
     "client.MixinWItemSlot"

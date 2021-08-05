@@ -1,0 +1,14 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:compressor_mk2"
+    },
+    {
+      "item": "indrev:tier_upgrade_mk3"
+    }
+  ],
+  "result": {
+    "item": "indrev:compressor_mk3"
+  }
+}

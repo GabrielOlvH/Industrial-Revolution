@@ -1,0 +1,14 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "indrev:sawmill_mk1"
+    },
+    {
+      "item": "indrev:tier_upgrade_mk2"
+    }
+  ],
+  "result": {
+    "item": "indrev:sawmill_mk2"
+  }
+}

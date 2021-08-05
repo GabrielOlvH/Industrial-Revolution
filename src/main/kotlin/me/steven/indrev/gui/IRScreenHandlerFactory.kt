@@ -10,7 +10,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 
-class IRScreenHandlerFactory(
+open class IRScreenHandlerFactory(
     private val handlerFactory: (Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler,
     private val pos: BlockPos
 ) : ExtendedScreenHandlerFactory {
@@ -18,8 +18,8 @@ class IRScreenHandlerFactory(
         return handlerFactory(syncId, inv!!, ScreenHandlerContext.create(inv.player.world, pos))
     }
 
-    override fun writeScreenOpeningData(p0: ServerPlayerEntity?, p1: PacketByteBuf?) {
-        p1?.writeBlockPos(pos)
+    override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {
+        buf.writeBlockPos(pos)
     }
 
     override fun getDisplayName(): Text? = null

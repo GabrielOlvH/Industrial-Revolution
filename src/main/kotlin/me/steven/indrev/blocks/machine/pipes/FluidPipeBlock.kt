@@ -59,8 +59,8 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
     }
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
-        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
+        val directions = DIRECTIONS.filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.get().computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
@@ -71,7 +71,12 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
 
     companion object {
 
-        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
+        val SHAPE_CACHE: ThreadLocal<Int2ObjectOpenHashMap<VoxelShape>> = ThreadLocal.withInitial {
+            object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
+                override fun rehash(newN: Int) {
+                }
+            }
+        }
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.0, 10.0, 6.0, 10.0, 16.0, 10.0)

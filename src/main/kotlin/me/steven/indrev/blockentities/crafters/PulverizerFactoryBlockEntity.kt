@@ -11,7 +11,6 @@ import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.PulverizerRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.BlockPos
 
 class PulverizerFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
@@ -21,7 +20,6 @@ class PulverizerFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(6, 8, 10, 12, 14) }
@@ -34,6 +32,7 @@ class PulverizerFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
         }
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
+        this.propertiesSize = 4 + 5 * 2
     }
 
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE

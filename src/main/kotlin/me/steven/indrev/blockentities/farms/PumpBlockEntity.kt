@@ -8,7 +8,7 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.drainFluid
@@ -85,8 +85,8 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
         val fluidToPump = world.getFluidState(currentTarget)
 
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
-            if (!fluidToPump.isEmpty && canUse(config.energyCost)) {
+        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost)) {
+            if (!fluidToPump.isEmpty && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
                 val blockState = world.getBlockState(currentTarget)
                 val block = blockState?.block
                 if (block is FluidDrainable && block is FluidBlock) {
@@ -101,7 +101,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         } else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
             isDescending = false
             movingTicks = movingTicks.roundToInt().toDouble()
-        } else if (use(2.0) && (lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false))) {
+        } else if ((lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false)) && use(2.0)) {
             movingTicks += 0.01
             sync()
         }
@@ -154,14 +154,13 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         super.readNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        super.fromClientTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
+        movingTicks = tag.getDouble("MovingTicks")
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("MovingTicks", movingTicks)
-        return super.toClientTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.putDouble("MovingTicks", movingTicks)
+        return tag
     }
 
     companion object {

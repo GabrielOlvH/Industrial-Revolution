@@ -1,6 +1,7 @@
 package me.steven.indrev.mixin.common;
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import me.steven.indrev.components.CraftingComponent;
 import me.steven.indrev.recipes.machines.IRRecipe;
 import me.steven.indrev.recipes.machines.entries.InputEntry;
 import me.steven.indrev.recipes.machines.entries.OutputEntry;
@@ -11,7 +12,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -68,7 +68,7 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull List<ItemStack> inv, @Nullable FluidVolume fluidVolume) {
+    public boolean matches(@NotNull List<ItemStack> inv, @NotNull List<? extends FluidVolume> fluidVolume) {
         return this.input.test(inv.get(0));
     }
 
@@ -88,5 +88,10 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     public boolean isEmpty() {
         DefaultedList<Ingredient> defaultedList = this.getIngredients();
         return defaultedList.isEmpty() || defaultedList.stream().anyMatch((ingredient) -> ingredient.getMatchingStacksClient().length == 0);
+    }
+
+    @Override
+    public boolean canStart(@NotNull CraftingComponent<?> component) {
+        return component.fits(output);
     }
 }

@@ -2,8 +2,9 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.FLUID_INFUSER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.utils.add
@@ -17,7 +18,7 @@ import net.minecraft.util.Identifier
 
 class FluidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.FLUID_INFUSER_HANDLER,
+        FLUID_INFUSER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -30,7 +31,11 @@ class FluidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 3.7, 1.8)
 
-        val fluid = WFluid(ctx, 0)
+        val fluid = WFluid(ctx, propertyDelegate, 0,
+            FluidInfuserBlockEntity.TANK_SIZE_ID,
+            FluidInfuserBlockEntity.INPUT_TANK_ID,
+            FluidInfuserBlockEntity.INPUT_TANK_FLUID_ID
+        )
         root.add(fluid, 2.5, 1.0)
 
         val processWidget = createProcessBar()
@@ -39,7 +44,11 @@ class FluidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         val outputStack = WItemSlot.of(blockInventory, 3)
         root.add(outputStack, 6.4, 1.8)
 
-        val outputFluid = WFluid(ctx, 1)
+        val outputFluid = WFluid(ctx, propertyDelegate, 1,
+            FluidInfuserBlockEntity.TANK_SIZE_ID,
+            FluidInfuserBlockEntity.OUTPUT_TANK_ID,
+            FluidInfuserBlockEntity.OUTPUT_TANK_FLUID_ID
+        )
         root.add(outputFluid, 7.7, 1.0)
 
         root.validate(this)

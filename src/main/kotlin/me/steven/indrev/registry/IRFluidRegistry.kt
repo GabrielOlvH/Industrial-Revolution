@@ -1,5 +1,6 @@
 package me.steven.indrev.registry
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blocks.misc.AcidFluidBlock
 import me.steven.indrev.datagen.utils.*
 import me.steven.indrev.fluids.BaseFluid
@@ -65,7 +66,25 @@ object IRFluidRegistry {
         identifier("${TOXIC_MUD_IDENTIFIER.path}_still").fluid(TOXIC_MUD_STILL)
         identifier("${TOXIC_MUD_IDENTIFIER.path}_flowing").fluid(TOXIC_MUD_FLOWING)
         identifier("${TOXIC_MUD_IDENTIFIER.path}_bucket").item(TOXIC_MUD_BUCKET)
-        
+
+        HYDROGEN_IDENTIFIER.block(HYDROGEN)
+        identifier("${HYDROGEN_IDENTIFIER.path}_still").fluid(HYDROGEN_STILL)
+        identifier("${HYDROGEN_IDENTIFIER.path}_flowing").fluid(HYDROGEN_FLOWING)
+        identifier("${HYDROGEN_IDENTIFIER.path}_bucket").item(HYDROGEN_BUCKET)
+        IRFluidFuelRegistry.register(HYDROGEN_STILL, 10, 900, 4, FluidAmount.of(1, 10))
+
+        OXYGEN_IDENTIFIER.block(OXYGEN)
+        identifier("${OXYGEN_IDENTIFIER.path}_still").fluid(OXYGEN_STILL)
+        identifier("${OXYGEN_IDENTIFIER.path}_flowing").fluid(OXYGEN_FLOWING)
+        identifier("${OXYGEN_IDENTIFIER.path}_bucket").item(OXYGEN_BUCKET)
+
+        METHANE_IDENTIFIER.block(METHANE)
+        identifier("${METHANE_IDENTIFIER.path}_still").fluid(METHANE_STILL)
+        identifier("${METHANE_IDENTIFIER.path}_flowing").fluid(METHANE_FLOWING)
+        identifier("${METHANE_IDENTIFIER.path}_bucket").item(METHANE_BUCKET)
+        IRFluidFuelRegistry.register(METHANE_STILL, 60, 900, 128, FluidAmount.of(1, 4))
+
+
         STEAM_IDENTIFIER.block(STEAM)
         identifier("${STEAM_IDENTIFIER.path}_still").fluid(STEAM_STILL)
         identifier("${STEAM_IDENTIFIER.path}_flowing").fluid(STEAM_FLOWING)
@@ -152,7 +171,31 @@ object IRFluidRegistry {
     val TOXIC_MUD_FLOWING =
         BaseFluid.Flowing(TOXIC_MUD_IDENTIFIER, { TOXIC_MUD }, { TOXIC_MUD_BUCKET }, 0x5c3b0e) { TOXIC_MUD_STILL }
     val TOXIC_MUD_BUCKET = BucketItem(TOXIC_MUD_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
-    val TOXIC_MUD = AcidFluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL))
+    val TOXIC_MUD = object : FluidBlock(TOXIC_MUD_STILL, FabricBlockSettings.of(MUD_MATERIAL)) {}
+
+    val HYDROGEN_IDENTIFIER = identifier("hydrogen")
+    val HYDROGEN_STILL: BaseFluid.Still =
+        BaseFluid.Still(HYDROGEN_IDENTIFIER, { HYDROGEN }, { HYDROGEN_BUCKET }, -1) { HYDROGEN_FLOWING }
+    val HYDROGEN_FLOWING =
+        BaseFluid.Flowing(HYDROGEN_IDENTIFIER, { HYDROGEN }, { HYDROGEN_BUCKET }, -1) { HYDROGEN_STILL }
+    val HYDROGEN_BUCKET = BucketItem(HYDROGEN_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
+    val HYDROGEN = object : FluidBlock(HYDROGEN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val OXYGEN_IDENTIFIER = identifier("oxygen")
+    val OXYGEN_STILL: BaseFluid.Still =
+        BaseFluid.Still(OXYGEN_IDENTIFIER, { OXYGEN }, { OXYGEN_BUCKET }, 0xfcfccf) { OXYGEN_FLOWING }
+    val OXYGEN_FLOWING =
+        BaseFluid.Flowing(OXYGEN_IDENTIFIER, { OXYGEN }, { OXYGEN_BUCKET }, 0xfcfccf) { OXYGEN_STILL }
+    val OXYGEN_BUCKET = BucketItem(OXYGEN_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
+    val OXYGEN = object : FluidBlock(OXYGEN_STILL, FabricBlockSettings.of(Material.LAVA)) {}
+
+    val METHANE_IDENTIFIER = identifier("methane")
+    val METHANE_STILL: BaseFluid.Still =
+        BaseFluid.Still(METHANE_IDENTIFIER, { METHANE }, { METHANE_BUCKET }, 0xe8ffbf) { METHANE_FLOWING }
+    val METHANE_FLOWING =
+        BaseFluid.Flowing(METHANE_IDENTIFIER, { METHANE }, { METHANE_BUCKET }, 0xe8ffbf) { METHANE_STILL }
+    val METHANE_BUCKET = BucketItem(METHANE_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
+    val METHANE = object : FluidBlock(METHANE_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 
     val STEAM_IDENTIFIER = identifier("steam")
     val STEAM_STILL: BaseFluid.Still = BaseFluid.Still(STEAM_IDENTIFIER, { STEAM }, { STEAM_BUCKET }, -1) { STEAM_FLOWING }

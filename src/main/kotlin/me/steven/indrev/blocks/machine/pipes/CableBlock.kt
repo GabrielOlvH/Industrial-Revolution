@@ -5,6 +5,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.energy.CableEnergyIo
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.pack
 import net.minecraft.client.item.TooltipContext
@@ -34,7 +35,8 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        if (energyOf(world, pos, dir) != null) return true
+        val handler = energyOf(world, pos, dir)
+        if (handler != null && handler !is CableEnergyIo) return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
         if (!blockEntity.cachedState.isOf(this)) return false
         return blockEntity.connections[dir.opposite]!!.isConnectable()
@@ -48,8 +50,8 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun getShape(blockEntity: BasePipeBlockEntity): VoxelShape {
-        val directions = Direction.values().filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
-        return SHAPE_CACHE.computeIfAbsent(pack(directions).toInt(), IntFunction {
+        val directions = DIRECTIONS.filter { dir -> blockEntity.connections[dir] == ConnectionType.CONNECTED }
+        return SHAPE_CACHE.get().computeIfAbsent(pack(directions).toInt(), IntFunction {
             var shape = CENTER_SHAPE
             directions.forEach { direction ->
                 shape = VoxelShapes.union(shape, getShape(direction))
@@ -60,7 +62,12 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
 
     companion object {
 
-        val SHAPE_CACHE = Int2ObjectOpenHashMap<VoxelShape>()
+        val SHAPE_CACHE: ThreadLocal<Int2ObjectOpenHashMap<VoxelShape>> = ThreadLocal.withInitial {
+            object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
+                override fun rehash(newN: Int) {
+                }
+            }
+        }
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.0, 0.0, 6.0, 10.0, 6.0, 10.0)
         val UP_SHAPE: VoxelShape = createCuboidShape(6.0, 10.5, 6.0, 10.0, 16.0, 10.0)

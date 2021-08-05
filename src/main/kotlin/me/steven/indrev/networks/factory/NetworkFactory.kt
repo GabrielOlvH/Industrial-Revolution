@@ -3,6 +3,7 @@ package me.steven.indrev.networks.factory
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.networks.Network
+import me.steven.indrev.networks.NetworkState
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -13,6 +14,7 @@ interface NetworkFactory<T : Network> {
 
     fun process(
         network: T,
+        state: NetworkState<T>,
         world: ServerWorld,
         pos: BlockPos,
         direction: Direction,
@@ -22,6 +24,7 @@ interface NetworkFactory<T : Network> {
     fun deepScan(
         scanned: LongOpenHashSet,
         type: Network.Type<T>,
+        state: NetworkState<T>,
         network: T,
         chunk: Chunk,
         world: ServerWorld,
@@ -30,24 +33,24 @@ interface NetworkFactory<T : Network> {
         direction: Direction
     ) {
         val blockState by lazy { chunk.getBlockState(blockPos) }
-        val shouldContinue = process(network, world, blockPos, direction) { blockState }
+        val shouldContinue = process(network, state, world, blockPos, direction) { blockState }
         val longPos = blockPos.asLong()
         if (blockPos != source && !scanned.add(longPos)) return
         if (shouldContinue) {
-            if (type.networksByPos.containsKey(longPos)) {
-                val oldNetwork = type.networksByPos[longPos]
+            if (state.networksByPos.containsKey(longPos)) {
+                val oldNetwork = state.networksByPos[longPos]
                 if (oldNetwork != network)
                     oldNetwork?.remove()
             }
-            type.updatedPositions.add(longPos)
+            state.updatedPositions.add(longPos)
             val blockEntity = chunk.getBlockEntity(blockPos) as? BasePipeBlockEntity ?: return
             DIRECTIONS.forEach { dir ->
                 if (blockEntity.connections[dir]!!.isConnected()) {
                     val nPos = blockPos.offset(dir)
                     if (nPos.x shr 4 == chunk.pos.x && nPos.z shr 4 == chunk.pos.z)
-                        deepScan(scanned, type, network, chunk, world, nPos, source, dir)
+                        deepScan(scanned, type, state, network, chunk, world, nPos, source, dir)
                     else
-                        deepScan(scanned, type, network, world.getChunk(nPos), world, nPos, source, dir)
+                        deepScan(scanned, type, state, network, world.getChunk(nPos), world, nPos, source, dir)
                 }
             }
         }
@@ -58,10 +61,9 @@ interface NetworkFactory<T : Network> {
         world: ServerWorld,
         source: BlockPos
     ): T {
-        type
         val network = type.createEmpty(world)
         DIRECTIONS.forEach { direction ->
-            deepScan(LongOpenHashSet(), type, network, world.getChunk(source), world, source, source, direction)
+            deepScan(LongOpenHashSet(), type, type.getNetworkState(world), network, world.getChunk(source), world, source, source, direction)
         }
         return network
     }

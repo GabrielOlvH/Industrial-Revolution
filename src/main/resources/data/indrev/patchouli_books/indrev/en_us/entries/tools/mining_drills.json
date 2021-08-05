@@ -1,7 +1,7 @@
 {
   "name": "Mining Drills",
   "category": "indrev:tools",
-  "sortnum": 2,
+  "sortnum": 3,
   "icon": "indrev:mining_drill_mk1",
   "pages": [
     {

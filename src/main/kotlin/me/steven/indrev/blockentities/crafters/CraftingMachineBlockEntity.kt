@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.recipe.SmeltingRecipe
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -34,10 +33,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
 
-    init {
-        this.propertyDelegate = ArrayPropertyDelegate(6)
-    }
-
     override val maxOutput: Double = 0.0
 
     private var currentRecipe: T? = null
@@ -45,6 +40,10 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     abstract val type: IRecipeGetter<T>
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
     var isSplitOn = false
+
+    init {
+        this.propertiesSize = 6
+    }
 
     override fun machineTick() {
         ticks++
@@ -73,6 +72,21 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                     config.processSpeed
             Enhancer.BUFFER -> config.maxEnergyStored
             else -> 0.0
+        }
+    }
+
+    override fun getMaxCount(enhancer: Enhancer): Int {
+        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
+    }
+
+    override fun get(index: Int): Int {
+        return if (index < 4) {
+            super.get(index)
+        } else {
+            val isEven = (index - PROCESS_TIME_ID) % 2 == 0
+            val current = (if (isEven) index - PROCESS_TIME_ID else index - TOTAL_PROCESS_TIME_ID)/2
+            if (isEven) craftingComponents[current].processTime
+            else craftingComponents[current].totalProcessTime
         }
     }
 
@@ -123,10 +137,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         return destination
     }
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
-    }
-
     override fun readNbt(tag: NbtCompound?) {
         val craftTags = tag?.getList("craftingComponents", 10)
         craftTags?.forEach { craftTag ->
@@ -147,27 +157,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         tag?.put("craftingComponents", craftTags)
         tag?.putBoolean("split", isSplitOn)
         return super.writeNbt(tag)
-    }
-
-    override fun fromClientTag(tag: NbtCompound?) {
-        val craftTags = tag?.getList("craftingComponents", 10)
-        craftTags?.forEach { craftTag ->
-            val index = (craftTag as NbtCompound).getInt("index")
-            craftingComponents[index].readNbt(craftTag)
-        }
-        isSplitOn = tag?.getBoolean("split") ?: isSplitOn
-        super.fromClientTag(tag)
-    }
-
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        val craftTags = NbtList()
-        craftingComponents.forEachIndexed { index, crafting ->
-            val craftTag = NbtCompound()
-            craftTags.add(crafting.writeNbt(craftTag))
-            craftTag.putInt("index", index)
-        }
-        tag?.putBoolean("split", isSplitOn)
-        return super.toClientTag(tag)
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -196,5 +185,10 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             ++n
         }
         ExperienceOrbEntity.spawn(world as ServerWorld, pos, n)
+    }
+
+    companion object {
+        const val PROCESS_TIME_ID = 4
+        const val TOTAL_PROCESS_TIME_ID = 5
     }
 }
