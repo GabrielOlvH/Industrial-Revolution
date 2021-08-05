@@ -78,10 +78,12 @@ object IRBlockRegistry {
         identifier("cable_mk3").block(CABLE_MK3).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK3)
         identifier("cable_mk4").block(CABLE_MK4).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK4)
 
-        EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
-            if (world is ServerWorld) {
+        EnergyApi.SIDED.registerForBlocks({ world, pos, _, be, dir ->
+            if (world is ServerWorld && be is BasePipeBlockEntity) {
                 val energyNetwork = world.energyNetworkState.networksByPos[pos.asLong()]
-                if (energyNetwork != null) return@registerForBlocks CableEnergyIo(energyNetwork)
+                if (energyNetwork != null && be.connections[dir.opposite]?.isConnected() == true) {
+                    return@registerForBlocks CableEnergyIo(energyNetwork)
+                }
             }
             CableEnergyIo.NO_NETWORK
         }, CABLE_MK1, CABLE_MK2, CABLE_MK3, CABLE_MK4)
