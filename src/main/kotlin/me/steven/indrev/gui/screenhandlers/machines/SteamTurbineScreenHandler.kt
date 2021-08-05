@@ -6,6 +6,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.STEAM_TURBINE_HANDLER
 import me.steven.indrev.gui.widgets.misc.WKnob
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -16,7 +17,7 @@ import net.minecraft.util.Identifier
 
 class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.STEAM_TURBINE_HANDLER,
+        STEAM_TURBINE_HANDLER,
         syncId,
         playerInventory,
         ctx

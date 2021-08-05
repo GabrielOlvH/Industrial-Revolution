@@ -8,6 +8,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SOLAR_POWER_PLANT_SMELTER_HANDLER
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
@@ -21,7 +22,7 @@ class SolarPowerPlantSmelterScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SOLAR_POWER_PLANT_SMELTER_HANDLER,
+        SOLAR_POWER_PLANT_SMELTER_HANDLER,
         syncId,
         playerInventory,
         ctx

@@ -1,6 +1,6 @@
 package me.steven.indrev.utils
 
-import me.steven.indrev.items.misc.IRWrenchItem
+import me.steven.indrev.IndustrialRevolution
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.client.MinecraftClient
@@ -18,7 +18,7 @@ object IRWorldRenderer : WorldRenderEvents.BeforeBlockOutline {
     override fun beforeBlockOutline(context: WorldRenderContext, hitResult: HitResult?): Boolean {
         val player = MinecraftClient.getInstance().player ?: return true
         val stack = player.mainHandStack ?: return true
-        if (stack.item !is IRWrenchItem || stack.tag?.contains("SelectedHeliostats") != true) return true
+        if (stack.isIn(IndustrialRevolution.WRENCH_TAG) || stack.tag?.contains("SelectedHeliostats") != true) return true
 
         val positions = stack.tag?.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) } ?: return true
         val vcp = context.consumers() as VertexConsumerProvider.Immediate

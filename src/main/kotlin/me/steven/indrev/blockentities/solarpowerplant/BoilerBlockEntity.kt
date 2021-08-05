@@ -9,10 +9,12 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
+import me.steven.indrev.blockentities.Syncable
+import me.steven.indrev.blockentities.SyncableBlockEntity
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.components.multiblock.BoilerStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
@@ -41,7 +43,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class BoilerBlockEntity(pos: BlockPos, state: BlockState)
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider {
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider, Syncable {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
     val multiblockComponent = BoilerMultiblockComponent()
@@ -163,6 +165,10 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 
     override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
 
+    override fun markForUpdate(condition: () -> Boolean) {
+        TODO("Not yet implemented")
+    }
+
     inner class BoilerMultiblockComponent : MultiBlockComponent({ id -> id.structure == "boiler" }, { _, _, _ -> BoilerStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
@@ -178,7 +184,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         }
     }
 
-    inner class BoilerFluidComponent : FluidComponent(this, MAX_CAPACITY, 3) {
+    inner class BoilerFluidComponent : FluidComponent({this}, MAX_CAPACITY, 3) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
             return if (tank == 0) FluidAmount.BUCKET else super.getMaxAmount_F(tank)

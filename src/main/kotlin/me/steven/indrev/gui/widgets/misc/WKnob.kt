@@ -3,6 +3,7 @@ package me.steven.indrev.gui.widgets.misc
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
+import me.steven.indrev.packets.common.UpdateKnobValue.UPDATE_EFFICIENCY_PACKET
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
@@ -59,6 +60,5 @@ class WKnob(var angle: Float = 30.0f, val pos: BlockPos) : WWidget() {
 
     companion object {
         val KNOB_TEXTURE_ID = identifier("textures/gui/knob.png")
-        val UPDATE_EFFICIENCY_PACKET = identifier("update_steam_turbine_efficiency")
     }
 }

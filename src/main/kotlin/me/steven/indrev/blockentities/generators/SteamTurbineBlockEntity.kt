@@ -7,7 +7,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
 import me.steven.indrev.registry.IRFluidRegistry
@@ -69,7 +69,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     override fun supportsInsertion(): Boolean = false
 
-    private inner class SteamTurbineFluidComponent : FluidComponent(this, FluidAmount.ofWhole(1), 1) {
+    private inner class SteamTurbineFluidComponent : FluidComponent({this}, FluidAmount.ofWhole(1), 1) {
 
         override fun getMaxAmount_F(tank: Int): FluidAmount {
             return FluidAmount.ofWhole(getRadius() * getRadius().toLong()).mul((efficiency * 100).toLong()).div(100)
@@ -115,7 +115,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         super.readNbt( tag)
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
+  /*  override fun toClientTag(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Efficiency", efficiency)
         tag?.putDouble("Generating", getGenerationRatio())
         tag?.put("Consuming", getConsumptionRatio().toNbt())
@@ -127,7 +127,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         generating = tag?.getDouble("Generating") ?: generating
         consuming = FluidAmount.fromNbt(tag?.getCompound("Consuming")) ?: consuming
         super.fromClientTag(tag)
-    }
+    }*/
 
     companion object {
         val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)

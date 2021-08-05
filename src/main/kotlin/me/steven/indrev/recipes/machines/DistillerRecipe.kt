@@ -11,10 +11,10 @@ class DistillerRecipe(
     override val identifier: Identifier,
     override val input: Array<InputEntry>,
     override val outputs: Array<OutputEntry>,
-    override val fluidInput: FluidVolume,
+    override val fluidInput: Array<FluidVolume>,
     override val ticks: Int,
 ) : IRFluidRecipe() {
-    override val fluidOutput: FluidVolume? = null
+    override val fluidOutput: Array<FluidVolume> = emptyArray()
 
     override fun getType(): IRRecipeType<*> = TYPE
 

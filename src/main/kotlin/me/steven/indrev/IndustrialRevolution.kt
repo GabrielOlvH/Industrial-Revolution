@@ -9,6 +9,10 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
+import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantTowerScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SteamTurbineScreenHandler
 import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.NetworkEvents
@@ -176,11 +180,6 @@ object IndustrialRevolution : ModInitializer {
     val COOLERS_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("indrev:coolers")
     val WRENCH_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:wrenches")
     val SCREWDRIVER_TAG: Tag.Identified<Item> = AccessorItemTags.getRequiredTagList().add("c:screwdrivers")
-
-    val STEAM_TURBINE_HANDLER = SteamTurbineScreenHandler.SCREEN_ID.registerScreenHandler(::SteamTurbineScreenHandler)
-    val SOLAR_POWER_PLANT_TOWER_HANDLER = SolarPowerPlantTowerScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantTowerScreenHandler)
-    val SOLAR_POWER_PLANT_SMELTER_HANDLER = SolarPowerPlantSmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantSmelterScreenHandler)
-    val BOILER_HANDLER = BoilerScreenHandler.SCREEN_ID.registerScreenHandler(::BoilerScreenHandler)
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)

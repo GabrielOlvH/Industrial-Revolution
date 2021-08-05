@@ -6,6 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.BOILER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.machines.WTemperature
@@ -22,7 +23,7 @@ import net.minecraft.util.Identifier
 
 class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.BOILER_HANDLER,
+        BOILER_HANDLER,
         syncId,
         playerInventory,
         ctx

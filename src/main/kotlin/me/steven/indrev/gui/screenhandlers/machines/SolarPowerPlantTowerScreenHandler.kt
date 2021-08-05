@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WLabel
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SOLAR_POWER_PLANT_TOWER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.gui.widgets.machines.WTemperature
 import me.steven.indrev.utils.identifier
@@ -18,7 +19,7 @@ class SolarPowerPlantTowerScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SOLAR_POWER_PLANT_TOWER_HANDLER,
+        SOLAR_POWER_PLANT_TOWER_HANDLER,
         syncId,
         playerInventory,
         ctx

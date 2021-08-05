@@ -4,7 +4,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.DistillerRecipe
@@ -20,7 +20,7 @@ class DistillerBlockEntity(pos: BlockPos, state: BlockState) : CraftingMachineBl
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.01, 70..120, 200)
-        this.fluidComponent = FluidComponent(this, FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent({this}, FluidAmount.BUCKET)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
         }

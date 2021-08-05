@@ -5,10 +5,10 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 
-abstract class SyncableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : BlockEntity(type, pos, state) {
+abstract class SyncableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : BlockEntity(type, pos, state), Syncable {
     var isMarkedForUpdate: Boolean = true
 
-    fun markForUpdate(condition: () -> Boolean = { true }) {
+    override fun markForUpdate(condition: () -> Boolean) {
         isMarkedForUpdate = isMarkedForUpdate || condition()
     }
 }

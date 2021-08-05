@@ -2,10 +2,11 @@ package me.steven.indrev.blockentities.solarpowerplant
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
@@ -20,12 +21,12 @@ import net.minecraft.world.World
 
 class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state),
-    BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider {
+    BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider, Syncable {
 
     val propertyDelegate = ArrayPropertyDelegate(4)
     val temperatureComponent = TemperatureComponent(this, 0.06, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
-    val fluidComponent = FluidComponent(this, FluidAmount.ofWhole(16))
+    val fluidComponent = FluidComponent({this}, FluidAmount.ofWhole(16))
 
     var heliostats = 0
 
@@ -83,6 +84,10 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     }
 
     override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
+
+    override fun markForUpdate(condition: () -> Boolean) {
+        TODO("Not yet implemented")
+    }
 
     inner class SolarPowerPlantMultiblockComponent : MultiBlockComponent({ id -> id.structure == "solar_power_plant" }, { _, _, _ -> SolarPowerPlantTowerStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
