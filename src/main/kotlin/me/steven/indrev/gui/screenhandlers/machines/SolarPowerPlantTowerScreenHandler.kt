@@ -30,7 +30,7 @@ class SolarPowerPlantTowerScreenHandler(
 
         root.add(WLabel("Solar Power Plant Tower"), 0, 0)
 
-        val wFluid = WFluid(ctx, 0)
+        val wFluid = WFluid(ctx, propertyDelegate, 0, SolarPowerPlantTowerBlockEntity.TANK_SIZE, SolarPowerPlantTowerBlockEntity.TANK_AMOUNT_ID, SolarPowerPlantTowerBlockEntity.TANK_FLUID_ID)
         root.add(wFluid, 8, 0)
         wFluid.setLocation(8 * 18, 8)
 

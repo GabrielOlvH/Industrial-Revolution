@@ -43,7 +43,7 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
         leftoverSalt.isInsertingAllowed = false
         root.add(leftoverSalt, 1.0, 2.0)
 
-        val moltenSaltWidget = WFluid(ctx, 0)
+        val moltenSaltWidget = WFluid(ctx, propertyDelegate,0, BoilerBlockEntity.MOLTEN_SALT_TANK_SIZE, BoilerBlockEntity.MOLTEN_SALT_TANK_AMOUNT_ID, BoilerBlockEntity.MOLTEN_SALT_TANK_FLUID_ID)
         root.add(moltenSaltWidget, 0.1, 0.7)
 
         val saltSprite = WSprite(identifier("textures/gui/molten_salt_label.png"))
@@ -52,14 +52,14 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
 
         root.add(WSprite(identifier("textures/gui/widget_processing_split.png")), 1.1, 1.1)
 
-        val waterWidget = WFluid(ctx, 1)
+        val waterWidget = WFluid(ctx, propertyDelegate, 1, BoilerBlockEntity.WATER_TANK_SIZE, BoilerBlockEntity.WATER_TANK_AMOUNT_ID, BoilerBlockEntity.WATER_TANK_FLUID_ID)
         root.add(waterWidget, 5.0, 0.7)
 
         val waterSprite = WSprite(identifier("textures/gui/water_label.png"))
         root.add(waterSprite, 4.8, 3.0)
         waterSprite.setSize(32, 12)
 
-        val steamWidget = WFluid(ctx, 2)
+        val steamWidget = WFluid(ctx, propertyDelegate,2, BoilerBlockEntity.STEAM_TANK_SIZE, BoilerBlockEntity.STEAM_TANK_AMOUNT_ID, BoilerBlockEntity.STEAM_TANK_FLUID_ID)
         root.add(steamWidget, 7.7, 0.7)
 
         val steamSprite = WSprite(identifier("textures/gui/steam_label.png"))

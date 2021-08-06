@@ -24,6 +24,7 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.MB
 import me.steven.indrev.utils.createWrapper
 import me.steven.indrev.utils.minus
+import me.steven.indrev.utils.rawId
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -43,9 +44,9 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class BoilerBlockEntity(pos: BlockPos, state: BlockState)
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider, Syncable {
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), PropertyDelegateHolder, ComponentProvider, Syncable, BlockEntityClientSerializable {
 
-    val propertyDelegate = ArrayPropertyDelegate(4)
+    val propertyDelegate = ArrayPropertyDelegate(15)
     val multiblockComponent = BoilerMultiblockComponent()
     val fluidComponent = BoilerFluidComponent()
     val temperatureComponent = TemperatureComponent(this,0.1, 700..1000, 1200)
@@ -53,6 +54,21 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
     var solidifiedSalt = 0.0
 
     companion object {
+//TODO use crafting components for this
+        const val PROCESS_TIME_ID = 4
+        const val TOTAL_PROCESS_TIME_ID = 5
+
+        const val MOLTEN_SALT_TANK_SIZE = 6
+        const val MOLTEN_SALT_TANK_AMOUNT_ID = 7
+        const val MOLTEN_SALT_TANK_FLUID_ID = 8
+
+        const val WATER_TANK_SIZE = 9
+        const val WATER_TANK_AMOUNT_ID = 10
+        const val WATER_TANK_FLUID_ID = 11
+
+        const val STEAM_TANK_SIZE = 12
+        const val STEAM_TANK_AMOUNT_ID = 13
+        const val STEAM_TANK_FLUID_ID = 14
 
         val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
         val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(8)
@@ -149,24 +165,37 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        temperatureComponent.readNbt(tag)
-        fluidComponent.fromTag(tag)
         multiblockComponent.readNbt(tag)
-        Inventories.readNbt(tag, inventory)
     }
 
     override fun toClientTag(tag: NbtCompound): NbtCompound {
-        temperatureComponent.writeNbt(tag)
-        fluidComponent.toTag(tag)
         multiblockComponent.writeNbt(tag)
-        Inventories.writeNbt(tag, inventory)
         return tag
     }
 
-    override fun getPropertyDelegate(): PropertyDelegate = propertyDelegate
+    override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) propertyDelegate else object : PropertyDelegate {
+        override fun get(index: Int): Int {
+            return when (index) {
+                MOLTEN_SALT_TANK_SIZE -> fluidComponent.getMaxAmount_F(0).asInt(1000)
+                MOLTEN_SALT_TANK_AMOUNT_ID -> fluidComponent[0].amount().asInt(1000)
+                MOLTEN_SALT_TANK_FLUID_ID -> fluidComponent[0].rawFluid.rawId
+                WATER_TANK_SIZE -> fluidComponent.getMaxAmount_F(1).asInt(1000)
+                WATER_TANK_AMOUNT_ID -> fluidComponent[1].amount().asInt(1000)
+                WATER_TANK_FLUID_ID -> fluidComponent[1].rawFluid.rawId
+                STEAM_TANK_SIZE -> fluidComponent.getMaxAmount_F(2).asInt(1000)
+                STEAM_TANK_AMOUNT_ID -> fluidComponent[2].amount().asInt(1000)
+                STEAM_TANK_FLUID_ID -> fluidComponent[2].rawFluid.rawId
+                else -> -1
+            }
+        }
+
+        override fun set(index: Int, value: Int) = error("Unsupported")
+
+        override fun size(): Int = 15
+    }
 
     override fun markForUpdate(condition: () -> Boolean) {
-        TODO("Not yet implemented")
+        //TODO
     }
 
     inner class BoilerMultiblockComponent : MultiBlockComponent({ id -> id.structure == "boiler" }, { _, _, _ -> BoilerStructureDefinition }) {
