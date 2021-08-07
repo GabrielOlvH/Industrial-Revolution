@@ -9,6 +9,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.SyncableBlockEntity
 import me.steven.indrev.components.ComponentKey
@@ -54,6 +55,9 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
     var solidifiedSalt = 0.0
 
     companion object {
+        const val TEMPERATURE_ID = 2
+        const val MAX_TEMPERATURE_ID = 3
+
 //TODO use crafting components for this
         const val PROCESS_TIME_ID = 4
         const val TOTAL_PROCESS_TIME_ID = 5
@@ -176,6 +180,8 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
     override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) propertyDelegate else object : PropertyDelegate {
         override fun get(index: Int): Int {
             return when (index) {
+                TEMPERATURE_ID -> temperatureComponent.temperature.toInt()
+                MAX_TEMPERATURE_ID -> temperatureComponent.limit
                 MOLTEN_SALT_TANK_SIZE -> fluidComponent.getMaxAmount_F(0).asInt(1000)
                 MOLTEN_SALT_TANK_AMOUNT_ID -> fluidComponent[0].amount().asInt(1000)
                 MOLTEN_SALT_TANK_FLUID_ID -> fluidComponent[0].rawFluid.rawId

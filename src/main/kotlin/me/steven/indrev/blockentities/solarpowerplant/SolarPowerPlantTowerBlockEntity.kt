@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.solarpowerplant
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
 import me.steven.indrev.components.ComponentKey
@@ -33,6 +34,8 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     var heliostats = 0
 
     companion object {
+        const val TEMPERATURE_ID = 2
+        const val MAX_TEMPERATURE_ID = 3
 
         const val TANK_SIZE = 4
         const val TANK_AMOUNT_ID = 5
@@ -89,6 +92,8 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) propertyDelegate else object : PropertyDelegate {
         override fun get(index: Int): Int {
             return when (index) {
+                TEMPERATURE_ID -> temperatureComponent.temperature.toInt()
+                MAX_TEMPERATURE_ID -> temperatureComponent.limit
                 TANK_SIZE -> fluidComponent.limit.asInt(1000)
                 TANK_AMOUNT_ID -> fluidComponent[0].amount().asInt(1000)
                 TANK_FLUID_ID -> fluidComponent[0].rawFluid.rawId
