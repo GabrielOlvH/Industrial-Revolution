@@ -40,8 +40,10 @@ fun wrench(
 fun screwdriver(
     world: World,
     pos: BlockPos,
+    blockState: BlockState,
     blockEntity: BlockEntity?,
-    player: PlayerEntity?
+    player: PlayerEntity?,
+    stack: ItemStack
 ): ActionResult {
     if (blockEntity is MachineBlockEntity<*>) {
         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {
