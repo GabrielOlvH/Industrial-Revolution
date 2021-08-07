@@ -16,12 +16,13 @@ import me.steven.indrev.utils.minus
 import me.steven.indrev.utils.plus
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlockEntity(Tier.MK4, MachineRegistry.STEAM_TURBINE_REGISTRY, pos, state) {
+class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlockEntity(Tier.MK4, MachineRegistry.STEAM_TURBINE_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
         this.multiblockComponent = SteamTurbineMultiblockComponent()
@@ -32,9 +33,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
     var generatingTicks = 0
     var totalInserted: FluidAmount = FluidAmount.ZERO
 
-    //these values are used for the screen handler
-    @Environment(EnvType.CLIENT)
-    var generating: Double = 0.0
+    // used for the screen handler
     @Environment(EnvType.CLIENT)
     var consuming: FluidAmount = FluidAmount.ZERO
 
@@ -105,6 +104,14 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         }
     }
 
+    override fun get(index: Int): Int {
+        return when (index) {
+            EFFICIENCY -> (efficiency * 100).toInt()
+            GENERATING -> (getGenerationRatio() * 100).toInt()
+            else -> super.get(index)
+        }
+    }
+
     override fun writeNbt(tag: NbtCompound?): NbtCompound {
         tag?.putDouble("Efficiency", efficiency)
         return super.writeNbt(tag)
@@ -112,25 +119,25 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     override fun readNbt(tag: NbtCompound?) {
         efficiency = tag?.getDouble("Efficiency") ?: efficiency
-        super.readNbt( tag)
+        super.readNbt(tag)
     }
 
-  /*  override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("Efficiency", efficiency)
-        tag?.putDouble("Generating", getGenerationRatio())
-        tag?.put("Consuming", getConsumptionRatio().toNbt())
-        return super.toClientTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.put("Consuming", getConsumptionRatio().toNbt())
+        multiblockComponent?.writeNbt(tag)
+        return tag
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        efficiency = tag?.getDouble("Efficiency") ?: efficiency
-        generating = tag?.getDouble("Generating") ?: generating
-        consuming = FluidAmount.fromNbt(tag?.getCompound("Consuming")) ?: consuming
-        super.fromClientTag(tag)
-    }*/
+    override fun fromClientTag(tag: NbtCompound) {
+        consuming = FluidAmount.fromNbt(tag.getCompound("Consuming")) ?: consuming
+        multiblockComponent?.readNbt(tag)
+    }
 
     companion object {
         val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
         val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }
+
+        const val EFFICIENCY = 2
+        const val GENERATING = 3
     }
 }

@@ -37,11 +37,11 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
                 val prefix = if (inexact > a) ">" else if (inexact < a) "<" else ""
                 "  Consuming: $prefix$a mB"
             }, 1, 2)
-            root.add(WDynamicLabel { "  Generating: " + String.format("%.2f", blockEntity.generating) }, 1, 3)
+            root.add(WDynamicLabel { "  Generating: ${propertyDelegate[SteamTurbineBlockEntity.GENERATING] / 100.0}" }, 1, 3)
 
             //root.add(WFluid(ctx, 0), -1, 0)
 
-            val wKnob = WKnob((blockEntity.efficiency.toFloat() * 300f) + 30f, pos)
+            val wKnob = WKnob((propertyDelegate[SteamTurbineBlockEntity.EFFICIENCY] * 3f) + 30f, pos)
             root.add(wKnob, 7, 4)
 
             wKnob.setSize(32, 32)
