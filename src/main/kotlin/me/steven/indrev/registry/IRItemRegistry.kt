@@ -363,7 +363,8 @@ object IRItemRegistry {
     val SCREWDRIVER = object : Item(itemSettings().maxCount(1)) {
         override fun useOnBlock(context: ItemUsageContext): ActionResult {
             val blockEntity = context.world.getBlockEntity(context.blockPos)
-            return screwdriver(context.world, context.blockPos, blockEntity, context.player)
+            val state = context.world.getBlockState(context.blockPos)
+            return screwdriver(context.world, context.blockPos, state, blockEntity, context.player, context.stack)
         }
     }
 

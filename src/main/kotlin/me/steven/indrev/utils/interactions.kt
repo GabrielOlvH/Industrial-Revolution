@@ -45,8 +45,10 @@ fun wrench(
 fun screwdriver(
     world: World,
     pos: BlockPos,
+    blockState: BlockState,
     blockEntity: BlockEntity?,
-    player: PlayerEntity?
+    player: PlayerEntity?,
+    stack: ItemStack
 ): ActionResult {
     //TODO fix this
     /*if (state.isOf(IRBlockRegistry.HELIOSTAT_BLOCK)) {

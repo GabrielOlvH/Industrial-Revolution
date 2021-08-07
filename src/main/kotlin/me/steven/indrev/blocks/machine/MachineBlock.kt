@@ -95,7 +95,7 @@ open class MachineBlock(
         } else if (stack.isIn(IndustrialRevolution.WRENCH_TAG)) {
             return wrench(world, pos!!, state!!, blockEntity, player, stack)
         } else if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG)) {
-            return screwdriver(world, pos!!, blockEntity, player)
+            return screwdriver(world, pos!!, state!!, blockEntity, player, stack)
         } else if (blockEntity.multiblockComponent != null
             && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
             player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
