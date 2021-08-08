@@ -126,7 +126,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         if (world is ServerWorld) {
             getDroppedStacks(state, world, pos, blockEntity, player, toolStack).forEach { stack ->
                 if (blockEntity is TankBlockEntity) {
-                    val tag = stack.orCreateTag
+                    val tag = stack.orCreateNbt
                     blockEntity.fluidComponent.toTag(tag)
                 }
                 dropStack(world, pos, stack)
@@ -158,7 +158,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         placer: LivingEntity?,
         itemStack: ItemStack?
     ) {
-        val tag = itemStack?.tag
+        val tag = itemStack?.nbt
         if (world.isClient) return
         val tankEntity = world.getBlockEntity(pos) as? TankBlockEntity ?: return
         if (tag?.isEmpty == false) {
@@ -172,7 +172,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         tooltip: MutableList<Text>?,
         options: TooltipContext?
     ) {
-        val tag = stack?.tag
+        val tag = stack?.nbt
         val tanksTag = tag?.getCompound("tanks") ?: return
         val volume = tanksTag.keys?.map { key ->
             val tankTag = tanksTag.getCompound(key)
@@ -187,8 +187,8 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
         val blockPos = ctx.blockPos
         val world = ctx.world
         val fluidComponent = FluidComponent({ null }, FluidAmount.BUCKET, 1)
-        if (ctx.stack.tag != null && !ctx.stack.tag!!.isEmpty)
-            fluidComponent.fromTag(ctx.stack.tag)
+        if (ctx.stack.nbt != null && !ctx.stack.nbt!!.isEmpty)
+            fluidComponent.fromTag(ctx.stack.nbt)
         val connectsUp = isConnectable(world, fluidComponent, blockPos.up())
         val connectsDown = isConnectable(world, fluidComponent, blockPos.down())
         return defaultState
@@ -235,7 +235,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     override fun getPickStack(world: BlockView?, pos: BlockPos?, state: BlockState?): ItemStack {
         val stack = super.getPickStack(world, pos, state)
         val blockEntity = world?.getBlockEntity(pos) as? TankBlockEntity ?: return stack
-        blockEntity.fluidComponent.toTag(stack.orCreateTag)
+        blockEntity.fluidComponent.toTag(stack.orCreateNbt)
         return stack
     }
 

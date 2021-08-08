@@ -164,6 +164,11 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     companion object {
-        val DISPATCHER = Executors.newSingleThreadExecutor { t -> Thread(t).also { it.name = "Indrev Pump" } }.asCoroutineDispatcher()
+        val DISPATCHER = Executors.newSingleThreadExecutor {
+            val t = Thread(it)
+            t.name = "IR Pump Thread"
+            t.isDaemon = true
+            t
+        }.asCoroutineDispatcher()
     }
 }

@@ -160,7 +160,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         FabricModelPredicateProviderRegistry.register(
             IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
-        ) { stack, _, _, _ -> stack?.orCreateTag?.getFloat("Progress") ?: 0f }
+        ) { stack, _, _, _ -> stack?.orCreateNbt?.getFloat("Progress") ?: 0f }
 
         PacketRegistry.registerClient()
 
@@ -175,7 +175,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                     .isNotEmpty()
                 if (hasModularItem)
                     MinecraftClient.getInstance()
-                        .openScreen(IRModularControllerScreen(ModularItemConfigurationScreenHandler(client.player!!.inventory)))
+                        .setScreen(IRModularControllerScreen(ModularItemConfigurationScreenHandler(client.player!!.inventory)))
             }
         }
 

@@ -91,7 +91,7 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
             it.damage(LaserBlock.LASER_DAMAGE_SOURCE, 2f)
         }
 
-        val tag = stack.orCreateTag
+        val tag = stack.orCreateNbt
         val progress = tag.getDouble("Progress")
         if (progress >= recipe!!.ticks) {
             container.inventory[0] = recipe!!.craft(null as Random?).first()

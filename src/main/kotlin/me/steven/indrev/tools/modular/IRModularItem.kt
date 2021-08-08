@@ -9,7 +9,7 @@ interface IRModularItem<T : Module> {
     fun getCompatibleModules(itemStack: ItemStack): Array<T>
 
     fun getInstalled(stack: ItemStack): List<T> {
-        val tag = stack.tag ?: return emptyList()
+        val tag = stack.nbt ?: return emptyList()
         return getCompatibleModules(stack).mapNotNull { module ->
             if (tag.contains(module.key)) module
             else null
@@ -30,7 +30,7 @@ interface IRModularItem<T : Module> {
     }
     fun getCount(stack: ItemStack): Int {
         return getCompatibleModules(stack).map { module ->
-            val tag = stack.tag ?: return@map 0
+            val tag = stack.nbt ?: return@map 0
             if (tag.contains(module.key)) tag.getInt(module.key)
             else 0
         }.sum()

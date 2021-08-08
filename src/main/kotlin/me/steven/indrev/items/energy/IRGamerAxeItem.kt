@@ -82,7 +82,7 @@ class IRGamerAxeItem(
     override fun use(world: World?, user: PlayerEntity?, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {
             val stack = user?.getStackInHand(hand)
-            val tag = stack?.orCreateTag
+            val tag = stack?.orCreateNbt
             if (tag?.contains("Active") == false || tag?.contains("Progress") == false) {
                 tag.putBoolean("Active", true)
                 tag.putFloat("Progress", 0f)
@@ -90,7 +90,7 @@ class IRGamerAxeItem(
                 val active = !tag.getBoolean("Active")
                 if (active && energyOf(stack)?.use(5.0) == false)
                     return TypedActionResult.pass(stack)
-                stack.orCreateTag.putBoolean("Active", active)
+                stack.orCreateNbt.putBoolean("Active", active)
             }
             return TypedActionResult.pass(stack)
         }
@@ -108,7 +108,7 @@ class IRGamerAxeItem(
     }
 
     override fun hasGlint(stack: ItemStack?): Boolean {
-        return stack?.tag?.getBoolean("Active") == true
+        return stack?.nbt?.getBoolean("Active") == true
     }
 
     override fun postMine(
@@ -163,12 +163,12 @@ class IRGamerAxeItem(
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = GamerAxeModule.COMPATIBLE
 
     fun isActive(stack: ItemStack): Boolean {
-        val tag = stack.orCreateTag ?: return false
+        val tag = stack.orCreateNbt ?: return false
         return tag.contains("Active") && tag.getBoolean("Active")
     }
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
-        val tag = stack?.orCreateTag ?: return
+        val tag = stack?.orCreateNbt ?: return
 
         tickAnimations(stack)
 
@@ -181,7 +181,7 @@ class IRGamerAxeItem(
     }
 
     private fun tickAnimations(stack: ItemStack) {
-        val tag = stack.orCreateTag
+        val tag = stack.orCreateNbt
         if (!tag.contains("Active") || !tag.contains("Progress")) return
         val active = tag.getBoolean("Active")
         var progress = tag.getFloat("Progress")

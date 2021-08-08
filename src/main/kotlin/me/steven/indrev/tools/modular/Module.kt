@@ -14,18 +14,18 @@ interface Module {
     val item: ItemConvertible
 
     fun isInstalled(itemStack: ItemStack): Boolean {
-        return !itemStack.isEmpty && itemStack.orCreateTag.contains(key)
+        return !itemStack.isEmpty && itemStack.orCreateNbt.contains(key)
     }
 
     fun getLevel(itemStack: ItemStack): Int {
         if (itemStack.isEmpty) return 0
-        val tag = itemStack.getOrCreateSubTag("selected")
+        val tag = itemStack.getOrCreateSubNbt("selected")
         return if (tag.contains(key)) tag.getInt(key) else getMaxInstalledLevel(itemStack)
     }
 
     fun getMaxInstalledLevel(itemStack: ItemStack): Int {
         if (itemStack.isEmpty) return 0
-        val tag = itemStack.orCreateTag
+        val tag = itemStack.orCreateNbt
         return if (tag.contains(key)) tag.getInt(key) else 0
     }
 

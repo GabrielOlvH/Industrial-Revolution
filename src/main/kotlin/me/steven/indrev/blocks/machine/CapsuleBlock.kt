@@ -42,7 +42,7 @@ class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).breakByTool(Fa
                 blockEntity.inventory[0] = stack
             } else if (!blockEntity.inventory[0].isEmpty) {
                 val itemStack = blockEntity.inventory[0]
-                itemStack.tag = null
+                itemStack.nbt = null
                 player.inventory?.insertStack(itemStack)
                 blockEntity.inventory[0] = ItemStack.EMPTY
             } else

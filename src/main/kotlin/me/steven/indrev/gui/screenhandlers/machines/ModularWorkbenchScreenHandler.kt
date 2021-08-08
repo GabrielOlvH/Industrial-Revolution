@@ -158,7 +158,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             slots.forEachIndexed { index, slot ->
                 slot.hidden = size != inputs.size
                 if (!slot.hidden && FabricLoader.getInstance().environmentType == EnvType.CLIENT)
-                    slot.preview = inputs[index].ingredient.matchingStacksClient[0]
+                    slot.preview = inputs[index].ingredient.matchingStacks[0]
             }
         }
     }

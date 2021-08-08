@@ -20,7 +20,7 @@ class ItemFilterData(
         if (findMatches.isEmpty()) return !whitelist
         var valid = true
         if (valid && matchDurability) valid = findMatches.any { it.damage == itemStack.damage }
-        if (valid && matchTag) valid = findMatches.any { it.tag == itemStack.tag }
+        if (valid && matchTag) valid = findMatches.any { it.nbt == itemStack.nbt }
         if (valid) return whitelist
         return !whitelist
     }

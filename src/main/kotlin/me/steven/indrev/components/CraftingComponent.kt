@@ -68,17 +68,11 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
 
     protected open fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
         val output = recipe.craft(machine.world!!.random)
-        inputSlots!!.forEachIndexed { index, slot ->
+        inputSlots!!.forEachIndexed { index, _ ->
             recipe.input.forEach { (ingredient, count) ->
                 val stack = inputInventory[index]
                 if (!ingredient.test(stack)) return@forEach
-                val item = stack.item
-                if (item.hasRecipeRemainder())
-                    inventory.setStack(slot, ItemStack(item.recipeRemainder))
-                else {
-                    stack.decrement(count)
-                    inventory.setStack(slot, stack)
-                }
+                stack.decrement(count)
                 return@forEachIndexed
             }
         }
@@ -115,7 +109,7 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
         val inventory = inventoryComponent.inventory
         for (outputSlot in outputSlots!!) {
             val outStack = inventory.getStack(outputSlot)
-            if (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount)
+            if (stack.item == outStack.item && stack.nbt == outStack.nbt && stack.count + outStack.count <= stack.maxCount)
                 outStack.increment(stack.count)
             else if (outStack.isEmpty)
                 inventory.setStack(outputSlot, stack)
@@ -127,7 +121,7 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
     fun fits(stack: ItemStack): Boolean {
         for (outputSlot in outputSlots!!) {
             val outStack = inventoryComponent.inventory.getStack(outputSlot)
-            if (outStack.isEmpty || (stack.item == outStack.item && stack.tag == outStack.tag && stack.count + outStack.count <= stack.maxCount))
+            if (outStack.isEmpty || (stack.item == outStack.item && stack.nbt == outStack.nbt && stack.count + outStack.count <= stack.maxCount))
                 return true
         }
         return false

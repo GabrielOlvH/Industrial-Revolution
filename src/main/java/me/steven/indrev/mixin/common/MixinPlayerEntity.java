@@ -47,7 +47,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         EnergyIo itemIo = EnergyutilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
-                NbtCompound tag = itemStack.getOrCreateTag();
+                NbtCompound tag = itemStack.getOrCreateNbt();
                 if (tag.contains("Active") && !tag.getBoolean("Active")) {
                     cir.setReturnValue(0.2F);
                     return;
