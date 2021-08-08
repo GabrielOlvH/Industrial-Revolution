@@ -1,5 +1,6 @@
 package me.steven.indrev.blocks.machine.solarpowerplant
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.blocks.misc.HorizontalFacingBlock
@@ -45,7 +46,7 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
     ): ActionResult {
         if (!world.isClient) {
             val stack = player.getStackInHand(hand)
-            if (stack.item == IRItemRegistry.WRENCH && stack.orCreateTag.contains("SelectedHeliostats")) {
+            if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG) && stack.orCreateTag.contains("SelectedHeliostats")) {
                 val positions = stack.tag!!.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) }
                 val receivers = SolarPowerPlantTowerStructureDefinition.getSolarReceiverPositions(pos, state)
 

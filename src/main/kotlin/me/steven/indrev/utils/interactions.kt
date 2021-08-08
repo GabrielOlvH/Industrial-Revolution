@@ -50,8 +50,7 @@ fun screwdriver(
     player: PlayerEntity?,
     stack: ItemStack
 ): ActionResult {
-    //TODO fix this
-    /*if (state.isOf(IRBlockRegistry.HELIOSTAT_BLOCK)) {
+    if (blockState.isOf(IRBlockRegistry.HELIOSTAT_BLOCK)) {
         val positions = LongOpenHashSet()
         positions.add(pos.asLong())
         HeliostatBlock.findConnectingHeliostats(pos, world, LongOpenHashSet(), positions)
@@ -59,8 +58,7 @@ fun screwdriver(
         positions.forEach { long -> tagList.add(NbtLong.of(long)) }
         stack.orCreateTag.put("SelectedHeliostats", tagList)
         player?.sendMessage(LiteralText("Click on Solar Power Plant Tower to link the Heliostats."), true)
-    } else*/
-        if (blockEntity is MachineBlockEntity<*>) {
+    } else if (blockEntity is MachineBlockEntity<*>) {
         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {
             val map = EnumMap<ConfigurationType, SideConfiguration>(ConfigurationType::class.java)
             map[ConfigurationType.ITEM] = if (blockEntity.isConfigurable(ConfigurationType.ITEM)) blockEntity.getCurrentConfiguration(ConfigurationType.ITEM) else SideConfiguration.EMPTY_ITEM
