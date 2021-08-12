@@ -42,6 +42,10 @@ class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
             faces.add(FluidRenderFace.createFlatFaceY(0.1, yHeight, 0.1, 0.9, yHeight, 0.9, 1.0, true, false))
         }
 
+        for (face in faces) {
+            face.light = light;
+        }
+
         volume.render(faces, vertexConsumers, matrices);
     }
 }
