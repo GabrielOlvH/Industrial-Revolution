@@ -27,8 +27,7 @@ class FluidInfuserBlockEntityRenderer : BlockEntityRenderer<FluidInfuserBlockEnt
         }
         val inputVolume = fluidComponent[0]
         if (!inputVolume.isEmpty) {
-            inputVolume.render(inputFace, FluidVolumeRenderer.VCPS, matrices)
-            FluidVolumeRenderer.VCPS.draw()
+            inputVolume.render(inputFace, vertexConsumers, matrices)
         }
 
         val outputFace = when (entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]) {
@@ -40,8 +39,7 @@ class FluidInfuserBlockEntityRenderer : BlockEntityRenderer<FluidInfuserBlockEnt
         }
         val outputVolume = fluidComponent[1]
         if (!outputVolume.isEmpty) {
-            outputVolume.render(outputFace, FluidVolumeRenderer.VCPS, matrices)
-            FluidVolumeRenderer.VCPS.draw()
+            outputVolume.render(outputFace, vertexConsumers, matrices)
         }
     }
 

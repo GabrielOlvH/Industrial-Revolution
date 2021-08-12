@@ -28,8 +28,7 @@ class CondenserBlockEntityRenderer : BlockEntityRenderer<CondenserBlockEntity> {
         }
         val volume = fluidComponent[0]
         if (!volume.isEmpty) {
-            volume.render(faces, FluidVolumeRenderer.VCPS, matrices)
-            FluidVolumeRenderer.VCPS.draw()
+            volume.render(faces, vertexConsumers, matrices)
         }
     }
 

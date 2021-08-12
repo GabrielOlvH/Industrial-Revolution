@@ -39,7 +39,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 translate(-0.5, -0.5, -0.5)
                 push()
                 multiply(Vec3f.NEGATIVE_X.getDegreesQuaternion(22.5f))
-                renderFluid(inputVolume)
+                renderFluid(inputVolume, vertexConsumers)
                 pop()
 
                 push()
@@ -48,7 +48,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(90f))
                 translate(-0.5, -0.5, -0.5)
                 matrices.translate(0.0, 0.38, 0.0765)
-                renderFluid(inputVolume)
+                renderFluid(inputVolume, vertexConsumers)
                 pop()
 
                 push()
@@ -57,10 +57,8 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180f))
                 translate(-0.5, -0.5, -0.5)
                 matrices.translate(0.1284, 0.0, 0.1285)
-                renderFluid(inputVolume)
+                renderFluid(inputVolume, vertexConsumers)
                 pop()
-
-                FluidVolumeRenderer.VCPS.draw()
             }
             pop()
             val currentY = floor(entity.movingTicks).toInt()
@@ -89,9 +87,9 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
         )
     }
 
-    private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
+    private fun MatrixStack.renderFluid(inputVolume: FluidVolume, vcp: VertexConsumerProvider) {
 
-        inputVolume.render(FACES, FluidVolumeRenderer.VCPS, this)
+        inputVolume.render(FACES, vcp, this)
     }
 
     override fun rendersOutsideBoundingBox(blockEntity: PumpBlockEntity?): Boolean = true

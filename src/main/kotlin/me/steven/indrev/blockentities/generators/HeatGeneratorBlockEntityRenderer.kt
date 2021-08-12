@@ -15,7 +15,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
         entity: HeatGeneratorBlockEntity?,
         tickDelta: Float,
         matrices: MatrixStack?,
-        vertexConsumers: VertexConsumerProvider?,
+        vertexConsumers: VertexConsumerProvider,
         light: Int,
         overlay: Int
     ) {
@@ -28,14 +28,13 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
                 translate(0.5, 0.5, 0.5)
                 multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
                 translate(-0.5, -0.5, -0.5)
-                matrices.renderFluid(volume)
-                FluidVolumeRenderer.VCPS.draw()
+                matrices.renderFluid(volume, vertexConsumers)
                 pop()
             }
         }
     }
 
-    private fun MatrixStack.renderFluid(inputVolume: FluidVolume) {
+    private fun MatrixStack.renderFluid(inputVolume: FluidVolume, vcp: VertexConsumerProvider) {
         val yMax = (((inputVolume.amount().asInexactDouble().toFloat() / 4f) * 10.0) / 16.0).coerceAtLeast(0.1)
         val face =
             listOf(
@@ -44,7 +43,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
                 FluidRenderFace.createFlatFaceX(0.01, 0.1, 0.8, 0.01, yMax, 0.99, 2.0, false, false),
                 FluidRenderFace.createFlatFaceX(0.99, 0.1, 0.8, 0.99, yMax, 0.99, 2.0, true, false)
             )
-        inputVolume.render(face, FluidVolumeRenderer.VCPS, this)
+        inputVolume.render(face, vcp, this)
     }
 
 }

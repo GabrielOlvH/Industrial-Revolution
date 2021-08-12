@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.storage
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import me.steven.indrev.blocks.misc.TankBlock
-import me.steven.indrev.utils.IRFluidVolumeRenderer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
