@@ -14,6 +14,7 @@
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
     "common.MixinAbstractCookingRecipe",
+    "common.MixinBlockBreaker",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",
     "common.MixinItemPredicate",
@@ -21,9 +22,9 @@
     "common.MixinLivingEntity",
     "common.MixinPiglinBrain",
     "common.MixinPlayerEntity",
+    "common.MixinPlayerInventory",
     "common.MixinServerPlayerEntity",
-    "common.MixinServerWorld",
-    "common.MixinPlayerInventory"
+    "common.MixinServerWorld"
   ],
   "client": [
     "client.MixinBuiltChunk",

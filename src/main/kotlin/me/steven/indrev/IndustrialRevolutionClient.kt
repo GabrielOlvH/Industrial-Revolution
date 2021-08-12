@@ -39,6 +39,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.MinecraftClient
@@ -211,6 +212,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
             helper.register(ReinforcedElytraFeatureRenderer(renderer, ctx.modelLoader))
         })
+
+        WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
 
         AprilFools.init()
     }

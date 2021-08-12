@@ -194,7 +194,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return when(index) {
             EXPLORED_PERCENTAGE_ID -> {
                 val inventory = inventoryComponent?.inventory ?: return 0
-                val scanOutput = inventory.getStack(14).tag ?: return 0
+                val scanOutput = inventory.getStack(14).nbt ?: return 0
                 val chunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
                 val state = ChunkVeinState.getState(world as ServerWorld)
                 val data = state.veins[chunkPos] ?: return 0

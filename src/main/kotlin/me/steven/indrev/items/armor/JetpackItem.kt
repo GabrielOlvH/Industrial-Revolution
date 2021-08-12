@@ -19,11 +19,11 @@ class JetpackItem(tier: Tier) : ArmorItem(IRArmorMaterial.JETPACK, EquipmentSlot
 
     override val fluidFilter: FluidFilter = FluidFilter { it.rawFluid == IRFluidRegistry.HYDROGEN_STILL }
 
-    private fun isActivated(stack: ItemStack) = stack.isOf(this) && stack.orCreateTag.getBoolean("Activated")
+    private fun isActivated(stack: ItemStack) = stack.isOf(this) && stack.orCreateNbt.getBoolean("Activated")
 
     fun toggle(stack: ItemStack) {
         if (stack.isOf(this)) {
-            val tag = stack.orCreateTag
+            val tag = stack.orCreateNbt
             tag.putBoolean("Activated", tag.getBoolean("Activated"))
         }
     }

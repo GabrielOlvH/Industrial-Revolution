@@ -50,7 +50,7 @@ interface JetpackHandler : AttributeProviderItem, ItemConvertible {
     }
 
     fun getFuelStored(stack: ItemStack): FluidVolume {
-        val tag = stack.tag ?: return FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+        val tag = stack.nbt ?: return FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
         return FluidVolume.fromTag(tag.getCompound("Tank"))
     }
 
@@ -61,7 +61,7 @@ interface JetpackHandler : AttributeProviderItem, ItemConvertible {
         val fuel = getFuelStored(stack)
         val consumption = getConsumptionRatio(stack)
         if (fuel.amount() < consumption) return false
-        stack.tag?.put("Tank", fuel.fluidKey.withAmount(fuel.amount() - consumption).toTag())
+        stack.nbt?.put("Tank", fuel.fluidKey.withAmount(fuel.amount() - consumption).toTag())
         return true
     }
 
@@ -75,7 +75,7 @@ interface JetpackHandler : AttributeProviderItem, ItemConvertible {
             if (stack.isEmpty || !stack.isOf(handler.asItem()))
                 return fluid
 
-            val tag = stack.getOrCreateSubTag("Tank") ?: return fluid
+            val tag = stack.getOrCreateSubNbt("Tank") ?: return fluid
             val current = FluidVolume.fromTag(tag)
             val result = FluidVolumeUtil.computeInsertion(current, handler.limit, fluid)
             val actuallyInserted = fluid.amount() - result.result.amount()
@@ -84,7 +84,7 @@ interface JetpackHandler : AttributeProviderItem, ItemConvertible {
 
             val oldStack = stack.copy()
             val newStack = stack
-            newStack.orCreateTag.put("Tank", fluid.fluidKey.withAmount(current.amount() + actuallyInserted).toTag())
+            newStack.orCreateNbt.put("Tank", fluid.fluidKey.withAmount(current.amount() + actuallyInserted).toTag())
             return if (setStacks(simulation, oldStack, newStack)) result.result
             else fluid
         }

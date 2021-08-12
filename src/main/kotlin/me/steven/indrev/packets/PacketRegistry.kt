@@ -11,6 +11,7 @@ object PacketRegistry {
         SelectModuleOnWorkbenchPacket.register()
         ToggleFactoryStackSplittingPacket.register()
         UpdateAOEMachineRangePacket.register()
+        UpdateMiningDrillBlockBlacklistPacket.register()
         UpdateModularToolLevelPacket.register()
         UpdateRancherConfigPacket.register()
     }
