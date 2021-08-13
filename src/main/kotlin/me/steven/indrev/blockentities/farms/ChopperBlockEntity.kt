@@ -122,7 +122,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
     ): Boolean {
         fun damageTool(amount: Int): Boolean {
             return when {
-                energyOf(toolStack).let { it != null && !it.use(amount.toDouble()) } -> false
+                energyOf(toolStack) != null -> energyOf(toolStack)!!.use(amount.toDouble())
                 toolStack.isEmpty -> false
                 toolStack.isDamageable -> {
                     toolStack.damage(amount, world?.random, null)
