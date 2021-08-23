@@ -14,7 +14,8 @@ import java.util.*
 
 enum class FluidType(val stillId: Identifier, val flowId: Identifier) {
     LAVA(identifier("block/gray_lava_still"), identifier("block/gray_lava_flow")),
-    WATER(Identifier("block/water_still"), Identifier("block/water_flow"));
+    WATER(Identifier("block/water_still"), Identifier("block/water_flow")),
+    GAS(identifier("block/gas"), identifier("block/gas"));
 
     var sprites = arrayOfNulls<Sprite>(2)
 

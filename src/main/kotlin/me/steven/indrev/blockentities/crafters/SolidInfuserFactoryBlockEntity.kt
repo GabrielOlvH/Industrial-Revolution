@@ -13,7 +13,6 @@ import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.recipes.machines.InfuserRecipe
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
@@ -24,7 +23,6 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
         this.inventoryComponent = inventory(this) {
             input {
@@ -40,6 +38,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
             }
         }
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
+        this.propertiesSize = 4 + 5 * 2
     }
 
     override fun splitStacks() {
@@ -58,7 +57,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {
         return when (type) {
-            ConfigurationType.ITEM -> TransferMode.values()
+            ConfigurationType.ITEM -> TransferMode.SOLID_INFUSER
             else -> super.getValidConfigurations(type)
         }
     }

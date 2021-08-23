@@ -3,10 +3,10 @@ package me.steven.indrev.blockentities
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import me.steven.indrev.packets.client.MachineStateUpdatePacket
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.component3
-import me.steven.indrev.utils.identifier
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
@@ -18,9 +18,6 @@ import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
 
 object GlobalStateController {
-
-    val UPDATE_PACKET_ID = identifier("global_state_update")
-
     @Environment(EnvType.CLIENT)
     val chunksToUpdate: Long2ObjectMap<MutableSet<BlockPos>> = Long2ObjectOpenHashMap()
     @Environment(EnvType.CLIENT)
@@ -48,7 +45,7 @@ object GlobalStateController {
                     val buf = PacketByteBufs.create()
                     buf.writeLong(pos.asLong())
                     buf.writeBoolean(workingState)
-                    ServerPlayNetworking.send(player, UPDATE_PACKET_ID, buf)
+                    ServerPlayNetworking.send(player, MachineStateUpdatePacket.UPDATE_PACKET_ID, buf)
                 }
             }
         }

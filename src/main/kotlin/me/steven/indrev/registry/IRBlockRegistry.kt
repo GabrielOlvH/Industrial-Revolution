@@ -4,15 +4,21 @@ import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
+import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
+import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.*
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
 import me.steven.indrev.blockentities.storage.TankBlockEntity
+import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.blocks.machine.CapsuleBlock
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
+import me.steven.indrev.blocks.machine.solarpowerplant.*
 import me.steven.indrev.blocks.misc.*
 import me.steven.indrev.networks.energy.CableEnergyIo
 import me.steven.indrev.utils.*
@@ -41,6 +47,8 @@ object IRBlockRegistry {
         identifier("plank_block").block(PLANK_BLOCK).item(BlockItem(PLANK_BLOCK, itemSettings()))
         FlammableBlockRegistry.getDefaultInstance().add(PLANKS, 10, 40)
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
+
+        identifier("biomass_composter").block(BIOMASS_COMPOSTER_BLOCK).item(BIOMASS_COMPOSTER_ITEM).blockEntityType(BIOMASS_COMPOSTER_BLOCK_ENTITY)
 
         identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
 
@@ -87,6 +95,54 @@ object IRBlockRegistry {
             }
             CableEnergyIo.NO_NETWORK
         }, CABLE_MK1, CABLE_MK2, CABLE_MK3, CABLE_MK4)
+
+        identifier("heliostat")
+            .block(HELIOSTAT_BLOCK)
+            .item(HELIOSTAT_BLOCK_ITEM)
+            .blockEntityType(HELIOSTAT_BLOCK_ENTITY)
+
+        identifier("resistant_glass")
+            .block(RESISTANT_GLASS_BLOCK)
+            .item(RESISTANT_GLASS_BLOCK_ITEM)
+
+        identifier("solar_receiver")
+            .block(SOLAR_RECEIVER_BLOCK)
+            .item(SOLAR_RECEIVER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_RECEIVER_BLOCK_ENTITY)
+
+        identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
+        identifier("steam_turbine_steam_input_valve")
+            .block(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK)
+            .item(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM)
+            .blockEntityType(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY)
+        identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
+
+        EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
+            val turbineBlockEntity = world.getBlockEntity(pos.up()) as? SteamTurbineBlockEntity
+            if (turbineBlockEntity?.multiblockComponent?.isBuilt(world, pos.up(), turbineBlockEntity.cachedState) == true)
+                turbineBlockEntity
+            else
+                null
+        }, STEAM_TURBINE_ENERGY_OUTPUT)
+
+        identifier("steam_turbine_casing").block(STEAM_TURBINE_CASING_BLOCK).item(STEAM_TURBINE_CASING_BLOCK_ITEM)
+        identifier("steam_turbine_rotor").block(STEAM_TURBINE_ROTOR_BLOCK).item(STEAM_TURBINE_ROTOR_BLOCK_ITEM)
+        identifier("steam_turbine_pressure_valve").block(STEAM_TURBINE_PRESSURE_VALVE_BLOCK).item(STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM)
+
+        identifier("solar_power_plant_tower")
+            .block(SOLAR_POWER_PLANT_TOWER_BLOCK)
+            .item(SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY)
+
+        identifier("solar_power_plant_smelter")
+            .block(SOLAR_POWER_PLANT_SMELTER_BLOCK)
+            .item(SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM)
+            .blockEntityType(SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY)
+
+        identifier("boiler")
+            .block(BOILER_BLOCK)
+            .item(BOILER_BLOCK_ITEM)
+            .blockEntityType(BOILER_BLOCK_ENTITY)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool().strength(3f, 3f))
@@ -112,6 +168,10 @@ object IRBlockRegistry {
     val PLANK_BLOCK = Block(
         FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
     )
+
+    val BIOMASS_COMPOSTER_BLOCK = BiomassComposterBlock()
+    val BIOMASS_COMPOSTER_ITEM = BlockItem(BIOMASS_COMPOSTER_BLOCK, itemSettings())
+    val BIOMASS_COMPOSTER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(::BiomassComposterBlockEntity, BIOMASS_COMPOSTER_BLOCK).build()
 
     val WITHER_PROOF_OBSIDIAN = Block(
         FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
@@ -181,4 +241,53 @@ object IRBlockRegistry {
     val COVERABLE_BLOCK_ENTITY_TYPE_MK3 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK3, pos, state) }, FLUID_PIPE_MK3, ITEM_PIPE_MK3, CABLE_MK3).build(null)
 
     val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK4, pos, state) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
+
+    val HELIOSTAT_BLOCK = HeliostatBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
+    val HELIOSTAT_BLOCK_ENTITY = BlockEntityType.Builder.create(::HeliostatBlockEntity, HELIOSTAT_BLOCK).build(null)
+
+    val SOLAR_RECEIVER_BLOCK = SolarReceiverBlock(
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val SOLAR_RECEIVER_BLOCK_ITEM = BlockItem(SOLAR_RECEIVER_BLOCK, itemSettings())
+    val SOLAR_RECEIVER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarReceiverBlockEntity, SOLAR_RECEIVER_BLOCK).build(null)
+
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK, itemSettings())
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY = BlockEntityType.Builder.create(::SteamTurbineSteamInputValveBlockEntity, STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK).build(null)
+
+    val RESISTANT_GLASS_BLOCK = Block(
+        FabricBlockSettings.of(Material.GLASS).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+    )
+    val RESISTANT_GLASS_BLOCK_ITEM = BlockItem(RESISTANT_GLASS_BLOCK, itemSettings())
+
+    val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val FLUID_VALVE_ITEM = BlockItem(FLUID_VALVE, itemSettings())
+
+    val STEAM_TURBINE_ENERGY_OUTPUT = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ENERGY_OUTPUT_ITEM = BlockItem(STEAM_TURBINE_ENERGY_OUTPUT, itemSettings())
+
+    val STEAM_TURBINE_CASING_BLOCK = Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_CASING_BLOCK_ITEM = BlockItem(STEAM_TURBINE_CASING_BLOCK, itemSettings())
+
+    val STEAM_TURBINE_ROTOR_BLOCK = VerticalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ROTOR_BLOCK_ITEM = BlockItem(STEAM_TURBINE_ROTOR_BLOCK, itemSettings())
+
+    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_PRESSURE_VALVE_BLOCK, itemSettings())
+
+    val SOLAR_POWER_PLANT_TOWER_BLOCK = SolarPowerPlantTowerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_TOWER_BLOCK, itemSettings())
+    val SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarPowerPlantTowerBlockEntity, SOLAR_POWER_PLANT_TOWER_BLOCK).build(null)
+
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK = SolarPowerPlantSmelterBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_SMELTER_BLOCK, itemSettings())
+    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarPowerPlantSmelterBlockEntity, SOLAR_POWER_PLANT_SMELTER_BLOCK).build(null)
+
+    val BOILER_BLOCK = BoilerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val BOILER_BLOCK_ITEM = BlockItem(BOILER_BLOCK, itemSettings())
+    val BOILER_BLOCK_ENTITY = BlockEntityType.Builder.create(::BoilerBlockEntity, BOILER_BLOCK).build(null)
+
 }

@@ -2,8 +2,8 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.BIOMASS_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.misc.WFuel
 import me.steven.indrev.utils.add
@@ -20,7 +20,7 @@ class BiomassGeneratorScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.BIOMASS_GENERATOR_HANDLER,
+        BIOMASS_GENERATOR_HANDLER,
         syncId,
         playerInventory,
         ctx

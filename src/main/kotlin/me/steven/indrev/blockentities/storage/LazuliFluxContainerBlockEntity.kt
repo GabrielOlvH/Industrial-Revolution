@@ -13,18 +13,17 @@ import me.steven.indrev.config.LFCConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import kotlin.math.floor
 
 class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
-    MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY, pos, state) {
+    MachineBlockEntity<LFCConfig>(tier, MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(2)
         this.inventoryComponent = inventory(this) {
             input { 0 filter { stack -> energyOf(stack) != null } }
         }
@@ -91,14 +90,15 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         transferConfig.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.putDouble("energy", energy)
         transferConfig.writeNbt(tag)
-        return super.toClientTag(tag)
+        return tag
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        super.fromClientTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
         transferConfig.readNbt(tag)
+        energy = tag.getDouble("energy")
     }
 
     class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {

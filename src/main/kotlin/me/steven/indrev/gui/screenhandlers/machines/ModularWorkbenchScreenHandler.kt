@@ -8,16 +8,17 @@ import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.MODULAR_WORKBENCH_HANDLER
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.items.armor.IRModuleItem
+import me.steven.indrev.packets.common.SelectModuleOnWorkbenchPacket
 import me.steven.indrev.recipes.machines.ModuleRecipe
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -49,7 +50,7 @@ import kotlin.math.sin
 // All the `index + 3` are because the slot numbers changed and it was easier to do this, if you don't like it don't read it :)
 class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.MODULAR_WORKBENCH_HANDLER,
+        MODULAR_WORKBENCH_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -127,7 +128,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                     buf.writeInt(syncId)
                     buf.writeIdentifier(id)
                     buf.writeBlockPos(pos)
-                    ClientPlayNetworking.send(MODULE_SELECT_PACKET, buf)
+                    ClientPlayNetworking.send(SelectModuleOnWorkbenchPacket.MODULE_SELECT_PACKET, buf)
                     layoutSlots(recipe)
                     slotsPanel.addPainters()
                 }
@@ -172,7 +173,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val moduleSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.module_slot_type"))
         root.add(moduleSlot, 1.5, 1.0)
 
-        val process = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 2, 3)
+        val process = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, ModularWorkbenchBlockEntity.INSTALL_TIME_ID, ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID)
         root.add(process, 1.5, 2.2)
 
         val info = WStaticTooltip()
@@ -217,7 +218,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }, HorizontalAlignment.LEFT)
 
         val installing = WText({
-            val state = ModularWorkbenchBlockEntity.State.values()[propertyDelegate[4]]
+            val state = ModularWorkbenchBlockEntity.State.values()[propertyDelegate[ModularWorkbenchBlockEntity.STATE_ID]]
             if (state == ModularWorkbenchBlockEntity.State.INSTALLING) {
                 INSTALLING_TEXT()
             } else LiteralText.EMPTY
@@ -227,12 +228,12 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             val stack = blockInventory.getStack(1)
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
-                val progress = propertyDelegate!![2]
-                when (ModularWorkbenchBlockEntity.State.values()[propertyDelegate[4]]) {
+                val progress = propertyDelegate!![ModularWorkbenchBlockEntity.INSTALL_TIME_ID]
+                when (ModularWorkbenchBlockEntity.State.values()[propertyDelegate[ModularWorkbenchBlockEntity.STATE_ID]]) {
                     ModularWorkbenchBlockEntity.State.INCOMPATIBLE -> INCOMPATIBLE_TEXT()
                     ModularWorkbenchBlockEntity.State.MAX_LEVEL -> MAX_LEVEL_TEXT()
                     else -> {
-                        val percent = ((progress / 1200f) * 100).toInt()
+                        val percent = ((progress / propertyDelegate!![ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID].toDouble().coerceAtLeast(1.0)) * 100).toInt()
                         PROGRESS_TEXT().append(LiteralText("$percent%"))
                     }
                 }
@@ -327,8 +328,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
             if (selected != null) {
-                val cur = propertyDelegate[5]
-                val max = propertyDelegate[6]
+                val cur = propertyDelegate[ModularWorkbenchBlockEntity.PROCESS_TIME_ID]
+                val max = propertyDelegate[ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID]
                 val renderer = MinecraftClient.getInstance().itemRenderer
                 renderer.renderInGui(selected!!.outputs[0].stack, x + 1, y + 1)
                 RenderSystem.disableDepthTest()
@@ -351,8 +352,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player)
             { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
 
-            val cur = propertyDelegate[5]
-            val max = propertyDelegate[6]
+            val cur = propertyDelegate[ModularWorkbenchBlockEntity.PROCESS_TIME_ID]
+            val max = propertyDelegate[ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID]
             if (max > 0 && cur != max) {
                 tooltip?.add(LiteralText("Crafting: "))
                 tooltip?.add(LiteralText.EMPTY)
@@ -378,7 +379,6 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     companion object {
         val SCREEN_ID = identifier("modular_workbench_screen")
-        val MODULE_SELECT_PACKET = identifier("module_select_packet")
         val SHIELD_TEXT = { TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE) }
         val PROGRESS_TEXT = { TranslatableText("gui.indrev.progress").formatted(Formatting.BLUE) }
         val MODULE_COUNT = { TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE) }

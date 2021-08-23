@@ -1,9 +1,12 @@
 package me.steven.indrev.items.energy
 
+import draylar.magna.api.BlockBreaker
 import draylar.magna.api.BlockProcessor
 import draylar.magna.api.MagnaTool
+import io.github.cottonmc.cotton.gui.client.CottonClientScreen
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.gui.screenhandlers.blockblacklister.BlockBlacklisterScreenHandler
 import me.steven.indrev.gui.tooltip.CustomTooltipData
 import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
 import me.steven.indrev.tools.modular.DrillModule
@@ -12,14 +15,19 @@ import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.BlockState
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
+import net.minecraft.util.ActionResult
+import net.minecraft.util.Hand
+import net.minecraft.util.TypedActionResult
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -49,6 +57,40 @@ class IRModularDrillItem(
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
+    }
+
+    override fun use(world: World?, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
+        val stack = user.getStackInHand(hand)
+        if (world!!.isClient && (DrillModule.CONTROLLED_DESTRUCTION.getLevel(stack) > 0 || DrillModule.MATTER_PROJECTOR.getLevel(stack) > 0)) {
+            MinecraftClient.getInstance().setScreen(object : CottonClientScreen(BlockBlacklisterScreenHandler()) {
+                override fun isPauseScreen(): Boolean = false
+            })
+            return TypedActionResult.success(stack)
+        }
+        return TypedActionResult.pass(stack)
+    }
+
+    override fun useOnBlock(context: ItemUsageContext): ActionResult {
+        if (DrillModule.MATTER_PROJECTOR.getLevel(context.stack) <= 0) return ActionResult.PASS
+
+        val world = context.world
+        val player = context.player!!
+
+        BlockBreaker.findPositions(world, context.player, getRadius(context.stack)).forEach { pos ->
+            val blockState = world.getBlockState(pos)
+            val offset = pos.offset(context.side)
+            if (world.getBlockState(offset).material.isReplaceable) {
+                val stackToRemove = ItemStack(blockState.block)
+                val slot = player.inventory.getSlotWithStack(stackToRemove)
+                if (slot >= 0) {
+                    val removed = player.inventory.removeStack(slot, 1)
+                    if (removed.item == stackToRemove.item && removed.count == 1) {
+                        world.setBlockState(offset, blockState)
+                    }
+                }
+            }
+        }
+        return ActionResult.success(world.isClient)
     }
 
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE
@@ -94,5 +136,30 @@ class IRModularDrillItem(
 
     override fun getData(stack: ItemStack): List<CustomTooltipData> {
         return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IRMiningDrillItem>.getData(stack)).flatten()
+    }
+
+    companion object {
+        fun filterBlacklistedBlocks(center: BlockPos, blockHitResult: BlockHitResult, playerEntity: PlayerEntity, stack: ItemStack, blocks: MutableList<BlockPos>) {
+            blocks.removeIf { pos ->
+
+                var offset = pos.subtract(center)
+                if (blockHitResult.side.axis.isVertical) {
+                    offset = BlockPos(offset.x, offset.z, offset.y)
+                    if (playerEntity.horizontalFacing.axis == Direction.Axis.Z) {
+                        offset = BlockPos(offset.x* -playerEntity.horizontalFacing.offsetZ, offset.y* playerEntity.horizontalFacing.offsetZ, offset.z)
+                    }
+                    else if (playerEntity.horizontalFacing.axis == Direction.Axis.X) {
+                        offset = BlockPos(offset.y *playerEntity.horizontalFacing.offsetX, offset.x* playerEntity.horizontalFacing.offsetX, offset.z)
+                    }
+                } else if (blockHitResult.side.axis == Direction.Axis.X) {
+                    offset = BlockPos(offset.z * -blockHitResult.side.offsetX, offset.y, offset.x)
+                } else if (blockHitResult.side.axis == Direction.Axis.Z) {
+                    offset = BlockPos(offset.x * blockHitResult.side.offsetZ, offset.y, offset.z)
+                }
+
+                DrillModule.getBlacklistedPositions(stack).contains(offset)
+            }
+
+        }
     }
 }

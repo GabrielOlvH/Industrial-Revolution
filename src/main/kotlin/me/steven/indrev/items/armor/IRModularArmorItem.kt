@@ -1,5 +1,10 @@
 package me.steven.indrev.items.armor
 
+import alexiil.mc.lib.attributes.ItemAttributeList
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import alexiil.mc.lib.attributes.misc.LimitedConsumer
+import alexiil.mc.lib.attributes.misc.Reference
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
@@ -11,9 +16,12 @@ import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.gui.tooltip.CustomTooltipData
 import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
 import me.steven.indrev.items.energy.IREnergyItem
+import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.minus
+import me.steven.indrev.utils.times
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
@@ -26,12 +34,37 @@ import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
 import java.util.*
+import kotlin.math.roundToInt
 
 class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, ModularTooltipDataProvider {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, ModularTooltipDataProvider, JetpackHandler {
 
     init {
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
+    }
+
+    override val fluidFilter: FluidFilter = FluidFilter { it.rawFluid == IRFluidRegistry.HYDROGEN_STILL }
+
+    override val limit: FluidAmount = FluidAmount.BUCKET.mul(20)
+
+    override fun isUsable(stack: ItemStack): Boolean = ArmorModule.JETPACK.getLevel(stack) > 0
+
+    fun getFluidItemBarStep(stack: ItemStack): Int {
+        val volume = getFuelStored(stack)
+        return (13.0 - (((limit - volume.amount()) * 13) / limit).asInexactDouble()).roundToInt()
+    }
+
+    fun getFluidItemBarColor(stack: ItemStack): Int = getFuelStored(stack).fluidKey.renderColor
+
+    fun isFluidItemBarVisible(stack: ItemStack): Boolean = !getFuelStored(stack).isEmpty
+
+    override fun addAllAttributes(
+        stack: Reference<ItemStack>,
+        excess: LimitedConsumer<ItemStack>,
+        to: ItemAttributeList<*>
+    ) {
+        if (ArmorModule.JETPACK.isInstalled(stack.get()))
+            super.addAllAttributes(stack, excess, to)
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)

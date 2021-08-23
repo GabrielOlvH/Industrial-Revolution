@@ -2,8 +2,9 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.crafters.CondenserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
+import me.steven.indrev.gui.screenhandlers.CONDENSER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WFluid
 import me.steven.indrev.utils.add
@@ -17,7 +18,7 @@ import net.minecraft.util.Identifier
 
 class CondenserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.CONDENSER_HANDLER,
+        CONDENSER_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -27,7 +28,11 @@ class CondenserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx:
         setRootPanel(root)
         configure("block.indrev.condenser", ctx, playerInventory, blockInventory)
 
-        val fluid = WFluid(ctx, 0)
+        val fluid = WFluid(ctx, propertyDelegate, 0,
+            CondenserBlockEntity.INPUT_TANK_SIZE_ID,
+            CondenserBlockEntity.INPUT_TANK_ID,
+            CondenserBlockEntity.INPUT_TANK_FLUID_ID
+        )
         root.add(fluid, 2.8, 1.0)
 
         val processWidget = createProcessBar()

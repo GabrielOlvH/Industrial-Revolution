@@ -5,10 +5,10 @@ import io.github.cottonmc.cotton.gui.widget.WSlider
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.SLAUGHTER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.inventories.IRInventory
@@ -28,7 +28,7 @@ class SlaughterScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.SLAUGHTER_HANDLER,
+        SLAUGHTER_HANDLER,
         syncId,
         playerInventory,
         ctx

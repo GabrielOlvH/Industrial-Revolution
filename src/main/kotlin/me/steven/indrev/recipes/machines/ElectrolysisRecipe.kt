@@ -1,0 +1,32 @@
+package me.steven.indrev.recipes.machines
+
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.recipes.machines.entries.InputEntry
+import me.steven.indrev.recipes.machines.entries.OutputEntry
+import me.steven.indrev.utils.identifier
+import net.minecraft.recipe.RecipeSerializer
+import net.minecraft.util.Identifier
+
+class ElectrolysisRecipe(
+    override val identifier: Identifier,
+    override val input: Array<InputEntry>,
+    override val outputs: Array<OutputEntry>,
+    override val fluidInput: Array<FluidVolume>,
+    override val fluidOutput: Array<FluidVolume>,
+    override val ticks: Int
+) : IRFluidRecipe() {
+
+    override fun getType(): IRRecipeType<*> = TYPE
+
+    override fun fits(width: Int, height: Int): Boolean = true
+
+    override fun getSerializer(): RecipeSerializer<*> = SERIALIZER
+
+    companion object {
+        val IDENTIFIER = identifier("electrolysis")
+        val TYPE = IRRecipeType<ElectrolysisRecipe>(IDENTIFIER)
+        val SERIALIZER = Serializer()
+
+        class Serializer : IRFluidRecipeSerializer<ElectrolysisRecipe>({ id, ingredients, output, fluidInput, fluidOutput, ticks -> ElectrolysisRecipe(id, ingredients, output, fluidInput, fluidOutput, ticks) })
+    }
+}

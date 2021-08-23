@@ -79,7 +79,11 @@ class Generators {
 
     val heatGenerator: GeneratorConfig = GeneratorConfig(128.0, -1.0, 10000.0, Tier.MK4.io)
 
-    val biomassGenerator: GeneratorConfig = GeneratorConfig(128.0, 1.5, 10000.0, Tier.MK3.io)
+    val gasGenerator: GeneratorConfig = GeneratorConfig(1.0, 1.5, 10000.0, Tier.MK4.io)
+
+    val biomassGenerator: GeneratorConfig = GeneratorConfig(64.0, 1.5, 10000.0, Tier.MK3.io)
+
+    val steamTurbine: GeneratorConfig = GeneratorConfig(4.0, -1.0, 20000.0, Tier.MK4.io)
 }
 
 class GeneratorConfig(
@@ -138,8 +142,6 @@ class Machines {
 
     val infuserFactory: HeatMachineConfig = HeatMachineConfig(64.0, 4.5, 2.0, 100000.0, 16384.0)
 
-    val recycler: MachineConfig = MachineConfig(8.0, 2.5, 50000.0, Tier.MK2.io)
-
     val chopperMk1: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
 
     val chopperMk2: MachineConfig = MachineConfig(32.0, 40.0, 5000.0, Tier.MK2.io)
@@ -182,6 +184,8 @@ class Machines {
 
     val fishingMk4: MachineConfig = MachineConfig(64.0, 500.0, 50000.0, Tier.MK4.io)
 
+    val dirtOxygenator: MachineConfig = MachineConfig(16.0, 50.0, 1000.0, Tier.MK1.io)
+
     val drain: MachineConfig = MachineConfig(4.0, 20.0, 1000.0, Tier.MK1.io)
 
     val pump: MachineConfig = MachineConfig(4.0, 20.0, 50.0, Tier.MK1.io)
@@ -198,9 +202,19 @@ class Machines {
 
     val fluidInfuserMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
 
+    val electrolyticSeparatorMk1: MachineConfig = MachineConfig(4.0, 1.0, 1000.0, Tier.MK1.io)
+
+    val electrolyticSeparatorMk2: MachineConfig = MachineConfig(8.0, 2.0, 5000.0, Tier.MK2.io)
+
+    val electrolyticSeparatorMk3: MachineConfig = MachineConfig(16.0, 3.0, 10000.0, Tier.MK3.io)
+
+    val electrolyticSeparatorMk4: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
+
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
+
+    val distiller: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
 
     val lazuliFluxContainerMk1: LFCConfig = LFCConfig(10000.0, 128.0, 128.0)
 

@@ -4,8 +4,8 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WLabel
 import io.github.cottonmc.cotton.gui.widget.data.Insets
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.LASER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WEnergy
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
@@ -19,7 +19,7 @@ class LaserEmitterScreenHandler(
     ctx: ScreenHandlerContext
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.LASER_HANDLER,
+        LASER_HANDLER,
         syncId,
         playerInventory,
         ctx

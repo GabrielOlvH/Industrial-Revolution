@@ -18,7 +18,6 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
@@ -28,10 +27,6 @@ import net.minecraft.world.explosion.Explosion
 import java.util.*
 
 class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_EMITTER_REGISTRY, pos, state) {
-
-    init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
-    }
 
     override val maxInput: Double = config.maxInput
     override val maxOutput: Double = 0.0
@@ -63,13 +58,13 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
 
         val stack = container.inventory[0]
         if (recipe == null) {
-            recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack, null)
-                .firstOrNull { it.matches(stack, null) }
+            recipe = LaserRecipe.TYPE.getMatchingRecipe(world as ServerWorld, stack)
+                .firstOrNull { it.matches(stack, emptyList()) }
         } else if (ItemStack.areItemsEqual(recipe!!.outputs.first().stack, stack)) {
             return
         }
 
-        if (recipe?.matches(stack, null) != true) {
+        if (recipe?.matches(stack, emptyList()) != true) {
             world?.breakBlock(containerPos, false)
             recipe = null
             return

@@ -3,7 +3,7 @@ package me.steven.indrev.gui.screenhandlers.storage
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.gui.screenhandlers.CABINET_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
@@ -14,7 +14,7 @@ import net.minecraft.text.TranslatableText
 
 class CabinetScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.CABINET_HANDLER,
+        CABINET_HANDLER,
         syncId,
         playerInventory,
         ctx

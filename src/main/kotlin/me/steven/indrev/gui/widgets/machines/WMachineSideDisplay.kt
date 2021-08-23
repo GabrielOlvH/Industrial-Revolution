@@ -5,6 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
 import io.github.cottonmc.cotton.gui.widget.WButton
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.Configurable
+import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.utils.draw2Colors
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawableHelper
@@ -18,7 +19,7 @@ import net.minecraft.world.World
 import java.util.*
 
 class WMachineSideDisplay(
-    private val side: Configurable.MachineSide,
+    private val side: SideConfiguration.MachineSide,
     private val direction: Direction,
     var mode: TransferMode,
     private val world: World,

@@ -49,13 +49,13 @@ open class IRMachineRecipeCategory(
         }
 
         if (recipe is IRFluidRecipe) {
-            if (recipe.fluidOutput != null && recipe.fluidOutput?.amount() != FluidAmount.ZERO) {
+            if (recipe.fluidOutput.isNotEmpty() && recipe.fluidOutput[0].amount() != FluidAmount.ZERO) {
                 val outputFluidPoint = Point(startPoint.x + 83, startPoint.y)
-                createREIFluidWidget(widgets, outputFluidPoint, recipe.fluidOutput!!)
+                createREIFluidWidget(widgets, outputFluidPoint, recipe.fluidOutput[0])
             }
-            if (recipe.fluidInput != null && recipe.fluidInput?.amount() != FluidAmount.ZERO) {
+            if (recipe.fluidInput.isNotEmpty() && recipe.fluidInput[0].amount() != FluidAmount.ZERO) {
                 val inputFluidPoint = Point(startPoint.x - 20, startPoint.y)
-                createREIFluidWidget(widgets, inputFluidPoint, recipe.fluidInput!!)
+                createREIFluidWidget(widgets, inputFluidPoint, recipe.fluidInput[1])
             }
         }
         return widgets

@@ -1,10 +1,8 @@
 package me.steven.indrev.components
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.components.fluid.FluidComponent
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
@@ -19,9 +17,9 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
 import kotlin.math.ceil
 
-class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
-    var processTime: Int by Property(4 + (index * 2), 0)
-    var totalProcessTime: Int by Property(5 + (index * 2), 0)
+open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
+    var processTime: Int = 0
+    var totalProcessTime: Int = 0
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
     val inventoryComponent: InventoryComponent get() = machine.inventoryComponent!!
     val temperatureComponent: TemperatureComponent? get() = machine.temperatureComponent
@@ -39,11 +37,12 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
     fun tick() {
         val inventory = inventoryComponent.inventory
         val inputInventory = inputSlots!!.map { inventory.getStack(it) }
+        val inputTanks = fluidComponent?.inputTanks?.map { fluidComponent!![it] } ?: emptyList()
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
                 val upgrades = machine.getEnhancers()
-                if (recipe?.matches(inputInventory, fluidComponent?.get(0)) != true)
+                if (recipe?.matches(inputInventory, inputTanks) != true)
                     tryStartRecipe(inventory) ?: reset()
                 else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
@@ -67,7 +66,7 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
         temperatureComponent?.tick(isProcessing() && isCrafting)
     }
 
-    private fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
+    protected open fun handleInventories(inventory: IRInventory, inputInventory: List<ItemStack>, recipe: IRRecipe) {
         val output = recipe.craft(machine.world!!.random)
         inputSlots!!.forEachIndexed { index, _ ->
             recipe.input.forEach { (ingredient, count) ->
@@ -78,22 +77,32 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
             }
         }
 
-        if (recipe is IRFluidRecipe) {
-            val fluidInput = recipe.fluidInput
-            if (fluidInput != null) {
-                val inputTank = fluidComponent!!.tanks.first()
-                val amount = inputTank.amount() - fluidInput.amount()
-                fluidComponent!![0] = inputTank.fluidKey.withAmount(amount)
-            }
-            val fluidOutput = recipe.fluidOutput
-            if (fluidOutput != null) {
-                val outputTank = fluidComponent!!.tanks.last()
-                val amount = outputTank.amount() + fluidOutput.amount()
-                fluidComponent!![fluidComponent!!.tankCount - 1] = fluidOutput.fluidKey.withAmount(amount)
-            }
-        }
-
         output.forEach { stack -> craft(stack) }
+
+        if (recipe is IRFluidRecipe) {
+            fluidComponent!!.inputTanks.forEachIndexed { index, slot ->
+                recipe.fluidInput.forEach { volume ->
+                    val tank = fluidComponent!![slot]
+                    if (tank.fluidKey != volume.fluidKey) return@forEach
+                    val amount = tank.amount() - volume.amount()
+                    fluidComponent!![slot] = tank.fluidKey.withAmount(amount)
+                    return@forEachIndexed
+                }
+            }
+            recipe.fluidOutput.forEach { craft(it.copy()) }
+
+        }
+    }
+
+    fun craft(fluid: FluidVolume) {
+        val fluidComponent = fluidComponent!!
+        for (outputSlot in fluidComponent.outputTanks) {
+            val outStack = fluidComponent[outputSlot]
+            if (outStack.isEmpty || fluid.fluidKey == outStack.fluidKey && fluid.amount() + outStack.amount() <= fluidComponent.getMaxAmount_F(outputSlot))
+                fluidComponent[outputSlot] = fluid.fluidKey.withAmount(outStack.amount() + fluid.amount())
+            else continue
+            break
+        }
     }
 
     fun craft(stack: ItemStack) {
@@ -120,28 +129,11 @@ class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBl
 
     private fun tryStartRecipe(inventory: IRInventory): T? {
         val inputStacks = inputSlots!!.map { inventory.getStack(it) }
-        val inputFluid = fluidComponent?.tanks?.get(0)
+        val inputFluids = fluidComponent?.inputTanks?.map { fluidComponent!![it] } ?: emptyList()
         val recipe =
-            (if (inputStacks.isEmpty())
-                type.getMatchingRecipe(world as ServerWorld, ItemStack.EMPTY, inputFluid?.fluidKey)
-            else inputStacks.flatMap {
-                type.getMatchingRecipe(world as ServerWorld, it, inputFluid?.fluidKey)
-            }).firstOrNull { it.matches(inputStacks, inputFluid) } ?: return null
-        if (recipe is IRFluidRecipe && recipe.fluidOutput != null) {
-            val tanks = if (recipe.fluidInput != null) 2 else 1
-            if (fluidComponent!!.tankCount < tanks) {
-                IndustrialRevolution.LOGGER.error("Attempted to start recipe ${recipe.id} which has a fluid output but machine $this is missing tank! Report this issue")
-                return null
-            }
-            val outputTankVolume = fluidComponent!!.tanks.last()
-            val recipeFluidOutput = recipe.fluidOutput!!
-            if (!outputTankVolume.isEmpty && (outputTankVolume.fluidKey != recipeFluidOutput.fluidKey || outputTankVolume.amount()
-                    .add(recipeFluidOutput.amount()) > fluidComponent!!.limit)
-            )
-                return null
-        }
-        if (outputSlots!!.isNotEmpty() && recipe.outputs.any { !fits(it.stack) })
-            return null
+            type.getMatchingRecipe(world as ServerWorld, inputStacks, inputFluids)
+                .firstOrNull { it.matches(inputStacks, inputFluids) } ?: return null
+        if (!recipe.canStart(this)) return null
         processTime = 0
         totalProcessTime = recipe.ticks
         this.currentRecipe = recipe

@@ -7,7 +7,7 @@ import me.steven.indrev.api.IRPlayerEntityExtension;
 import me.steven.indrev.items.energy.IREnergyItem;
 import me.steven.indrev.items.energy.IRGamerAxeItem;
 import me.steven.indrev.tools.modular.ArmorModule;
-import me.steven.indrev.utils.EnergyApiUtilsKt;
+import me.steven.indrev.utils.EnergyutilsKt;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -44,7 +44,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.main.get(inventory.selectedSlot);
         Item item = itemStack.getItem();
-        EnergyIo itemIo = EnergyApiUtilsKt.energyOf(itemStack);
+        EnergyIo itemIo = EnergyutilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
                 NbtCompound tag = itemStack.getOrCreateNbt();

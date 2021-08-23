@@ -1,0 +1,12 @@
+{
+  "type": "indrev:compress",
+  "ingredients": {
+    "item": "indrev:soot",
+    "count": 9
+  },
+  "output": {
+    "item": "indrev:carbon_fiber_plate",
+    "count": 1
+  },
+  "processTime": 400
+}

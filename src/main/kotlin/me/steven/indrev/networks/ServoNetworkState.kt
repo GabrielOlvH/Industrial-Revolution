@@ -3,7 +3,7 @@ package me.steven.indrev.networks
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.packets.client.SyncNetworkServosPacket
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.entity.player.PlayerEntity
@@ -41,7 +41,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
                 val buf = PacketByteBufs.create()
                 buf.writeString(type.key)
                 type.createClientNetworkInfo(world)?.write(buf)
-                ServerPlayNetworking.send(player, IndustrialRevolution.SYNC_NETWORK_SERVOS, buf)
+                ServerPlayNetworking.send(player, SyncNetworkServosPacket.SYNC_NETWORK_SERVOS, buf)
                 syncedMaps[player.uuid] =version
             }
         }

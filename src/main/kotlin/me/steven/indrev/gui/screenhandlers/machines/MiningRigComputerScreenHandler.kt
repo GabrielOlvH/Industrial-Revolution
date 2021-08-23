@@ -6,11 +6,12 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItem
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.MINING_RIG_HANDLER
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -26,7 +27,7 @@ import net.minecraft.util.Identifier
 
 class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
-        IndustrialRevolution.MINING_RIG_HANDLER,
+        MINING_RIG_HANDLER,
         syncId,
         playerInventory,
         ctx
@@ -50,13 +51,15 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             root.add(bg, 1.5, 0.9)
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
+
+            val requiredPower = propertyDelegate[MiningRigBlockEntity.ENERGY_REQUIRED_ID].toDouble()
             when {
-                blockEntity.extract(blockEntity.requiredPower, Simulation.SIMULATE) != blockEntity.requiredPower -> {
+                 propertyDelegate[MachineBlockEntity.ENERGY_ID] < requiredPower -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(
                                 TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED),
-                                TranslatableText("block.indrev.drill.power_required", blockEntity.requiredPower)
+                                TranslatableText("block.indrev.drill.power_required", requiredPower)
                                     .formatted(Formatting.DARK_RED)
                             )
                         }
@@ -81,7 +84,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.1)
         }
         root.add(WText({
-            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[3]}%")
+            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[MiningRigBlockEntity.EXPLORED_PERCENTAGE_ID]}%")
         }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
 
         root.validate(this)

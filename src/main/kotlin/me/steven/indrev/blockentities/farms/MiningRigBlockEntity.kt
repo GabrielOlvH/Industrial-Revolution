@@ -16,18 +16,19 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.misc.IRResourceReportItem
 import me.steven.indrev.items.upgrade.Enhancer
+import me.steven.indrev.packets.client.MiningRigSpawnBlockParticlesPacket
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -35,14 +36,13 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 
 class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), EnhancerProvider {
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), BlockEntityClientSerializable, EnhancerProvider {
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
     override val enhancerSlots: IntArray = intArrayOf(10, 11, 12, 13)
     override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.BUFFER)
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(5)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 14
@@ -50,6 +50,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
         }
+        this.propertiesSize = 4
     }
 
     override val maxInput: Double = config.maxInput
@@ -59,7 +60,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     private var mining = 0.0
     private var finished = false
     var lastMinedItem: ItemStack = ItemStack.EMPTY
-    var requiredPower = 0.0
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -67,9 +67,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         cacheVeinType()
 
         val upgrades = getEnhancers()
-        requiredPower = getEnergyCost()
 
-        if (isLocationCorrect() && use(requiredPower)) {
+        if (isLocationCorrect() && use(getEnergyCost())) {
             workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
             mining += Enhancer.getSpeed(upgrades, this)
@@ -86,7 +85,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     return@updateData false
                 }
                 val (_, size, explored) = data
-                propertyDelegate[3] = explored * 100 / size
                 if (explored >= size) {
                     finished = true
                 }
@@ -140,7 +138,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeBlockPos(pos)
                     buf.writeInt(Registry.BLOCK.getRawId(block))
-                    ServerPlayNetworking.send(serverPlayerEntity, BLOCK_BREAK_PACKET, buf)
+                    ServerPlayNetworking.send(serverPlayerEntity, MiningRigSpawnBlockParticlesPacket.BLOCK_BREAK_PACKET, buf)
                 }
             }
         }
@@ -159,7 +157,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             updateData { data ->
                 if (data == null) return@updateData false
                 this.chunkVeinType = VeinType.REGISTERED[data.veinIdentifier]
-                propertyDelegate[3] = data.explored * 100 / data.size
                 if (data.explored >= data.size) {
                     finished = true
                 }
@@ -190,6 +187,21 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     null
                 }
             } else null
+        }
+    }
+
+    override fun get(index: Int): Int {
+        return when(index) {
+            EXPLORED_PERCENTAGE_ID -> {
+                val inventory = inventoryComponent?.inventory ?: return 0
+                val scanOutput = inventory.getStack(14).nbt ?: return 0
+                val chunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
+                val state = ChunkVeinState.getState(world as ServerWorld)
+                val data = state.veins[chunkPos] ?: return 0
+                data.explored * 100 / data.size
+            }
+            ENERGY_REQUIRED_ID -> getEnergyCost().toInt()
+            else -> super.get(index)
         }
     }
 
@@ -244,25 +256,22 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         super.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("Mining", mining)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.putDouble("Mining", mining)
         if (chunkVeinType != null)
-            tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        tag?.put("LastMinedBlock", lastMinedItem.writeNbt(NbtCompound()))
-        return super.toClientTag(tag)
+            tag.putString("VeinIdentifier", chunkVeinType?.id.toString())
+        tag.put("LastMinedBlock", lastMinedItem.writeNbt(NbtCompound()))
+        return tag
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        mining = tag?.getDouble("Mining") ?: 0.0
-        if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
+    override fun fromClientTag(tag: NbtCompound) {
+        mining = tag.getDouble("Mining")
+        if (tag.contains("VeinIdentifier") && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        lastMinedItem = ItemStack.fromNbt(tag?.getCompound("LastMinedBlock"))
-        super.fromClientTag(tag)
+        lastMinedItem = ItemStack.fromNbt(tag.getCompound("LastMinedBlock"))
     }
 
     companion object {
-        val BLOCK_BREAK_PACKET = identifier("miner_drill_block_particle")
-
         val VALID_DRILL_POSITIONS = arrayOf(
             BlockPos(-1, 0, 0),
             BlockPos(1, 0, 0),
@@ -273,5 +282,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             BlockPos(1, 0, 1),
             BlockPos(1, 0, -1)
         )
+
+        const val EXPLORED_PERCENTAGE_ID = 2
+        const val ENERGY_REQUIRED_ID = 3
     }
 }

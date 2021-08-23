@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "S S",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "indrev:carbon_fiber_rod"
+    }
+  },
+  "result": {
+    "item": "indrev:carbon_fiber_chest_frame"
+  }
+}

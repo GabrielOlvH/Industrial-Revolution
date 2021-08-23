@@ -17,23 +17,24 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
     private val recipeCache: Multimap<Item, T> = HashMultimap.create()
     private val fluidOnlyRecipeCache:  Multimap<FluidKey, T> = HashMultimap.create()
 
-    override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack, fluidInput: FluidKey?): Collection<T> {
-        if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
-        else if (itemStack.isEmpty && fluidInput != null) {
-            if (fluidOnlyRecipeCache.containsKey(fluidInput)) return fluidOnlyRecipeCache[fluidInput]!!
-            val matches = ImmutableList.copyOf(
-                world.recipeManager.getAllOfType(this).values
-                    .filter { recipe -> recipe is IRFluidRecipe && recipe.fluidInput != null && recipe.fluidInput!!.fluidKey == fluidInput }
-            )
-            fluidOnlyRecipeCache.putAll(fluidInput, matches)
-            return matches
-        }
+    override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
         if (itemStack.isEmpty) return emptyList()
+        else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
         val matches = ImmutableList.copyOf(
             world.recipeManager.getAllOfType(this).values
-                .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }.toList()
+                .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }
         )
         recipeCache.putAll(itemStack.item, matches)
+        return matches
+    }
+
+    override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidKey): Collection<T> {
+        if (fluidOnlyRecipeCache.containsKey(fluidInput)) return fluidOnlyRecipeCache[fluidInput]!!
+        val matches = ImmutableList.copyOf(
+            world.recipeManager.getAllOfType(this).values
+                .filter { recipe -> recipe is IRFluidRecipe && recipe.fluidInput.any { it.fluidKey == fluidInput } }
+        )
+        fluidOnlyRecipeCache.putAll(fluidInput, matches)
         return matches
     }
 
@@ -41,6 +42,4 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
         recipeCache.clear()
         fluidOnlyRecipeCache.clear()
     }
-
-    companion object
 }

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " M ",
+    "MCM",
+    " M "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:elytra"
+    },
+    "M": {
+      "tag": "c:steel_plates"
+    }
+  },
+  "result": {
+    "item": "indrev:reinforced_elytra"
+  }
+}

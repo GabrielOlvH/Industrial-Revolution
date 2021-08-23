@@ -9,11 +9,11 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.items.energy.IRGamerAxeItem
+import me.steven.indrev.packets.common.UpdateModularToolLevelPacket
 import me.steven.indrev.tools.modular.IRModularItem
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
@@ -74,7 +74,7 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
                         buf.writeString(module.key)
                         buf.writeInt(value)
                         buf.writeInt(slot)
-                        ClientPlayNetworking.send(IndustrialRevolution.UPDATE_MODULAR_TOOL_LEVEL, buf)
+                        ClientPlayNetworking.send(UpdateModularToolLevelPacket.UPDATE_MODULAR_TOOL_LEVEL, buf)
                     }
                     moduleBox.add(slider)
                     tabPanel.add(moduleBox)
