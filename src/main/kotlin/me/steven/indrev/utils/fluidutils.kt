@@ -58,7 +58,7 @@ fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Grou
             return fluid
 
         val thisMax = maxAmount.roundedSub(fluid.amount(), RoundingMode.DOWN)
-        fluid = extractFluid(outputTank, filter, fluid, thisMax, simulation)
+        fluid = inv().extractFluid(outputTank, filter, fluid, thisMax, simulation)
         if (fluid.amount() >= maxAmount)
             return fluid
         return fluid
@@ -70,7 +70,7 @@ fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : Grou
             return fluid
         else if (fluid.isEmpty)
             return FluidVolumeUtil.EMPTY
-        fluid = insertFluid(inputTank, fluid.copy(), simulation)
+        fluid = inv().insertFluid(inputTank, fluid.copy(), simulation)
         if (fluid.isEmpty)
             return FluidVolumeUtil.EMPTY
         return fluid

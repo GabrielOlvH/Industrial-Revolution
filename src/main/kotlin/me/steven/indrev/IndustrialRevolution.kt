@@ -9,6 +9,10 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
+import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantTowerScreenHandler
+import me.steven.indrev.gui.screenhandlers.machines.SteamTurbineScreenHandler
 import me.steven.indrev.items.armor.ReinforcedElytraItem
 import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.NetworkEvents
@@ -25,6 +29,7 @@ import net.adriantodt.fallflyinglib.FallFlyingLib
 import net.adriantodt.fallflyinglib.event.PreFallFlyingCallback
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
@@ -96,6 +101,8 @@ object IndustrialRevolution : ModInitializer {
         Registry.register(Registry.RECIPE_TYPE, SmelterRecipe.IDENTIFIER, SmelterRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, CondenserRecipe.IDENTIFIER, CondenserRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, CondenserRecipe.IDENTIFIER, CondenserRecipe.TYPE)
+        Registry.register(Registry.RECIPE_SERIALIZER, DistillerRecipe.IDENTIFIER, DistillerRecipe.SERIALIZER)
+        Registry.register(Registry.RECIPE_TYPE, DistillerRecipe.IDENTIFIER, DistillerRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, SawmillRecipe.IDENTIFIER, SawmillRecipe.SERIALIZER)
         Registry.register(Registry.RECIPE_TYPE, SawmillRecipe.IDENTIFIER, SawmillRecipe.TYPE)
         Registry.register(Registry.RECIPE_SERIALIZER, ModuleRecipe.IDENTIFIER, ModuleRecipe.SERIALIZER)

@@ -9,9 +9,11 @@ import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.DistillerBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
+import me.steven.indrev.blocks.machine.solarpowerplant.SteamTurbineBlock
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
@@ -615,5 +617,16 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
             .noModelProvider()
+
+        val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
+            .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
+            .blockEntityProvider { { pos, state -> SteamTurbineBlockEntity(pos, state) } }
+            .defaultModelProvider(true)
+
+        val DISTILLER_REGISTRY = MachineRegistry("distiller", false, Tier.MK4)
+            .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.machines.distiller, ::DistillerScreenHandler) }
+            .blockEntityProvider { { pos, state -> DistillerBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(true)
     }
 }

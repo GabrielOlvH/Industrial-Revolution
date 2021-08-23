@@ -82,6 +82,8 @@ class Generators {
     val gasGenerator: GeneratorConfig = GeneratorConfig(1.0, 1.5, 10000.0, Tier.MK4.io)
 
     val biomassGenerator: GeneratorConfig = GeneratorConfig(64.0, 1.5, 10000.0, Tier.MK3.io)
+
+    val steamTurbine: GeneratorConfig = GeneratorConfig(4.0, -1.0, 20000.0, Tier.MK4.io)
 }
 
 class GeneratorConfig(
@@ -211,6 +213,8 @@ class Machines {
     val modularWorkbench: MachineConfig = MachineConfig(64.0, 1.0, 5000.0, Tier.MK4.io)
 
     val laser: MachineConfig = MachineConfig(4096.0, 1.0, 2500000.0, 16384.0)
+
+    val distiller: MachineConfig = MachineConfig(64.0, 4.0, 100000.0, Tier.MK4.io)
 
     val lazuliFluxContainerMk1: LFCConfig = LFCConfig(10000.0, 128.0, 128.0)
 

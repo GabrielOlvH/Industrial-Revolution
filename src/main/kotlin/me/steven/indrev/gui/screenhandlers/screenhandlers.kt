@@ -46,6 +46,12 @@ val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.regist
 val COMPRESSOR_FACTORY_HANDLER = CompressorFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorFactoryScreenHandler)
 val SOLID_INFUSER_FACTORY_HANDLER = SolidInfuserFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserFactoryScreenHandler)
 
+val STEAM_TURBINE_HANDLER = SteamTurbineScreenHandler.SCREEN_ID.registerScreenHandler(::SteamTurbineScreenHandler)
+val SOLAR_POWER_PLANT_TOWER_HANDLER = SolarPowerPlantTowerScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantTowerScreenHandler)
+val SOLAR_POWER_PLANT_SMELTER_HANDLER = SolarPowerPlantSmelterScreenHandler.SCREEN_ID.registerScreenHandler(::SolarPowerPlantSmelterScreenHandler)
+val BOILER_HANDLER = BoilerScreenHandler.SCREEN_ID.registerScreenHandler(::BoilerScreenHandler)
+val DISTILLER_HANDLER = DistillerScreenHandler.SCREEN_ID.registerScreenHandler(::DistillerScreenHandler)
+
 val PIPE_FILTER_HANDLER = ScreenHandlerRegistry.registerExtended(PipeFilterScreenHandler.SCREEN_ID) { syncId, inv, buf ->
     val dir = buf.readEnumConstant(Direction::class.java)
     val pos = buf.readBlockPos()

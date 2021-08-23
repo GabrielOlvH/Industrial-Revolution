@@ -13,6 +13,7 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRendere
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
+import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
@@ -28,6 +29,7 @@ import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.packets.PacketRegistry
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.utils.IRWorldRenderer
 import me.steven.indrev.utils.identifier
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
@@ -54,7 +56,6 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.screen.PlayerScreenHandler
 import org.lwjgl.glfw.GLFW
 
-
 @Suppress("UNCHECKED_CAST")
 object IndustrialRevolutionClient : ClientModInitializer {
     override fun onInitializeClient() {
@@ -65,6 +66,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRFluidRegistry.COOLANT_STILL,
             IRFluidRegistry.SULFURIC_ACID_STILL,
             IRFluidRegistry.TOXIC_MUD_STILL,
+            IRFluidRegistry.STEAM_STILL
         ).forEach { it.registerRender(FluidType.WATER) }
         arrayOf(
             IRFluidRegistry.MOLTEN_NETHERITE_STILL,
@@ -73,7 +75,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRFluidRegistry.MOLTEN_COPPER_STILL,
             IRFluidRegistry.MOLTEN_TIN_STILL,
             IRFluidRegistry.MOLTEN_LEAD_STILL,
-            IRFluidRegistry.MOLTEN_SILVER_STILL
+            IRFluidRegistry.MOLTEN_SILVER_STILL,
+            IRFluidRegistry.MOLTEN_SALT_STILL
         ).forEach { it.registerRender(FluidType.LAVA) }
         arrayOf(
             IRFluidRegistry.HYDROGEN_STILL,
@@ -112,7 +115,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
             CABINET_HANDLER,
             DRILL_HANDLER,
             LASER_HANDLER,
-            ELECTROLYTIC_SEPARATOR_HANDLER
+            ELECTROLYTIC_SEPARATOR_HANDLER,
+            STEAM_TURBINE_HANDLER,
+            SOLAR_POWER_PLANT_TOWER_HANDLER,
+            SOLAR_POWER_PLANT_SMELTER_HANDLER,
+            DISTILLER_HANDLER,
+            BOILER_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
@@ -135,10 +143,15 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
+        MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
         BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
+        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
+
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
@@ -166,6 +179,8 @@ object IndustrialRevolutionClient : ClientModInitializer {
         PacketRegistry.registerClient()
 
         GlobalStateController.initClient()
+
+        WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(IRWorldRenderer)
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {

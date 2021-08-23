@@ -1,16 +1,21 @@
 package me.steven.indrev.utils
 
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.ScrewdriverScreenHandlerFactory
 import me.steven.indrev.gui.screenhandlers.wrench.ScrewdriverScreenHandler
+import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.nbt.NbtLong
+import net.minecraft.text.LiteralText
 import net.minecraft.util.ActionResult
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
@@ -45,7 +50,15 @@ fun screwdriver(
     player: PlayerEntity?,
     stack: ItemStack
 ): ActionResult {
-    if (blockEntity is MachineBlockEntity<*>) {
+    if (blockState.isOf(IRBlockRegistry.HELIOSTAT_BLOCK)) {
+        val positions = LongOpenHashSet()
+        positions.add(pos.asLong())
+        HeliostatBlock.findConnectingHeliostats(pos, world, LongOpenHashSet(), positions)
+        val tagList = stack.orCreateTag.getList("SelectedHeliostats", 4)
+        positions.forEach { long -> tagList.add(NbtLong.of(long)) }
+        stack.orCreateTag.put("SelectedHeliostats", tagList)
+        player?.sendMessage(LiteralText("Click on Solar Power Plant Tower to link the Heliostats."), true)
+    } else if (blockEntity is MachineBlockEntity<*>) {
         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {
             val map = EnumMap<ConfigurationType, SideConfiguration>(ConfigurationType::class.java)
             map[ConfigurationType.ITEM] = if (blockEntity.isConfigurable(ConfigurationType.ITEM)) blockEntity.getCurrentConfiguration(ConfigurationType.ITEM) else SideConfiguration.EMPTY_ITEM
