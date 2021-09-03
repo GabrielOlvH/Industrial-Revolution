@@ -5,8 +5,8 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.screenhandlers.RESOURCE_REPORT_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.entries
@@ -29,7 +29,7 @@ class ResourceReportScreenHandler(
     veinData: ChunkVeinData
 ) :
     IRGuiScreenHandler(
-        IndustrialRevolution.RESOURCE_REPORT_HANDLER,
+        RESOURCE_REPORT_HANDLER,
         syncId,
         playerInventory,
         ctx

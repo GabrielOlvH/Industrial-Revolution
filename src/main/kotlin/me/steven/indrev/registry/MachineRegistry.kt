@@ -6,15 +6,14 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
-import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.CoalGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
-import me.steven.indrev.blockentities.generators.SolarGeneratorBlockEntity
+import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
+import me.steven.indrev.blockentities.solarpowerplant.DistillerBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.blocks.machine.*
+import me.steven.indrev.blocks.machine.solarpowerplant.SteamTurbineBlock
 import me.steven.indrev.blocks.models.LazuliFluxContainerBakedModel
 import me.steven.indrev.blocks.models.MachineBakedModel
 import me.steven.indrev.blocks.models.MinerBakedModel
@@ -217,6 +216,16 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .noModelProvider()
 
+        val GAS_BURNING_GENERATOR_REGISTRY = MachineRegistry("gas_generator", false, Tier.MK4)
+            .blockProvider { tier ->
+                HorizontalFacingMachineBlock(
+                    this, SETTINGS().nonOpaque(), tier, IRConfig.generators.gasGenerator, ::GasBurningGeneratorScreenHandler
+                )
+            }
+            .blockEntityProvider { { pos, state -> GasBurningGeneratorBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider()
+
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
             .blockProvider { tier -> LazuliFluxContainerBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> LazuliFluxContainerBlockEntity(tier, pos, state) } }
@@ -330,16 +339,6 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                 )
             }
             .blockEntityProvider { tier -> { pos, state -> SawmillBlockEntity(tier, pos, state) } }
-            .defaultEnergyProvider()
-            .defaultModelProvider()
-
-        val RECYCLER_REGISTRY = MachineRegistry("recycler", false, Tier.MK2)
-            .blockProvider { tier ->
-                HorizontalFacingMachineBlock(
-                    this, SETTINGS(), tier, IRConfig.machines.recycler, ::RecyclerScreenHandler
-                )
-            }
-            .blockEntityProvider { tier -> { pos, state -> RecyclerBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
 
@@ -481,6 +480,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { tier -> { pos, state -> FluidInfuserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
             .defaultModelProvider()
+        
+        val ELECTROLYTIC_SEPARATOR_REGISTRY = MachineRegistry("electrolytic_separator", true)
+            .blockProvider { tier ->
+                ElectrolyticSeparatorBlock(this, SETTINGS(), tier)
+            }
+            .blockEntityProvider { tier -> { pos, state -> ElectrolyticSeparatorBlockEntity(tier, pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider()
 
         val CHOPPER_REGISTRY = MachineRegistry("chopper", true)
             .blockProvider { tier ->
@@ -579,6 +586,12 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .defaultEnergyProvider()
             .noModelProvider()
 
+        val DIRT_OXYGENATOR_REGISTRY = MachineRegistry("dirt_oxygenator", false, Tier.MK1)
+            .blockProvider { DirtOxygenatorBlock(this, SETTINGS()) }
+            .blockEntityProvider { { pos, state -> DirtOxygenatorBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(hasWorkingState = false)
+
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry("modular_workbench", false, Tier.MK4)
             .blockProvider { tier ->
                 HorizontalFacingMachineBlock(
@@ -596,7 +609,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> ChargePadBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.UP) ChargePadBlockEntity.ChargePadEnergyIo(be as ChargePadBlockEntity) else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.UP) (be as? ChargePadBlockEntity)?.energyIo else null } }
             .noModelProvider()
 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
@@ -604,5 +617,16 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
             .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
             .noModelProvider()
+
+        val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
+            .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
+            .blockEntityProvider { { pos, state -> SteamTurbineBlockEntity(pos, state) } }
+            .defaultModelProvider(true)
+
+        val DISTILLER_REGISTRY = MachineRegistry("distiller", false, Tier.MK4)
+            .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.machines.distiller, ::DistillerScreenHandler) }
+            .blockEntityProvider { { pos, state -> DistillerBlockEntity(pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider(true)
     }
 }

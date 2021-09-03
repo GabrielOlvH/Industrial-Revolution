@@ -54,5 +54,6 @@ object IRModelManagers : ModelVariantProvider, ExtraModelProvider {
         out.accept(ModelIdentifier(identifier("drill_head"), "diamond"))
         out.accept(ModelIdentifier(identifier("drill_head"), "netherite"))
         out.accept(ModelIdentifier(identifier("pump_pipe"), ""))
+        out.accept(ModelIdentifier(identifier("composting"), ""))
     }
 }

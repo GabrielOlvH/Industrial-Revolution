@@ -12,7 +12,6 @@ import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.BlockPos
 
 class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
@@ -22,11 +21,10 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockS
     override val availableEnhancers: Array<Enhancer> = Enhancer.FURNACE
 
     init {
-        this.propertyDelegate = ArrayPropertyDelegate(15)
         this.temperatureComponent = TemperatureComponent(this, 0.1, 1300..1700, 2000)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(6, 8, 10, 12, 14) }
-            output { slots =intArrayOf(7, 9, 11, 13, 15) }
+            output { slots = intArrayOf(7, 9, 11, 13, 15) }
         }
         this.craftingComponents = Array(5) { index ->
             CraftingComponent(index, this).apply {
@@ -35,6 +33,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockS
             }
         }
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
+        this.propertiesSize = 4 + 5 * 2
     }
 
     @Suppress("UNCHECKED_CAST")

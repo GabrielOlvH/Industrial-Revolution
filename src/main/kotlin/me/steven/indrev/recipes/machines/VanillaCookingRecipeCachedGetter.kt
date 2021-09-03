@@ -16,13 +16,15 @@ class VanillaCookingRecipeCachedGetter<T : AbstractCookingRecipe>(private val ty
 
     private val recipeCache: Multimap<Item, T> = HashMultimap.create()
 
-    override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack, fluidInput: FluidKey?): Collection<T> {
+    override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
         if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
         val matches = world.recipeManager.getAllOfType(type).values
-            .filter { recipe -> recipe.input.test(itemStack) }.toSet()
+            .filter { recipe -> recipe.input.test(itemStack) }
         recipeCache.putAll(itemStack.item, matches)
         return matches
     }
+
+    override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidKey): Collection<T> = emptyList()
 
     companion object {
         val SMELTING = VanillaCookingRecipeCachedGetter(RecipeType.SMELTING)

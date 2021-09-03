@@ -88,14 +88,6 @@ object REIPlugin : REIClientPlugin {
 
         registry.add(
             IRMachineRecipeCategory(
-                RecyclerRecipe.IDENTIFIER,
-                EntryStacks.of(MachineRegistry.RECYCLER_REGISTRY.block(Tier.MK2)),
-                "indrev.category.rei.recycling"
-            )
-        )
-
-        registry.add(
-            IRMachineRecipeCategory(
                 FluidInfuserRecipe.IDENTIFIER,
                 EntryStacks.of(MachineRegistry.FLUID_INFUSER_REGISTRY.block(Tier.MK1)),
                 "indrev.category.rei.fluid_infusing"

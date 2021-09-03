@@ -18,7 +18,7 @@ class IRInventory(
     var component: InventoryComponent? = null
 
     private var availableSlots = inputSlots.plus(outputSlots)
-    private val coolerSlot = dsl.coolerSlot
+    val coolerSlot = dsl.coolerSlot
     private val maxCount = dsl.maxStackCount
 
     init {

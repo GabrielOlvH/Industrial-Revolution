@@ -50,16 +50,16 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
         direction: Direction,
         blockState: () -> BlockState
     ): Boolean {
-        if (
+        if (blockState().block is FluidPipeBlock) {
+            network.appendPipe(blockState().block, pos.toImmutable())
+            state.onSet(pos, network)
+            return true
+        } else if (
             fluidInsertableOf(world, pos, direction) != RejectingFluidInsertable.NULL
             || fluidExtractableOf(world, pos, direction) != EmptyFluidExtractable.NULL
             || groupedFluidInv(world, pos, direction) != EmptyGroupedFluidInv.INSTANCE
         ) {
             network.appendContainer(pos, direction.opposite)
-        } else if (blockState().block is FluidPipeBlock) {
-            network.appendPipe(blockState().block, pos.toImmutable())
-            state.onSet(pos, network)
-            return true
         }
         return false
     }
@@ -74,15 +74,15 @@ val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<Item
         direction: Direction,
         blockState: () -> BlockState
     ): Boolean {
-        if (
+        if (blockState().block is ItemPipeBlock) {
+            network.appendPipe(blockState().block, pos.toImmutable())
+            state.onSet(pos, network)
+            return true
+        } else if (
             itemInsertableOf(world, pos, direction) != RejectingItemInsertable.NULL
             || itemExtractableOf(world, pos, direction) != EmptyItemExtractable.NULL
         ) {
             network.appendContainer(pos, direction.opposite)
-        } else if (blockState().block is ItemPipeBlock) {
-            network.appendPipe(blockState().block, pos.toImmutable())
-            state.onSet(pos, network)
-            return true
         }
         return false
     }

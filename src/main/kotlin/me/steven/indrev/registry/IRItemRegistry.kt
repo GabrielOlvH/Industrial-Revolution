@@ -5,9 +5,7 @@ import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blocks.misc.NikoliteOreBlock
-import me.steven.indrev.items.armor.IRColorModuleItem
-import me.steven.indrev.items.armor.IRModularArmorItem
-import me.steven.indrev.items.armor.IRModuleItem
+import me.steven.indrev.items.armor.*
 import me.steven.indrev.items.energy.*
 import me.steven.indrev.items.misc.*
 import me.steven.indrev.items.upgrade.Enhancer
@@ -21,12 +19,10 @@ import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
-import net.minecraft.item.BlockItem
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
-import net.minecraft.item.ToolMaterials
+import net.minecraft.item.*
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
@@ -152,6 +148,12 @@ object IRItemRegistry {
 
         MaterialHelper.register()
 
+        identifier("soot").item(SOOT)
+        identifier("carbon_fiber_plate").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_rod").item(DEFAULT_ITEM())
+
+        identifier("salt").item(SALT)
+
         identifier("sawdust").item(DEFAULT_ITEM())
 
         identifier("hammer").item(HAMMER)
@@ -195,14 +197,25 @@ object IRItemRegistry {
 
         identifier("energy_reader").item(ENERGY_READER)
 
-        identifier("tier_upgrade_mk2").item(IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2))
-        identifier("tier_upgrade_mk3").item(IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3))
-        identifier("tier_upgrade_mk4").item(IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4))
+        identifier("tier_upgrade_mk2").item(TIER_UPGRADE_MK2)
+        identifier("tier_upgrade_mk3").item(TIER_UPGRADE_MK3)
+        identifier("tier_upgrade_mk4").item(TIER_UPGRADE_MK4)
 
         identifier("biomass").item(BIOMASS)
         identifier("untanned_leather").item(DEFAULT_ITEM())
 
         identifier("wrench").item(WRENCH)
+        identifier("screwdriver").item(SCREWDRIVER)
+
+        identifier("jetpack_mk1").item(JETPACK_MK1)
+        identifier("jetpack_mk2").item(JETPACK_MK2)
+        identifier("jetpack_mk3").item(JETPACK_MK3)
+        identifier("jetpack_mk4").item(JETPACK_MK4)
+
+        identifier("carbon_fiber_helmet_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_chest_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_legs_frame").item(DEFAULT_ITEM())
+        identifier("carbon_fiber_boots_frame").item(DEFAULT_ITEM())
 
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
@@ -219,11 +232,17 @@ object IRItemRegistry {
         identifier("module_charger").item(CHARGER_MODULE_ITEM)
         identifier("module_solar_panel").item(SOLAR_PANEL_MODULE_ITEM)
         identifier("module_piglin_tricker").item(PIGLIN_TRICKER_MODULE_ITEM)
+        identifier("module_elytra").item(ELYTRA_MODULE_ITEM)
+        identifier("module_jetpack").item(JETPACK_MODULE_ITEM)
+        identifier("module_magnet").item(MAGNET_MODULE)
+        identifier("module_water_affinity").item(WATER_AFFINITY_MODULE)
         identifier("module_fire_resistance").item(FIRE_RESISTANCE_MODULE_ITEM)
         identifier("module_range").item(RANGE_MODULE_ITEM)
         identifier("module_efficiency").item(EFFICIENCY_MODULE_ITEM)
         identifier("module_fortune").item(FORTUNE_MODULE_ITEM)
         identifier("module_silk_touch").item(SILK_TOUCH_MODULE_ITEM)
+        identifier("module_controlled_destruction").item(CONTROLLED_DESTRUCTION_MODULE_ITEM)
+        identifier("module_matter_projector").item(MATTER_PROJECTOR_MODULE_ITEM)
         identifier("module_looting").item(LOOTING_MODULE_ITEM)
         identifier("module_fire_aspect").item(FIRE_ASPECT_MODULE_ITEM)
         identifier("module_sharpness").item(SHARPNESS_MODULE_ITEM)
@@ -257,7 +276,6 @@ object IRItemRegistry {
         identifier("item_pipe_mk3").item(ITEM_PIPE_ITEM_MK3)
         identifier("item_pipe_mk4").item(ITEM_PIPE_ITEM_MK4)
 
-
         identifier("cable_mk1").item(CABLE_ITEM_MK1)
         identifier("cable_mk2").item(CABLE_ITEM_MK2)
         identifier("cable_mk3").item(CABLE_ITEM_MK3)
@@ -265,6 +283,8 @@ object IRItemRegistry {
 
         identifier("servo_retriever").item(SERVO_RETRIEVER)
         identifier("servo_output").item(SERVO_OUTPUT)
+
+        identifier("reinforced_elytra").item(REINFORCED_ELYTRA)
     }
 
     private val DEFAULT_ITEM: () -> Item = { Item(itemSettings()) }
@@ -276,6 +296,7 @@ object IRItemRegistry {
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
     val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
+    val STEEL_PLATE = { Registry.ITEM.get(identifier("steel_plate")) }
     val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
     val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
     val LEAD_INGOT = { Registry.ITEM.get(identifier("lead_ingot")) }
@@ -298,6 +319,10 @@ object IRItemRegistry {
         }
     }
 
+    val TIER_UPGRADE_MK2 = IRMachineUpgradeItem(itemSettings(), Tier.MK1, Tier.MK2)
+    val TIER_UPGRADE_MK3 = IRMachineUpgradeItem(itemSettings(), Tier.MK2, Tier.MK3)
+    val TIER_UPGRADE_MK4 = IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4)
+
     val MINING_DRILL_MK1 =
         IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().customDamage(EnergyDamageHandler))
     val MINING_DRILL_MK2 =
@@ -313,8 +338,12 @@ object IRItemRegistry {
 
     val ENERGY_READER = IREnergyReaderItem(itemSettings())
 
+    val SOOT = DEFAULT_ITEM()
+
     val SULFUR_CRYSTAL_ITEM = DEFAULT_ITEM()
-    
+
+    val SALT = DEFAULT_ITEM()
+
     val STONE_DRILL_HEAD = Item(itemSettings().maxDamage(256))
     val IRON_DRILL_HEAD = Item(itemSettings().maxDamage(1024))
     val DIAMOND_DRILL_HEAD = Item(itemSettings().maxDamage(2048))
@@ -326,7 +355,25 @@ object IRItemRegistry {
     val SMOKER_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.SMOKER)
     val DAMAGE_UPGRADE = IREnhancerItem(itemSettings().maxCount(1), Enhancer.DAMAGE)
 
-    val WRENCH = IRWrenchItem(itemSettings().maxCount(1))
+    val WRENCH = object : Item(itemSettings().maxCount(1)) {
+        override fun useOnBlock(context: ItemUsageContext): ActionResult {
+            val state = context.world.getBlockState(context.blockPos)
+            val blockEntity = context.world.getBlockEntity(context.blockPos)
+            return wrench(context.world, context.blockPos, state, blockEntity, context.player, context.stack)
+        }
+    }
+    val SCREWDRIVER = object : Item(itemSettings().maxCount(1)) {
+        override fun useOnBlock(context: ItemUsageContext): ActionResult {
+            val blockEntity = context.world.getBlockEntity(context.blockPos)
+            val state = context.world.getBlockState(context.blockPos)
+            return screwdriver(context.world, context.blockPos, state, blockEntity, context.player, context.stack)
+        }
+    }
+
+    val JETPACK_MK1 = JetpackItem(Tier.MK1)
+    val JETPACK_MK2 = JetpackItem(Tier.MK2)
+    val JETPACK_MK3 = JetpackItem(Tier.MK3)
+    val JETPACK_MK4 = JetpackItem(Tier.MK4)
 
     val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
     val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
@@ -343,8 +390,14 @@ object IRItemRegistry {
     val CHARGER_MODULE_ITEM = IRModuleItem(ArmorModule.CHARGER, itemSettings().maxCount(1))
     val SOLAR_PANEL_MODULE_ITEM = IRModuleItem(ArmorModule.SOLAR_PANEL, itemSettings().maxCount(1))
     val PIGLIN_TRICKER_MODULE_ITEM = IRModuleItem(ArmorModule.PIGLIN_TRICKER, itemSettings().maxCount(1))
+    val ELYTRA_MODULE_ITEM = IRModuleItem(ArmorModule.ELYTRA, itemSettings().maxCount(1))
+    val JETPACK_MODULE_ITEM = IRModuleItem(ArmorModule.JETPACK, itemSettings().maxCount(1))
+    val MAGNET_MODULE = IRModuleItem(ArmorModule.MAGNET, itemSettings().maxCount(1))
+    val WATER_AFFINITY_MODULE = IRModuleItem(ArmorModule.WATER_AFFINITY, itemSettings().maxCount(1))
     val FIRE_RESISTANCE_MODULE_ITEM = IRModuleItem(ArmorModule.FIRE_RESISTANCE, itemSettings().maxCount(1))
     val SILK_TOUCH_MODULE_ITEM = IRModuleItem(DrillModule.SILK_TOUCH, itemSettings().maxCount(1))
+    val CONTROLLED_DESTRUCTION_MODULE_ITEM = IRModuleItem(DrillModule.CONTROLLED_DESTRUCTION, itemSettings().maxCount(1))
+    val MATTER_PROJECTOR_MODULE_ITEM = IRModuleItem(DrillModule.MATTER_PROJECTOR, itemSettings().maxCount(1))
     val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
     val RANGE_MODULE_ITEM = IRModuleItem(DrillModule.RANGE, itemSettings().maxCount(1))
     val REACH_MODULE_ITEM = IRModuleItem(GamerAxeModule.REACH, itemSettings().maxCount(1))
@@ -404,4 +457,6 @@ object IRItemRegistry {
 
     val SERVO_RETRIEVER = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.RETRIEVER)
     val SERVO_OUTPUT = IRServoItem(itemSettings().maxCount(16), EndpointData.Type.OUTPUT)
+
+    val REINFORCED_ELYTRA = ReinforcedElytraItem()
 }

@@ -5,6 +5,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -17,7 +18,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import java.util.*
 
-class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private val to: Tier) : Item(settings) {
+class IRMachineUpgradeItem(settings: Settings, val from: Tier, val to: Tier) : Item(settings) {
     override fun appendTooltip(stack: ItemStack?, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         tooltip?.add(TranslatableText("item.indrev.tier_upgrade_${to.toString().lowercase(Locale.getDefault())}.tooltip").formatted(Formatting.GREEN))
         super.appendTooltip(stack, world, tooltip, context)
@@ -57,5 +58,16 @@ class IRMachineUpgradeItem(settings: Settings, private val from: Tier, private v
             return ActionResult.SUCCESS
         }
         return super.useOnBlock(context)
+    }
+
+    companion object {
+        fun fromTier(tier: Tier): IRMachineUpgradeItem {
+            return when (tier) {
+                Tier.MK1 -> IRItemRegistry.TIER_UPGRADE_MK2
+                Tier.MK2 -> IRItemRegistry.TIER_UPGRADE_MK3
+                Tier.MK3 -> IRItemRegistry.TIER_UPGRADE_MK4
+                else -> error("no upgrade available")
+            }
+        }
     }
 }

@@ -47,8 +47,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         cooldown += Enhancer.getSpeed(enhancers, this)
         if (cooldown < config.processSpeed) return
         val source = DamageSource.player(fakePlayer)
-        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) }
-            ?: emptyList()
+        val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) } ?: emptyList()
         if (mobs.isEmpty() || !canUse(getEnergyCost())) {
             workingState = false
             return

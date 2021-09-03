@@ -93,6 +93,15 @@ repositories {
         url = 'https://maven.cafeteria.dev'
         content {
             includeGroup 'dev.cafeteria'
+            includeGroup 'net.adriantodt.fabricmc'
+        }
+    }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+        content {
+            includeGroup 'io.github.ladysnake'
+            includeGroupByRegex 'io\\.github\\.onyxstudios.*'
         }
     }
 }
@@ -134,6 +143,7 @@ dependencies {
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
+    dependencies.ext.lib("net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}")
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -149,8 +159,8 @@ processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
+        expand "version": project.version
+    }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
@@ -173,6 +183,8 @@ jar {
     from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
+
+    exclude("me/steven/indrev/datagen")
 }
 
 // configure the maven publication

@@ -1,0 +1,13 @@
+{
+  "type": "indrev:distiller",
+  "output": {
+    "item": "indrev:salt",
+    "count": 1
+  },
+  "fluidInput": {
+    "fluid": "minecraft:water",
+    "type": "bottle",
+    "count": 1
+  },
+  "processTime": 150
+}

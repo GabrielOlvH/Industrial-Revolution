@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
-import me.steven.indrev.api.machines.properties.Property
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.registry.MachineRegistry
@@ -15,8 +14,13 @@ import net.minecraft.util.math.Direction
 
 abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : GeneratorBlockEntity(tier, registry, pos, state) {
-    private var burnTime: Int by Property(4, 0)
-    private var maxBurnTime: Int by Property(5, 0)
+
+    init {
+        this.propertiesSize = 6
+    }
+
+    private var burnTime = 0
+    private var maxBurnTime = 0
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
@@ -34,6 +38,14 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
             markDirty()
         }
         return burnTime > 0 && energy < energyCapacity
+    }
+
+    override fun get(index: Int): Int {
+        return when(index) {
+            BURN_TIME_ID -> burnTime
+            TOTAL_BURN_TIME_ID -> maxBurnTime
+            else -> super.get(index)
+        }
     }
 
     override fun applyDefault(
@@ -69,17 +81,10 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
         return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        super.fromClientTag(tag)
-        burnTime = tag?.getInt("BurnTime") ?: 0
-        maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
-    }
-
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putInt("BurnTime", burnTime)
-        tag?.putInt("MaxBurnTime", maxBurnTime)
-        return super.toClientTag(tag)
-    }
-
     abstract fun getFuelMap(): Map<Item, Int>
+
+    companion object {
+        const val BURN_TIME_ID = 4
+        const val TOTAL_BURN_TIME_ID = 5
+    }
 }

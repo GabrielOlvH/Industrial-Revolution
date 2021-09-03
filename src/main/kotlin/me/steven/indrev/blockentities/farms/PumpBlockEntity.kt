@@ -8,7 +8,7 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.components.fluid.FluidComponent
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.drainFluid
@@ -34,7 +34,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent({this}, FluidAmount.BUCKET)
     }
 
     override val maxInput: Double = config.maxInput
@@ -154,14 +154,13 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         super.readNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        super.fromClientTag(tag)
+    override fun fromClientTag(tag: NbtCompound) {
+        movingTicks = tag.getDouble("MovingTicks")
     }
 
-    override fun toClientTag(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("MovingTicks", movingTicks)
-        return super.toClientTag(tag)
+    override fun toClientTag(tag: NbtCompound): NbtCompound {
+        tag.putDouble("MovingTicks", movingTicks)
+        return tag
     }
 
     companion object {

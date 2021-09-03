@@ -1,0 +1,16 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": {
+    "item": "minecraft:black_concrete_powder"
+  },
+  "fluidInput": {
+    "fluid": "minecraft:water",
+    "type": "mb",
+    "count": 100
+  },
+  "output": {
+    "item": "minecraft:black_concrete",
+    "count": 1
+  },
+  "processTime": 200
+}
