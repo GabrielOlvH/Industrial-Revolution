@@ -2,9 +2,12 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BIOMASS_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.widgets.machines.WCustomBar
+import me.steven.indrev.gui.widgets.machines.fuelBar
 import me.steven.indrev.gui.widgets.misc.WFuel
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
@@ -33,7 +36,8 @@ class BiomassGeneratorScreenHandler(
         // Fuel input
         root.add(WItemSlot.of(blockInventory, 2), 4, 2)
         // Burning widget
-        val wFuel = WFuel()
+
+        val wFuel = query<BiomassGeneratorBlockEntity, WCustomBar> { be -> fuelBar(be) }
         root.add(wFuel, 4.1, 1.1)
         wFuel.setSize(14, 14)
 

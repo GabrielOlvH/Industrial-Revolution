@@ -7,6 +7,7 @@ import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -32,13 +33,14 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
             output { slots = intArrayOf(8, 11, 14, 17, 20) }
         }
         this.craftingComponents = Array(5) { index ->
-            CraftingComponent(index, this).apply {
+            val component = CraftingComponent(index, this).apply {
                 inputSlots = intArrayOf(6 + (index * 3), 6 + (index * 3) + 1)
                 outputSlots = intArrayOf(6 + (index * 3) + 2)
             }
+            trackObject(CRAFTING_COMPONENT_START_ID + index, component)
+            component
         }
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
-        this.propertiesSize = 4 + 5 * 2
     }
 
     override fun splitStacks() {
@@ -67,5 +69,6 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     companion object {
         val TOP_SLOTS = intArrayOf(6, 9, 12, 15, 18)
         val BOTTOM_SLOTS = intArrayOf(7, 10, 13, 16, 19)
+        const val CRAFTING_COMPONENT_START_ID = 4
     }
 }

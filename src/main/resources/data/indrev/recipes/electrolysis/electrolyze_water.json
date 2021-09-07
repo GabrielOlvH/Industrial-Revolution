@@ -2,19 +2,16 @@
   "type": "indrev:electrolysis",
   "fluidInput": {
     "fluid": "minecraft:water",
-    "type": "bucket",
-    "count": 1
+    "amount": 81000
   },
   "fluidOutput": [
     {
       "fluid": "indrev:hydrogen_still",
-      "type": "mb",
-      "count": 500
+      "amount": 40500
     },
     {
       "fluid": "indrev:oxygen_still",
-      "type": "mb",
-      "count": 500
+      "amount": 40500
     }
   ],
   "processTime": 300

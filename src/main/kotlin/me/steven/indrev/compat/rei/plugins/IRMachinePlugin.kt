@@ -33,7 +33,7 @@ open class IRMachinePlugin(val recipe: IRRecipe) : Display {
                 val fluidInput = recipe.fluidInput
                 //TODO properly support multiple inputs
                 if (fluidInput.isNotEmpty())
-                    list.addAll(mutableListOf(EntryIngredients.of(fluidInput[0].rawFluid, 81000)))
+                    list.addAll(mutableListOf(EntryIngredients.of(fluidInput[0].resource.fluid, 81000)))
             }
             list.addAll(recipe.input.map { (ingredient, count) ->
                 val builder = EntryIngredient.builder()
@@ -51,7 +51,7 @@ open class IRMachinePlugin(val recipe: IRRecipe) : Display {
 
                 //TODO properly support multiple outputs
                 if (fluidOutput.isNotEmpty())
-                    list.add(EntryIngredients.of(fluidOutput[0].rawFluid, 81000))
+                    list.add(EntryIngredients.of(fluidOutput[0].resource.fluid, 81000))
             }
 
             return list

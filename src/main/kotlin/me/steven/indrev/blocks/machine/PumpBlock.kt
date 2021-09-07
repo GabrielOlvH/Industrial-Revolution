@@ -36,15 +36,6 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
         else -> VoxelShapes.fullCube()
     }
 
-    override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
-        val blockEntity = world?.getBlockEntity(pos) as? PumpBlockEntity ?: return
-        val fluidComponent = blockEntity.fluidComponent ?: return
-        val dir = to.searchDirection?.opposite
-        val facing = blockState!![HORIZONTAL_FACING]
-        if (facing == dir && (to.attribute == FluidAttributes.EXTRACTABLE || to.attribute == FluidAttributes.GROUPED_INV))
-            to.offer(fluidComponent)
-    }
-
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing)
     }

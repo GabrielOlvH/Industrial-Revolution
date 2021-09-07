@@ -1,23 +1,22 @@
 package me.steven.indrev.components
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.inventories.IRInventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.recipes.machines.IRRecipe
-import me.steven.indrev.utils.minus
-import me.steven.indrev.utils.plus
+import me.steven.indrev.utils.IRFluidAmount
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.PropertyDelegate
+import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
 import kotlin.math.ceil
 
-open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMachineBlockEntity<T>) : PropertyDelegateHolder {
+open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: CraftingMachineBlockEntity<T>) : DefaultSyncableObject() {
     var processTime: Int = 0
     var totalProcessTime: Int = 0
     val fluidComponent: FluidComponent? get() = machine.fluidComponent
@@ -47,6 +46,7 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
                 else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
                     processTime = (processTime + ceil(Enhancer.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()
+                    markDirty()
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
                         machine.usedRecipes.addTo(recipe.id, 1)
@@ -83,23 +83,29 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
             fluidComponent!!.inputTanks.forEachIndexed { index, slot ->
                 recipe.fluidInput.forEach { volume ->
                     val tank = fluidComponent!![slot]
-                    if (tank.fluidKey != volume.fluidKey) return@forEach
-                    val amount = tank.amount() - volume.amount()
-                    fluidComponent!![slot] = tank.fluidKey.withAmount(amount)
+                    if (tank.resource != volume.resource) return@forEach
+                    val amount = tank.amount - volume.amount
+                    fluidComponent!![slot].amount = amount
                     return@forEachIndexed
                 }
             }
-            recipe.fluidOutput.forEach { craft(it.copy()) }
+            recipe.fluidOutput.forEach { craft(it) }
 
         }
     }
 
-    fun craft(fluid: FluidVolume) {
+    fun craft(fluid: IRFluidAmount) {
         val fluidComponent = fluidComponent!!
         for (outputSlot in fluidComponent.outputTanks) {
-            val outStack = fluidComponent[outputSlot]
-            if (outStack.isEmpty || fluid.fluidKey == outStack.fluidKey && fluid.amount() + outStack.amount() <= fluidComponent.getMaxAmount_F(outputSlot))
-                fluidComponent[outputSlot] = fluid.fluidKey.withAmount(outStack.amount() + fluid.amount())
+            val tank = fluidComponent[outputSlot]
+            if (tank.isEmpty) {
+                tank.variant = fluid.resource
+                tank.amount = tank.amount + fluid.amount
+                tank.markDirty()
+            } else if (fluid.resource == tank.resource && fluid.amount() + tank.amount <= tank.capacity) {
+                tank.amount = tank.amount + fluid.amount
+                tank.markDirty()
+            }
             else continue
             break
         }
@@ -147,8 +153,6 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
 
     private fun isProcessing() = totalProcessTime > 0 && processTime < totalProcessTime
 
-    override fun getPropertyDelegate(): PropertyDelegate = machine.propertyDelegate
-
     fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0
         totalProcessTime = tag?.getInt("MaxProcessTime") ?: 0
@@ -158,5 +162,16 @@ open class CraftingComponent<T : IRRecipe>(index: Int, val machine: CraftingMach
         tag.putInt("ProcessTime", processTime)
         tag.putInt("MaxProcessTime", totalProcessTime)
         return tag
+    }
+
+    override fun toPacket(buf: PacketByteBuf) {
+        buf.writeInt(processTime)
+        buf.writeInt(totalProcessTime)
+    }
+
+    @Environment(EnvType.CLIENT)
+    override fun fromPacket(buf: PacketByteBuf) {
+        this.processTime = buf.readInt()
+        this.totalProcessTime = buf.readInt()
     }
 }

@@ -1,10 +1,5 @@
 package me.steven.indrev.blocks.machine
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.AttributeProvider
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
@@ -22,6 +17,10 @@ import me.steven.indrev.utils.wrench
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -59,7 +58,7 @@ open class MachineBlock(
     val tier: Tier,
     val config: IConfig?,
     private val screenHandler: ((Int, PlayerInventory, ScreenHandlerContext) -> ScreenHandler)?,
-) : Block(settings), BlockEntityProvider, InventoryProvider, AttributeProvider {
+) : Block(settings), BlockEntityProvider, InventoryProvider{
 
     override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = registry.blockEntityType(tier).instantiate(pos, state)
 
@@ -85,8 +84,8 @@ open class MachineBlock(
         if (world.isClient) return ActionResult.CONSUME
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.FAIL
         if (blockEntity.fluidComponent != null) {
-            val result = FluidInvUtil.interactHandWithTank(blockEntity.fluidComponent as FixedFluidInv, player as ServerPlayerEntity, hand)
-            if (result.didMoveAny()) return result.asActionResult()
+            val result = StorageUtil.move(ContainerItemContext.ofPlayerHand(player, hand).find(FluidStorage.ITEM), blockEntity.fluidComponent, { true }, Long.MAX_VALUE, null)
+            if (result > 0) return ActionResult.SUCCESS
         }
         val stack = player?.mainHandStack!!
         val item = stack.item
@@ -229,17 +228,5 @@ open class MachineBlock(
             val f = pos.z.toDouble() + 0.5
             world.addParticle(ParticleTypes.SMOKE, d, e, f, 0.0, 0.0, 0.0)
         }
-    }
-
-    override fun addAllAttributes(world: World?, pos: BlockPos?, blockState: BlockState?, to: AttributeList<*>) {
-        val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
-        val fluidComponent = blockEntity.fluidComponent ?: return
-        val opposite = to.searchDirection?.opposite
-        if (to.attribute == FluidAttributes.INSERTABLE && fluidComponent.transferConfig[opposite]?.input == true)
-            to.offer(fluidComponent)
-        else if (to.attribute == FluidAttributes.EXTRACTABLE && fluidComponent.transferConfig[opposite]?.output == true)
-            to.offer(fluidComponent)
-        else if (to.attribute == FluidAttributes.GROUPED_INV)
-            to.offer(fluidComponent)
     }
 }

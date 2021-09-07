@@ -1,32 +1,18 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.SearchOptions
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidTransferable
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
-import me.steven.indrev.blockentities.SyncableBlockEntity
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
-import me.steven.indrev.components.FluidComponent
-import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.BoilerStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
-import me.steven.indrev.utils.MB
-import me.steven.indrev.utils.createWrapper
-import me.steven.indrev.utils.minus
-import me.steven.indrev.utils.rawId
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -34,25 +20,34 @@ import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.screen.PropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
 class BoilerBlockEntity(pos: BlockPos, state: BlockState)
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), PropertyDelegateHolder, ComponentProvider, Syncable, BlockEntityClientSerializable {
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), ComponentProvider, Syncable, BlockEntityClientSerializable {
 
-    val propertyDelegate = ArrayPropertyDelegate(15)
+    val guiSyncableComponent = GuiSyncableComponent()
+
     val multiblockComponent = BoilerMultiblockComponent()
-    val fluidComponent = BoilerFluidComponent()
     val temperatureComponent = TemperatureComponent(this,0.1, 700..1000, 1200)
+    val fluidComponent = BoilerFluidComponent()
+
+    val processTime by autosync(PROCESS_TIME_ID, 0)
+    val totalProcessTime by autosync(TOTAL_PROCESS_TIME_ID, 0)
+
+    init {
+        trackObject(MOLTEN_SALT_TANK, fluidComponent[0])
+        trackObject(WATER_TANK, fluidComponent[1])
+        trackObject(STEAM_TANK, fluidComponent[2])
+    }
+
     var inventory = DefaultedList.ofSize(1, ItemStack.EMPTY)
-    var solidifiedSalt = 0.0
+    var solidifiedSalt = 0L
 
     companion object {
         const val TEMPERATURE_ID = 2
@@ -61,61 +56,52 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 //TODO use crafting components for this
         const val PROCESS_TIME_ID = 4
         const val TOTAL_PROCESS_TIME_ID = 5
-
-        const val MOLTEN_SALT_TANK_SIZE = 6
-        const val MOLTEN_SALT_TANK_AMOUNT_ID = 7
-        const val MOLTEN_SALT_TANK_FLUID_ID = 8
-
-        const val WATER_TANK_SIZE = 9
-        const val WATER_TANK_AMOUNT_ID = 10
-        const val WATER_TANK_FLUID_ID = 11
-
-        const val STEAM_TANK_SIZE = 12
-        const val STEAM_TANK_AMOUNT_ID = 13
-        const val STEAM_TANK_FLUID_ID = 14
+        const val MOLTEN_SALT_TANK = 6
+        const val WATER_TANK = 7
+        const val STEAM_TANK = 8
 
         val FLUID_VALVES_MAPPER = Long2LongOpenHashMap()
-        val MAX_CAPACITY: FluidAmount = FluidAmount.ofWhole(8)
-        val MOLTEN_SALT_AMOUNT: FluidAmount = SolarPowerPlantSmelterBlockEntity.MOLTEN_SALT_AMOUNT
+        val MAX_CAPACITY: Long = bucket * 8
+        val MOLTEN_SALT_AMOUNT = SolarPowerPlantSmelterBlockEntity.MOLTEN_SALT_AMOUNT
 
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: BoilerBlockEntity) {
             blockEntity.multiblockComponent.tick(world, pos, state)
             if (blockEntity.multiblockComponent.isBuilt(world, pos, state)) {
                 blockEntity.interactWithTanks()
 
-                val moltenSaltVolume = blockEntity.fluidComponent.getTank(0)
-                val hasMoltenSalt = moltenSaltVolume.get().fluidKey.rawFluid!!.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL)
+                val moltenSaltVolume = blockEntity.fluidComponent[0]
+                val hasMoltenSalt = moltenSaltVolume.variant.isOf(IRFluidRegistry.MOLTEN_SALT_STILL)
                 blockEntity.temperatureComponent.tick(hasMoltenSalt)
-                blockEntity.solidifiedSalt += moltenSaltVolume.extract(MB.div(3)).amount().asInexactDouble()
+                blockEntity.solidifiedSalt += moltenSaltVolume.extract(scrap, true)
 
-                if (blockEntity.solidifiedSalt >= MOLTEN_SALT_AMOUNT.asInexactDouble() * 2.5) {
-                    blockEntity.solidifiedSalt = 0.0
+                if (blockEntity.solidifiedSalt >= MOLTEN_SALT_AMOUNT * 3) {
+                    blockEntity.solidifiedSalt = 0
                     val stack = blockEntity.inventory[0]
                     if (stack.isEmpty) blockEntity.inventory[0] = ItemStack(IRItemRegistry.SALT, 1)
                     else if (stack.count < blockEntity.maxCountPerStack) stack.increment(1)
                 }
 
-                val waterVolume = blockEntity.fluidComponent.getTank(1)
-                val steamVolume = blockEntity.fluidComponent.getTank(2)
+                val waterVolume = blockEntity.fluidComponent[1]
+                val steamVolume = blockEntity.fluidComponent[2]
 
-                if (waterVolume.get().isEmpty || steamVolume.get().amount() >= blockEntity.fluidComponent.getMaxAmount_F(2)) return
+                if (waterVolume.isEmpty || steamVolume.amount >= blockEntity.fluidComponent.getTankCapacity(2)) return
 
-                val waterSteamConversionRate = FluidAmount.ofWhole(blockEntity.temperatureComponent.temperature.toLong()).sub(100L).div(2500L)
-                if (waterSteamConversionRate.isNegative || waterSteamConversionRate.isOverflow) return
-                val amountToConvert = waterVolume.get().amount()
-                    .coerceAtMost(steamVolume.maxAmount_F - steamVolume.get().amount())
+                val waterSteamConversionRate = blockEntity.temperatureComponent.temperature.toLong() - 100
+                val amountToConvert = waterVolume.amount
+                    .coerceAtMost(steamVolume.capacity - steamVolume.amount)
                     .coerceAtMost(waterSteamConversionRate)
 
-                waterVolume.extract(amountToConvert)
+                waterVolume.extract(amountToConvert, true)
 
-                val volumeToConvert = FluidKeys.get(IRFluidRegistry.STEAM_STILL).withAmount(amountToConvert)
-                steamVolume.insert(volumeToConvert)
+                steamVolume.insert(FluidVariant.of(IRFluidRegistry.STEAM_STILL), amountToConvert, true)
 
             }
         }
     }
 
     private fun interactWithTanks() {
+        //TODO
+        /*
         val inputTanks = BoilerStructureDefinition.getInputTankPositions(pos, cachedState)
         inputTanks.forEach { tankPos ->
             val extractable = FluidAttributes.EXTRACTABLE.get(world, tankPos)
@@ -124,7 +110,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 
         val outputTankPos = BoilerStructureDefinition.getSteamOutputTankPos(pos, cachedState)
         val insertable = FluidAttributes.INSERTABLE.get(world, outputTankPos, SearchOptions.inDirection(Direction.UP))
-        FluidVolumeUtil.move(fluidComponent.getTank(2), insertable)
+        FluidVolumeUtil.move(fluidComponent.getTank(2), insertable)*/
 
     }
 
@@ -147,7 +133,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
             ComponentKey.FLUID -> fluidComponent
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
-            ComponentKey.PROPERTY_HOLDER -> this
+            ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
             else -> null
         }
     }
@@ -177,29 +163,6 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         return tag
     }
 
-    override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) propertyDelegate else object : PropertyDelegate {
-        override fun get(index: Int): Int {
-            return when (index) {
-                TEMPERATURE_ID -> temperatureComponent.temperature.toInt()
-                MAX_TEMPERATURE_ID -> temperatureComponent.limit
-                MOLTEN_SALT_TANK_SIZE -> fluidComponent.getMaxAmount_F(0).asInt(1000)
-                MOLTEN_SALT_TANK_AMOUNT_ID -> fluidComponent[0].amount().asInt(1000)
-                MOLTEN_SALT_TANK_FLUID_ID -> fluidComponent[0].rawFluid.rawId
-                WATER_TANK_SIZE -> fluidComponent.getMaxAmount_F(1).asInt(1000)
-                WATER_TANK_AMOUNT_ID -> fluidComponent[1].amount().asInt(1000)
-                WATER_TANK_FLUID_ID -> fluidComponent[1].rawFluid.rawId
-                STEAM_TANK_SIZE -> fluidComponent.getMaxAmount_F(2).asInt(1000)
-                STEAM_TANK_AMOUNT_ID -> fluidComponent[2].amount().asInt(1000)
-                STEAM_TANK_FLUID_ID -> fluidComponent[2].rawFluid.rawId
-                else -> -1
-            }
-        }
-
-        override fun set(index: Int, value: Int) = error("Unsupported")
-
-        override fun size(): Int = 15
-    }
-
     override fun markForUpdate(condition: () -> Boolean) {
         //TODO
     }
@@ -221,21 +184,17 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 
     inner class BoilerFluidComponent : FluidComponent({this}, MAX_CAPACITY, 3) {
 
-        override fun getMaxAmount_F(tank: Int): FluidAmount {
-            return if (tank == 0) FluidAmount.BUCKET else super.getMaxAmount_F(tank)
+        override fun getTankCapacity(index: Int): Long {
+            return if (index == 0) bucket else super.getTankCapacity(index)
         }
 
-        override fun isFluidValidForTank(tank: Int, fluid: FluidKey): Boolean {
-            return when (tank) {
-                0 -> fluid.rawFluid?.matchesType(IRFluidRegistry.MOLTEN_SALT_STILL) == true
-                1 -> fluid == FluidKeys.WATER
-                2 -> fluid.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true
+        override fun isFluidValidForTank(index: Int, variant: FluidVariant): Boolean {
+            return when (index) {
+                0 -> variant.isOf(IRFluidRegistry.MOLTEN_SALT_STILL)
+                1 -> variant == FluidKeys.WATER
+                2 -> variant.isOf(IRFluidRegistry.STEAM_STILL)
                 else -> false
             }
-        }
-
-        override fun getInteractInventory(tank: Int): FluidTransferable {
-            return createWrapper(tank, tank)
         }
     }
 }

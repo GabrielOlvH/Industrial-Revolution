@@ -24,11 +24,4 @@ class SteamTurbineSteamInputValveBlock(settings: Settings) : FluidValveBlock(set
             (blockEntity as? SteamTurbineSteamInputValveBlockEntity)?.inserted = false
         }
     }
-
-    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
-        if (to.attribute == FluidAttributes.INSERTABLE || to.attribute == FluidAttributes.GROUPED_INV) {
-            val blockEntity = world.getBlockEntity(pos) as? SteamTurbineSteamInputValveBlockEntity ?: return
-            to.offer(blockEntity.fluidInv)
-        }
-    }
 }

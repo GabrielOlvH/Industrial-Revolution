@@ -24,5 +24,6 @@ class ComponentKey<T>(val id: Identifier) {
         val TEMPERATURE = ComponentKey<TemperatureComponent>(identifier("temperature"))
         val MULTIBLOCK = ComponentKey<MultiBlockComponent>(identifier("multiblock"))
         val PROPERTY_HOLDER = ComponentKey<PropertyDelegateHolder>(identifier("property_holder"))
+        val GUI_SYNCABLE = ComponentKey<GuiSyncableComponent>(identifier("gui_syncable"))
     }
 }

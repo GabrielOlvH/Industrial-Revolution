@@ -9,7 +9,11 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.GuiSyncableComponent
+import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
@@ -51,11 +55,13 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val root = WCustomTabPanel()
 
         setRootPanel(root)
+        val properties = query<RancherBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
 
-        feedBabies = propertyDelegate[RancherBlockEntity.FEED_BABIES_ID] == 1
-        mateAdults = propertyDelegate[RancherBlockEntity.MATE_ADULTS] == 1
-        matingLimit = propertyDelegate[RancherBlockEntity.MATING_LIMIT]
-        killAfter = propertyDelegate[RancherBlockEntity.KILL_AFTER]
+        feedBabies = properties[RancherBlockEntity.FEED_BABIES_ID]
+        mateAdults = properties[RancherBlockEntity.MATE_ADULTS]
+        matingLimit = properties[RancherBlockEntity.MATING_LIMIT]
+        killAfter = properties[RancherBlockEntity.KILL_AFTER]
+
 
         root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
         root.add(buildConfigPanel()) { it.icon(ItemIcon(IRItemRegistry.WRENCH)) }

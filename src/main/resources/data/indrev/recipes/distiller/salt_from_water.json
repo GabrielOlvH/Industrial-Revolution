@@ -6,8 +6,7 @@
   },
   "fluidInput": {
     "fluid": "minecraft:water",
-    "type": "bottle",
-    "count": 1
+    "amount": 27000
   },
   "processTime": 150
 }

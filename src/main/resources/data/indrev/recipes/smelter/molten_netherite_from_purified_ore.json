@@ -5,8 +5,7 @@
   },
   "fluidOutput": {
     "fluid": "indrev:molten_netherite_still",
-    "type": "scrap",
-    "count": 4
+    "amount": 250
   },
   "processTime": 600
 }

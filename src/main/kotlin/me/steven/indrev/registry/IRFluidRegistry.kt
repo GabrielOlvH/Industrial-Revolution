@@ -71,7 +71,7 @@ object IRFluidRegistry {
         identifier("${HYDROGEN_IDENTIFIER.path}_still").fluid(HYDROGEN_STILL)
         identifier("${HYDROGEN_IDENTIFIER.path}_flowing").fluid(HYDROGEN_FLOWING)
         identifier("${HYDROGEN_IDENTIFIER.path}_bucket").item(HYDROGEN_BUCKET)
-        IRFluidFuelRegistry.register(HYDROGEN_STILL, 10, 900, 4, FluidAmount.of(1, 10))
+        IRFluidFuelRegistry.register(HYDROGEN_STILL, 10, 900, 4, 100 * 81)
 
         OXYGEN_IDENTIFIER.block(OXYGEN)
         identifier("${OXYGEN_IDENTIFIER.path}_still").fluid(OXYGEN_STILL)
@@ -82,7 +82,7 @@ object IRFluidRegistry {
         identifier("${METHANE_IDENTIFIER.path}_still").fluid(METHANE_STILL)
         identifier("${METHANE_IDENTIFIER.path}_flowing").fluid(METHANE_FLOWING)
         identifier("${METHANE_IDENTIFIER.path}_bucket").item(METHANE_BUCKET)
-        IRFluidFuelRegistry.register(METHANE_STILL, 60, 900, 128, FluidAmount.of(1, 4))
+        IRFluidFuelRegistry.register(METHANE_STILL, 60, 900, 128, 250 * 81)
 
 
         STEAM_IDENTIFIER.block(STEAM)

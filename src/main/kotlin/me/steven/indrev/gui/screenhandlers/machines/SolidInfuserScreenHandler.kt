@@ -2,9 +2,13 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
+import me.steven.indrev.blockentities.crafters.SolidInfuserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SOLID_INFUSER_HANDLER
+import me.steven.indrev.gui.widgets.machines.WCustomBar
+import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.createProcessBar
@@ -32,7 +36,7 @@ class SolidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         val secondInput = WItemSlot.of(blockInventory, 3)
         root.add(secondInput, 4.0, 1.8)
 
-        val processWidget = createProcessBar()
+        val processWidget = query<SolidInfuserBlockEntity, WCustomBar> { be -> processBar(be, SolidInfuserBlockEntity.CRAFTING_COMPONENT_ID) }
         root.add(processWidget, 5.15, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 4)

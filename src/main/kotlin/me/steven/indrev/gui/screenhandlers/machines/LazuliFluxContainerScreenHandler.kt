@@ -5,10 +5,12 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BATTERY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WEnergy
+import me.steven.indrev.gui.widgets.machines.energyBar
 import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
@@ -55,8 +57,10 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
             0.7
         )
 
-        val wEnergy = WEnergy()
-        root.add(wEnergy, 8.4, 0.4)
+        withBlockEntity<LazuliFluxContainerBlockEntity> { be ->
+            val wEnergy = energyBar(be)
+            root.add(wEnergy, 8.4, 0.4)
+        }
 
         ctx.run { world, _ ->
             val itemSlot = WItemSlot.of(blockInventory, 0)

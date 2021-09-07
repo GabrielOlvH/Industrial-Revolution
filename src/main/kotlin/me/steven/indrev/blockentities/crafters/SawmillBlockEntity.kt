@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -22,7 +23,13 @@ class SawmillBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             input { slot = 2 }
             output { slots = intArrayOf(3, 4, 5, 6) }
         }
+
+        trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
     }
 
     override val type: IRRecipeType<SawmillRecipe> = SawmillRecipe.TYPE
+
+    companion object {
+        const val CRAFTING_COMPONENT_ID = 4
+    }
 }

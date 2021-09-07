@@ -4,9 +4,11 @@ import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WLabel
 import io.github.cottonmc.cotton.gui.widget.data.Insets
+import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.LASER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WEnergy
+import me.steven.indrev.gui.widgets.machines.energyBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -33,9 +35,11 @@ class LaserEmitterScreenHandler(
         root.add(label, 0, 0)
         label.setSize(75, 0)
 
-        val energy = WEnergy()
-        root.add(energy, 1, 1)
-        energy.setLocation(9 + 16 + root.insets.left, 16 + root.insets.top)
+        withBlockEntity<LaserBlockEntity> { be ->
+            val energy = energyBar(be)
+            root.add(energy, 1, 1)
+            energy.setLocation(9 + 16 + root.insets.left, 16 + root.insets.top)
+        }
 
         root.validate(this)
     }

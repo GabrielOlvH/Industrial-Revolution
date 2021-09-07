@@ -1,5 +1,7 @@
 package me.steven.indrev.registry
 
+import alexiil.mc.lib.attributes.fluid.FluidAttributes
+import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
@@ -26,6 +28,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
@@ -34,6 +37,7 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
+import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
 
 @Suppress("MemberVisibilityCanBePrivate")
@@ -68,6 +72,12 @@ object IRBlockRegistry {
         identifier("drill").blockEntityType(DRILL_BLOCK_ENTITY_TYPE)
 
         identifier("tank").block(TANK_BLOCK).item(IRItemRegistry.TANK_BLOCK_ITEM).blockEntityType(TANK_BLOCK_ENTITY)
+
+        FluidStorage.SIDED.registerForBlockEntity({ be, _ ->
+            val combinedStorage = TankBlockEntity.CombinedTankStorage()
+            TankBlock.findAllTanks(be.world!!.getChunk(be.pos), be.world!!.getBlockState(be.pos), be.pos, mutableSetOf(), combinedStorage)
+            combinedStorage
+        }, TANK_BLOCK_ENTITY)
 
         identifier("capsule").block(CAPSULE_BLOCK).item(IRItemRegistry.CAPSULE_BLOCK_ITEM).blockEntityType(CAPSULE_BLOCK_ENTITY)
 
@@ -111,10 +121,25 @@ object IRBlockRegistry {
             .blockEntityType(SOLAR_RECEIVER_BLOCK_ENTITY)
 
         identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
+
+        FluidStorage.SIDED.registerForBlocks({ world, pos, state, be, dir ->
+            if (BoilerBlockEntity.FLUID_VALVES_MAPPER.containsKey(pos.asLong())) {
+                val boilerPos = BlockPos.fromLong(BoilerBlockEntity.FLUID_VALVES_MAPPER[pos.asLong()])
+                val blockEntity = world.getBlockEntity(boilerPos) as? BoilerBlockEntity
+                return@registerForBlocks blockEntity?.fluidComponent
+            } else {
+                val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
+                return@registerForBlocks aboveBlockEntity?.fluidComponent
+            }
+        }, FLUID_VALVE)
+
         identifier("steam_turbine_steam_input_valve")
             .block(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK)
             .item(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM)
             .blockEntityType(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY)
+
+        FluidStorage.SIDED.registerForBlockEntity({ be, _ -> be.getSteamTurbine()?.fluidComponent }, STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY)
+
         identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
 
         EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->

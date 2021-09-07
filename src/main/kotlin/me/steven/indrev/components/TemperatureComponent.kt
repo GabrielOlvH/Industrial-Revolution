@@ -14,10 +14,15 @@ class TemperatureComponent(
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
     val limit: Int
-) {
+) : ComponentProvider by ensureIsProvider(blockEntity) {
 
-    var temperature: Double = 25.0
     var cooling = true
+
+    var temperature: Double by autosync(MachineBlockEntity.TEMPERATURE_ID, 25.0)
+
+    init {
+        trackInt(MachineBlockEntity.MAX_TEMPERATURE_ID) { limit }
+    }
 
     private var ticks = 0
 

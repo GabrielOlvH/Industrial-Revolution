@@ -1,22 +1,20 @@
 package me.steven.indrev.blockentities.generators
 
-import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.autosync
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
+import me.steven.indrev.components.trackDouble
+import me.steven.indrev.components.trackInt
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.minus
-import me.steven.indrev.utils.plus
+import me.steven.indrev.utils.bucket
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
@@ -29,7 +27,12 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         this.fluidComponent = SteamTurbineFluidComponent()
     }
 
-    var efficiency = 1.0
+    var efficiency by autosync(EFFICIENCY, 1.0)
+
+    init {
+        trackDouble(GENERATING) { getGenerationRatio() * 100 }
+    }
+
     var generatingTicks = 0
     var totalInserted: FluidAmount = FluidAmount.ZERO
 
@@ -47,7 +50,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         if (generatingTicks <= 0) {
             if (!totalInserted.isZero) {
                 generatingTicks = 20
-                fluidComponent!!.extract(FluidAmount.MAX_BUCKETS)
+                fluidComponent!![0].extract(Long.MAX_VALUE, true)
             } else
                 return false
         }
@@ -68,22 +71,14 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     override fun supportsInsertion(): Boolean = false
 
-    private inner class SteamTurbineFluidComponent : FluidComponent({this}, FluidAmount.ofWhole(1), 1) {
+    private inner class SteamTurbineFluidComponent : FluidComponent({this}, bucket, 1) {
 
-        override fun getMaxAmount_F(tank: Int): FluidAmount {
-            return FluidAmount.ofWhole(getRadius() * getRadius().toLong()).mul((efficiency * 100).toLong()).div(100)
+        override fun getTankCapacity(index: Int): Long {
+            return (((getRadius() * getRadius().toLong()) * efficiency) * 81L).toLong()
         }
 
-        override fun isFluidValidForTank(tank: Int, fluid: FluidKey?): Boolean {
-            return fluid?.rawFluid?.matchesType(IRFluidRegistry.STEAM_STILL) == true
-        }
-
-        override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
-            if (generatingTicks > 0) return fluid
-            val result = super.attemptInsertion(fluid, simulation)
-            if (simulation.isAction)
-                totalInserted += fluid.amount_F - result.amount_F
-            return result
+        override fun isFluidValidForTank(index: Int, variant: FluidVariant): Boolean {
+            return variant.isOf(IRFluidRegistry.STEAM_STILL)
         }
     }
 
@@ -99,16 +94,8 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
                 }
 
             if (!isBuilt(world, pos, blockState)) {
-                fluidComponent!![0] = fluidComponent!![0].withAmount(fluidComponent!!.getMaxAmount_F(0))
+                fluidComponent!![0].amount = 0
             }
-        }
-    }
-
-    override fun get(index: Int): Int {
-        return when (index) {
-            EFFICIENCY -> (efficiency * 100).toInt()
-            GENERATING -> (getGenerationRatio() * 100).toInt()
-            else -> super.get(index)
         }
     }
 
@@ -134,9 +121,6 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
     }
 
     companion object {
-        val STEAM_FLUID_KEY: FluidKey = FluidKeys.get(IRFluidRegistry.STEAM_STILL)
-        val STEAM_FILTER = FluidFilter { f -> f == STEAM_FLUID_KEY }
-
         const val EFFICIENCY = 2
         const val GENERATING = 3
     }

@@ -17,6 +17,7 @@ import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.tools.modular.GamerAxeModule
 import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.utils.*
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*

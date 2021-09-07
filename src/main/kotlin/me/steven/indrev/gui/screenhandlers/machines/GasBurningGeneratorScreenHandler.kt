@@ -7,8 +7,8 @@ import me.steven.indrev.blockentities.generators.GasBurningGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.GAS_BURNING_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.widgets.machines.WFluid
-import me.steven.indrev.gui.widgets.misc.WFuel
+import me.steven.indrev.gui.widgets.machines.fluidTank
+import me.steven.indrev.gui.widgets.machines.fuelBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
@@ -32,17 +32,14 @@ class GasBurningGeneratorScreenHandler(
         setRootPanel(root)
         configure("block.indrev.gas_generator", ctx, playerInventory, blockInventory)
 
-        val wFuel = WFuel()
-        root.add(wFuel, 3.5, 3.2)
-        wFuel.setSize(14, 14)
+        withBlockEntity<GasBurningGeneratorBlockEntity> { be ->
+            val wFuel = fuelBar(be)
+            root.add(wFuel, 3.5, 3.2)
+            wFuel.setSize(14, 14)
 
-        val fluid = WFluid(ctx, propertyDelegate, 0,
-            GasBurningGeneratorBlockEntity.FLUID_TANK_SIZE_ID,
-            GasBurningGeneratorBlockEntity.FLUID_TANK_AMOUNT_ID,
-            GasBurningGeneratorBlockEntity.FLUID_TANK_FLUID_ID
-        )
-        root.add(fluid, 3.5, 0.8)
-
+            val fluid = fluidTank(be, GasBurningGeneratorBlockEntity.TANK_ID)
+            root.add(fluid, 3.5, 0.8)
+        }
         val processSprite = WSprite(identifier("textures/gui/widget_processing_empty.png"))
         root.add(processSprite, 4.9, 1.5)
 

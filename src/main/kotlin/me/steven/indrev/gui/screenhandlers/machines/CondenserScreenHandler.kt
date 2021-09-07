@@ -6,10 +6,10 @@ import me.steven.indrev.blockentities.crafters.CondenserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.CONDENSER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.machines.fluidTank
+import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -28,15 +28,13 @@ class CondenserScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx:
         setRootPanel(root)
         configure("block.indrev.condenser", ctx, playerInventory, blockInventory)
 
-        val fluid = WFluid(ctx, propertyDelegate, 0,
-            CondenserBlockEntity.INPUT_TANK_SIZE_ID,
-            CondenserBlockEntity.INPUT_TANK_ID,
-            CondenserBlockEntity.INPUT_TANK_FLUID_ID
-        )
-        root.add(fluid, 2.8, 1.0)
+        withBlockEntity<CondenserBlockEntity> { be ->
+            val fluid = fluidTank(be, CondenserBlockEntity.INPUT_TANK_ID)
+            root.add(fluid, 2.8, 1.0)
 
-        val processWidget = createProcessBar()
-        root.add(processWidget, 4.0, 1.8)
+            val processWidget = processBar(be, CondenserBlockEntity.CRAFTING_COMPONENT_ID)
+            root.add(processWidget, 4.0, 1.8)
+        }
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 2)
         root.add(outputSlot, 5.7, 1.8)

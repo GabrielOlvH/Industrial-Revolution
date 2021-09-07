@@ -1,7 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -9,8 +7,10 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.registry.MachineRegistry
+import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.contains
 import me.steven.indrev.utils.drainFluid
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
@@ -24,7 +24,7 @@ import net.minecraft.util.math.Direction
 class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY, pos, state) {
 
     init {
-        this.fluidComponent = FluidComponent({ this }, FluidAmount.BUCKET)
+        this.fluidComponent = FluidComponent({ this }, bucket)
     }
 
     override val maxInput: Double = config.maxInput
@@ -60,8 +60,7 @@ class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBl
                 if (block is FluidDrainable && block is FluidBlock) {
                     val drained = block.drainFluid(world, pos, blockState)
                     if (drained != Fluids.EMPTY) {
-                        val toInsert = FluidKeys.get(drained).withAmount(FluidAmount.BUCKET)
-                        fluidComponent.insertable.insert(toInsert)
+                        fluidComponent[0].insert(FluidVariant.of(drained), bucket, true)
                         use(config.energyCost)
                         return
                     }

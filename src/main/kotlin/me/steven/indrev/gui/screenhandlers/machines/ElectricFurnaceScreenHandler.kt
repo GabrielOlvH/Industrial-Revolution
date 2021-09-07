@@ -2,10 +2,14 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.CompressorBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
+import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.ELECTRIC_FURNACE_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.widgets.machines.WCustomBar
+import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.createProcessBar
@@ -34,7 +38,7 @@ class ElectricFurnaceScreenHandler(
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 3.3, 1.8)
 
-        val processWidget = createProcessBar()
+        val processWidget = query<ElectricFurnaceBlockEntity, WCustomBar> { be -> processBar(be, ElectricFurnaceBlockEntity.CRAFTING_COMPONENT_ID) }
         root.add(processWidget, 4.45, 1.8)
 
         val outputSlot = WItemSlot.outputOf(blockInventory, 3)

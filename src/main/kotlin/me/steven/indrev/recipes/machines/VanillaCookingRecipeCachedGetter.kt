@@ -6,6 +6,7 @@ import com.google.common.collect.Multimap
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.utils.getAllOfType
 import me.steven.indrev.utils.input
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.AbstractCookingRecipe
@@ -24,7 +25,7 @@ class VanillaCookingRecipeCachedGetter<T : AbstractCookingRecipe>(private val ty
         return matches
     }
 
-    override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidKey): Collection<T> = emptyList()
+    override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidVariant): Collection<T> = emptyList()
 
     companion object {
         val SMELTING = VanillaCookingRecipeCachedGetter(RecipeType.SMELTING)

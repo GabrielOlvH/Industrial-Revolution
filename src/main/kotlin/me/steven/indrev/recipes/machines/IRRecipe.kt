@@ -7,6 +7,8 @@ import com.google.gson.JsonObject
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
+import me.steven.indrev.utils.IRFluidAmount
+import me.steven.indrev.utils.IRFluidTank
 import me.steven.indrev.utils.asMutableList
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
@@ -58,7 +60,7 @@ interface IRRecipe : Recipe<Inventory> {
         return produced
     }
 
-    fun matches(inv: List<ItemStack>, fluidVolume: List<FluidVolume>): Boolean {
+    fun matches(inv: List<ItemStack>, fluidVolume: List<IRFluidTank>): Boolean {
         if (inv.isEmpty()) return true
         else if (inv.size == 1 && input.size == 1) return matches(inv.first(), fluidVolume)
         val remainder = input.map { it.copy() }.asMutableList()
@@ -70,7 +72,7 @@ interface IRRecipe : Recipe<Inventory> {
         return remainder.isEmpty()
     }
 
-    fun matches(stack: ItemStack, fluidVolume: List<FluidVolume>): Boolean {
+    fun matches(stack: ItemStack, fluidVolume: List<IRFluidTank>): Boolean {
         assert(input.size == 1)
         val (ingredient, count) = input.first()
         if (ingredient.test(stack) && stack.count >= count) return true

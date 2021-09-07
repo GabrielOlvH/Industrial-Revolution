@@ -4,6 +4,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.autosync
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.item.Item
@@ -15,12 +16,8 @@ import net.minecraft.util.math.Direction
 abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : GeneratorBlockEntity(tier, registry, pos, state) {
 
-    init {
-        this.propertiesSize = 6
-    }
-
-    private var burnTime = 0
-    private var maxBurnTime = 0
+    private var burnTime by autosync(BURN_TIME_ID, 0)
+    private var maxBurnTime by autosync(TOTAL_BURN_TIME_ID, 0)
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
@@ -38,14 +35,6 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
             markDirty()
         }
         return burnTime > 0 && energy < energyCapacity
-    }
-
-    override fun get(index: Int): Int {
-        return when(index) {
-            BURN_TIME_ID -> burnTime
-            TOTAL_BURN_TIME_ID -> maxBurnTime
-            else -> super.get(index)
-        }
     }
 
     override fun applyDefault(

@@ -12,4 +12,4 @@ import net.minecraft.util.math.BlockPos
 
 //i didn't like having all of that in the MachineBlockEntity class so yea i made this, shut
 abstract class BaseMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState)
-    : SyncableBlockEntity(type, pos, state), PropertyDelegate, PropertyDelegateHolder, InventoryProvider, EnergyIo, Configurable, ComponentProvider
+    : SyncableBlockEntity(type, pos, state), InventoryProvider, EnergyIo, Configurable, ComponentProvider

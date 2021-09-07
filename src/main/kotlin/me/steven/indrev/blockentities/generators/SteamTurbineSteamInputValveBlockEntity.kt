@@ -17,7 +17,6 @@ import net.minecraft.util.math.BlockPos
 
 class SteamTurbineSteamInputValveBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY, pos, state) {
 
-    val fluidInv = SteamTurbineSteamInputValveFluidInventoryWrapper()
     var steamTurbinePos: BlockPos = BlockPos(-1, -1, -1)
     var inserted = false
 
@@ -26,29 +25,5 @@ class SteamTurbineSteamInputValveBlockEntity(pos: BlockPos, state: BlockState) :
         return if (blockEntity.multiblockComponent?.isBuilt(world!!, pos, blockEntity.cachedState) == true)
             blockEntity
         else null
-    }
-
-    inner class SteamTurbineSteamInputValveFluidInventoryWrapper : FluidTransferable, GroupedFluidInv {
-        override fun getStoredFluids(): MutableSet<FluidKey> = mutableSetOf()
-
-        override fun getStatistics(filter: FluidFilter?): GroupedFluidInvView.FluidInvStatistic = GroupedFluidInvView.FluidInvStatistic.emptyOf { IRFluidRegistry.STEAM_STILL == it.rawFluid }
-
-        override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
-            if (inserted) return fluid
-            val steamTurbine = getSteamTurbine()
-            return if (steamTurbine == null) fluid
-            else {
-                val volume = steamTurbine.fluidComponent!!.attemptInsertion(fluid, simulation)
-                if (simulation.isAction && fluid != volume) inserted = true
-                volume
-            }
-        }
-
-        override fun attemptExtraction(
-            filter: FluidFilter?,
-            maxAmount: FluidAmount?,
-            simulation: Simulation?
-        ): FluidVolume = FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
-
     }
 }

@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.autosync
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
@@ -43,10 +44,10 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     var cooldown = 0.0
     override var range = 5
     private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
-    var feedBabies: Boolean = true
-    var mateAdults: Boolean = true
-    var matingLimit: Int = 16
-    var killAfter: Int = 8
+    var feedBabies: Boolean by autosync(FEED_BABIES_ID, true)
+    var mateAdults: Boolean by autosync(MATE_ADULTS, true)
+    var matingLimit: Int by autosync(MATING_LIMIT, 16)
+    var killAfter: Int by autosync(KILL_AFTER, 8)
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -123,16 +124,6 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return types.values.let { values ->
             values.map { animals -> animals.dropLast((animals.size - killAfter).coerceAtLeast(killAfter)) }
         }.flatten()
-    }
-
-    override fun get(index: Int): Int {
-        return when(index) {
-            FEED_BABIES_ID -> if (feedBabies) 1 else 0
-            MATE_ADULTS -> if (mateAdults) 1 else 0
-            MATING_LIMIT -> matingLimit
-            KILL_AFTER -> killAfter
-            else -> super.get(index)
-        }
     }
 
     override fun getEnergyCost(): Double {

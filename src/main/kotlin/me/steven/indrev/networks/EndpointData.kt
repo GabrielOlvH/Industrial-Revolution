@@ -1,12 +1,12 @@
 package me.steven.indrev.networks
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import me.steven.indrev.utils.fluidStorageOf
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
+import net.minecraft.server.world.ServerWorld
 import alexiil.mc.lib.attributes.item.filter.ItemFilter
-import me.steven.indrev.utils.groupedFluidInv
 import me.steven.indrev.utils.groupedItemInv
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.world.World
 import java.util.*
 import kotlin.random.Random
 
@@ -37,23 +37,26 @@ data class EndpointData(var type: Type, var mode: Mode?) {
 
     enum class Mode {
         ROUND_ROBIN {
-            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+            override fun getFluidSorter(world: ServerWorld, type: Type, filter: (FluidVariant) -> Boolean): (Array<Any?>) -> Unit {
                 return { array ->
-                    Arrays.sort(array,
-                        if (type == Type.RETRIEVER)
-                            Comparator.comparing<Any?, FluidAmount> { node ->
-                                node as Node
-                                groupedFluidInv(world, node.target, node.direction).getAmount_F(filter)
-                            }.reversed()
-                        else
-                            Comparator.comparing {
-                                it as Node
-                                groupedFluidInv(world, it.target, it.direction).getAmount_F(filter)
-                            })
+                    Transaction.openOuter().use { tx ->
+                        Arrays.sort(array,
+                            if (type == Type.RETRIEVER)
+                                Comparator.comparing<Any?, Long> { node ->
+                                    node as Node
+                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                }.reversed()
+                            else
+                                Comparator.comparing { node ->
+                                    node as Node
+                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                })
+                        tx.abort()
+                    }
                 }
             }
 
-            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+            override fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
                 return { array ->
                     Arrays.sort(array,
                         (if (type == Type.RETRIEVER)
@@ -71,7 +74,7 @@ data class EndpointData(var type: Type, var mode: Mode?) {
             }
         },
         FURTHEST_FIRST {
-            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+            override fun getFluidSorter(world: ServerWorld, type: Type, filter: (FluidVariant) -> Boolean): (Array<Any?>) -> Unit {
                 return { array ->
                     Arrays.sort(array) { first, second ->
                         first as Node
@@ -85,7 +88,7 @@ data class EndpointData(var type: Type, var mode: Mode?) {
                 }
             }
 
-            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+            override fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
                 return { array ->
                     Arrays.sort(array) { first, second ->
                         first as Node
@@ -100,27 +103,27 @@ data class EndpointData(var type: Type, var mode: Mode?) {
             }
         },
         NEAREST_FIRST {
-            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+            override fun getFluidSorter(world: ServerWorld, type: Type, filter: (FluidVariant) -> Boolean): (Array<Any?>) -> Unit {
                 return { array -> Arrays.sort(array) }
             }
 
-            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+            override fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
                 return { array -> Arrays.sort(array) }
             }
         },
         RANDOM {
-            override fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit {
+            override fun getFluidSorter(world: ServerWorld, type: Type, filter: (FluidVariant) -> Boolean): (Array<Any?>) -> Unit {
                 return { array -> array.shuffle() }
             }
 
-            override fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
+            override fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
                 return { array -> array.shuffle() }
             }
         };
 
-        abstract fun getFluidSorter(world: World, type: Type, filter: FluidFilter): (Array<Any?>) -> Unit
+        abstract fun getFluidSorter(world: ServerWorld, type: Type, filter: (FluidVariant) -> Boolean): (Array<Any?>) -> Unit
 
-        abstract fun getItemSorter(world: World, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit
+        abstract fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit
 
         fun next(): Mode {
             return when (this) {

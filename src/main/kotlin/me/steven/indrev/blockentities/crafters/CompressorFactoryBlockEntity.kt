@@ -5,6 +5,7 @@ import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.multiblock.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CompressorRecipe
@@ -26,14 +27,19 @@ class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             output { slots = intArrayOf(7, 9, 11, 13, 15) }
         }
         this.craftingComponents = Array(5) { index ->
-            CraftingComponent(index, this).apply {
+            val component = CraftingComponent(index, this).apply {
                 inputSlots = intArrayOf(6 + (index * 2))
                 outputSlots = intArrayOf(6 + (index * 2) + 1)
             }
+            trackObject(CRAFTING_COMPONENT_START_ID + index, component)
+            component
         }
         this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
-        this.propertiesSize = 4 + 5 * 2
     }
 
     override val type: IRRecipeType<CompressorRecipe> = CompressorRecipe.TYPE
+
+    companion object {
+        const val CRAFTING_COMPONENT_START_ID = 4
+    }
 }

@@ -3,10 +3,12 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.CompressorFactoryBlockEntity
 import me.steven.indrev.blockentities.crafters.PulverizerFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.PULVERIZER_FACTORY_HANDLER
+import me.steven.indrev.gui.widgets.machines.upProcessBar
 import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -28,8 +30,7 @@ class PulverizerFactoryScreenHandler(
         val root = WGridPanel()
         setRootPanel(root)
         configure("block.indrev.pulverizer_factory", ctx, playerInventory, blockInventory, widgetPos = 0.15)
-        ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? PulverizerFactoryBlockEntity ?: return@run
+        withBlockEntity<PulverizerFactoryBlockEntity> { blockEntity ->
             val slotsAmount = 5
             val offset = 2.2
 
@@ -39,7 +40,7 @@ class PulverizerFactoryScreenHandler(
             }
 
             for (i in 0 until slotsAmount) {
-                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
+                val processWidget = upProcessBar(blockEntity, PulverizerFactoryBlockEntity.CRAFTING_COMPONENT_START_ID + i)
                 root.add(processWidget, offset + (i * 1.4), 1.7)
             }
 

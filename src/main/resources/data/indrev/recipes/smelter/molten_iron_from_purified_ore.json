@@ -5,8 +5,7 @@
   },
   "fluidOutput": {
     "fluid": "indrev:molten_iron_still",
-    "type": "ingot",
-    "count": 5
+    "amount": 9000
   },
   "processTime": 600
 }

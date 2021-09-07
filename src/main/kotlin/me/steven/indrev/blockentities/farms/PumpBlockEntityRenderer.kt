@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.utils.IRFluidTank
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -87,7 +88,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
         )
     }
 
-    private fun MatrixStack.renderFluid(inputVolume: FluidVolume, vcp: VertexConsumerProvider) {
+    private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
 
         inputVolume.render(FACES, vcp, this)
     }

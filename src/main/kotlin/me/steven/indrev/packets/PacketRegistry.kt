@@ -19,7 +19,7 @@ object PacketRegistry {
 
     fun registerClient() {
         ClientItemPipePackets.register()
-        IntPropertyDelegateSyncPacket.register()
+        GuiPropertySyncPacket.register()
         MachineStateUpdatePacket.register()
         MiningRigSpawnBlockParticlesPacket.register()
         SyncAppliedModulesPacket.register()

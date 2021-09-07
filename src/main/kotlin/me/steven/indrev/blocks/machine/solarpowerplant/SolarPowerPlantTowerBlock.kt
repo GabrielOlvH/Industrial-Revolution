@@ -46,8 +46,8 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
     ): ActionResult {
         if (!world.isClient) {
             val stack = player.getStackInHand(hand)
-            if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG) && stack.orCreateTag.contains("SelectedHeliostats")) {
-                val positions = stack.tag!!.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) }
+            if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG) && stack.orCreateNbt.contains("SelectedHeliostats")) {
+                val positions = stack.nbt!!.getList("SelectedHeliostats", 4)?.map { BlockPos.fromLong((it as NbtLong).longValue()) }
                 val receivers = SolarPowerPlantTowerStructureDefinition.getSolarReceiverPositions(pos, state)
 
                 positions?.forEach { p ->

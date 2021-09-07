@@ -5,8 +5,7 @@
   },
   "fluidInput": {
     "fluid": "minecraft:water",
-    "type": "mb",
-    "count": 100
+    "amount": 8100
   },
   "output": {
     "item": "minecraft:blue_concrete",

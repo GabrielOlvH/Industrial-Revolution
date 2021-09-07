@@ -1,13 +1,16 @@
 package me.steven.indrev.blocks.misc
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.AttributeProvider
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.storage.TankBlockEntity
+import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.utils.bucket
+import me.steven.indrev.utils.fluidStorageOf
+import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
@@ -40,7 +43,7 @@ import net.minecraft.world.WorldAccess
 import net.minecraft.world.chunk.Chunk
 import java.util.stream.Stream
 
-class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, AttributeProvider {
+class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState.with(UP, false).with(DOWN, false)
@@ -80,15 +83,20 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     override fun onUse(
         state: BlockState?,
         world: World,
-        pos: BlockPos?,
+        pos: BlockPos,
         player: PlayerEntity,
         hand: Hand,
-        hit: BlockHitResult?
+        hit: BlockHitResult
     ): ActionResult {
-        val insertable = FluidAttributes.INSERTABLE.get(world, pos)
-        val extractable = FluidAttributes.EXTRACTABLE.get(world, pos)
-        val res = FluidInvUtil.interactHandWithTank(insertable, extractable, player, hand)
-        return if (res.didMoveAny()) ActionResult.success(world.isClient) else ActionResult.PASS
+        if (world is ServerWorld) {
+            val storage = fluidStorageOf(world, pos, hit.side)
+            val inHand = ContainerItemContext.ofPlayerHand(player, hand).find(FluidStorage.ITEM)
+            var res = StorageUtil.move(storage, inHand, { true }, Long.MAX_VALUE, null)
+            if (res == 0L)
+                res = StorageUtil.move(inHand, storage, { true }, Long.MAX_VALUE, null)
+            return if (res > 0) ActionResult.SUCCESS else ActionResult.PASS
+        }
+        return ActionResult.CONSUME
     }
 
     override fun afterBreak(
@@ -186,7 +194,15 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
         val blockPos = ctx.blockPos
         val world = ctx.world
-        val fluidComponent = FluidComponent({ null }, FluidAmount.BUCKET, 1)
+        val fluidComponent = FluidComponent({ object : Syncable{
+            override fun markForUpdate(condition: () -> Boolean) {
+                TODO("Not yet implemented")
+            }
+
+            override fun <T> get(key: ComponentKey<T>): Any? {
+                TODO("Not yet implemented")
+            }
+        } }, bucket, 1)
         if (ctx.stack.nbt != null && !ctx.stack.nbt!!.isEmpty)
             fluidComponent.fromTag(ctx.stack.nbt)
         val connectsUp = isConnectable(world, fluidComponent, blockPos.up())
@@ -196,40 +212,17 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
             .with(DOWN, connectsDown && (!connectsUp || isConnectable(world, blockPos.up(), blockPos.down())))
     }
 
-    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
-        if (
-            to.attribute == FluidAttributes.GROUPED_INV
-            || to.attribute == FluidAttributes.EXTRACTABLE
-            || to.attribute == FluidAttributes.INSERTABLE
-        ) {
-            val combinedStorage = TankBlockEntity.GroupedTankFluidInv()
-            findAllTanks(world.getChunk(pos), world.getBlockState(pos), pos, mutableSetOf(), combinedStorage)
-            to.offer(combinedStorage)
-        }
-    }
-
-    private fun findAllTanks(chunk: Chunk, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: TankBlockEntity.GroupedTankFluidInv) {
-        if (blockState.isOf(this) && scanned.add(pos)) {
-            to.add((chunk.getBlockEntity(pos) as TankBlockEntity))
-
-            if (blockState[UP])
-                findAllTanks(chunk, chunk.getBlockState(pos.up()), pos.up(), scanned, to)
-            if (blockState[DOWN])
-                findAllTanks(chunk, chunk.getBlockState(pos.down()), pos.down(), scanned, to)
-        }
-    }
-
     private fun isConnectable(world: World, pos: BlockPos, other: BlockPos): Boolean {
-        val firstInv = FluidAttributes.GROUPED_INV.get(world, pos) as? TankBlockEntity.GroupedTankFluidInv ?: return false
-        val secondInv = FluidAttributes.GROUPED_INV.get(world, other) as? TankBlockEntity.GroupedTankFluidInv ?: return false
-        return if (firstInv.initialFluid.isEmpty || secondInv.initialFluid.isEmpty) true
+        val firstInv = fluidStorageOf(world, pos, Direction.UP) as? TankBlockEntity.CombinedTankStorage ?: return false
+        val secondInv = fluidStorageOf(world, pos, Direction.DOWN)  as? TankBlockEntity.CombinedTankStorage ?: return false
+        return if (firstInv.initialFluid.isBlank || secondInv.initialFluid.isBlank) true
         else firstInv.initialFluid == secondInv.initialFluid
     }
 
     private fun isConnectable(world: World, firstInv: FluidComponent, other: BlockPos): Boolean {
-        val secondInv = FluidAttributes.GROUPED_INV.get(world, other) as? TankBlockEntity.GroupedTankFluidInv ?: return false
-        return if (firstInv.getInvFluid(0).isEmpty || secondInv.initialFluid.isEmpty) true
-        else firstInv.getInvFluid(0).fluidKey == secondInv.initialFluid
+        val secondInv = fluidStorageOf(world, other, Direction.UP)  as? TankBlockEntity.CombinedTankStorage ?: return false
+        return if (firstInv[0].isEmpty || secondInv.initialFluid.isBlank) true
+        else firstInv[0].variant == secondInv.initialFluid
     }
 
     override fun getPickStack(world: BlockView?, pos: BlockPos?, state: BlockState?): ItemStack {
@@ -291,5 +284,16 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider, Attr
             createCuboidShape(1.5, 0.0, 1.5, 14.5, 16.0, 1.7),
             createCuboidShape(1.5, 0.0, 14.5, 14.5, 16.0, 14.7)
         ).reduce { v1, v2 -> VoxelShapes.combineAndSimplify(v1, v2, BooleanBiFunction.OR) }.get()
+
+        fun findAllTanks(chunk: Chunk, blockState: BlockState, pos: BlockPos, scanned: MutableSet<BlockPos>, to: TankBlockEntity.CombinedTankStorage) {
+            if (blockState.isOf(IRBlockRegistry.TANK_BLOCK) && scanned.add(pos)) {
+                to.add((chunk.getBlockEntity(pos) as TankBlockEntity))
+
+                if (blockState[UP])
+                    findAllTanks(chunk, chunk.getBlockState(pos.up()), pos.up(), scanned, to)
+                if (blockState[DOWN])
+                    findAllTanks(chunk, chunk.getBlockState(pos.down()), pos.down(), scanned, to)
+            }
+        }
     }
 }

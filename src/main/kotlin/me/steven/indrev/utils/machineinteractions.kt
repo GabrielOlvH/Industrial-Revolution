@@ -10,6 +10,9 @@ import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blockentities.MachineBlockEntity
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.ChestBlock
 import net.minecraft.block.InventoryProvider
 import net.minecraft.block.entity.ChestBlockEntity
@@ -108,19 +111,19 @@ private fun getInvAt(world: World, pos: BlockPos): Inventory? {
 fun MachineBlockEntity<*>.transferFluids() {
     fluidComponent?.transferConfig?.forEach innerForEach@{ (direction, mode) ->
         if (mode == TransferMode.NONE) return@innerForEach
-        var extractable: FluidExtractable? = null
-        var insertable: FluidInsertable? = null
+        var extractable: Storage<FluidVariant>? = null
+        var insertable: Storage<FluidVariant>? = null
         if (mode.output) {
-            insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, direction)
-            extractable = fluidComponent?.extractable
+            insertable = fluidStorageOf(world as ServerWorld, pos, direction)
+            extractable = fluidComponent
         }
         if (mode.input) {
-            extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
-            insertable = fluidComponent?.insertable
+            extractable = fluidStorageOf(world as ServerWorld, pos, direction)
+            insertable = fluidComponent
 
         }
         if (extractable != null && insertable != null)
-            FluidVolumeUtil.move(extractable, insertable, getFluidTransferRate())
+            StorageUtil.move(extractable, insertable, { true }, getFluidTransferRate(), null)
     }
 }
 

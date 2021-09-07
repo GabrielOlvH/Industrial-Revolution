@@ -8,24 +8,51 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
+import alexiil.mc.lib.attributes.fluid.filter.FluidSetFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import dev.technici4n.fasttransferlib.api.energy.EnergyApi
+import dev.technici4n.fasttransferlib.api.energy.EnergyIo
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
+import net.minecraft.item.ItemStack
+import net.minecraft.network.PacketByteBuf
+import net.minecraft.server.world.ServerWorld
+import net.minecraft.text.OrderedText
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.math.RoundingMode
+import java.util.*
+import java.util.function.LongFunction
 
-val NUGGET_AMOUNT: FluidAmount = FluidAmount.of(10, 625)
-val INGOT_AMOUNT: FluidAmount = NUGGET_AMOUNT.mul(9)
-val BLOCK_AMOUNT: FluidAmount = INGOT_AMOUNT.mul(9)
-val SCRAP_AMOUNT: FluidAmount = INGOT_AMOUNT.div(4)
 
-val MB: FluidAmount = FluidAmount.BUCKET.div(1000)
+//these are just for reference, they're not used much
+
+val bucket = 81000L
+
+val bottle = bucket / 3 // 27000 droplets
+
+val half_bucket = bucket / 2 // 40500 droplets
+
+val block = bucket
+val ingot = block / 9 // 9000 droplets
+val nugget = ingot / 9 // 1000 droplets
+val scrap = ingot / 4 // 250 droplets
+
+val mb = bucket / 1000
 
 operator fun FluidAmount.plus(volume: FluidAmount): FluidAmount {
     return add(volume)
@@ -43,46 +70,6 @@ operator fun FluidAmount.times(whole: Int): FluidAmount {
     return mul(whole.toLong())
 }
 
-fun FixedFluidInv.createWrapper(outputTank: Int, inputTank: Int) = object : GroupedFluidInvFixedWrapper(this) {
-
-    override fun attemptExtraction(
-        filter: FluidFilter?,
-        maxAmount: FluidAmount,
-        simulation: Simulation?
-    ): FluidVolume {
-        if (maxAmount.isNegative)
-            throw IllegalArgumentException("maxAmount cannot be negative! (was $maxAmount)")
-
-        var fluid = FluidVolumeUtil.EMPTY
-        if (maxAmount.isZero || outputTank < 0)
-            return fluid
-
-        val thisMax = maxAmount.roundedSub(fluid.amount(), RoundingMode.DOWN)
-        fluid = inv().extractFluid(outputTank, filter, fluid, thisMax, simulation)
-        if (fluid.amount() >= maxAmount)
-            return fluid
-        return fluid
-    }
-
-    override fun attemptInsertion(immutableFluid: FluidVolume, simulation: Simulation?): FluidVolume {
-        var fluid = immutableFluid
-        if (inputTank < 0)
-            return fluid
-        else if (fluid.isEmpty)
-            return FluidVolumeUtil.EMPTY
-        fluid = inv().insertFluid(inputTank, fluid.copy(), simulation)
-        if (fluid.isEmpty)
-            return FluidVolumeUtil.EMPTY
-        return fluid
-    }
-}
-
-fun fluidInsertableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(direction))
-
-fun fluidExtractableOf(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.EXTRACTABLE.get(world, pos, SearchOptions.inDirection(direction))
-
-fun groupedFluidInv(world: World, pos: BlockPos, direction: Direction) = FluidAttributes.GROUPED_INV.get(world, pos, SearchOptions.inDirection(direction))
-
 fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid {
     return if (state.get(FluidBlock.LEVEL) as Int == 0) {
         world.setBlockState(pos, Blocks.AIR.defaultState, 11)
@@ -98,4 +85,61 @@ fun FluidExtractable.use(vol: FluidVolume): Boolean {
         return true
     }
     return false
+}
+
+//TODO fuck weakhashmaps
+val fluidApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<FluidVariant>, Direction>>>()
+
+fun fluidStorageOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Storage<FluidVariant>? {
+    return fluidApiCache
+        .computeIfAbsent(world) { Long2ObjectOpenHashMap() }
+        .computeIfAbsent(blockPos.asLong(), LongFunction { BlockApiCache.create(FluidStorage.SIDED, world, blockPos) })
+        .find(direction)
+}
+
+
+fun fluidStorageOf(world: World, blockPos: BlockPos, direction: Direction): Storage<FluidVariant>? {
+    if (world is ServerWorld)
+        return fluidStorageOf(world, blockPos, direction)
+    else return FluidStorage.SIDED.find(world, blockPos, direction)
+}
+
+fun fluidStorageOf(itemStack: ItemStack?): Storage<FluidVariant>? {
+    return if (itemStack == null) null
+    else FluidStorage.ITEM.find(itemStack, null)
+}
+
+typealias IRFluidAmount = ResourceAmount<FluidVariant>
+
+fun IRFluidAmount.toPacket(buf: PacketByteBuf) {
+    resource.toPacket(buf)
+    buf.writeLong(amount)
+}
+
+fun IRFluidAmount.renderGuiRect(x0: Double, y0: Double, x1: Double, y1: Double) {
+    FluidKeys.get(resource.fluid).withAmount(FluidAmount.BUCKET).renderGuiRect(x0, y0, x1, y1)
+}
+
+fun fromPacket(buf: PacketByteBuf): IRFluidAmount {
+    val res = FluidVariant.fromPacket(buf)
+    val amt = buf.readLong()
+    return amt of res
+}
+
+infix fun Long.of(variant: FluidVariant) = IRFluidAmount(variant, this)
+
+fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<OrderedText> {
+    val tooltips = mutableListOf<OrderedText>()
+    val id = Registry.FLUID.getId(variant.fluid)
+    tooltips.add(TranslatableText("block.${id.namespace}.${id.path}").asOrderedText())
+    val asMb = amount / 81
+    val accurate = amount / 81.0
+    val prefix = when {
+        accurate > asMb -> ">"
+        accurate < asMb -> "<"
+        else -> ""
+    }
+    tooltips.add(TranslatableText("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
+    return tooltips
+
 }

@@ -11,6 +11,8 @@ import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.trackDouble
+import me.steven.indrev.components.trackInt
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
@@ -50,7 +52,16 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             output { slots = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9) }
         }
-        this.propertiesSize = 4
+        trackInt(EXPLORED_PERCENTAGE_ID) {
+            val inventory = inventoryComponent?.inventory ?: return@trackInt 0
+            val scanOutput = inventory.getStack(14).nbt ?: return@trackInt 0
+            val chunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
+            val state = ChunkVeinState.getState(world as ServerWorld)
+            val data = state.veins[chunkPos] ?: return@trackInt 0
+            data.explored * 100 / data.size
+        }
+
+        trackDouble(ENERGY_REQUIRED_ID) { getEnergyCost() }
     }
 
     override val maxInput: Double = config.maxInput
@@ -187,21 +198,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     null
                 }
             } else null
-        }
-    }
-
-    override fun get(index: Int): Int {
-        return when(index) {
-            EXPLORED_PERCENTAGE_ID -> {
-                val inventory = inventoryComponent?.inventory ?: return 0
-                val scanOutput = inventory.getStack(14).nbt ?: return 0
-                val chunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
-                val state = ChunkVeinState.getState(world as ServerWorld)
-                val data = state.veins[chunkPos] ?: return 0
-                data.explored * 100 / data.size
-            }
-            ENERGY_REQUIRED_ID -> getEnergyCost().toInt()
-            else -> super.get(index)
         }
     }
 

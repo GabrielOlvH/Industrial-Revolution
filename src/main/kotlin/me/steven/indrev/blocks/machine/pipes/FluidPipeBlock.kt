@@ -9,10 +9,7 @@ import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
-import me.steven.indrev.utils.fluidExtractableOf
-import me.steven.indrev.utils.fluidInsertableOf
-import me.steven.indrev.utils.groupedFluidInv
-import me.steven.indrev.utils.pack
+import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -40,10 +37,7 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        if (fluidInsertableOf(world, pos, dir) != RejectingFluidInsertable.NULL
-            || fluidExtractableOf(world, pos, dir) != EmptyFluidExtractable.NULL
-            || groupedFluidInv(world, pos, dir) != EmptyGroupedFluidInv.INSTANCE
-        ) return true
+        if (fluidStorageOf(world, pos, dir) != null) return true
         if ((type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir))
             return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false

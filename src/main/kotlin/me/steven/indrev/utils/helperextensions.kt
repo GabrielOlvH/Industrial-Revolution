@@ -3,7 +3,7 @@ package me.steven.indrev.utils
 import me.steven.indrev.api.IREntityExtension
 import me.steven.indrev.inventories.IRInventory
 import net.minecraft.entity.Entity
-import net.minecraft.entity.effect.StatusEffectType
+import net.minecraft.entity.effect.StatusEffectCategory
 import net.minecraft.item.FoodComponent
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -22,7 +22,7 @@ fun <E> WeightedList<E>.pickRandom(): E {
 }
 
 fun FoodComponent.hasNegativeEffects(): Boolean {
-    return statusEffects.any { it.first.effectType.type == StatusEffectType.HARMFUL }
+    return statusEffects.any { it.first.effectType.category == StatusEffectCategory.HARMFUL }
 }
 
 inline fun Entity.redirectDrops(inv: IRInventory, run: () -> Unit) {

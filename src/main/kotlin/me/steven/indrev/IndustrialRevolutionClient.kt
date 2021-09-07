@@ -138,7 +138,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
         MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.MINING_RIG_REGISTRY.registerBlockEntityRenderer(::MinerBlockEntityRenderer)
+        MachineRegistry.MINING_RIG_REGISTRY.registerBlockEntityRenderer(::MiningRigBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)

@@ -54,9 +54,9 @@ fun screwdriver(
         val positions = LongOpenHashSet()
         positions.add(pos.asLong())
         HeliostatBlock.findConnectingHeliostats(pos, world, LongOpenHashSet(), positions)
-        val tagList = stack.orCreateTag.getList("SelectedHeliostats", 4)
+        val tagList = stack.orCreateNbt.getList("SelectedHeliostats", 4)
         positions.forEach { long -> tagList.add(NbtLong.of(long)) }
-        stack.orCreateTag.put("SelectedHeliostats", tagList)
+        stack.orCreateNbt.put("SelectedHeliostats", tagList)
         player?.sendMessage(LiteralText("Click on Solar Power Plant Tower to link the Heliostats."), true)
     } else if (blockEntity is MachineBlockEntity<*>) {
         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {

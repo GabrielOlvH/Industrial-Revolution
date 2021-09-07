@@ -7,7 +7,9 @@ import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreen
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
+import me.steven.indrev.utils.bucket
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -41,13 +43,11 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
                 stackTemperatures[slot] = Pair(meltingStack, (temp + modifier).coerceAtMost(800.0))
 
                 val temp = stackTemperatures[slot].second
-
-                val volume = FluidKeys.get(IRFluidRegistry.MOLTEN_SALT_STILL).withAmount(MOLTEN_SALT_AMOUNT)
                 val fluidComponent = blockEntity.fluidComponent
 
-                if (temp >= 800 && fluidComponent.attemptInsertion(volume, Simulation.SIMULATE).isEmpty) {
+                if (temp >= 800 && fluidComponent[0].tryInsert(FluidVariant.of(IRFluidRegistry.MOLTEN_SALT_STILL), MOLTEN_SALT_AMOUNT)) {
                     inventory[slot] = ItemStack.EMPTY
-                    fluidComponent.insert(volume)
+                    fluidComponent[0].insert(FluidVariant.of(IRFluidRegistry.MOLTEN_SALT_STILL), MOLTEN_SALT_AMOUNT, true)
                 }
             }
         }
@@ -96,7 +96,7 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
 
     companion object {
 
-        val MOLTEN_SALT_AMOUNT: FluidAmount = FluidAmount.of(1, 10)
+        val MOLTEN_SALT_AMOUNT = (bucket / 81) / 9
 
         fun readNbt(tag: NbtCompound, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
             val listTag = tag.getList("Items", 10)

@@ -29,6 +29,9 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntit
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -102,13 +105,6 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
     fun block(tier: Tier) = blocks[tier]
         ?: throw java.lang.IllegalStateException("invalid tier for machine $key")
 
-    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyIo?): MachineRegistry {
-        blockEntities.forEach { (tier, type) ->
-            EnergyApi.SIDED.registerForBlockEntities(provider(tier), type)
-        }
-        return this
-    }
-
     fun modelProvider(provider: (Tier) -> (String) -> UnbakedModel?): MachineRegistry {
 
         if (FabricLoader.getInstance().environmentType == EnvType.CLIENT) {
@@ -143,7 +139,28 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         return this
     }
 
+    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyIo?): MachineRegistry {
+        blockEntities.forEach { (tier, type) ->
+            EnergyApi.SIDED.registerForBlockEntities(provider(tier), type)
+        }
+        return this
+    }
+
     fun defaultEnergyProvider(): MachineRegistry = energyProvider { { be, _ -> be as? MachineBlockEntity<*>? } }
+
+    fun fluidStorageProvider(provider: (Tier) -> (BlockEntity, Direction) -> Storage<FluidVariant>?): MachineRegistry {
+        blockEntities.forEach { (tier, type) ->
+            FluidStorage.SIDED.registerForBlockEntities(provider(tier), type)
+        }
+        return this
+    }
+
+    fun defaultFluidStorageProvider(): MachineRegistry {
+        blockEntities.forEach { (_, type) ->
+            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir) }, type)
+        }
+        return this
+    }
 
     @Suppress("UNCHECKED_CAST")
     @Environment(EnvType.CLIENT)
@@ -214,6 +231,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> HeatGeneratorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .noModelProvider()
 
         val GAS_BURNING_GENERATOR_REGISTRY = MachineRegistry("gas_generator", false, Tier.MK4)
@@ -224,6 +242,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { { pos, state -> GasBurningGeneratorBlockEntity(pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider()
 
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
@@ -350,6 +369,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> SmelterBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider(hasWorkingState = false)
 
         val CONDENSER_REGISTRY = MachineRegistry("condenser", false, Tier.MK4)
@@ -360,6 +380,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> CondenserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider()
 
         val ELECTRIC_FURNACE_FACTORY_REGISTRY = MachineRegistry("electric_furnace_factory", false, Tier.MK4)
@@ -454,12 +475,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> DrainBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider(hasWorkingState = false)
 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
             .energyProvider { { be, dir -> if (dir == Direction.DOWN) be as? MachineBlockEntity<*> else null } }
+            .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir) (be as PumpBlockEntity).fluidComponent else null } }
             .noModelProvider()
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry("fluid_infuser", true)
@@ -479,6 +502,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> FluidInfuserBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider()
         
         val ELECTROLYTIC_SEPARATOR_REGISTRY = MachineRegistry("electrolytic_separator", true)
@@ -487,6 +511,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             }
             .blockEntityProvider { tier -> { pos, state -> ElectrolyticSeparatorBlockEntity(tier, pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider()
 
         val CHOPPER_REGISTRY = MachineRegistry("chopper", true)
@@ -590,6 +615,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockProvider { DirtOxygenatorBlock(this, SETTINGS()) }
             .blockEntityProvider { { pos, state -> DirtOxygenatorBlockEntity(pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider(hasWorkingState = false)
 
         val MODULAR_WORKBENCH_REGISTRY = MachineRegistry("modular_workbench", false, Tier.MK4)
@@ -621,12 +647,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)
             .blockProvider { SteamTurbineBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { pos, state -> SteamTurbineBlockEntity(pos, state) } }
+            .defaultFluidStorageProvider()
             .defaultModelProvider(true)
 
         val DISTILLER_REGISTRY = MachineRegistry("distiller", false, Tier.MK4)
             .blockProvider { HorizontalFacingMachineBlock(this, SETTINGS().nonOpaque(), Tier.MK4, IRConfig.machines.distiller, ::DistillerScreenHandler) }
             .blockEntityProvider { { pos, state -> DistillerBlockEntity(pos, state) } }
             .defaultEnergyProvider()
+            .defaultFluidStorageProvider()
             .defaultModelProvider(true)
     }
 }

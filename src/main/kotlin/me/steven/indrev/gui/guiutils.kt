@@ -12,10 +12,9 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.gui.PatchouliEntryShortcut
-import me.steven.indrev.gui.widgets.machines.WEnergy
-import me.steven.indrev.gui.widgets.machines.WProcessBar
-import me.steven.indrev.gui.widgets.machines.WTemperature
+import me.steven.indrev.gui.widgets.machines.*
 import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -62,11 +61,11 @@ fun SyncedGuiDescription.configure(
     val title = WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040)
     var titlePos = 4.7
 
-    val energyWidget = WEnergy()
-    panel.add(energyWidget, 0.1, widgetPos)
-
     ctx.run { world, blockPos ->
-        val blockEntity = world.getBlockEntity(blockPos)
+        val blockEntity = world.getBlockEntity(blockPos) as ComponentProvider
+
+        val energyWidget = energyBar(blockEntity)
+        panel.add(energyWidget, 0.1, widgetPos)
 
         if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {
             addUpgradeSlots(blockEntity, blockInventory, world, panel)
@@ -148,8 +147,7 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
 }
 
 fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World, widgetPos: Double) {
-    val controller = blockEntity.temperatureComponent!!
-    panel.add(WTemperature(controller), 0.95, widgetPos)
+    panel.add(temperatureBar(blockEntity), 0.95, widgetPos)
     val coolerSlot =
         WTooltipedItemSlot.of(blockInventory, blockEntity.inventoryComponent!!.inventory.coolerSlot!!, TranslatableText("gui.indrev.cooler_slot_type"))
     if (world.isClient)

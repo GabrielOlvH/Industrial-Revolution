@@ -3,10 +3,13 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WBar
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.CompressorFactoryBlockEntity
+import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
 import me.steven.indrev.blockentities.crafters.ElectricFurnaceFactoryBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.ELECTRIC_FURNACE_FACTORY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
+import me.steven.indrev.gui.widgets.machines.upProcessBar
 import me.steven.indrev.utils.*
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -28,8 +31,7 @@ class ElectricFurnaceFactoryScreenHandler(
         val root = WGridPanel()
         setRootPanel(root)
         configure("block.indrev.electric_furnace_factory", ctx, playerInventory, blockInventory, widgetPos = 0.15)
-        ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? ElectricFurnaceFactoryBlockEntity ?: return@run
+        withBlockEntity<ElectricFurnaceFactoryBlockEntity> { blockEntity ->
             val slotsAmount = 5
             val offset = 2.2
 
@@ -39,7 +41,7 @@ class ElectricFurnaceFactoryScreenHandler(
             }
 
             for (i in 0 until slotsAmount) {
-                val processWidget = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, 4 + (i * 2), 5 + (i * 2))
+                val processWidget = upProcessBar(blockEntity, ElectricFurnaceFactoryBlockEntity.CRAFTING_COMPONENT_START_ID + i)
                 root.add(processWidget, offset + (i * 1.4), 1.7)
             }
 

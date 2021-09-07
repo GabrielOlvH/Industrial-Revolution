@@ -1,20 +1,17 @@
 package me.steven.indrev.blockentities.crafters
 
-import alexiil.mc.lib.attributes.fluid.FluidTransferable
-import alexiil.mc.lib.attributes.fluid.SingleFluidTank
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.createWrapper
-import me.steven.indrev.utils.rawId
+import me.steven.indrev.utils.bucket
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
@@ -32,24 +29,19 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             output { slot = 2 }
             coolerSlot = 1
         }
-        this.fluidComponent = object : FluidComponent({ this }, FluidAmount.ofWhole(8)) {
+        this.fluidComponent = object : FluidComponent({ this }, bucket * 8) {
             init {
                 this.inputTanks = intArrayOf(0)
             }
         }
-        this.propertiesSize = 9
+
+        trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
+
+
+        trackObject(INPUT_TANK_ID, fluidComponent!![0])
     }
 
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
-
-    override fun get(index: Int): Int {
-        return when(index) {
-            INPUT_TANK_ID -> fluidComponent!![0].amount().asInt(1000)
-            INPUT_TANK_SIZE_ID -> fluidComponent!!.limit.asInt(1000)
-            INPUT_TANK_FLUID_ID -> fluidComponent!![0].rawFluid.rawId
-            else -> super.get(index)
-        }
-    }
 
     override fun getMaxCount(enhancer: Enhancer): Int {
         return if (enhancer == Enhancer.SPEED) 4 else super.getMaxCount(enhancer)
@@ -87,8 +79,7 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
 
     companion object {
-        const val INPUT_TANK_ID = 6
-        const val INPUT_TANK_SIZE_ID = 7
-        const val INPUT_TANK_FLUID_ID = 8
+        const val CRAFTING_COMPONENT_ID = 2
+        const val INPUT_TANK_ID = 3
     }
 }

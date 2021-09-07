@@ -2,8 +2,12 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import me.steven.indrev.blockentities.crafters.SawmillBlockEntity
+import me.steven.indrev.blockentities.crafters.SolidInfuserBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SAWMILL_HANDLER
+import me.steven.indrev.gui.widgets.machines.WCustomBar
+import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.createProcessBar
@@ -27,7 +31,7 @@ class SawmillScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val inputSlot = WItemSlot.of(blockInventory, 2)
         root.add(inputSlot, 3.0, 1.8)
 
-        val processWidget = createProcessBar()
+        val processWidget = query<SawmillBlockEntity, WCustomBar> { be -> processBar(be, SawmillBlockEntity.CRAFTING_COMPONENT_ID) }
         root.add(processWidget, 4.15, 1.8)
 
         val outputSlots = WItemSlot.of(blockInventory, 3, 2, 2)

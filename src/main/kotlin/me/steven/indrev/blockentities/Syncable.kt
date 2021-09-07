@@ -1,5 +1,7 @@
 package me.steven.indrev.blockentities
 
-interface Syncable {
+import me.steven.indrev.components.ComponentProvider
+
+interface Syncable : ComponentProvider {
     fun markForUpdate(condition: () -> Boolean = { true })
 }

@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.components.autosync
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.armor.IRColorModuleItem
@@ -38,15 +39,17 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             output { slot = 15 }
         }
-
-        this.propertiesSize = 7
     }
 
     override val maxOutput: Double = 0.0
 
-    private var processTime = 0
-    private var maxProcessTime = 0
-    private var state: State = State.IDLE
+    var moduleProcessTime by autosync(PROCESS_TIME_ID, 0)
+    var moduleMaxProcessTime by autosync(MAX_PROCESS_TIME_ID, 0)
+
+    private var processTime by autosync(INSTALL_TIME_ID, 0)
+    private var maxProcessTime by autosync(MAX_INSTALL_TIME_ID, 0)
+
+    private var state: State by autosync(STATE_ID, State.IDLE, State.values())
 
     var selectedRecipe: Identifier? = null
     var recipe: ModuleRecipe? = null
@@ -55,9 +58,6 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 field = world!!.recipeManager.getAllOfType(ModuleRecipe.TYPE)[selectedRecipe]!!
             return field
         }
-
-    var moduleProcessTime = 0
-    var moduleMaxProcessTime = 0
 
     override fun machineTick() {
         tickModuleInstall()
@@ -148,17 +148,6 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
-
-    override fun get(index: Int): Int {
-        return when(index) {
-            PROCESS_TIME_ID -> moduleProcessTime
-            MAX_PROCESS_TIME_ID -> moduleMaxProcessTime
-            INSTALL_TIME_ID -> processTime
-            MAX_INSTALL_TIME_ID -> maxProcessTime
-            STATE_ID -> state.ordinal
-            else -> super.get(index)
-        }
-    }
 
     override fun readNbt(tag: NbtCompound?) {
         processTime = tag?.getInt("ProcessTime") ?: 0

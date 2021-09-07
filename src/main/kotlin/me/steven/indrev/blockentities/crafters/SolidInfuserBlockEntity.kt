@@ -4,6 +4,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -28,6 +29,8 @@ class SolidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             }
             output { slot = 4 }
         }
+
+        trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
     }
 
     private fun canInput(side: Direction?, slot: Int): Boolean {
@@ -47,4 +50,8 @@ class SolidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     }
 
     override val type: IRRecipeType<InfuserRecipe> = InfuserRecipe.TYPE
+
+    companion object {
+        const val CRAFTING_COMPONENT_ID = 4
+    }
 }

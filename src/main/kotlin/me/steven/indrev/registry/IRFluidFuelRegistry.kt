@@ -11,7 +11,7 @@ object IRFluidFuelRegistry {
         registry[fluid] = info
     }
 
-    fun register(fluid: Fluid, burnTime: Int, combustionTemperature: Int, ratio: Int, consumptionRatio: FluidAmount) {
+    fun register(fluid: Fluid, burnTime: Int, combustionTemperature: Int, ratio: Int, consumptionRatio: Long) {
         registry[fluid] = FluidFuelInfo(burnTime, combustionTemperature, ratio, consumptionRatio)
     }
 
@@ -19,5 +19,5 @@ object IRFluidFuelRegistry {
 
     fun get(fluid: Fluid) = registry[fluid]
 
-    data class FluidFuelInfo(val burnTime: Int, val combustionTemperature: Int, val generationRatio: Int, val consumptionRatio: FluidAmount)
+    data class FluidFuelInfo(val burnTime: Int, val combustionTemperature: Int, val generationRatio: Int, val consumptionRatio: Long)
 }

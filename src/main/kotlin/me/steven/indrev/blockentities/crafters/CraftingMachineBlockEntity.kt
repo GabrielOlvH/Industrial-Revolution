@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.items.upgrade.Enhancer
@@ -41,10 +42,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     var craftingComponents = Array(1) { CraftingComponent(0, this) }
     var isSplitOn = false
 
-    init {
-        this.propertiesSize = 6
-    }
-
     override fun machineTick() {
         ticks++
         craftingComponents.forEach { it.tick() }
@@ -77,17 +74,6 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     override fun getMaxCount(enhancer: Enhancer): Int {
         return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
-    }
-
-    override fun get(index: Int): Int {
-        return if (index < 4) {
-            super.get(index)
-        } else {
-            val isEven = (index - PROCESS_TIME_ID) % 2 == 0
-            val current = (if (isEven) index - PROCESS_TIME_ID else index - TOTAL_PROCESS_TIME_ID)/2
-            if (isEven) craftingComponents[current].processTime
-            else craftingComponents[current].totalProcessTime
-        }
     }
 
     open fun splitStacks() {
@@ -185,10 +171,5 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
             ++n
         }
         ExperienceOrbEntity.spawn(world as ServerWorld, pos, n)
-    }
-
-    companion object {
-        const val PROCESS_TIME_ID = 4
-        const val TOTAL_PROCESS_TIME_ID = 5
     }
 }

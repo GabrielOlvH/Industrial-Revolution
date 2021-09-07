@@ -20,7 +20,7 @@ enum class Enhancer {
 
         fun getBuffer(provider: MachineBlockEntity<*>) = getBuffer((provider as EnhancerProvider).getEnhancers(), provider)
 
-        fun getBuffer(enhancers: Map<Enhancer, Int>, provider: EnhancerProvider)
-                = provider.getBaseValue(BUFFER) + (IRConfig.upgrades.bufferUpgradeModifier * (enhancers[BUFFER] ?: 0))
+        fun getBuffer(enhancers: Map<Enhancer, Int>?, provider: EnhancerProvider)
+                = provider.getBaseValue(BUFFER) + (IRConfig.upgrades.bufferUpgradeModifier * ((enhancers?: emptyMap())[BUFFER] ?: 0))
     }
 }

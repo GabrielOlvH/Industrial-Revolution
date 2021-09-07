@@ -11,6 +11,7 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.machines.WFluid
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
@@ -75,36 +76,26 @@ fun ChunkPos.toNbt() = NbtCompound().also {
 
 fun getChunkPos(nbt: NbtCompound) = ChunkPos(nbt.getInt("x"), nbt.getInt("z"))
 
-fun getFluidFromJson(json: JsonElement): Array<FluidVolume> {
+fun getFluidFromJson(json: JsonElement): Array<IRFluidAmount> {
     if (json.isJsonArray) {
         return json.asJsonArray.map { getFluidFromJson(it.asJsonObject).toList() }.flatten().toTypedArray()
     } else {
         val json = json.asJsonObject
         val fluidId = json.get("fluid").asString
-        val fluidKey = FluidKeys.get(Registry.FLUID.get(Identifier(fluidId)))
-        val amount = JsonHelper.getLong(json, "count", 1)
-        val fluidAmount = when (val type = json.get("type").asString) {
-            "nugget" -> NUGGET_AMOUNT
-            "ingot" -> INGOT_AMOUNT
-            "block" -> BLOCK_AMOUNT
-            "bucket" -> FluidAmount.BUCKET
-            "scrap" -> SCRAP_AMOUNT
-            "bottle" -> FluidAmount.BOTTLE
-            "mb" -> MB
-            else -> throw IllegalArgumentException("unknown amount type $type")
-        }.mul(amount)
-        return arrayOf(fluidKey.withAmount(fluidAmount))
+        val fluidKey = FluidVariant.of(Registry.FLUID.get(Identifier(fluidId)))
+        val fluidAmount = json.get("amount").asLong
+        return arrayOf(fluidAmount of fluidKey)
     }
 }
 
-fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: FluidVolume) {
+fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: IRFluidAmount) {
     widgets.add(Widgets.createTexturedWidget(WFluid.TANK_BOTTOM, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
     widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
         fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
             val information = mutableListOf<OrderedText>()
-            information.addAll(fluid.fluidKey.fullTooltip.map { it.asOrderedText() })
-            information.add(LiteralText("${(fluid.amount().asInexactDouble() * 1000).toInt()} mB").asOrderedText())
+            //information.addAll(fluid.resource.fullTooltip.map { it.asOrderedText() })
+            information.add(LiteralText("${(fluid.amount /81).toInt()} mB").asOrderedText())
             MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
         }
     })

@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.utils.IRFluidTank
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
@@ -34,8 +35,8 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
         }
     }
 
-    private fun MatrixStack.renderFluid(inputVolume: FluidVolume, vcp: VertexConsumerProvider) {
-        val yMax = (((inputVolume.amount().asInexactDouble().toFloat() / 4f) * 10.0) / 16.0).coerceAtLeast(0.1)
+    private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
+        val yMax = (((inputVolume.amount / 4f) * 10.0) / 16.0).coerceAtLeast(0.1)
         val face =
             listOf(
                 FluidRenderFace.createFlatFaceZ(0.01, 0.1, 0.99, 0.99, yMax, 0.99, 2.0, true, false),

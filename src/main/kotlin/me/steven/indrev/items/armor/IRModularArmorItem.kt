@@ -19,9 +19,12 @@ import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
+import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.minus
 import me.steven.indrev.utils.times
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
@@ -43,29 +46,20 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
         EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
     }
 
-    override val fluidFilter: FluidFilter = FluidFilter { it.rawFluid == IRFluidRegistry.HYDROGEN_STILL }
+    override val fluidFilter: (FluidVariant) -> Boolean = { it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
 
-    override val limit: FluidAmount = FluidAmount.BUCKET.mul(20)
+    override val limit: Long = bucket / 20
 
     override fun isUsable(stack: ItemStack): Boolean = ArmorModule.JETPACK.getLevel(stack) > 0
 
     fun getFluidItemBarStep(stack: ItemStack): Int {
         val volume = getFuelStored(stack)
-        return (13.0 - (((limit - volume.amount()) * 13) / limit).asInexactDouble()).roundToInt()
+        return (13.0 - (((limit - volume.amount()) * 13) / limit)).roundToInt()
     }
 
-    fun getFluidItemBarColor(stack: ItemStack): Int = getFuelStored(stack).fluidKey.renderColor
+    fun getFluidItemBarColor(stack: ItemStack): Int = FluidRenderHandlerRegistry.INSTANCE.get(getFuelStored(stack).resource.fluid).getFluidColor(null, null, null)
 
-    fun isFluidItemBarVisible(stack: ItemStack): Boolean = !getFuelStored(stack).isEmpty
-
-    override fun addAllAttributes(
-        stack: Reference<ItemStack>,
-        excess: LimitedConsumer<ItemStack>,
-        to: ItemAttributeList<*>
-    ) {
-        if (ArmorModule.JETPACK.isInstalled(stack.get()))
-            super.addAllAttributes(stack, excess, to)
-    }
+    fun isFluidItemBarVisible(stack: ItemStack): Boolean = getFuelStored(stack).amount > 0
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
 

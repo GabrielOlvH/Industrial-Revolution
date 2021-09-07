@@ -7,13 +7,11 @@
   ],
   "fluidInput": {
     "fluid": "indrev:sulfuric_acid_still",
-    "type": "bucket",
-    "count": 1
+    "amount": 81000
   },
   "fluidOutput": {
     "fluid": "indrev:toxic_mud_still",
-    "type": "nugget",
-    "count": 1
+    "amount": 1000
   },
   "output": {
     "item": "indrev:gold_purified_ore",

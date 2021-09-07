@@ -9,6 +9,10 @@ import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
+import me.steven.indrev.components.GuiSyncableComponent
+import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.MINING_RIG_HANDLER
@@ -44,6 +48,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
         val scanSlot = WTooltipedItemSlot.of(blockInventory, 14, TranslatableText("gui.indrev.scan_output_slot_type"))
         root.add(scanSlot, 7.0, 4.3)
 
+        val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
@@ -52,9 +57,9 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             bg.setSize(70, 60)
             root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
 
-            val requiredPower = propertyDelegate[MiningRigBlockEntity.ENERGY_REQUIRED_ID].toDouble()
+            val requiredPower = properties.get<Double>(MiningRigBlockEntity.ENERGY_REQUIRED_ID).toDouble()
             when {
-                 propertyDelegate[MachineBlockEntity.ENERGY_ID] < requiredPower -> {
+                properties.get<Double>(MachineBlockEntity.ENERGY_ID) < requiredPower -> {
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(
@@ -84,7 +89,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.1)
         }
         root.add(WText({
-            TranslatableText("block.indrev.mining_rig.mined", "${propertyDelegate[MiningRigBlockEntity.EXPLORED_PERCENTAGE_ID]}%")
+            TranslatableText("block.indrev.mining_rig.mined", "${properties.get<Int>(MiningRigBlockEntity.EXPLORED_PERCENTAGE_ID)}%")
         }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
 
         root.validate(this)

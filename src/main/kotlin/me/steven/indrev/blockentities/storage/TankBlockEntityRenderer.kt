@@ -18,8 +18,8 @@ class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
         val fluidComponent = entity.fluidComponent
         val volume = fluidComponent[0]
         if (volume.isEmpty) return
-        val fluid = volume.amount().asInt(1000)
-        val maxFluid = fluidComponent.limit.asInt(1000).toDouble()
+        val fluid = volume.amount
+        val maxFluid = fluidComponent.limit
         var percent = fluid.toFloat() / maxFluid.toFloat()
         val maxHeight = if (entity.cachedState[TankBlock.UP]) 16 else 14
         percent = (percent * maxHeight).toInt() / 16f
@@ -34,7 +34,7 @@ class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
         var renderFluidTop = true
         if (entity.cachedState[TankBlock.UP]) {
             val aboveTank = entity.world!!.getBlockEntity(entity.pos.up()) as? TankBlockEntity
-            renderFluidTop = aboveTank?.fluidComponent?.get(0)?.fluidKey != volume.fluidKey
+            renderFluidTop = aboveTank?.fluidComponent?.get(0)?.variant != volume.variant
         }
         if (renderFluidTop) {
             faces.add(FluidRenderFace.createFlatFaceY(0.1, yHeight, 0.1, 0.9, yHeight, 0.9, 1.0, true, false))

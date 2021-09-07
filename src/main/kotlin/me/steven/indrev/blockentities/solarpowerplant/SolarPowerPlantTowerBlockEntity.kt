@@ -5,13 +5,11 @@ import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
-import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.rawId
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
@@ -23,23 +21,23 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
-    : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state),
-    BlockEntityClientSerializable, PropertyDelegateHolder, ComponentProvider, Syncable {
+    : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, ComponentProvider, Syncable {
+
+    val guiSyncableComponent = GuiSyncableComponent()
 
     val propertyDelegate = ArrayPropertyDelegate(7)
     val temperatureComponent = TemperatureComponent(this, 0.06, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
-    val fluidComponent = FluidComponent({this}, FluidAmount.ofWhole(16))
+    val fluidComponent = FluidComponent({this}, bucket * 16)
+
+    init {
+        trackObject(TANK_ID, fluidComponent[0])
+    }
 
     var heliostats = 0
 
     companion object {
-        const val TEMPERATURE_ID = 2
-        const val MAX_TEMPERATURE_ID = 3
-
-        const val TANK_SIZE = 4
-        const val TANK_AMOUNT_ID = 5
-        const val TANK_FLUID_ID = 6
+        const val TANK_ID = 2
 
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: SolarPowerPlantTowerBlockEntity) {
             blockEntity.multiblockComponent.tick(world, pos, state)
@@ -61,7 +59,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
             ComponentKey.FLUID -> fluidComponent
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
-            ComponentKey.PROPERTY_HOLDER -> this
+            ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
             else -> null
         }
     }
@@ -87,23 +85,6 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     override fun toClientTag(tag: NbtCompound): NbtCompound {
         multiblockComponent.writeNbt(tag)
         return tag
-    }
-
-    override fun getPropertyDelegate(): PropertyDelegate = if (world!!.isClient) propertyDelegate else object : PropertyDelegate {
-        override fun get(index: Int): Int {
-            return when (index) {
-                TEMPERATURE_ID -> temperatureComponent.temperature.toInt()
-                MAX_TEMPERATURE_ID -> temperatureComponent.limit
-                TANK_SIZE -> fluidComponent.limit.asInt(1000)
-                TANK_AMOUNT_ID -> fluidComponent[0].amount().asInt(1000)
-                TANK_FLUID_ID -> fluidComponent[0].rawFluid.rawId
-                else -> -1
-            }
-        }
-
-        override fun set(index: Int, value: Int) = error("Unsupported")
-
-        override fun size(): Int = 7
     }
 
     override fun markForUpdate(condition: () -> Boolean) {

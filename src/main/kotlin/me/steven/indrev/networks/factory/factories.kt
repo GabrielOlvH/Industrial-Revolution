@@ -54,11 +54,7 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
             network.appendPipe(blockState().block, pos.toImmutable())
             state.onSet(pos, network)
             return true
-        } else if (
-            fluidInsertableOf(world, pos, direction) != RejectingFluidInsertable.NULL
-            || fluidExtractableOf(world, pos, direction) != EmptyFluidExtractable.NULL
-            || groupedFluidInv(world, pos, direction) != EmptyGroupedFluidInv.INSTANCE
-        ) {
+        } else if (fluidStorageOf(world, pos, direction) != null) {
             network.appendContainer(pos, direction.opposite)
         }
         return false

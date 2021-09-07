@@ -5,6 +5,7 @@ import me.steven.indrev.components.CraftingComponent;
 import me.steven.indrev.recipes.machines.IRRecipe;
 import me.steven.indrev.recipes.machines.entries.InputEntry;
 import me.steven.indrev.recipes.machines.entries.OutputEntry;
+import me.steven.indrev.utils.IRFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
@@ -69,7 +70,7 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull List<ItemStack> inv, @NotNull List<? extends FluidVolume> fluidVolume) {
+    public boolean matches(@NotNull List<ItemStack> inv, @NotNull List<IRFluidTank> fluidVolume) {
         return this.input.test(inv.get(0));
     }
 

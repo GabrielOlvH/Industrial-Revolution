@@ -6,10 +6,10 @@ import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.FLUID_INFUSER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.machines.fluidTank
+import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -31,25 +31,19 @@ class FluidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         val firstInput = WItemSlot.of(blockInventory, 2)
         root.add(firstInput, 3.7, 1.8)
 
-        val fluid = WFluid(ctx, propertyDelegate, 0,
-            FluidInfuserBlockEntity.TANK_SIZE_ID,
-            FluidInfuserBlockEntity.INPUT_TANK_ID,
-            FluidInfuserBlockEntity.INPUT_TANK_FLUID_ID
-        )
-        root.add(fluid, 2.5, 1.0)
+        withBlockEntity<FluidInfuserBlockEntity> { be ->
+            val fluid = fluidTank(be, FluidInfuserBlockEntity.INPUT_TANK_ID)
+            root.add(fluid, 2.5, 1.0)
 
-        val processWidget = createProcessBar()
-        root.add(processWidget, 5.0, 1.8)
+            val processWidget = processBar(be, FluidInfuserBlockEntity.CRAFTING_COMPONENT_ID)
+            root.add(processWidget, 5.0, 1.8)
 
-        val outputStack = WItemSlot.of(blockInventory, 3)
-        root.add(outputStack, 6.4, 1.8)
+            val outputStack = WItemSlot.of(blockInventory, 3)
+            root.add(outputStack, 6.4, 1.8)
 
-        val outputFluid = WFluid(ctx, propertyDelegate, 1,
-            FluidInfuserBlockEntity.TANK_SIZE_ID,
-            FluidInfuserBlockEntity.OUTPUT_TANK_ID,
-            FluidInfuserBlockEntity.OUTPUT_TANK_FLUID_ID
-        )
-        root.add(outputFluid, 7.7, 1.0)
+            val outputFluid = fluidTank(be, FluidInfuserBlockEntity.OUTPUT_TANK_ID)
+            root.add(outputFluid, 7.7, 1.0)
+        }
 
         root.validate(this)
     }

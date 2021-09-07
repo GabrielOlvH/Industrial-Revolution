@@ -2,20 +2,24 @@ package me.steven.indrev.blockentities.storage
 
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
-import alexiil.mc.lib.attributes.fluid.GroupedFluidInv
 import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.SyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
+import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
+import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.plus
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
+import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
@@ -23,7 +27,7 @@ import net.minecraft.world.World
 import java.math.RoundingMode
 
 class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
-    val fluidComponent = FluidComponent({ this }, FluidAmount.ofWhole(8))
+    val fluidComponent = FluidComponent({ this }, bucket * 8)
 
     companion object {
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: TankBlockEntity) {
@@ -35,8 +39,8 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IR
             }
             if (!state[TankBlock.DOWN]) return
             val down = world.getBlockEntity(pos.down()) as? TankBlockEntity ?: return
-            val volume = FluidVolumeUtil.move(blockEntity.fluidComponent, down.fluidComponent)
-            if (!volume.amount().isZero) {
+            val volume = StorageUtil.move(blockEntity.fluidComponent, down.fluidComponent, { true }, Long.MAX_VALUE, null)
+            if (volume > 0) {
                 down.isMarkedForUpdate = true
                 blockEntity.isMarkedForUpdate = true
             }
@@ -68,83 +72,37 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IR
         }
     }
 
-    class GroupedTankFluidInv : GroupedFluidInv {
+    override fun <T> get(key: ComponentKey<T>): Any? {
+        return when (key) {
+            ComponentKey.FLUID -> fluidComponent
+            else -> null
+        }
+    }
 
-        private val tanks = mutableListOf<FluidComponent>()
+    class CombinedTankStorage : CombinedStorage<FluidVariant, FluidComponent>(mutableListOf<FluidComponent>()) {
 
-        var initialFluid = FluidKeys.EMPTY
+        var initialFluid = FluidVariant.blank()
 
         fun add(tank: TankBlockEntity): Boolean {
-            val invFluid = tank.fluidComponent.getInvFluid(0)
-            if (initialFluid.isEmpty && !invFluid.isEmpty) {
-                initialFluid = invFluid.fluidKey
-            } else if (!invFluid.isEmpty && initialFluid != invFluid.fluidKey) {
+            val invFluid = tank.fluidComponent[0]
+            if (initialFluid.isBlank && !invFluid.isEmpty) {
+                initialFluid = invFluid.variant
+            } else if (!invFluid.isEmpty && initialFluid != invFluid.variant) {
                 IndustrialRevolution.LOGGER.debug("Found connected tanks with mismatching fluids @ ${tank.pos}")
                 return false
             }
-            tanks.add(tank.fluidComponent)
+            parts.add(tank.fluidComponent)
             return true
         }
 
-        override fun getStoredFluids(): Set<FluidKey> = setOf(initialFluid)
-
-        override fun getStatistics(filter: FluidFilter?): GroupedFluidInvView.FluidInvStatistic {
-            return GroupedFluidInvView.FluidInvStatistic.emptyOf(filter)
+        override fun insert(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
+            if (!initialFluid.isBlank && resource != initialFluid) return 0
+            return super.insert(resource, maxAmount, transaction)
         }
 
-        override fun getAmount_F(filter: FluidFilter): FluidAmount {
-            return if (!filter.matches(initialFluid)) FluidAmount.ZERO
-            else
-                tanks.map { it.getInvFluid(0).amount() }.reduce { first, second -> first + second }
+        override fun extract(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
+            if (!initialFluid.isBlank && resource != initialFluid) return 0
+            return super.extract(resource, maxAmount, transaction)
         }
-
-        override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation): FluidVolume {
-            if (!initialFluid.isEmpty && fluid.fluidKey != initialFluid) return fluid
-            var fluid = fluid
-            for (insertable in tanks) {
-                fluid = insertable.attemptInsertion(fluid, simulation)
-                if (fluid.isEmpty) {
-                    return FluidVolumeUtil.EMPTY
-                }
-            }
-            return fluid
-        }
-
-        override fun attemptExtraction(
-            filter: FluidFilter,
-            maxAmount: FluidAmount,
-            simulation: Simulation
-        ): FluidVolume {
-            require(!maxAmount.isNegative) { "maxCount cannot be negative! (was $maxAmount)" }
-            var extracted = FluidVolumeUtil.EMPTY
-            if (maxAmount.isZero || (!initialFluid.isEmpty && !filter.matches(initialFluid))) {
-                return extracted!!
-            }
-            val filter = initialFluid.exactFilter
-            for (extractable in tanks) {
-                if (extracted!!.isEmpty) {
-                    extracted = extractable.attemptExtraction(filter, maxAmount, simulation)
-                    if (extracted.isEmpty) {
-                        continue
-                    }
-                    if (extracted.amount_F >= maxAmount) {
-                        return extracted
-                    }
-                } else {
-                    val newMaxAmount = maxAmount.roundedSub(extracted.amount_F, RoundingMode.UP)
-                    val additional = extractable.attemptExtraction(filter, newMaxAmount, simulation)
-                    if (additional.isEmpty) {
-                        continue
-                    }
-                    extracted = FluidVolume.merge(extracted, additional)
-                    checkNotNull(extracted) { "bad FluidExtractable " + extractable.javaClass.name }
-                    if (extracted.amount_F >= maxAmount)  {
-                        return extracted
-                    }
-                }
-            }
-            return extracted!!
-        }
-
     }
 }

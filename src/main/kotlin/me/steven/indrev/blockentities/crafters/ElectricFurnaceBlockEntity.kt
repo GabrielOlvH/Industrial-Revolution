@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.TemperatureComponent
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.mixin.common.MixinAbstractCookingRecipe
@@ -23,6 +24,7 @@ class ElectricFurnaceBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
             input { slot = 2 }
             output { slot = 3 }
         }
+        trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -35,4 +37,8 @@ class ElectricFurnaceBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
                 else -> VanillaCookingRecipeCachedGetter.SMELTING
             } as IRecipeGetter<MixinAbstractCookingRecipe>
         }
+
+    companion object {
+        const val CRAFTING_COMPONENT_ID = 4
+    }
 }

@@ -7,8 +7,7 @@
   ],
   "fluidInput": {
     "fluid": "indrev:molten_iron_still",
-    "type": "block",
-    "count": 1
+    "amount": 81000
   },
   "output": {
     "item": "indrev:wither_proof_obsidian",

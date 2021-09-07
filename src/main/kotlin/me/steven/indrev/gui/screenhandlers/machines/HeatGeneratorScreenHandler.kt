@@ -7,7 +7,7 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.HEAT_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.machines.fluidTank
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
@@ -43,7 +43,7 @@ class HeatGeneratorScreenHandler(
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return@run
             val generatingText = WText({
-                val consumptionRate = blockEntity.getConsumptionRate(propertyDelegate[MachineBlockEntity.TEMPERATURE_ID].toDouble()).div(10).asInt(1000).toString()
+                val consumptionRate = (blockEntity.getConsumptionRate(propertyDelegate[MachineBlockEntity.TEMPERATURE_ID].toDouble()) / 810).toString()
                 TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
             }, HorizontalAlignment.LEFT)
             root.add(generatingText, 2.5, 1.0)
@@ -58,12 +58,10 @@ class HeatGeneratorScreenHandler(
 
         root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.2)
 
-        val fluid = WFluid(ctx, propertyDelegate, 0,
-            HeatGeneratorBlockEntity.FLUID_TANK_SIZE_ID,
-            HeatGeneratorBlockEntity.FLUID_TANK_AMOUNT_ID,
-            HeatGeneratorBlockEntity.FLUID_TANK_FLUID_ID
-        )
-        root.add(fluid, 8.0, 0.6)
+        withBlockEntity<HeatGeneratorBlockEntity> { be ->
+            val fluid = fluidTank(be, HeatGeneratorBlockEntity.TANK_ID)
+            root.add(fluid, 8.0, 0.6)
+        }
 
         root.validate(this)
     }
