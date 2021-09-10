@@ -212,6 +212,19 @@ fun upProcessBar(provider: ComponentProvider, index: Int): WCustomBar {
 
 }
 
+fun upProcessBar(provider: ComponentProvider, progress: Int, max: Int): WCustomBar {
+    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+    val process = object : WCustomBar(UP_PROCESS_EMPTY, UP_PROCESS_FULL, { properties[progress] }, { properties[max] }, Direction.DOWN) {
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            if (properties.get<Int>(max) <= 0) return
+            val percentage = properties.get<Int>(progress) * 100 / properties.get<Int>(max)
+            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+        }
+    }
+    return process
+
+}
+
 fun leftProcessBar(provider: ComponentProvider, index: Int): WCustomBar {
     val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
     val process = object : WCustomBar(LEFT_PROCESS_EMPTY, LEFT_PROCESS_FULL, { properties.get<CraftingComponent<*>>(index).processTime }, { properties.get<CraftingComponent<*>>(index).totalProcessTime }, Direction.LEFT) {

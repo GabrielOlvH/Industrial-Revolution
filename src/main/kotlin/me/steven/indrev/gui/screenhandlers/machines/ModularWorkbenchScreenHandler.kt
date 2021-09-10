@@ -10,13 +10,14 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.icon.ItemIcon
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.MODULAR_WORKBENCH_HANDLER
+import me.steven.indrev.gui.widgets.machines.WCustomBar
+import me.steven.indrev.gui.widgets.machines.upProcessBar
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -177,7 +178,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val moduleSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.module_slot_type"))
         root.add(moduleSlot, 1.5, 1.0)
 
-        val process = createProcessBar(WBar.Direction.DOWN, PROCESS_VERTICAL_EMPTY, PROCESS_VERTICAL_FULL, ModularWorkbenchBlockEntity.INSTALL_TIME_ID, ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID)
+        val process = query<ModularWorkbenchBlockEntity, WCustomBar> { upProcessBar(it, ModularWorkbenchBlockEntity.INSTALL_TIME_ID, ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID) }
         root.add(process, 1.5, 2.2)
 
         val info = WStaticTooltip()
@@ -191,7 +192,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     // Are you seriously still going?
     private fun addTextInfo(panel: WGridPanel) {
-        val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
+        val properties = query<ModularWorkbenchBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
         val armorInfoText = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty)
@@ -223,7 +224,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }, HorizontalAlignment.LEFT)
 
         val installing = WText({
-            val state = ModularWorkbenchBlockEntity.State.values()[properties[ModularWorkbenchBlockEntity.STATE_ID]]
+            val state = properties.get<ModularWorkbenchBlockEntity.State>(ModularWorkbenchBlockEntity.STATE_ID)
             if (state == ModularWorkbenchBlockEntity.State.INSTALLING) {
                 INSTALLING_TEXT()
             } else LiteralText.EMPTY
@@ -234,7 +235,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             val item = stack.item
             if (!stack.isEmpty && item is IRModuleItem) {
                 val progress = properties.get<Int>(ModularWorkbenchBlockEntity.INSTALL_TIME_ID)
-                when (ModularWorkbenchBlockEntity.State.values()[properties[ModularWorkbenchBlockEntity.STATE_ID]]) {
+                when (properties.get<ModularWorkbenchBlockEntity.State>(ModularWorkbenchBlockEntity.STATE_ID)) {
                     ModularWorkbenchBlockEntity.State.INCOMPATIBLE -> INCOMPATIBLE_TEXT()
                     ModularWorkbenchBlockEntity.State.MAX_LEVEL -> MAX_LEVEL_TEXT()
                     else -> {
@@ -333,7 +334,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             super.paint(matrices, x, y, mouseX, mouseY)
             if (selected != null) {
-                val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
+                val properties = query<ModularWorkbenchBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
                 val cur = properties.get<Int>(ModularWorkbenchBlockEntity.PROCESS_TIME_ID)
                 val max = properties.get<Int>(ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID)
                 val renderer = MinecraftClient.getInstance().itemRenderer
@@ -355,7 +356,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
+            val properties = query<ModularWorkbenchBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
             val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player)
             { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
 
