@@ -5,7 +5,7 @@
   },
   "fluidOutput": {
     "fluid": "indrev:molten_tin_still",
-    "amount": 9000
+    "amount": 45000
   },
   "processTime": 600
 }

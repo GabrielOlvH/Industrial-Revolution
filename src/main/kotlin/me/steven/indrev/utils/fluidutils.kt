@@ -15,6 +15,8 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -23,12 +25,14 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
+import net.minecraft.client.gui.screen.Screen
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.OrderedText
+import net.minecraft.text.Style
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -130,8 +134,11 @@ infix fun Long.of(variant: FluidVariant) = IRFluidAmount(variant, this)
 
 fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<OrderedText> {
     val tooltips = mutableListOf<OrderedText>()
-    val id = Registry.FLUID.getId(variant.fluid)
-    tooltips.add(TranslatableText("block.${id.namespace}.${id.path}").asOrderedText())
+    val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
+    val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid).getFluidColor(null, null, null)
+
+    tooltips.add(TranslatableText("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)).asOrderedText())
+
     val asMb = amount / 81
     val accurate = amount / 81.0
     val prefix = when {
@@ -139,7 +146,18 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Ordere
         accurate < asMb -> "<"
         else -> ""
     }
-    tooltips.add(TranslatableText("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
+    if (capacity > 0)
+        tooltips.add(TranslatableText("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
+    else
+        tooltips.add(TranslatableText("$prefix$asMb mB").asOrderedText())
+
+    if (Screen.hasShiftDown()) {
+        if (capacity > 0)
+            tooltips.add(TranslatableText("$amount / $capacity droplets").asOrderedText())
+        else
+            tooltips.add(TranslatableText("$amount droplets").asOrderedText())
+    }
+    
     return tooltips
 
 }
