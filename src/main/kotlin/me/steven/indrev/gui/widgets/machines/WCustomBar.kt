@@ -152,8 +152,8 @@ fun temperatureBar(provider: ComponentProvider): WCustomBar {
     val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
     val temp = object : WCustomBar(EMPTY_HEAT, FULL_HEAT, { properties.get<Double>(2).toInt() }, { properties.get<Double>(3).toInt() }, Direction.UP) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            val temperature = properties.get<Double>(2)
-            val maxTemperature = properties.get<Double>(3)
+            val temperature = properties.get<Double>(2).toInt()
+            val maxTemperature = properties.get<Double>(3).toInt()
 
             //TODO
             /*

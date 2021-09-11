@@ -43,7 +43,7 @@ class HeatGeneratorScreenHandler(
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return@run
             val generatingText = WText({
-                val consumptionRate = (blockEntity.getConsumptionRate(propertyDelegate[MachineBlockEntity.TEMPERATURE_ID].toDouble()) / 810).toString()
+                val consumptionRate = (blockEntity.getConsumptionRate(component!![MachineBlockEntity.TEMPERATURE_ID]) / 810).toString()
                 TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
             }, HorizontalAlignment.LEFT)
             root.add(generatingText, 2.5, 1.0)
@@ -51,7 +51,7 @@ class HeatGeneratorScreenHandler(
         root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
 
         val amount = WText({
-            val ratio = propertyDelegate[HeatGeneratorBlockEntity.GENERATION_RATIO_ID]
+            val ratio = component!!.get<Double>(HeatGeneratorBlockEntity.GENERATION_RATIO_ID)
             TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
         root.add(amount, 2.5, 2.6)

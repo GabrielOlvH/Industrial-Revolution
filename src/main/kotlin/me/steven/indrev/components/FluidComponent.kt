@@ -38,7 +38,7 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         return exposedSides[dir]!!
     }
 
-    open fun getValidTanks(dir: Direction): IntArray = IntArray(tankCount) { it }
+    open fun getValidTanks(dir: Direction): IntArray = if (transferConfig[dir]!!.input) inputTanks else if (transferConfig[dir]!!.output) outputTanks else IntArray(0)
 
     open fun getTankCapacity(index: Int): Long = limit
 
@@ -94,14 +94,14 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         }
 
         override fun insert(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
-            return if (transferConfig[dir.opposite]!!.input) {
+            return if (transferConfig[dir]!!.input) {
                 super.insert(resource, maxAmount, transaction)
             }
             else 0
         }
 
         override fun extract(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
-            return if (transferConfig[dir.opposite]!!.output)
+            return if (transferConfig[dir]!!.output)
                 super.extract(resource, maxAmount, transaction)
             else 0
         }
@@ -113,15 +113,15 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         override fun getVersion(): Long = this@FluidComponent.version
 
         override fun exactView(transaction: TransactionContext?, resource: FluidVariant?): StorageView<FluidVariant>? {
-            return this@FluidComponent.exactView(transaction, resource)
+            return super.exactView(transaction, resource)
         }
 
         override fun iterable(transaction: TransactionContext?): MutableIterable<StorageView<FluidVariant>> {
-            return this@FluidComponent.iterable(transaction)
+            return super.iterable(transaction)
         }
 
         override fun iterator(transaction: TransactionContext?): MutableIterator<StorageView<FluidVariant>> {
-            return this@FluidComponent.iterator(transaction)
+            return super.iterator(transaction)
         }
 
     }

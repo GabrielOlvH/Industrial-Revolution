@@ -68,18 +68,18 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
     fun insert(variant: FluidVariant, amount: Long, act: Boolean = false): Long {
         if (!this.variant.isBlank && variant != this.variant) return 0
         Transaction.openOuter().use {
-            val extracted = extract(variant, amount, it)
+            val inserted = insert(variant, amount, it)
             if (act) it.commit() else it.abort()
-            return extracted
+            return inserted
         }
     }
 
     fun tryInsert(variant: FluidVariant, amount: Long): Boolean {
         if (!this.variant.isBlank && variant != this.variant) return false
         Transaction.openOuter().use {
-            val extracted = extract(variant, amount, it)
+            val inserted = insert(variant, amount, it)
             it.abort()
-            return extracted == amount
+            return inserted == amount
         }
     }
 

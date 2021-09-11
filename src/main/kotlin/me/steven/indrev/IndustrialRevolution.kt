@@ -9,6 +9,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
+import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreenHandler
 import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantTowerScreenHandler
@@ -138,6 +139,13 @@ object IndustrialRevolution : ModInitializer {
             }
         }
 
+        ServerTickEvents.END_SERVER_TICK.register { server ->
+            server.playerManager.playerList.forEach { player ->
+                val currentScreenHandler = player.currentScreenHandler as? IRGuiScreenHandler ?: return@forEach
+                currentScreenHandler.syncProperties()
+            }
+        }
+
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
             s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
         }
@@ -161,10 +169,6 @@ object IndustrialRevolution : ModInitializer {
             } else {
                 tracker.removeSource(REINFORCED_ELYTRA_SOURCE)
             }
-        }
-
-        FabricModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
-            if (ElytraItem.isUsable(stack)) 0.0f else 1.0f
         }
 
         LOGGER.info("Industrial Revolution has initialized.")

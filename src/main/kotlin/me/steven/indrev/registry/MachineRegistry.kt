@@ -157,7 +157,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
     fun defaultFluidStorageProvider(): MachineRegistry {
         blockEntities.forEach { (_, type) ->
-            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir) }, type)
+            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir.opposite) }, type)
         }
         return this
     }
@@ -482,7 +482,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
             .energyProvider { { be, dir -> if (dir == Direction.DOWN) be as? MachineBlockEntity<*> else null } }
-            .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir) (be as PumpBlockEntity).fluidComponent else null } }
+            .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir.opposite) (be as PumpBlockEntity).fluidComponent else null } }
             .noModelProvider()
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry("fluid_infuser", true)

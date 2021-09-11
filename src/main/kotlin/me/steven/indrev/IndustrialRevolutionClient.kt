@@ -53,6 +53,7 @@ import net.minecraft.client.render.entity.model.BipedEntityModel
 import net.minecraft.client.render.entity.model.EntityModelLayers
 import net.minecraft.client.util.InputUtil
 import net.minecraft.entity.LivingEntity
+import net.minecraft.item.ElytraItem
 import net.minecraft.screen.PlayerScreenHandler
 import org.lwjgl.glfw.GLFW
 
@@ -175,6 +176,10 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRItemRegistry.GAMER_AXE_ITEM,
             identifier("activate")
         ) { stack, _, _, _ -> stack?.orCreateNbt?.getFloat("Progress") ?: 0f }
+
+        FabricModelPredicateProviderRegistry.register(IRItemRegistry.REINFORCED_ELYTRA, identifier("broken")) { stack, _, _, _ ->
+            if (ElytraItem.isUsable(stack)) 0.0f else 1.0f
+        }
 
         PacketRegistry.registerClient()
 

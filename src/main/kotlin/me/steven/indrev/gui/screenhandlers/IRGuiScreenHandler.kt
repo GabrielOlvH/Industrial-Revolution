@@ -61,15 +61,13 @@ open class IRGuiScreenHandler(
             )
     }
 
-    override fun close(player: PlayerEntity?) {
-        super.close(player)
-    }
+    override fun syncState() {
+        super.syncState()
 
-    override fun updateSyncHandler(handler: ScreenHandlerSyncHandler?) {
-        super.updateSyncHandler(handler)
         // when someone opens the same screen, resync everything to everyone
         component?.properties?.forEach { p -> p.markDirty() }
     }
+
 
     inline fun <T : BlockEntity> withBlockEntity(block: (T) -> Unit) {
         val be = ctx.get(BiFunction { world, pos ->
@@ -85,7 +83,7 @@ open class IRGuiScreenHandler(
         return block(be ?: error("burh"))
     }
 
-    override fun sendContentUpdates() {
+    fun syncProperties() {
         val props = component!!.properties
         val player = playerInventory.player
         if (player is ServerPlayerEntity) {
@@ -100,6 +98,5 @@ open class IRGuiScreenHandler(
                 }
             }
         }
-        super.sendContentUpdates()
     }
 }
