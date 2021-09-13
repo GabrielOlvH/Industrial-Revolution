@@ -58,7 +58,7 @@ class FluidNetwork(
                     val deque = getQueue(pos, data, filter, nodes)
 
                     if (data.type == EndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir, deque, state, filter)
+                        tickOutput(pos, dir.opposite, deque, state, filter)
                     else if (data.type == EndpointData.Type.RETRIEVER)
                         tickRetriever(pos, dir, deque, state, filter)
 
@@ -89,7 +89,7 @@ class FluidNetwork(
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: (FluidVariant) -> Boolean) {
-        val extractable = fluidStorageOf(world, pos, dir.opposite)
+        val extractable = fluidStorageOf(world, pos, dir)
         var remaining = maxCableTransfer
         updateLastTransferred(extractable)
         while (queue.isNotEmpty() && remaining > 0) {
@@ -99,14 +99,14 @@ class FluidNetwork(
             val input = targetData == null || targetData.type == EndpointData.Type.INPUT
             if (!input) continue
 
-            val insertable = fluidStorageOf(world, targetPos, targetDir.opposite)
+            val insertable = fluidStorageOf(world, targetPos, targetDir)
             val moved = StorageUtil.move(extractable, insertable, fluidFilter, remaining, null)
             remaining -= moved
         }
     }
 
     private fun tickRetriever(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: FluidNetworkState, fluidFilter: (FluidVariant) -> Boolean) {
-        val insertable = fluidStorageOf(world, pos, dir.opposite)
+        val insertable = fluidStorageOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val (_, targetPos, _, targetDir) = queue.removeFirst()
@@ -115,7 +115,7 @@ class FluidNetwork(
             val isRetriever = targetData?.type == EndpointData.Type.RETRIEVER
             if (isRetriever) continue
 
-            val extractable = fluidStorageOf(world, targetPos, targetDir.opposite)
+            val extractable = fluidStorageOf(world, targetPos, targetDir)
             updateLastTransferred(extractable)
             val moved = StorageUtil.move(extractable, insertable, fluidFilter, remaining, null)
             remaining -= moved

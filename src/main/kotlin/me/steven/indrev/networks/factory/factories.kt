@@ -31,7 +31,7 @@ val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<
             network.appendPipe(blockState().block, pos.toImmutable())
             return true
         } else {
-            val energyOf = energyOf(world, pos, direction)
+            val energyOf = energyOf(world, pos, direction.opposite)
             if (energyOf != null) {
                 network.appendContainer(pos, direction.opposite)
                 if (energyOf.supportsInsertion()) network.insertables.add(pos)
@@ -54,7 +54,7 @@ val FLUID_NET_FACTORY: NetworkFactory<FluidNetwork> = object : NetworkFactory<Fl
             network.appendPipe(blockState().block, pos.toImmutable())
             state.onSet(pos, network)
             return true
-        } else if (fluidStorageOf(world, pos, direction) != null) {
+        } else if (fluidStorageOf(world, pos, direction.opposite) != null) {
             network.appendContainer(pos, direction.opposite)
         }
         return false
@@ -74,10 +74,7 @@ val ITEM_NET_FACTORY: NetworkFactory<ItemNetwork> = object : NetworkFactory<Item
             network.appendPipe(blockState().block, pos.toImmutable())
             state.onSet(pos, network)
             return true
-        } else if (
-            itemInsertableOf(world, pos, direction) != RejectingItemInsertable.NULL
-            || itemExtractableOf(world, pos, direction) != EmptyItemExtractable.NULL
-        ) {
+        } else if (itemStorageOf(world, pos, direction.opposite) != null) {
             network.appendContainer(pos, direction.opposite)
         }
         return false

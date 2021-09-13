@@ -1,5 +1,6 @@
 package me.steven.indrev.networks.item
 
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
@@ -14,12 +15,12 @@ class ItemFilterData(
 
     constructor() : this(false, false, false)
 
-    fun matches(itemStack: ItemStack): Boolean {
+    fun matches(itemStack: ItemVariant): Boolean {
         if (filter.isEmpty()) return !whitelist
         val findMatches = filter.filter { it.item == itemStack.item }
         if (findMatches.isEmpty()) return !whitelist
         var valid = true
-        if (valid && matchDurability) valid = findMatches.any { it.damage == itemStack.damage }
+        if (valid && matchDurability) valid = findMatches.any { it.damage == itemStack.toStack().damage }
         if (valid && matchTag) valid = findMatches.any { it.nbt == itemStack.nbt }
         if (valid) return whitelist
         return !whitelist

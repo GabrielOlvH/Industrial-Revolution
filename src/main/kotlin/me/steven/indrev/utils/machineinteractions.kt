@@ -133,7 +133,7 @@ fun MachineBlockEntity<*>.transferEnergy() {
         .forEach { direction ->
             if (validConnections.contains(direction)) {
                 val sourceIo = energyOf(world, pos, direction)
-                val targetIo = energyOf(world, pos.offset(direction.opposite), direction.opposite)
+                val targetIo = energyOf(world, pos.offset(direction), direction.opposite)
                 if (sourceIo == null || targetIo == null)
                     validConnections.remove(direction)
                 else if (sourceIo.supportsExtraction() && targetIo.supportsInsertion())

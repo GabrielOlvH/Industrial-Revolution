@@ -210,7 +210,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val networkState = type.getNetworkState(world)
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return
         val before = blockEntity.connections[facing]
-        val new = ConnectionType.getType(isConnectable(world, neighborPos, facing))
+        val new = ConnectionType.getType(isConnectable(world, neighborPos, facing.opposite))
         val neighborBlockEntity = world.getBlockEntity(neighborPos) as? BasePipeBlockEntity
         if (before != new && (before != ConnectionType.WRENCHED || neighborBlockEntity != null
                     && neighborBlockEntity.connections[facing.opposite] == ConnectionType.CONNECTED)) {

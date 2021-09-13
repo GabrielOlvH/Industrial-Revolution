@@ -1,11 +1,12 @@
 package me.steven.indrev.networks
 
+import me.steven.indrev.utils.ItemFilter
 import me.steven.indrev.utils.fluidStorageOf
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.server.world.ServerWorld
-import alexiil.mc.lib.attributes.item.filter.ItemFilter
 import me.steven.indrev.utils.groupedItemInv
+import me.steven.indrev.utils.itemStorageOf
 import net.minecraft.nbt.NbtCompound
 import java.util.*
 import kotlin.random.Random
@@ -58,18 +59,21 @@ data class EndpointData(var type: Type, var mode: Mode?) {
 
             override fun getItemSorter(world: ServerWorld, type: Type, filter: ItemFilter): (Array<Any?>) -> Unit {
                 return { array ->
-                    Arrays.sort(array,
-                        (if (type == Type.RETRIEVER)
-                            Comparator.comparing<Any, Int> { node ->
-                                node as Node
-                                groupedItemInv(world, node.target, node.direction).getAmount(filter)
-                            }.reversed()
-                        else
-                            Comparator.comparing {
-                                it as Node
-                                groupedItemInv(world, it.target, it.direction).getAmount(filter)
-                            })
-                    )
+                    Transaction.openOuter().use { tx ->
+                        Arrays.sort(array,
+                            (if (type == Type.RETRIEVER)
+                                Comparator.comparing<Any, Long> { node ->
+                                    node as Node
+                                    itemStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                }.reversed()
+                            else
+                                Comparator.comparing { node ->
+                                    node as Node
+                                    itemStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                })
+                        )
+                    }
+
                 }
             }
         },

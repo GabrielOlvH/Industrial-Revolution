@@ -157,7 +157,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
     fun defaultFluidStorageProvider(): MachineRegistry {
         blockEntities.forEach { (_, type) ->
-            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir.opposite) }, type)
+            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir) }, type)
         }
         return this
     }
@@ -253,7 +253,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
                     val blockEntity = be as? LazuliFluxContainerBlockEntity
                     if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(
                         blockEntity,
-                        dir.opposite
+                        dir
                     ) else null
                 }
             }
@@ -481,8 +481,8 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.DOWN) be as? MachineBlockEntity<*> else null } }
-            .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir.opposite) (be as PumpBlockEntity).fluidComponent else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.UP) be as? MachineBlockEntity<*> else null } }
+            .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir) (be as PumpBlockEntity).fluidComponent else null } }
             .noModelProvider()
 
         val FLUID_INFUSER_REGISTRY = MachineRegistry("fluid_infuser", true)
@@ -635,13 +635,13 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val CHARGE_PAD_REGISTRY = MachineRegistry("charge_pad", false, Tier.MK4)
             .blockProvider { tier -> ChargePadBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> ChargePadBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.UP) (be as? ChargePadBlockEntity)?.energyIo else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.DOWN) (be as? ChargePadBlockEntity)?.energyIo else null } }
             .noModelProvider()
 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
             .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
-            .energyProvider { { be, dir -> if (dir == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
+            .energyProvider { { be, dir -> if (dir.opposite == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
             .noModelProvider()
 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)

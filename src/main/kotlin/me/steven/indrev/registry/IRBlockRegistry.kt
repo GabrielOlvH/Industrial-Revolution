@@ -99,7 +99,7 @@ object IRBlockRegistry {
         EnergyApi.SIDED.registerForBlocks({ world, pos, _, be, dir ->
             if (world is ServerWorld && be is BasePipeBlockEntity) {
                 val energyNetwork = world.energyNetworkState.networksByPos[pos.asLong()]
-                if (energyNetwork != null && be.connections[dir.opposite]?.isConnected() == true) {
+                if (energyNetwork != null && be.connections[dir]?.isConnected() == true) {
                     return@registerForBlocks CableEnergyIo(energyNetwork)
                 }
             }

@@ -9,10 +9,8 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.Node
-import me.steven.indrev.utils.ReusableArrayDeque
-import me.steven.indrev.utils.isLoaded
-import me.steven.indrev.utils.itemExtractableOf
-import me.steven.indrev.utils.itemInsertableOf
+import me.steven.indrev.utils.*
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -26,13 +24,13 @@ class ItemNetwork(
 ) : Network(Type.ITEM, world, pipes, containers) {
 
     var tier = Tier.MK1
-    private val maxCableTransfer: Int
+    private val maxCableTransfer: Long
         get() = when (tier) {
             Tier.MK1 -> IRConfig.cables.itemPipeMk1
             Tier.MK2 -> IRConfig.cables.itemPipeMk2
             Tier.MK3 -> IRConfig.cables.itemPipeMk3
             else -> IRConfig.cables.itemPipeMk4
-        }
+        }.toLong()
 
     private val deques = Object2ObjectOpenHashMap<BlockPos, EnumMap<EndpointData.Mode, ReusableArrayDeque<Node>>>()
 
@@ -86,7 +84,7 @@ class ItemNetwork(
     }
 
     private fun tickOutput(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
-        val extractable = itemExtractableOf(world, pos, dir.opposite)
+        val extractable = itemStorageOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.removeFirst()
@@ -98,8 +96,8 @@ class ItemNetwork(
             val targetFilterData = state.getFilterData(targetPos.offset(targetDir), targetDir.opposite)
 
             fun doMove() {
-                val insertable = itemInsertableOf(world, targetPos, targetDir.opposite)
-                val moved = ItemInvUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining)
+                val insertable = itemStorageOf(world, targetPos, targetDir)
+                val moved = StorageUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining, null)
                 remaining -= moved
                 if (moved > 0 && remaining > 0) {
                     doMove()
@@ -110,7 +108,7 @@ class ItemNetwork(
     }
 
     private fun tickRetriever(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
-        val insertable = itemInsertableOf(world, pos, dir.opposite)
+        val insertable = itemStorageOf(world, pos, dir)
         var remaining = maxCableTransfer
         while (queue.isNotEmpty() && remaining > 0) {
             val node = queue.removeFirst()
@@ -122,8 +120,8 @@ class ItemNetwork(
             val targetFilterData = state.getFilterData(targetPos.offset(targetDir), targetDir.opposite)
 
            fun doMove() {
-               val extractable = itemExtractableOf(world, targetPos, targetDir.opposite)
-               val moved = ItemInvUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining)
+               val extractable = itemStorageOf(world, targetPos, targetDir)
+               val moved = StorageUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining, null)
                remaining -= moved
                if (moved > 0 && remaining > 0)
                    doMove()
