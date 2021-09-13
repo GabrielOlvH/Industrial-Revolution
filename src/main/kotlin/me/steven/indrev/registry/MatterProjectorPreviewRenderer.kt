@@ -22,7 +22,7 @@ object MatterProjectorPreviewRenderer : WorldRenderEvents.BeforeEntities {
         val stack = player.mainHandStack
         val item = stack.item
         if (player.isSneaking && DrillModule.MATTER_PROJECTOR.isInstalled(stack) && item is MagnaTool && target is BlockHitResult) {
-            BlockBreaker.findPositions(context.world(), player, item.getRadius(stack)).forEach { pos ->
+            item.blockFinder.findPositions(context.world(), player, item.getRadius(stack)).forEach { pos ->
                 val blockState = context.world().getBlockState(pos)
                 val offset = pos.offset(target.side)
                 if (context.world().getBlockState(offset).material.isReplaceable) {

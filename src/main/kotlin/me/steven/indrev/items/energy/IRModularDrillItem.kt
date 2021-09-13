@@ -1,8 +1,9 @@
 package me.steven.indrev.items.energy
 
-import draylar.magna.api.BlockBreaker
+import draylar.magna.api.BlockFinder
 import draylar.magna.api.BlockProcessor
 import draylar.magna.api.MagnaTool
+import draylar.magna.api.reach.ReachDistanceHelper
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
@@ -31,6 +32,7 @@ import net.minecraft.util.TypedActionResult
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
 
 class IRModularDrillItem(
@@ -76,7 +78,7 @@ class IRModularDrillItem(
         val world = context.world
         val player = context.player!!
 
-        BlockBreaker.findPositions(world, context.player, getRadius(context.stack)).forEach { pos ->
+        blockFinder.findPositions(world, context.player, getRadius(context.stack)).forEach { pos ->
             val blockState = world.getBlockState(pos)
             val offset = pos.offset(context.side)
             if (world.getBlockState(offset).material.isReplaceable) {
@@ -91,6 +93,33 @@ class IRModularDrillItem(
             }
         }
         return ActionResult.success(world.isClient)
+    }
+
+    override fun getBlockFinder(): BlockFinder {
+        return object : BlockFinder {
+            override fun findPositions(
+                world: World,
+                playerEntity: PlayerEntity,
+                radius: Int,
+                depth: Int
+            ): MutableList<BlockPos> {
+                val cameraPos = playerEntity.getCameraPosVec(1f)
+                val rotation = playerEntity.getRotationVec(1f)
+                val reachDistance = ReachDistanceHelper.getReachDistance(playerEntity)
+                val combined = cameraPos.add(rotation.x * reachDistance, rotation.y * reachDistance, rotation.z * reachDistance)
+                val blockHitResult = world.raycast(RaycastContext(cameraPos, combined, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, playerEntity))
+
+                val handStack = playerEntity.getStackInHand(Hand.MAIN_HAND)
+
+                val blocks = super.findPositions(world, playerEntity, radius, depth)
+
+                val center = getCenterPosition(world, playerEntity, blockHitResult, handStack)
+
+                filterBlacklistedBlocks(center, blockHitResult, playerEntity, handStack, blocks)
+
+                return blocks
+            }
+        }
     }
 
     override fun getCompatibleModules(itemStack: ItemStack): Array<Module> = DrillModule.COMPATIBLE

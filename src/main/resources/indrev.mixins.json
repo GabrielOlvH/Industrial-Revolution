@@ -14,7 +14,6 @@
     "common.AccessorScreenHandler",
     "common.AccessorWeightedList",
     "common.MixinAbstractCookingRecipe",
-    "common.MixinBlockBreaker",
     "common.MixinEnchantmentHelper",
     "common.MixinEntity",
     "common.MixinItemPredicate",
