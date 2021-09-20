@@ -39,9 +39,9 @@ fun MachineBlockEntity<*>.transferItems() {
                     }
                     return@forEach
                 }
-                val insertable = ItemAttributes.INSERTABLE.getFromNeighbour(this, direction)
-                val extractable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).extractable
-                ItemInvUtil.move(extractable, insertable, 64)
+                val insertable = itemStorageOf(world!!, pos, direction.opposite)
+                val extractable = itemStorageOf(world!!, this.pos, direction)
+                StorageUtil.move(extractable, insertable, { true },  64, null)
             }
             if (mode.input && inventoryComponent!!.itemConfig.autoPull) {
                 val neighborInv = getInvAt(world!!, pos)
@@ -51,9 +51,9 @@ fun MachineBlockEntity<*>.transferItems() {
                     }
                     return@forEach
                 }
-                val extractable = ItemAttributes.EXTRACTABLE.getFromNeighbour(this, direction)
-                val insertable = FixedSidedInventoryVanillaWrapper.create(inventory, direction).insertable
-                ItemInvUtil.move(extractable, insertable, 64)
+                val extractable = itemStorageOf(world!!, pos, direction.opposite)
+                val insertable = itemStorageOf(world!!, this.pos, direction)
+                StorageUtil.move(extractable, insertable, { true },  64, null)
             }
         }
     }
