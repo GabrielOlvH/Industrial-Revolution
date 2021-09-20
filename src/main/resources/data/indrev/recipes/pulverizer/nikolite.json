@@ -1,7 +1,7 @@
 {
   "type": "indrev:pulverize",
   "ingredients": {
-    "item": "indrev:nikolite_ore"
+    "tag": "c:nikolite_ores"
   },
   "output": {
     "item": "indrev:nikolite_dust",

@@ -94,7 +94,8 @@ fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid:
             MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
         }
     })
-    widgets.add(Widgets.createTexturedWidget(TANK_TOP.image, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    //TODO rei does not respect alpha
+    //widgets.add(Widgets.createTexturedWidget(TANK_TOP.image, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
 }
 
 fun pack(dirs: Collection<Direction>): Byte {
