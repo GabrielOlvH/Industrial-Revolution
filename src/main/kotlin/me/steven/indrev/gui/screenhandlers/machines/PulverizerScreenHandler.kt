@@ -10,7 +10,6 @@ import me.steven.indrev.gui.widgets.machines.WCustomBar
 import me.steven.indrev.gui.widgets.machines.processBar
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.createProcessBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory

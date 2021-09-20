@@ -1,14 +1,12 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonElement
 import me.shedaniel.math.Point
 import me.shedaniel.rei.api.client.gui.widgets.Widget
 import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.gui.widgets.machines.WFluid
+import me.steven.indrev.gui.widgets.machines.TANK_BOTTOM
+import me.steven.indrev.gui.widgets.machines.TANK_TOP
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -24,10 +22,8 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
 import net.minecraft.text.OrderedText
 import net.minecraft.util.Identifier
-import net.minecraft.util.JsonHelper
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
@@ -89,16 +85,16 @@ fun getFluidFromJson(json: JsonElement): Array<IRFluidAmount> {
 }
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: IRFluidAmount) {
-    widgets.add(Widgets.createTexturedWidget(WFluid.TANK_BOTTOM, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
+    widgets.add(Widgets.createTexturedWidget(TANK_BOTTOM.image, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
     widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
         fluid.renderGuiRect(startPoint.x + 2.0, startPoint.y.toDouble() + 1.5, startPoint.x.toDouble() + 14, startPoint.y.toDouble() + 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
             val information = mutableListOf<OrderedText>()
-            //information.addAll(fluid.resource.fullTooltip.map { it.asOrderedText() })
             information.addAll(getTooltip(fluid.resource, fluid.amount, -1))
             MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
         }
     })
+    widgets.add(Widgets.createTexturedWidget(TANK_TOP.image, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
 }
 
 fun pack(dirs: Collection<Direction>): Byte {

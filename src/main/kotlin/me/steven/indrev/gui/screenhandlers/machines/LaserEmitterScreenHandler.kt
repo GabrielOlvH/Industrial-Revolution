@@ -7,7 +7,6 @@ import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.LASER_HANDLER
-import me.steven.indrev.gui.widgets.machines.WEnergy
 import me.steven.indrev.gui.widgets.machines.energyBar
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity

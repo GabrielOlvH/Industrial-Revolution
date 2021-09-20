@@ -8,7 +8,6 @@ import me.steven.indrev.gui.screenhandlers.BIOMASS_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WCustomBar
 import me.steven.indrev.gui.widgets.machines.fuelBar
-import me.steven.indrev.gui.widgets.misc.WFuel
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier

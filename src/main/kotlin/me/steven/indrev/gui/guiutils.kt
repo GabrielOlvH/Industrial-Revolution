@@ -260,15 +260,3 @@ fun getLockedSlotPainter(inventory: Inventory, slot: Int) = BackgroundPainter { 
     if (inventory.getStack(slot).isEmpty)
         ScreenDrawing.texturedRect(matrices, left, top, 18, 18, LOCKED_ICON_ID, -1)
 }
-
-val PROCESS_EMPTY =
-    identifier("textures/gui/widget_processing_empty.png")
-val PROCESS_FULL =
-    identifier("textures/gui/widget_processing_full.png")
-val PROCESS_VERTICAL_EMPTY =
-    identifier("textures/gui/widget_processing_empty_vertical.png")
-val PROCESS_VERTICAL_FULL =
-    identifier("textures/gui/widget_processing_full_vertical.png")
-
-fun createProcessBar(direction: WBar.Direction = WBar.Direction.RIGHT, bg: Identifier = PROCESS_EMPTY, bar: Identifier = PROCESS_FULL, value: Int = 4, maxValue: Int = 5)
-        = WProcessBar(direction, bg, bar, value, maxValue)

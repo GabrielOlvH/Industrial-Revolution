@@ -9,7 +9,6 @@ import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BATTERY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.widgets.machines.WEnergy
 import me.steven.indrev.gui.widgets.machines.energyBar
 import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
