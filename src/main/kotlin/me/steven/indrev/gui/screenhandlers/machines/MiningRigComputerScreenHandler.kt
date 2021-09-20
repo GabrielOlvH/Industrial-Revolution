@@ -1,10 +1,8 @@
 package me.steven.indrev.gui.screenhandlers.machines
 
 import dev.technici4n.fasttransferlib.api.Simulation
-import io.github.cottonmc.cotton.gui.widget.TooltipBuilder
-import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItem
-import io.github.cottonmc.cotton.gui.widget.WSprite
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing
+import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
@@ -22,6 +20,8 @@ import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -45,10 +45,16 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
         outputSlots.isInsertingAllowed = false
         root.add(outputSlots, 6.0, 0.85)
 
+        val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
         val scanSlot = WTooltipedItemSlot.of(blockInventory, 14, TranslatableText("gui.indrev.scan_output_slot_type"))
         root.add(scanSlot, 7.0, 4.3)
+        root.add(object : WWidget() {
+            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                if (!properties.get<Boolean>(MiningRigBlockEntity.LOCATION_ID))
+                    ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x88ff6666.toInt())
+            }
+                                    }, 7.0, 4.3)
 
-        val properties = query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()

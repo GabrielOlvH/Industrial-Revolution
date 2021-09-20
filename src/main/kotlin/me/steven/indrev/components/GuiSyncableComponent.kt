@@ -3,6 +3,7 @@ package me.steven.indrev.components
 import me.steven.indrev.gui.properties.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.minecraft.block.entity.BlockEntity
 import net.minecraft.network.PacketByteBuf
 
 class GuiSyncableComponent()  {
@@ -73,17 +74,17 @@ fun ComponentProvider.trackInt(index: Int, provider: () -> Int) {
     val component = ComponentKey.GUI_SYNCABLE.get(this) ?: error("$this does not provide gui_syncable component")
     component.add(index, object : IntSyncableProperty(index, provider()) {
         override var value: Int
-            get() = provider()
-            set(value) {}
+            get() = if (ComponentKey.WORLD_OBJECT.get(this@trackInt)!!.isClient) clientValue else provider()
+            set(value) {
+                clientValue = value
+            }
 
-        private var previousValue = 0
+        var clientValue: Int = 0
 
         override var isDirty: Boolean
-            get() = previousValue != value
+            get() = clientValue != value
             set(value) {
-                if (!value) {
-                    previousValue = this.value
-                }
+                clientValue = if (!value) this.value else -1
             }
     })
 }
@@ -98,17 +99,17 @@ fun ComponentProvider.trackLong(index: Int, provider: () -> Long) {
     val component = ComponentKey.GUI_SYNCABLE.get(this) ?: error("$this does not provide gui_syncable component")
     component.add(index, object : LongSyncableProperty(index, provider()) {
         override var value: Long
-            get() = provider()
-            set(value) {}
+            get() = if (ComponentKey.WORLD_OBJECT.get(this@trackLong)!!.isClient) clientValue else provider()
+            set(value) {
+                clientValue = value
+            }
 
-        private var previousValue = 0L
+        private var clientValue = 0L
 
         override var isDirty: Boolean
-            get() = previousValue != value
+            get() = clientValue != value
             set(value) {
-                if (!value) {
-                    previousValue = this.value
-                }
+                clientValue = if (!value) this.value else -1
             }
     })
 }
@@ -123,17 +124,17 @@ fun ComponentProvider.trackDouble(index: Int, provider: () -> Double) {
     val component = ComponentKey.GUI_SYNCABLE.get(this) ?: error("$this does not provide gui_syncable component")
     component.add(index, object : DoubleSyncableProperty(index, provider()) {
         override var value: Double
-            get() = provider()
-            set(value) {}
+            get() = if (ComponentKey.WORLD_OBJECT.get(this@trackDouble)!!.isClient) clientValue else provider()
+            set(value) {
+                clientValue = value
+            }
 
-        private var previousValue = 0.0
+        private var clientValue = 0.0
 
         override var isDirty: Boolean
-            get() = previousValue != value
+            get() = clientValue != value
             set(value) {
-                if (!value) {
-                    previousValue = this.value
-                }
+                clientValue = if (!value) this.value else -1.0
             }
     })
 }
@@ -148,17 +149,17 @@ fun ComponentProvider.trackBoolean(index: Int, provider: () -> Boolean) {
     val component = ComponentKey.GUI_SYNCABLE.get(this) ?: error("$this does not provide gui_syncable component")
     component.add(index, object : BooleanSyncableProperty(index, provider()) {
         override var value: Boolean
-            get() = provider()
-            set(value) {}
+            get() = if (ComponentKey.WORLD_OBJECT.get(this@trackBoolean)!!.isClient) clientValue else provider()
+            set(value) {
+                clientValue = value
+            }
 
-        private var previousValue = false
+        private var clientValue = false
 
         override var isDirty: Boolean
-            get() = previousValue != value
+            get() = clientValue != value
             set(value) {
-                if (!value) {
-                    previousValue = this.value
-                }
+                clientValue = if (!value) this.value else !clientValue
             }
     })
 }
@@ -169,21 +170,21 @@ fun <T : Enum<T>> ComponentProvider.autosync(index: Int, value: T, values: Array
         .also { component.add(index, it) }
 }
 
-fun<T : Enum<T>> ComponentProvider.trackEnum(index: Int, values: Array<T>, provider: () -> T) {
+fun <T : Enum<T>> ComponentProvider.trackEnum(blockEntity: BlockEntity, index: Int, values: Array<T>, provider: () -> T) {
     val component = ComponentKey.GUI_SYNCABLE.get(this) ?: error("$this does not provide gui_syncable component")
     component.add(index, object : EnumSyncableProperty<T>(index, provider(), values) {
         override var value: T
-            get() = provider()
-            set(value) {}
+            get() = if (ComponentKey.WORLD_OBJECT.get(this@trackEnum)!!.isClient) clientValue else provider()
+            set(value) {
+                clientValue = value
+            }
 
-        private var previousValue = defaultValue
+        private var clientValue = defaultValue
 
         override var isDirty: Boolean
-            get() = previousValue != value
+            get() = clientValue != value
             set(value) {
-                if (!value) {
-                    previousValue = this.value
-                }
+                clientValue = if (!value) this.value else values[0]
             }
     })
 }

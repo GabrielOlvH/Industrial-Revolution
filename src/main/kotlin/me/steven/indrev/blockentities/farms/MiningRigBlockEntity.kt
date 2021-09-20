@@ -11,6 +11,7 @@ import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.trackBoolean
 import me.steven.indrev.components.trackDouble
 import me.steven.indrev.components.trackInt
 import me.steven.indrev.config.BasicMachineConfig
@@ -36,6 +37,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
+import net.minecraft.util.registry.RegistryKey
 
 class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), BlockEntityClientSerializable, EnhancerProvider {
@@ -62,6 +64,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
 
         trackDouble(ENERGY_REQUIRED_ID) { getEnergyCost() }
+        trackBoolean(LOCATION_ID) { !hasReport() || isLocationCorrect() }
     }
 
     override val maxInput: Double = config.maxInput
@@ -155,12 +158,20 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
+    private fun hasReport(): Boolean {
+        val inventory = inventoryComponent?.inventory ?: return false
+        return !inventory.getStack(14).isEmpty
+    }
+
     private fun isLocationCorrect(): Boolean {
         val inventory = inventoryComponent?.inventory ?: return false
         val scanOutput = inventory.getStack(14).nbt ?: return false
         val scanChunkPos = getChunkPos(scanOutput.getCompound("ChunkPos"))
         val chunkPos = world?.getChunk(pos)?.pos ?: return false
-        return chunkPos == scanChunkPos
+        val dimId = Identifier(scanOutput.getString("Dimension"))
+        val key = RegistryKey.of(Registry.WORLD_KEY, dimId)
+        val w = world!!.server!!.getWorld(key)
+        return chunkPos == scanChunkPos && w == world
     }
 
     private fun cacheVeinType() {
@@ -281,5 +292,6 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
         const val EXPLORED_PERCENTAGE_ID = 2
         const val ENERGY_REQUIRED_ID = 3
+        const val LOCATION_ID = 4
     }
 }

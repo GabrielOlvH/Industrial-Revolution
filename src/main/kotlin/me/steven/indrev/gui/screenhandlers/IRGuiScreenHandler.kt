@@ -84,7 +84,7 @@ open class IRGuiScreenHandler(
     }
 
     fun syncProperties() {
-        val props = component!!.properties
+        val props = component?.properties ?: return
         val player = playerInventory.player
         if (player is ServerPlayerEntity) {
             for (i in props.indices) {

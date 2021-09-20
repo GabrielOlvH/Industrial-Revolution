@@ -53,7 +53,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val tag = NbtCompound()
                 tag.putString("VeinIdentifier", identifier.toString())
                 tag.put("ChunkPos", chunkPos.toNbt())
-                tag.putString("Dimension", world.registryKey.value.path)
+                tag.putString("Dimension", world.registryKey.value.toString())
                 val infoStack = ItemStack(IRItemRegistry.SCAN_OUTPUT_ITEM)
                 infoStack.nbt = tag
 

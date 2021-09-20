@@ -18,9 +18,10 @@ class TemperatureComponent(
 
     var cooling = true
 
-    var temperature: Double by autosync(MachineBlockEntity.TEMPERATURE_ID, 25.0)
+    var temperature: Double = 25.0
 
     init {
+        trackInt(MachineBlockEntity.TEMPERATURE_ID) { temperature.toInt() }
         trackInt(MachineBlockEntity.MAX_TEMPERATURE_ID) { limit }
     }
 

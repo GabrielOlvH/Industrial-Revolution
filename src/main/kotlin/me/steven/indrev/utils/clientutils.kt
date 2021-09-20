@@ -6,6 +6,8 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.config.LFCConfig
+import net.fabricmc.api.EnvType
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.render.*
@@ -16,6 +18,8 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+
+val isClient = FabricLoader.getInstance().environmentType == EnvType.CLIENT
 
 val UPGRADE_SLOT_PANEL_PAINTER: BackgroundPainter = BackgroundPainter.createLightDarkVariants(
     BackgroundPainter.createNinePatch(Identifier("libgui", "textures/widget/panel_light.png")).setPadding(4),

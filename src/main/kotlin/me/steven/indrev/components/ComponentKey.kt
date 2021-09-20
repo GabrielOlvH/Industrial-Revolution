@@ -5,6 +5,7 @@ import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.utils.identifier
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.Identifier
+import net.minecraft.world.World
 
 /**
  * Used for some internals, allows to provide components without spamming interfaces
@@ -23,7 +24,7 @@ class ComponentKey<T>(val id: Identifier) {
         val ITEM = ComponentKey<InventoryComponent>(identifier("item"))
         val TEMPERATURE = ComponentKey<TemperatureComponent>(identifier("temperature"))
         val MULTIBLOCK = ComponentKey<MultiBlockComponent>(identifier("multiblock"))
-        val PROPERTY_HOLDER = ComponentKey<PropertyDelegateHolder>(identifier("property_holder"))
+        val WORLD_OBJECT = ComponentKey<World>(identifier("world"))
         val GUI_SYNCABLE = ComponentKey<GuiSyncableComponent>(identifier("gui_syncable"))
     }
 }

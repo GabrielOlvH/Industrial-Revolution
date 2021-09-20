@@ -189,6 +189,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
             ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
+            ComponentKey.WORLD_OBJECT -> world
             else -> null
         }
     }

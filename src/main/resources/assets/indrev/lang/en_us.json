@@ -83,6 +83,7 @@
   "block.indrev.drill_top": "Mining Rig Drill",
   "block.indrev.drill.faster": "%sx faster",
   "block.indrev.drill.no_drills": "Empty.",
+  "block.indrev.drill.wrong_location": "Incorrect report for current location!",
   "block.indrev.drill.active": "Active drills",
   "block.indrev.drill.activating": "Not ready",
   "block.indrev.drill.not_enough_power": "Insufficient power",
