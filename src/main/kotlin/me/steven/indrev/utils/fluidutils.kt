@@ -12,8 +12,6 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidSetFilter
 import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry

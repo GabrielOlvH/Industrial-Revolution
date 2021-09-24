@@ -1,7 +1,5 @@
 package me.steven.indrev.registry
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.*
@@ -48,6 +46,7 @@ import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import team.reborn.energy.api.EnergyStorage
 import java.util.*
 
 class MachineRegistry(private val key: String, val upgradeable: Boolean = true, vararg val tiers: Tier = Tier.values()) {
@@ -139,14 +138,14 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         return this
     }
 
-    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyIo?): MachineRegistry {
+    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyStorage?): MachineRegistry {
         blockEntities.forEach { (tier, type) ->
-            EnergyApi.SIDED.registerForBlockEntities(provider(tier), type)
+            EnergyStorage.SIDED.registerForBlockEntities(provider(tier), type)
         }
         return this
     }
 
-    fun defaultEnergyProvider(): MachineRegistry = energyProvider { { be, _ -> be as? MachineBlockEntity<*>? } }
+    fun defaultEnergyProvider(): MachineRegistry = energyProvider { { be, side -> (be as? MachineBlockEntity<*>)?.storage?.getSideStorage(side) } }
 
     fun fluidStorageProvider(provider: (Tier) -> (BlockEntity, Direction) -> Storage<FluidVariant>?): MachineRegistry {
         blockEntities.forEach { (tier, type) ->
@@ -248,15 +247,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val LAZULI_FLUX_CONTAINER_REGISTRY = MachineRegistry("lazuli_flux_container", false)
             .blockProvider { tier -> LazuliFluxContainerBlock(this, SETTINGS(), tier) }
             .blockEntityProvider { tier -> { pos, state -> LazuliFluxContainerBlockEntity(tier, pos, state) } }
-            .energyProvider {
-                { be, dir ->
-                    val blockEntity = be as? LazuliFluxContainerBlockEntity
-                    if (blockEntity != null) LazuliFluxContainerBlockEntity.LFCEnergyIo(
-                        blockEntity,
-                        dir
-                    ) else null
-                }
-            }
+            .defaultEnergyProvider()
             .modelProvider { { id -> LazuliFluxContainerBakedModel(id) } }
 
         val ELECTRIC_FURNACE_REGISTRY = MachineRegistry("electric_furnace")
@@ -481,7 +472,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val PUMP_REGISTRY = MachineRegistry("pump", false, Tier.MK1)
             .blockProvider { PumpBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { tier -> { pos, state -> PumpBlockEntity(tier, pos, state) } }
-            .energyProvider { { be, dir -> if (dir == Direction.UP) be as? MachineBlockEntity<*> else null } }
+            .energyProvider { { be, dir -> if (dir == Direction.UP) (be as? MachineBlockEntity<*>)?.storage?.getSideStorage(dir) else null } }
             .fluidStorageProvider { { be, dir -> if (be.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING] == dir) (be as PumpBlockEntity).fluidComponent else null } }
             .noModelProvider()
 
@@ -641,7 +632,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
             .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
-            .energyProvider { { be, dir -> if (dir.opposite == be.cachedState[FacingMachineBlock.FACING]) be as LaserBlockEntity else null } }
+            .energyProvider { { be, dir -> if (dir.opposite == be.cachedState[FacingMachineBlock.FACING]) (be as LaserBlockEntity).storage.getSideStorage(dir) else null } }
             .noModelProvider()
 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)

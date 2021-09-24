@@ -133,7 +133,7 @@ dependencies {
 
     modImplementation "net.fabricmc:fabric-language-kotlin:${project.fabric_kotlin_version}"
 
-    dependencies.ext.lib("dev.technici4n:FastTransferLib:${project.ftl_version}")
+    dependencies.ext.lib("teamreborn:energy:${project.tr_energy_version}")
     dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
     dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
     dependencies.ext.lib("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")

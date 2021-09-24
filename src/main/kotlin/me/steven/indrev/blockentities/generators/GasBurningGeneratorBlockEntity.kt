@@ -53,7 +53,7 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (energyCapacity > energy) {
+        else if (getCapacity() > energy) {
             val invFluid = fluidComponent!![0]
             val fluid = invFluid.resource.fluid
             if (invFluid.isEmpty || !IRFluidFuelRegistry.isFuel(fluid)) return false
@@ -64,14 +64,14 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
             }
         }
 
-        return burnTime > 0 && energy < energyCapacity
+        return burnTime > 0 && energy < getCapacity()
     }
 
-    override fun getGenerationRatio(): Double {
+    override fun getGenerationRatio(): Long {
         val invFluid = fluidComponent!![0]
         val fluid = invFluid.resource.fluid
         val modifier = if (temperatureComponent!!.isFullEfficiency()) config.temperatureBoost else 1.0
-        return (IRFluidFuelRegistry.get(fluid)?.generationRatio?.toDouble() ?: 0.0) * modifier
+        return ((IRFluidFuelRegistry.get(fluid)?.generationRatio ?: 0) * modifier).toLong()
     }
 
     override fun getValidConfigurations(type: ConfigurationType): Array<TransferMode> {

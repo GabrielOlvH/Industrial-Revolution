@@ -27,7 +27,7 @@ class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBl
         this.fluidComponent = FluidComponent({ this }, bucket)
     }
 
-    override val maxInput: Double = config.maxInput
+    override val maxInput: Long = config.maxInput
 
     override fun machineTick() {
         val world = world ?: return

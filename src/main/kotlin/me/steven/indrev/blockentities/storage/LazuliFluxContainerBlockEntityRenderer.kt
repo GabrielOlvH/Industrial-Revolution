@@ -26,7 +26,7 @@ class LazuliFluxContainerBlockEntityRenderer : BlockEntityRenderer<LazuliFluxCon
         overlay: Int
     ) {
         entity ?: return
-        val width = ((entity.energy.toFloat() / entity.energyCapacity.toFloat()) * 0.5f) + 0.25f
+        val width = ((entity.energy.toFloat() / entity.getCapacity().toFloat()) * 0.5f) + 0.25f
         val sprite = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(identifier("block/lazuli_flux_container_lf_level"))
         val color: Long = (255 shl 24 or when (entity.tier) {
             Tier.MK1 -> 0xffbb19

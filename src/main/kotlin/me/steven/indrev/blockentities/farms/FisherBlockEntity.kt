@@ -41,8 +41,8 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     private var cooldown = config.processSpeed
     
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     override fun machineTick() {
         val upgrades = getEnhancers()
@@ -72,7 +72,7 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
@@ -83,11 +83,11 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
-    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(this)
 
     override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
-        Enhancer.BUFFER -> config.maxEnergyStored
+        Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
         else -> 0.0
     }
 

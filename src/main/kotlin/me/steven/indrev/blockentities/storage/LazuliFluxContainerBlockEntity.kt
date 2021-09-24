@@ -1,8 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import dev.technici4n.fasttransferlib.api.Simulation
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
+import me.steven.indrev.IREnergyStorage
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -14,10 +12,14 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.api.EnergyStorageUtil
+import team.reborn.energy.api.base.SimpleSidedEnergyContainer
 import kotlin.math.floor
 
 class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
@@ -29,35 +31,51 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = config.maxOutput
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = config.maxOutput
 
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
     private var lastWidth = 0f
 
+    override val storage = object : IREnergyStorage() {
+
+        override fun getAmount(): Long = energy
+
+        override fun setAmount(v: Long) {
+            energy = v
+        }
+
+        override fun getCapacity(): Long = this@LazuliFluxContainerBlockEntity.getCapacity()
+
+        override fun getMaxInsert(side: Direction?): Long {
+            return if (this@LazuliFluxContainerBlockEntity.transferConfig[side]?.input == true)
+                maxInput
+            else 0
+        }
+
+        override fun getMaxExtract(side: Direction?): Long {
+            return if (side == null || this@LazuliFluxContainerBlockEntity.transferConfig[side]?.output == true)
+                maxOutput
+            else 0
+        }
+
+        override fun onFinalCommit() {
+            super.onFinalCommit()
+            markDirty()
+            update()
+        }
+    }
+
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val stack = inventory.getStack(0)
-        val itemIo = energyOf(stack)
+        val itemIo = energyOf(inventory, 0)
         if (itemIo != null)
-            EnergyMovement.move(this, itemIo, maxOutput)
-    }
-
-    override fun insert(amount: Double, simulation: Simulation?): Double {
-        val insert = super.insert(amount, simulation)
-        update()
-        return insert
-    }
-
-    override fun extract(maxAmount: Double, simulation: Simulation?): Double {
-        val extract = super.extract(maxAmount, simulation)
-        update()
-        return extract
+            EnergyStorageUtil.move(storage.getSideStorage(null), itemIo, maxOutput, null)
     }
 
     private fun update() {
-        val width = floor((((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f) * 16)
+        val width = floor((((energy.toFloat() / getCapacity().toFloat()) * 0.5f) + 0.25f) * 16)
         if (width != lastWidth) {
             sync()
             lastWidth = width
@@ -91,43 +109,13 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     }
 
     override fun toClientTag(tag: NbtCompound): NbtCompound {
-        tag.putDouble("energy", energy)
+        tag.putLong("energy", energy)
         transferConfig.writeNbt(tag)
         return tag
     }
 
     override fun fromClientTag(tag: NbtCompound) {
         transferConfig.readNbt(tag)
-        energy = tag.getDouble("energy")
-    }
-
-    class LFCEnergyIo(val blockEntity: LazuliFluxContainerBlockEntity, val direction: Direction) : EnergyIo {
-        override fun getEnergy(): Double = blockEntity.energy
-
-        override fun getEnergyCapacity(): Double = blockEntity.energyCapacity
-
-        override fun extract(maxAmount: Double, simulation: Simulation?): Double {
-            if (blockEntity.transferConfig[direction]?.output != true) return 0.0
-            val extracted = maxAmount.coerceAtMost(blockEntity.maxOutput).coerceAtMost(energy)
-            if (simulation?.isActing == true) {
-                blockEntity.energy -= extracted
-                blockEntity.update()
-            }
-            return extracted
-        }
-
-        override fun insert(amount: Double, simulation: Simulation?): Double {
-            if (blockEntity.transferConfig[direction]?.input != true) return amount
-            val inserted = amount.coerceAtMost(blockEntity.maxInput).coerceAtMost(this.energyCapacity - energy)
-            if (simulation?.isActing == true) {
-                blockEntity.energy += inserted
-                blockEntity.update()
-            }
-            return amount - inserted
-        }
-
-        override fun supportsExtraction(): Boolean = true
-
-        override fun supportsInsertion(): Boolean = true
+        energy = tag.getLong("energy")
     }
 }

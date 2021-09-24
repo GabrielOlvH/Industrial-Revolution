@@ -1,6 +1,5 @@
 package me.steven.indrev.mixin.common;
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import me.steven.indrev.api.IRPlayerEntityExtension;
@@ -23,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -44,7 +44,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         PlayerInventory inventory = player.getInventory();
         ItemStack itemStack = inventory.main.get(inventory.selectedSlot);
         Item item = itemStack.getItem();
-        EnergyIo itemIo = EnergyutilsKt.energyOf(itemStack);
+        EnergyStorage itemIo = EnergyutilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
             if (item instanceof IRGamerAxeItem) {
                 NbtCompound tag = itemStack.getOrCreateNbt();
@@ -53,7 +53,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
                     return;
                 }
             }
-            if (itemIo.getEnergy() < 1) cir.setReturnValue(0.2F);
+            if (itemIo.getAmount() < 1) cir.setReturnValue(0.2F);
         }
     }
 

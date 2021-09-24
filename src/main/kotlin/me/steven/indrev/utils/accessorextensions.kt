@@ -1,6 +1,5 @@
 package me.steven.indrev.utils
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo
 import it.unimi.dsi.fastutil.ints.IntList
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import me.steven.indrev.api.ServerWorldExtension
@@ -26,6 +25,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.Identifier
 import net.minecraft.util.collection.WeightedList
 import net.minecraft.util.math.Direction
+import team.reborn.energy.api.EnergyStorage
 
 @Suppress("UNCHECKED_CAST")
 val <T> WeightedList<T>.entries: MutableList<WeightedList.Entry<T>>
@@ -53,7 +53,7 @@ val FluidBlock.fluid: FlowableFluid
 
 val LivingEntity.isJumping: Boolean get() = (this as AccessorLivingEntity).isJumping
 
-val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>>
+val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction>>
     get() = (this as ServerWorldExtension).indrev_getEnergyCache()
 
 val ServerWorld.energyNetworkState: EnergyNetworkState

@@ -6,7 +6,7 @@ import net.minecraft.server.world.ServerWorld
 
 class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Network.Type.ENERGY, world) {
 
-    private var destroyedEnergy = 0.0
+    private var destroyedEnergy = 0L
 
     override fun add(network: Network) {
         super.add(network)
@@ -15,7 +15,7 @@ class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Netwo
             network.energy += destroyedEnergy.coerceAtMost(network.capacity)
             destroyedEnergy -= network.energy
 
-            if (destroyedEnergy <= 1e-9) destroyedEnergy = 0.0
+            if (destroyedEnergy <= 0) destroyedEnergy = 0
         }
     }
 
@@ -29,6 +29,6 @@ class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Netwo
 
     override fun tick(world: ServerWorld) {
         super.tick(world)
-        destroyedEnergy = 0.0
+        destroyedEnergy = 0
     }
 }

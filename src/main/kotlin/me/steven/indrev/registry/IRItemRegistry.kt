@@ -1,7 +1,5 @@
 package me.steven.indrev.registry
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
 import me.steven.indrev.blocks.misc.NikoliteOreBlock
@@ -28,6 +26,8 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
+import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRItemRegistry {
@@ -169,10 +169,10 @@ object IRItemRegistry {
         identifier("mining_drill_mk3").item(MINING_DRILL_MK3)
         identifier("mining_drill_mk4").item(MINING_DRILL_MK4)
 
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(4000.0, Tier.MK1.io, Tier.MK1.io), MINING_DRILL_MK1)
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(8000.0, Tier.MK2.io, Tier.MK2.io), MINING_DRILL_MK2)
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(16000.0, Tier.MK3.io, Tier.MK3.io), MINING_DRILL_MK3)
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(32000.0, Tier.MK4.io, Tier.MK4.io), MINING_DRILL_MK4)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, 4000, Tier.MK1.io, Tier.MK1.io) }, MINING_DRILL_MK1)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, 8000, Tier.MK2.io, Tier.MK2.io) }, MINING_DRILL_MK2)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, 16000, Tier.MK3.io, Tier.MK3.io) }, MINING_DRILL_MK3)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, 32000, Tier.MK4.io, Tier.MK4.io) }, MINING_DRILL_MK4)
 
         identifier("battery").item(BATTERY)
 
@@ -292,7 +292,7 @@ object IRItemRegistry {
 
     val GUIDE_BOOK = IRGuideBookItem(itemSettings())
 
-    val BATTERY = IRBatteryItem(itemSettings(), 4096.0)
+    val BATTERY = IRBatteryItem(itemSettings(), 4096)
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
@@ -376,10 +376,10 @@ object IRItemRegistry {
     val JETPACK_MK3 = JetpackItem(Tier.MK3)
     val JETPACK_MK4 = JetpackItem(Tier.MK4)
 
-    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 250000.0, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))
@@ -418,10 +418,10 @@ object IRItemRegistry {
     val BLACK_MODULE_ITEM = IRColorModuleItem(0x424242, itemSettings().maxCount(1))
     val BROWN_MODULE_ITEM = IRColorModuleItem(0x935F42, itemSettings().maxCount(1))
 
-    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings(), 250000.0)
+    val PORTABLE_CHARGER_ITEM = IRPortableChargerItem(itemSettings(), 250000)
 
     val GAMER_AXE_ITEM =
-        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000.0, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+        IRGamerAxeItem(ToolMaterials.NETHERITE, 10000, Tier.MK4, 4f, -2f, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val TANK_BLOCK_ITEM = BlockItem(IRBlockRegistry.TANK_BLOCK, itemSettings())
 

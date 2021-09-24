@@ -8,8 +8,6 @@ import alexiil.mc.lib.attributes.misc.Reference
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
@@ -36,14 +34,16 @@ import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
+import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 import java.util.*
 import kotlin.math.roundToInt
 
-class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Settings) :
+class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Settings) :
     DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, ModularTooltipDataProvider, JetpackHandler {
 
     init {
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK4.io, Tier.MK4.io), this)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, Tier.MK4.io, Tier.MK4.io) }, this)
     }
 
     override val fluidFilter: (FluidVariant) -> Boolean = { it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
@@ -108,7 +108,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Double, settings: Setti
     ): Multimap<EntityAttribute, EntityAttributeModifier> {
         val item = itemStack.item as IRModularArmorItem
         val itemIo = energyOf(itemStack)
-        if (itemIo == null || itemIo.energy <= 0) {
+        if (itemIo == null || itemIo.amount <= 0) {
             return ImmutableMultimap.of()
         } else if (equipmentSlot == item.slotType) {
             val level = ArmorModule.PROTECTION.getLevel(itemStack).toDouble()

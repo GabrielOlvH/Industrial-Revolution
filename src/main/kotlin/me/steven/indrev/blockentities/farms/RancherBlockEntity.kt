@@ -38,8 +38,8 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     var cooldown = 0.0
     override var range = 5
@@ -126,7 +126,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }.flatten()
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
@@ -134,7 +134,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override fun getBaseValue(enhancer: Enhancer): Double =
         when (enhancer) {
             Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
 
@@ -159,7 +159,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         killAfter = tag?.getInt("killAfter") ?: killAfter
     }
 
-    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(this)
 
     companion object {
         const val FEED_BABIES_ID = 2

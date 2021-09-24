@@ -45,7 +45,7 @@ class IRModularDrillItem(
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
-        val hasEnergy = (energyOf(stack)?.energy ?: 0.0) > 0
+        val hasEnergy = (energyOf(stack)?.amount ?: 0) > 0
         val level = MiningToolModule.EFFICIENCY.getLevel(stack)
         var speedMultiplier = (level + 1) * 2
         if (level == 5) speedMultiplier *= 50

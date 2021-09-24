@@ -1,6 +1,5 @@
 package me.steven.indrev.mixin.common;
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import me.steven.indrev.api.ServerWorldExtension;
 import me.steven.indrev.networks.Network;
@@ -17,11 +16,12 @@ import net.minecraft.world.PersistentStateManager;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import team.reborn.energy.api.EnergyStorage;
 
 @Mixin(ServerWorld.class)
 public abstract class MixinServerWorld implements ServerWorldExtension {
 
-    private final Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>> indrev_energyIoCache = new Long2ObjectOpenHashMap<>();
+    private final Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction>> indrev_energyIoCache = new Long2ObjectOpenHashMap<>();
 
     private ItemNetworkState indrev_itemNetworkState = null;
     private FluidNetworkState indrev_fluidNetworkState = null;
@@ -32,7 +32,7 @@ public abstract class MixinServerWorld implements ServerWorldExtension {
 
     @NotNull
     @Override
-    public Long2ObjectOpenHashMap<BlockApiCache<EnergyIo, Direction>> indrev_getEnergyCache() {
+    public Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction>> indrev_getEnergyCache() {
         return indrev_energyIoCache;
     }
 

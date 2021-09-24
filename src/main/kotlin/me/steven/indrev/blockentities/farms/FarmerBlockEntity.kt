@@ -36,8 +36,8 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     override var range: Int = 5
 
@@ -127,7 +127,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return performedAction
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
@@ -159,9 +159,9 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
-        Enhancer.BUFFER -> config.maxEnergyStored
+        Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
         else -> 0.0
     }
 
-    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(this)
 }

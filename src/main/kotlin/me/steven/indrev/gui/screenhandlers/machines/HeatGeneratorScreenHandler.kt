@@ -51,7 +51,7 @@ class HeatGeneratorScreenHandler(
         root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
 
         val amount = WText({
-            val ratio = component!!.get<Double>(HeatGeneratorBlockEntity.GENERATION_RATIO_ID)
+            val ratio = component!!.get<Long>(HeatGeneratorBlockEntity.GENERATION_RATIO_ID)
             TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
         root.add(amount, 2.5, 2.6)

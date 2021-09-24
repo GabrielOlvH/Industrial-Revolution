@@ -8,10 +8,10 @@ import kotlin.math.roundToInt
 interface IREnergyItem : EnergyTooltipDataProvider {
     fun getDurabilityBarProgress(stack: ItemStack?): Int {
         val energyIo = energyOf(stack) ?: return 0
-        return (13.0f - (energyIo.energyCapacity - energyIo.energy) * 13.0f / energyIo.energyCapacity).roundToInt()
+        return (13.0f - (energyIo.capacity - energyIo.amount) * 13.0f / energyIo.capacity).roundToInt()
     }
 
-    fun hasDurabilityBar(stack: ItemStack?): Boolean = (energyOf(stack)?.energy ?: 0.0) > 0
+    fun hasDurabilityBar(stack: ItemStack?): Boolean = (energyOf(stack)?.amount ?: 0) > 0
 
     fun getDurabilityBarColor(stack: ItemStack?): Int {
         val durability = getDurabilityBarProgress(stack) / 13f

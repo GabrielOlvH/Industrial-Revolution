@@ -19,7 +19,7 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
         val blockEntity = context?.world?.getBlockEntity(blockPos)
         val machineIo = energyOf(context!!.world as ServerWorld, blockPos!!, context.side)
         if (machineIo != null) {
-            val energy = machineIo.energy.toInt()
+            val energy = machineIo.amount
             val text = TranslatableText("item.indrev.energy_reader.use")
                 .formatted(Formatting.BLUE)
                 .append(LiteralText(" $energy LF").formatted(Formatting.WHITE))
@@ -28,9 +28,9 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
                     when {
                         blockEntity !is LazuliFluxContainerBlockEntity && blockEntity.config is BasicMachineConfig ->
                             blockEntity.getEnergyCost()
-                        else -> -1.0
+                        else -> -1
                     }
-                if (energyCost > 0.0) {
+                if (energyCost > 0) {
                     val energyCostText = TranslatableText(
                         "item.indrev.energy_reader.use1",
                         LiteralText(energyCost.toString()).formatted(Formatting.WHITE)

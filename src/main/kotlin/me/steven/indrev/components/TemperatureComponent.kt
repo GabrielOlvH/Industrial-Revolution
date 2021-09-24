@@ -51,7 +51,7 @@ class TemperatureComponent(
         val random = blockEntity.world!!.random
         val inv = inventoryComponent?.inventory
         val (coolerStack, coolerItem) = inv?.coolerStack ?: ItemStack.EMPTY
-        val isHeatingUp = shouldHeatUp || (machine != null && coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16.0))
+        val isHeatingUp = shouldHeatUp || (machine != null && coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16))
 
         if (cooling) {
             val modifier = (blockEntity as? CraftingMachineBlockEntity<*>)?.craftingComponents?.size ?: 0

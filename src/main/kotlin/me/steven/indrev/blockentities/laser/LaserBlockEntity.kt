@@ -28,8 +28,8 @@ import java.util.*
 
 class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_EMITTER_REGISTRY, pos, state) {
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     private var ticksUntilExplode = 100
 

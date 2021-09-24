@@ -83,9 +83,9 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
 
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     val handler = energyOf(stack) ?: return
-    if (handler.energy > 0) {
-        val percentage = handler.energy * 100 / handler.energyCapacity
-        tooltip?.add(LiteralText("${getEnergyString(handler.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
+    if (handler.amount > 0) {
+        val percentage = handler.amount * 100 / handler.capacity
+        tooltip?.add(LiteralText("${getEnergyString(handler.amount)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
     }
 }
 
@@ -143,11 +143,11 @@ private fun configText(key: String, unit: String, value: Any): Text {
         .append(TranslatableText("gui.indrev.tooltip.$unit", value).formatted(Formatting.GRAY))
 }
 
-fun getEnergyString(energy: Double): String =
+fun getEnergyString(energy: Long): String =
     when {
-        energy >= 1000000000000 -> "${"%.1f".format(energy / 1000000000000)}T"
-        energy >= 1000000000 -> "${"%.1f".format(energy / 1000000000)}B"
-        energy >= 1000000 -> "${"%.1f".format(energy / 1000000)}M"
-        energy >= 1000 -> "${"%.1f".format(energy / 1000)}k"
-        else -> "%.1f".format(energy)
+        energy >= 1000000000000 -> "${"%.1f".format(energy / 1000000000000f)}T"
+        energy >= 1000000000 -> "${"%.1f".format(energy / 1000000000f)}B"
+        energy >= 1000000 -> "${"%.1f".format(energy / 1000000f)}M"
+        energy >= 1000 -> "${"%.1f".format(energy / 1000f)}k"
+        else -> "%.1f".format(energy.toFloat())
     }

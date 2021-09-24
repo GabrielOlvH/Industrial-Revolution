@@ -1,8 +1,6 @@
 package me.steven.indrev.mixin.common;
 
 import com.mojang.authlib.GameProfile;
-import dev.technici4n.fasttransferlib.api.Simulation;
-import dev.technici4n.fasttransferlib.api.energy.EnergyIo;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -40,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import team.reborn.energy.api.EnergyStorage;
 
 import java.util.List;
 import java.util.Map;
@@ -111,7 +110,10 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
         PlayerInventory inventory = player.getInventory();
         getAppliedModules().clear();
-        for (ItemStack itemStack : inventory.armor) {
+
+        for (int i = 0; i < inventory.armor.size(); i++) {
+            int cSlot = 36+i;
+            ItemStack itemStack = inventory.getStack(cSlot);
             if (itemStack.getItem() instanceof IRModularArmorItem) {
                 List<ArmorModule> modules = ((IRModularArmorItem) itemStack.getItem()).getInstalled(itemStack);
                 for (ArmorModule module : modules) {
@@ -126,7 +128,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case PIGLIN_TRICKER:
                         case FEATHER_FALLING:
                         case WATER_AFFINITY:
-                            if (EnergyutilsKt.extract(itemStack, 20.0))
+                            if (EnergyutilsKt.extract(inventory, cSlot, 20))
                                 applyModule(module, level);
                             break;
                         case AUTO_FEEDER:
@@ -135,7 +137,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 for (int slot = 0; slot <= inventory.size(); slot++) {
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
-                                    if (food != null && !food.isAlwaysEdible() && !HelperextensionsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyutilsKt.extract(itemStack, 30.0)) {
+                                    if (food != null && !food.isAlwaysEdible() && !HelperextensionsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyutilsKt.extract(inventory, cSlot, 30)) {
                                         stack.finishUsing(world, player);
                                         player.eatFood(world, stack);
                                     }
@@ -149,14 +151,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
                                 for (ItemStack stackToCharge : inventory.armor) {
-                                    EnergyIo toCharge = EnergyutilsKt.energyOf(stackToCharge);
-                                    if (toCharge != null)
-                                        toCharge.insert(75.0 * level, Simulation.ACT);
+                                    EnergyutilsKt.insert(inventory, cSlot, 75L * level);
                                 }
                             }
                             break;
                         case PROTECTION:
-                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyutilsKt.extract(itemStack, 30.0)) {
+                            if (ticks - 120 > lastDamageTick && getShieldDurability() < getMaxShieldDurability() && EnergyutilsKt.extract(inventory, cSlot, 30)) {
                                 regenerateShield();
                             }
                             break;

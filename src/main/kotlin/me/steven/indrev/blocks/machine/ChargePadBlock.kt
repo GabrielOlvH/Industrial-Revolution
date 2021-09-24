@@ -56,9 +56,9 @@ class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
             return ActionResult.SUCCESS
         }
         val handStack = player?.mainHandStack
-        if (energyOf(handStack) != null) {
+        if (energyOf(player?.inventory, player?.inventory?.selectedSlot?: return ActionResult.PASS) != null) {
             inventory.setStack(0, handStack)
-            player?.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
+            player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY)
             return ActionResult.SUCCESS
         }
         return ActionResult.PASS

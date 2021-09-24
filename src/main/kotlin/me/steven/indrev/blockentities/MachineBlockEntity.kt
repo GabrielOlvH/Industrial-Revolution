@@ -1,8 +1,6 @@
 package me.steven.indrev.blockentities
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import dev.technici4n.fasttransferlib.api.Simulation
-import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.IREnergyStorage
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -20,6 +18,7 @@ import me.steven.indrev.utils.transferItems
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.inventory.SidedInventory
@@ -27,6 +26,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
+import team.reborn.energy.api.base.SimpleSidedEnergyContainer
 import kotlin.collections.set
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
@@ -36,19 +36,15 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
 
-    internal var energy: Double by autosync(ENERGY_ID, 0.0) { value ->
-        when {
-            value.isNaN() -> {
-                IndustrialRevolution.LOGGER.error("Received NaN energy! $pos, $this", IllegalArgumentException())
-                if (energy.isNaN()) 0.0 else energy
-            }
-            tier == Tier.CREATIVE -> energyCapacity
-            else -> value.coerceIn(0.0, energyCapacity)
+    internal var energy: Long by autosync(ENERGY_ID, 0L) { value ->
+        when (tier) {
+            Tier.CREATIVE -> getCapacity()
+            else -> value.coerceIn(0, getCapacity())
         }
     }
 
-    open val maxInput: Double = tier.io
-    open val maxOutput: Double = tier.io
+    open val maxInput: Long = tier.io
+    open val maxOutput: Long = tier.io
 
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
@@ -77,8 +73,29 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     val config: T by lazy { registry.config(tier) as T }
 
     init {
-        trackDouble(MAX_ENERGY_ID) { energyCapacity }
+        trackLong(MAX_ENERGY_ID) { getCapacity() }
     }
+
+    open val storage = object : IREnergyStorage() {
+
+        override fun getAmount(): Long = energy
+
+        override fun setAmount(v: Long) {
+            energy = v
+        }
+
+        override fun getCapacity(): Long = this@MachineBlockEntity.getCapacity()
+
+        override fun getMaxExtract(side: Direction?): Long = maxOutput
+
+        override fun getMaxInsert(side: Direction?): Long = maxInput
+
+        override fun onFinalCommit() {
+            super.onFinalCommit()
+            markDirty()
+        }
+    }
+
 
     protected open fun machineTick() {}
 
@@ -104,30 +121,12 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    override fun getEnergy(): Double = if (tier == Tier.CREATIVE) energyCapacity else energy
+    open fun getCapacity(): Long = config.maxEnergyStored
 
-    override fun getEnergyCapacity(): Double = config.maxEnergyStored
-
-    open fun getEnergyCost(): Double = 0.0
-
-    override fun insert(amount: Double, simulation: Simulation?): Double {
-        val inserted = amount.coerceAtMost(this.maxInput).coerceAtMost(this.energyCapacity - energy)
-        if (simulation?.isActing == true) this.energy += inserted
-        return amount - inserted
-    }
-
-    override fun extract(maxAmount: Double, simulation: Simulation?): Double {
-        val extracted = maxAmount.coerceAtMost(this.maxOutput).coerceAtMost(energy)
-        if (simulation?.isActing == true) this.energy -= extracted
-        return extracted
-    }
-
-    override fun supportsExtraction(): Boolean = maxOutput > 0
-
-    override fun supportsInsertion(): Boolean = maxInput > 0
+    open fun getEnergyCost(): Long = 0
 
     // internal consumption
-    fun use(amount: Double): Boolean {
+    fun use(amount: Long): Boolean {
         val extracted = amount.coerceAtMost(energy)
         if (extracted == amount) {
             this.energy -= extracted
@@ -136,7 +135,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         return false
     }
 
-    fun canUse(amount: Double): Boolean {
+    fun canUse(amount: Long): Boolean {
         val extracted = amount.coerceAtMost(energy)
         return extracted == amount
     }
@@ -206,11 +205,11 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         temperatureComponent?.readNbt(tag)
         fluidComponent?.fromTag(tag)
         multiblockComponent?.readNbt(tag)
-        energy = tag?.getDouble("Energy") ?: 0.0
+        energy = tag?.getLong("Energy") ?: 0
     }
 
     override fun writeNbt(tag: NbtCompound?): NbtCompound {
-        tag?.putDouble("Energy", energy)
+        tag?.putLong("Energy", energy)
         if (tag != null) {
             inventoryComponent?.writeNbt(tag)
             temperatureComponent?.writeNbt(tag)

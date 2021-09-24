@@ -12,7 +12,7 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: 
 
     override fun machineTick() {
         if (world?.isClient == false) {
-            if (shouldGenerate() && energyCapacity > energy) {
+            if (shouldGenerate() && getCapacity() > energy) {
                 this.energy += getGenerationRatio()
                 this.temperatureComponent?.tick(true)
                 workingState = true
@@ -23,10 +23,10 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: 
         }
     }
 
-    override val maxInput: Double = 0.0
-    override val maxOutput: Double = config.maxOutput
+    override val maxInput: Long = 0
+    override val maxOutput: Long = config.maxOutput
 
     abstract fun shouldGenerate(): Boolean
 
-    open fun getGenerationRatio(): Double = config.ratio * if (this.temperatureComponent?.isFullEfficiency() == true) config.temperatureBoost else 1.0
+    open fun getGenerationRatio(): Long = (config.ratio * if (this.temperatureComponent?.isFullEfficiency() == true) config.temperatureBoost else 1.0).toLong()
 }

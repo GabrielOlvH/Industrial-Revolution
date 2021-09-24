@@ -39,8 +39,8 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         this.fluidComponent = FluidComponent({this}, bucket * 8)
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     var movingTicks = 0.0
     var isDescending = false
@@ -102,7 +102,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         } else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
             isDescending = false
             movingTicks = movingTicks.roundToInt().toDouble()
-        } else if ((lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false)) && use(2.0)) {
+        } else if ((lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false)) && use(2)) {
             movingTicks += 0.01
             sync()
         }

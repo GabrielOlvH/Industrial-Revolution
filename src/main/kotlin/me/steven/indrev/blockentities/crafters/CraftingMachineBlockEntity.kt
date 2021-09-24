@@ -34,7 +34,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
 
-    override val maxOutput: Double = 0.0
+    override val maxOutput: Long = 0
 
     private var currentRecipe: T? = null
     val usedRecipes = Object2IntOpenHashMap<Identifier>()
@@ -49,14 +49,14 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 
-    override fun getEnergyCapacity(): Double {
+    override fun getCapacity(): Long {
         return Enhancer.getBuffer(this)
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return (if (temperatureComponent?.isFullEfficiency() == true) config.energyCost * 1.5
-        else config.energyCost) * speedEnhancers
+        else config.energyCost).toLong() * speedEnhancers
     }
 
     override fun getBaseValue(enhancer: Enhancer): Double {
@@ -67,7 +67,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
                     ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
                 else
                     config.processSpeed
-            Enhancer.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
     }

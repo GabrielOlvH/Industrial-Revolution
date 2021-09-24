@@ -1,11 +1,11 @@
 package me.steven.indrev.api.machines
 
-enum class Tier(val io: Double, val id: String) {
-    MK1(64.0, "mk1"),
-    MK2(128.0, "mk2"),
-    MK3(512.0, "mk3"),
-    MK4(4096.0, "mk4"),
-    CREATIVE(4096.0, "creative");
+enum class Tier(val io: Long, val id: String) {
+    MK1(64, "mk1"),
+    MK2(128, "mk2"),
+    MK3(512, "mk3"),
+    MK4(4096, "mk4"),
+    CREATIVE(4096, "creative");
 
     fun next(): Tier {
         return when (this) {

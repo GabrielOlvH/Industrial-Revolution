@@ -2,12 +2,9 @@ package me.steven.indrev.blockentities.generators
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.components.FluidComponent
-import me.steven.indrev.components.autosync
+import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.SteamTurbineStructureDefinition
-import me.steven.indrev.components.trackDouble
-import me.steven.indrev.components.trackInt
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
@@ -27,10 +24,12 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         this.fluidComponent = SteamTurbineFluidComponent()
     }
 
+    override val maxInput: Long = 0
+
     var efficiency by autosync(EFFICIENCY, 1.0)
 
     init {
-        trackDouble(GENERATING) { getGenerationRatio() * 100 }
+        trackLong(GENERATING) { getGenerationRatio() * 100 }
     }
 
     var generatingTicks = 0
@@ -40,10 +39,10 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
     @Environment(EnvType.CLIENT)
     var consuming: FluidAmount = FluidAmount.ZERO
 
-    override fun getGenerationRatio(): Double {
+    override fun getGenerationRatio(): Long {
         val radius = getRadius()
         val eff  = totalInserted.div(20).asInexactDouble()
-        return ((eff * 2) / (radius.toDouble() / 7)) * 2048
+        return (((eff * 2) / (radius.toDouble() / 7)) * 2048).toLong()
     }
 
     override fun shouldGenerate(): Boolean {
@@ -68,8 +67,6 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         val matcher = multiblockComponent!!.getSelectedMatcher(world!!, pos, cachedState)
         return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
     }
-
-    override fun supportsInsertion(): Boolean = false
 
     private inner class SteamTurbineFluidComponent : FluidComponent({this}, bucket, 1) {
 

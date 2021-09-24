@@ -1,16 +1,16 @@
 package me.steven.indrev.items.energy
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.api.machines.Tier
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 
-class IRBatteryItem(settings: Settings, maxStored: Double) :
+class IRBatteryItem(settings: Settings, maxStored: Long) :
     Item(settings), IREnergyItem {
 
     init {
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, Tier.MK1.io, Tier.MK1.io), this)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, Tier.MK1.io, Tier.MK1.io) }, this)
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)

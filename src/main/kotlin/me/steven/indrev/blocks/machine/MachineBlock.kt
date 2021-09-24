@@ -164,7 +164,7 @@ open class MachineBlock(
                 if (blockEntity is MachineBlockEntity<*> && item is BlockItem && item.block is MachineBlock) {
                     val itemIo = energyOf(stack)
                     if (itemIo != null) {
-                        stack.orCreateNbt.putDouble("energy", blockEntity.energy)
+                        stack.orCreateNbt.putLong("energy", blockEntity.energy)
                     }
                     val tag = stack.getOrCreateSubNbt("MachineInfo")
                     val temperatureController = blockEntity.temperatureComponent
@@ -186,7 +186,7 @@ open class MachineBlock(
             val temperatureController = blockEntity.temperatureComponent
             val itemIo = energyOf(itemStack)
             if (itemIo != null) {
-                blockEntity.energy = itemIo.energy
+                blockEntity.energy = itemIo.amount
             }
             if (temperatureController != null) {
                 val temperature = tag?.getDouble("Temperature")

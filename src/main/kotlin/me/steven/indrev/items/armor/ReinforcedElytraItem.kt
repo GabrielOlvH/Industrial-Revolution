@@ -16,7 +16,7 @@ class ReinforcedElytraItem : ArmorItem(IRArmorMaterial.STEEL_ELYTRA, EquipmentSl
             return (itemStack.isOf(IRItemRegistry.REINFORCED_ELYTRA) && ElytraItem.isUsable(itemStack))
                     || (itemStack.isOf(IRItemRegistry.MODULAR_ARMOR_CHEST)
                     && ArmorModule.ELYTRA.getLevel(itemStack) > 0
-                    && energyOf(itemStack)!!.energy > 0)
+                    && energyOf(itemStack)!!.amount > 0)
         }
 
         fun hasValidElytra(itemStack: ItemStack): Boolean {

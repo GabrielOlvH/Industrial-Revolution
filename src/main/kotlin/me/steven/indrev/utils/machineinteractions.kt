@@ -7,7 +7,6 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.item.ItemAttributes
 import alexiil.mc.lib.attributes.item.ItemInvUtil
 import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blockentities.MachineBlockEntity
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -23,6 +22,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
+import team.reborn.energy.api.EnergyStorageUtil
 
 fun MachineBlockEntity<*>.transferItems() {
     itemTransferCooldown--
@@ -137,7 +137,7 @@ fun MachineBlockEntity<*>.transferEnergy() {
                 if (sourceIo == null || targetIo == null)
                     validConnections.remove(direction)
                 else if (sourceIo.supportsExtraction() && targetIo.supportsInsertion())
-                    EnergyMovement.move(sourceIo, targetIo, Double.MAX_VALUE)
+                    EnergyStorageUtil.move(sourceIo, targetIo, Long.MAX_VALUE, null)
             }
         }
 }

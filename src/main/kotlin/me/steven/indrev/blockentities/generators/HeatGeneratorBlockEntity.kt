@@ -27,12 +27,12 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
         trackObject(TANK_ID, fluidComponent!![0])
 
-        trackDouble(GENERATION_RATIO_ID) { getGenerationRatio() }
+        trackLong(GENERATION_RATIO_ID) { getGenerationRatio() }
     }
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (energyCapacity > energy) {
+        else if (getCapacity() > energy) {
             val tank = fluidComponent!![0]
             val consume = getConsumptionRate()
             if (tank.variant.isOf(Fluids.LAVA)
@@ -43,11 +43,11 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             markDirty()
         }
-        return burnTime > 0 && energy < energyCapacity
+        return burnTime > 0 && energy < getCapacity()
     }
 
-    override fun getGenerationRatio(): Double {
-        return config.ratio * (temperatureComponent!!.temperature / temperatureComponent!!.optimalRange.first).coerceAtMost(1.0)
+    override fun getGenerationRatio(): Long {
+        return (config.ratio * (temperatureComponent!!.temperature / temperatureComponent!!.optimalRange.first).coerceAtMost(1.0)).toLong()
     }
 
     fun getConsumptionRate(temperature: Double = temperatureComponent!!.temperature): Long {

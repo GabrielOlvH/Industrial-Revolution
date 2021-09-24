@@ -1,8 +1,5 @@
 package me.steven.indrev.items.energy
 
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
-import dev.technici4n.fasttransferlib.api.energy.EnergyMovement
-import dev.technici4n.fasttransferlib.api.energy.base.SimpleItemEnergyIo
 import me.steven.indrev.utils.energyOf
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
@@ -10,14 +7,17 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.World
+import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.api.EnergyStorageUtil
+import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 
 class IRPortableChargerItem(
     settings: Settings,
-    maxStored: Double
+    maxStored: Long
 ) : Item(settings), IREnergyItem {
 
     init {
-        EnergyApi.ITEM.registerForItems(SimpleItemEnergyIo.getProvider(maxStored, 16384.0, 16384.0), this)
+        EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, 16384, 16384) }, this)
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
@@ -34,10 +34,10 @@ class IRPortableChargerItem(
             .map { s -> player.inventory.getStack(s) }
             .filter { s -> s.item !is IRPortableChargerItem }
             .mapNotNull { s -> energyOf(s) }
-        var rem = 16384.0
+        var rem = 16384L
         items.forEach { h ->
             if (rem <= 0) return
-            rem -= EnergyMovement.move(energyOf(stack) ?: return, h, rem)
+            rem -= EnergyStorageUtil.move(energyOf(stack) ?: return, h, rem, null)
         }
     }
 
@@ -47,10 +47,10 @@ class IRPortableChargerItem(
                 .map { s -> inventory[s] }
                 .filter { s -> s.item !is IRPortableChargerItem }
                 .mapNotNull { s -> energyOf(s) }
-            var rem = 16384.0
+            var rem = 16384L
             items.forEach { h ->
                 if (rem <= 0) return
-                rem -= EnergyMovement.move(energyOf(itemStack) ?: return, h, rem)
+                rem -= EnergyStorageUtil.move(energyOf(itemStack) ?: return, h, rem, null)
             }
         }
     }

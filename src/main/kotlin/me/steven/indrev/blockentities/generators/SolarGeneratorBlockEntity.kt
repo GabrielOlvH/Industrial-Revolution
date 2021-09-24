@@ -16,5 +16,5 @@ class SolarGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
     }
 
-    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < energyCapacity
+    override fun shouldGenerate(): Boolean = this.world?.isSkyVisible(pos.up()) == true && this.world?.isDay == true && energy < getCapacity()
 }

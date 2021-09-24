@@ -2,13 +2,18 @@ package me.steven.indrev.items.energy
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.use
 import net.minecraft.block.BlockState
 import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.entity.EquipmentSlot
+import net.minecraft.entity.LivingEntity
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
 import net.minecraft.text.Text
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 open class IRMiningDrillItem(
@@ -21,12 +26,30 @@ open class IRMiningDrillItem(
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
-        val hasEnergy = (energyOf(stack)?.energy ?: 0.0) > 0
+        val hasEnergy = (energyOf(stack)?.amount ?: 0) > 0
         return when {
             SUPPORTED_MATERIALS.contains(material) && hasEnergy -> baseMiningSpeed
             !hasEnergy -> 0F
             else -> super.getMiningSpeedMultiplier(stack, state)
         }
+    }
+
+    override fun postHit(stack: ItemStack, target: LivingEntity?, attacker: LivingEntity): Boolean {
+        if (attacker !is PlayerEntity) return false
+        energyOf(attacker.inventory, attacker.inventory.selectedSlot)?.use(2) ?: return false
+        return true
+    }
+
+    override fun postMine(
+        stack: ItemStack,
+        world: World,
+        state: BlockState,
+        pos: BlockPos?,
+        miner: LivingEntity
+    ): Boolean {
+        if (miner !is PlayerEntity) return false
+        energyOf(miner.inventory, miner.inventory.selectedSlot)?.use(1) ?: return false
+        return true
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)

@@ -41,7 +41,7 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override val maxOutput: Double = 0.0
+    override val maxOutput: Long = 0
 
     var moduleProcessTime by autosync(PROCESS_TIME_ID, 0)
     var moduleMaxProcessTime by autosync(MAX_PROCESS_TIME_ID, 0)

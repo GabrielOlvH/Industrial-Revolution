@@ -14,6 +14,7 @@ import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.trackBoolean
 import me.steven.indrev.components.trackDouble
 import me.steven.indrev.components.trackInt
+import me.steven.indrev.components.trackLong
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
@@ -63,12 +64,12 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             data.explored * 100 / data.size
         }
 
-        trackDouble(ENERGY_REQUIRED_ID) { getEnergyCost() }
+        trackLong(ENERGY_REQUIRED_ID) { getEnergyCost() }
         trackBoolean(LOCATION_ID) { !hasReport() || isLocationCorrect() }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     private var chunkVeinType: VeinType? = null
     private var mining = 0.0
@@ -212,7 +213,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         return config.energyCost + (IRConfig.machines.drill * getActiveDrills().size)
     }
 
@@ -223,7 +224,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 blockEntity.inventory[0]
                 blockEntity.getSpeedMultiplier()
             }
-            Enhancer.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
     }

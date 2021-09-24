@@ -21,7 +21,7 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (energyCapacity > energy) {
+        else if (getCapacity() > energy) {
             val inventory = inventoryComponent?.inventory ?: return false
             val invStack = inventory.getStack(2)
             val item = invStack.item
@@ -34,7 +34,7 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
             }
             markDirty()
         }
-        return burnTime > 0 && energy < energyCapacity
+        return burnTime > 0 && energy < getCapacity()
     }
 
     override fun applyDefault(

@@ -33,8 +33,8 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     var cooldown = 0.0
     override var range = 5
@@ -70,7 +70,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         cooldown = 0.0
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         val dmgEnhancers = (getEnhancers().getInt(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
         return config.energyCost * speedEnhancers * dmgEnhancers
@@ -79,7 +79,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
     override fun getBaseValue(enhancer: Enhancer): Double =
         when (enhancer) {
             Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
 
@@ -87,5 +87,5 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         return if (enhancer == Enhancer.SPEED || enhancer == Enhancer.DAMAGE) return 1 else super.getMaxCount(enhancer)
     }
 
-    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(this)
 }

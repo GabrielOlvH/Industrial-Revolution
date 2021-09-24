@@ -1,8 +1,5 @@
 package me.steven.indrev.registry
 
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
-import dev.technici4n.fasttransferlib.api.energy.EnergyApi
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
@@ -39,6 +36,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
+import team.reborn.energy.api.EnergyStorage
 
 @Suppress("MemberVisibilityCanBePrivate")
 object IRBlockRegistry {
@@ -96,7 +94,7 @@ object IRBlockRegistry {
         identifier("cable_mk3").block(CABLE_MK3).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK3)
         identifier("cable_mk4").block(CABLE_MK4).blockEntityType(COVERABLE_BLOCK_ENTITY_TYPE_MK4)
 
-        EnergyApi.SIDED.registerForBlocks({ world, pos, _, be, dir ->
+        EnergyStorage.SIDED.registerForBlocks({ world, pos, _, be, dir ->
             if (world is ServerWorld && be is BasePipeBlockEntity) {
                 val energyNetwork = world.energyNetworkState.networksByPos[pos.asLong()]
                 if (energyNetwork != null && be.connections[dir]?.isConnected() == true) {
@@ -142,10 +140,10 @@ object IRBlockRegistry {
 
         identifier("steam_turbine_energy_output").block(STEAM_TURBINE_ENERGY_OUTPUT).item(STEAM_TURBINE_ENERGY_OUTPUT_ITEM)
 
-        EnergyApi.SIDED.registerForBlocks({ world, pos, _, _, _ ->
+        EnergyStorage.SIDED.registerForBlocks({ world, pos, _, _, s ->
             val turbineBlockEntity = world.getBlockEntity(pos.up()) as? SteamTurbineBlockEntity
             if (turbineBlockEntity?.multiblockComponent?.isBuilt(world, pos.up(), turbineBlockEntity.cachedState) == true)
-                turbineBlockEntity
+                turbineBlockEntity.storage.getSideStorage(s)
             else
                 null
         }, STEAM_TURBINE_ENERGY_OUTPUT)

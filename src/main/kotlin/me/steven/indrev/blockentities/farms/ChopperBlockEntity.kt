@@ -44,8 +44,8 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         }
     }
 
-    override val maxInput: Double = config.maxInput
-    override val maxOutput: Double = 0.0
+    override val maxInput: Long = config.maxInput
+    override val maxOutput: Long = 0
 
     private var scheduledBlocks = mutableListOf<BlockPos>().iterator()
     private val scannedBlocks = mutableSetOf<BlockPos>()
@@ -122,7 +122,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
     ): Boolean {
         fun damageTool(amount: Int): Boolean {
             return when {
-                energyOf(toolStack) != null -> energyOf(toolStack)!!.use(amount.toDouble())
+                energyOf(toolStack) != null -> energyOf(toolStack)!!.use(amount.toLong())
                 toolStack.isEmpty -> false
                 toolStack.isDamageable -> {
                     toolStack.damage(amount, world?.random, null)
@@ -186,7 +186,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         return true
     }
 
-    override fun getEnergyCost(): Double {
+    override fun getEnergyCost(): Long {
         val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
@@ -194,7 +194,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
     override fun getBaseValue(enhancer: Enhancer): Double =
         when (enhancer) {
             Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored
+            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
 
@@ -207,5 +207,5 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         return if (enhancer == Enhancer.SPEED) return 12 else super.getMaxCount(enhancer)
     }
 
-    override fun getEnergyCapacity(): Double = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(this)
 }
