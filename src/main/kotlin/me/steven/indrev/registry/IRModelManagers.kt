@@ -7,6 +7,9 @@ import me.steven.indrev.blocks.models.pipes.CableModel
 import me.steven.indrev.blocks.models.pipes.FluidPipeModel
 import me.steven.indrev.blocks.models.pipes.ItemPipeModel
 import me.steven.indrev.items.models.TankItemBakedModel
+import me.steven.indrev.utils.EmptyModel
+import me.steven.indrev.utils.hiddenIds
+import me.steven.indrev.utils.hide
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider
 import net.fabricmc.fabric.api.client.model.ModelProviderContext
@@ -37,6 +40,7 @@ object IRModelManagers : ModelVariantProvider, ExtraModelProvider {
         val variant = resourceId.variant
         val id = Identifier(resourceId.namespace, resourceId.path)
         return when {
+            hide(id) -> EmptyModel
             path == "drill_head" -> DrillHeadModel(resourceId.variant)
             path == "pump_pipe" -> PumpPipeBakedModel()
             path == "tank" && variant == "inventory" -> TankItemBakedModel()

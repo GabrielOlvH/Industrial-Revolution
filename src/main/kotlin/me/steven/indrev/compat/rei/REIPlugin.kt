@@ -15,9 +15,7 @@ import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.energyOf
-import me.steven.indrev.utils.entries
-import me.steven.indrev.utils.getRecipes
+import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
 import net.minecraft.item.Item
@@ -59,6 +57,8 @@ object REIPlugin : REIClientPlugin {
                 tag.putBoolean("Active", true)
                 tag.putFloat("Progress", 1f)
             }))
+
+        entryRegistry?.removeEntryIf { e -> hide(e.identifier!!) }
     }
 
     override fun registerCategories(registry: CategoryRegistry) {
