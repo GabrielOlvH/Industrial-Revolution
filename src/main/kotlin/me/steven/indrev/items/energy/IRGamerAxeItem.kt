@@ -177,10 +177,12 @@ class IRGamerAxeItem(
         tickAnimations(stack)
 
         val itemIo = energyOf(inv, slot) ?: return
-        if (itemIo.amount > 5L)
-            SimpleBatteryItem.setStoredEnergyUnchecked(stack, itemIo.amount - 5)
-        else if (isActive(stack)) {
-            tag.putBoolean("Active", false)
+        if (isActive(stack)) {
+            if (itemIo.amount > 5L)
+                SimpleBatteryItem.setStoredEnergyUnchecked(stack, itemIo.amount - 5)
+            else {
+                tag.putBoolean("Active", false)
+            }
         }
     }
 

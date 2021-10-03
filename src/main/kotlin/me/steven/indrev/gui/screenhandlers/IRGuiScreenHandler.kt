@@ -58,11 +58,6 @@ open class IRGuiScreenHandler(
             )
     }
 
-    override fun addListener(listener: ScreenHandlerListener?) {
-        super.addListener(listener)
-        component?.properties?.forEach { p -> p.markDirty() }
-    }
-
 
     inline fun <T : BlockEntity> withBlockEntity(block: (T) -> Unit) {
         val be = ctx.get(BiFunction { world, pos ->

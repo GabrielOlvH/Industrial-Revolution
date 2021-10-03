@@ -24,6 +24,7 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             input { slot = 2 }
         }
         this.fluidComponent = FluidComponent({ this }, bucket * 4)
+        fluidComponent!!.inputTanks = intArrayOf(0)
 
         trackObject(TANK_ID, fluidComponent!![0])
 
@@ -76,9 +77,7 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     companion object {
-        const val BURN_TIME_ID = 4
-        const val TOTAL_BURN_TIME_ID = 5
-        const val TANK_ID = 6
-        const val GENERATION_RATIO_ID = 7
+        const val TANK_ID = 4
+        const val GENERATION_RATIO_ID = 5
     }
 }
