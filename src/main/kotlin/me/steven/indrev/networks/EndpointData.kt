@@ -45,12 +45,12 @@ data class EndpointData(var type: Type, var mode: Mode?) {
                             if (type == Type.RETRIEVER)
                                 Comparator.comparing<Any?, Long> { node ->
                                     node as Node
-                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 }.reversed()
                             else
                                 Comparator.comparing { node ->
                                     node as Node
-                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.firstOrNull { v -> filter(v.resource) }?.amount ?: 0
+                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 })
                         tx.abort()
                     }

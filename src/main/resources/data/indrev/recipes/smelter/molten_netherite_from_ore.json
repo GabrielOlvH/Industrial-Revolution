@@ -5,7 +5,7 @@
   },
   "fluidOutput": {
     "fluid": "indrev:molten_netherite_still",
-    "amount": 250
+    "amount": 750
   },
   "processTime": 600
 }
