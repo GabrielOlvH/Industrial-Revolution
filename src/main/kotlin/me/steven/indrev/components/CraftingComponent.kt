@@ -9,6 +9,7 @@ import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.utils.IRFluidAmount
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
@@ -85,6 +86,8 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
                     val tank = fluidComponent!![slot]
                     if (tank.resource != volume.resource) return@forEach
                     val amount = tank.amount - volume.amount
+                    if (amount <= 0)
+                        fluidComponent!![slot].variant = FluidVariant.blank()
                     fluidComponent!![slot].amount = amount
                     return@forEachIndexed
                 }

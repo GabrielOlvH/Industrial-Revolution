@@ -12,6 +12,7 @@ import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.utils.itemExtractableOf
 import me.steven.indrev.utils.itemInsertableOf
+import me.steven.indrev.utils.itemStorageOf
 import me.steven.indrev.utils.pack
 import net.minecraft.block.BlockState
 import net.minecraft.client.item.TooltipContext
@@ -67,9 +68,7 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        if (itemInsertableOf(world, pos, dir.opposite) != RejectingItemInsertable.NULL
-            || itemExtractableOf(world, pos, dir.opposite) != EmptyItemExtractable.NULL
-        ) return true
+        if (itemStorageOf(world, pos, dir.opposite) != null) return true
         if ((type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir))
             return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false

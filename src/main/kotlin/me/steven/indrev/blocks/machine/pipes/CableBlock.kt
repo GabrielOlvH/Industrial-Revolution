@@ -35,7 +35,7 @@ class CableBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, tier,
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        val handler = energyOf(world, pos, dir)
+        val handler = energyOf(world, pos, dir.opposite)
         if (handler != null && handler !is CableEnergyIo) return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false
         if (!blockEntity.cachedState.isOf(this)) return false

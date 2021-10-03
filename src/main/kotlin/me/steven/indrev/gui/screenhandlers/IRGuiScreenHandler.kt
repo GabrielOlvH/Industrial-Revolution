@@ -17,10 +17,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.screen.ScreenHandlerSyncHandler
-import net.minecraft.screen.ScreenHandlerType
+import net.minecraft.screen.*
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
@@ -61,10 +58,8 @@ open class IRGuiScreenHandler(
             )
     }
 
-    override fun syncState() {
-        super.syncState()
-
-        // when someone opens the same screen, resync everything to everyone
+    override fun addListener(listener: ScreenHandlerListener?) {
+        super.addListener(listener)
         component?.properties?.forEach { p -> p.markDirty() }
     }
 

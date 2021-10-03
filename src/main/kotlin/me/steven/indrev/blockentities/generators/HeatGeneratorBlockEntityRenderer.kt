@@ -36,7 +36,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
     }
 
     private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
-        val yMax = (((inputVolume.amount / 4f) * 10.0) / 16.0).coerceAtLeast(0.1)
+        val yMax = (((inputVolume.amount / (4f*81000)) * 10.0) / 16.0).coerceAtLeast(0.1)
         val face =
             listOf(
                 FluidRenderFace.createFlatFaceZ(0.01, 0.1, 0.99, 0.99, yMax, 0.99, 2.0, true, false),

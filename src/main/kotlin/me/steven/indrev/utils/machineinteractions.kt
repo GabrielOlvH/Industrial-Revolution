@@ -114,11 +114,11 @@ fun MachineBlockEntity<*>.transferFluids() {
         var extractable: Storage<FluidVariant>? = null
         var insertable: Storage<FluidVariant>? = null
         if (mode.output) {
-            insertable = fluidStorageOf(world as ServerWorld, pos.offset(direction.opposite), direction)
+            insertable = fluidStorageOf(world as ServerWorld, pos.offset(direction), direction.opposite)
             extractable = fluidComponent
         }
         if (mode.input) {
-            extractable = fluidStorageOf(world as ServerWorld, pos.offset(direction.opposite), direction)
+            extractable = fluidStorageOf(world as ServerWorld, pos.offset(direction), direction.opposite)
             insertable = fluidComponent
 
         }

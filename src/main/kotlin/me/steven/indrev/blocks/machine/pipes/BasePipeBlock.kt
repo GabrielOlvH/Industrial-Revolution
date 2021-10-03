@@ -210,10 +210,12 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         val networkState = type.getNetworkState(world)
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return
         val before = blockEntity.connections[facing]
-        val new = ConnectionType.getType(isConnectable(world, neighborPos, facing.opposite))
+        val new = ConnectionType.getType(isConnectable(world, neighborPos, facing))
         val neighborBlockEntity = world.getBlockEntity(neighborPos) as? BasePipeBlockEntity
-        if (before != new && (before != ConnectionType.WRENCHED || neighborBlockEntity != null
-                    && neighborBlockEntity.connections[facing.opposite] == ConnectionType.CONNECTED)) {
+        if (before != new) {
+            neighborBlockEntity?.connections?.put(facing.opposite, new)
+            neighborBlockEntity?.markDirty()
+            neighborBlockEntity?.sync()
             blockEntity.connections[facing] = new
             blockEntity.markDirty()
             blockEntity.sync()
@@ -229,7 +231,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         fun isConnectable() = this != WRENCHED
 
         companion object {
-            fun getType(connects: Boolean) = if (connects) CONNECTED else NONE
+            fun getType(connects: Boolean) = if (connects) CONNECTED else WRENCHED
 
             fun byId(id: Int): ConnectionType {
                 return when (id) {

@@ -46,6 +46,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
         Item item = itemStack.getItem();
         EnergyStorage itemIo = EnergyutilsKt.energyOf(itemStack);
         if (itemIo != null && item instanceof IREnergyItem) {
+            long amount = itemIo.getAmount();
             if (item instanceof IRGamerAxeItem) {
                 NbtCompound tag = itemStack.getOrCreateNbt();
                 if (tag.contains("Active") && !tag.getBoolean("Active")) {
@@ -53,7 +54,7 @@ public abstract class MixinPlayerEntity extends LivingEntity implements IRPlayer
                     return;
                 }
             }
-            if (itemIo.getAmount() < 1) cir.setReturnValue(0.2F);
+            if (amount < 1) cir.setReturnValue(0.2F);
         }
     }
 

@@ -30,13 +30,4 @@ public abstract class MixinItemStack {
         }
     }
 
-    @Inject(method = "isDamageable", at = @At("RETURN"), cancellable = true)
-    private void indrev_setDamageable(CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof IREnergyItem) cir.setReturnValue(true);
-    }
-
-    @Inject(method = "damage(ILjava/util/Random;Lnet/minecraft/server/network/ServerPlayerEntity;)Z", at = @At("RETURN"), cancellable = true)
-    private void indrev_cancelBreak(int amount, Random random, ServerPlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if (getItem() instanceof IREnergyItem) cir.setReturnValue(false);
-    }
 }

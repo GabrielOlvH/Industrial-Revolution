@@ -58,7 +58,7 @@ class FluidNetwork(
                     val deque = getQueue(pos, data, filter, nodes)
 
                     if (data.type == EndpointData.Type.OUTPUT)
-                        tickOutput(pos, dir.opposite, deque, state, filter)
+                        tickOutput(pos, dir, deque, state, filter)
                     else if (data.type == EndpointData.Type.RETRIEVER)
                         tickRetriever(pos, dir, deque, state, filter)
 

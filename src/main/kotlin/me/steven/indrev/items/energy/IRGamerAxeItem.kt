@@ -40,6 +40,7 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
+import team.reborn.energy.api.base.SimpleBatteryItem
 import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 import java.util.*
 
@@ -80,15 +81,17 @@ class IRGamerAxeItem(
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
         if (world?.isClient == false) {
-            val stack = user?.getStackInHand(hand)
+            var stack = user?.getStackInHand(hand)
             val tag = stack?.orCreateNbt
             if (tag?.contains("Active") == false || tag?.contains("Progress") == false) {
                 tag.putBoolean("Active", true)
                 tag.putFloat("Progress", 0f)
             } else if (tag?.contains("Active") == true) {
                 val active = !tag.getBoolean("Active")
-                if (active && energyOf(user.inventory, user.inventory.selectedSlot)?.use(5) == false)
+                val use = energyOf(user.inventory, user.inventory.selectedSlot)?.use(5)
+                if (active && use == false)
                     return TypedActionResult.pass(stack)
+                if (use == true) stack = user?.getStackInHand(hand)
                 stack.orCreateNbt.putBoolean("Active", active)
             }
             return TypedActionResult.pass(stack)
@@ -169,15 +172,16 @@ class IRGamerAxeItem(
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateNbt ?: return
+        val inv = (entity as? PlayerEntity)?.inventory ?: return
 
         tickAnimations(stack)
 
-        val itemIo = energyOf(stack)
-        if (isActive(stack) && itemIo?.extract(5, true) == 5L) {
+        val itemIo = energyOf(inv, slot) ?: return
+        if (itemIo.amount > 5L)
+            SimpleBatteryItem.setStoredEnergyUnchecked(stack, itemIo.amount - 5)
+        else if (isActive(stack)) {
             tag.putBoolean("Active", false)
         }
-
-
     }
 
     private fun tickAnimations(stack: ItemStack) {

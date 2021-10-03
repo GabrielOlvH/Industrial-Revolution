@@ -12,7 +12,7 @@ class CableEnergyIo(private val network: EnergyNetwork?) : EnergyStorage, Snapsh
 
     override fun insert(maxAmount: Long, transaction: TransactionContext?): Long {
         if (network == null) return 0
-        val inserted = maxAmount.coerceAtMost(network.maxCableTransfer).coerceAtMost(this.capacity - amount)
+        val inserted = maxAmount.coerceAtMost(network.maxCableTransfer).coerceAtMost(capacity - amount)
         network.energy += inserted
         return inserted
     }
@@ -27,8 +27,8 @@ class CableEnergyIo(private val network: EnergyNetwork?) : EnergyStorage, Snapsh
         return network?.energy ?: 0
     }
 
-    override fun readSnapshot(snapshot: Long?) {
-        network?.energy = snapshot ?: 0
+    override fun readSnapshot(snapshot: Long) {
+        network?.energy = snapshot
     }
 
     companion object {

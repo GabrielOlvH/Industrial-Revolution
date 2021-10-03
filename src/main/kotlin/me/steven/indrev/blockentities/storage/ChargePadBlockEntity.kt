@@ -22,7 +22,11 @@ import team.reborn.energy.api.EnergyStorage
 class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
-        this.inventoryComponent = inventory(this) {}
+        this.inventoryComponent = inventory(this) {
+            input { slot = 0 }
+            output { slot = 0 }
+        }
+
     }
 
     override val maxOutput: Long = 16384
@@ -59,15 +63,16 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
             } else
                 getItemEnergyIo().let { if (it == null) emptyList() else listOf(it) }
 
-            if (handlers.isEmpty()) return amount
+            if (handlers.isEmpty()) return 0
 
-            var remainder = amount.coerceAtMost(maxOutput)
+            val max = amount.coerceAtMost(maxOutput)
+            var remainder = max
             handlers.forEach { handler ->
                 if (remainder > 0)
-                    remainder -= remainder - handler.insert(remainder, transaction)
+                    remainder -= handler.insert(remainder, transaction)
                 else return 0
             }
-            return remainder
+            return max - remainder
         }
 
         override fun extract(maxAmount: Long, transaction: TransactionContext?): Long = 0
@@ -79,11 +84,11 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
         private fun collectItemIos(): MutableList<EnergyStorage> {
             return world!!.getEntitiesByClass(LivingEntity::class.java, Box(pos)) { true }.flatMap { entity ->
                 when (entity) {
-                    is PlayerEntity -> Iterables.concat(entity.inventory.armor, listOf(entity.mainHandStack, entity.offHandStack))
-                    is ArmorStandEntity -> entity.itemsEquipped
+                    is PlayerEntity -> Iterables.concat(entity.inventory.armor.mapIndexed { index, _ ->  energyOf(entity.inventory, 36 + index) },
+                        listOf(energyOf(entity.inventory, entity.inventory.selectedSlot), energyOf(entity.inventory, 40)))
                     else -> emptyList()
-                }.mapNotNull { stack -> energyOf(stack) }
-            }.asMutableList()
+                }
+            }.filterNotNull().asMutableList()
         }
     }
 }

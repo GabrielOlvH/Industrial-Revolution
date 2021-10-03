@@ -37,7 +37,7 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
     }
 
     override fun isConnectable(world: ServerWorld, pos: BlockPos, dir: Direction): Boolean {
-        if (fluidStorageOf(world, pos, dir) != null) return true
+        if (fluidStorageOf(world, pos, dir.opposite) != null) return true
         if ((type.getNetworkState(world) as ServoNetworkState<*>).hasServo(pos.offset(dir.opposite), dir))
             return true
         val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return false

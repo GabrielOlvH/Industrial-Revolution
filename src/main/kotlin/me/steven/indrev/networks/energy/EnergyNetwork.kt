@@ -55,11 +55,11 @@ open class EnergyNetwork(
                 remainders -= leftoverToInsert
 
                 val toTransfer = (energyIo.maxInput / totalInput) * energy + leftoverToInsert
-                val leftover = energyIo.insert(toTransfer, true)
+                val transferred = energyIo.insert(toTransfer, true)
 
-                energy -= toTransfer - leftover
+                energy -= transferred
 
-                remainders += leftover
+                remainders += toTransfer - transferred
             }
         }
     }

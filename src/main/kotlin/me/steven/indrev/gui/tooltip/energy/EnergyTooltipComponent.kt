@@ -3,6 +3,7 @@ package me.steven.indrev.gui.tooltip.energy
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.utils.getEnergyString
 import me.steven.indrev.utils.identifier
+import net.fabricmc.loom.configuration.providers.minecraft.assets.MinecraftAssetsProvider
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.gui.tooltip.TooltipComponent
@@ -17,7 +18,12 @@ import net.minecraft.util.math.Matrix4f
 class EnergyTooltipComponent(val data: EnergyTooltipData) : TooltipComponent {
     override fun getHeight(): Int = 18
 
-    override fun getWidth(textRenderer: TextRenderer?): Int = 18
+    override fun getWidth(textRenderer: TextRenderer): Int {
+        val percentage = if (data.maxEnergy > 0) data.energy * 100 / data.maxEnergy else 0
+        val text =
+            LiteralText("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+        return textRenderer.getWidth(text) + 20
+    }
 
     override fun drawItems(
         textRenderer: TextRenderer,
