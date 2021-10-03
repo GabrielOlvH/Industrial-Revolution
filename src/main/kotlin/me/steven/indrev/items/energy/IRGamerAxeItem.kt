@@ -88,10 +88,10 @@ class IRGamerAxeItem(
                 tag.putFloat("Progress", 0f)
             } else if (tag?.contains("Active") == true) {
                 val active = !tag.getBoolean("Active")
-                val use = energyOf(user.inventory, user.inventory.selectedSlot)?.use(5)
-                if (active && use == false)
+                val use = unsafeUse(stack, 1)
+                if (active && !use)
                     return TypedActionResult.pass(stack)
-                if (use == true) stack = user?.getStackInHand(hand)
+                if (use) stack = user?.getStackInHand(hand)
                 stack.orCreateNbt.putBoolean("Active", active)
             }
             return TypedActionResult.pass(stack)
@@ -121,26 +121,25 @@ class IRGamerAxeItem(
         miner: LivingEntity
     ): Boolean {
         if (!isActive(stack) || miner !is PlayerEntity) return false
-        val energyHandler = energyOf(miner.inventory, miner.inventory.selectedSlot) ?: return false
-        val canStart = energyHandler.use(1)
+        val canStart = unsafeUse(stack, 1)
         if (canStart && !miner.isSneaking && state.isIn(BlockTags.LOGS)) {
             val scanned = mutableSetOf<BlockPos>()
             Direction.values().forEach { dir ->
-                scanTree(scanned, world, energyHandler, pos.offset(dir))
+                scanTree(scanned, world, stack, pos.offset(dir))
             }
         }
         return canStart
     }
 
-    fun scanTree(scanned: MutableSet<BlockPos>, world: World, energyHandler: EnergyStorage, pos: BlockPos) {
+    fun scanTree(scanned: MutableSet<BlockPos>, world: World, stack: ItemStack, pos: BlockPos) {
         if (!scanned.add(pos)) return
         val state = world.getBlockState(pos)
         if (state.isIn(BlockTags.LOGS) || state.isIn(BlockTags.LEAVES)) {
-            if (energyHandler.use(1)) {
+            if (unsafeUse(stack, 1)) {
                 world.breakBlock(pos, true)
                 if (scanned.size < 40)
                     Direction.values().forEach { dir ->
-                        scanTree(scanned, world, energyHandler, pos.offset(dir))
+                        scanTree(scanned, world, stack, pos.offset(dir))
                     }
             }
         }
@@ -149,16 +148,15 @@ class IRGamerAxeItem(
     override fun postHit(stack: ItemStack, target: LivingEntity?, attacker: LivingEntity): Boolean {
         if (attacker !is PlayerEntity) return false
         val level = GamerAxeModule.REACH.getLevel(stack)
-        val handler = energyOf(attacker.inventory, attacker.inventory.selectedSlot) ?: return false
         if (isActive(stack) && level > 0) {
             target?.world?.getEntitiesByClass(LivingEntity::class.java, Box(target.blockPos).expand(level.toDouble())) { true }?.forEach { entity ->
-                if (handler.use(1)) {
+                if (unsafeUse(stack, 1)) {
                     attacker.resetLastAttackedTicks()
                     attacker.attack(entity)
                 }
             }
         }
-        return handler.use(1)
+        return unsafeUse(stack, 1)
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false
@@ -172,18 +170,21 @@ class IRGamerAxeItem(
 
     override fun inventoryTick(stack: ItemStack?, world: World?, entity: Entity, slot: Int, selected: Boolean) {
         val tag = stack?.orCreateNbt ?: return
-        val inv = (entity as? PlayerEntity)?.inventory ?: return
 
         tickAnimations(stack)
 
-        val itemIo = energyOf(inv, slot) ?: return
-        if (isActive(stack)) {
-            if (itemIo.amount > 5L)
-                SimpleBatteryItem.setStoredEnergyUnchecked(stack, itemIo.amount - 5)
-            else {
-                tag.putBoolean("Active", false)
-            }
+        if (isActive(stack) && !unsafeUse(stack, 5)) {
+            tag.putBoolean("Active", false)
         }
+    }
+
+    fun unsafeUse(stack: ItemStack, amount: Long): Boolean {
+        val itemIo = energyOf(stack)!!
+        if (itemIo.amount > amount) {
+            SimpleBatteryItem.setStoredEnergyUnchecked(stack, itemIo.amount - amount)
+            return true
+        }
+        return false
     }
 
     private fun tickAnimations(stack: ItemStack) {
