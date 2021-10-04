@@ -73,6 +73,11 @@ open class IRGuiScreenHandler(
         return block(be ?: error("burh"))
     }
 
+    override fun sendContentUpdates() {
+        super.sendContentUpdates()
+        component?.properties?.forEach { p -> p.markDirty() }
+    }
+
     fun syncProperties() {
         val props = component?.properties ?: return
         val player = playerInventory.player

@@ -146,7 +146,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                             }
                             break;
                         case CHARGER:
-                                IRPortableChargerItem.Companion.chargeItemsInInv(itemStack, player.getInventory().main);
+                                IRPortableChargerItem.Companion.chargeItemsInInv(cSlot, player.getInventory());
                             break;
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {

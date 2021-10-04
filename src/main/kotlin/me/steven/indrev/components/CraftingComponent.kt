@@ -42,8 +42,9 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
             isProcessing() -> {
                 val recipe = currentRecipe
                 val upgrades = machine.getEnhancers()
-                if (recipe?.matches(inputInventory, inputTanks) != true)
-                    tryStartRecipe(inventory) ?: reset()
+                if (recipe?.matches(inputInventory, inputTanks) != true) {
+                    tryStartRecipe(inventory) ?: reset().also { markDirty() }
+                }
                 else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
                     processTime = (processTime + ceil(Enhancer.getSpeed(upgrades, machine))).coerceAtLeast(0.0).toInt()

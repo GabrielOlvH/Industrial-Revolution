@@ -38,23 +38,26 @@ open class EnergyNetwork(
     var energy = 0L
     val capacity: Long get() = pipes.size * maxCableTransfer
 
+    val inputFaces: MutableMap<BlockPos, EnumSet<Direction>> = Object2ObjectOpenHashMap()
+
     override fun tick(world: ServerWorld) {
         val totalInput = insertables.sumOf { pos ->
             if (world.isLoaded(pos))
-                energyOf(world, pos, machines[pos]!!.first())?.maxInput ?: 0
+                energyOf(world, pos, machines[pos]!!.firstOrNull { inputFaces[pos]?.contains(it) != true } ?: return@sumOf 0)?.maxInput ?: 0
             else 0
         }
         if (totalInput <= 0) return
-        var remainders = 0L
+        var remainders = 0.0
         insertables.forEachIndexed { index, pos ->
             machines[pos]!!.forEach { direction ->
                 if (!world.isLoaded(pos)) return@forEach
+                if (inputFaces[pos]?.contains(direction) == true) return@forEach
                 val energyIo = energyOf(world, pos, direction)?: return@forEach
                 val leftoverToInsert = remainders / (insertables.size - index)
 
                 remainders -= leftoverToInsert
 
-                val toTransfer = (energyIo.maxInput / totalInput) * energy + leftoverToInsert
+                val toTransfer = ((energyIo.maxInput / totalInput.toDouble()) * energy + leftoverToInsert).toLong()
                 val transferred = energyIo.insert(toTransfer, true)
 
                 energy -= transferred

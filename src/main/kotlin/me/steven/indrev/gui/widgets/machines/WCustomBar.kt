@@ -114,7 +114,8 @@ fun fluidTank(provider: ComponentProvider, index: Int): WCustomBar {
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val tank = properties.get<IRFluidTank>(index)
-            tooltip?.add(*getTooltip(tank.variant, tank.amount, tank.capacity).toTypedArray())
+            if (!tank.isEmpty)
+                tooltip?.add(*getTooltip(tank.variant, tank.amount, tank.capacity).toTypedArray())
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {

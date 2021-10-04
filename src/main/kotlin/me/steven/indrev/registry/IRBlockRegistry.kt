@@ -98,7 +98,7 @@ object IRBlockRegistry {
             if (world is ServerWorld && be is BasePipeBlockEntity) {
                 val energyNetwork = world.energyNetworkState.networksByPos[pos.asLong()]
                 if (energyNetwork != null && be.connections[dir]?.isConnected() == true) {
-                    return@registerForBlocks CableEnergyIo(energyNetwork)
+                    return@registerForBlocks CableEnergyIo(energyNetwork, pos, dir)
                 }
             }
             CableEnergyIo.NO_NETWORK
