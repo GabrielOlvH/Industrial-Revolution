@@ -26,6 +26,7 @@ val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerSc
 val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)
 val COMPRESSOR_HANDLER = CompressorScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorScreenHandler)
 val SOLID_INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
+val RECYCLER_HANDLER = RecyclerScreenHandler.SCREEN_ID.registerScreenHandler(::RecyclerScreenHandler)
 val CHOPPER_HANDLER = ChopperScreenHandler.SCREEN_ID.registerScreenHandler(::ChopperScreenHandler)
 val RANCHER_HANDLER = RancherScreenHandler.SCREEN_ID.registerScreenHandler(::RancherScreenHandler)
 val MINING_RIG_HANDLER = MiningRigComputerScreenHandler.SCREEN_ID.registerScreenHandler(::MiningRigComputerScreenHandler)

@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafters
 
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.IRRecipeType
@@ -21,9 +22,15 @@ class RecyclerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             output { slot = 3 }
             coolerSlot = 1
         }
+
+        trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
     }
 
     override val type: IRRecipeType<RecyclerRecipe> = RecyclerRecipe.TYPE
 
     override fun isLocked(slot: Int, tier: Tier): Boolean = false
+
+    companion object {
+        const val CRAFTING_COMPONENT_ID = 4
+    }
 }

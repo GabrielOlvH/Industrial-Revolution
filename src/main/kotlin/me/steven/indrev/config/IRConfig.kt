@@ -142,6 +142,8 @@ class Machines {
 
     val infuserFactory: HeatMachineConfig = HeatMachineConfig(64, 4.5, 2.0, 100000, 16384)
 
+    val recycler: MachineConfig = MachineConfig(8, 2.5, 50000, Tier.MK2.io)
+
     val chopperMk1: MachineConfig = MachineConfig(16, 50.0, 1000, Tier.MK1.io)
 
     val chopperMk2: MachineConfig = MachineConfig(32, 40.0, 5000, Tier.MK2.io)
