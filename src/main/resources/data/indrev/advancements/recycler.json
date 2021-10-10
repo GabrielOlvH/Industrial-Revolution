@@ -1,23 +1,23 @@
 {
   "display": {
     "icon": {
-      "item": "indrev:biomass"
+      "item": "indrev:recycler_mk2"
     },
     "title": {
-      "translate": "advancements.indrev.biomass"
+      "translate": "advancements.indrev.recycler"
     },
     "description": {
-      "translate": "advancements.indrev.biomass.description"
+      "translate": "advancements.indrev.recycler.description"
     }
   },
-  "parent": "indrev:recycler",
+  "parent": "indrev:machine_block",
   "criteria": {
     "checkInv": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": ["indrev:biomass"]
+            "items": ["indrev:recycler_mk2"]
           }
         ]
       }
