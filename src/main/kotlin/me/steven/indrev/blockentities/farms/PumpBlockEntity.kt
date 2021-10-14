@@ -36,7 +36,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state), BlockEntityClientSerializable {
 
     init {
-        this.fluidComponent = FluidComponent({this}, bucket * 8)
+        this.fluidComponent = FluidComponent({this}, bucket)
     }
 
     override val maxInput: Long = config.maxInput

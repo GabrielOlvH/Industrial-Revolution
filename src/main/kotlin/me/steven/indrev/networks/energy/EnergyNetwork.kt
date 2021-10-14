@@ -55,7 +55,7 @@ open class EnergyNetwork(
                 val energyIo = energyOf(world, pos, direction)?: return@forEach
                 val leftoverToInsert = remainders / (insertables.size - index)
 
-                remainders -= leftoverToInsert
+                remainders = (remainders - leftoverToInsert).coerceAtLeast(0.0)
 
                 val toTransfer = ((energyIo.maxInput / totalInput.toDouble()) * energy + leftoverToInsert).toLong()
                 val transferred = energyIo.insert(toTransfer, true)
