@@ -143,7 +143,7 @@ dependencies {
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
-    dependencies.ext.lib("net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}")
+    //dependencies.ext.lib("net.adriantodt.fabricmc:fallflyinglib:${project.ffl_version}")
 
     modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
