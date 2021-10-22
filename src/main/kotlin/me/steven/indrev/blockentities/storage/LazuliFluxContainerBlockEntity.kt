@@ -93,7 +93,7 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     override fun applyDefault(state: BlockState, type: ConfigurationType, configuration: MutableMap<Direction, TransferMode>) {
         val facing = state[FacingMachineBlock.FACING]
         Direction.values().forEach { dir ->
-            if (dir == facing) configuration[dir] = TransferMode.INPUT
+            if (dir == facing && tier != Tier.CREATIVE) configuration[dir] = TransferMode.INPUT
             else configuration[dir] = TransferMode.OUTPUT
         }
     }
