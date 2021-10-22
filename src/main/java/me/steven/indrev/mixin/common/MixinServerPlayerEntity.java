@@ -150,8 +150,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                             break;
                         case SOLAR_PANEL:
                             if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
-                                for (ItemStack stackToCharge : inventory.armor) {
-                                    EnergyutilsKt.insert(inventory, cSlot, 75L * level);
+                                for (int x = 0; x < 4; x++) {
+                                    EnergyutilsKt.insert(inventory, cSlot - x, 75L * level);
                                 }
                             }
                             break;
