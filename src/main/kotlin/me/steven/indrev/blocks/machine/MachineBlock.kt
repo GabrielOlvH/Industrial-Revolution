@@ -196,6 +196,7 @@ open class MachineBlock(
                 if (blockEntity.isConfigurable(type))
                     blockEntity.applyDefault(state, type, blockEntity.getCurrentConfiguration(type))
             }
+            world.updateNeighbors(pos, this)
             blockEntity.markDirty()
         }
     }

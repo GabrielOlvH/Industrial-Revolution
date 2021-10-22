@@ -1,5 +1,6 @@
 package me.steven.indrev.networks.energy
 
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
 import net.minecraft.util.math.BlockPos
@@ -15,11 +16,10 @@ class CableEnergyIo(private val network: EnergyNetwork?, val pos: BlockPos, val 
 
     override fun insert(maxAmount: Long, transaction: TransactionContext?): Long {
         if (network == null || direction == null) return 0
+        StoragePreconditions.notNegative(maxAmount)
         val inserted = maxAmount.coerceAtMost(network.maxCableTransfer).coerceAtMost(capacity - amount)
+        updateSnapshots(transaction)
         network.energy += inserted
-        if (inserted > 0) {
-            network.inputFaces.computeIfAbsent(pos) { EnumSet.noneOf(Direction::class.java) }.add(direction)
-        }
         return inserted
     }
 

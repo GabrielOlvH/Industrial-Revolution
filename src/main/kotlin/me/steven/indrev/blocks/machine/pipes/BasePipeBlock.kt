@@ -200,7 +200,7 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         notify: Boolean
     ) {
         val (x, y, z) = pos.subtract(fromPos)
-        val facing = Direction.fromVector(x, y, z)!!.opposite
+        val facing = Direction.fromVector(x, y, z)?.opposite ?: return
         if (world is ServerWorld) {
             updateConnection(world, pos, fromPos, facing)
         }

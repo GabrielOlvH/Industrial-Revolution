@@ -288,7 +288,7 @@
   "item.indrev.rechargeable.tooltip": "Rechargeable",
   "item.indrev.chunk_scanner": "Chunk Scanner",
   "item.indrev.chunk_scanner.scanning": "Scanning...",
-  "item.indrev.chunk_scanner.scanned1": "Finished Scanning!",
+  "item.indrev.chunk_scanner.scanned1": "Finished Scanning! Check your inventory.",
   "item.indrev.chunk_scanner.scanned2": "Vein type: %s",
   "item.indrev.chunk_scanner.already_scanned": "This chunk is already scanned and it has a %s vein",
   "item.indrev.chunk_scanner.tooltip1": "Hold right click to start scanning this chunk",

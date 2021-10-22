@@ -15,6 +15,8 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.sound.SoundCategory
+import net.minecraft.sound.SoundEvents
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
@@ -68,6 +70,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
                 veinData
             )
         )
+        world.playSound(null, user.blockPos, SoundEvents.ITEM_BOOK_PAGE_TURN, SoundCategory.PLAYERS, 1f, 1f)
         return super.use(world, user, hand)
     }
 }

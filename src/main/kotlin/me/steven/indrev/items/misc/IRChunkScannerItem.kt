@@ -15,6 +15,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
@@ -60,7 +61,7 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 if (user is PlayerEntity) {
                     if (!user.inventory.insertStack(infoStack)) ItemScatterer.spawn(user.world, user.x, user.y, user.z, infoStack)
                     user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned1"), true)
-                    user.sendMessage(TranslatableText("item.indrev.chunk_scanner.scanned2", type), true)
+                    user.itemCooldownManager.set(this, 20)
                     world.playSound(user.x, user.y, user.z, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 1.0f, 1.0f, false)
                 }
                 return stack
@@ -77,6 +78,19 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
         }
         return TypedActionResult.consume(stack)
     }
+
+    override fun usageTick(world: World, user: LivingEntity, stack: ItemStack, remainingUseTicks: Int) {
+        if (world.isClient || user !is PlayerEntity) return
+        val text = LiteralText("")
+        for (x in 0 until 100 - remainingUseTicks) {
+            if (x % 10 == 0)
+                text.append("$x%")
+            else if (x % 2 == 0)
+                text.append(".")
+        }
+        user.sendMessage(text.formatted(Formatting.GRAY, Formatting.ITALIC), true)
+    }
+
 
     override fun getMaxUseTime(stack: ItemStack?): Int = 100
 

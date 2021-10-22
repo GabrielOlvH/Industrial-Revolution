@@ -78,6 +78,7 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
             ctx.run { world, pos ->
                 val blockEntity = world.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return@run
                 blockEntity.sync()
+                world.updateNeighbors(pos, blockEntity.cachedState.block)
             }
         }
     }
