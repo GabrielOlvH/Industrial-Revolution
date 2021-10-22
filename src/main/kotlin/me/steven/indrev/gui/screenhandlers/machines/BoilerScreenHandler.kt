@@ -4,7 +4,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BOILER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.fluidTank
@@ -26,7 +25,7 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -74,10 +73,6 @@ class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("boiler")

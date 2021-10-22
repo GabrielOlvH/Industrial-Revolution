@@ -2,7 +2,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.FISHER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
@@ -21,7 +20,7 @@ class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -35,10 +34,6 @@ class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
 
         root.validate(this)
     }
-
-    override fun getEntry(): Identifier = identifier("machines/fisher")
-
-    override fun getPage(): Int = 0
 
     companion object {
         val SCREEN_ID = identifier("fishing_farm_screen")

@@ -3,7 +3,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.generators.BiomassGeneratorBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BIOMASS_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WCustomBar
@@ -26,7 +25,7 @@ class BiomassGeneratorScreenHandler(
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -44,10 +43,6 @@ class BiomassGeneratorScreenHandler(
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/generators")
-
-    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("biomass_generator")

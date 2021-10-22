@@ -4,7 +4,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.ElectricFurnaceBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.ELECTRIC_FURNACE_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.WCustomBar
@@ -27,7 +26,7 @@ class ElectricFurnaceScreenHandler(
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -56,10 +55,6 @@ class ElectricFurnaceScreenHandler(
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 1
 
     companion object {
         val SCREEN_ID = identifier("electric_furnace_screen")

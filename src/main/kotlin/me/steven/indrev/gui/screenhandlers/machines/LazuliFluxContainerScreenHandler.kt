@@ -6,7 +6,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.BATTERY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.energyBar
@@ -14,7 +13,6 @@ import me.steven.indrev.gui.widgets.misc.WPlayerRender
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
-import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.getEnergySlotPainter
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.EquipmentSlot
@@ -32,7 +30,7 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
 
     val shieldPainter by lazy { getSlotPainter(40, Identifier("minecraft", "textures/item/empty_armor_slot_shield.png")) }
     val helmetPainter by lazy { getSlotPainter(39, Identifier("minecraft", "textures/item/empty_armor_slot_helmet.png")) }
@@ -118,16 +116,10 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
         val playerWidget = WPlayerRender()
         root.add(playerWidget, 2.4, 3.5)
 
-        addBookEntryShortcut(playerInventory, root, -1.8, -0.47)
-
         root.validate(this)
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/batteries")
-
-    override fun getPage(): Int = 0
 
     private fun getSlotPainter(slot: Int, identifier: Identifier) = BackgroundPainter { matrices, left, top, panel ->
         BackgroundPainter.SLOT.paintBackground(matrices, left, top, panel)

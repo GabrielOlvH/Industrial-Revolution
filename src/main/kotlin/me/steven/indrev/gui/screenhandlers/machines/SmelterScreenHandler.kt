@@ -3,7 +3,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SMELTER_HANDLER
 import me.steven.indrev.gui.widgets.machines.fluidTank
@@ -22,7 +21,7 @@ class SmelterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -43,10 +42,6 @@ class SmelterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 7
 
     companion object {
         val SCREEN_ID = identifier("smelter")

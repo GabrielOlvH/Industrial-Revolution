@@ -13,14 +13,11 @@ import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.components.ComponentProvider
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.widgets.machines.*
-import me.steven.indrev.gui.widgets.misc.WBookEntryShortcut
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.packets.common.ToggleFactoryStackSplittingPacket
-import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventory
@@ -28,11 +25,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import vazkii.patchouli.client.book.ClientBookRegistry
 
 fun WGridPanel.add(w: WWidget, x: Double, y: Double, width: Double, height: Double) {
     this.add(w, x.toInt(), y.toInt(), width.toInt(), height.toInt())
@@ -83,9 +78,6 @@ fun SyncedGuiDescription.configure(
         if (blockEntity is CraftingMachineBlockEntity<*> && blockEntity.craftingComponents.size > 1) {
             addSplitStackButton(blockEntity, blockPos, world, panel)
         }
-    }
-    if (this is PatchouliEntryShortcut) {
-        addBookEntryShortcut(playerInventory, panel, -1.8, -0.47)
     }
     panel.add(title, titlePos, 0.0)
 }
@@ -174,43 +166,6 @@ fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WG
     buttonPanel.add(button, 0, 0)
     panel.add(buttonPanel, 9.7, 4.2)
     button.setSize(20, 20)
-}
-
-fun PatchouliEntryShortcut.addBookEntryShortcut(playerInventory: PlayerInventory, panel: WGridPanel, x: Double, y: Double): WButton {
-    val containsBook = playerInventory.count(IRItemRegistry.GUIDE_BOOK) > 0
-    val button = object : WBookEntryShortcut() {
-        override fun addTooltip(tooltip: TooltipBuilder?) {
-            if (containsBook)
-                tooltip?.add(
-                    TranslatableText("gui.indrev.guide_book_shortcut.contains").formatted(
-                        Formatting.BLUE,
-                        Formatting.ITALIC
-                    )
-                )
-            else
-                tooltip?.add(
-                    TranslatableText("gui.indrev.guide_book_shortcut.missing").formatted(
-                        Formatting.RED,
-                        Formatting.ITALIC
-                    )
-                )
-        }
-
-        override fun isWithinBounds(x: Int, y: Int): Boolean =
-            x < this.width && y < this.height
-    }
-    if (containsBook) {
-        button.setOnClick {
-            ClientBookRegistry.INSTANCE.displayBookGui(
-                Identifier("indrev:indrev"),
-                this.getEntry(),
-                this.getPage()
-            )
-        }
-    }
-    panel.add(button, x, y)
-    button.setSize(24, 24)
-    return button
 }
 
 fun WItemSlot.setPainterSafe(ctx: ScreenHandlerContext, painter: () -> BackgroundPainter) {

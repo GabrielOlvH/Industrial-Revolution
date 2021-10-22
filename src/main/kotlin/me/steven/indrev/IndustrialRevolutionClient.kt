@@ -39,8 +39,8 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
-import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
@@ -146,13 +146,13 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
         MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
-        BlockEntityRendererRegistry.INSTANCE.register(IRBlockRegistry.BOILER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.BOILER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
 
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())

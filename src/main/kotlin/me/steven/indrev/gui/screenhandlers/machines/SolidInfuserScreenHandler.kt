@@ -3,7 +3,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.crafters.SolidInfuserBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SOLID_INFUSER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WCustomBar
@@ -22,7 +21,7 @@ class SolidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -45,10 +44,6 @@ class SolidInfuserScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 4
 
     companion object {
         val SCREEN_ID = identifier("infuser")

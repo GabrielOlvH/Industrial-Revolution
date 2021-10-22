@@ -9,12 +9,10 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.components.ensureIsProvider
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
@@ -40,7 +38,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
 
     var value = -1
 
@@ -173,10 +171,6 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/rancher")
-
-    override fun getPage(): Int = 0
 
     companion object {
         val SCREEN_ID = identifier("rancher_screen")

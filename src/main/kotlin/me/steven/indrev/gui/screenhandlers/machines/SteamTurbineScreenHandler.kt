@@ -2,9 +2,7 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WDynamicLabel
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.STEAM_TURBINE_HANDLER
 import me.steven.indrev.gui.widgets.misc.WKnob
@@ -21,7 +19,7 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -51,10 +49,6 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 4
 
     companion object {
         val SCREEN_ID = identifier("steam_turbine")

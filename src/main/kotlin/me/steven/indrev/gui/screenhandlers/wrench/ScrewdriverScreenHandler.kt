@@ -9,12 +9,10 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SCREWDRIVER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
-import me.steven.indrev.utils.addBookEntryShortcut
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -30,7 +28,7 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
 
     private lateinit var currentType: ConfigurationType
 
@@ -62,15 +60,10 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
             if (availableTypes.size > 1)
                 root.add(configTypeButton, 1.6, 1.0)
             configTypeButton.setSize(45, 20)
-            
-            addBookEntryShortcut(playerInventory, root, -1.3, 0.0)
+
         }
         root.validate(this)
     }
-
-    override fun getEntry(): Identifier = identifier("tools/wrench")
-
-    override fun getPage(): Int = 0
 
     override fun close(player: PlayerEntity?) {
         super.close(player)

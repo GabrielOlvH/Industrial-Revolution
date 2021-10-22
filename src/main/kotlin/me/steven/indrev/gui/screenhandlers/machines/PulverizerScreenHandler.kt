@@ -3,7 +3,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import me.steven.indrev.blockentities.crafters.PulverizerBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.PULVERIZER_HANDLER
 import me.steven.indrev.gui.widgets.machines.WCustomBar
@@ -22,7 +21,7 @@ class PulverizerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -46,10 +45,6 @@ class PulverizerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 2
 
     companion object {
         val SCREEN_ID = identifier("pulverizer_screen")

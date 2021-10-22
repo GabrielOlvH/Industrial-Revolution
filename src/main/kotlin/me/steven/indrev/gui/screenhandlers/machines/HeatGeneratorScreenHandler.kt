@@ -4,7 +4,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.HEAT_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.fluidTank
@@ -30,7 +29,7 @@ class HeatGeneratorScreenHandler(
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -65,10 +64,6 @@ class HeatGeneratorScreenHandler(
 
         root.validate(this)
     }
-
-    override fun getEntry(): Identifier = identifier("machines/generators")
-
-    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("heat_generator_screen")

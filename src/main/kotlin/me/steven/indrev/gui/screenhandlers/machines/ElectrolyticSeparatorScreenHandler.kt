@@ -2,7 +2,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import me.steven.indrev.blockentities.crafters.ElectrolyticSeparatorBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.ELECTROLYTIC_SEPARATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.fluidTank
@@ -22,7 +21,7 @@ class ElectrolyticSeparatorScreenHandler(syncId: Int, playerInventory: PlayerInv
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -49,10 +48,6 @@ class ElectrolyticSeparatorScreenHandler(syncId: Int, playerInventory: PlayerInv
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("electrolytic_separator")

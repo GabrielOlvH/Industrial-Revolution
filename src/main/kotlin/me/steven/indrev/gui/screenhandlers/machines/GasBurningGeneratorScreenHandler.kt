@@ -4,7 +4,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WItemSlot
 import io.github.cottonmc.cotton.gui.widget.WSprite
 import me.steven.indrev.blockentities.generators.GasBurningGeneratorBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.GAS_BURNING_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.fluidTank
@@ -26,7 +25,7 @@ class GasBurningGeneratorScreenHandler(
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -48,10 +47,6 @@ class GasBurningGeneratorScreenHandler(
 
         root.validate(this)
     }
-
-    override fun getEntry(): Identifier = identifier("machines/generators")
-
-    override fun getPage(): Int = 5
 
     companion object {
         val SCREEN_ID = identifier("gas_burning_generator_screen")

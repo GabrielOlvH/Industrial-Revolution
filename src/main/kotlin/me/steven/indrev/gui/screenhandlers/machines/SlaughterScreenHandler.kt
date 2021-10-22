@@ -6,7 +6,6 @@ import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SLAUGHTER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
@@ -32,7 +31,7 @@ class SlaughterScreenHandler(
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     private var value = -1
 
     init {
@@ -79,10 +78,6 @@ class SlaughterScreenHandler(
         super.close(player)
         AOEMachineBlockEntity.sendValueUpdatePacket(value, ctx)
     }
-
-    override fun getEntry(): Identifier = identifier("machines/basic_machines")
-
-    override fun getPage(): Int = 1
 
     companion object {
         val SCREEN_ID = identifier("slaughter_screen")

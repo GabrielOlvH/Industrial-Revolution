@@ -7,10 +7,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
 import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.components.ensureIsProvider
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.MINING_RIG_HANDLER
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
@@ -19,7 +17,6 @@ import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -34,7 +31,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
     init {
         val root = WGridPanel()
         setRootPanel(root)
@@ -117,10 +114,6 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/mining_rig")
-
-    override fun getPage(): Int = 0
 
     companion object {
         val SCREEN_ID = identifier("mining_rig")

@@ -6,7 +6,6 @@ import io.github.cottonmc.cotton.gui.widget.WSprite
 import io.github.cottonmc.cotton.gui.widget.data.Axis
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.gui.PatchouliEntryShortcut
 import me.steven.indrev.gui.screenhandlers.CHOPPER_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.misc.WText
@@ -27,7 +26,7 @@ class ChopperScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         syncId,
         playerInventory,
         ctx
-    ), PatchouliEntryShortcut {
+    ) {
 
     var value = -1
     init {
@@ -86,10 +85,6 @@ class ChopperScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
     }
 
     override fun canUse(player: PlayerEntity?): Boolean = true
-
-    override fun getEntry(): Identifier = identifier("machines/chopper")
-
-    override fun getPage(): Int = 0
 
     companion object {
         val SCREEN_ID = identifier("chopper_controller")
