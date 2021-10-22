@@ -67,12 +67,10 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             val kill = filterAnimalsToKill(animals)
             if (kill.isNotEmpty()) use(getEnergyCost())
             kill.forEach { animal ->
-                if (!animal.isAlive || !animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)) return@forEach
-                swordStack.damage(1, world?.random, null)
-                if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
-
                 animal.redirectDrops(inventory) {
-                    animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)
+                    if (!animal.isAlive || !animal.damage(DamageSource.player(fakePlayer), swordItem.attackDamage)) return@forEach
+                    swordStack.damage(1, world?.random, null)
+                    if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
                 }
             }
         }

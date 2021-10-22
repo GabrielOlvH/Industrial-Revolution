@@ -61,8 +61,10 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
                 swordStack.damage(1, world?.random, null)
                 if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
 
-                mob.redirectDrops(inventory) {
-                    mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
+                if (mob.isAlive) {
+                    mob.redirectDrops(inventory) {
+                        mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
+                    }
                 }
             }
         }
