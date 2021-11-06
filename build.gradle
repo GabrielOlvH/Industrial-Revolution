@@ -153,6 +153,7 @@ dependencies {
     modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
     dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
     modRuntime("org.yaml:snakeyaml:1.27")
+    modCompileOnly("org.anti-ad.mc:inventory-profiles-next:fabric-1.17.1-1.1.0")
 }
 
 processResources {
@@ -186,7 +187,7 @@ jar {
 
     exclude("me/steven/indrev/datagen")
 }
-
+/*
 // configure the maven publication
 publishing {
     publications {
@@ -215,5 +216,5 @@ publishing {
         }
     }
 }
-
+*/
 compileKotlin.kotlinOptions.jvmTarget = "16"
