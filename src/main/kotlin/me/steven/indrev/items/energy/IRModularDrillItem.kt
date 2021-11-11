@@ -8,8 +8,7 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.gui.screenhandlers.blockblacklister.BlockBlacklisterScreenHandler
-import me.steven.indrev.gui.tooltip.CustomTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
@@ -19,6 +18,7 @@ import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.item.TooltipData
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerEntity
@@ -34,6 +34,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.RaycastContext
 import net.minecraft.world.World
+import java.util.*
 
 class IRModularDrillItem(
     toolMaterial: ToolMaterial,
@@ -41,7 +42,7 @@ class IRModularDrillItem(
     maxStored: Double,
     baseMiningSpeed: Float,
     settings: Settings
-) : IRMiningDrillItem(toolMaterial, tier, maxStored, baseMiningSpeed, settings), MagnaTool, IRModularItem<Module>, CustomEnchantmentProvider, ModularTooltipDataProvider {
+) : IRMiningDrillItem(toolMaterial, tier, maxStored, baseMiningSpeed, settings), MagnaTool, IRModularItem<Module>, CustomEnchantmentProvider {
 
     override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
         val material = state?.material
@@ -163,8 +164,10 @@ class IRModularDrillItem(
         else false
     }
 
-    override fun getData(stack: ItemStack): List<CustomTooltipData> {
-        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IRMiningDrillItem>.getData(stack)).flatten()
+    override fun getTooltipData(stack: ItemStack): Optional<TooltipData> {
+        val handler = energyOf(stack) ?: return Optional.empty()
+        val modules = getInstalled(stack)
+        return Optional.of(ModularTooltipData(handler.amount, handler.capacity, modules) { it.getLevel(stack) })
     }
 
     companion object {

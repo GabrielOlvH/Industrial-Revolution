@@ -1,6 +1,8 @@
 package me.steven.indrev.items.energy
 
+import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
 import me.steven.indrev.utils.energyOf
+import net.minecraft.client.item.TooltipData
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
@@ -11,6 +13,7 @@ import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
 import team.reborn.energy.api.EnergyStorageUtil
 import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
+import java.util.*
 
 class IRPortableChargerItem(
     settings: Settings,
@@ -31,6 +34,11 @@ class IRPortableChargerItem(
         val player = entity as? PlayerEntity ?: return
         if (player.offHandStack != stack && player.mainHandStack != stack) return
         chargeItemsInInv(slot, player.inventory)
+    }
+
+    override fun getTooltipData(stack: ItemStack): Optional<TooltipData> {
+        val handler = energyOf(stack) ?: return Optional.empty()
+        return Optional.of(EnergyTooltipData(handler.amount, handler.capacity))
     }
 
     companion object {

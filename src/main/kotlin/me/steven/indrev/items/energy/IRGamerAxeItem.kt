@@ -5,18 +5,16 @@ import com.google.common.collect.Multimap
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.gui.tooltip.CustomTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
 import me.steven.indrev.tools.modular.GamerAxeModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.tools.modular.MiningToolModule
 import me.steven.indrev.tools.modular.Module
 import me.steven.indrev.utils.energyOf
-import me.steven.indrev.utils.extract
-import me.steven.indrev.utils.use
 import net.minecraft.block.BlockState
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.item.TooltipData
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.Entity
@@ -51,7 +49,7 @@ class IRGamerAxeItem(
     attackDamage: Float,
     attackSpeed: Float,
     settings: Settings
-) : AxeItem(material, attackDamage, attackSpeed, settings), IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider, ModularTooltipDataProvider {
+) : AxeItem(material, attackDamage, attackSpeed, settings), IREnergyItem, IRModularItem<Module>, AttributeModifierProvider, CustomEnchantmentProvider {
 
     init {
         EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, tier.io, tier.io) }, this)
@@ -75,8 +73,10 @@ class IRGamerAxeItem(
 
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
-    override fun getData(stack: ItemStack): List<CustomTooltipData> {
-        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IREnergyItem>.getData(stack)).flatten()
+    override fun getTooltipData(stack: ItemStack): Optional<TooltipData> {
+        val handler = energyOf(stack) ?: return Optional.empty()
+        val modules = getInstalled(stack)
+        return Optional.of(ModularTooltipData(handler.amount, handler.capacity, modules) { it.getLevel(stack) })
     }
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {

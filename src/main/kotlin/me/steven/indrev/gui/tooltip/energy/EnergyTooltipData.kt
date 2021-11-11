@@ -1,8 +1,5 @@
 package me.steven.indrev.gui.tooltip.energy
 
-import me.steven.indrev.gui.tooltip.CustomTooltipData
-import net.minecraft.client.gui.tooltip.TooltipComponent
+import net.minecraft.client.item.TooltipData
 
-data class EnergyTooltipData(val energy: Long, val maxEnergy: Long) : CustomTooltipData {
-    override fun toComponent(): TooltipComponent = EnergyTooltipComponent(this)
-}
+open class EnergyTooltipData(val energy: Long, val maxEnergy: Long) : TooltipData

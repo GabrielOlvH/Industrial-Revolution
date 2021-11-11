@@ -1,5 +1,6 @@
 package me.steven.indrev.gui.tooltip.modular
 
+import me.steven.indrev.gui.tooltip.energy.EnergyTooltipComponent
 import net.minecraft.client.font.TextRenderer
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.gui.tooltip.TooltipComponent
@@ -8,11 +9,12 @@ import net.minecraft.client.texture.TextureManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 
-class ModularTooltipComponent(val data: ModularTooltipData) : TooltipComponent {
+class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTooltipComponent(data) {
 
-    override fun getHeight(): Int = if (Screen.hasShiftDown()) 0 else 18
+    override fun getHeight(): Int = if (Screen.hasShiftDown()) 18 else 36
 
-    override fun getWidth(textRenderer: TextRenderer?): Int {
+    override fun getWidth(textRenderer: TextRenderer): Int {
+        val energyWidth = super.getWidth(textRenderer)
         var cX = 0
         data.modules.forEachIndexed { index, module ->
             val level = data.levelProvider(module)
@@ -20,7 +22,7 @@ class ModularTooltipComponent(val data: ModularTooltipData) : TooltipComponent {
             if (index + 1 % 5 == 0)
                 return cX
         }
-        return cX
+        return cX.coerceAtLeast(energyWidth)
     }
 
     override fun drawItems(
@@ -32,10 +34,11 @@ class ModularTooltipComponent(val data: ModularTooltipData) : TooltipComponent {
         z: Int,
         textureManager: TextureManager
     ) {
+        super.drawItems(textRenderer, x, y, matrices, itemRenderer, z, textureManager)
         if (Screen.hasShiftDown()) return
 
         var cX = x
-        var cY = y
+        var cY = y + 18
         data.modules.sortedByDescending { data.levelProvider(it) }.forEachIndexed { index, module ->
             val level = data.levelProvider(module)
             cX += level * 5

@@ -151,6 +151,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
         pos: BlockPos,
         posFrom: BlockPos
     ): BlockState {
+        if (world.isClient) return state
         val connects = isConnectable(world as World, pos, posFrom)
         return when (direction) {
             Direction.UP -> state.with(UP, newState.isOf(this) && newState[DOWN] && connects)
@@ -213,6 +214,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
     }
 
     private fun isConnectable(world: World, pos: BlockPos, other: BlockPos): Boolean {
+        if (world.isClient) return false
         val firstInv = fluidStorageOf(world, pos, Direction.UP) as? TankBlockEntity.CombinedTankStorage ?: return false
         val secondInv = fluidStorageOf(world, pos, Direction.DOWN)  as? TankBlockEntity.CombinedTankStorage ?: return false
         return if (firstInv.initialFluid.isBlank || secondInv.initialFluid.isBlank) true
@@ -220,6 +222,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
     }
 
     private fun isConnectable(world: World, firstInv: FluidComponent, other: BlockPos): Boolean {
+        if (world.isClient) return false
         val secondInv = fluidStorageOf(world, other, Direction.UP)  as? TankBlockEntity.CombinedTankStorage ?: return false
         return if (firstInv[0].isEmpty || secondInv.initialFluid.isBlank) true
         else firstInv[0].variant == secondInv.initialFluid

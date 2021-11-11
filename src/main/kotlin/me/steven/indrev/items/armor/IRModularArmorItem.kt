@@ -1,30 +1,23 @@
 package me.steven.indrev.items.armor
 
-import alexiil.mc.lib.attributes.ItemAttributeList
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.misc.LimitedConsumer
-import alexiil.mc.lib.attributes.misc.Reference
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
-import me.steven.indrev.gui.tooltip.CustomTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipDataProvider
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
 import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.energyOf
-import me.steven.indrev.utils.minus
-import me.steven.indrev.utils.times
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.item.TooltipData
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.attribute.EntityAttributeModifier
@@ -40,7 +33,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, ModularTooltipDataProvider, JetpackHandler {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, JetpackHandler {
 
     init {
         EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, Tier.MK4.io, Tier.MK4.io) }, this)
@@ -143,8 +136,10 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
         return getAttributeModifiers(equipmentSlot)
     }
 
-    override fun getData(stack: ItemStack): List<CustomTooltipData> {
-        return listOf(super<ModularTooltipDataProvider>.getData(stack), super<IREnergyItem>.getData(stack)).flatten()
+    override fun getTooltipData(stack: ItemStack): Optional<TooltipData> {
+        val handler = energyOf(stack) ?: return Optional.empty()
+        val modules = getInstalled(stack)
+        return Optional.of(ModularTooltipData(handler.amount, handler.capacity, modules) { it.getLevel(stack) })
     }
 
     companion object {

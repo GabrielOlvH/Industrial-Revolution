@@ -57,7 +57,7 @@ open class EnergyNetwork(
                 if (!energyIo.supportsInsertion()) return@forEach
 
                 val maxInput = energyIo.maxInput
-                val toTransfer = ((maxInput / totalInput.toDouble()) * energy + remainders).toLong()
+                val toTransfer = ((maxInput / totalInput.toDouble()) * energy + remainders).toLong().coerceAtMost(energy)
                 try  {
                     val transferred = energyIo.insert(toTransfer, true)
 
