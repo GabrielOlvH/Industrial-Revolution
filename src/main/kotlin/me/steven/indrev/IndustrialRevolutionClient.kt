@@ -24,6 +24,10 @@ import me.steven.indrev.gui.IRModularControllerScreen
 import me.steven.indrev.gui.screenhandlers.*
 import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScreenHandler
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
+import me.steven.indrev.gui.tooltip.energy.EnergyTooltipComponent
+import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipComponent
+import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.packets.PacketRegistry
@@ -41,6 +45,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
@@ -235,6 +240,14 @@ object IndustrialRevolutionClient : ClientModInitializer {
         })
 
         WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
+
+        TooltipComponentCallback.EVENT.register(TooltipComponentCallback { data ->
+            when (data) {
+                is ModularTooltipData -> ModularTooltipComponent(data)
+                is EnergyTooltipData -> EnergyTooltipComponent(data)
+                else -> null
+            }
+        })
 
         AprilFools.init()
     }

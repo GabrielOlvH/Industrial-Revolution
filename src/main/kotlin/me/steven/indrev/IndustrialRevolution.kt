@@ -166,14 +166,6 @@ object IndustrialRevolution : ModInitializer {
             }
         }*/
 
-        TooltipComponentCallback.EVENT.register(TooltipComponentCallback { data ->
-            when (data) {
-                is ModularTooltipData -> ModularTooltipComponent(data)
-                is EnergyTooltipData -> EnergyTooltipComponent(data)
-                else -> null
-            }
-        })
-
         LOGGER.info("Industrial Revolution has initialized.")
     }
 
