@@ -1,12 +1,22 @@
 package me.steven.indrev.networks.energy
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
+import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
+import me.steven.indrev.networks.ServoNetworkState
+import net.minecraft.nbt.NbtCompound
+import net.minecraft.nbt.NbtHelper
+import net.minecraft.nbt.NbtList
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 
 class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Network.Type.ENERGY, world) {
 
     private var destroyedEnergy = 0L
+
+    val savedEnergy = mutableMapOf<BlockPos, Long>()
 
     override fun add(network: Network) {
         super.add(network)
@@ -30,5 +40,35 @@ class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Netwo
     override fun tick(world: ServerWorld) {
         super.tick(world)
         destroyedEnergy = 0
+    }
+
+    override fun writeNbt(tag: NbtCompound): NbtCompound {
+        val list = NbtList()
+        networks.forEach { network ->
+            val pos = network.pipes.minByOrNull { it }  ?: return@forEach
+            val networkTag = NbtCompound()
+            networkTag.put("Pos", NbtHelper.fromBlockPos(pos))
+            networkTag.putLong("Energy", (network as EnergyNetwork).energy)
+            list.add(networkTag)
+        }
+        tag.put("SavedEnergy", list)
+        return super.writeNbt(tag)
+    }
+
+
+    companion object {
+        fun readNbt(tag: NbtCompound, supplier: () -> EnergyNetworkState): EnergyNetworkState {
+            val state = supplier()
+            val list = tag.getList("SavedEnergy", 10)
+
+            list.forEach { t ->
+                val networkTag = t as NbtCompound
+                val pos = NbtHelper.toBlockPos(networkTag.getCompound("Pos"))
+                val energy = networkTag.getLong("Energy")
+                state.savedEnergy[pos] = energy
+            }
+
+            return state
+        }
     }
 }

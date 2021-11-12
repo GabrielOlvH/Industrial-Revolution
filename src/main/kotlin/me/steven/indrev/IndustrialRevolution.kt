@@ -116,6 +116,7 @@ object IndustrialRevolution : ModInitializer {
 
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
+        ServerLifecycleEvents.SERVER_STOPPING.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player

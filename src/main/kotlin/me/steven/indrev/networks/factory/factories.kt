@@ -10,6 +10,7 @@ import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
 import me.steven.indrev.networks.NetworkState
 import me.steven.indrev.networks.energy.EnergyNetwork
+import me.steven.indrev.networks.energy.EnergyNetworkState
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.item.ItemNetwork
 import me.steven.indrev.utils.*
@@ -29,6 +30,11 @@ val ENERGY_NET_FACTORY: NetworkFactory<EnergyNetwork> = object : NetworkFactory<
     ): Boolean {
         if (blockState().block is CableBlock) {
             network.appendPipe(blockState().block, pos.toImmutable())
+
+            if ((state as EnergyNetworkState).savedEnergy.containsKey(pos)) {
+                val energy = state.savedEnergy.remove(pos)!!
+                network.energy += energy
+            }
             return true
         } else {
             val energyOf = energyOf(world, pos, direction.opposite)

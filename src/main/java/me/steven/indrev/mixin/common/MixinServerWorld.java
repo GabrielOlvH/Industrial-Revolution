@@ -41,7 +41,11 @@ public abstract class MixinServerWorld implements ServerWorldExtension {
     public EnergyNetworkState indrev_getEnergyNetworkState() {
         ServerWorld world = (ServerWorld) (Object) this;
         if (indrev_energyNetworkState == null) {
-            indrev_energyNetworkState = new EnergyNetworkState(world);
+            indrev_energyNetworkState = getPersistentStateManager()
+                    .getOrCreate(
+                            nbt -> EnergyNetworkState.Companion.readNbt(nbt, () -> new EnergyNetworkState(world)),
+                            () -> new EnergyNetworkState(world),
+                            Network.Type.Companion.getENERGY().getKey());
         }
         return indrev_energyNetworkState;
     }
