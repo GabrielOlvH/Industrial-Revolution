@@ -133,7 +133,7 @@ infix fun Long.of(variant: FluidVariant) = IRFluidAmount(variant, this)
 fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<OrderedText> {
     val tooltips = mutableListOf<OrderedText>()
     val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
-    val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, null) ?: -1
+    val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, variant.fluid.defaultState) ?: -1
 
     tooltips.add(TranslatableText("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)).asOrderedText())
 
