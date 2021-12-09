@@ -5,7 +5,6 @@ import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ensureIsProvider
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.block.entity.BlockEntity

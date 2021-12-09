@@ -1,7 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import kotlinx.coroutines.*
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
@@ -14,7 +12,6 @@ import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.drainFluid
 import me.steven.indrev.utils.submitAndGet
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
@@ -33,7 +30,7 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 
 class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state), BlockEntityClientSerializable {
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state) {
 
     init {
         this.fluidComponent = FluidComponent({this}, bucket)
@@ -145,23 +142,22 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun isFixed(type: ConfigurationType): Boolean = true
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         tag?.putDouble("MovingTicks", movingTicks)
-        return super.writeNbt(tag)
+        super.toTag(tag)
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        movingTicks = tag?.getDouble("MovingTicks") ?: movingTicks
-        super.readNbt(tag)
+    override fun fromTag(tag: NbtCompound) {
+        movingTicks = tag.getDouble("MovingTicks")
+        super.fromTag(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
         movingTicks = tag.getDouble("MovingTicks")
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         tag.putDouble("MovingTicks", movingTicks)
-        return tag
     }
 
     companion object {

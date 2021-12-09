@@ -2,6 +2,7 @@ package me.steven.indrev.networks
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectFunction
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.packets.client.SyncNetworkServosPacket
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
@@ -76,7 +77,7 @@ abstract class ServoNetworkState<T : Network>(type: Network.Type<T>, world: Serv
     fun getEndpointData(pos: Long, direction: Direction, createIfAbsent: Boolean = false): EndpointData? {
         return if (createIfAbsent)
             endpointData.computeIfAbsent(pos, LongFunction { Object2ObjectOpenHashMap() })
-                .computeIfAbsent(direction) { EndpointData(EndpointData.Type.INPUT, null) }
+                .computeIfAbsent(direction, Object2ObjectFunction { EndpointData(EndpointData.Type.INPUT, null) })
         else
             endpointData.get(pos)?.get(direction)
     }

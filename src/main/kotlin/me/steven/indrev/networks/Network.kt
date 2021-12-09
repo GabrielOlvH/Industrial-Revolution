@@ -1,6 +1,7 @@
 package me.steven.indrev.networks
 
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
+import it.unimi.dsi.fastutil.objects.Object2ObjectFunction
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.networks.client.ClientNetworkInfo
@@ -23,6 +24,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
+import java.util.function.Function
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -58,7 +60,7 @@ abstract class Network(
                 find(source, offset, count + 1, s)
             }
             if (source != offset && containers.contains(offset) && containers[offset]!!.contains(dir)) {
-                queue.computeIfAbsent(source) { ArrayList(containers.size) }.add(Node(source, offset, count, dir))
+                queue.computeIfAbsent(source, Object2ObjectFunction { ArrayList(containers.size) }).add(Node(source, offset, count, dir))
             }
         }
     }

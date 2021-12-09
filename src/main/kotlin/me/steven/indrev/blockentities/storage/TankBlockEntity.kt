@@ -1,12 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
-import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
+import com.google.common.base.Preconditions
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.SyncableBlockEntity
 import me.steven.indrev.blocks.misc.TankBlock
@@ -14,19 +8,18 @@ import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.plus
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import java.math.RoundingMode
 
-class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
+class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state) {
     val fluidComponent = FluidComponent({ this }, bucket * 8)
 
     companion object {
@@ -47,23 +40,20 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IR
         }
     }
 
-    override fun writeNbt(tag: NbtCompound): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         fluidComponent.toTag(tag)
-        return super.writeNbt(tag)
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
+    override fun fromTag(tag: NbtCompound) {
         fluidComponent.fromTag(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        fluidComponent.fromTag(tag)
+    override fun toClientTag(tag: NbtCompound) {
+        fluidComponent.toTag(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        fluidComponent.toTag(tag)
-        return tag
+    override fun fromClientTag(tag: NbtCompound) {
+        fluidComponent.fromTag(tag)
     }
 
     override fun markDirty() {

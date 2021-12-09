@@ -58,16 +58,16 @@ abstract class SolidFuelGeneratorBlockEntity(tier: Tier, registry: MachineRegist
         }
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
+    override fun fromTag(tag: NbtCompound) {
+        super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        return super.writeNbt(tag)
+        super.toTag(tag)
     }
 
     abstract fun getFuelMap(): Map<Item, Int>

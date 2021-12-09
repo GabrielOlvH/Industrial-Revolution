@@ -12,14 +12,13 @@ import me.steven.indrev.recipes.machines.CondenserRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
 class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
-    CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY, pos, state), BlockEntityClientSerializable {
+    CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY, pos, state) {
 
     override val enhancerSlots: IntArray = intArrayOf(3, 4, 5, 6)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
@@ -72,9 +71,8 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
         fluidComponent!!.fromTag(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         fluidComponent!!.toTag(tag)
-        return tag
     }
 
 

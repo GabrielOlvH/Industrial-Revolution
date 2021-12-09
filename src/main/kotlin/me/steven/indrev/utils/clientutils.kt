@@ -27,7 +27,7 @@ val UPGRADE_SLOT_PANEL_PAINTER: BackgroundPainter = BackgroundPainter.createLigh
 )
 
 fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color1: Long, color2: Long) {
-    val matrix = matrices.peek().model
+    val matrix = matrices.peek().positionMatrix
 
     var j: Int
     var xx1 = x1.toFloat()

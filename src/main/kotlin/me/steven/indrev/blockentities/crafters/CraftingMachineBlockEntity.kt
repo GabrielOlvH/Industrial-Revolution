@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
-import me.steven.indrev.components.trackObject
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
 import me.steven.indrev.items.upgrade.Enhancer
@@ -27,6 +26,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Vec3d
 import net.minecraft.world.World
+import java.util.function.IntBinaryOperator
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) :
@@ -118,31 +118,31 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         for (element in this) {
             val stack = transform(element)
             if (!stack.isEmpty && stack.nbt?.isEmpty != false)
-                destination.mergeInt(stack.item, stack.count) { old, new -> old + new }
+                destination.mergeInt(stack.item, stack.count, IntBinaryOperator { old, new -> old + new })
         }
         return destination
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        val craftTags = tag?.getList("craftingComponents", 10)
+    override fun fromTag(tag: NbtCompound) {
+        val craftTags = tag.getList("craftingComponents", 10)
         craftTags?.forEach { craftTag ->
             val index = (craftTag as NbtCompound).getInt("index")
             craftingComponents[index].readNbt(craftTag)
         }
-        isSplitOn = tag?.getBoolean("split") ?: isSplitOn
-        super.readNbt(tag)
+        isSplitOn = tag.getBoolean("split")
+        super.fromTag(tag)
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         val craftTags = NbtList()
         craftingComponents.forEachIndexed { index, crafting ->
             val craftTag = NbtCompound()
             craftTags.add(crafting.writeNbt(craftTag))
             craftTag.putInt("index", index)
         }
-        tag?.put("craftingComponents", craftTags)
-        tag?.putBoolean("split", isSplitOn)
-        return super.writeNbt(tag)
+        tag.put("craftingComponents", craftTags)
+        tag.putBoolean("split", isSplitOn)
+        return super.toTag(tag)
     }
 
     @Suppress("UNCHECKED_CAST")

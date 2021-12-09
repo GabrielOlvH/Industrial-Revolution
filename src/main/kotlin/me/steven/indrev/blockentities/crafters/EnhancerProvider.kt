@@ -7,6 +7,7 @@ import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.inventory.Inventory
+import java.util.function.IntBinaryOperator
 
 //TODO refactor this into an UpgradeComponent, much more flexible
 interface EnhancerProvider {
@@ -23,7 +24,7 @@ interface EnhancerProvider {
             .forEach { slot ->
                 val (stack, item) = inventory.getStack(slot)
                 if (item is IREnhancerItem && availableEnhancers.contains(item.enhancer))
-                    backingMap.mergeInt(item.enhancer, stack.count) { i, j -> i + j }
+                    backingMap.mergeInt(item.enhancer, stack.count, IntBinaryOperator { i, j -> i + j })
             }
     }
 

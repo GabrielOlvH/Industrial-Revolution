@@ -30,8 +30,7 @@ open class EnergyTooltipComponent(private val data: EnergyTooltipData) : Tooltip
         y: Int,
         matrices: MatrixStack,
         itemRenderer: ItemRenderer,
-        z: Int,
-        textureManager: TextureManager
+        z: Int
     ) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f)
         RenderSystem.setShaderTexture(0, identifier("textures/gui/energy_icon.png"))

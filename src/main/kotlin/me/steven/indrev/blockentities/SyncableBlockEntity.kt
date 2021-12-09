@@ -5,7 +5,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.util.math.BlockPos
 
-abstract class SyncableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : BlockEntity(type, pos, state), Syncable {
+abstract class SyncableBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : BaseBlockEntity(type, pos, state), Syncable {
     var isMarkedForUpdate: Boolean = true
 
     override fun markForUpdate(condition: () -> Boolean) {

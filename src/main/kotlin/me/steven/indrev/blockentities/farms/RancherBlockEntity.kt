@@ -140,21 +140,20 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
-        super.writeNbt(tag)
-        tag?.putBoolean("feedBabies", feedBabies)
-        tag?.putBoolean("mateAdults", mateAdults)
-        tag?.putInt("matingLimit", matingLimit)
-        tag?.putInt("killAfter", killAfter)
-        return tag!!
+    override fun toTag(tag: NbtCompound) {
+        super.toTag(tag)
+        tag.putBoolean("feedBabies", feedBabies)
+        tag.putBoolean("mateAdults", mateAdults)
+        tag.putInt("matingLimit", matingLimit)
+        tag.putInt("killAfter", killAfter)
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
-        feedBabies = tag?.getBoolean("feedBabies") ?: feedBabies
-        mateAdults = tag?.getBoolean("mateAdults") ?: mateAdults
-        matingLimit = tag?.getInt("matingLimit") ?: matingLimit
-        killAfter = tag?.getInt("killAfter") ?: killAfter
+    override fun fromTag(tag: NbtCompound) {
+        super.fromTag(tag)
+        feedBabies = tag.getBoolean("feedBabies")
+        mateAdults = tag.getBoolean("mateAdults")
+        matingLimit = tag.getInt("matingLimit")
+        killAfter = tag.getInt("killAfter")
     }
 
     override fun getCapacity(): Long = Enhancer.getBuffer(this)

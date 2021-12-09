@@ -7,17 +7,21 @@ import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.biome.Biome
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.feature.ConfiguredFeature
+import net.minecraft.world.gen.feature.PlacedFeature
 
 
 class IRConfiguredFeature(
     val identifier: Identifier,
     val step: GenerationStep.Feature,
-    val configuredFeature: ConfiguredFeature<*,*>,
+    val configuredFeature: ConfiguredFeature<*, *>,
+    val placedFeature: (ConfiguredFeature<*, *>) -> PlacedFeature,
     val biomePredicate: (Biome) -> Boolean
 ) {
-    val key = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, identifier)
+    val configuredFeatureKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, identifier)
+    val placedFeatureKey = RegistryKey.of(Registry.PLACED_FEATURE_KEY, identifier)
     init {
-        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, key.value, configuredFeature)
+        BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, configuredFeatureKey.value, configuredFeature)
+        BuiltinRegistries.add(BuiltinRegistries.PLACED_FEATURE, placedFeatureKey.value, placedFeature(configuredFeature))
     }
 
     companion object {

@@ -8,6 +8,7 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.item.ItemStack
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Direction
 
 object ItemPipePackets  {
@@ -23,7 +24,7 @@ object ItemPipePackets  {
             val pos = buf.readBlockPos()
             server.execute {
                 val cursorStack = player.currentScreenHandler.cursorStack
-                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val state = Network.Type.ITEM.getNetworkState(player.world as ServerWorld) as? ItemNetworkState ?: return@execute
                 val data = state.getFilterData(pos, dir)
                 if (cursorStack.isEmpty) data.filter[slotIndex] = ItemStack.EMPTY
                 else data.filter[slotIndex] = cursorStack.copy().also { it.count = 1 }
@@ -42,7 +43,7 @@ object ItemPipePackets  {
             val value = buf.readBoolean()
 
             server.execute {
-                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val state = Network.Type.ITEM.getNetworkState(player.world as ServerWorld) as? ItemNetworkState ?: return@execute
                 val data = state.getFilterData(pos, dir, true)
                 when (field) {
                     0 -> data.whitelist = value
@@ -60,7 +61,7 @@ object ItemPipePackets  {
             val mode = buf.readEnumConstant(EndpointData.Mode::class.java)
 
             server.execute {
-                val state = Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState ?: return@execute
+                val state = Network.Type.ITEM.getNetworkState(player.world as ServerWorld) as? ItemNetworkState ?: return@execute
                 val data = state.getEndpointData(pos, dir, true) ?: return@execute
                 data.mode = mode
                 state.markDirty()

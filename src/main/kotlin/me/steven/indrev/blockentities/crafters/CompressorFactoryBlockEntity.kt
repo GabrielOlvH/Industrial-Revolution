@@ -11,13 +11,12 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.machines.CompressorRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 
 class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
-    CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_FACTORY_REGISTRY, pos, state), BlockEntityClientSerializable {
+    CraftingMachineBlockEntity<CompressorRecipe>(tier, MachineRegistry.COMPRESSOR_FACTORY_REGISTRY, pos, state) {
 
     override val enhancerSlots: IntArray = intArrayOf(2, 3, 4, 5)
     override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
@@ -45,8 +44,8 @@ class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         multiblockComponent?.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        return multiblockComponent?.writeNbt(tag) ?: tag
+    override fun toClientTag(tag: NbtCompound) {
+        multiblockComponent?.writeNbt(tag)
     }
 
     companion object {

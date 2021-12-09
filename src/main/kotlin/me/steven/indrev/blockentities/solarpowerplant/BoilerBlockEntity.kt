@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import com.google.common.base.Preconditions
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.*
@@ -11,7 +12,6 @@ import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.*
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -19,9 +19,9 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
@@ -29,7 +29,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class BoilerBlockEntity(pos: BlockPos, state: BlockState)
-    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), ComponentProvider, Syncable, BlockEntityClientSerializable {
+    : LootableContainerBlockEntity(IRBlockRegistry.BOILER_BLOCK_ENTITY, pos, state), ComponentProvider, Syncable {
 
     val guiSyncableComponent = GuiSyncableComponent()
 
@@ -146,21 +146,18 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         Inventories.readNbt(tag, inventory)
     }
 
-    override fun writeNbt(tag: NbtCompound): NbtCompound {
+    override fun writeNbt(tag: NbtCompound) {
         temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
         multiblockComponent.writeNbt(tag)
         Inventories.writeNbt(tag, inventory)
-        return super.writeNbt(tag)
+        super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound) {
-        multiblockComponent.readNbt(tag)
-    }
-
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        multiblockComponent.writeNbt(tag)
-        return tag
+    fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 
     override fun markForUpdate(condition: () -> Boolean) {

@@ -1,23 +1,20 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
+import com.google.common.base.Preconditions
 import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.registry.IRBlockRegistry
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
+class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, pos, state) {
 
     var targetBlock: BlockPos = BlockPos.ORIGIN
 
-    @Environment(EnvType.CLIENT)
     var pitch: Float = 0.0f
-    @Environment(EnvType.CLIENT)
     var yaw: Float = 0.0f
 
     companion object {
@@ -33,24 +30,21 @@ class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlo
         }
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
-        tag?.putLong("target", targetBlock.asLong())
-        return super.writeNbt(tag)
+    override fun writeNbt(tag: NbtCompound) {
+        tag.putLong("target", targetBlock.asLong())
+        super.writeNbt(tag)
     }
     
-    override fun readNbt(tag: NbtCompound?) {
-        targetBlock = BlockPos.fromLong(tag!!.getLong("target"))
-        super.readNbt(tag)
-    }
-    
-    override fun fromClientTag(tag: NbtCompound?) {
-        targetBlock = BlockPos.fromLong(tag!!.getLong("target"))
+    override fun readNbt(tag: NbtCompound) {
+        targetBlock = BlockPos.fromLong(tag.getLong("target"))
         yaw = HeliostatBlock.getYaw(pos, targetBlock)
         pitch = HeliostatBlock.getPitch(pos, targetBlock)
+        super.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        tag.putLong("target", targetBlock.asLong())
-        return tag
+    fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 }

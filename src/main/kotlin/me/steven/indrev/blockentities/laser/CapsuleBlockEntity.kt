@@ -1,19 +1,20 @@
 package me.steven.indrev.blockentities.laser
 
+import com.google.common.base.Preconditions
 import me.steven.indrev.blocks.machine.LaserBlock
 import me.steven.indrev.registry.IRBlockRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 
-class CapsuleBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable {
+class CapsuleBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.CAPSULE_BLOCK_ENTITY, pos, state) {
 
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
@@ -32,19 +33,15 @@ class CapsuleBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlock
         Inventories.readNbt(tag, inventory)
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+    override fun writeNbt(tag: NbtCompound) {
         super.writeNbt(tag)
         Inventories.writeNbt(tag, inventory)
-        return tag
     }
 
-    override fun fromClientTag(tag: NbtCompound) {
-        inventory[0] = ItemStack.fromNbt(tag.getCompound("Item"))
-    }
-
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        tag.put("Item", inventory[0].writeNbt(NbtCompound()))
-        return tag
+    open fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 
     companion object {

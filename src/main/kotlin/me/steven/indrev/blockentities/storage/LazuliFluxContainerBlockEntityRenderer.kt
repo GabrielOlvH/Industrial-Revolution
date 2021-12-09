@@ -68,7 +68,7 @@ class LazuliFluxContainerBlockEntityRenderer : BlockEntityRenderer<LazuliFluxCon
     }
 
     private fun drawOverlay(matrices: MatrixStack, x1: Float, y1: Float, x2: Float, y2: Float, color: Long, sprite: Sprite, vertexConsumers: VertexConsumerProvider?, direction: Direction, width: Float, tickDelta: Float, time: Long) {
-        val matrix = matrices.peek().model
+        val matrix = matrices.peek().positionMatrix
         
         var xx1 = x1
         var xx2 = x2
@@ -94,7 +94,7 @@ class LazuliFluxContainerBlockEntityRenderer : BlockEntityRenderer<LazuliFluxCon
         var maxU = sprite.getFrameU(4.0)
         var minU = sprite.getFrameU(floor(width.toDouble() * 16))
 
-        val normal = matrices.peek().normal
+        val normal = matrices.peek().normalMatrix
         vertexConsumers?.getBuffer(RenderLayer.getEntityTranslucent(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE))?.run {
 
             fun vertex(x: Float, y: Float, u: Float, v: Float, alpha: Float = a) {

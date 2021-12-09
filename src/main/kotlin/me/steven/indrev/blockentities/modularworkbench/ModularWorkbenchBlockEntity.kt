@@ -15,7 +15,6 @@ import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.getAllOfType
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
@@ -23,7 +22,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 
 class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY, pos, state), BlockEntityClientSerializable {
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MODULAR_WORKBENCH_REGISTRY, pos, state) {
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -149,18 +148,18 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     private fun isProcessing(): Boolean = processTime > 0 && energy > 0
 
-    override fun readNbt(tag: NbtCompound?) {
-        processTime = tag?.getInt("ProcessTime") ?: 0
-        if (tag?.contains("SelectedRecipe") == true)
+    override fun fromTag(tag: NbtCompound) {
+        processTime = tag.getInt("ProcessTime")
+        if (tag.contains("SelectedRecipe"))
             selectedRecipe = Identifier(tag.getString("SelectedRecipe"))
-        super.readNbt(tag)
+        super.fromTag(tag)
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
-        tag?.putInt("ProcessTime", processTime)
+    override fun toTag(tag: NbtCompound) {
+        tag.putInt("ProcessTime", processTime)
         if (selectedRecipe != null)
-            tag?.putString("SelectedRecipe", selectedRecipe!!.toString())
-        return super.writeNbt(tag)
+            tag.putString("SelectedRecipe", selectedRecipe!!.toString())
+        super.toTag(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
@@ -169,11 +168,10 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         inventoryComponent!!.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         if (selectedRecipe != null)
             tag.putString("SelectedRecipe", selectedRecipe!!.toString())
         inventoryComponent!!.writeNbt(tag)
-        return tag
     }
 
     enum class State {

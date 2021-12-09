@@ -31,10 +31,9 @@ class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTool
         y: Int,
         matrices: MatrixStack,
         itemRenderer: ItemRenderer,
-        z: Int,
-        textureManager: TextureManager
+        z: Int
     ) {
-        super.drawItems(textRenderer, x, y, matrices, itemRenderer, z, textureManager)
+        super.drawItems(textRenderer, x, y, matrices, itemRenderer, z)
         if (Screen.hasShiftDown()) return
 
         var cX = x

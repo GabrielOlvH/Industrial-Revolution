@@ -48,11 +48,10 @@ class CabinetBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBl
         }
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+    override fun writeNbt(tag: NbtCompound) {
         super.writeNbt(tag)
         if (!serializeLootTable(tag)) {
             Inventories.writeNbt(tag, inventory)
         }
-        return tag
     }
 }

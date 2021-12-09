@@ -48,8 +48,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
 
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
-    @Shadow public abstract ServerWorld getServerWorld();
-
     @Shadow public abstract void playSound(SoundEvent event, SoundCategory category, float volume, float pitch);
 
     private int ticks = 0;

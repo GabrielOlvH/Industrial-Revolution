@@ -3,12 +3,12 @@ package me.steven.indrev.blockentities.solarpowerplant
 import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import com.google.common.base.Preconditions
 import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.bucket
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -19,14 +19,14 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state),
-    BlockEntityClientSerializable, SidedInventory {
+class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state), SidedInventory {
 
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(4, ItemStack.EMPTY)
 
@@ -80,18 +80,14 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
         readNbt(tag, inventory, stackTemperatures)
     }
 
-    override fun writeNbt(tag: NbtCompound): NbtCompound {
+    override fun writeNbt(tag: NbtCompound) {
         writeNbt(tag, inventory, stackTemperatures)
-        return super.writeNbt(tag)
     }
 
-    override fun fromClientTag(tag: NbtCompound) {
-        readNbt(tag, inventory, stackTemperatures)
-    }
-
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        writeNbt(tag, inventory, stackTemperatures)
-        return tag
+    fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 
     companion object {

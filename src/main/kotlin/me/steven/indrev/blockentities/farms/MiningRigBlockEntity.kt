@@ -12,7 +12,6 @@ import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.trackBoolean
-import me.steven.indrev.components.trackDouble
 import me.steven.indrev.components.trackInt
 import me.steven.indrev.components.trackLong
 import me.steven.indrev.config.BasicMachineConfig
@@ -26,7 +25,6 @@ import me.steven.indrev.utils.*
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.ChunkVeinState
 import me.steven.indrev.world.chunkveins.VeinType
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
@@ -41,7 +39,7 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 
 class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), BlockEntityClientSerializable, EnhancerProvider {
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), EnhancerProvider {
 
     override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
     override val enhancerSlots: IntArray = intArrayOf(10, 11, 12, 13)
@@ -250,26 +248,25 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
+        super.toTag(tag)
         tag?.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
-        return super.writeNbt(tag)
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        mining = tag?.getDouble("Mining") ?: 0.0
-        if (tag?.contains("VeinIdentifier") == true && !tag.getString("VeinIdentifier").isNullOrEmpty())
+    override fun fromTag(tag: NbtCompound) {
+        mining = tag.getDouble("Mining")
+        if (tag.contains("VeinIdentifier") && !tag.getString("VeinIdentifier").isNullOrEmpty())
             chunkVeinType = VeinType.REGISTERED[Identifier(tag.getString("VeinIdentifier"))]
-        super.readNbt(tag)
+        super.fromTag(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         tag.putDouble("Mining", mining)
         if (chunkVeinType != null)
             tag.putString("VeinIdentifier", chunkVeinType?.id.toString())
         tag.put("LastMinedBlock", lastMinedItem.writeNbt(NbtCompound()))
-        return tag
     }
 
     override fun fromClientTag(tag: NbtCompound) {

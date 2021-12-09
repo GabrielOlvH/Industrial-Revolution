@@ -1,5 +1,6 @@
 package me.steven.indrev.packets.client
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectFunction
 import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.client.ClientNetworkState
@@ -13,7 +14,7 @@ object SyncNetworkServosPacket {
      fun register() {
         ClientPlayNetworking.registerGlobalReceiver(SYNC_NETWORK_SERVOS) { client, _, buf, _ ->
             val type = Network.Type.valueOf(buf.readString())
-            val state = IndustrialRevolutionClient.CLIENT_NETWORK_STATE.computeIfAbsent(type) { ClientNetworkState(type) }
+            val state = IndustrialRevolutionClient.CLIENT_NETWORK_STATE.computeIfAbsent(type, Object2ObjectFunction { ClientNetworkState(type) })
             state.processPacket(buf, client)
         }
     }

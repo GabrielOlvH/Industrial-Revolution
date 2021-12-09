@@ -8,19 +8,20 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import alexiil.mc.lib.attributes.item.ItemTransferable
 import alexiil.mc.lib.attributes.item.filter.ItemFilter
+import com.google.common.base.Preconditions
 import me.steven.indrev.blocks.misc.BiomassComposterBlock
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.ComposterBlock
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
-class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, ItemTransferable {
+class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY, pos, state), ItemTransferable {
 
     var ticks = 0
     var level = 0
@@ -117,7 +118,7 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
         }
     }
 
-    override fun writeNbt(nbt: NbtCompound): NbtCompound {
+    override fun writeNbt(nbt: NbtCompound) {
         nbt.putInt("ticks", ticks)
         nbt.putInt("level", level)
         nbt.put("fluidInv", fluidInv.toTag())
@@ -131,17 +132,10 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
         super.readNbt(nbt)
     }
 
-    override fun fromClientTag(nbt: NbtCompound) {
-        ticks = nbt.getInt("ticks")
-        level = nbt.getInt("level")
-        fluidInv.fromTag(nbt.getCompound("fluidInv"))
-    }
-
-    override fun toClientTag(nbt: NbtCompound): NbtCompound {
-        nbt.putInt("ticks", ticks)
-        nbt.putInt("level", level)
-        nbt.put("fluidInv", fluidInv.toTag())
-        return nbt
+    fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 
 }

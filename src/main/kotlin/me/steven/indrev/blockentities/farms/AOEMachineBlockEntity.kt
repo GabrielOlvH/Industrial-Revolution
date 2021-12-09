@@ -6,7 +6,6 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.packets.common.UpdateAOEMachineRangePacket
 import me.steven.indrev.registry.MachineRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
@@ -15,7 +14,7 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 
-abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) : MachineBlockEntity<T>(tier, registry, pos, state), BlockEntityClientSerializable {
+abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) : MachineBlockEntity<T>(tier, registry, pos, state) {
     var renderWorkingArea = false
     abstract var range: Int
     open fun getWorkingArea(): Box {
@@ -23,19 +22,17 @@ abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineR
         return box.expand(range.toDouble(), 0.0, range.toDouble()).stretch(0.0, range.toDouble() * 2, 0.0)
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         tag?.putInt("range", range)
-        return super.writeNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         tag.putInt("range", range)
-        return tag
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
-        range = tag?.getInt("range") ?: range
+    override fun fromTag(tag: NbtCompound) {
+        super.fromTag(tag)
+        range = tag.getInt("range")
     }
 
     override fun fromClientTag(tag: NbtCompound) {

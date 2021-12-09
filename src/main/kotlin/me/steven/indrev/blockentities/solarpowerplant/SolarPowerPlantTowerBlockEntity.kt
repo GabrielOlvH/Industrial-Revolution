@@ -1,7 +1,9 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
+import com.google.common.base.Preconditions
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
@@ -11,17 +13,17 @@ import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefin
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.rawId
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.screen.PropertyDelegate
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
-    : BlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state), BlockEntityClientSerializable, ComponentProvider, Syncable {
+    : BaseBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state), ComponentProvider, Syncable {
 
     val guiSyncableComponent = GuiSyncableComponent()
 
@@ -64,27 +66,24 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
         }
     }
 
-    override fun readNbt(tag: NbtCompound) {
-        super.readNbt(tag)
+    override fun toTag(tag: NbtCompound) {
         temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
         multiblockComponent.readNbt(tag)
     }
 
-    override fun writeNbt(tag: NbtCompound): NbtCompound {
+    override fun fromTag(tag: NbtCompound) {
         temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
         multiblockComponent.writeNbt(tag)
-        return super.writeNbt(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        multiblockComponent.readNbt(tag)
+        multiblockComponent.writeNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         multiblockComponent.writeNbt(tag)
-        return tag
     }
 
     override fun markForUpdate(condition: () -> Boolean) {

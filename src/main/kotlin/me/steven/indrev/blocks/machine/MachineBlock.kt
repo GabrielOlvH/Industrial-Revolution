@@ -16,7 +16,6 @@ import me.steven.indrev.utils.screwdriver
 import me.steven.indrev.utils.wrench
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage
@@ -100,7 +99,7 @@ open class MachineBlock(
             player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender(player.isSneaking)
             blockEntity.markDirty()
-            (blockEntity as? BlockEntityClientSerializable)?.sync() ?: error("multiblock component cannot sync")
+            blockEntity.sync()
         } else if (screenHandler != null) {
             player.openHandledScreen(IRScreenHandlerFactory(screenHandler, pos!!))
         } else return ActionResult.PASS

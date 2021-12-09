@@ -9,13 +9,13 @@ import net.minecraft.util.math.BlockPos
 class SolarReceiverBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.SOLAR_RECEIVER_BLOCK_ENTITY, pos, state) {
     var controllerPos: BlockPos = BlockPos.ORIGIN
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun writeNbt(tag: NbtCompound?) {
         tag?.putLong("controller", controllerPos.asLong())
         return super.writeNbt(tag)
     }
 
-    override fun readNbt(tag: NbtCompound?) {
+    override fun readNbt(tag: NbtCompound) {
         super.readNbt(tag)
-        controllerPos = BlockPos.fromLong(tag?.getLong("controller") ?: -1)
+        controllerPos = BlockPos.fromLong(tag.getLong("controller"))
     }
 }

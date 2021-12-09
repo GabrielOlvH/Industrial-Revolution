@@ -1,6 +1,7 @@
 package me.steven.indrev.networks.item
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
+import it.unimi.dsi.fastutil.objects.Object2ObjectFunction
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
@@ -39,7 +40,7 @@ class ItemNetworkState(world: ServerWorld) : ServoNetworkState<ItemNetwork>(Netw
 
     fun getFilterData(pos: BlockPos, direction: Direction, createIfAbsent: Boolean = false): ItemFilterData {
         return if (createIfAbsent)
-            filters.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() }).computeIfAbsent(direction) { ItemFilterData() }
+            filters.computeIfAbsent(pos.asLong(), LongFunction { Object2ObjectOpenHashMap() }).computeIfAbsent(direction, Object2ObjectFunction { ItemFilterData() })
         else
             filters.get(pos.asLong())?.get(direction) ?: ItemFilterData.ACCEPTING_FILTER_DATA
     }

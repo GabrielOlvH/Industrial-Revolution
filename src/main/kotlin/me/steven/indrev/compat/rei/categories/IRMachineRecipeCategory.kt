@@ -9,7 +9,7 @@ import me.shedaniel.rei.api.client.gui.Renderer
 import me.shedaniel.rei.api.client.gui.SimpleDisplayRenderer
 import me.shedaniel.rei.api.client.gui.widgets.Widget
 import me.shedaniel.rei.api.client.gui.widgets.Widgets
-import me.shedaniel.rei.api.client.registry.display.TransferDisplayCategory
+import me.shedaniel.rei.api.client.registry.display.DisplayCategory
 import me.shedaniel.rei.api.common.category.CategoryIdentifier
 import me.shedaniel.rei.api.common.entry.EntryStack
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes
@@ -26,7 +26,7 @@ open class IRMachineRecipeCategory(
     private val identifier: Identifier,
     private val logo: EntryStack<*>,
     private val categoryName: String
-) : TransferDisplayCategory<IRMachinePlugin> {
+) : DisplayCategory<IRMachinePlugin> {
 
     override fun setupDisplay(recipeDisplay: IRMachinePlugin, bounds: Rectangle): MutableList<Widget> {
         val recipe = recipeDisplay.recipe
@@ -61,14 +61,6 @@ open class IRMachineRecipeCategory(
         return widgets
     }
 
-    override fun renderRedSlots(
-        matrices: MatrixStack?,
-        widgets: MutableList<Widget>?,
-        bounds: Rectangle?,
-        display: IRMachinePlugin?,
-        redSlots: IntList?
-    ) {
-    }
 
     override fun getDisplayRenderer(display: IRMachinePlugin): DisplayRenderer {
         return SimpleDisplayRenderer.from(listOf(display.inputEntries[0]), display.outputEntries)

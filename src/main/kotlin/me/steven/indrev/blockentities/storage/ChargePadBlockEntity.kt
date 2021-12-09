@@ -8,7 +8,6 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.asMutableList
 import me.steven.indrev.utils.energyOf
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
@@ -19,7 +18,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import team.reborn.energy.api.EnergyStorage
 
-class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state), BlockEntityClientSerializable {
+class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHARGE_PAD_REGISTRY, pos, state) {
 
     init {
         this.inventoryComponent = inventory(this) {
@@ -44,9 +43,8 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
         inventoryComponent!!.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         inventoryComponent!!.writeNbt(tag)
-        return tag
     }
 
     inner class ChargePadEnergyIo : EnergyStorage {

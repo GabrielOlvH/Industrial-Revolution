@@ -18,7 +18,7 @@ class WStaticTooltip : WWidget() {
         val bufferBuilder = tessellator.buffer
         RenderSystem.setShader { GameRenderer.getPositionColorShader() }
         bufferBuilder.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR)
-        val matrix4f = matrices.peek().model
+        val matrix4f = matrices.peek().positionMatrix
         val z = 0
         fillGradient(matrix4f, bufferBuilder, x - 3, y - 4, x + width + 3, y - 3, z, -267386864, -267386864)
         fillGradient(matrix4f, bufferBuilder, x - 3, y + height + 3, x + width + 3, y + height + 4, z, -267386864, -267386864)

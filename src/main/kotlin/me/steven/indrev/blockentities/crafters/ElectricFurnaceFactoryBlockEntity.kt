@@ -12,13 +12,12 @@ import me.steven.indrev.mixin.common.MixinAbstractCookingRecipe
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.VanillaCookingRecipeCachedGetter
 import me.steven.indrev.registry.MachineRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 
 class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
-    CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY, pos, state), BlockEntityClientSerializable {
+    CraftingMachineBlockEntity<MixinAbstractCookingRecipe>(tier, MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY, pos, state) {
 
     override val enhancerSlots: IntArray = intArrayOf(2, 3, 4, 5)
     override val availableEnhancers: Array<Enhancer> = Enhancer.FURNACE
@@ -55,8 +54,8 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockS
         multiblockComponent?.readNbt(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        return multiblockComponent?.writeNbt(tag) ?: tag
+    override fun toClientTag(tag: NbtCompound) {
+        multiblockComponent?.writeNbt(tag)
     }
 
     companion object {

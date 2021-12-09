@@ -17,8 +17,6 @@ import me.steven.indrev.utils.transferFluids
 import me.steven.indrev.utils.transferItems
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.inventory.SidedInventory
@@ -26,7 +24,6 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
-import team.reborn.energy.api.base.SimpleSidedEnergyContainer
 import kotlin.collections.set
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
@@ -116,7 +113,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         machineTick()
         if (isMarkedForUpdate) {
             markDirty()
-            if (this is BlockEntityClientSerializable) sync()
+            sync()
             isMarkedForUpdate = false
         }
     }
@@ -199,24 +196,20 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         else -> bucket
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
+    override fun fromTag(tag: NbtCompound) {
         inventoryComponent?.readNbt(tag)
         temperatureComponent?.readNbt(tag)
         fluidComponent?.fromTag(tag)
         multiblockComponent?.readNbt(tag)
-        energy = tag?.getLong("Energy") ?: 0
+        energy = tag.getLong("Energy")
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
-        tag?.putLong("Energy", energy)
-        if (tag != null) {
-            inventoryComponent?.writeNbt(tag)
-            temperatureComponent?.writeNbt(tag)
-            fluidComponent?.toTag(tag)
-            multiblockComponent?.writeNbt(tag)
-        }
-        return super.writeNbt(tag)
+    override fun toTag(tag: NbtCompound) {
+        tag.putLong("Energy", energy)
+        inventoryComponent?.writeNbt(tag)
+        temperatureComponent?.writeNbt(tag)
+        fluidComponent?.toTag(tag)
+        multiblockComponent?.writeNbt(tag)
     }
 
     companion object {

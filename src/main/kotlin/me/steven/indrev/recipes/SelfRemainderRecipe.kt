@@ -42,7 +42,7 @@ class SelfRemainderRecipe(id: Identifier, group: String, output: ItemStack, ingr
             override fun read(identifier: Identifier, jsonObject: JsonObject): SelfRemainderRecipe {
                 val shaped = super.read(identifier, jsonObject)!!
                 val group = JsonHelper.getString(jsonObject, "group", "")
-                return SelfRemainderRecipe(shaped.id, group, shaped.output, shaped.ingredients)
+                return SelfRemainderRecipe(shaped.id, group!!, shaped.output, shaped.ingredients)
             }
 
             override fun read(identifier: Identifier?, packetByteBuf: PacketByteBuf?): SelfRemainderRecipe {

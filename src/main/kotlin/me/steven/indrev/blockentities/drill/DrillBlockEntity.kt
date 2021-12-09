@@ -1,10 +1,10 @@
 package me.steven.indrev.blockentities.drill
 
+import com.google.common.base.Preconditions
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.gui.screenhandlers.machines.MiningRigDrillScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
@@ -17,13 +17,14 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, pos, state), BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
+class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, pos, state), ExtendedScreenHandlerFactory {
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(1, ItemStack.EMPTY)
 
     var position: Double = 1.0
@@ -56,29 +57,18 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
         position = tag?.getDouble("Position") ?: position
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound? {
+    override fun writeNbt(tag: NbtCompound?) {
         super.writeNbt(tag)
         if (!serializeLootTable(tag)) {
             Inventories.writeNbt(tag, inventory)
         }
         tag?.putDouble("Position", position)
-        return tag
     }
 
-    override fun fromClientTag(tag: NbtCompound?) {
-        inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY)
-        if (!deserializeLootTable(tag)) {
-            Inventories.readNbt(tag, inventory)
-        }
-        position = tag?.getDouble("Position") ?: position
-    }
-
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
-        if (!serializeLootTable(tag)) {
-            Inventories.writeNbt(tag, inventory)
-        }
-        tag.putDouble("Position", position)
-        return tag
+    fun sync() {
+        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
+        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {

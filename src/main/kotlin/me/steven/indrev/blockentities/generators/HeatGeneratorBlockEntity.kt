@@ -4,16 +4,14 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.*
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
-
 import me.steven.indrev.utils.bucket
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable
 import net.minecraft.block.BlockState
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 
 class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY, pos, state), BlockEntityClientSerializable {
+    : GeneratorBlockEntity(tier, MachineRegistry.HEAT_GENERATOR_REGISTRY, pos, state) {
 
     private var burnTime by autosync(GasBurningGeneratorBlockEntity.BURN_TIME_ID, 0)
     private var maxBurnTime by autosync(GasBurningGeneratorBlockEntity.TOTAL_BURN_TIME_ID, 0)
@@ -55,21 +53,20 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return ((temperature / temperatureComponent!!.optimalRange.first) / 810).toLong()
     }
 
-    override fun readNbt(tag: NbtCompound?) {
-        super.readNbt(tag)
+    override fun fromTag(tag: NbtCompound) {
+        super.fromTag(tag)
         burnTime = tag?.getInt("BurnTime") ?: 0
         maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
     }
 
-    override fun writeNbt(tag: NbtCompound?): NbtCompound {
+    override fun toTag(tag: NbtCompound) {
         tag?.putInt("BurnTime", burnTime)
         tag?.putInt("MaxBurnTime", maxBurnTime)
-        return super.writeNbt(tag)
+        super.toTag(tag)
     }
 
-    override fun toClientTag(tag: NbtCompound): NbtCompound {
+    override fun toClientTag(tag: NbtCompound) {
         fluidComponent!!.toTag(tag)
-        return tag
     }
 
     override fun fromClientTag(tag: NbtCompound) {

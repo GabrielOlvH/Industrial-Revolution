@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
@@ -23,7 +24,7 @@ class PipeFilterScreenFactory(
     }
 
     override fun writeScreenOpeningData(player: ServerPlayerEntity, buf: PacketByteBuf) {
-        (Network.Type.ITEM.getNetworkState(player.serverWorld) as? ItemNetworkState)?.let { state ->
+        (Network.Type.ITEM.getNetworkState(player.world as ServerWorld) as? ItemNetworkState)?.let { state ->
             val data = state.getEndpointData(pos, dir, false)
             val filterData = state.getFilterData(pos, dir, true)
             buf.writeEnumConstant(dir)

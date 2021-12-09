@@ -16,6 +16,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.world.World
+import java.util.function.LongFunction
 
 object GlobalStateController {
     @Environment(EnvType.CLIENT)
@@ -27,9 +28,9 @@ object GlobalStateController {
     fun queueUpdate(pos: BlockPos) {
         val chunkPos = ChunkPos.toLong(pos.x shr 4, pos.z shr 4)
         if (MinecraftClient.getInstance().isOnThread)
-            chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos)
+            chunksToUpdate.computeIfAbsent(chunkPos, LongFunction { hashSetOf() }).add(pos)
         else
-            MinecraftClient.getInstance().execute { chunksToUpdate.computeIfAbsent(chunkPos) { hashSetOf() }.add(pos) }
+            MinecraftClient.getInstance().execute { chunksToUpdate.computeIfAbsent(chunkPos, LongFunction { hashSetOf() }).add(pos) }
     }
 
     fun update(world: World, pos: BlockPos, workingState: Boolean) {
@@ -60,7 +61,7 @@ object GlobalStateController {
             if (world != null && ticks % 15 == 0) {
                 chunksToUpdate.values.removeIf { positions ->
                     positions.forEach { (x, y, z) ->
-                        client.worldRenderer.scheduleBlockRenders(x shr 4, y shr 4, z shr 4)
+                        client.worldRenderer.scheduleBlockRenders(x , y, z, x, y,z)
                     }
                     true
                 }
