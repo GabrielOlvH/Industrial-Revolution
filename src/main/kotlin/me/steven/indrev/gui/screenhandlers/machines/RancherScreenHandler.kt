@@ -13,6 +13,7 @@ import me.steven.indrev.blockentities.farms.RancherBlockEntity
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.components.ensureIsProvider
+import me.steven.indrev.gui.properties.SyncableProperty
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
@@ -42,10 +43,15 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
     var value = -1
 
+    val feedBabyText = WToggleButton()
     var feedBabies: Boolean = false
+
+    val mateAdultsText = WToggleButton()
     var mateAdults: Boolean = false
+
     val matingLimitText = WTextField()
     var matingLimit: Int = 0
+
     val killAfterText = WTextField()
     var killAfter: Int = 0
 
@@ -57,8 +63,8 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         feedBabies = properties[RancherBlockEntity.FEED_BABIES_ID]
         mateAdults = properties[RancherBlockEntity.MATE_ADULTS]
-        matingLimit = properties[RancherBlockEntity.MATING_LIMIT]
-        killAfter = properties[RancherBlockEntity.KILL_AFTER]
+       // matingLimit = properties[RancherBlockEntity.MATING_LIMIT]
+        //killAfter = properties[RancherBlockEntity.KILL_AFTER]
 
 
         root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
@@ -110,7 +116,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val configPanel = WGridPanel()
         val feedBabyInput = WGridPanel()
         feedBabyInput.add(WLabel("Feed babies"), 0.0, 0.25)
-        val feedBabyText = WToggleButton()
+
         feedBabyText.toggle = feedBabies
         feedBabyText.setOnToggle { v -> feedBabies = v }
         feedBabyInput.add(feedBabyText, 4.4, 0.0)
@@ -118,7 +124,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         val mateAdultsInput = WGridPanel()
         mateAdultsInput.add(WLabel("Mate adults"), 0.0, 0.25)
-        val mateAdultsText = WToggleButton()
+
         mateAdultsText.toggle = mateAdults
         mateAdultsText.setOnToggle { v -> mateAdults = v }
         mateAdultsInput.add(mateAdultsText, 4.4, 0.0)
@@ -126,19 +132,40 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         val matingLimitInput = WGridPanel()
         matingLimitInput.add(WLabel("Mating limit"), 0.0, 0.25)
-        matingLimitText.text = matingLimit.toString()
+
         matingLimitInput.add(matingLimitText, 4, 0)
         matingLimitText.setSize(34, 18)
         configPanel.add(matingLimitInput, 1, 5)
 
         val killAfterInput = WGridPanel()
         killAfterInput.add(WLabel("Kill after"), 0.0, 0.25)
-        killAfterText.text = killAfter.toString()
+
         killAfterInput.add(killAfterText, 4, 0)
         killAfterText.setSize(34, 18)
         configPanel.add(killAfterInput, 1, 7)
         
         return configPanel
+    }
+
+    override fun onSyncedProperty(index: Int, property: SyncableProperty<*>) {
+        when (index) {
+            RancherBlockEntity.KILL_AFTER -> {
+                killAfter = property.value as Int
+                killAfterText.text = killAfter.toString()
+            }
+            RancherBlockEntity.MATING_LIMIT -> {
+                matingLimit = property.value as Int
+                matingLimitText.text = matingLimit.toString()
+            }
+            RancherBlockEntity.MATE_ADULTS -> {
+                mateAdults = property.value as Boolean
+                mateAdultsText.toggle = mateAdults
+            }
+            RancherBlockEntity.FEED_BABIES_ID -> {
+                feedBabies = property.value as Boolean
+                feedBabyText.toggle = feedBabies
+            }
+        }
     }
 
     @Environment(EnvType.CLIENT)

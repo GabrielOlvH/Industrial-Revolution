@@ -7,6 +7,7 @@ import io.netty.buffer.Unpooled
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.GuiSyncableComponent
+import me.steven.indrev.gui.properties.SyncableProperty
 import me.steven.indrev.packets.client.GuiPropertySyncPacket
 import me.steven.indrev.utils.properties
 import me.steven.indrev.utils.trackedPropertyValues
@@ -43,6 +44,11 @@ open class IRGuiScreenHandler(
         }
     }
 
+    override fun syncState() {
+        super.syncState()
+        component?.properties?.forEach { p -> p.markDirty() }
+    }
+
     val player = playerInventory.player
 
     @Environment(EnvType.CLIENT)
@@ -75,7 +81,6 @@ open class IRGuiScreenHandler(
 
     override fun sendContentUpdates() {
         super.sendContentUpdates()
-        component?.properties?.forEach { p -> p.markDirty() }
     }
 
     fun syncProperties() {
@@ -90,8 +95,14 @@ open class IRGuiScreenHandler(
                     props[i].toPacket(buf)
                     ServerPlayNetworking.send(player, GuiPropertySyncPacket.SYNC_PROPERTY, buf)
                     props[i].isDirty = false
+
+                    onSyncedProperty(i, props[i])
                 }
             }
         }
+    }
+
+    open fun onSyncedProperty(index: Int, property: SyncableProperty<*>) {
+
     }
 }

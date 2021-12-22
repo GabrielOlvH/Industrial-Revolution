@@ -16,7 +16,9 @@ object GuiPropertySyncPacket {
 
             val handler = client.player!!.currentScreenHandler
             if (handler.syncId == syncId && handler is IRGuiScreenHandler) {
-                handler.component?.properties?.get(property)?.fromPacket(buf)
+                val prop = handler.component?.properties?.get(property) ?: return@registerGlobalReceiver
+                prop.fromPacket(buf)
+                handler.onSyncedProperty(property, prop)
             }
         }
     }
