@@ -25,10 +25,10 @@ object SyncVeinTypesPacket {
                 val outputs = WeightedList<Block>()
                 val infiniteOutputs = WeightedList<Block>()
                 for (y in 0 until entriesSize) {
-                    val rawId = buf.readInt()
+                    val id = buf.readIdentifier()
                     val weight = buf.readInt()
                     val infiniteWeight = buf.readInt()
-                    val block = Registry.BLOCK.get(rawId)
+                    val block = Registry.BLOCK.get(id)
                     outputs.add(block, weight)
                     infiniteOutputs.add(block, infiniteWeight)
                 }
@@ -54,8 +54,8 @@ object SyncVeinTypesPacket {
                 val block = entry.element
                 val weight = entry.weight
                 val infiniteWeight = infiniteEntries[i].weight
-                val rawId = Registry.BLOCK.getRawId(block)
-                buf.writeInt(rawId)
+                val id = Registry.BLOCK.getId(block)
+                buf.writeIdentifier(id)
                 buf.writeInt(weight)
                 buf.writeInt(infiniteWeight)
             }
