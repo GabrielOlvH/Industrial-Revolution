@@ -24,6 +24,7 @@ abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineR
 
     override fun toTag(tag: NbtCompound) {
         tag?.putInt("range", range)
+        super.toTag(tag)
     }
 
     override fun toClientTag(tag: NbtCompound) {

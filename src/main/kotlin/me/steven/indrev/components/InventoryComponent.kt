@@ -21,7 +21,7 @@ class InventoryComponent(val syncable: MachineBlockEntity<*>, supplier: Inventor
     val itemConfig: SideConfiguration = SideConfiguration(ConfigurationType.ITEM)
 
     override fun onInventoryChanged(sender: Inventory?) {
-        //syncable.markForUpdate()
+        syncable.markDirty()
     }
 
     fun readNbt(tag: NbtCompound?) {
