@@ -71,7 +71,7 @@ object WorldGeneration {
             { feature -> feature.withPlacement(
                 CountPlacementModifier.of(14),
                 SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(48)))
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-48), YOffset.fixed(48)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -95,7 +95,7 @@ object WorldGeneration {
             { feature -> feature.withPlacement(
                 CountPlacementModifier.of(11),
                 SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(32)))
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -117,9 +117,9 @@ object WorldGeneration {
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(OreFeatureConfig(silverTargets, 8)),
             { feature -> feature.withPlacement(
-                CountPlacementModifier.of(8),
+                CountPlacementModifier.of(9),
                 SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(32)))
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -137,9 +137,9 @@ object WorldGeneration {
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(OreFeatureConfig(tungstenTargets, 5)),
             { feature -> feature.withPlacement(
-                CountPlacementModifier.of(6),
+                CountPlacementModifier.of(8),
                 SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -161,9 +161,9 @@ object WorldGeneration {
             GenerationStep.Feature.UNDERGROUND_ORES,
             Feature.ORE.configure(OreFeatureConfig(nikoliteTargets, 7)),
             { feature -> feature.withPlacement(
-                CountPlacementModifier.of(6),
+                CountPlacementModifier.of(8),
                 SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -180,8 +180,8 @@ object WorldGeneration {
             GenerationStep.Feature.UNDERGROUND_DECORATION,
             sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE),
             { feature -> feature.withPlacement(
-                CountPlacementModifier.of(8),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(8)))
+                CountPlacementModifier.of(12),
+                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))
             },
             IRConfiguredFeature.IS_OVERWORLD
         )

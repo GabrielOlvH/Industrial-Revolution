@@ -66,7 +66,7 @@ class IRModularDrillItem(
         val stack = user.getStackInHand(hand)
         if (world!!.isClient && (DrillModule.CONTROLLED_DESTRUCTION.getLevel(stack) > 0 || DrillModule.MATTER_PROJECTOR.getLevel(stack) > 0)) {
             MinecraftClient.getInstance().setScreen(object : CottonClientScreen(BlockBlacklisterScreenHandler()) {
-                override fun isPauseScreen(): Boolean = false
+                override fun shouldPause(): Boolean = false
             })
             return TypedActionResult.success(stack)
         }
