@@ -1,11 +1,9 @@
 package me.steven.indrev.components
 
-import alexiil.mc.lib.attributes.fluid.FluidTransferable
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.Syncable
-
 import me.steven.indrev.utils.IRFluidTank
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView
@@ -57,11 +55,6 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
             tankTag.put("fluids", tank.toTag())
             tanksTag.put(index.toString(), tankTag)
         }
-        /* tanks.forEachIndexed { index, tank ->
-            val tankTag = NbtCompound()
-            tankTag.put("fluids", tank.toTag())
-            tanksTag.put(index.toString(), tankTag)
-        }*/
         tag.put("tanks", tanksTag)
         transferConfig.writeNbt(tag)
         return tag
@@ -75,14 +68,6 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
             val tankTag = tanksTag.getCompound(key)
             parts[index].fromTag(tankTag.getCompound("fluids"))
         }
-
-        //TODO try backwards compat with this shit
-        /*tanksTag?.keys?.forEach { key ->
-            val index = key.toInt()
-            val tankTag = tanksTag.getCompound(key)
-            val volume = FluidVolume.fromTag(tankTag.getCompound("fluids"))
-            tanks[index] = volume
-        }*/
 
         transferConfig.readNbt(tag)
     }

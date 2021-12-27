@@ -14,11 +14,13 @@ import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.energyOf
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
+import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.item.TooltipData
 import net.minecraft.entity.EquipmentSlot
+import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.attribute.EntityAttributes
@@ -33,7 +35,7 @@ import java.util.*
 import kotlin.math.roundToInt
 
 class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, JetpackHandler {
+    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, JetpackHandler, FabricElytraItem {
 
     init {
         EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, Tier.MK4.io, Tier.MK4.io) }, this)
@@ -93,6 +95,10 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
             if (tag.contains(module.key)) module
             else null
         }
+    }
+
+    override fun useCustomElytra(entity: LivingEntity, chestStack: ItemStack, tickElytra: Boolean): Boolean {
+        return ReinforcedElytraItem.canFallFly(chestStack) && super.useCustomElytra(entity, chestStack, tickElytra)
     }
 
     override fun getAttributeModifiers(

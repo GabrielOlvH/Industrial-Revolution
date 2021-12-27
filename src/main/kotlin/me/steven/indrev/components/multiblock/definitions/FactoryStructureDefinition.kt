@@ -1,6 +1,10 @@
-package me.steven.indrev.components.multiblock
+package me.steven.indrev.components.multiblock.definitions
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.components.multiblock.AbstractMultiblockMatcher
+import me.steven.indrev.components.multiblock.StructureDefinition
+import me.steven.indrev.components.multiblock.StructureHelper
+import me.steven.indrev.components.multiblock.StructureHolder
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.state.property.Properties
@@ -54,7 +58,8 @@ object FactoryStructureDefinition : StructureDefinition() {
     }
 
     val SELECTOR: (BlockState, World, BlockPos) -> StructureDefinition = { state, world, pos ->
-        val rotation = AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
+        val rotation =
+            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING].opposite)
         val ductState = world.getBlockState(pos.subtract(BlockPos(0, -1, 1).rotate(rotation)))
         if (!ductState.isOf(IRBlockRegistry.DUCT)) FactoryStructureDefinition
         else {

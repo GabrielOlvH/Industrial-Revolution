@@ -30,9 +30,7 @@ import java.util.function.IntBinaryOperator
 import kotlin.math.floor
 
 abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) :
-    MachineBlockEntity<BasicMachineConfig>(tier, registry, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
+    MachineBlockEntity<BasicMachineConfig>(tier, registry, pos, state) {
 
     override val maxOutput: Long = 0
 
@@ -50,16 +48,16 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
     }
 
     override fun getCapacity(): Long {
-        return Enhancer.getBuffer(this)
+        return Enhancer.getBuffer(enhancerComponent)
     }
 
     override fun getEnergyCost(): Long {
-        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return (if (temperatureComponent?.isFullEfficiency() == true) config.energyCost * 1.5
         else config.energyCost).toLong() * speedEnhancers
     }
 
-    override fun getBaseValue(enhancer: Enhancer): Double {
+    open fun getBaseValue(enhancer: Enhancer): Double {
         val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
         return when (enhancer) {
             Enhancer.SPEED ->
@@ -72,8 +70,12 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         }
     }
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
+    open fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED -> return 1
+            Enhancer.BUFFER -> 4
+            else -> 1
+        }
     }
 
     open fun splitStacks() {

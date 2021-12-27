@@ -4,6 +4,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
@@ -20,10 +21,8 @@ import net.minecraft.util.math.Direction
 class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(3, 4, 5, 6)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
-
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
             coolerSlot = 1
@@ -35,7 +34,6 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
         }
 
         trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
-
 
         trackObject(INPUT_TANK_ID, fluidComponent!![0])
     }

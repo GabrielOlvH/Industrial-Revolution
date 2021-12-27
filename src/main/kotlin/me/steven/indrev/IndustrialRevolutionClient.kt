@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.armor.ReinforcedElytraFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
-import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
+import me.steven.indrev.components.multiblock.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer

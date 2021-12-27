@@ -4,8 +4,9 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.components.CraftingComponent
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.multiblock.FactoryStructureDefinition
+import me.steven.indrev.components.multiblock.definitions.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
@@ -21,11 +22,9 @@ import net.minecraft.util.math.Direction
 class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(2, 3, 4, 5)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
-
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(2, 3, 4, 5), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19)
@@ -41,7 +40,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
             trackObject(CRAFTING_COMPONENT_START_ID + index, component)
             component
         }
-        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" },FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
     }
 
     override fun splitStacks() {

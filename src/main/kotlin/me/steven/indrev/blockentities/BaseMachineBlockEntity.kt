@@ -12,7 +12,10 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
 abstract class BaseMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState)
-    : SyncableBlockEntity(type, pos, state), InventoryProvider, Configurable, ComponentProvider {
+    : BaseBlockEntity(type, pos, state), InventoryProvider, Configurable, ComponentProvider, Syncable {
+    var isMarkedForUpdate: Boolean = true
 
-
+    override fun markForUpdate(condition: () -> Boolean) {
+        isMarkedForUpdate = isMarkedForUpdate || condition()
+    }
 }

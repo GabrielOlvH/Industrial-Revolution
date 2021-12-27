@@ -20,9 +20,13 @@ abstract class BaseBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
 
     abstract fun fromTag(tag: NbtCompound)
 
-    open fun toClientTag(tag: NbtCompound) {}
+    open fun toClientTag(tag: NbtCompound) {
+        toTag(tag)
+    }
 
-    open fun fromClientTag(tag: NbtCompound) {}
+    open fun fromClientTag(tag: NbtCompound) {
+        fromTag(tag)
+    }
 
     override fun toUpdatePacket(): BlockEntityUpdateS2CPacket {
         return BlockEntityUpdateS2CPacket.create(this)

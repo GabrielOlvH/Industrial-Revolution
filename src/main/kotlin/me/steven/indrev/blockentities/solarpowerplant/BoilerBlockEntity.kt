@@ -5,7 +5,7 @@ import com.google.common.base.Preconditions
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.*
-import me.steven.indrev.components.multiblock.BoilerStructureDefinition
+import me.steven.indrev.components.multiblock.definitions.BoilerStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry

@@ -5,7 +5,6 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
@@ -47,6 +46,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     var temperatureComponent: TemperatureComponent? = null
     var fluidComponent: FluidComponent? = null
     var multiblockComponent: MultiBlockComponent? = null
+    var enhancerComponent: EnhancerComponent? = null
 
     var itemTransferCooldown = 0
 
@@ -100,8 +100,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     open fun machineClientTick() {}
 
     fun tick() {
-        if (this is EnhancerProvider && inventoryComponent != null)
-            this.updateEnhancers(inventoryComponent!!.inventory)
+        inventoryComponent?.run { enhancerComponent?.updateEnhancers(inventory) }
         ticks++
         multiblockComponent?.tick(world!!, pos, cachedState)
         if (multiblockComponent?.isBuilt(world!!, pos, cachedState) == false) return
@@ -186,6 +185,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
             ComponentKey.MULTIBLOCK -> multiblockComponent
             ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
             ComponentKey.WORLD_OBJECT -> world
+            ComponentKey.ENHANCER -> enhancerComponent
             else -> null
         }
     }

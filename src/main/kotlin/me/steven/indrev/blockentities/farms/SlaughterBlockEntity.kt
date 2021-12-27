@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
-import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
@@ -20,13 +18,10 @@ import net.minecraft.item.SwordItem
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
-class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
-    override val enhancerSlots: IntArray = intArrayOf(11, 12, 13, 14)
-    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE)
+class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY, pos, state) {
 
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(11, 12, 13, 14), arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE), this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slot = 1 }
             output { slots = intArrayOf(2, 3, 4, 5, 6, 7, 8, 9, 10) }
@@ -43,8 +38,8 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val enhancers = getEnhancers()
-        cooldown += Enhancer.getSpeed(enhancers, this)
+        val enhancers = enhancerComponent!!.enhancers
+        cooldown += Enhancer.getSpeed(enhancers, enhancerComponent!!)
         if (cooldown < config.processSpeed) return
         val source = DamageSource.player(fakePlayer)
         val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) } ?: emptyList()
@@ -63,7 +58,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
                 if (mob.isAlive) {
                     mob.redirectDrops(inventory) {
-                        mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, this)).toFloat())
+                        mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, enhancerComponent!!)).toFloat())
                     }
                 }
             }
@@ -73,21 +68,25 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
     }
 
     override fun getEnergyCost(): Long {
-        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
-        val dmgEnhancers = (getEnhancers().getInt(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
+        val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val dmgEnhancers = (enhancerComponent!!.getCount(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
         return config.energyCost * speedEnhancers * dmgEnhancers
     }
 
-    override fun getBaseValue(enhancer: Enhancer): Double =
+    fun getBaseValue(enhancer: Enhancer): Double =
         when (enhancer) {
             Enhancer.SPEED -> 1.0
             Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED || enhancer == Enhancer.DAMAGE) return 1 else super.getMaxCount(enhancer)
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED, Enhancer.DAMAGE -> return 1
+            Enhancer.BUFFER -> 4
+            else -> 1
+        }
     }
 
-    override fun getCapacity(): Long = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 }

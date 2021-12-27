@@ -154,21 +154,6 @@ object IndustrialRevolution : ModInitializer {
             })
         }
 
-        /*PreFallFlyingCallback.EVENT.register { player ->
-            if (player.world.isClient) return@register
-            val armorStack = player.inventory.getArmorStack(EquipmentSlot.CHEST.entitySlotId)
-            val tracker = FallFlyingLib.ABILITY.getTracker(player)
-            if (ReinforcedElytraItem.canFallFly(armorStack)) {
-                tracker.addSource(REINFORCED_ELYTRA_SOURCE)
-                val i = player.roll + 1
-                if (i % 10 == 0 && (i / 10) % 2 == 0) {
-                    armorStack.damage(1, player) { player -> player.sendEquipmentBreakStatus(EquipmentSlot.CHEST) }
-                }
-            } else {
-                tracker.removeSource(REINFORCED_ELYTRA_SOURCE)
-            }
-        }*/
-
         LOGGER.info("Industrial Revolution has initialized.")
     }
 
@@ -195,6 +180,4 @@ object IndustrialRevolution : ModInitializer {
             override fun playSound(event: SoundEvent?, category: SoundCategory?, volume: Float, pitch: Float) {}
         }
     }
-
-    //val REINFORCED_ELYTRA_SOURCE: AbilitySource = Pal.getAbilitySource(identifier("reinforced_elytra"))
 }

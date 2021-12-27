@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.trackObject
@@ -19,11 +20,9 @@ import net.minecraft.util.math.Direction
 class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : CraftingMachineBlockEntity<ElectrolysisRecipe>(tier, MachineRegistry.ELECTROLYTIC_SEPARATOR_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(1, 2, 3, 4)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
-
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 500..700, 900)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(1, 2, 3, 4), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             coolerSlot = 0
         }

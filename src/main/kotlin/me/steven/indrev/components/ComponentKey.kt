@@ -8,7 +8,7 @@ import net.minecraft.util.Identifier
 import net.minecraft.world.World
 
 /**
- * Used for some internals, allows to provide components without spamming interfaces
+ * Used for some internals, allows providing components without spamming interfaces
  * for example: a Solar Power Plant Smelter has a TemperatureComponent however it is not a child of MachineBlockEntity.
  */
 class ComponentKey<T>(val id: Identifier) {
@@ -24,6 +24,7 @@ class ComponentKey<T>(val id: Identifier) {
         val ITEM = ComponentKey<InventoryComponent>(identifier("item"))
         val TEMPERATURE = ComponentKey<TemperatureComponent>(identifier("temperature"))
         val MULTIBLOCK = ComponentKey<MultiBlockComponent>(identifier("multiblock"))
+        val ENHANCER = ComponentKey<EnhancerComponent>(identifier("enhancer"))
         val WORLD_OBJECT = ComponentKey<World>(identifier("world"))
         val GUI_SYNCABLE = ComponentKey<GuiSyncableComponent>(identifier("gui_syncable"))
     }

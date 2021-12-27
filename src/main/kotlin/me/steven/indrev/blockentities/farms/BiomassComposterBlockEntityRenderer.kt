@@ -2,6 +2,7 @@ package me.steven.indrev.blockentities.farms
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import me.steven.indrev.blocks.misc.BiomassComposterBlock
+import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -43,9 +44,9 @@ class BiomassComposterBlockEntityRenderer : BlockEntityRenderer<BiomassComposter
                 pop()
             }
             push()
-            val vol = entity.fluidInv.getInvFluid(0)
-            translate(0.0, vol.amount().asInexactDouble(), 0.0)
-            vol.render(FACE, vertexConsumers, matrices)
+            val vol = entity.fluidInv.amount / bucket.toDouble()
+            translate(0.0, vol, 0.0)
+            entity.fluidInv.render(FACE, vertexConsumers, matrices)
             pop()
         }
     }

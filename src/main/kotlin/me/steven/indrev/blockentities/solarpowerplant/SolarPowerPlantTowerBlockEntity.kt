@@ -1,24 +1,15 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import com.google.common.base.Preconditions
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.blockentities.BaseBlockEntity
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.Syncable
-import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
 import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
-import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefinition
+import me.steven.indrev.components.multiblock.definitions.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.screen.ArrayPropertyDelegate
-import net.minecraft.screen.PropertyDelegate
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -30,7 +21,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     val propertyDelegate = ArrayPropertyDelegate(7)
     val temperatureComponent = TemperatureComponent(this, 0.06, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
-    val fluidComponent = FluidComponent({this}, bucket * 16)
+    val fluidComponent = FluidComponent({ this }, bucket * 16)
 
     init {
         trackObject(TANK_ID, fluidComponent[0])

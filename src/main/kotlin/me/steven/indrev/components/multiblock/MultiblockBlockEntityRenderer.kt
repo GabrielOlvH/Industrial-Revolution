@@ -1,4 +1,4 @@
-package me.steven.indrev.blockentities
+package me.steven.indrev.components.multiblock
 
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider

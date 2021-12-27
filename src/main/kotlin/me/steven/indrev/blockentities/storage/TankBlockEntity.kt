@@ -1,10 +1,11 @@
 package me.steven.indrev.blockentities.storage
 
-import com.google.common.base.Preconditions
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.SyncableBlockEntity
+import me.steven.indrev.blockentities.BaseBlockEntity
+import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blocks.misc.TankBlock
 import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
@@ -14,13 +15,13 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import java.math.RoundingMode
 
-class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state) {
+class TankBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), Syncable, ComponentProvider {
     val fluidComponent = FluidComponent({ this }, bucket * 8)
+
+    var isMarkedForUpdate: Boolean = true
 
     companion object {
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: TankBlockEntity) {
@@ -67,6 +68,10 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : SyncableBlockEntity(IR
             ComponentKey.FLUID -> fluidComponent
             else -> null
         }
+    }
+
+    override fun markForUpdate(condition: () -> Boolean) {
+        isMarkedForUpdate = isMarkedForUpdate || condition()
     }
 
     class CombinedTankStorage : CombinedStorage<FluidVariant, FluidComponent>(mutableListOf<FluidComponent>()) {

@@ -1,7 +1,8 @@
-package me.steven.indrev.components.multiblock
+package me.steven.indrev.components.multiblock.definitions
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.blocks.misc.VerticalFacingBlock
+import me.steven.indrev.components.multiblock.*
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
@@ -66,7 +67,7 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
                     if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } >= 2 || (y == 0 && abs(z) == radius) || (x == 0 && abs(z) == radius) || abs(y) == radius)
                         map[BlockPos(x, y, z + radius)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
                     else if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } != 0)
-                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({ state -> state == CASING || state == RESISTANT_GLASS}, RESISTANT_GLASS)
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({ state -> state == CASING || state == RESISTANT_GLASS }, RESISTANT_GLASS)
                 }
             }
         }

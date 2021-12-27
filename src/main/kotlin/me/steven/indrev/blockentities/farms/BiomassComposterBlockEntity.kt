@@ -1,40 +1,46 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv
+import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import alexiil.mc.lib.attributes.item.ItemTransferable
-import alexiil.mc.lib.attributes.item.filter.ItemFilter
-import com.google.common.base.Preconditions
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blocks.misc.BiomassComposterBlock
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.registry.IRItemRegistry
+import me.steven.indrev.utils.bucket
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.block.BlockState
 import net.minecraft.block.ComposterBlock
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.item.ItemStack
+import net.minecraft.client.render.VertexConsumerProvider
+import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
-class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY, pos, state), ItemTransferable {
+class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY, pos, state) {
 
     var ticks = 0
     var level = 0
     val fluidInv = BiomassComposterFluidInv()
+    val itemInv = BiomassComposterItemInv()
 
     companion object {
         fun tick(state: BlockState, blockEntity: BiomassComposterBlockEntity) {
-            val vol = blockEntity.fluidInv.getTank(0)
+            val vol = blockEntity.fluidInv
             if (blockEntity.isInProgress()) {
                 blockEntity.ticks++
             }
-            if (blockEntity.isReady() && state[BiomassComposterBlock.CLOSED] && !vol.get().isEmpty && vol.get().fluidKey == FluidKeys.WATER) {
-                blockEntity.fluidInv.setInvFluid(0, FluidKeys.get(IRFluidRegistry.METHANE_STILL).withAmount(vol.get().amount()), Simulation.ACTION)
+            if (blockEntity.isReady() && state[BiomassComposterBlock.CLOSED] && vol.amount > 0 && vol.resource.isOf(Fluids.WATER)) {
+                blockEntity.fluidInv.variant = FluidVariant.of(IRFluidRegistry.METHANE_STILL)
+                blockEntity.reset()
+            } else if (blockEntity.isReady() && !blockEntity.hasFluids()) {
+                blockEntity.itemInv.amount = 1
+                blockEntity.itemInv.variant = ItemVariant.of(IRItemRegistry.BIOMASS)
                 blockEntity.reset()
             }
 
@@ -42,43 +48,9 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
         }
     }
 
-    private val simulated: ThreadLocal<Int> = ThreadLocal.withInitial { 0 }
     private var doneInsertionThisTick = false
 
-    override fun attemptInsertion(stack: ItemStack, simulation: Simulation): ItemStack {
-        if (doneInsertionThisTick || level >= 7 || !ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.contains(stack.item)) return stack
-        var inserted = 0
-        val chance = ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.getValue(stack.item)
-        if (simulation.isSimulate) {
-            while (inserted < stack.count && level <= 7) {
-                inserted++
-                if (world!!.random.nextDouble() < chance) {
-                    simulated.set(inserted)
-                    break
-                }
-            }
-        } else if (simulated.get() > 0) {
-            inserted = simulated.get().coerceAtMost(stack.count)
-            level++
-            markDirty()
-            if (!world!!.isClient)
-                sync()
-            simulated.set(0)
-            doneInsertionThisTick = true
-        }
-        return stack.copy().also { it.decrement(inserted) }
-    }
-
-    override fun attemptExtraction(filter: ItemFilter, maxAmount: Int, simulation: Simulation): ItemStack {
-        if (!isReady() || hasFluids()) return ItemStack.EMPTY
-
-        if (simulation.isAction)
-            reset()
-
-        return ItemStack(IRItemRegistry.BIOMASS)
-    }
-
-    private fun hasFluids() = !fluidInv.getTank(0).get().isEmpty
+    private fun hasFluids() = !fluidInv.isResourceBlank && fluidInv.amount > 0
 
     fun isReady() = level >= 7 && ticks >= getProgressTime()
 
@@ -93,49 +65,83 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BlockEntit
     fun isInProgress(): Boolean {
         return when {
             level < 7 -> false
-            cachedState[BiomassComposterBlock.CLOSED] -> fluidInv.getInvFluid(0).fluidKey == FluidKeys.WATER
-            else -> fluidInv.getInvFluid(0).isEmpty
+            cachedState[BiomassComposterBlock.CLOSED] -> fluidInv.variant.isOf(Fluids.WATER)
+            else -> !hasFluids()
         } && ticks < getProgressTime()
     }
 
     fun getProgressTime() = if (!cachedState[BiomassComposterBlock.CLOSED]) 120 else 440
 
-    inner class BiomassComposterFluidInv : SimpleFixedFluidInv(1, FluidAmount.of(1, 2)) {
-        override fun attemptInsertion(fluid: FluidVolume, simulation: Simulation?): FluidVolume {
-            return if (fluid.fluidKey == FluidKeys.WATER) super.attemptInsertion(fluid, simulation)
-            else fluid
-        }
+    inner class BiomassComposterFluidInv : SingleVariantStorage<FluidVariant>() {
+        override fun canInsert(variant: FluidVariant): Boolean = variant.isOf(Fluids.WATER)
 
-        override fun attemptExtraction(
-            filter: FluidFilter,
-            maxAmount: FluidAmount?,
-            simulation: Simulation?
-        ): FluidVolume {
-            return if (getInvFluid(0).rawFluid == IRFluidRegistry.METHANE_STILL)
-                super.attemptExtraction(filter, maxAmount, simulation)
-            else
-                FluidKeys.EMPTY.withAmount(FluidAmount.ZERO)
+        override fun canExtract(variant: FluidVariant): Boolean = variant.isOf(IRFluidRegistry.METHANE_STILL)
+
+        override fun getCapacity(variant: FluidVariant?): Long = bucket
+
+        override fun getBlankVariant(): FluidVariant = FluidVariant.blank()
+
+        fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
+            if (!variant.isBlank)
+                FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).render(faces, vcp, matrices)
         }
     }
 
-    override fun writeNbt(nbt: NbtCompound) {
-        nbt.putInt("ticks", ticks)
-        nbt.putInt("level", level)
-        nbt.put("fluidInv", fluidInv.toTag())
-        return super.writeNbt(nbt)
+    inner class BiomassComposterItemInv : SingleVariantStorage<ItemVariant>() {
+
+        override fun canInsert(variant: ItemVariant): Boolean = ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.contains(variant.item) && level < 7 && !doneInsertionThisTick
+
+        override fun insert(insertedVariant: ItemVariant, maxAmount: Long, transaction: TransactionContext?): Long {
+            StoragePreconditions.notBlankNotNegative(insertedVariant, maxAmount)
+
+            if ((insertedVariant == variant || variant.isBlank) && canInsert(insertedVariant)) {
+
+                val chance = ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.getValue(variant.item)
+                val insertedAmount = maxAmount.coerceAtMost(getCapacity(insertedVariant) - amount)
+                var actuallyInserted = 0L
+                for (x in 0 until insertedAmount) {
+                    if (world!!.random.nextDouble() < chance) {
+                        actuallyInserted++
+                    }
+                }
+                if (insertedAmount > 0) {
+                    updateSnapshots(transaction)
+                    if (variant.isBlank) {
+                        variant = insertedVariant
+                        amount = actuallyInserted
+                    } else {
+                        amount += actuallyInserted
+                    }
+                    doneInsertionThisTick = true
+                }
+                return insertedAmount
+            }
+
+            return 0
+        }
+
+        override fun getCapacity(variant: ItemVariant): Long = 7 - level.toLong()
+
+        override fun canExtract(variant: ItemVariant): Boolean = variant.isOf(IRItemRegistry.BIOMASS)
+
+        override fun getBlankVariant(): ItemVariant = ItemVariant.blank()
     }
 
-    override fun readNbt(nbt: NbtCompound) {
-        ticks = nbt.getInt("ticks")
-        level = nbt.getInt("level")
-        fluidInv.fromTag(nbt.getCompound("fluidInv"))
-        super.readNbt(nbt)
+    override fun toTag(tag: NbtCompound) {
+        tag.putInt("ticks", ticks)
+        tag.putInt("level", level)
+        tag.put("fluidVariant", fluidInv.variant.toNbt())
+        tag.putLong("fluidAmt", fluidInv.amount)
+        tag.put("itemVariant", itemInv.variant.toNbt())
+        tag.putLong("itemAmt", itemInv.amount)
     }
 
-    fun sync() {
-        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
-        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
-        (world as ServerWorld).chunkManager.markForUpdate(getPos())
+    override fun fromTag(tag: NbtCompound) {
+        ticks = tag.getInt("ticks")
+        level = tag.getInt("level")
+        fluidInv.variant = FluidVariant.fromNbt(tag.getCompound("fluidVariant"))
+        fluidInv.amount = tag.getLong("fluidAmt")
+        itemInv.variant = ItemVariant.fromNbt(tag.getCompound("itemVariant"))
+        itemInv.amount = tag.getLong("itemAmt")
     }
-
 }

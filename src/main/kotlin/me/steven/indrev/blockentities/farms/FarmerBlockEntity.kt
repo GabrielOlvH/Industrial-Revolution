@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.farms
 
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
-import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
@@ -23,13 +21,10 @@ import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
 
 class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
-    override val enhancerSlots: IntArray = intArrayOf(14, 15, 16, 17)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
+    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY, pos, state) {
 
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(1, 2, 3, 4) }
             output { slots = intArrayOf(5, 6, 7, 8, 9, 10, 11, 12, 13) }
@@ -45,8 +40,8 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     private var nextBlocks = emptyList<BlockPos>().iterator()
 
     override fun machineTick() {
-        val upgrades = getEnhancers()
-        cooldown += Enhancer.getSpeed(upgrades, this)
+        val upgrades = enhancerComponent!!.enhancers
+        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
         val energyCost = config.energyCost
@@ -128,7 +123,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     override fun getEnergyCost(): Long {
-        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
 
@@ -153,15 +148,19 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun getWorkingArea(): Box = Box(pos).expand(range.toDouble(), 0.0, range.toDouble())
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) 1 else super.getMaxCount(enhancer)
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED -> return 1
+            Enhancer.BUFFER -> 4
+            else -> 1
+        }
     }
-
-    override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
+    
+    fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
         Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
         else -> 0.0
     }
 
-    override fun getCapacity(): Long = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 }

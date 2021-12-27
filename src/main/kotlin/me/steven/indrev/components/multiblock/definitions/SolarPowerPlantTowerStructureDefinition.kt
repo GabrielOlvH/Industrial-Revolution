@@ -1,6 +1,7 @@
-package me.steven.indrev.components.multiblock
+package me.steven.indrev.components.multiblock.definitions
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
+import me.steven.indrev.components.multiblock.*
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks

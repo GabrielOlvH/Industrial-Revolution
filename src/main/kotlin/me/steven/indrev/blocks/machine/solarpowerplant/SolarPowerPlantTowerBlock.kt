@@ -4,10 +4,9 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantTowerBlockEntity
 import me.steven.indrev.blocks.misc.HorizontalFacingBlock
-import me.steven.indrev.components.multiblock.SolarPowerPlantTowerStructureDefinition
+import me.steven.indrev.components.multiblock.definitions.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantTowerScreenHandler
-import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity

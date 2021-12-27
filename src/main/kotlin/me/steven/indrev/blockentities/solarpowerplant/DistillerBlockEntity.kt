@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.trackObject
@@ -19,15 +20,16 @@ import net.minecraft.util.math.BlockPos
 
 class DistillerBlockEntity(pos: BlockPos, state: BlockState) : CraftingMachineBlockEntity<DistillerRecipe>(Tier.MK4, MachineRegistry.DISTILLER_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(3, 4, 5, 6)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
-
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.01, 70..120, 200)
         this.fluidComponent = FluidComponent({ this }, bucket)
+
+        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
         }
+        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+
         trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
         trackObject(TANK_ID, fluidComponent!![0])
     }

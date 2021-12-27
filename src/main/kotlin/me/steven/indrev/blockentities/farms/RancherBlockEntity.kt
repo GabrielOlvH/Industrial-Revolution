@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
-import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.autosync
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
@@ -24,13 +22,10 @@ import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
 
 class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
-    override val enhancerSlots: IntArray = intArrayOf(15, 16, 17, 18)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
+    : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY, pos, state) {
 
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(2, 3, 4, 5) }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
@@ -52,8 +47,8 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = getEnhancers()
-        cooldown += Enhancer.getSpeed(upgrades, this)
+        val upgrades = enhancerComponent!!.enhancers
+        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
         if (cooldown < config.processSpeed) return
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true } ?: emptyList()
         if (animals.isEmpty() || !canUse(getEnergyCost())) {
@@ -125,19 +120,23 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     override fun getEnergyCost(): Long {
-        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
 
-    override fun getBaseValue(enhancer: Enhancer): Double =
+    fun getBaseValue(enhancer: Enhancer): Double =
         when (enhancer) {
             Enhancer.SPEED -> 1.0
             Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
         }
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 1 else super.getMaxCount(enhancer)
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED -> return 1 
+            Enhancer.BUFFER -> 4
+            else -> 1
+        }
     }
 
     override fun toTag(tag: NbtCompound) {
@@ -156,7 +155,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         killAfter = tag.getInt("killAfter")
     }
 
-    override fun getCapacity(): Long = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent!!)
 
     companion object {
         const val FEED_BABIES_ID = 2

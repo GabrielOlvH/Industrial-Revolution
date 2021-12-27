@@ -2,7 +2,7 @@ package me.steven.indrev.blocks.machine.solarpowerplant
 
 import me.steven.indrev.blockentities.solarpowerplant.BoilerBlockEntity
 import me.steven.indrev.blocks.misc.HorizontalFacingBlock
-import me.steven.indrev.components.multiblock.BoilerStructureDefinition
+import me.steven.indrev.components.multiblock.definitions.BoilerStructureDefinition
 import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
 import net.minecraft.block.BlockEntityProvider

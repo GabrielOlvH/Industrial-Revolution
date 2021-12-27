@@ -1,6 +1,7 @@
 package me.steven.indrev.items.upgrade
 
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.gui.IRInventoryScreen
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import net.minecraft.client.MinecraftClient
@@ -22,11 +23,12 @@ class IREnhancerItem(settings: Settings, val enhancer: Enhancer) : Item(settings
         if (currentScreen is IRInventoryScreen<*>) {
             val handler = currentScreen.screenHandler as? IRGuiScreenHandler ?: return
             handler.ctx.run { _, pos ->
-                val blockEntity = world?.getBlockEntity(pos) as? EnhancerProvider? ?: return@run
-                if (!blockEntity.availableEnhancers.contains(enhancer))
+                val blockEntity = world?.getBlockEntity(pos) as? ComponentProvider ?: return@run
+                val enhancerComponent = ComponentKey.ENHANCER.get(blockEntity) ?: return@run
+                if (!enhancerComponent.compatible.contains(enhancer))
                     tooltip?.add(TranslatableText("item.indrev.enhancers.incompatible").formatted(Formatting.DARK_RED))
                 else
-                    tooltip?.add(TranslatableText("item.indrev.enhancers.count", blockEntity.getMaxCount(enhancer)).formatted(Formatting.AQUA))
+                    tooltip?.add(TranslatableText("item.indrev.enhancers.count", enhancerComponent.baseValue(enhancer)).formatted(Formatting.AQUA))
             }
         }
     }

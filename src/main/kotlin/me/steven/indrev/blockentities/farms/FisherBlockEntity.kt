@@ -1,10 +1,8 @@
 package me.steven.indrev.blockentities.farms
 
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
-import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
@@ -23,13 +21,10 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
 class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHER_REGISTRY, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
-    override val enhancerSlots: IntArray = intArrayOf(6, 7, 8, 9)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHER_REGISTRY, pos, state) {
 
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(6, 7, 8, 9), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 1
@@ -45,11 +40,11 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val maxOutput: Long = 0
 
     override fun machineTick() {
-        val upgrades = getEnhancers()
+        val upgrades = enhancerComponent!!.enhancers
         if (!canUse(getEnergyCost())) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
         if (rodStack.isEmpty || rodStack.item !is FishingRodItem || !use(getEnergyCost())) return
-        cooldown += Enhancer.getSpeed(upgrades, this)
+        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
         if (cooldown < config.processSpeed) return
         cooldown = 0.0
         Direction.values().forEach { direction ->
@@ -73,7 +68,7 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     override fun getEnergyCost(): Long {
-        val speedEnhancers = (getEnhancers().getInt(Enhancer.SPEED) * 2).coerceAtLeast(1)
+        val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
 
@@ -83,16 +78,19 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
     }
 
-    override fun getCapacity(): Long = Enhancer.getBuffer(this)
+    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 
-    override fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
+    fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
         Enhancer.SPEED -> 1.0
         Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
         else -> 0.0
     }
 
-    override fun getMaxCount(enhancer: Enhancer): Int {
-        return if (enhancer == Enhancer.SPEED) return 4 else super.getMaxCount(enhancer)
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED, Enhancer.BUFFER -> 4
+            else -> 1
+        }
     }
 
     companion object {

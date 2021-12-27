@@ -1,7 +1,7 @@
 package me.steven.indrev.blockentities.modularworkbench
 
 import me.steven.indrev.armor.ModuleFeatureRenderer
-import me.steven.indrev.blockentities.MultiblockBlockEntityRenderer
+import me.steven.indrev.components.multiblock.MultiblockBlockEntityRenderer
 import me.steven.indrev.items.armor.IRModularArmorItem
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.identifier

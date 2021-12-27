@@ -1,16 +1,14 @@
 package me.steven.indrev.blockentities.farms
 
 import io.netty.buffer.Unpooled
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap
-import it.unimi.dsi.fastutil.objects.Object2IntMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
 import me.steven.indrev.blocks.machine.DrillBlock
 import me.steven.indrev.blocks.machine.MachineBlock
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.trackBoolean
 import me.steven.indrev.components.trackInt
 import me.steven.indrev.components.trackLong
@@ -39,13 +37,10 @@ import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 
 class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
-    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state), EnhancerProvider {
-
-    override val backingMap: Object2IntMap<Enhancer> = Object2IntArrayMap()
-    override val enhancerSlots: IntArray = intArrayOf(10, 11, 12, 13)
-    override val availableEnhancers: Array<Enhancer> = arrayOf(Enhancer.BUFFER)
+    : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.MINING_RIG_REGISTRY, pos, state) {
 
     init {
+        this.enhancerComponent = EnhancerComponent(intArrayOf(10, 11, 12, 13), arrayOf(Enhancer.BUFFER), this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 14
@@ -79,12 +74,12 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         val inventory = inventoryComponent?.inventory ?: return
         cacheVeinType()
 
-        val upgrades = getEnhancers()
+        val upgrades = enhancerComponent!!.enhancers
 
         if (isLocationCorrect() && use(getEnergyCost())) {
             workingState = true
             getActiveDrills().forEach { drill -> drill.setWorkingState(true) }
-            mining += Enhancer.getSpeed(upgrades, this)
+            mining += Enhancer.getSpeed(upgrades, enhancerComponent!!)
             temperatureComponent?.tick(true)
         } else {
             workingState = false
@@ -215,7 +210,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return config.energyCost + (IRConfig.machines.drill * getActiveDrills().size)
     }
 
-    override fun getBaseValue(enhancer: Enhancer): Double {
+    fun getBaseValue(enhancer: Enhancer): Double {
         val activeDrills = getActiveDrills()
         return when (enhancer) {
             Enhancer.SPEED -> activeDrills.sumOf { blockEntity ->
@@ -224,6 +219,13 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
             else -> 0.0
+        }
+    }
+
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.BUFFER -> 4
+            else -> 1
         }
     }
 
@@ -250,9 +252,9 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     override fun toTag(tag: NbtCompound) {
         super.toTag(tag)
-        tag?.putDouble("Mining", mining)
+        tag.putDouble("Mining", mining)
         if (chunkVeinType != null)
-            tag?.putString("VeinIdentifier", chunkVeinType?.id.toString())
+            tag.putString("VeinIdentifier", chunkVeinType?.id.toString())
     }
 
     override fun fromTag(tag: NbtCompound) {

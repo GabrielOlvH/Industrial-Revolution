@@ -10,7 +10,6 @@ import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.gui.widgets.machines.*
@@ -62,7 +61,7 @@ fun SyncedGuiDescription.configure(
         val energyWidget = energyBar(blockEntity)
         panel.add(energyWidget, 0.1, widgetPos)
 
-        if (blockEntity is MachineBlockEntity<*> && blockEntity is EnhancerProvider) {
+        if (blockEntity is MachineBlockEntity<*> && blockEntity.enhancerComponent != null) {
             addUpgradeSlots(blockEntity, blockInventory, world, panel)
         }
 
@@ -112,22 +111,22 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
 }
 
 fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventory, world: World, panel: WGridPanel) {
-    blockEntity as EnhancerProvider
+    val enhancerComponent = blockEntity.enhancerComponent!!
     val slotPanel = WGridPanel()
-    for ((i, slot) in blockEntity.enhancerSlots.withIndex()) {
+    for ((i, slot) in enhancerComponent.slots.withIndex()) {
         val s =
             object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
                 override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
                     return object : ValidatedSlot(inventory, index, x, y) {
                         override fun getMaxItemCount(stack: ItemStack): Int {
                             val upgrade = (stack.item as? IREnhancerItem)?.enhancer ?: return 0
-                            return blockEntity.getMaxCount(upgrade)
+                            return enhancerComponent.maxSlotCount(upgrade)
                         }
                     }
                 }
             }
         if (world.isClient)
-            s.backgroundPainter = if (blockEntity.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
+            s.backgroundPainter = if (enhancerComponent.isLocked(slot, blockEntity.tier)) getLockedSlotPainter(
                 blockInventory,
                 slot
             ) else getUpgradeSlotPainter(blockInventory, slot)

@@ -325,13 +325,13 @@ object IRItemRegistry {
     val TIER_UPGRADE_MK4 = IRMachineUpgradeItem(itemSettings(), Tier.MK3, Tier.MK4)
 
     val MINING_DRILL_MK1 =
-        IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings().customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.STONE, Tier.MK1, 4000.0, 6f, itemSettings())
     val MINING_DRILL_MK2 =
-        IRMiningDrillItem(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings().customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.IRON, Tier.MK2, 8000.0, 10f, itemSettings())
     val MINING_DRILL_MK3 =
-        IRMiningDrillItem(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings().customDamage(EnergyDamageHandler))
+        IRMiningDrillItem(ToolMaterials.DIAMOND, Tier.MK3, 16000.0, 14f, itemSettings())
     val MINING_DRILL_MK4 = IRModularDrillItem(
-        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof().customDamage(EnergyDamageHandler)
+        ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof()
     )
 
     val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())

@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.crafters
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
+import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
@@ -17,11 +18,9 @@ import net.minecraft.util.math.Direction
 class SolidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     CraftingMachineBlockEntity<InfuserRecipe>(tier, MachineRegistry.SOLID_INFUSER_REGISTRY, pos, state) {
 
-    override val enhancerSlots: IntArray = intArrayOf(5, 6, 7, 8)
-    override val availableEnhancers: Array<Enhancer> = Enhancer.DEFAULT
-
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(5, 6, 7, 8), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3)

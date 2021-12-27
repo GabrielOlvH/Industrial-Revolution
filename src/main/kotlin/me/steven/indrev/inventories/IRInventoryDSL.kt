@@ -2,7 +2,6 @@ package me.steven.indrev.inventories
 
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.crafters.EnhancerProvider
 import me.steven.indrev.components.InventoryComponent
 import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.utils.EMPTY_INT_ARRAY
@@ -54,7 +53,8 @@ open class IRInventoryDSL : Filterable() {
         var size = input.slots.plus(output.slots).plus(filters.keys).distinct().size + 1
         if (coolerSlot == null && blockEntity.temperatureComponent != null) coolerSlot = 1
         if (coolerSlot != null) size++
-        if (blockEntity is EnhancerProvider) size += blockEntity.enhancerSlots.size
+        val enhancerComponent = blockEntity.enhancerComponent
+        if (enhancerComponent != null) size += enhancerComponent.slots.size
         return IRInventory(this, size, input.slots, output.slots) { slot, stack, dir ->
             if (stack == null) false
             else filters.computeIfAbsent(slot) {
@@ -62,7 +62,7 @@ open class IRInventoryDSL : Filterable() {
                     when {
                         coolerSlot != null && slot == coolerSlot -> stack.isIn(IndustrialRevolution.COOLERS_TAG)
                         input.slots.contains(slot) -> true
-                        blockEntity is EnhancerProvider -> item is IREnhancerItem && slot in blockEntity.enhancerSlots && !blockEntity.isLocked(slot, blockEntity.tier) && blockEntity.availableEnhancers.contains(item.enhancer)
+                        enhancerComponent != null -> item is IREnhancerItem && slot in enhancerComponent.slots && !enhancerComponent.isLocked(slot, blockEntity.tier) && enhancerComponent.compatible.contains(item.enhancer)
                         else -> false
                     }
                 }

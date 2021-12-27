@@ -199,10 +199,6 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
             override fun markForUpdate(condition: () -> Boolean) {
                 TODO("Not yet implemented")
             }
-
-            override fun <T> get(key: ComponentKey<T>): Any? {
-                TODO("Not yet implemented")
-            }
         } }, bucket, 1)
         if (ctx.stack.nbt != null && !ctx.stack.nbt!!.isEmpty)
             fluidComponent.fromTag(ctx.stack.nbt)
