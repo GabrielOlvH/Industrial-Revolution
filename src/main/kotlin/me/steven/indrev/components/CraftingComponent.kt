@@ -88,8 +88,9 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
                     if (tank.resource != volume.resource) return@forEach
                     val amount = tank.amount - volume.amount
                     if (amount <= 0)
-                        fluidComponent!![slot].variant = FluidVariant.blank()
-                    fluidComponent!![slot].amount = amount
+                        tank.variant = FluidVariant.blank()
+                    tank.amount = amount
+                    tank.markDirty()
                     return@forEachIndexed
                 }
             }
