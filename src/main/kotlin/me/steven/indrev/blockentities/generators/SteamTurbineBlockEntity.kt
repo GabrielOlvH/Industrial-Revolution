@@ -3,6 +3,7 @@ package me.steven.indrev.blockentities.generators
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.*
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.definitions.SteamTurbineStructureDefinition
 import me.steven.indrev.registry.IRFluidRegistry

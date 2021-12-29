@@ -111,7 +111,7 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
 
     companion object {
 
-        val MOLTEN_SALT_AMOUNT = bucket / 9
+        val MOLTEN_SALT_AMOUNT = bucket / 100
 
         const val FIRST_SLOT_ID = 0
         const val SECOND_SLOT_ID = 1

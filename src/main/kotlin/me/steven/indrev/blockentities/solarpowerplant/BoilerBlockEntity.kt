@@ -1,10 +1,10 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import com.google.common.base.Preconditions
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.*
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.definitions.BoilerStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.gui.screenhandlers.machines.BoilerScreenHandler
@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.LootableContainerBlockEntity
 import net.minecraft.entity.player.PlayerInventory
+import net.minecraft.fluid.Fluids
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
@@ -193,6 +194,12 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 
     inner class BoilerFluidComponent : FluidComponent({ this }, MAX_CAPACITY, 3) {
 
+        init {
+            this.inputTanks = intArrayOf(0, 1)
+            this.outputTanks = intArrayOf(2)
+            this.unsided = true
+        }
+
         override fun getTankCapacity(index: Int): Long {
             return if (index == 0) bucket else super.getTankCapacity(index)
         }
@@ -200,7 +207,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         override fun isFluidValidForTank(index: Int, variant: FluidVariant): Boolean {
             return when (index) {
                 0 -> variant.isOf(IRFluidRegistry.MOLTEN_SALT_STILL)
-                1 -> variant == FluidKeys.WATER
+                1 -> variant.isOf(Fluids.WATER)
                 2 -> variant.isOf(IRFluidRegistry.STEAM_STILL)
                 else -> false
             }

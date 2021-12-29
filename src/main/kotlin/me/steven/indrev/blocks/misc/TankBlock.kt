@@ -3,7 +3,6 @@ package me.steven.indrev.blocks.misc
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.storage.TankBlockEntity
-import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket

@@ -1,8 +1,5 @@
 package me.steven.indrev.blockentities.generators
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -15,8 +12,6 @@ import me.steven.indrev.registry.IRFluidFuelRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.rawId
-import me.steven.indrev.utils.use
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack

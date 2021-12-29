@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.Direction
 import java.util.*
-import kotlin.math.exp
 
 open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tankCount: Int = 1) :
     CombinedStorage<FluidVariant, IRFluidTank>(mutableListOf()) {
@@ -24,19 +23,24 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
     var inputTanks = intArrayOf()
     var outputTanks = intArrayOf()
 
+    var unsided = false
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.FLUID)
 
     private val exposedSides = EnumMap<Direction, ExposedFluidComponent>(Direction::class.java)
 
+
     fun getCachedSide(dir: Direction): ExposedFluidComponent {
         val exposed = exposedSides[dir]
-        if (exposed == null || exposed.mode != transferConfig[dir]) {
+        if (exposed == null || (!unsided && exposed.mode != transferConfig[dir])) {
             exposedSides[dir] = ExposedFluidComponent(dir, transferConfig[dir]!!)
         }
         return exposedSides[dir]!!
     }
 
-    open fun getValidTanks(dir: Direction): IntArray = if (transferConfig[dir]!!.input) inputTanks else if (transferConfig[dir]!!.output) outputTanks else IntArray(0)
+    open fun getValidTanks(dir: Direction): IntArray =
+        if (unsided) IntArray(tankCount) { it }
+        else if (transferConfig[dir]!!.input) inputTanks
+        else if (transferConfig[dir]!!.output) outputTanks else IntArray(0)
 
     open fun getTankCapacity(index: Int): Long = limit
 
@@ -72,21 +76,21 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         transferConfig.readNbt(tag)
     }
 
-    inner class ExposedFluidComponent(val dir: Direction, val mode: TransferMode) : CombinedStorage<FluidVariant, IRFluidTank>(mutableListOf()) {
+    inner class ExposedFluidComponent(val dir: Direction, val mode: TransferMode) : CombinedStorage<FluidVariant, IRFluidTank.ExposedIRFluidTank>(mutableListOf()) {
 
         init {
-            parts.addAll(getValidTanks(dir).map { this@FluidComponent.parts[it] })
+            parts.addAll(getValidTanks(dir).map { this@FluidComponent.parts[it].exposed })
         }
 
         override fun insert(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
-            return if (transferConfig[dir]!!.input) {
+            return if (unsided || transferConfig[dir]!!.input) {
                 super.insert(resource, maxAmount, transaction)
             }
             else 0
         }
 
         override fun extract(resource: FluidVariant?, maxAmount: Long, transaction: TransactionContext?): Long {
-            return if (transferConfig[dir]!!.output)
+            return if (unsided || transferConfig[dir]!!.output)
                 super.extract(resource, maxAmount, transaction)
             else 0
         }

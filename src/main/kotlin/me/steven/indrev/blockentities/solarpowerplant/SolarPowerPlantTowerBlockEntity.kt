@@ -3,13 +3,13 @@ package me.steven.indrev.blockentities.solarpowerplant
 import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.*
+import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.definitions.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
 import net.minecraft.block.BlockState
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.screen.ArrayPropertyDelegate
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -20,7 +20,12 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
 
     val temperatureComponent = TemperatureComponent(this, 0.09, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
-    val fluidComponent = FluidComponent({ this }, bucket * 16)
+    val fluidComponent = object : FluidComponent({ this }, bucket * 16) {
+        init {
+            this.outputTanks = intArrayOf(0)
+            this.unsided = true
+        }
+    }
 
     var isMarkedForUpdate = false
 

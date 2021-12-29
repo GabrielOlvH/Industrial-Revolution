@@ -1,6 +1,5 @@
 package me.steven.indrev.components
 
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.utils.identifier
 import net.minecraft.block.entity.BlockEntity

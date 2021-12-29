@@ -9,20 +9,23 @@ import me.steven.indrev.components.SyncableObject
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
+import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.util.registry.Registry
 
 class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleVariantStorage<FluidVariant>(), SyncableObject by DefaultSyncableObject() {
 
     val isEmpty: Boolean get() = variant.isBlank || amount == 0L
-    val fluidRawId: Int get() = Registry.FLUID.getRawId(variant.fluid)
+    val exposed = ExposedIRFluidTank()
 
-    override fun getCapacity(variant: FluidVariant): Long = component().limit
+    override fun getCapacity(variant: FluidVariant): Long = component().getTankCapacity(index)
 
     override fun getBlankVariant(): FluidVariant = FluidVariant.blank()
 
@@ -31,10 +34,6 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
         nbt.put("variant", variant.toNbt())
         nbt.putLong("amt", amount)
         return nbt
-    }
-
-    override fun canInsert(variant: FluidVariant): Boolean {
-        return component().isFluidValidForTank(index, variant)
     }
 
     fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
@@ -104,5 +103,25 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
 
         this.variant = variant
         amount = amt
+    }
+
+    inner class ExposedIRFluidTank : SnapshotParticipant<ResourceAmount<FluidVariant>>(), SingleSlotStorage<FluidVariant> by this {
+        override fun createSnapshot(): ResourceAmount<FluidVariant> = this@IRFluidTank.createSnapshot()
+
+        override fun readSnapshot(snapshot: ResourceAmount<FluidVariant>) = this@IRFluidTank.readSnapshot(snapshot)
+
+        override fun insert(resource: FluidVariant, maxAmount: Long, transaction: TransactionContext): Long {
+            return if (component().inputTanks.contains(index) && component().isFluidValidForTank(index, resource))
+                this@IRFluidTank.insert(resource, maxAmount, transaction)
+            else 0
+        }
+
+        override fun extract(resource: FluidVariant, maxAmount: Long, transaction: TransactionContext): Long {
+            return if (component().outputTanks.contains(index))
+                this@IRFluidTank.extract(resource, maxAmount, transaction)
+            else 0
+        }
+
+        override fun onFinalCommit() = this@IRFluidTank.onFinalCommit()
     }
 }

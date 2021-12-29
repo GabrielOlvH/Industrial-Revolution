@@ -19,7 +19,11 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class TankBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), Syncable, ComponentProvider {
-    val fluidComponent = FluidComponent({ this }, bucket * 8)
+    val fluidComponent = object : FluidComponent({ this }, bucket * 8) {
+        init {
+            this.unsided = true
+        }
+    }
 
     var isMarkedForUpdate: Boolean = true
 

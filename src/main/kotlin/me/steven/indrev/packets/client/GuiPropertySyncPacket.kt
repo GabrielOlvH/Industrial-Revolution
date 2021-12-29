@@ -23,7 +23,7 @@ object GuiPropertySyncPacket {
                 prop.fromPacket(buf)
                 handler.onSyncedProperty(property, prop)
             } else {
-                println("MISSED SYNC PACKET @ $handler")
+                IndustrialRevolution.LOGGER.warn("Received sync packet for unknown screen type @ $handler")
             }
         }
     }
@@ -35,8 +35,6 @@ object GuiPropertySyncPacket {
             val handler = player!!.currentScreenHandler
             if (handler.syncId == syncId && handler is IRGuiScreenHandler) {
                 handler.component!!.properties.forEach { it.markDirty() }
-            } else {
-                IndustrialRevolution.LOGGER.warn("Received sync packet for unknown screen type @ $handler")
             }
         }
     }

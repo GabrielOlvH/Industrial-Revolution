@@ -1,9 +1,7 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
-import me.steven.indrev.blockentities.crafters.SmelterBlockEntity
 import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.FluidComponent
@@ -14,7 +12,6 @@ import me.steven.indrev.recipes.machines.DistillerRecipe
 import me.steven.indrev.recipes.machines.IRRecipeType
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.rawId
 import net.minecraft.block.BlockState
 import net.minecraft.util.math.BlockPos
 

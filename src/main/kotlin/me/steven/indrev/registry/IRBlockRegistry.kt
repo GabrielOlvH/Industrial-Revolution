@@ -124,10 +124,10 @@ object IRBlockRegistry {
             if (BoilerBlockEntity.FLUID_VALVES_MAPPER.containsKey(pos.asLong())) {
                 val boilerPos = BlockPos.fromLong(BoilerBlockEntity.FLUID_VALVES_MAPPER[pos.asLong()])
                 val blockEntity = world.getBlockEntity(boilerPos) as? BoilerBlockEntity
-                return@registerForBlocks blockEntity?.fluidComponent
+                return@registerForBlocks blockEntity?.fluidComponent?.getCachedSide(dir)
             } else {
                 val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
-                return@registerForBlocks aboveBlockEntity?.fluidComponent
+                return@registerForBlocks aboveBlockEntity?.fluidComponent?.getCachedSide(dir)
             }
         }, FLUID_VALVE)
 
