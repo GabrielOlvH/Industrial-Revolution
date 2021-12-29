@@ -8,11 +8,6 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
-import me.steven.indrev.gui.tooltip.energy.EnergyTooltipComponent
-import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipComponent
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
-import me.steven.indrev.mixin.common.AccessorItemTags
 import me.steven.indrev.networks.NetworkEvents
 import me.steven.indrev.packets.PacketRegistry
 import me.steven.indrev.packets.client.SyncConfigPacket
@@ -20,14 +15,11 @@ import me.steven.indrev.packets.client.SyncVeinTypesPacket
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
-import me.steven.indrev.utils.getRecipes
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
@@ -145,7 +137,7 @@ object IndustrialRevolution : ModInitializer {
         }
 
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register { s, _, _ ->
-            s.recipeManager.getRecipes().keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
+            s.recipeManager.recipes.keys.filterIsInstance<IRRecipeType<*>>().forEach { it.clearCache() }
         }
 
         if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {

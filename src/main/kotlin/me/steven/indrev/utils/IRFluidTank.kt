@@ -33,6 +33,10 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
         return nbt
     }
 
+    override fun canInsert(variant: FluidVariant): Boolean {
+        return component().isFluidValidForTank(index, variant)
+    }
+
     fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
         if (!variant.isBlank)
             FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).render(faces, vcp, matrices)

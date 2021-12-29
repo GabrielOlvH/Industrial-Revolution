@@ -126,7 +126,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
         val modules = WGridPanel()
         ctx.run { world, pos ->
-            world.recipeManager.getAllOfType(ModuleRecipe.TYPE).entries.forEachIndexed { index, (id, recipe) ->
+            world.recipeManager.getRecipes(ModuleRecipe.TYPE).entries.forEachIndexed { index, (id, recipe) ->
                 val button = WModule(recipe.outputs.first().stack)
                 button.clickAction = {
                     val buf = PacketByteBufs.create()

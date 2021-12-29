@@ -108,6 +108,5 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         override fun iterator(transaction: TransactionContext?): MutableIterator<StorageView<FluidVariant>> {
             return super.iterator(transaction)
         }
-
     }
 }

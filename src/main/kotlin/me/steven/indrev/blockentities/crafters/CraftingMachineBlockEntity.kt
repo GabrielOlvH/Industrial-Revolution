@@ -12,7 +12,6 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.getRecipes
 import net.minecraft.block.BlockState
 import net.minecraft.entity.ExperienceOrbEntity
 import net.minecraft.entity.player.PlayerEntity
@@ -152,7 +151,7 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         val list = mutableListOf<T>()
 
         usedRecipes.forEach { (id, amount) ->
-            for (recipes in world!!.recipeManager.getRecipes().values) {
+            for (recipes in world!!.recipeManager.recipes.values) {
                 val recipe = recipes[id] ?: continue
                 list.add(recipe as? T ?: continue)
                 if (recipe is SmeltingRecipe)

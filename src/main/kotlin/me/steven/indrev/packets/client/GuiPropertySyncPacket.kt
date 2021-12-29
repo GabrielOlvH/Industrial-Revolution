@@ -19,6 +19,8 @@ object GuiPropertySyncPacket {
                 val prop = handler.component?.properties?.get(property) ?: return@registerGlobalReceiver
                 prop.fromPacket(buf)
                 handler.onSyncedProperty(property, prop)
+            } else {
+                println("MISSED SYNC PACKET @ $handler")
             }
         }
     }

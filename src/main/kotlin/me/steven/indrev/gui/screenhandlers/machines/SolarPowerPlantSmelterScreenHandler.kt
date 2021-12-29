@@ -1,12 +1,11 @@
 package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
-import io.github.cottonmc.cotton.gui.widget.WGridPanel
-import io.github.cottonmc.cotton.gui.widget.WItemSlot
-import io.github.cottonmc.cotton.gui.widget.WLabel
-import io.github.cottonmc.cotton.gui.widget.WWidget
+import io.github.cottonmc.cotton.gui.widget.*
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SOLAR_POWER_PLANT_SMELTER_HANDLER
 import me.steven.indrev.utils.identifier
@@ -14,6 +13,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.LiteralText
 import net.minecraft.util.math.MathHelper
 
 class SolarPowerPlantSmelterScreenHandler(
@@ -34,14 +34,13 @@ class SolarPowerPlantSmelterScreenHandler(
         root.add(WLabel("Solar Power Plant Smelter"), 0, 0)
 
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? SolarPowerPlantSmelterBlockEntity ?: return@run
 
-            blockEntity.inventory.forEachIndexed { slot, stack ->
+            repeat(4) { slot ->
                 val wSlot = WItemSlot.of(blockInventory, slot)
 
                 root.add(wSlot, 0, 0)
                 wSlot.setLocation((slot % 2) * 28 + 7, (slot / 2) * 20 + 18)
-                val w = WSlotTemperature { blockEntity.stackTemperatures[slot].second.toFloat() }
+                val w = WSlotTemperature { component!!.get<Double>(slot).toFloat() }
                 root.add(w, 0, 0)
                 w.setLocation((slot % 2) * 28, (slot / 2) * 20 + 18)
             }
@@ -62,7 +61,8 @@ class SolarPowerPlantSmelterScreenHandler(
             ScreenDrawing.drawBeveledPanel(matrices, x, y, 7, 18)
 
             var percent = progress() / 800f
-            percent = (percent * 17).toInt() / 17f
+            if (percent <= 0) return
+            percent = ((percent * 17).toInt() / 17f)
             if (percent <= 0) return
             if (percent < 0) percent = 0f
             if (percent > 1) percent = 1f

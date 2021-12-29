@@ -51,6 +51,7 @@
   "mixins": [
     "indrev.mixins.json"
   ],
+  "accessWidener": "indrev.accesswidener",
   "depends": {
     "fabricloader": ">=0.7.1",
     "fabric": ">=0.32.0",
@@ -58,8 +59,5 @@
     "minecraft": ">=1.18",
 
     "libgui": "*"
-  },
-  "suggests": {
-    "flamingo": "*"
   }
 }

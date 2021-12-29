@@ -16,11 +16,12 @@ import kotlin.math.roundToInt
 class JetpackItem(tier: Tier) : ArmorItem(IRArmorMaterial.JETPACK, EquipmentSlot.CHEST, itemSettings().maxCount(1)), JetpackHandler {
 
     init {
+        FluidStorage.ITEM.registerForItems({ stack, ctx -> JetpackHandler.JetpackFluidStorage(this, ctx) }, this)
     }
 
     override val limit = bucket * (10L * (tier.ordinal + 1))
 
-    override val fluidFilter: (FluidVariant) -> Boolean ={ it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
+    override val fluidFilter: (FluidVariant) -> Boolean = { it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
 
     private fun isActivated(stack: ItemStack) = stack.isOf(this) && stack.orCreateNbt.getBoolean("Activated")
 

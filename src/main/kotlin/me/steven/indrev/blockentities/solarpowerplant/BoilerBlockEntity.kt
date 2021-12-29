@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.inventory.Inventories
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.world.ServerWorld
@@ -50,10 +51,6 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
     var solidifiedSalt = 0L
 
     companion object {
-        const val TEMPERATURE_ID = 2
-        const val MAX_TEMPERATURE_ID = 3
-
-//TODO use crafting components for this
         const val PROCESS_TIME_ID = 4
         const val TOTAL_PROCESS_TIME_ID = 5
         const val MOLTEN_SALT_TANK = 6
@@ -71,8 +68,12 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
 
                 val moltenSaltVolume = blockEntity.fluidComponent[0]
                 val hasMoltenSalt = moltenSaltVolume.variant.isOf(IRFluidRegistry.MOLTEN_SALT_STILL)
+
                 blockEntity.temperatureComponent.tick(hasMoltenSalt)
-                blockEntity.solidifiedSalt += moltenSaltVolume.extract(scrap, true)
+
+                if (!hasMoltenSalt) return
+                val off = (1100 / (blockEntity.temperatureComponent.temperature - 1100.0)).coerceIn(1.0, 10.0)
+                blockEntity.solidifiedSalt += moltenSaltVolume.extract(81 * off.toLong(), true)
 
                 if (blockEntity.solidifiedSalt >= MOLTEN_SALT_AMOUNT * 3) {
                     blockEntity.solidifiedSalt = 0
@@ -90,11 +91,11 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
                 val amountToConvert = waterVolume.amount
                     .coerceAtMost(steamVolume.capacity - steamVolume.amount)
                     .coerceAtMost(waterSteamConversionRate)
+                if (amountToConvert <= 0) return
 
                 waterVolume.extract(amountToConvert, true)
 
                 steamVolume.insert(FluidVariant.of(IRFluidRegistry.STEAM_STILL), amountToConvert, true)
-
             }
         }
     }
@@ -134,6 +135,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
             ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
+            ComponentKey.WORLD_OBJECT -> world
             else -> null
         }
     }
@@ -152,6 +154,16 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         multiblockComponent.writeNbt(tag)
         Inventories.writeNbt(tag, inventory)
         super.writeNbt(tag)
+    }
+
+    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket {
+        return BlockEntityUpdateS2CPacket.create(this)
+    }
+
+    override fun toInitialChunkDataNbt(): NbtCompound {
+        val nbt = super.toInitialChunkDataNbt()
+        writeNbt(nbt)
+        return nbt
     }
 
     fun sync() {
@@ -179,7 +191,7 @@ class BoilerBlockEntity(pos: BlockPos, state: BlockState)
         }
     }
 
-    inner class BoilerFluidComponent : FluidComponent({this}, MAX_CAPACITY, 3) {
+    inner class BoilerFluidComponent : FluidComponent({ this }, MAX_CAPACITY, 3) {
 
         override fun getTankCapacity(index: Int): Long {
             return if (index == 0) bucket else super.getTankCapacity(index)

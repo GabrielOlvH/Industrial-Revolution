@@ -1,11 +1,10 @@
 package me.steven.indrev.recipes.machines
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.Multimap
 import me.steven.indrev.recipes.IRecipeGetter
-import me.steven.indrev.utils.getAllOfType
+import me.steven.indrev.utils.getRecipes
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -22,7 +21,7 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
         if (itemStack.isEmpty) return emptyList()
         else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
         val matches = ImmutableList.copyOf(
-            world.recipeManager.getAllOfType(this).values
+            world.recipeManager.getRecipes(this).values
                 .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }
         )
         recipeCache.putAll(itemStack.item, matches)
@@ -32,7 +31,7 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
     override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidVariant): Collection<T> {
         if (fluidOnlyRecipeCache.containsKey(fluidInput)) return fluidOnlyRecipeCache[fluidInput]!!
         val matches = ImmutableList.copyOf(
-            world.recipeManager.getAllOfType(this).values
+            world.recipeManager.getRecipes(this).values
                 .filter { recipe -> recipe is IRFluidRecipe && recipe.fluidInput.any { it.resource == fluidInput } }
         )
         fluidOnlyRecipeCache.putAll(fluidInput, matches)

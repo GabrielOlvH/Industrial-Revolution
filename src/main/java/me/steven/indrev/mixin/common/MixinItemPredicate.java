@@ -26,10 +26,9 @@ public class MixinItemPredicate {
     private void indrev_customEnchantProvider(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (stack.getItem() instanceof CustomEnchantmentProvider && enchantments.length > 0) {
             for (EnchantmentPredicate predicate : enchantments) {
-                AccessorEnchantmentPredicate accessor = (AccessorEnchantmentPredicate) predicate;
-                if (accessor.getLevels() != null && accessor.getLevels() != null) {
-                    int level = ((CustomEnchantmentProvider) stack.getItem()).getLevel(accessor.getEnchantment(), stack);
-                    if (level > -1 && accessor.getLevels().test(level)) cir.setReturnValue(true);
+                if (predicate.levels != null && predicate.enchantment != null) {
+                    int level = ((CustomEnchantmentProvider) stack.getItem()).getLevel(predicate.enchantment, stack);
+                    if (level > -1 && predicate.levels.test(level)) cir.setReturnValue(true);
                 }
             }
         }

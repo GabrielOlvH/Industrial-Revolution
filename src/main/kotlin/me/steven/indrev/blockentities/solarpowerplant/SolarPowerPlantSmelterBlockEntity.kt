@@ -4,6 +4,10 @@ import alexiil.mc.lib.attributes.Simulation
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import com.google.common.base.Preconditions
+import me.steven.indrev.components.ComponentKey
+import me.steven.indrev.components.ComponentProvider
+import me.steven.indrev.components.GuiSyncableComponent
+import me.steven.indrev.components.trackDouble
 import me.steven.indrev.gui.screenhandlers.machines.SolarPowerPlantSmelterScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRFluidRegistry
@@ -17,6 +21,7 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.world.ServerWorld
@@ -26,12 +31,22 @@ import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 
-class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state), SidedInventory {
+class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY, pos, state), SidedInventory, ComponentProvider {
 
     var inventory: DefaultedList<ItemStack> = DefaultedList.ofSize(4, ItemStack.EMPTY)
 
     //i know its bad i'll fix it someday sorry
     var stackTemperatures = Array<Pair<ItemStack, Double>>(4) { Pair(ItemStack.EMPTY, 12.0) }
+
+    val guiSyncableComponent = GuiSyncableComponent()
+
+    init {
+        trackDouble(FIRST_SLOT_ID) { stackTemperatures[0].second }
+        trackDouble(SECOND_SLOT_ID) { stackTemperatures[1].second }
+        trackDouble(THIRD_SLOT_ID) { stackTemperatures[2].second }
+        trackDouble(FOURTH_SLOT_ID) { stackTemperatures[3].second }
+    }
+
 
     fun tickStacks(blockEntity: SolarPowerPlantTowerBlockEntity) {
         stackTemperatures.forEachIndexed { slot, (meltingStack, temp) ->
@@ -39,7 +54,7 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
             if (!ItemStack.areEqual(meltingStack, stack)) {
                 stackTemperatures[slot] = Pair(stack.copy(), 12.0)
             } else if (!meltingStack.isEmpty) {
-                val modifier = ((blockEntity.temperatureComponent.temperature - 700) / (1200.0 - 700.0)).coerceIn(0.0, 1.0)
+                val modifier = ((blockEntity.temperatureComponent.temperature - 700) / (1200.0 - 700.0)).coerceIn(0.0, 2.0)
                 stackTemperatures[slot] = Pair(meltingStack, (temp + modifier).coerceAtMost(800.0))
 
                 val temp = stackTemperatures[slot].second
@@ -49,6 +64,8 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
                     inventory[slot] = ItemStack.EMPTY
                     fluidComponent[0].insert(FluidVariant.of(IRFluidRegistry.MOLTEN_SALT_STILL), MOLTEN_SALT_AMOUNT, true)
                 }
+
+                markDirty()
             }
         }
     }
@@ -84,15 +101,22 @@ class SolarPowerPlantSmelterBlockEntity(pos: BlockPos, state: BlockState) : Loot
         writeNbt(tag, inventory, stackTemperatures)
     }
 
-    fun sync() {
-        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
-        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
-        (world as ServerWorld).chunkManager.markForUpdate(getPos())
+    override fun <T> get(key: ComponentKey<T>): Any? {
+        return when (key) {
+            ComponentKey.WORLD_OBJECT -> world
+            ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
+            else -> null
+        }
     }
 
     companion object {
 
-        val MOLTEN_SALT_AMOUNT = (bucket / 81) / 9
+        val MOLTEN_SALT_AMOUNT = bucket / 9
+
+        const val FIRST_SLOT_ID = 0
+        const val SECOND_SLOT_ID = 1
+        const val THIRD_SLOT_ID = 2
+        const val FOURTH_SLOT_ID = 3
 
         fun readNbt(tag: NbtCompound, stacks: DefaultedList<ItemStack>, temps: Array<Pair<ItemStack, Double>>) {
             val listTag = tag.getList("Items", 10)

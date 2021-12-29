@@ -8,7 +8,6 @@ import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.eat
 import me.steven.indrev.utils.redirectDrops
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource

@@ -18,10 +18,11 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
 
     val guiSyncableComponent = GuiSyncableComponent()
 
-    val propertyDelegate = ArrayPropertyDelegate(7)
-    val temperatureComponent = TemperatureComponent(this, 0.06, 1100..1300, 1500)
+    val temperatureComponent = TemperatureComponent(this, 0.09, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
     val fluidComponent = FluidComponent({ this }, bucket * 16)
+
+    var isMarkedForUpdate = false
 
     init {
         trackObject(TANK_ID, fluidComponent[0])
@@ -30,7 +31,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     var heliostats = 0
 
     companion object {
-        const val TANK_ID = 2
+        const val TANK_ID = 4
 
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: SolarPowerPlantTowerBlockEntity) {
             blockEntity.multiblockComponent.tick(world, pos, state)
@@ -40,9 +41,14 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
                         world.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
                     smelterBlockEntity.tickStacks(blockEntity)
                 }
-                val limit = blockEntity.heliostats * 3
+                val limit = blockEntity.heliostats * 6
                 blockEntity.temperatureComponent.tick(blockEntity.temperatureComponent.temperature < limit + (world.random.nextFloat() * 2 - 1) * 10)
+                blockEntity.markForUpdate()
                 blockEntity.heliostats = 0
+            }
+
+            if (blockEntity.isMarkedForUpdate) {
+                blockEntity.markDirty()
             }
         }
     }
@@ -53,24 +59,25 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
             ComponentKey.TEMPERATURE -> temperatureComponent
             ComponentKey.MULTIBLOCK -> multiblockComponent
             ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
+            ComponentKey.WORLD_OBJECT -> world
             else -> null
         }
     }
 
-    override fun toTag(tag: NbtCompound) {
+    override fun fromTag(tag: NbtCompound) {
         temperatureComponent.readNbt(tag)
         fluidComponent.fromTag(tag)
         multiblockComponent.readNbt(tag)
     }
 
-    override fun fromTag(tag: NbtCompound) {
+    override fun toTag(tag: NbtCompound) {
         temperatureComponent.writeNbt(tag)
         fluidComponent.toTag(tag)
         multiblockComponent.writeNbt(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        multiblockComponent.writeNbt(tag)
+        multiblockComponent.readNbt(tag)
     }
 
     override fun toClientTag(tag: NbtCompound) {
@@ -78,7 +85,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     }
 
     override fun markForUpdate(condition: () -> Boolean) {
-        //TODO
+        isMarkedForUpdate = isMarkedForUpdate || condition()
     }
 
     inner class SolarPowerPlantMultiblockComponent : MultiBlockComponent({ id -> id.structure == "solar_power_plant" }, { _, _, _ -> SolarPowerPlantTowerStructureDefinition }) {

@@ -22,13 +22,14 @@ class DistillerBlockEntity(pos: BlockPos, state: BlockState) : CraftingMachineBl
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.01, 70..120, 200)
-        this.fluidComponent = FluidComponent({ this }, bucket)
+        this.fluidComponent = FluidComponent({ this }, bucket).also {
+            it.inputTanks = intArrayOf(0)
+        }
 
         this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
         }
-        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
 
         trackObject(CRAFTING_COMPONENT_ID, craftingComponents[0])
         trackObject(TANK_ID, fluidComponent!![0])

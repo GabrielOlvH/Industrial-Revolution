@@ -155,6 +155,10 @@ dependencies {
     modRuntime("org.yaml:snakeyaml:1.27")
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/indrev.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
 

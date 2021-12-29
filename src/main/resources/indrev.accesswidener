@@ -1,0 +1,28 @@
+accessWidener	v1	named
+
+# Used for compat between cooking recipes and IR machines
+accessible field net/minecraft/recipe/AbstractCookingRecipe input Lnet/minecraft/recipe/Ingredient;
+
+# Used to simulate enchantments
+accessible field net/minecraft/predicate/item/EnchantmentPredicate enchantment Lnet/minecraft/enchantment/Enchantment;
+accessible field net/minecraft/predicate/item/EnchantmentPredicate levels Lnet/minecraft/predicate/NumberRange$IntRange;
+
+# Used to get the fluid when draining it
+accessible field net/minecraft/block/FluidBlock fluid Lnet/minecraft/fluid/FlowableFluid;
+
+# Used by the jetpack
+accessible field net/minecraft/entity/LivingEntity jumping Z
+
+# Used by crafting machines
+accessible field net/minecraft/recipe/RecipeManager recipes Ljava/util/Map;
+accessible method net/minecraft/recipe/RecipeManager getAllOfType (Lnet/minecraft/recipe/RecipeType;)Ljava/util/Map;
+
+# Used to override vanilla's property syncing
+accessible field net/minecraft/screen/ScreenHandler properties Ljava/util/List;
+accessible field net/minecraft/screen/ScreenHandler trackedPropertyValues Lit/unimi/dsi/fastutil/ints/IntList;
+
+# Used to calculate random results
+accessible field net/minecraft/util/collection/WeightedList entries Ljava/util/List;
+
+# Used by the rancher
+accessible method net/minecraft/entity/passive/AnimalEntity eat (Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/item/ItemStack;)V

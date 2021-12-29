@@ -9,7 +9,6 @@ import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RESOURCE_REPORT_HANDLER
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.utils.add
-import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.ChunkVeinData
 import me.steven.indrev.world.chunkveins.VeinType

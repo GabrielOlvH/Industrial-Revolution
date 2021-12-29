@@ -26,6 +26,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.DyeableArmorItem
+import net.minecraft.item.ElytraItem
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.world.World
@@ -98,7 +99,14 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
     }
 
     override fun useCustomElytra(entity: LivingEntity, chestStack: ItemStack, tickElytra: Boolean): Boolean {
-        return ReinforcedElytraItem.canFallFly(chestStack) && super.useCustomElytra(entity, chestStack, tickElytra)
+        if (ReinforcedElytraItem.canFallFly(chestStack)) {
+            if (tickElytra) {
+                doVanillaElytraTick(entity, chestStack)
+            }
+            return true
+        }
+
+        return false
     }
 
     override fun getAttributeModifiers(

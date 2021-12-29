@@ -27,6 +27,7 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         trackObject(TANK_ID, fluidComponent!![0])
 
         trackLong(GENERATION_RATIO_ID) { getGenerationRatio() }
+        trackLong(CONSUMPTION_RATIO_ID) { getConsumptionRate() }
     }
 
     override fun shouldGenerate(): Boolean {
@@ -50,18 +51,18 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     fun getConsumptionRate(temperature: Double = temperatureComponent!!.temperature): Long {
-        return ((temperature / temperatureComponent!!.optimalRange.first) / 810).toLong()
+        return ((temperature / temperatureComponent!!.optimalRange.first).coerceIn(0.001, 1.0) * 810).toLong()
     }
 
     override fun fromTag(tag: NbtCompound) {
         super.fromTag(tag)
-        burnTime = tag?.getInt("BurnTime") ?: 0
-        maxBurnTime = tag?.getInt("MaxBurnTime") ?: 0
+        burnTime = tag.getInt("BurnTime")
+        maxBurnTime = tag.getInt("MaxBurnTime")
     }
 
     override fun toTag(tag: NbtCompound) {
-        tag?.putInt("BurnTime", burnTime)
-        tag?.putInt("MaxBurnTime", maxBurnTime)
+        tag.putInt("BurnTime", burnTime)
+        tag.putInt("MaxBurnTime", maxBurnTime)
         super.toTag(tag)
     }
 
@@ -76,5 +77,6 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     companion object {
         const val TANK_ID = 4
         const val GENERATION_RATIO_ID = 5
+        const val CONSUMPTION_RATIO_ID = 6
     }
 }

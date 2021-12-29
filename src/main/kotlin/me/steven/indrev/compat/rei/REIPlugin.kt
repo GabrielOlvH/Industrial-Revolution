@@ -136,7 +136,7 @@ object REIPlugin : REIClientPlugin {
     }
 
     override fun registerDisplays(registry: DisplayRegistry) {
-        registry.recipeManager.getRecipes().keys.forEach { type ->
+        registry.recipeManager.recipes.keys.forEach { type ->
             if (type is IRRecipeType<*> && type.id.namespace == IndustrialRevolution.MOD_ID)
                 registry.registerFiller(IRRecipe::class.java, { r -> r is IRRecipe && r !is AbstractCookingRecipe && r.type == type }) { recipe -> IRMachinePlugin(recipe) }
         }

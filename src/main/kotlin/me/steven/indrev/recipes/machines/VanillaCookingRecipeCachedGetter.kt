@@ -4,8 +4,7 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import me.steven.indrev.recipes.IRecipeGetter
-import me.steven.indrev.utils.getAllOfType
-import me.steven.indrev.utils.input
+import me.steven.indrev.utils.getRecipes
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -18,8 +17,8 @@ class VanillaCookingRecipeCachedGetter<T : AbstractCookingRecipe>(private val ty
     private val recipeCache: Multimap<Item, T> = HashMultimap.create()
 
     override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
-        if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
-        val matches = world.recipeManager.getAllOfType(type).values
+        if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]
+        val matches = world.recipeManager.getRecipes(type).values
             .filter { recipe -> recipe.input.test(itemStack) }
         recipeCache.putAll(itemStack.item, matches)
         return matches

@@ -1,7 +1,6 @@
 package me.steven.indrev.packets.client
 
 import io.netty.buffer.Unpooled
-import me.steven.indrev.utils.entries
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.world.chunkveins.VeinType
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking

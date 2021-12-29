@@ -14,7 +14,7 @@ import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
-import me.steven.indrev.utils.getAllOfType
+import me.steven.indrev.utils.getRecipes
 import net.minecraft.block.BlockState
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
@@ -54,7 +54,7 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     var recipe: ModuleRecipe? = null
         get() {
             if (selectedRecipe != null)
-                field = world!!.recipeManager.getAllOfType(ModuleRecipe.TYPE)[selectedRecipe]!!
+                field = world!!.recipeManager.getRecipes(ModuleRecipe.TYPE)[selectedRecipe]!!
             return field
         }
 

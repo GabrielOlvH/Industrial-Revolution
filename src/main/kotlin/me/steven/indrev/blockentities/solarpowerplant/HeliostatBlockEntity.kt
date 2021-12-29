@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
 import com.google.common.base.Preconditions
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.BlockState
@@ -10,7 +11,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, pos, state) {
+class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY, pos, state) {
 
     var targetBlock: BlockPos = BlockPos.ORIGIN
 
@@ -30,21 +31,13 @@ class HeliostatBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(IRBlo
         }
     }
 
-    override fun writeNbt(tag: NbtCompound) {
+    override fun toTag(tag: NbtCompound) {
         tag.putLong("target", targetBlock.asLong())
-        super.writeNbt(tag)
     }
     
-    override fun readNbt(tag: NbtCompound) {
+    override fun fromTag(tag: NbtCompound) {
         targetBlock = BlockPos.fromLong(tag.getLong("target"))
         yaw = HeliostatBlock.getYaw(pos, targetBlock)
         pitch = HeliostatBlock.getPitch(pos, targetBlock)
-        super.readNbt(tag)
-    }
-
-    fun sync() {
-        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
-        check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
-        (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
 }

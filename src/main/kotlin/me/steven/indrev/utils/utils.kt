@@ -17,8 +17,12 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
+import net.minecraft.inventory.Inventory
 import net.minecraft.item.Item
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.recipe.Recipe
+import net.minecraft.recipe.RecipeManager
+import net.minecraft.recipe.RecipeType
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -111,3 +115,7 @@ private val DIRECTIONS = Direction.values()
 
 val Fluid?.rawId: Int
     get() = Registry.FLUID.getRawId(this)
+
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Recipe<Inventory>> RecipeManager.getRecipes(type: RecipeType<T>) = getAllOfType(type) as Map<Identifier, T>

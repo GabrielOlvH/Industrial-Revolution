@@ -9,13 +9,10 @@ import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.gui.properties.SyncableProperty
 import me.steven.indrev.packets.client.GuiPropertySyncPacket
-import me.steven.indrev.utils.properties
-import me.steven.indrev.utils.trackedPropertyValues
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.entity.BlockEntity
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.*
