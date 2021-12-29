@@ -1,6 +1,5 @@
 package me.steven.indrev.recipes.machines
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import me.steven.indrev.recipes.IRecipeGetter

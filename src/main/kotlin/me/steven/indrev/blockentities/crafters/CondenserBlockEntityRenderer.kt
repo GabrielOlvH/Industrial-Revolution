@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.crafters
 
 import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.render.FluidVolumeRenderer
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer

@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.FacingMachineBlock

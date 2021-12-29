@@ -1,15 +1,13 @@
 package me.steven.indrev.blocks.machine.pipes
 
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
-import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.fluidStorageOf
+import me.steven.indrev.utils.pack
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld

@@ -7,7 +7,6 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.*
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
 import me.steven.indrev.registry.MachineRegistry

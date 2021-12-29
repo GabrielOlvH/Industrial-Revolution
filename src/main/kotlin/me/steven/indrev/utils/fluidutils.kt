@@ -1,19 +1,8 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.SearchOptions
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FixedFluidInv
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidExtractable
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.filter.FluidSetFilter
-import alexiil.mc.lib.attributes.fluid.impl.GroupedFluidInvFixedWrapper
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
@@ -36,7 +25,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import java.math.RoundingMode
 import java.util.*
 import java.util.function.LongFunction
 
@@ -56,22 +44,6 @@ val scrap = ingot / 4 // 250 droplets
 
 val mb = bucket / 1000
 
-operator fun FluidAmount.plus(volume: FluidAmount): FluidAmount {
-    return add(volume)
-}
-
-operator fun FluidAmount.minus(volume: FluidAmount): FluidAmount {
-    return sub(volume)
-}
-
-operator fun FluidAmount.times(volume: FluidAmount): FluidAmount {
-    return mul(volume)
-}
-
-operator fun FluidAmount.times(whole: Int): FluidAmount {
-    return mul(whole.toLong())
-}
-
 fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid {
     return if (state.get(FluidBlock.LEVEL) as Int == 0) {
         world.setBlockState(pos, Blocks.AIR.defaultState, 11)
@@ -79,14 +51,6 @@ fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid
     } else {
         Fluids.EMPTY
     }
-}
-
-fun FluidExtractable.use(vol: FluidVolume): Boolean {
-    if (attemptExtraction({ key -> key == vol.fluidKey }, vol.amount(), Simulation.SIMULATE).amount() == vol.amount()) {
-        assert(attemptExtraction({ key -> key == vol.fluidKey }, vol.amount(), Simulation.ACTION).amount() == vol.amount())
-        return true
-    }
-    return false
 }
 
 //TODO fuck weakhashmaps

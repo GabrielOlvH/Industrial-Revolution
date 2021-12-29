@@ -24,9 +24,6 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
-import java.util.function.Function
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 abstract class Network(
     val type: Type<*>,

@@ -6,11 +6,12 @@ import me.steven.indrev.blockentities.crafters.ElectricFurnaceFactoryBlockEntity
 import me.steven.indrev.gui.screenhandlers.ELECTRIC_FURNACE_FACTORY_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.widgets.machines.upProcessBar
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.add
+import me.steven.indrev.utils.configure
+import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.util.Identifier
 
 class ElectricFurnaceFactoryScreenHandler(
     syncId: Int,

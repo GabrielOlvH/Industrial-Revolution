@@ -14,7 +14,6 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.util.Identifier
 
 class ElectricFurnaceScreenHandler(
     syncId: Int,

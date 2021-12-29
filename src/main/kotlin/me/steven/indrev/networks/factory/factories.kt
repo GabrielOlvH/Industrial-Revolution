@@ -1,10 +1,5 @@
 package me.steven.indrev.networks.factory
 
-import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable
-import alexiil.mc.lib.attributes.fluid.impl.EmptyGroupedFluidInv
-import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable
-import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
-import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
 import me.steven.indrev.blocks.machine.pipes.CableBlock
 import me.steven.indrev.blocks.machine.pipes.FluidPipeBlock
 import me.steven.indrev.blocks.machine.pipes.ItemPipeBlock
@@ -13,7 +8,9 @@ import me.steven.indrev.networks.energy.EnergyNetwork
 import me.steven.indrev.networks.energy.EnergyNetworkState
 import me.steven.indrev.networks.fluid.FluidNetwork
 import me.steven.indrev.networks.item.ItemNetwork
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.fluidStorageOf
+import me.steven.indrev.utils.itemStorageOf
 import net.minecraft.block.BlockState
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos

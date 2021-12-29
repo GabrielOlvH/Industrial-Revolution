@@ -1,12 +1,5 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidExtractable
-import alexiil.mc.lib.attributes.fluid.FluidInsertable
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil
-import alexiil.mc.lib.attributes.item.ItemAttributes
-import alexiil.mc.lib.attributes.item.ItemInvUtil
-import alexiil.mc.lib.attributes.item.compat.FixedSidedInventoryVanillaWrapper
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.blockentities.MachineBlockEntity
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant

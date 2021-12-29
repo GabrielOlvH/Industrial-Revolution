@@ -19,7 +19,6 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Identifier
 import java.util.*
 
 class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext, val configs: EnumMap<ConfigurationType, SideConfiguration>) :

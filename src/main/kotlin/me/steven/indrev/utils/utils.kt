@@ -6,7 +6,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget
 import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.machines.TANK_BOTTOM
-import me.steven.indrev.gui.widgets.machines.TANK_TOP
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant

@@ -1,6 +1,5 @@
 package me.steven.indrev.networks.item
 
-import alexiil.mc.lib.attributes.item.ItemInvUtil
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
@@ -9,13 +8,23 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.Node
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.ReusableArrayDeque
+import me.steven.indrev.utils.isLoaded
+import me.steven.indrev.utils.itemStorageOf
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
+import kotlin.collections.List
+import kotlin.collections.MutableMap
+import kotlin.collections.MutableSet
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.set
 
 class ItemNetwork(
     world: ServerWorld,

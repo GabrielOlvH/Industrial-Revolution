@@ -15,7 +15,8 @@ import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.hide
 import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
 import net.minecraft.item.Item
@@ -25,6 +26,13 @@ import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import java.util.*
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.distinctBy
+import kotlin.collections.forEach
+import kotlin.collections.indexOf
+import kotlin.collections.mutableMapOf
+import kotlin.collections.sumOf
 import kotlin.math.roundToInt
 
 object REIPlugin : REIClientPlugin {

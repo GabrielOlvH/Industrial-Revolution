@@ -8,7 +8,6 @@ import me.steven.indrev.blocks.models.pipes.FluidPipeModel
 import me.steven.indrev.blocks.models.pipes.ItemPipeModel
 import me.steven.indrev.items.models.TankItemBakedModel
 import me.steven.indrev.utils.EmptyModel
-import me.steven.indrev.utils.hiddenIds
 import me.steven.indrev.utils.hide
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider

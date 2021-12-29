@@ -1,6 +1,5 @@
 package me.steven.indrev.gui.screenhandlers
 
-import io.github.cottonmc.cotton.gui.PropertyDelegateHolder
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.netty.buffer.Unpooled
@@ -15,11 +14,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.screen.*
+import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.screen.ScreenHandlerType
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 import java.util.function.BiFunction
 
 open class IRGuiScreenHandler(

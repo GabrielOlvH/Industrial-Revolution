@@ -3,7 +3,6 @@ package me.steven.indrev.compat.dashloader.models
 import io.activej.serializer.annotations.Deserialize
 import io.activej.serializer.annotations.Serialize
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.blocks.models.pipes.CableModel
 import me.steven.indrev.blocks.models.pipes.ItemPipeModel
 import net.minecraft.client.render.model.BakedModel
 import net.oskarstrom.dashloader.DashRegistry

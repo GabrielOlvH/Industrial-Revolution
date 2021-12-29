@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.util.collection.DefaultedList
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
 import team.reborn.energy.api.EnergyStorageUtil

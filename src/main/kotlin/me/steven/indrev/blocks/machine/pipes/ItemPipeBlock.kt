@@ -1,7 +1,5 @@
 package me.steven.indrev.blocks.machine.pipes
 
-import alexiil.mc.lib.attributes.item.impl.EmptyItemExtractable
-import alexiil.mc.lib.attributes.item.impl.RejectingItemInsertable
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
@@ -10,8 +8,6 @@ import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenFactory
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.ServoNetworkState
-import me.steven.indrev.utils.itemExtractableOf
-import me.steven.indrev.utils.itemInsertableOf
 import me.steven.indrev.utils.itemStorageOf
 import me.steven.indrev.utils.pack
 import net.minecraft.block.BlockState

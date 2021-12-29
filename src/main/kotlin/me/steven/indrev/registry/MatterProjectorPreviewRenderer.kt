@@ -1,18 +1,12 @@
 package me.steven.indrev.registry
 
-import com.mojang.blaze3d.systems.RenderSystem
-import draylar.magna.api.BlockBreaker
 import draylar.magna.api.MagnaTool
 import me.steven.indrev.tools.modular.DrillModule
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.GameRenderer
 import net.minecraft.client.render.OverlayTexture
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.RenderLayers
 import net.minecraft.util.hit.BlockHitResult
-import net.minecraft.util.math.BlockPos
 
 
 object MatterProjectorPreviewRenderer : WorldRenderEvents.BeforeEntities {

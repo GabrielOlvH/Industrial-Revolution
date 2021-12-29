@@ -2,12 +2,11 @@ package me.steven.indrev.networks
 
 import me.steven.indrev.utils.ItemFilter
 import me.steven.indrev.utils.fluidStorageOf
+import me.steven.indrev.utils.itemStorageOf
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
-import net.minecraft.server.world.ServerWorld
-import me.steven.indrev.utils.groupedItemInv
-import me.steven.indrev.utils.itemStorageOf
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.server.world.ServerWorld
 import java.util.*
 import kotlin.random.Random
 

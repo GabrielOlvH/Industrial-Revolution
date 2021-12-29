@@ -1,10 +1,5 @@
 package me.steven.indrev.blocks.misc
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.AttributeProvider
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil
-import alexiil.mc.lib.attributes.item.ItemAttributes
 import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
@@ -14,7 +9,6 @@ import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
-import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.*
 import net.minecraft.block.entity.BlockEntity
@@ -30,7 +24,7 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BiomassComposterBlock : Block(FabricBlockSettings.copyOf(Blocks.COMPOSTER).breakByTool(FabricToolTags.AXES, 1).requiresTool()), AttributeProvider, BlockEntityProvider {
+class BiomassComposterBlock : Block(FabricBlockSettings.copyOf(Blocks.COMPOSTER).breakByTool(FabricToolTags.AXES, 1).requiresTool()), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState.with(CLOSED, false)
@@ -53,20 +47,6 @@ class BiomassComposterBlock : Block(FabricBlockSettings.copyOf(Blocks.COMPOSTER)
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
         builder?.add(CLOSED)
-    }
-
-    override fun addAllAttributes(world: World, pos: BlockPos, state: BlockState, to: AttributeList<*>) {
-        val blockEntity = world.getBlockEntity(pos) as? BiomassComposterBlockEntity ?: return
-        if (to.attribute == ItemAttributes.INSERTABLE || to.attribute == ItemAttributes.EXTRACTABLE) {
-            to.offer(blockEntity)
-        } else if (
-            to.attribute == FluidAttributes.INSERTABLE
-            || to.attribute == FluidAttributes.EXTRACTABLE
-            || to.attribute == FluidAttributes.GROUPED_INV
-            || to.attribute == FluidAttributes.FIXED_INV
-        ) {
-            to.offer(blockEntity.fluidInv)
-        }
     }
 
     override fun onUse(

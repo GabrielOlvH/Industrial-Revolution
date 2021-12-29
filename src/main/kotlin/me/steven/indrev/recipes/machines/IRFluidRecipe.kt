@@ -1,8 +1,5 @@
 package me.steven.indrev.recipes.machines
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonObject
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
@@ -13,7 +10,6 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
 
 abstract class IRFluidRecipe : IRRecipe {
     abstract val fluidInput: Array<IRFluidAmount>

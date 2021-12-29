@@ -1,9 +1,5 @@
 package me.steven.indrev.fluids
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.SimpleFluidKey
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
@@ -18,9 +14,6 @@ import net.minecraft.fluid.FluidState
 import net.minecraft.item.BucketItem
 import net.minecraft.item.Item
 import net.minecraft.state.StateManager
-import net.minecraft.text.Style
-import net.minecraft.text.TextColor
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -79,20 +72,6 @@ abstract class BaseFluid(
             RenderLayer.getTranslucent(),
             still,
             flowing
-        )
-    }
-
-    fun registerFluidKey() {
-        FluidKeys.put(
-            this, SimpleFluidKey(
-                FluidKey.FluidKeyBuilder(this)
-                    .setName(TranslatableText(block().translationKey).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(color))))
-                    .setViscosity(FluidAmount.of(5, 5))
-                    .setNetherViscosity(FluidAmount.of(5, 5))
-                    .setCohesion(FluidAmount.ofWhole(2))
-                    .setNetherCohesion(FluidAmount.ofWhole(2))
-                    .setRenderColor(color)
-            )
         )
     }
 

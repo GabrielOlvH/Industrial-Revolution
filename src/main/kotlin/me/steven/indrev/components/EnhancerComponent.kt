@@ -9,7 +9,6 @@ import me.steven.indrev.items.upgrade.IREnhancerItem
 import me.steven.indrev.utils.component1
 import me.steven.indrev.utils.component2
 import net.minecraft.inventory.Inventory
-import kotlin.reflect.KFunction1
 
 open class EnhancerComponent(
     val slots: IntArray,

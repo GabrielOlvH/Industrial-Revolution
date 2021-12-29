@@ -3,7 +3,6 @@ package me.steven.indrev.packets.common
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtHelper
 import net.minecraft.nbt.NbtList

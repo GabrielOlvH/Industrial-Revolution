@@ -1,16 +1,6 @@
 package me.steven.indrev.blockentities.generators
 
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.FluidTransferable
-import alexiil.mc.lib.attributes.fluid.GroupedFluidInv
-import alexiil.mc.lib.attributes.fluid.GroupedFluidInvView
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.registry.IRBlockRegistry
-import me.steven.indrev.registry.IRFluidRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.util.math.BlockPos

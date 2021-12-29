@@ -6,20 +6,17 @@ import net.fabricmc.api.Environment
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.network.PacketByteBuf
 
-class GuiSyncableComponent()  {
+class GuiSyncableComponent  {
 
     val properties = mutableListOf<SyncableProperty<*>>()
 
     operator fun <T> get(index: Int) = properties[index].value as T
 
     fun add(index: Int, prop: SyncableProperty<*>) {
-       // if (properties.size > index)
-            //println("Overriding property $prop @ $this")
         val r = properties.size until index + 1
         for (x in r) {
             properties.add(NullSyncableProperty)
         }
-        //if (r.count() > 1) println("Non linear id registering @ $this {$prop}")
         properties[index] = prop
     }
 }

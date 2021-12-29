@@ -6,7 +6,6 @@ import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.HeliostatBlock
 import me.steven.indrev.blocks.machine.MachineBlock
-import me.steven.indrev.gui.IRScreenHandlerFactory
 import me.steven.indrev.gui.ScrewdriverScreenHandlerFactory
 import me.steven.indrev.gui.screenhandlers.wrench.ScrewdriverScreenHandler
 import me.steven.indrev.registry.IRBlockRegistry

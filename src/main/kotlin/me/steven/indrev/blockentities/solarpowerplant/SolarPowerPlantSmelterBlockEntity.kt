@@ -1,9 +1,5 @@
 package me.steven.indrev.blockentities.solarpowerplant
 
-import alexiil.mc.lib.attributes.Simulation
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
-import com.google.common.base.Preconditions
 import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.GuiSyncableComponent
@@ -21,10 +17,8 @@ import net.minecraft.inventory.SidedInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
 import net.minecraft.util.collection.DefaultedList

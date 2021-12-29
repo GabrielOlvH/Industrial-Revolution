@@ -17,7 +17,6 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
-import net.minecraft.util.Identifier
 
 class BoilerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(

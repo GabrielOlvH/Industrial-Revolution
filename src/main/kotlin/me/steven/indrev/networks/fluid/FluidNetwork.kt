@@ -9,7 +9,10 @@ import me.steven.indrev.config.IRConfig
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.Node
-import me.steven.indrev.utils.*
+import me.steven.indrev.utils.ReusableArrayDeque
+import me.steven.indrev.utils.bucket
+import me.steven.indrev.utils.fluidStorageOf
+import me.steven.indrev.utils.isLoaded
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil

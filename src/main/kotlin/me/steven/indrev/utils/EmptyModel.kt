@@ -4,14 +4,12 @@ import com.mojang.datafixers.util.Pair
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
-import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.model.*
 import net.minecraft.client.render.model.json.ModelOverrideList
 import net.minecraft.client.render.model.json.ModelTransformation
 import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.ItemStack
-import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction

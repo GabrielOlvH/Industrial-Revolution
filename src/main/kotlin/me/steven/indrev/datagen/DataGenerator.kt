@@ -2,7 +2,6 @@ package me.steven.indrev.datagen
 
 import net.minecraft.util.Identifier
 import java.io.File
-import java.util.*
 
 abstract class DataGenerator<T, P>(val dir: File, val namespace: String, val fallback: (T) -> DataFactory<T, P>) {
 

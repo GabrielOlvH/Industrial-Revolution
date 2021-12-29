@@ -1,7 +1,6 @@
 package me.steven.indrev.gui.properties
 
 import me.steven.indrev.components.DefaultSyncableObject
-import me.steven.indrev.components.SyncableObject
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.network.PacketByteBuf

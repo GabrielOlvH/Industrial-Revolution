@@ -10,13 +10,11 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantItemStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
-import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
-import javax.naming.CompoundName
 
 interface JetpackHandler : ItemConvertible {
 

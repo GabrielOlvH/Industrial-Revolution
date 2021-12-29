@@ -1,6 +1,5 @@
 package me.steven.indrev.packets.common
 
-import alexiil.mc.lib.attributes.fluid.FluidInvUtil
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.utils.identifier

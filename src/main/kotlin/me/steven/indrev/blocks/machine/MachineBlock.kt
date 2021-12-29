@@ -18,7 +18,6 @@ import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
-import net.fabricmc.fabric.api.transfer.v1.item.PlayerInventoryStorage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
@@ -36,7 +35,6 @@ import net.minecraft.item.ItemStack
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.text.TranslatableText

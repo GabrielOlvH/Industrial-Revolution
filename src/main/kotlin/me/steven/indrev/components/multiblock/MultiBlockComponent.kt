@@ -1,16 +1,14 @@
 package me.steven.indrev.components.multiblock
 
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ensureIsProvider
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
-import net.minecraft.nbt.NbtCompound
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World

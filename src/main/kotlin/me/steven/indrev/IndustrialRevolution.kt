@@ -56,22 +56,6 @@ object IndustrialRevolution : ModInitializer {
 
         WorldGeneration.init()
         WorldGeneration.addFeatures()
-        
-        arrayOf(
-            IRFluidRegistry.COOLANT_STILL,
-            IRFluidRegistry.MOLTEN_NETHERITE_STILL,
-            IRFluidRegistry.MOLTEN_IRON_STILL,
-            IRFluidRegistry.MOLTEN_GOLD_STILL,
-            IRFluidRegistry.MOLTEN_COPPER_STILL,
-            IRFluidRegistry.MOLTEN_TIN_STILL,
-            IRFluidRegistry.MOLTEN_SILVER_STILL,
-            IRFluidRegistry.MOLTEN_LEAD_STILL,
-            IRFluidRegistry.SULFURIC_ACID_STILL,
-            IRFluidRegistry.TOXIC_MUD_STILL,
-            IRFluidRegistry.HYDROGEN_STILL,
-            IRFluidRegistry.OXYGEN_STILL,
-            IRFluidRegistry.METHANE_STILL,
-        ).forEach { it.registerFluidKey() }
 
         IRLootTables.register()
 

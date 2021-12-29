@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.armor.ReinforcedElytraFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
-import me.steven.indrev.components.multiblock.MultiblockBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
 import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
@@ -17,6 +16,7 @@ import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRender
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRenderer
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
+import me.steven.indrev.components.multiblock.MultiblockBlockEntityRenderer
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen

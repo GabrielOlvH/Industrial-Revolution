@@ -6,8 +6,8 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.components.EnhancerComponent
 import me.steven.indrev.components.TemperatureComponent
-import me.steven.indrev.components.multiblock.definitions.FactoryStructureDefinition
 import me.steven.indrev.components.multiblock.MultiBlockComponent
+import me.steven.indrev.components.multiblock.definitions.FactoryStructureDefinition
 import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer

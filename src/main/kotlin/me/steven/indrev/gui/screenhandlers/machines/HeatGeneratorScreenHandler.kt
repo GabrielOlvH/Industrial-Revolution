@@ -2,7 +2,6 @@ package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
-import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntity
 import me.steven.indrev.gui.screenhandlers.HEAT_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
@@ -17,7 +16,6 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
-import net.minecraft.util.Identifier
 
 class HeatGeneratorScreenHandler(
     syncId: Int,

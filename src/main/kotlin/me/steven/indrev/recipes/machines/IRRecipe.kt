@@ -1,13 +1,11 @@
 package me.steven.indrev.recipes.machines
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
-import me.steven.indrev.utils.IRFluidAmount
 import me.steven.indrev.utils.IRFluidTank
 import me.steven.indrev.utils.asMutableList
 import net.minecraft.inventory.Inventory

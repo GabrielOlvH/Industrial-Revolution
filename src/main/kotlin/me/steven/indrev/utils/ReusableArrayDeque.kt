@@ -1,8 +1,5 @@
 package me.steven.indrev.utils
 
-import java.util.*
-import javax.lang.model.type.UnionType
-
 /**
  * Limited simple re-implementation of a reusable ArrayDeque
  * When polling, instead of reducing size and setting elements on the array to null, it will just increase the head

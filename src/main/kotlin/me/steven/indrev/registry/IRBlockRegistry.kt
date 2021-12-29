@@ -3,9 +3,9 @@ package me.steven.indrev.registry
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
 import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
-import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntity
 import me.steven.indrev.blockentities.solarpowerplant.*
 import me.steven.indrev.blockentities.storage.CabinetBlockEntity
@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntit
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.minecraft.block.Block
 import net.minecraft.block.Blocks
 import net.minecraft.block.MapColor
@@ -35,6 +36,7 @@ import net.minecraft.item.BlockItem
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.api.EnergyStorage
 
@@ -51,6 +53,16 @@ object IRBlockRegistry {
         FlammableBlockRegistry.getDefaultInstance().add(PLANK_BLOCK, 10, 40)
 
         identifier("biomass_composter").block(BIOMASS_COMPOSTER_BLOCK).item(BIOMASS_COMPOSTER_ITEM).blockEntityType(BIOMASS_COMPOSTER_BLOCK_ENTITY)
+
+        FluidStorage.SIDED.registerForBlockEntity({ be, c ->
+            if (c != Direction.UP) be.fluidInv
+            else null
+        }, BIOMASS_COMPOSTER_BLOCK_ENTITY)
+
+        ItemStorage.SIDED.registerForBlockEntity({ be, c ->
+            if (c != Direction.UP) be.itemInv
+            else null
+        }, BIOMASS_COMPOSTER_BLOCK_ENTITY)
 
         identifier("wither_proof_obsidian").block(WITHER_PROOF_OBSIDIAN).item(BlockItem(WITHER_PROOF_OBSIDIAN, itemSettings()))
 

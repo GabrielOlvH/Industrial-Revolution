@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.minecraft.fluid.Fluid
 

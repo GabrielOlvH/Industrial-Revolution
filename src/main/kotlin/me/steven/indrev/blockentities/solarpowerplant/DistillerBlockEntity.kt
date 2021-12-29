@@ -3,8 +3,8 @@ package me.steven.indrev.blockentities.solarpowerplant
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.components.EnhancerComponent
-import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.TemperatureComponent
 import me.steven.indrev.components.trackObject
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer

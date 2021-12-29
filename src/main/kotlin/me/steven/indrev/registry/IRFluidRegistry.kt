@@ -1,6 +1,5 @@
 package me.steven.indrev.registry
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.blocks.misc.AcidFluidBlock
 import me.steven.indrev.datagen.utils.*
 import me.steven.indrev.fluids.BaseFluid

@@ -1,6 +1,5 @@
 package me.steven.indrev.recipes.machines
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.recipes.machines.entries.InputEntry
 import me.steven.indrev.recipes.machines.entries.OutputEntry
 import me.steven.indrev.utils.IRFluidAmount

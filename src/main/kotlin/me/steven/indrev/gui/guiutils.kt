@@ -12,7 +12,8 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.components.ComponentProvider
-import me.steven.indrev.gui.widgets.machines.*
+import me.steven.indrev.gui.widgets.machines.energyBar
+import me.steven.indrev.gui.widgets.machines.temperatureBar
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.items.upgrade.IREnhancerItem

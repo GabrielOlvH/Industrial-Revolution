@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import team.reborn.energy.api.EnergyStorage
-import java.util.*
 
 class CableEnergyIo(private val network: EnergyNetwork?, val pos: BlockPos, val direction: Direction?) : EnergyStorage, SnapshotParticipant<Long>() {
 

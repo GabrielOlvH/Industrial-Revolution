@@ -2,7 +2,6 @@ package me.steven.indrev.blockentities.generators
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.*
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket

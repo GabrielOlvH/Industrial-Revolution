@@ -1,7 +1,5 @@
 package me.steven.indrev.blocks.machine.solarpowerplant
 
-import alexiil.mc.lib.attributes.AttributeList
-import alexiil.mc.lib.attributes.fluid.FluidAttributes
 import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState

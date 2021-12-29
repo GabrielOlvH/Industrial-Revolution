@@ -3,7 +3,6 @@ package me.steven.indrev.compat.rei.plugins
 import me.shedaniel.rei.api.common.category.CategoryIdentifier
 import me.shedaniel.rei.api.common.display.Display
 import me.shedaniel.rei.api.common.entry.EntryIngredient
-import me.shedaniel.rei.api.common.entry.EntryStack
 import me.shedaniel.rei.api.common.util.EntryIngredients
 import me.shedaniel.rei.api.common.util.EntryStacks
 import me.steven.indrev.recipes.machines.IRFluidRecipe

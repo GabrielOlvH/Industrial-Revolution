@@ -15,7 +15,6 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import team.reborn.energy.api.EnergyStorage
 import java.util.*
-import kotlin.math.absoluteValue
 
 open class EnergyNetwork(
     world: ServerWorld,

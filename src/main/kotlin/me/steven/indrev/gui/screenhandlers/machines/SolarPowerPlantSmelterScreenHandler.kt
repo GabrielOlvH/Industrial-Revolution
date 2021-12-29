@@ -1,11 +1,10 @@
 package me.steven.indrev.gui.screenhandlers.machines
 
 import io.github.cottonmc.cotton.gui.client.ScreenDrawing
-import io.github.cottonmc.cotton.gui.widget.*
-import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.blockentities.solarpowerplant.SolarPowerPlantSmelterBlockEntity
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ensureIsProvider
+import io.github.cottonmc.cotton.gui.widget.WGridPanel
+import io.github.cottonmc.cotton.gui.widget.WItemSlot
+import io.github.cottonmc.cotton.gui.widget.WLabel
+import io.github.cottonmc.cotton.gui.widget.WWidget
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.SOLAR_POWER_PLANT_SMELTER_HANDLER
 import me.steven.indrev.utils.identifier
@@ -13,7 +12,6 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
 import net.minecraft.util.math.MathHelper
 
 class SolarPowerPlantSmelterScreenHandler(

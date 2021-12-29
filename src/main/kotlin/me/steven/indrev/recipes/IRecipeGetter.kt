@@ -1,8 +1,5 @@
 package me.steven.indrev.recipes
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
-import me.steven.indrev.utils.IRFluidAmount
 import me.steven.indrev.utils.IRFluidTank
 import me.steven.indrev.utils.asMutableList
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant

@@ -1,7 +1,6 @@
 package me.steven.indrev.packets.client
 
 import me.steven.indrev.IndustrialRevolution
-import me.steven.indrev.components.SyncableObject
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking

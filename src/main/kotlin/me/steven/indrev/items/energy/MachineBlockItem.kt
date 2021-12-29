@@ -3,7 +3,6 @@ package me.steven.indrev.items.energy
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
 import me.steven.indrev.utils.buildMachineTooltip
 import me.steven.indrev.utils.energyOf
 import net.minecraft.block.Block

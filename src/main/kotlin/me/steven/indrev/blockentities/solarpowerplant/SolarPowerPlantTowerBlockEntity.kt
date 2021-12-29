@@ -3,7 +3,6 @@ package me.steven.indrev.blockentities.solarpowerplant
 import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.components.*
-import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.components.multiblock.definitions.SolarPowerPlantTowerStructureDefinition
 import me.steven.indrev.registry.IRBlockRegistry

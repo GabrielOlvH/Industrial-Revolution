@@ -1,7 +1,5 @@
 package me.steven.indrev.compat.rei.categories
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import it.unimi.dsi.fastutil.ints.IntList
 import me.shedaniel.math.Point
 import me.shedaniel.math.Rectangle
 import me.shedaniel.rei.api.client.gui.DisplayRenderer
@@ -16,8 +14,6 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes
 import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.utils.createREIFluidWidget
-import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier

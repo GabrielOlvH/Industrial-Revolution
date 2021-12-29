@@ -1,16 +1,12 @@
 package me.steven.indrev.networks.energy
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
-import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.NetworkState
-import me.steven.indrev.networks.ServoNetworkState
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtHelper
 import net.minecraft.nbt.NbtList
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Direction
 
 class EnergyNetworkState(world: ServerWorld) : NetworkState<EnergyNetwork>(Network.Type.ENERGY, world) {
 
