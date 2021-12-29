@@ -41,13 +41,6 @@ open class IRGuiScreenHandler(
         }
     }
 
-    override fun syncState() {
-        super.syncState()
-        component?.properties?.forEach { p -> p.markDirty() }
-    }
-
-    val player = playerInventory.player
-
     @Environment(EnvType.CLIENT)
     override fun addPainters() {
         super.addPainters()
@@ -74,10 +67,6 @@ open class IRGuiScreenHandler(
             world.getBlockEntity(pos) as? T ?: return@BiFunction null
         }).orElse(null)
         return block(be ?: error("burh"))
-    }
-
-    override fun sendContentUpdates() {
-        super.sendContentUpdates()
     }
 
     fun syncProperties() {

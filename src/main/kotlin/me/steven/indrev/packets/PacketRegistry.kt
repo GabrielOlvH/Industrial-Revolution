@@ -6,6 +6,7 @@ import me.steven.indrev.packets.common.*
 object PacketRegistry {
     fun registerServer() {
         ConfigureIOPackets.register()
+        GuiPropertySyncPacket.registerServer()
         FluidGuiHandInteractionPacket.register()
         ItemPipePackets.register()
         SelectModuleOnWorkbenchPacket.register()
