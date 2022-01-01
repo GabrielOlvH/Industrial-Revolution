@@ -133,14 +133,8 @@ object IRBlockRegistry {
         identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
 
         FluidStorage.SIDED.registerForBlocks({ world, pos, state, be, dir ->
-            if (BoilerBlockEntity.FLUID_VALVES_MAPPER.containsKey(pos.asLong())) {
-                val boilerPos = BlockPos.fromLong(BoilerBlockEntity.FLUID_VALVES_MAPPER[pos.asLong()])
-                val blockEntity = world.getBlockEntity(boilerPos) as? BoilerBlockEntity
-                return@registerForBlocks blockEntity?.fluidComponent?.getCachedSide(dir)
-            } else {
-                val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
-                return@registerForBlocks aboveBlockEntity?.fluidComponent?.getCachedSide(dir)
-            }
+            val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
+            return@registerForBlocks aboveBlockEntity?.fluidComponent?.getCachedSide(dir)
         }, FLUID_VALVE)
 
         identifier("steam_turbine_steam_input_valve")
@@ -168,16 +162,6 @@ object IRBlockRegistry {
             .block(SOLAR_POWER_PLANT_TOWER_BLOCK)
             .item(SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM)
             .blockEntityType(SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY)
-
-        identifier("solar_power_plant_smelter")
-            .block(SOLAR_POWER_PLANT_SMELTER_BLOCK)
-            .item(SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM)
-            .blockEntityType(SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY)
-
-        identifier("boiler")
-            .block(BOILER_BLOCK)
-            .item(BOILER_BLOCK_ITEM)
-            .blockEntityType(BOILER_BLOCK_ENTITY)
     }
 
     val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool().strength(3f, 3f))
@@ -316,13 +300,4 @@ object IRBlockRegistry {
     val SOLAR_POWER_PLANT_TOWER_BLOCK = SolarPowerPlantTowerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
     val SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_TOWER_BLOCK, itemSettings())
     val SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarPowerPlantTowerBlockEntity, SOLAR_POWER_PLANT_TOWER_BLOCK).build(null)
-
-    val SOLAR_POWER_PLANT_SMELTER_BLOCK = SolarPowerPlantSmelterBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
-    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_SMELTER_BLOCK, itemSettings())
-    val SOLAR_POWER_PLANT_SMELTER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarPowerPlantSmelterBlockEntity, SOLAR_POWER_PLANT_SMELTER_BLOCK).build(null)
-
-    val BOILER_BLOCK = BoilerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
-    val BOILER_BLOCK_ITEM = BlockItem(BOILER_BLOCK, itemSettings())
-    val BOILER_BLOCK_ENTITY = BlockEntityType.Builder.create(::BoilerBlockEntity, BOILER_BLOCK).build(null)
-
 }

@@ -81,8 +81,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRFluidRegistry.MOLTEN_COPPER_STILL,
             IRFluidRegistry.MOLTEN_TIN_STILL,
             IRFluidRegistry.MOLTEN_LEAD_STILL,
-            IRFluidRegistry.MOLTEN_SILVER_STILL,
-            IRFluidRegistry.MOLTEN_SALT_STILL
+            IRFluidRegistry.MOLTEN_SILVER_STILL
         ).forEach { it.registerRender(FluidType.LAVA) }
         arrayOf(
             IRFluidRegistry.HYDROGEN_STILL,
@@ -124,10 +123,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
             LASER_HANDLER,
             ELECTROLYTIC_SEPARATOR_HANDLER,
             STEAM_TURBINE_HANDLER,
-            SOLAR_POWER_PLANT_TOWER_HANDLER,
-            SOLAR_POWER_PLANT_SMELTER_HANDLER,
-            DISTILLER_HANDLER,
-            BOILER_HANDLER
+            SOLAR_POWER_PLANT_TOWER_HANDLER
         ).forEach { handler ->
             ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
@@ -157,7 +153,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
         BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
         BlockEntityRendererRegistry.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.BOILER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
 
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())

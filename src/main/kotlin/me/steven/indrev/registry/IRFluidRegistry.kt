@@ -88,11 +88,6 @@ object IRFluidRegistry {
         identifier("${STEAM_IDENTIFIER.path}_still").fluid(STEAM_STILL)
         identifier("${STEAM_IDENTIFIER.path}_flowing").fluid(STEAM_FLOWING)
         identifier("${STEAM_IDENTIFIER.path}_bucket").item(STEAM_BUCKET)
-
-        MOLTEN_SALT_IDENTIFIER.block(MOLTEN_SALT)
-        identifier("${MOLTEN_SALT_IDENTIFIER.path}_still").fluid(MOLTEN_SALT_STILL)
-        identifier("${MOLTEN_SALT_IDENTIFIER.path}_flowing").fluid(MOLTEN_SALT_FLOWING)
-        identifier("${MOLTEN_SALT_IDENTIFIER.path}_bucket").item(MOLTEN_SALT_BUCKET)
     }
 
     val COOLANT_IDENTIFIER = identifier("coolant")
@@ -201,12 +196,4 @@ object IRFluidRegistry {
     val STEAM_FLOWING = BaseFluid.Flowing(STEAM_IDENTIFIER, { STEAM }, { STEAM_BUCKET }, -1) { STEAM_STILL }
     val STEAM_BUCKET = BucketItem(STEAM_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
     val STEAM = object : FluidBlock(STEAM_STILL, FabricBlockSettings.of(Material.WATER)) {}
-
-    val MOLTEN_SALT_IDENTIFIER = identifier("molten_salt")
-    val MOLTEN_SALT_STILL: BaseFluid.Still =
-        BaseFluid.Still(MOLTEN_SALT_IDENTIFIER, { MOLTEN_SALT }, { MOLTEN_SALT_BUCKET }, -1) { MOLTEN_SALT_FLOWING }
-    val MOLTEN_SALT_FLOWING =
-        BaseFluid.Flowing(MOLTEN_SALT_IDENTIFIER, { MOLTEN_SALT }, { MOLTEN_SALT_BUCKET }, -1) { MOLTEN_SALT_STILL }
-    val MOLTEN_SALT_BUCKET = BucketItem(MOLTEN_SALT_STILL, itemSettings().recipeRemainder(Items.BUCKET).maxCount(1))
-    val MOLTEN_SALT = object : FluidBlock(MOLTEN_SALT_STILL, FabricBlockSettings.of(Material.LAVA)) {}
 }

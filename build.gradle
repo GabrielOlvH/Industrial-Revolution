@@ -82,14 +82,6 @@ repositories {
         }
     }
     maven {
-        name = "Technici4n"
-        url = "https://raw.githubusercontent.com/Technici4n/Technici4n-maven/master/"
-        content {
-            includeGroup "net.fabricmc.fabric-api" // FTL needs this too
-            includeGroup "dev.technici4n"
-        }
-    }
-    maven {
         name = "Cafeteria Development"
         url = 'https://maven.cafeteria.dev'
         content {

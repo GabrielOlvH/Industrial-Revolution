@@ -30,7 +30,7 @@ class SolarPowerPlantTowerScreenHandler(
         root.add(WLabel("Solar Power Plant Tower"), 0, 0)
 
         withBlockEntity<SolarPowerPlantTowerBlockEntity> { be ->
-            val wFluid = fluidTank(be, SolarPowerPlantTowerBlockEntity.TANK_ID)
+            val wFluid = fluidTank(be, SolarPowerPlantTowerBlockEntity.INPUT_TANK_ID)
             root.add(wFluid, 8, 0)
             wFluid.setLocation(8 * 18, 8)
             val wTemp = temperatureBar(be)

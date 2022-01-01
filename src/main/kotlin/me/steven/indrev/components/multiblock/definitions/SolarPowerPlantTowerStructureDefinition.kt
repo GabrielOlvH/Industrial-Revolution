@@ -15,7 +15,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
 
     private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK
     private val RESISTANT_GLASS = Blocks.GLASS.defaultState
-    private val SMELTER = IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK.defaultState
+    private val FLUID_INPUT = IRBlockRegistry.FLUID_VALVE.defaultState
     private val FLUID_OUTPUT = IRBlockRegistry.FLUID_VALVE.defaultState.with(FacingBlock.FACING, Direction.NORTH)
 
     override val identifier: String = "solar_power_plant"
@@ -25,7 +25,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
         .create("default")
         .build()
 
-    fun getSmelterPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
+    fun getFluidInputPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
         val rotation =
             AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
 
@@ -69,7 +69,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
                     if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } >= 2 || y == -3 || y == 1)
                         map[BlockPos(x, y, z + radius)] = BlockStateFilter(Blocks.IRON_BLOCK.defaultState)
                     else if ((y == 0 && abs(z) == radius) || (y == 0 && abs(x) == radius))
-                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({state -> state == Blocks.IRON_BLOCK.defaultState || state == SMELTER }, SMELTER)
+                        map[BlockPos(x, y, z + radius)] = BlockStateFilter({state -> state == Blocks.IRON_BLOCK.defaultState || state == FLUID_INPUT }, FLUID_INPUT)
                     else if (arrayOf(abs(x), abs(y), abs(z)).count { it == radius } != 0)
                         map[BlockPos(x, y, z + radius)] = BlockStateFilter({ state -> state == CASING || state == RESISTANT_GLASS }, RESISTANT_GLASS)
                 }

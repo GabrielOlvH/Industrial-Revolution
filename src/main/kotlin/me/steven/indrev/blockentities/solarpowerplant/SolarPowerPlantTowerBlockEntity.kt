@@ -19,9 +19,10 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
 
     val temperatureComponent = TemperatureComponent(this, 0.09, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
-    val fluidComponent = object : FluidComponent({ this }, bucket * 16) {
+    val fluidComponent = object : FluidComponent({ this }, bucket * 16, 2) {
         init {
-            this.outputTanks = intArrayOf(0)
+            this.inputTanks = intArrayOf(0)
+            this.outputTanks = intArrayOf(1)
             this.unsided = true
         }
     }
@@ -29,30 +30,23 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
     var isMarkedForUpdate = false
 
     init {
-        trackObject(TANK_ID, fluidComponent[0])
+        trackObject(INPUT_TANK_ID, fluidComponent[0])
+        trackObject(OUTPUT_TANK_ID, fluidComponent[1])
     }
 
     var heliostats = 0
 
     companion object {
-        const val TANK_ID = 4
+        const val INPUT_TANK_ID = 4
+        const val OUTPUT_TANK_ID = 5
 
         fun tick(world: World, pos: BlockPos, state: BlockState, blockEntity: SolarPowerPlantTowerBlockEntity) {
             blockEntity.multiblockComponent.tick(world, pos, state)
             if (blockEntity.multiblockComponent.isBuilt(world, pos, state)) {
-                SolarPowerPlantTowerStructureDefinition.getSmelterPositions(pos, state).forEach { smelterPos ->
-                    val smelterBlockEntity =
-                        world.getBlockEntity(smelterPos) as? SolarPowerPlantSmelterBlockEntity ?: return@forEach
-                    smelterBlockEntity.tickStacks(blockEntity)
-                }
                 val limit = blockEntity.heliostats * 6
                 blockEntity.temperatureComponent.tick(blockEntity.temperatureComponent.temperature < limit + (world.random.nextFloat() * 2 - 1) * 10)
                 blockEntity.markForUpdate()
                 blockEntity.heliostats = 0
-            }
-
-            if (blockEntity.isMarkedForUpdate) {
-                blockEntity.markDirty()
             }
         }
     }
@@ -98,6 +92,10 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
             SolarPowerPlantTowerStructureDefinition.getSolarReceiverPositions(pos, blockState).forEach { receiverPos ->
                 val blockEntity = world.getBlockEntity(receiverPos) as? SolarReceiverBlockEntity ?: return@forEach
                 blockEntity.controllerPos = pos
+            }
+
+            SolarPowerPlantTowerStructureDefinition.getFluidInputPositions(pos, blockState).forEach { inputPos ->
+
             }
         }
     }
