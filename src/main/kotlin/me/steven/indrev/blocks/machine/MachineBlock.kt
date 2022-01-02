@@ -93,7 +93,7 @@ open class MachineBlock(
         } else if (stack.isIn(IndustrialRevolution.SCREWDRIVER_TAG)) {
             return screwdriver(world, pos!!, state!!, blockEntity, player, stack)
         } else if (blockEntity.multiblockComponent != null
-            && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState)) {
+            && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState, true)) {
             player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender(player.isSneaking)
             blockEntity.markDirty()

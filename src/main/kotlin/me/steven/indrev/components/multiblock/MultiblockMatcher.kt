@@ -3,7 +3,6 @@ package me.steven.indrev.components.multiblock
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import net.minecraft.block.BlockState
 import net.minecraft.util.BlockRotation
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
@@ -14,8 +13,8 @@ class MultiblockMatcher(val definition: StructureDefinition) {
     var builtId: StructureIdentifier? = null
     val matches get() = builtId != null
 
-    fun tick(world: World, pos: BlockPos, state: BlockState) {
-        if (builtId != null && !isBuilt(world, pos, state, definition.holder.variants[builtId]!!)) {
+    fun update(world: World, pos: BlockPos, state: BlockState) {
+        if (builtId == null || !isBuilt(world, pos, state, definition.holder.variants[builtId]!!)) {
             builtId = getBuiltStructureId(world, pos, state)
         }
     }

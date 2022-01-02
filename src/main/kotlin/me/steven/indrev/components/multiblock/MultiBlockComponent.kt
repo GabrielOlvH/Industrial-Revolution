@@ -1,15 +1,7 @@
 package me.steven.indrev.components.multiblock
 
-import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import net.fabricmc.api.EnvType
-import net.fabricmc.api.Environment
 import net.minecraft.block.BlockState
-import net.minecraft.block.entity.BlockEntity
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.VertexConsumerProvider
-import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
@@ -24,7 +16,7 @@ open class MultiBlockComponent(
     open fun tick(world: World, pos: BlockPos, blockState: BlockState) {
         ticks++
         if (ticks % 15 != 0) return
-        getSelectedMatcher(world, pos, blockState).tick(world, pos, blockState)
+        getSelectedMatcher(world, pos, blockState).update(world, pos, blockState)
     }
 
     fun getSelectedMatcher(world: World, pos: BlockPos, blockState: BlockState): MultiblockMatcher {
@@ -32,7 +24,12 @@ open class MultiBlockComponent(
         return cachedMatchers.computeIfAbsent(selected.identifier) { selected.toMatcher() }
     }
 
-    fun isBuilt(world: World, pos: BlockPos, blockState: BlockState) = getSelectedMatcher(world, pos, blockState).matches
+    fun isBuilt(world: World, pos: BlockPos, blockState: BlockState, forceUpdate: Boolean = false): Boolean {
+        if (forceUpdate) {
+            getSelectedMatcher(world, pos, blockState).update(world, pos, blockState)
+        }
+        return getSelectedMatcher(world, pos, blockState).matches
+    }
 
     fun toggleRender(isSneaking: Boolean) {
         if (!isSneaking)
