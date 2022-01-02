@@ -13,7 +13,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import kotlin.math.abs
 
-object SteamTurbineStructureDefinition : StructureDefinition() {
+object SteamTurbineStructureDefinition : StructureDefinition {
 
     private val ROTOR_UP = IRBlockRegistry.STEAM_TURBINE_ROTOR_BLOCK.defaultState.with(VerticalFacingBlock.FACING, Direction.UP)
     private val ROTOR_DOWN = IRBlockRegistry.STEAM_TURBINE_ROTOR_BLOCK.defaultState.with(VerticalFacingBlock.FACING, Direction.DOWN)
@@ -25,7 +25,7 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
 
     override val identifier: String = "steam_turbine"
     override val isOptional: Boolean = false
-    override val holder: StructureHolder = StructureHelper(this)
+    override val holder: StructureHolder = StructureHolder.Builder(this)
         .from(createStructureMap(2))
         .create("5x5x5")
         .from(createStructureMap(3))
@@ -40,11 +40,11 @@ object SteamTurbineStructureDefinition : StructureDefinition() {
         .create("15x15x15")
         .build()
 
-    fun getInputValvePositions(pos: BlockPos, state: BlockState, matcher: AbstractMultiblockMatcher): List<BlockPos> {
+    fun getInputValvePositions(pos: BlockPos, state: BlockState, matcher: MultiblockMatcher): List<BlockPos> {
         val rotation =
-            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+            MultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
 
-        matcher.structureIds.firstOrNull()?.also { id ->
+        matcher.builtId?.also { id ->
             val radius = getRadius(id)
             return arrayOf(
                 BlockPos(-radius + 1, 0, 0),

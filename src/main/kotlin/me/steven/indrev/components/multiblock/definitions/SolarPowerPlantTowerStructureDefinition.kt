@@ -11,7 +11,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import kotlin.math.abs
 
-object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
+object SolarPowerPlantTowerStructureDefinition : StructureDefinition {
 
     private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK
     private val RESISTANT_GLASS = Blocks.GLASS.defaultState
@@ -20,14 +20,14 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
 
     override val identifier: String = "solar_power_plant"
     override val isOptional: Boolean = false
-    override val holder: StructureHolder = StructureHelper(this)
+    override val holder: StructureHolder = StructureHolder.Builder(this)
         .from(createStructureMap())
         .create("default")
         .build()
 
     fun getFluidInputPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
         val rotation =
-            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+            MultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
 
         val radius = 3
         val positions = hashSetOf<BlockPos>()
@@ -43,7 +43,7 @@ object SolarPowerPlantTowerStructureDefinition : StructureDefinition() {
 
     fun getSolarReceiverPositions(pos: BlockPos, state: BlockState): List<BlockPos> {
         val rotation =
-            AbstractMultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
+            MultiblockMatcher.rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
 
         val radius = 3
         val positions = hashSetOf<BlockPos>()

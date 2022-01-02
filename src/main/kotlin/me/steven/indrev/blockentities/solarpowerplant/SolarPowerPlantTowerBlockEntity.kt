@@ -75,7 +75,7 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
         isMarkedForUpdate = isMarkedForUpdate || condition()
     }
 
-    inner class SolarPowerPlantMultiblockComponent : MultiBlockComponent({ id -> id.structure == "solar_power_plant" }, { _, _, _ -> SolarPowerPlantTowerStructureDefinition }) {
+    inner class SolarPowerPlantMultiblockComponent : MultiBlockComponent({ _, _, _ -> SolarPowerPlantTowerStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
             SolarPowerPlantTowerStructureDefinition.getSolarReceiverPositions(pos, blockState).forEach { receiverPos ->

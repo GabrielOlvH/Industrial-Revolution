@@ -29,12 +29,13 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     var efficiency by autosync(EFFICIENCY, 1.0)
 
+    var generatingTicks = 0
+    var totalInserted: FluidAmount = FluidAmount.ZERO
+
     init {
         trackLong(GENERATING) { getGenerationRatio() * 100 }
     }
 
-    var generatingTicks = 0
-    var totalInserted: FluidAmount = FluidAmount.ZERO
 
     // used for the screen handler
     @Environment(EnvType.CLIENT)
@@ -65,11 +66,11 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     private fun getRadius(): Int {
         //return 7
-        val matcher = multiblockComponent!!.getSelectedMatcher(world!!, pos, cachedState)
-        return SteamTurbineStructureDefinition.getRadius(matcher.structureIds.firstOrNull() ?: return 0)
+        val matcher = multiblockComponent!!.getSelectedMatcher(world ?: return 0, pos, cachedState)
+        return SteamTurbineStructureDefinition.getRadius(matcher.builtId ?: return 0)
     }
 
-    private inner class SteamTurbineFluidComponent : FluidComponent({this}, bucket, 1) {
+    private inner class SteamTurbineFluidComponent : FluidComponent({ this }, bucket, 1) {
 
         override fun getTankCapacity(index: Int): Long {
             return (((getRadius() * getRadius().toLong()) * efficiency) * 81L).toLong()
@@ -80,7 +81,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
         }
     }
 
-    private inner class SteamTurbineMultiblockComponent : MultiBlockComponent({ id -> id.structure == "steam_turbine" }, { _, _, _ -> SteamTurbineStructureDefinition }) {
+    private inner class SteamTurbineMultiblockComponent : MultiBlockComponent({ _, _, _ -> SteamTurbineStructureDefinition }) {
         override fun tick(world: World, pos: BlockPos, blockState: BlockState) {
             super.tick(world, pos, blockState)
             SteamTurbineStructureDefinition

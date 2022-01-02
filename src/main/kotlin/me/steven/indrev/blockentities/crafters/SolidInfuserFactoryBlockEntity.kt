@@ -40,7 +40,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
             trackObject(CRAFTING_COMPONENT_START_ID + index, component)
             component
         }
-        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
     override fun splitStacks() {

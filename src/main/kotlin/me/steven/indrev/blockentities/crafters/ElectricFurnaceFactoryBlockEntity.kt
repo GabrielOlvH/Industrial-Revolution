@@ -35,7 +35,7 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockS
             trackObject(CRAFTING_COMPONENT_START_ID + index, component)
             component
         }
-        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
     @Suppress("UNCHECKED_CAST")

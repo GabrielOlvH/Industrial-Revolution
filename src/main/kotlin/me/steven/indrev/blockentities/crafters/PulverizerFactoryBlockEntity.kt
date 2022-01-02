@@ -34,7 +34,7 @@ class PulverizerFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             trackObject(CRAFTING_COMPONENT_START_ID + index, component)
             component
         }
-        this.multiblockComponent = MultiBlockComponent({ id -> id.variant == "factory" }, FactoryStructureDefinition.SELECTOR)
+        this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
