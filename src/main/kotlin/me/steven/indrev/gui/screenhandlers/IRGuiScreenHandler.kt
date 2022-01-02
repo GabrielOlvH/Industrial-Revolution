@@ -3,8 +3,7 @@ package me.steven.indrev.gui.screenhandlers
 import io.github.cottonmc.cotton.gui.SyncedGuiDescription
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
 import io.netty.buffer.Unpooled
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.components.GuiSyncableComponent
 import me.steven.indrev.gui.properties.SyncableProperty
 import me.steven.indrev.packets.client.GuiPropertySyncPacket
@@ -34,8 +33,8 @@ open class IRGuiScreenHandler(
         trackedPropertyValues.clear()
 
         ctx.run { world, pos ->
-            val blockEntity = world.getBlockEntity(pos) as? ComponentProvider ?: return@run
-            component = ComponentKey.GUI_SYNCABLE.get(blockEntity)
+            val blockEntity = world.getBlockEntity(pos) as? BaseBlockEntity ?: return@run
+            component = blockEntity.guiSyncableComponent
         }
     }
 
@@ -53,6 +52,7 @@ open class IRGuiScreenHandler(
     }
 
 
+    @Suppress("UNCHECKED_CAST")
     inline fun <T : BlockEntity> withBlockEntity(block: (T) -> Unit) {
         val be = ctx.get(BiFunction { world, pos ->
             world.getBlockEntity(pos) as? T ?: return@BiFunction null
@@ -60,6 +60,7 @@ open class IRGuiScreenHandler(
         block(be ?: return)
     }
 
+    @Suppress("UNCHECKED_CAST")
     inline fun <T : BlockEntity, U> query(block: (T) -> U): U {
         val be = ctx.get(BiFunction { world, pos ->
             world.getBlockEntity(pos) as? T ?: return@BiFunction null

@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities
 
 import com.google.common.base.Preconditions
+import me.steven.indrev.components.GuiSyncableComponent
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
@@ -10,7 +11,10 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 
 abstract class BaseBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState) : BlockEntity(type, pos, state) {
-    open fun sync() {
+
+    open val guiSyncableComponent: GuiSyncableComponent? = null
+
+    fun sync() {
         Preconditions.checkNotNull(world) // Maintain distinct failure case from below
         check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
         (world as ServerWorld).chunkManager.markForUpdate(getPos())

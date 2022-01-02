@@ -10,9 +10,6 @@ import me.steven.indrev.WCustomTabPanel
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
 import me.steven.indrev.blockentities.farms.RancherBlockEntity
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.GuiSyncableComponent
-import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.properties.SyncableProperty
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.RANCHER_HANDLER
@@ -59,10 +56,9 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val root = WCustomTabPanel()
 
         setRootPanel(root)
-        val properties = query<RancherBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
 
-        feedBabies = properties[RancherBlockEntity.FEED_BABIES_ID]
-        mateAdults = properties[RancherBlockEntity.MATE_ADULTS]
+        feedBabies = component!![RancherBlockEntity.FEED_BABIES_ID]
+        mateAdults = component!![RancherBlockEntity.MATE_ADULTS]
        // matingLimit = properties[RancherBlockEntity.MATING_LIMIT]
         //killAfter = properties[RancherBlockEntity.KILL_AFTER]
 

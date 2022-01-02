@@ -6,8 +6,7 @@ import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.data.Texture
 import io.netty.buffer.Unpooled
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.packets.common.FluidGuiHandInteractionPacket
 import me.steven.indrev.utils.IRFluidTank
@@ -72,8 +71,8 @@ open class WCustomBar(val bg: Texture, val bar: Texture, val value: () -> Int, v
 private val LIT_TEXTURE_ID = Texture(identifier("textures/gui/widget_fuel_burning.png"))
 private val UNLIT_TEXTURE_ID = Texture(identifier("textures/gui/widget_fuel_not_burning.png"))
 
-fun fuelBar(provider: ComponentProvider, valueIndex: Int = 4, maxIndex: Int = 5): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun fuelBar(blockEntity: BaseBlockEntity, valueIndex: Int = 4, maxIndex: Int = 5): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val fuel = WCustomBar(UNLIT_TEXTURE_ID, LIT_TEXTURE_ID, { properties[valueIndex] }, { properties[maxIndex] }, WCustomBar.Direction.UP)
     fuel.setSize(14, 14)
     return fuel
@@ -82,8 +81,8 @@ fun fuelBar(provider: ComponentProvider, valueIndex: Int = 4, maxIndex: Int = 5)
 val TANK_BOTTOM = Texture(identifier("textures/gui/tank_bottom.png"))
 val TANK_TOP = Texture(identifier("textures/gui/tank_top.png"))
 
-fun fluidTank(provider: ComponentProvider, index: Int): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun fluidTank(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val tank = object : WCustomBar(TANK_BOTTOM, TANK_TOP, { 1 }, { 1 }, Direction.UP) {
         override fun drawBar(matrices: MatrixStack, left: Int, top: Int, width: Int, height: Int, u1: Float, v1: Float, u2: Float, v2: Float) {
 
@@ -96,17 +95,16 @@ fun fluidTank(provider: ComponentProvider, index: Int): WCustomBar {
 
             val barSize = (barMax * percent).toInt()
             if (barSize > 0) {
-                val left = left;
-                var top = top
-                top -= barSize;
+                var t = top
+                t -= barSize
 
                 val tank = properties.get<IRFluidTank>(index)
                 tank
                     .renderGuiRect(
                         left.toDouble() + 1,
-                        top.toDouble() + 1 + height,
+                        t.toDouble() + 1 + height,
                         left + width.toDouble() - 1,
-                        top + barSize.toDouble() - 1 + height
+                        t + barSize.toDouble() - 1 + height
                     )
             }
             ScreenDrawing.texturedRect(matrices, left, top, this.width, this.height, TANK_TOP, -1)
@@ -132,8 +130,8 @@ fun fluidTank(provider: ComponentProvider, index: Int): WCustomBar {
 val ENERGY_EMPTY = Texture(identifier("textures/gui/widget_energy_empty.png"))
 val ENERGY_FULL = Texture(identifier("textures/gui/widget_energy_full.png"))
 
-fun energyBar(provider: ComponentProvider): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun energyBar(blockEntity: BaseBlockEntity): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val energy = object : WCustomBar(ENERGY_EMPTY, ENERGY_FULL, { properties.get<Double>(0).toInt() }, { properties.get<Double>(1).toInt() }, Direction.UP) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val energy = getEnergyString(properties[0])
@@ -149,8 +147,8 @@ fun energyBar(provider: ComponentProvider): WCustomBar {
 private val EMPTY_HEAT = Texture(identifier("textures/gui/widget_temperature_empty.png"))
 private val FULL_HEAT = Texture(identifier("textures/gui/widget_temperature_full.png"))
 
-fun temperatureBar(provider: ComponentProvider): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun temperatureBar(blockEntity: BaseBlockEntity): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val temp = object : WCustomBar(EMPTY_HEAT, FULL_HEAT, { properties.get<Double>(2).toInt() }, { properties.get<Double>(3).toInt() }, Direction.UP) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val temperature = properties.get<Double>(2).toInt()
@@ -184,8 +182,8 @@ val LEFT_PROCESS_FULL = Texture(identifier("textures/gui/widget_processing_full_
 val UP_PROCESS_EMPTY = Texture(identifier("textures/gui/widget_processing_empty_vertical.png"))
 val UP_PROCESS_FULL = Texture(identifier("textures/gui/widget_processing_full_vertical.png"))
 
-fun processBar(provider: ComponentProvider, index: Int): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun processBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val process = object : WCustomBar(RIGHT_PROCESS_EMPTY, RIGHT_PROCESS_FULL, { properties.get<CraftingComponent<*>>(index).processTime }, { properties.get<CraftingComponent<*>>(index).totalProcessTime }, Direction.RIGHT) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val progress = properties.get<CraftingComponent<*>>(index).processTime
@@ -198,8 +196,8 @@ fun processBar(provider: ComponentProvider, index: Int): WCustomBar {
     return process
 }
 
-fun upProcessBar(provider: ComponentProvider, index: Int): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun upProcessBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val process = object : WCustomBar(UP_PROCESS_EMPTY, UP_PROCESS_FULL, { properties.get<CraftingComponent<*>>(index).processTime }, { properties.get<CraftingComponent<*>>(index).totalProcessTime }, Direction.DOWN) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val progress = properties.get<CraftingComponent<*>>(index).processTime
@@ -213,8 +211,8 @@ fun upProcessBar(provider: ComponentProvider, index: Int): WCustomBar {
 
 }
 
-fun upProcessBar(provider: ComponentProvider, progress: Int, max: Int): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun upProcessBar(blockEntity: BaseBlockEntity, progress: Int, max: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val process = object : WCustomBar(UP_PROCESS_EMPTY, UP_PROCESS_FULL, { properties[progress] }, { properties[max] }, Direction.DOWN) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             if (properties.get<Int>(max) <= 0) return
@@ -226,8 +224,8 @@ fun upProcessBar(provider: ComponentProvider, progress: Int, max: Int): WCustomB
 
 }
 
-fun leftProcessBar(provider: ComponentProvider, index: Int): WCustomBar {
-    val properties = ComponentKey.GUI_SYNCABLE.get(provider) ?: error("$provider does not provide gui_syncable component")
+fun leftProcessBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val process = object : WCustomBar(LEFT_PROCESS_EMPTY, LEFT_PROCESS_FULL, { properties.get<CraftingComponent<*>>(index).processTime }, { properties.get<CraftingComponent<*>>(index).totalProcessTime }, Direction.LEFT) {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val progress = properties.get<CraftingComponent<*>>(index).processTime

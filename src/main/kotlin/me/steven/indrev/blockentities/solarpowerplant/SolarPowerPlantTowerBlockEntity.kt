@@ -13,9 +13,9 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
-    : BaseBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state), ComponentProvider, Syncable {
+    : BaseBlockEntity(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY, pos, state), Syncable {
 
-    val guiSyncableComponent = GuiSyncableComponent()
+    override val guiSyncableComponent = GuiSyncableComponent()
 
     val temperatureComponent = TemperatureComponent(this, 0.09, 1100..1300, 1500)
     val multiblockComponent = SolarPowerPlantMultiblockComponent()
@@ -48,17 +48,6 @@ class SolarPowerPlantTowerBlockEntity(pos: BlockPos, state: BlockState)
                 blockEntity.markForUpdate()
                 blockEntity.heliostats = 0
             }
-        }
-    }
-
-    override fun <T> get(key: ComponentKey<T>): Any? {
-        return when (key) {
-            ComponentKey.FLUID -> fluidComponent
-            ComponentKey.TEMPERATURE -> temperatureComponent
-            ComponentKey.MULTIBLOCK -> multiblockComponent
-            ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
-            ComponentKey.WORLD_OBJECT -> world
-            else -> null
         }
     }
 

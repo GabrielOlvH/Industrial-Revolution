@@ -132,7 +132,7 @@ object IRBlockRegistry {
 
         identifier("fluid_valve").block(FLUID_VALVE).item(FLUID_VALVE_ITEM)
 
-        FluidStorage.SIDED.registerForBlocks({ world, pos, state, be, dir ->
+        FluidStorage.SIDED.registerForBlocks({ world, pos, _, _, dir ->
             val aboveBlockEntity = world.getBlockEntity(pos.up()) as? SolarPowerPlantTowerBlockEntity
             return@registerForBlocks aboveBlockEntity?.fluidComponent?.getCachedSide(dir)
         }, FLUID_VALVE)

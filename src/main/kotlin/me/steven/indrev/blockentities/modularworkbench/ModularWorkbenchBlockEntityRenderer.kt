@@ -13,6 +13,7 @@ import net.minecraft.client.render.OverlayTexture
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.WorldRenderer
+import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.entity.model.BipedEntityModel
 import net.minecraft.client.render.entity.model.ElytraEntityModel
 import net.minecraft.client.render.entity.model.PlayerEntityModel
@@ -25,7 +26,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3f
 
-class ModularWorkbenchBlockEntityRenderer : MultiblockBlockEntityRenderer<ModularWorkbenchBlockEntity>() {
+class ModularWorkbenchBlockEntityRenderer : BlockEntityRenderer<ModularWorkbenchBlockEntity> {
 
     private val bodyModel = BipedEntityModel<AbstractClientPlayerEntity>(TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64).createModel())
     private val leggingsModel = BipedEntityModel<AbstractClientPlayerEntity>(TexturedModelData.of(PlayerEntityModel.getTexturedModelData(Dilation.NONE, false), 64, 64).createModel())
@@ -44,7 +45,6 @@ class ModularWorkbenchBlockEntityRenderer : MultiblockBlockEntityRenderer<Modula
         overlay: Int
     ) {
         ElytraEntityModel.getTexturedModelData().createModel()
-        super.render(entity, tickDelta, matrices, vertexConsumers, light, overlay)
         val itemStack = entity.inventoryComponent?.inventory?.getStack(2)
         if (itemStack?.item is IRModularArmorItem) {
             matrices.run {

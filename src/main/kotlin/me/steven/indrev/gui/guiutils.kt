@@ -8,10 +8,10 @@ import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import io.github.cottonmc.cotton.gui.widget.icon.Icon
 import io.netty.buffer.Unpooled
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.blockentities.farms.AOEMachineBlockEntity
-import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.gui.widgets.machines.energyBar
 import me.steven.indrev.gui.widgets.machines.temperatureBar
 import me.steven.indrev.gui.widgets.misc.WText
@@ -57,7 +57,7 @@ fun SyncedGuiDescription.configure(
     var titlePos = 4.7
 
     ctx.run { world, blockPos ->
-        val blockEntity = world.getBlockEntity(blockPos) as ComponentProvider
+        val blockEntity = world.getBlockEntity(blockPos) as BaseBlockEntity
 
         val energyWidget = energyBar(blockEntity)
         panel.add(energyWidget, 0.1, widgetPos)

@@ -4,8 +4,6 @@ import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blocks.misc.TankBlock
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.bucket
@@ -18,7 +16,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class TankBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), Syncable, ComponentProvider {
+class TankBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBlockRegistry.TANK_BLOCK_ENTITY, pos, state), Syncable {
     val fluidComponent = object : FluidComponent({ this }, bucket * 8) {
         init {
             this.unsided = true
@@ -64,13 +62,6 @@ class TankBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockEntity(IRBloc
     override fun markDirty() {
         if (world != null) {
             world!!.markDirty(pos)
-        }
-    }
-
-    override fun <T> get(key: ComponentKey<T>): Any? {
-        return when (key) {
-            ComponentKey.FLUID -> fluidComponent
-            else -> null
         }
     }
 

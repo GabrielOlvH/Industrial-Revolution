@@ -1,9 +1,7 @@
 package me.steven.indrev.items.misc
 
 import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
-import me.steven.indrev.components.ComponentKey
 import me.steven.indrev.components.GuiSyncableComponent
-import me.steven.indrev.components.ensureIsProvider
 import me.steven.indrev.gui.screenhandlers.machines.MiningRigComputerScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandlerFactory
@@ -43,7 +41,7 @@ class IRResourceReportItem(settings: Settings) : Item(settings) {
 
         val handler = MinecraftClient.getInstance().player?.currentScreenHandler as? MiningRigComputerScreenHandler
         if (handler != null) {
-            val properties = handler.query<MiningRigBlockEntity, GuiSyncableComponent> { be -> ComponentKey.GUI_SYNCABLE.get(ensureIsProvider(be)) ?: error("$be does not provide gui_syncable component") }
+            val properties = handler.query<MiningRigBlockEntity, GuiSyncableComponent> { be -> be.guiSyncableComponent!! }
             if (!properties.get<Boolean>(MiningRigBlockEntity.LOCATION_ID)) {
                 tooltip?.add(LiteralText.EMPTY)
                 tooltip?.add(TranslatableText("block.indrev.drill.wrong_location").formatted(Formatting.RED))

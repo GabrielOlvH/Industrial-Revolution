@@ -30,7 +30,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
 
-    var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
+    override var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
 
     internal var energy: Long by autosync(ENERGY_ID, 0L) { value ->
         when (tier) {
@@ -176,19 +176,6 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     }
 
     override fun isFixed(type: ConfigurationType): Boolean = false
-
-    override fun <T> get(key: ComponentKey<T>): Any? {
-        return when (key) {
-            ComponentKey.FLUID -> fluidComponent
-            ComponentKey.ITEM -> inventoryComponent
-            ComponentKey.TEMPERATURE -> temperatureComponent
-            ComponentKey.MULTIBLOCK -> multiblockComponent
-            ComponentKey.GUI_SYNCABLE -> guiSyncableComponent
-            ComponentKey.WORLD_OBJECT -> world
-            ComponentKey.ENHANCER -> enhancerComponent
-            else -> null
-        }
-    }
 
     open fun getFluidTransferRate(): Long = when (tier) {
         Tier.MK1 -> bucket / 3

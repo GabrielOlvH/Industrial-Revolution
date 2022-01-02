@@ -1,5 +1,6 @@
 package me.steven.indrev.components
 
+import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.crafters.CraftingMachineBlockEntity
 import me.steven.indrev.registry.IRItemRegistry
@@ -10,19 +11,19 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 
 class TemperatureComponent(
-    private val blockEntity: BlockEntity,
+    private val blockEntity: BaseBlockEntity,
     private val heatingSpeed: Double,
     val optimalRange: IntRange,
     val limit: Int
-) : ComponentProvider by ensureIsProvider(blockEntity) {
+) {
 
     var cooling = true
 
     var temperature: Double = 25.0
 
     init {
-        trackInt(MachineBlockEntity.TEMPERATURE_ID) { temperature.toInt() }
-        trackInt(MachineBlockEntity.MAX_TEMPERATURE_ID) { limit }
+        blockEntity.trackInt(MachineBlockEntity.TEMPERATURE_ID) { temperature.toInt() }
+        blockEntity.trackInt(MachineBlockEntity.MAX_TEMPERATURE_ID) { limit }
     }
 
     private var ticks = 0
@@ -39,17 +40,18 @@ class TemperatureComponent(
     }
 
     fun isFullEfficiency(): Boolean {
-        val inventoryComponent = ComponentKey.ITEM.get(blockEntity)
+        val machine = blockEntity as? MachineBlockEntity<*>
+        val inventoryComponent = machine?.inventoryComponent
+
         return (!cooling || inventoryComponent?.inventory?.coolerStack?.isEmpty != true)
                 && temperature.toInt() in optimalRange
     }
 
     fun tick(shouldHeatUp: Boolean) {
         ticks++
-        val inventoryComponent = ComponentKey.ITEM.get(blockEntity)
         val machine = blockEntity as? MachineBlockEntity<*>
         val random = blockEntity.world!!.random
-        val inv = inventoryComponent?.inventory
+        val inv = machine?.inventoryComponent?.inventory
         val (coolerStack, coolerItem) = inv?.coolerStack ?: ItemStack.EMPTY
         val isHeatingUp = shouldHeatUp || (machine != null && coolerItem == IRItemRegistry.HEAT_COIL && machine.use(16))
 

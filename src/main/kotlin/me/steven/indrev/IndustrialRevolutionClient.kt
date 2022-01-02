@@ -4,11 +4,11 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.armor.ModuleFeatureRenderer
 import me.steven.indrev.armor.ReinforcedElytraFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
-import me.steven.indrev.blockentities.crafters.CondenserBlockEntityRenderer
-import me.steven.indrev.blockentities.crafters.FluidInfuserBlockEntityRenderer
+import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.drill.DrillBlockEntityRenderer
 import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRenderer
+import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
@@ -137,21 +137,21 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.CHARGE_PAD_REGISTRY.registerBlockEntityRenderer(::ChargePadBlockEntityRenderer)
         MachineRegistry.CONDENSER_REGISTRY.registerBlockEntityRenderer(::CondenserBlockEntityRenderer)
         MachineRegistry.FLUID_INFUSER_REGISTRY.registerBlockEntityRenderer(::FluidInfuserBlockEntityRenderer)
-        MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
-        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.SOLID_INFUSER_FACTORY_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<SolidInfuserFactoryBlockEntity> { be -> be.multiblockComponent!! } }
+        MachineRegistry.COMPRESSOR_FACTORY_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<CompressorFactoryBlockEntity> { be -> be.multiblockComponent!! } }
+        MachineRegistry.PULVERIZER_FACTORY_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<PulverizerFactoryBlockEntity> { be -> be.multiblockComponent!! } }
+        MachineRegistry.ELECTRIC_FURNACE_FACTORY_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<ElectricFurnaceFactoryBlockEntity> { be -> be.multiblockComponent!! } }
         MachineRegistry.MINING_RIG_REGISTRY.registerBlockEntityRenderer(::MiningRigBlockEntityRenderer)
         MachineRegistry.PUMP_REGISTRY.registerBlockEntityRenderer(::PumpBlockEntityRenderer)
         MachineRegistry.LAZULI_FLUX_CONTAINER_REGISTRY.registerBlockEntityRenderer(::LazuliFluxContainerBlockEntityRenderer)
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
-        MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer(::MultiblockBlockEntityRenderer)
+        MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<SteamTurbineBlockEntity> { be -> be.multiblockComponent!! } }
         BlockEntityRendererRegistry.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
         BlockEntityRendererRegistry.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
         BlockEntityRendererRegistry.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
         BlockEntityRendererRegistry.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer() }
+        BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer { be -> be.multiblockComponent } }
         BlockEntityRendererRegistry.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
 
 

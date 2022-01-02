@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction
 object BoilerStructureDefinition : StructureDefinition() {
     private val CASING = IRBlockRegistry.STEAM_TURBINE_CASING_BLOCK.defaultState
     private val RESISTANT_GLASS = Blocks.GLASS.defaultState
-    private val SMELTER = IRBlockRegistry.SOLAR_POWER_PLANT_SMELTER_BLOCK.defaultState
+    private val SMELTER = IRBlockRegistry.FLUID_VALVE.defaultState
     private val FLUID_VALVE_UP = IRBlockRegistry.FLUID_VALVE.defaultState.with(FacingBlock.FACING, Direction.UP)
     private val FLUID_VALVE_EAST = IRBlockRegistry.FLUID_VALVE.defaultState.with(FacingBlock.FACING, Direction.EAST)
     private val FLUID_VALVE_WEST = IRBlockRegistry.FLUID_VALVE.defaultState.with(FacingBlock.FACING, Direction.WEST)

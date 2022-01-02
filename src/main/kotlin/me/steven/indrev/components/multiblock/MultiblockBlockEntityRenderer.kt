@@ -1,13 +1,11 @@
 package me.steven.indrev.components.multiblock
 
-import me.steven.indrev.components.ComponentKey
-import me.steven.indrev.components.ComponentProvider
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 
-open class MultiblockBlockEntityRenderer<T : BlockEntity> : BlockEntityRenderer<T> {
+class MultiblockBlockEntityRenderer<T : BlockEntity>(val multiblock: (T) -> MultiBlockComponent) : BlockEntityRenderer<T> {
     override fun render(
         entity: T,
         tickDelta: Float,
@@ -16,8 +14,7 @@ open class MultiblockBlockEntityRenderer<T : BlockEntity> : BlockEntityRenderer<
         light: Int,
         overlay: Int
     ) {
-        ComponentKey.MULTIBLOCK.get(entity as? ComponentProvider ?: return)
-            ?.render(entity, matrices, vertexConsumers, overlay)
+        multiblock(entity).render(entity, matrices, vertexConsumers, overlay)
     }
 
     override fun rendersOutsideBoundingBox(blockEntity: T): Boolean = true
