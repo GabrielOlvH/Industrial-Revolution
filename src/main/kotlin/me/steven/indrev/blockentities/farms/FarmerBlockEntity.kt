@@ -24,7 +24,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(14, 15, 16, 17), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(1, 2, 3, 4) }
             output { slots = intArrayOf(5, 6, 7, 8, 9, 10, 11, 12, 13) }

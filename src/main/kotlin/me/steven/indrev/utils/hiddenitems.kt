@@ -53,4 +53,4 @@ val hiddenIds = arrayOf(
     "module_reinforced_elytra"
 )
 
-fun hide(id: Identifier) = id.namespace == "indrev" && hiddenIds.contains(id.path) && false
+fun hide(id: Identifier) = id.namespace == "indrev" && hiddenIds.contains(id.path)

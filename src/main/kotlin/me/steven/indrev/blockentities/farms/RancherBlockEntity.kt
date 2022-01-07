@@ -154,7 +154,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         killAfter = tag.getInt("killAfter")
     }
 
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent!!)
+    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 
     companion object {
         const val FEED_BABIES_ID = 2
