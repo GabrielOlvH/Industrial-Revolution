@@ -126,6 +126,7 @@ dependencies {
 
     dependencies.ext.lib("teamreborn:energy:${project.tr_energy_version}")
     dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
+    dependencies.ext.lib("io.github.queerbric:Inspecio:v1.2.0+1.18")
     dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
     dependencies.ext.lib("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     dependencies.ext.lib("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
