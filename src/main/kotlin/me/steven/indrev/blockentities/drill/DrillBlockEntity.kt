@@ -14,6 +14,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
@@ -64,6 +65,17 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
         }
         tag?.putDouble("Position", position)
     }
+
+    override fun toUpdatePacket(): BlockEntityUpdateS2CPacket {
+        return BlockEntityUpdateS2CPacket.create(this)
+    }
+
+    override fun toInitialChunkDataNbt(): NbtCompound {
+        val nbt = super.toInitialChunkDataNbt()
+        writeNbt(nbt)
+        return nbt
+    }
+
 
     fun sync() {
         Preconditions.checkNotNull(world) // Maintain distinct failure case from below

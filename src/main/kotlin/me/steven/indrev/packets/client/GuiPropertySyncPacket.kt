@@ -33,7 +33,7 @@ object GuiPropertySyncPacket {
 
             val handler = player!!.currentScreenHandler
             if (handler.syncId == syncId && handler is IRGuiScreenHandler) {
-                handler.component!!.properties.forEach { it.markDirty() }
+                handler.component?.properties?.forEach { it.markDirty() }
             }
         }
     }
