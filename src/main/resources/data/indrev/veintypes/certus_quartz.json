@@ -6,14 +6,9 @@
       "optional": true,
       "output": [
         {
-          "id": "appliedenergistics2:quartz_ore",
+          "id": "ae2:quartz_ore",
           "weight": 8,
           "infiniteWeight": 8
-        },
-        {
-          "id": "appliedenergistics2:charged_quartz_ore",
-          "weight": 3,
-          "infiniteWeight": 3
         },
         {
           "id": "minecraft:stone",
