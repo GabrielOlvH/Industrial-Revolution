@@ -1,0 +1,22 @@
+{
+  "name": "物品",
+  "category": "indrev:transportation",
+  "sortnum": 1,
+  "icon": "indrev:item_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "物品管道可以在物品栏（译注：如箱子等能存储物品的方块）之间运输物品。$(br)查看工具提示可以了解管道可以运输的物品数量。$(br)管道只会每秒，而不是每tick，进行一次运输。$(br)物品管道支持$(l)高级筛选$()，右键管道即可查看。$(br2)物品管道需要伺服器才能工作，详见$(l:transportation/servos)$(t:跳转到“伺服器”页面)伺服器$()章节。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/item_pipe_mk1",
+      "recipe2": "indrev:shaped/item_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/item_pipe_mk3",
+      "recipe2": "indrev:shaped/item_pipe_mk4"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "三倍产矿",
-  "category": "enhanced_ore_processing",
+  "category": "indrev:enhanced_ore_processing",
   "sortnum": 1,
   "icon": "indrev:smelter_mk4",
   "pages": [

@@ -1,6 +1,6 @@
 {
   "name": "机器怎么运作？",
-  "category": "temperature",
+  "category": "indrev:temperature",
   "sortnum": 0,
   "icon": "indrev:fan",
   "pages": [

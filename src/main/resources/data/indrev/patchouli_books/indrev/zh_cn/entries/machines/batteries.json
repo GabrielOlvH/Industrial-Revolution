@@ -1,6 +1,6 @@
 {
     "name": "青金石通量容器",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 3,
     "icon": "indrev:lazuli_flux_container_mk1",
     "pages": [

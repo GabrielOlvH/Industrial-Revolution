@@ -1,0 +1,13 @@
+{
+  "name": "铅矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 3,
+  "icon": "indrev:lead_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#575d61)$(l)铅矿石$()是一种不常见的矿石，可以在0至32层之间找到，有石头和深板岩两个变种。$(br)$(#575d61)$(l)铅$()被用于制作更高级的机械。"
+    }
+  ]
+}

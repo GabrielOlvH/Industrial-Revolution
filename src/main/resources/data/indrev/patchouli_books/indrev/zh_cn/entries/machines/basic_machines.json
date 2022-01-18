@@ -1,6 +1,6 @@
 {
     "name": "基础机器",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 1,
     "icon": "indrev:electric_furnace_mk1",
     "pages": [
@@ -29,7 +29,7 @@
       {
         "type": "crafting",
         "anchor": "infuser",
-        "recipe": "indrev:shaped/infuser_mk1",
+        "recipe": "indrev:shaped/solid_infuser_mk1",
         "text": "$(l)$(o)固体注入机$()可以将两种材料合为一种新材料。"
       },
       {

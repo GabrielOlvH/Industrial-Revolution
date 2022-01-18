@@ -1,6 +1,6 @@
 {
   "name": "采矿钻头",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 2,
   "icon": "indrev:mining_drill_mk1",
   "pages": [

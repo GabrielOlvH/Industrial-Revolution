@@ -1,0 +1,13 @@
+{
+  "name": "银矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 2,
+  "icon": "indrev:silver_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#c6e9e3)$(l)银矿石$()是一种不常见的矿石，可在0至32层找到，有石头和深板岩两个变种。$(br)$(#c6e9e3)$(l)银$()被用来制作更高级的机械。"
+    }
+  ]
+}

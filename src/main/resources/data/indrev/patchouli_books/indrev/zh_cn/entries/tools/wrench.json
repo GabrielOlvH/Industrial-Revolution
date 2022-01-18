@@ -1,6 +1,6 @@
 {
   "name": "扳手",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 1,
   "icon": "indrev:wrench",
   "pages": [

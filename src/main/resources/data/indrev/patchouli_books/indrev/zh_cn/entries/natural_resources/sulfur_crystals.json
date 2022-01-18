@@ -1,0 +1,13 @@
+{
+  "name": "硫晶体",
+  "category": "indrev:natural_resources",
+  "sortnum": 6,
+  "icon": "indrev:sulfur_crystal",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:sulfur_crystal",
+      "text": "$(#f5da68)$(l)硫晶体$()是一种常见矿物，可在主世界的0至16层以及下界的100层以下找到。$(br)$(#f5da68)$(l)硫$()被用于高级矿物处理链的纯化过程中。"
+    }
+  ]
+}

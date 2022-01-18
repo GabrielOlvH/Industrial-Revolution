@@ -1,0 +1,22 @@
+{
+  "name": "流体",
+  "category": "indrev:transportation",
+  "sortnum": 2,
+  "icon": "indrev:fluid_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "流体管道可以用来在相距很远的储罐间运输流体。$(br)查看工具提示来了解具体可传输流体的数量。$(br)管道只会每秒，而不是每 tick，进行运输。$(br2)管道需要伺服器才能工作，参见$(l:transportation/servos)$(t:跳转到“伺服器”页面)伺服器$()章节。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk1",
+      "recipe2": "indrev:shaped/fluid_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk3",
+      "recipe2": "indrev:shaped/fluid_pipe_mk4"
+    }
+  ]
+}

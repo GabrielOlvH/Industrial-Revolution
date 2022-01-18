@@ -1,0 +1,13 @@
+{
+  "name": "螺丝刀",
+  "category": "indrev:tools",
+  "sortnum": 2,
+  "icon": "indrev:screwdriver",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/screwdriver",
+      "text": "螺丝刀可以用来调整机器的物品I/O和流体I/O。$(br)它也可以被用来控制青金石通量容器的能源侧面（energy sides）。"
+    }
+  ]
+}

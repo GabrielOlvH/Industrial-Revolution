@@ -1,8 +1,8 @@
 {
   "name": "机器升级",
-  "category": "upgrades",
+  "category": "indrev:upgrades",
   "sortnum": 0,
-  "icon": "indrev:speed_upgrade",
+  "icon": "indrev:speed_enhancer",
   "pages": [
     {
       "type": "text",
@@ -10,32 +10,32 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/empty_upgrade",
+      "recipe": "indrev:shaped/empty_enhancer",
       "text": "没有任何用处，只用于合成其他升级。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/speed_upgrade",
+      "recipe": "indrev:shaped/speed_enhancer",
       "text": "这个升级以能耗为代价增加机器的运行速率。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/energy_upgrade",
+      "recipe": "indrev:shaped/energy_enhancer",
       "text": "这个升级可降低机器的能耗。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/buffer_upgrade",
+      "recipe": "indrev:shaped/buffer_enhancer",
       "text": "这个升级可增加机器的能量容量。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/blast_furnace_upgrade",
+      "recipe": "indrev:shaped/blast_furnace_enhancer",
       "text": "这个升级允许电炉处理高炉配方。"
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/smoker_upgrade",
+      "recipe": "indrev:shaped/smoker_enhancer",
       "text": "这个升级允许电炉处理烟熏炉配方。"
     }
   ]

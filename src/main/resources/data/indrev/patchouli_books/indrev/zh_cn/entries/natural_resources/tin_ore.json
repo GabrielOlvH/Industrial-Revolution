@@ -1,0 +1,13 @@
+{
+  "name": "锡矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 1,
+  "icon": "indrev:tin_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:tin_ore",
+      "text": "$(#999999)$(l)锡矿石$()是一种常见的矿石，可以在0至48层之间找到，有石头和深板岩两个变种。$(br)$(#999999)$(l)锡$()被大量用于机械制造中。"
+    }
+  ]
+}

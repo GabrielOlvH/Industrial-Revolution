@@ -1,6 +1,6 @@
 {
   "name": "时刻保持高“冷”~",
-  "category": "temperature",
+  "category": "indrev:temperature",
   "sortnum": 1,
   "icon": "indrev:cooler_cell",
   "pages": [

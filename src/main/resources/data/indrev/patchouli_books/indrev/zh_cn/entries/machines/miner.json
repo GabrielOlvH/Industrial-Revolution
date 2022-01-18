@@ -1,12 +1,12 @@
 {
     "name": "自动挖矿钻机",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 4,
-    "icon": "indrev:miner_mk4",
+    "icon": "indrev:mining_rig_mk4",
     "pages": [
       {
         "type": "crafting",
-        "recipe": "indrev:shaped/miner_mk4",
+        "recipe": "indrev:shaped/mining_rid_mk4",
         "text": "将$(l)$(o)自动挖矿钻机$()放置在$(l:machines/miner#chunk_scanner)$(t:区块扫描仪)$(l)$(o)$(#0000ff)扫描过$()的区块中即可自动挖矿。值得一提的是它并不会破坏方块。"
       },
       {
@@ -113,7 +113,7 @@
         "type": "spotlight",
         "title": "黄锡",
         "item": "indrev:tin_ore",
-        "text": "主要为$(#999999)$(l)锡矿石$()，$(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()，锡矿众多，也有。(#666666)$(l)铁$()，$(#FFA500)$(l)铜$()，少数石头，土，沙砾等。$(br)这些矿脉随处可见，但在丘陵，平顶山和沙漠更常见。"
+        "text": "主要为$(#999999)$(l)锡矿石$()，$(#FFA500)$(l)铜矿石$()和$(#666666)$(l)铁矿石$()，锡矿众多，也有。$(#666666)$(l)铁$()，$(#FFA500)$(l)铜$()，少数石头，土，沙砾等。$(br)这些矿脉随处可见，但在丘陵，平顶山和沙漠更常见。"
       },
       {
         "anchor": "nikolite",

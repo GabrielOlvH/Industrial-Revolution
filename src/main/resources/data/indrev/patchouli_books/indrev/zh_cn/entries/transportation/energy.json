@@ -1,0 +1,22 @@
+{
+  "name": "能量",
+  "category": "indrev:transportation",
+  "sortnum": 0,
+  "icon": "indrev:cable_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "线缆可以在机器之间运输能量。$(br)每根线缆可以传输不同数量的能量，可在查看工具提示时按下 Shift 来查看具体描述。$(br)如果你的机器运行能量不足，你可能需要试着升级线缆或者改进你的能量生产方法。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk1",
+      "recipe2": "indrev:shaped/cable_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk3",
+      "recipe2": "indrev:shaped/cable_mk4"
+    }
+  ]
+}

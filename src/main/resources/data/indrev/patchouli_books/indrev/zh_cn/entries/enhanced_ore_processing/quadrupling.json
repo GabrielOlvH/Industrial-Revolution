@@ -1,6 +1,6 @@
 {
   "name": "四倍产矿",
-  "category": "enhanced_ore_processing",
+  "category": "indrev:enhanced_ore_processing",
   "sortnum": 2,
   "icon": "indrev:fluid_infuser_mk4",
   "pages": [

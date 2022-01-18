@@ -1,6 +1,6 @@
 {
   "name": "模块盔甲",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 4,
   "icon": "indrev:modular_armor_helmet",
   "pages": [
@@ -22,35 +22,6 @@
       "type": "crafting",
       "recipe": "indrev:shaped/modular_workbench",
       "text": "模块化工作台用于给模块化盔甲安装模块。请注意安装模块会消耗时间和能量！"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_protection",
-      "recipe2": "indrev:shaped/module_speed"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_night_vision",
-      "recipe2": "indrev:shaped/module_jump_boost"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_breathing",
-      "recipe2": "indrev:shaped/module_feather_falling"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_charger",
-      "recipe2": "indrev:shaped/module_solar_panel"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_auto_feeder",
-      "recipe2": "indrev:shaped/module_fire_resistance"
-    },
-    {
-      "type": "crafting",
-      "recipe": "indrev:shaped/module_piglin_tricker"
     }
   ]
 }
