@@ -1,0 +1,22 @@
+{
+  "name": "Жидкости",
+  "category": "indrev:transportation",
+  "sortnum": 2,
+  "icon": "indrev:fluid_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Жидкостные трубы можно использовать для передачи жидкостей между резервуарами на большом расстоянии друг от друга.$(br)Чтобы посмотреть сколько можно передать количество жидкости, проверь подсказки.$(br)Трубы передают жидкость только в секундах, а не в тиках.$(br2)Понадобятся сервоприводы, прочти главу $(l:transportation/servos)$(t:Перейти к Сервоприводы)Сервоприводы$()."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk1",
+      "recipe2": "indrev:shaped/fluid_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk3",
+      "recipe2": "indrev:shaped/fluid_pipe_mk4"
+    }
+  ]
+}

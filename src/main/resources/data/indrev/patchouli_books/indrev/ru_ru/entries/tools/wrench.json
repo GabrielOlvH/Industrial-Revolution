@@ -1,0 +1,13 @@
+{
+  "name": "Гаечный ключ",
+  "category": "indrev:tools",
+  "sortnum": 1,
+  "icon": "indrev:wrench",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/wrench",
+      "text": "Гаечный ключ используется для вращения блоков и ломании машин, сохранив свой запас энергии при использовании с Shift по машине."
+    }
+  ]
+}

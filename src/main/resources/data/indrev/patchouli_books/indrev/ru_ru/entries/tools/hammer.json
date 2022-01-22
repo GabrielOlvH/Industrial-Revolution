@@ -1,0 +1,13 @@
+{
+  "name": "Молот",
+  "category": "indrev:tools",
+  "sortnum": 0,
+  "icon": "indrev:hammer",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/hammer",
+      "text": "Используется для изготовления пластин из слитков, пока у тебя по-прежнему нет Компрессора!"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Кабели",
+  "category": "indrev:machines",
+  "sortnum": 2,
+  "icon": "indrev:cable_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Кабели используются в машинах для передачи Лазуритного флакса на большие расстояния."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk1",
+      "recipe2": "indrev:shaped/cable_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk3",
+      "recipe2": "indrev:shaped/cable_mk4"
+    }
+  ]
+}

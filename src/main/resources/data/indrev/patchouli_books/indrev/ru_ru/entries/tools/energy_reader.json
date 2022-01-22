@@ -1,0 +1,13 @@
+{
+  "name": "Считыватель энергии",
+  "category": "indrev:tools",
+  "sortnum": 4,
+  "icon": "indrev:energy_reader",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/energy_reader",
+      "text": "Расскажет о текущей запасённой энергии в машинах, а также расскажет о потребления энергии в тик."
+    }
+  ]
+}
