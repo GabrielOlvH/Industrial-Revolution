@@ -94,9 +94,9 @@
   "block.indrev.mining_rig.mined": "%s добыто.",
 
   "block.indrev.drill": "Сверло буровой установки",
-  "block.indrev.drill_top": "Сверло буровой установки (верхняя часть)",
-  "block.indrev.drill_middle": "Сверло буровой установки (середина)",
-  "block.indrev.drill_bottom": "Сверло буровой установки (нижняя часть)",
+  "block.indrev.drill_top": "Сверло буровой установки",
+  "block.indrev.drill_middle": "Сверло буровой установки",
+  "block.indrev.drill_bottom": "Сверло буровой установки",
   "block.indrev.drill.faster": "%sх быстрее",
   "block.indrev.drill.no_drills": "Пустой.",
   "block.indrev.drill.wrong_location": "Неверный отчёт для текущего местоположения!",
