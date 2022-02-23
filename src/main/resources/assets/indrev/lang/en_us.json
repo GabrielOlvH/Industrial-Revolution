@@ -540,7 +540,7 @@
   "item.indrev.module_auto_feeder": "Auto Feeder Module",
   "item.indrev.module_auto_feeder.tooltip": "Eats food from your inventory automatically at cost of energy.",
   "item.indrev.module_charger": "Charger Module",
-  "item.indrev.module_charger.tooltip": "Recharges any items in your inventory (does not include armor).",
+  "item.indrev.module_charger.tooltip": "Recharges any items in your inventory.",
   "item.indrev.module_solar_panel": "Solar Panel Module",
   "item.indrev.module_solar_panel.tooltip": "Recharges your armor and held item when under sunlight.",
   "item.indrev.module_piglin_tricker": "Piglin Tricker Module",
