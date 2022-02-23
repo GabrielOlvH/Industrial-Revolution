@@ -28,7 +28,7 @@ class MultiblockMatcher(val definition: StructureDefinition) {
 
     fun isBuilt(world: World, pos: BlockPos, state: BlockState, map: Map<BlockPos, BlockStateFilter>): Boolean {
         var currentChunk: Chunk = world.getChunk(pos)
-        if (pos.y < 0)
+        if (world.isOutOfHeightLimit(pos))
             return false
         val rotation =
             rotateBlock(state[HorizontalFacingMachineBlock.HORIZONTAL_FACING])
