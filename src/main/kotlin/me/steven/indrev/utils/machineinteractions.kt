@@ -77,7 +77,7 @@ fun MachineBlockEntity<*>.transferItems(from: Inventory, to: Inventory, slot: In
 }
 
 private fun getAvailableSlots(inventory: Inventory, side: Direction): IntArray =
-    if (inventory is SidedInventory) inventory.getAvailableSlots(side)
+    if (inventory is SidedInventory) inventory.getAvailableSlots(side) ?: EMPTY_INT_ARRAY
     else (0 until inventory.size()).map { it }.toIntArray()
 
 private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
