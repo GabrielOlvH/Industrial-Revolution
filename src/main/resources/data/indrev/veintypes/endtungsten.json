@@ -1,4 +1,4 @@
-                                                                                                                                                                         {
+{
   "containsMultiple": true,
   "veins": [
     {
@@ -11,7 +11,7 @@
           "infiniteWeight": 8
         },
         {
-          "id": "minecraft:endstone",
+          "id": "minecraft:end_stone",
           "weight": 20,
           "infiniteWeight": 80
         },
@@ -38,7 +38,7 @@
       "biomes": [
         {
           "category": [
-            "END"
+            "THEEND"
           ],
           "weight": 5
         }
@@ -53,7 +53,7 @@
           "weight": 8
         },
         {
-          "id": "minecraft:endstone",
+          "id": "minecraft:end_stone",
           "weight": 20,
           "infiniteWeight": 100
 
@@ -82,7 +82,7 @@
       "biomes": [
         {
           "category": [
-            "END"
+            "THEEND"
           ],
           "weight": 4
         }

@@ -35,7 +35,7 @@
           "weight": 8,
           "infiniteWeight": 32
         },
-		{
+        {
           "id": "minecraft:emerald_ore",
           "weight": 4,
           "infiniteWeight": 4
@@ -53,7 +53,7 @@
             "DESERT",
             "PLAINS",
             "TAIGA",
-			"NETHER",
+            "NETHER",
             "ICY"
           ],
           "weight": 1

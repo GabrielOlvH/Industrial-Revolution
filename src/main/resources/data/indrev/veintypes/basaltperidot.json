@@ -16,7 +16,7 @@
           "infiniteWeight": 1
         },
 		{
-          "id": "minecraft:endstone",
+          "id": "minecraft:end_stone",
           "weight": 8,
           "infiniteWeight": 32
         }
@@ -28,7 +28,7 @@
       "biomes": [
         {
           "category": [
-			"END"
+			"THEEND"
           ],
           "weight": 1
         }

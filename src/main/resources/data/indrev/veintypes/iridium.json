@@ -48,7 +48,8 @@
             "DESERT",
             "PLAINS",
             "TAIGA",
-			"OCEAN",
+            "OCEAN",
+            "THEEND"
             "ICY"
           ],
           "weight": 1
