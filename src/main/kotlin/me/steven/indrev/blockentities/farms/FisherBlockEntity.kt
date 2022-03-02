@@ -59,8 +59,8 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                     .build(LootContextTypes.FISHING)
                 val loot = lootTable.generateLoot(ctx)
                 loot.forEach { stack -> inventoryComponent?.inventory?.output(stack) }
+                rodStack.damage(1, world?.random, null);
                 rodStack?.apply {
-                    damage++
                     if (damage >= maxDamage) decrement(1)
                 }
             }
