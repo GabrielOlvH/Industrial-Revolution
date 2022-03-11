@@ -1,0 +1,13 @@
+{
+  "name": "锡矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 1,
+  "icon": "indrev:tin_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:tin_ore",
+      "text": "$(#999999)$(l)锡矿石$()较为常见，在y轴0到48层生成普通或深层矿石。$(br)$(#999999)$(l)锡$()广泛应用于多种机器合成。"
+    }
+  ]
+}

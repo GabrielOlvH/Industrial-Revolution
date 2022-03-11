@@ -1,16 +1,16 @@
 {
   "name": "三倍产矿",
-  "category": "enhanced_ore_processing",
+  "category": "indrev:enhanced_ore_processing",
   "sortnum": 1,
   "icon": "indrev:smelter_mk4",
   "pages": [
     {
       "type": "text",
-      "text": "三倍产矿则是高级矿物处理的第一步。为此你需要一台$(l:machines/basic_machines#smelter)$(t:跳转到“工业熔炉”页面)$(l)$(o)工业熔炉$()，一台$(l:machines/basic_machines#condenser)$(t:跳转到“聚合机”页面)$(l)$(o)聚合机$()和一台$(l:machines/basic_machines#pulverizer)$(t:跳转到“粉碎机”页面)$(l)$(o)粉碎机$()。"
+      "text": "高级矿物处理再进一步则是三倍产矿。为此你需要一台$(l:machines/basic_machines#smelter)$(t:跳转到“工业熔炉”页面)$(l)$(o)工业熔炉$()，一台$(l:machines/basic_machines#condenser)$(t:跳转到“聚合机”页面)$(l)$(o)聚合机$()和一台$(l:machines/basic_machines#pulverizer)$(t:跳转到“粉碎机”页面)$(l)$(o)粉碎机$()。"
     },
     {
       "type": "text",
-      "text": "$(l)1)$()将矿物放入工业熔炉，矿物会被熔化为对应的液体形式。$(br)$(l)2)$()将熔融的液体转移到聚合机中，其将会固化为原矿碎块。$(br)$(l)3)$()将原矿碎块放入粉碎机中磨粉，其将会变为一个粉末。$(br)$(l)4)$()烧炼粉末。$(br2)锵锵~！你的一个矿就变成三个锭啦！"
+      "text": "$(l)1)$()将矿物放入工业熔炉，矿物会熔融为其对应的液体形式。$(br)$(l)2)$()将熔融的液体转移到至聚合机中，其则将会固化为原矿碎块。$(br)$(l)3)$()将原矿碎块放入粉碎机中磨粉，又将会变为一个粉末。$(br)$(l)4)$()烧炼粉末。$(br2)锵锵~！你的一个矿就变成三个锭啦！"
     }
   ]
 }

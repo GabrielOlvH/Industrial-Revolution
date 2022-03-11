@@ -1,12 +1,12 @@
 {
   "name": "头号玩家斧",
-  "category": "tools",
-  "sortnum": 5,
+  "category": "indrev:tools",
+  "sortnum": 6,
   "icon": "indrev:gamer_axe",
   "pages": [
     {
       "type": "text",
-      "text": "头号玩家斧头，彰显你头号玩家的最终实力！是可以一键砍树，还可以造成巨量伤害的居家不二之选！$(br)看着就是跟棍子？先启动试试……"
+      "text": "头号玩家斧头，彰显你头号玩家的最终实力！可以高速砍伐，安装模块后还可以造成巨量伤害，可谓居家不二之选！$(br)跟棍子没两样？先右键启动试试……"
     },
     {
       "type": "crafting",

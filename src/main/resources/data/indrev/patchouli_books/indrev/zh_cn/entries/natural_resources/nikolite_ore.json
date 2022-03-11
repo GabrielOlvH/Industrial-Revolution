@@ -1,0 +1,13 @@
+{
+  "name": "蓝石矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 5,
+  "icon": "indrev:nikolite_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:nikolite_ore",
+      "text": "$(#008f8c)$(l)蓝石矿石$()较为常见，在y轴0到16层生成普通或深层矿石。$(br)$(#008f8c)$(l)蓝石$()是$(l)“工业革命”$()的主要机械元件。"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
     "name": "基础机器",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 1,
     "icon": "indrev:electric_furnace_mk1",
     "pages": [
@@ -18,7 +18,7 @@
         "type": "crafting",
         "anchor": "pulverizer",
         "recipe": "indrev:shaped/pulverizer_mk1",
-        "text": "$(l)$(o)粉碎机$()常用于矿物打粉。"
+        "text": "$(l)$(o)粉碎机$()常用于矿物粉碎。"
       },
       {
         "type": "crafting",
@@ -30,7 +30,7 @@
         "type": "crafting",
         "anchor": "infuser",
         "recipe": "indrev:shaped/infuser_mk1",
-        "text": "$(l)$(o)固体注入机$()可以将两种材料合为一种新材料。"
+        "text": "$(l)$(o)固体注入机$()可以将两种材料混合为一种新材料。"
       },
       {
         "type": "crafting",
@@ -42,7 +42,7 @@
         "type": "crafting",
         "anchor": "condenser",
         "recipe": "indrev:shaped/condenser_mk4",
-        "text": "$(l)$(o)聚合机$()用于将熔融的矿物聚合为矿物碎块，然后送去磨粉，重炼成锭。"
+        "text": "$(l)$(o)聚合机$()用于将熔融的矿物聚合为矿物碎块。碎块可在经过磨粉工艺后重炼成锭。"
       },
       {
         "type": "crafting",

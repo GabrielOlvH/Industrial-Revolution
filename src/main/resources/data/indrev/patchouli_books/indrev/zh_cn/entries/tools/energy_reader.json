@@ -1,13 +1,13 @@
 {
   "name": "能量示数器",
-  "category": "tools",
-  "sortnum": 3,
+  "category": "indrev:tools",
+  "sortnum": 4,
   "icon": "indrev:energy_reader",
   "pages": [
     {
       "type": "crafting",
       "recipe": "indrev:shaped/energy_reader",
-      "text": "查看当前机器存储的能量。对电缆也有用。"
+      "text": "查看当前机器存储的能量与能耗。对电缆也有用。"
     }
   ]
 }

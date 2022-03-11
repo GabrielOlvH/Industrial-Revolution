@@ -1,12 +1,12 @@
 {
   "name": "等级升级",
-  "category": "upgrades",
+  "category": "indrev:upgrades",
   "sortnum": 1,
   "icon": "indrev:tier_upgrade_mk2",
   "pages": [
     {
       "type": "text",
-      "text": "等级升级可提升机器的输入输出能力等等。$(br2)手持等级升级部件右击机器即可升级。"
+      "text": "等级升级可提升机器的输入输出能力等等。$(br2)手持等级升级部件右击低一等的机器即可升级。"
     },
     {
       "type": "crafting",
