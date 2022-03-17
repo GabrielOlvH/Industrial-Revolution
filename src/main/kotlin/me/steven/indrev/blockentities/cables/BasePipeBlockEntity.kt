@@ -50,6 +50,7 @@ class BasePipeBlockEntity(val pipeType: Network.Type<*>, tier: Tier, pos: BlockP
             }
         }
         val list = tag.getList("connections", 10)
+        connections.clear()
         list?.forEach { t ->
             t as NbtCompound
             val dir = Direction.byId(t.getByte("d").toInt())
@@ -78,9 +79,7 @@ class BasePipeBlockEntity(val pipeType: Network.Type<*>, tier: Tier, pos: BlockP
                 list.add(t)
             }
         }
-        if (list.isNotEmpty()) {
-            tag.put("connections", list)
-        }
+        tag.put("connections", list)
     }
 
     fun sync() {
