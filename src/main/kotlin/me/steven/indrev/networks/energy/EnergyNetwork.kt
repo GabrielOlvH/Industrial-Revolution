@@ -40,35 +40,22 @@ open class EnergyNetwork(
     override fun tick(world: ServerWorld) {
         val totalInput = insertables.sumOf { pos ->
             if (world.isLoaded(pos)) {
-                machines[pos]?.sumOf { dir ->
-                    val handler = energyOf(world, pos, dir) ?: return@sumOf 0L
-                    if (handler.supportsInsertion()) handler.maxInput
-                    else 0L
+                machines[pos]?.sumOf innerSum@{ dir ->
+                    val handler = energyOf(world, pos, dir) ?: return@innerSum 0L
+                    handler.maxInput
                 } ?: 0
             } else 0L
         }
         if (totalInput <= 0) return
-        var remainders = 0.0
         insertables.forEach outer@{ pos ->
             machines[pos]!!.forEach { direction ->
                 if (!world.isLoaded(pos)) return@forEach
-                val energyIo = energyOf(world, pos, direction)?: return@forEach
-                if (!energyIo.supportsInsertion()) return@forEach
+                val energyIo = energyOf(world, pos, direction) ?: return@forEach
 
                 val maxInput = energyIo.maxInput
-                val toTransfer = ((maxInput / totalInput.toDouble()) * energy + remainders).toLong().coerceAtMost(energy)
-                try  {
-                    val transferred = energyIo.insert(toTransfer, true)
+                val toTransfer = ((maxInput / totalInput.toDouble()) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
 
-                    energy -= transferred
-
-                    remainders += toTransfer - transferred
-                } catch (e: Exception){
-                    println("toTransfer: $toTransfer")
-                    println("current: $energy")
-                    println("target: $energyIo @ $pos {${world.getBlockEntity(pos)}}")
-                    throw e
-                }
+                energy -= energyIo.insert(toTransfer, true)
             }
         }
     }
@@ -81,7 +68,7 @@ open class EnergyNetwork(
 
     companion object {
 
-        private const val MAX_VALUE = (Long.MAX_VALUE - 1)
+        private const val MAX_VALUE = Long.MAX_VALUE - 1L
 
         private val EnergyStorage.maxInput: Long
             get() = insert(MAX_VALUE, false)
