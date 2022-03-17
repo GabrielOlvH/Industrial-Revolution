@@ -286,7 +286,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }
     }
 
-    inner class WToggleableItemSlot(index: Int, x: Int, y: Int, big: Boolean)
+    inner class WToggleableItemSlot(private val index: Int, x: Int, y: Int, big: Boolean)
         : WItemSlot(blockInventory, index + 3, 1, 1, big) {
 
         var preview: ItemStack? = null
@@ -311,6 +311,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
+            if (!blockInventory.getStack(index + 3).isEmpty) return
             val texts = preview?.getTooltip(MinecraftClient.getInstance().player)
             { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
             tooltip?.add(*texts.toTypedArray())
