@@ -82,23 +82,29 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
         else if (handStack.item is IRServoItem) return ActionResult.PASS
         val item = handStack.item
         if (
-            !world.isClient
-            && blockEntity.coverState == null
-            && !handStack.isEmpty
+            blockEntity.coverState == null
             && !player.isSneaking
+            && isValidCover(handStack, world, pos)
+        ) {
+            val result = (item as BlockItem).block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
+            blockEntity.coverState = result
+            if (!world.isClient) {
+                blockEntity.markDirty()
+                blockEntity.sync()
+            }
+            if (!player.abilities.creativeMode)
+                handStack.decrement(1)
+            return ActionResult.success(world.isClient)
+        }
+        return ActionResult.PASS
+    }
+
+    private fun isValidCover(stack: ItemStack, world: World, pos: BlockPos): Boolean {
+        val item = stack.item
+        return !stack.isEmpty
             && item is BlockItem
             && item.block !is BlockEntityProvider
             && item.block.defaultState.isFullCube(world, pos)
-        ) {
-            val result = item.block.getPlacementState(ItemPlacementContext(player, hand, handStack, hit))
-            blockEntity.coverState = result
-            blockEntity.markDirty()
-            blockEntity.sync()
-            if (!player.abilities.creativeMode)
-                handStack.decrement(1)
-            return ActionResult.SUCCESS
-        }
-        return ActionResult.PASS
     }
 
     private fun onWrench(state: BlockState,world: World, pos: BlockPos,player: PlayerEntity,   hand: Hand, hit: BlockHitResult): ActionResult {
