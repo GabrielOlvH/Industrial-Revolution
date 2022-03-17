@@ -59,12 +59,11 @@ abstract class BasePipeBlock(settings: Settings, val tier: Tier, val type: Netwo
 
     override fun hasDynamicBounds(): Boolean = true
 
-    override fun onBlockBreakStart(state: BlockState, world: World?, pos: BlockPos?, player: PlayerEntity?) {
-        if (world?.isClient == false) {
+    override fun onBlockBreakStart(state: BlockState, world: World, pos: BlockPos, player: PlayerEntity) {
+        if (!world.isClient) {
             val blockEntity = world.getBlockEntity(pos) as? BasePipeBlockEntity ?: return
-            if (blockEntity.coverState != null) {
+            if (blockEntity.coverState != null && player.mainHandStack.isOf(IRItemRegistry.WRENCH)) {
                 val cover = blockEntity.coverState ?: return
-                //TODO replace ItemStack() with getDroppedStacks
                 ItemScatterer.spawn(world, pos, DefaultedList.ofSize(1, ItemStack(cover.block)))
                 blockEntity.coverState = null
                 blockEntity.markDirty()
