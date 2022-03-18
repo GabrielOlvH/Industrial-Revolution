@@ -1,6 +1,6 @@
 {
   "name": "升级",
-  "sortnum": 1,
-  "description": "升级也很重要！",
-  "icon": "indrev:speed_upgrade"
+  "sortnum": 3,
+  "description": "升级可为机器提供增益效果。",
+  "icon": "indrev:speed_enhancer"
 }

@@ -1,0 +1,13 @@
+{
+  "name": "螺丝刀",
+  "category": "indrev:tools",
+  "sortnum": 2,
+  "icon": "indrev:screwdriver",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/screwdriver",
+      "text": "螺丝刀用于配置机器的流体/物品输入输出。$(br)也用于配置青金石通量容器的能量输入输出。"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "银矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 2,
+  "icon": "indrev:silver_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#c6e9e3)$(l)银矿石$()较不常见，在y轴0到32层生成普通或深层矿石。$(br)$(#c6e9e3)$(l)银$()常用于合成高级机器。"
+    }
+  ]
+}

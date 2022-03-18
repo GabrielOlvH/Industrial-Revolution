@@ -1,6 +1,6 @@
 {
   "name": "高级矿物处理",
-  "sortnum": 0,
-  "description": "“工业革命”的一大亮点就是矿产的加倍甚至四倍处理。",
-  "icon": "minecraft:copper_ore"
+  "sortnum": 6,
+  "description": "“工业革命”的一大亮点在于矿产的加倍甚至四倍处理。",
+  "icon": "indrev:copper_chunk"
 }

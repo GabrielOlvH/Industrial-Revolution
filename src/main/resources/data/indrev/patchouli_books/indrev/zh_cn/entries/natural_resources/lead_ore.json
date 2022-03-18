@@ -1,0 +1,13 @@
+{
+  "name": "铅矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 3,
+  "icon": "indrev:lead_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:lead_ore",
+      "text": "$(#575d61)$(l)铅矿石$()较不常见，在y轴0到32层生成普通或深层矿石。$(br)$(#575d61)$(l)铅$()常用于合成高级机器。"
+    }
+  ]
+}

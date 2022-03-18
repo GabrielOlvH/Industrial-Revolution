@@ -1,17 +1,13 @@
 {
   "name": "扳手",
-  "category": "tools",
+  "category": "indrev:tools",
   "sortnum": 1,
   "icon": "indrev:wrench",
   "pages": [
     {
       "type": "crafting",
       "recipe": "indrev:shaped/wrench",
-      "text": "扳手有两个模式：旋转模式和配置模式。潜行+右击可以更改当前模式。"
-    },
-    {
-      "type": "text",
-      "text": "$(l)旋转机器：$()在这个模式下，对准机器右击以旋转机器；对准机器潜行右击以拆卸机器。$(br)$(l)配置机器：$()在这个模式下你可以配置机器的输入输出接口。新放置的机器默认为左进右出，但可以用扳手更改。$(br2)$(l)注意：$()该更新前放下的机器没有默认输入输出端口！"
+      "text": "扳手可用于旋转或拆卸机器。扳手拆除的机器会保存电量。"
     }
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "name": "能量传输",
+  "category": "indrev:transportation",
+  "sortnum": 0,
+  "icon": "indrev:cable_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "线缆可用于远距离跨机器传输能量。$(br)按住Shift查阅物品说明以查看每一种线缆的传输上限。$(br)机器没电了？改进产能和升级线缆都是好主意！"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk1",
+      "recipe2": "indrev:shaped/cable_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk3",
+      "recipe2": "indrev:shaped/cable_mk4"
+    }
+  ]
+}

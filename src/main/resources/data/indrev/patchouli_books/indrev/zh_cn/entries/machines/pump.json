@@ -1,0 +1,17 @@
+{
+  "name": "液泵",
+  "category": "indrev:machines",
+  "sortnum": 10,
+  "icon": "indrev:pump_mk1",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/pump_mk1",
+      "text": "$(l)液泵$()可以从世界中汲取液体并输入流体管道或储罐之中。"
+    },
+    {
+      "type": "text",
+      "text": "$(l)使用方法：$()在其上方供能，其会延伸一个管道，伸入液面后即可收集液体。无论液体状态如何，只要管道和液面接触，其会自动搜寻最近的液体源方块，因此适用于下界岩浆湖的清空。"
+    }
+  ]
+}

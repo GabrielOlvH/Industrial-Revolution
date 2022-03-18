@@ -1,6 +1,6 @@
 {
   "name": "时刻保持高“冷”~",
-  "category": "temperature",
+  "category": "indrev:temperature",
   "sortnum": 1,
   "icon": "indrev:cooler_cell",
   "pages": [
@@ -11,7 +11,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/fan",
-      "text": "$(o)先生，我是你的死忠“饭”！我可以要你的签名吗？签个名吧啊啊啊——$()"
+      "text": "$(o)先生，我可是你的死忠“饭”！我可以要签名吗？签个名吧球球您了——$()"
     },
     {
       "type": "crafting",
@@ -21,7 +21,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/heatsink",
-      "text": "$(o)还想着双关呢？两个就够冷了！$()"
+      "text": "$(o)还想再来一个双关呢？两个就已经够冷了！$()"
     }
   ]
 }

@@ -1,13 +1,13 @@
 {
   "name": "钓鱼机",
-  "category": "machines",
+  "category": "indrev:machines",
   "sortnum": 8,
   "icon": "indrev:fishing_farm_mk2",
   "pages": [
     {
       "type": "crafting",
       "recipe": "indrev:shaped/fishing_farm_mk2",
-      "text": "$(l)钓鱼机$()，顾名思义，钓鱼的机器。支持机器升级。$(br)只需要一个钓竿即可运行，支持附魔哦！"
+      "text": "$(l)钓鱼机$()，顾名思义，钓鱼的机器。支持增益升级。$(br)只需要一个钓竿即可运行，支持附魔哦！"
     }
   ]
 }
