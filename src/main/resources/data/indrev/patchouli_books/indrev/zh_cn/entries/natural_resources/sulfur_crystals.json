@@ -1,0 +1,13 @@
+{
+  "name": "硫晶体",
+  "category": "indrev:natural_resources",
+  "sortnum": 6,
+  "icon": "indrev:sulfur_crystal",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:sulfur_crystal",
+      "text": "$(#f5da68)$(l)硫晶体$()较为常见，在主世界y周0到16层或下界100层以下生成。$(br)$(#f5da68)$(l)硫$()常用于高级矿物处理工序中的净化工艺。"
+    }
+  ]
+}

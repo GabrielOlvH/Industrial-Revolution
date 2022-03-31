@@ -1,0 +1,22 @@
+{
+  "name": "流体传输",
+  "category": "indrev:transportation",
+  "sortnum": 2,
+  "icon": "indrev:fluid_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "流体管道可用于远距离转运流体。$(br)物品说明附注明传输上限。$(br)管道每秒进行一次传输，而非每游戏刻。$(br2)管道需要伺服机构才能正常运作，请参阅$(l:transportation/servos)$(t:查阅伺服机构)伺服机构$()一章。"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk1",
+      "recipe2": "indrev:shaped/fluid_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fluid_pipe_mk3",
+      "recipe2": "indrev:shaped/fluid_pipe_mk4"
+    }
+  ]
+}

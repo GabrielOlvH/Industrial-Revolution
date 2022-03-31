@@ -1,0 +1,13 @@
+{
+  "name": "钨矿石",
+  "category": "indrev:natural_resources",
+  "sortnum": 4,
+  "icon": "indrev:deepslate_tungsten_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:deepslate_tungsten_ore",
+      "text": "$(#686b5b)$(l)钨矿石$()较为稀有，在y轴0到16层仅生成深层矿石。$(br)$(#686b5b)$(l)钨$()常用于合成如模块盔甲等强韧的物品。"
+    }
+  ]
+}

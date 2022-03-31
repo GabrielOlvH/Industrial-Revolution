@@ -1,13 +1,13 @@
 {
   "name": "模块化核心",
-  "category": "tools",
-  "sortnum": 6,
+  "category": "indrev:tools",
+  "sortnum": 7,
   "icon": "indrev:modular_core",
   "pages": [
     {
       "type": "crafting",
       "recipe": "indrev:shaped/modular_core",
-      "text": "模块化核心，顾名思义，就是所有模块盔甲的核心部件。当然，模块化核心需要激活才能使用。要激活它，你至少需要一个激光器，一个微仓，和一堆能量。"
+      "text": "模块化核心，顾名思义，就是所有模块化物品的核心部件。当然，模块化核心需要激活才能使用。激活它至少需要一个激光发射器，一个微仓，和充足的能量（1亿）。"
     },
     {
       "type": "crafting",
@@ -16,8 +16,8 @@
     },
     {
       "type": "crafting",
-      "recipe": "indrev:shaped/laser",
-      "text": "激光器需要面向微仓放置在$(l)$(n)3格开外整$()$()。它们可以存储2500万LF，且需要红石信号激活。"
+      "recipe": "indrev:shaped/laser_emitter_mk4",
+      "text": "激光发射器需要面向微仓放置在$(l)$(n)3格开外整$()$()。它们可以存储250万LF，且需要红石信号激活。"
     },
     {
       "type": "text",

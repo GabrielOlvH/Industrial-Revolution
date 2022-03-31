@@ -1,6 +1,6 @@
 {
     "name": "发电机",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 0,
     "icon": "indrev:coal_generator_mk1",
     "pages": [
@@ -11,7 +11,7 @@
       {
         "type": "crafting",
         "recipe": "indrev:shaped/coal_generator_mk1",
-        "text": "$(l)$(o)煤炭发电机$()并不只能用煤炭，任何熔炉里的能源都可以。"
+        "text": "$(l)$(o)煤炭发电机$()不只烧煤，任何熔炉里的能源都可以。"
       },
       {
         "type": "crafting",
@@ -20,7 +20,7 @@
       },
       {
         "type": "text",
-        "text": "$(l)$(o)太阳能发电机$()会在阳光的照射下产生能量。"
+        "text": "$(l)$(o)太阳能发电机$()会在阳光直射下产生能量。"
       },
       {
         "type": "crafting",

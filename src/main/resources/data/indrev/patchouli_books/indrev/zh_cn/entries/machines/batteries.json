@@ -1,12 +1,12 @@
 {
     "name": "青金石通量容器",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 3,
     "icon": "indrev:lazuli_flux_container_mk1",
     "pages": [
       {
         "type": "text",
-        "text": "这些容器可用于存储青金石通量。"
+        "text": "这些容器可用于存储青金石通量。机身上可见的蓝色与橙色箭头标注了输入与输出接口，你可以使用螺丝刀进行接口的修改。"
       },
       {
         "type": "crafting",
