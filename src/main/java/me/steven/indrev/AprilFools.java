@@ -33,7 +33,8 @@ public final class AprilFools {
     }
 
     public static boolean isToday() {
-        LocalDate now = LocalDate.now();
-        return now.getDayOfMonth() == 1 && now.getMonthValue() == 4 && !CHECK.exists();
+        return false;
+        /*LocalDate now = LocalDate.now();
+        return now.getDayOfMonth() == 1 && now.getMonthValue() == 4 && !CHECK.exists();*/
     }
 }
