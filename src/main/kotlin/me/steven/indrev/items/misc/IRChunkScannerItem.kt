@@ -22,6 +22,7 @@ import net.minecraft.util.*
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
+import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.biome.BuiltinBiomes
 import kotlin.random.asKotlinRandom
 
@@ -39,9 +40,9 @@ class IRChunkScannerItem(settings: Settings) : Item(settings) {
                 val state = ChunkVeinState.getState(world as ServerWorld)
                 val isPresent = state.veins.containsKey(chunkPos)
                 val info = state.veins[chunkPos]
-                val default = BuiltinRegistries.BIOME.getKey(BuiltinBiomes.PLAINS).get()
+                val default = BiomeKeys.PLAINS
                 val biomeKey = world.registryManager.get(Registry.BIOME_KEY)
-                    .getKey(world.getBiome(user?.blockPos))
+                    .getKey(world.getBiome(user?.blockPos).value())
                     .orElse(default)
                 val picker = VeinType.BIOME_VEINS.getOrDefault(biomeKey, VeinType.BIOME_VEINS[default])
                 val identifier = info?.veinIdentifier ?: picker?.pickRandom()!!

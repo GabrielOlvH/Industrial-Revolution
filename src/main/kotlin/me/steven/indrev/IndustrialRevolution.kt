@@ -20,13 +20,14 @@ import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.fabricmc.fabric.api.tag.TagFactory
+import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
@@ -34,7 +35,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.resource.ResourceType
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
-import net.minecraft.tag.Tag
+import net.minecraft.tag.TagKey
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 import org.apache.logging.log4j.LogManager
@@ -125,11 +126,11 @@ object IndustrialRevolution : ModInitializer {
         }
 
         if (FabricLoader.getInstance().getLaunchArguments(true).contains("-dataGen")) {
+            FabricDataGenHelper.run()
             ClientLifecycleEvents.CLIENT_STARTED.register(ClientLifecycleEvents.ClientStarted {
                 DataGeneratorManager("indrev").generate()
             })
         }
-
         LOGGER.info("Industrial Revolution has initialized.")
     }
 
@@ -140,9 +141,9 @@ object IndustrialRevolution : ModInitializer {
     val MOD_GROUP: ItemGroup =
         FabricItemGroupBuilder.build(identifier("indrev_group")) { ItemStack { MachineRegistry.PULVERIZER_REGISTRY.block(Tier.MK4).asItem() } }
 
-    val COOLERS_TAG: Tag.Identified<Item> = TagFactory.ITEM.create(Identifier("indrev:coolers"))
-    val WRENCH_TAG: Tag.Identified<Item> = TagFactory.ITEM.create(Identifier("c:wrenches"))
-    val SCREWDRIVER_TAG: Tag.Identified<Item> = TagFactory.ITEM.create(Identifier("c:screwdrivers"))
+    val COOLERS_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, identifier("coolers"))
+    val WRENCH_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:wrenches"))
+    val SCREWDRIVER_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:screwdrivers"))
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)

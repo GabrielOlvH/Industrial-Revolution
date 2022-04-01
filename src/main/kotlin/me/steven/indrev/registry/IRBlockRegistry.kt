@@ -24,7 +24,6 @@ import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.minecraft.block.Block
@@ -164,7 +163,7 @@ object IRBlockRegistry {
             .blockEntityType(SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY)
     }
 
-    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool().strength(3f, 3f))
+    val SULFUR_CRYSTAL_CLUSTER = SulfurCrystalBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.GLASS).requiresTool().strength(3f, 3f))
 
     val NIKOLITE_ORE = { Registry.BLOCK.get(identifier("nikolite_ore")) }
     val TIN_ORE = { Registry.BLOCK.get(identifier("tin_ore")) }
@@ -179,13 +178,13 @@ object IRBlockRegistry {
     val DEEPSLATE_TUNGSTEN_ORE = { Registry.BLOCK.get(identifier("deepslate_tungsten_ore")) }
 
     val MACHINE_BLOCK = Block(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val PLANKS = PlankBlock(
-        FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(2.0f).sounds(BlockSoundGroup.WOOD)
+        FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).strength(2.0f).sounds(BlockSoundGroup.WOOD)
     )
     val PLANK_BLOCK = Block(
-        FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).breakByTool(FabricToolTags.AXES, 2).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
+        FabricBlockSettings.of(Material.WOOD, MapColor.BROWN).strength(3F, 6F).sounds(BlockSoundGroup.WOOD)
     )
 
     val BIOMASS_COMPOSTER_BLOCK = BiomassComposterBlock()
@@ -193,44 +192,44 @@ object IRBlockRegistry {
     val BIOMASS_COMPOSTER_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(::BiomassComposterBlockEntity, BIOMASS_COMPOSTER_BLOCK).build()
 
     val WITHER_PROOF_OBSIDIAN = Block(
-        FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().breakByTool(FabricToolTags.PICKAXES, 3).strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
+        FabricBlockSettings.of(Material.STONE, MapColor.BLACK).requiresTool().strength(50.0F, 1200.0F).sounds(BlockSoundGroup.STONE)
     )
 
     val CONTROLLER = HorizontalFacingBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val DUCT = DuctBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val FRAME = Block(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val SILO = Block(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val WARNING_STROBE = WarningStrobeBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().luminance(15).nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().luminance(15).nonOpaque().strength(3F, 6F)
     )
     val INTAKE =  HorizontalFacingBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val CABINET = CabinetBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().strength(3F, 6F)
     )
     val CABINET_BLOCK_ENTITY_TYPE: BlockEntityType<CabinetBlockEntity> = FabricBlockEntityTypeBuilder.create(::CabinetBlockEntity, CABINET).build(null)
 
     val DRILL_TOP = DrillBlock.TopDrillBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val DRILL_MIDDLE = DrillBlock.MiddleDrillBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val DRILL_BOTTOM = DrillBlock.BottomDrillBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val DRILL_BLOCK_ENTITY_TYPE: BlockEntityType<DrillBlockEntity> = BlockEntityType.Builder.create(::DrillBlockEntity, DRILL_BOTTOM).build(null)
 
-    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(1f, 1f))
+    val TANK_BLOCK = TankBlock(FabricBlockSettings.of(Material.GLASS).nonOpaque().requiresTool().strength(1f, 1f))
 
     val TANK_BLOCK_ENTITY: BlockEntityType<TankBlockEntity> = BlockEntityType.Builder.create(::TankBlockEntity, TANK_BLOCK).build(null)
 
@@ -238,20 +237,20 @@ object IRBlockRegistry {
 
     val CAPSULE_BLOCK_ENTITY: BlockEntityType<CapsuleBlockEntity> = BlockEntityType.Builder.create(::CapsuleBlockEntity, CAPSULE_BLOCK).build(null)
 
-    val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK1)
-    val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK2)
-    val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK3)
-    val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK4)
+    val FLUID_PIPE_MK1 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK1)
+    val FLUID_PIPE_MK2 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK2)
+    val FLUID_PIPE_MK3 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK3)
+    val FLUID_PIPE_MK4 = FluidPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK4)
 
-    val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK1)
-    val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK2)
-    val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK3)
-    val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK4)
+    val ITEM_PIPE_MK1 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK1)
+    val ITEM_PIPE_MK2 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK2)
+    val ITEM_PIPE_MK3 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK3)
+    val ITEM_PIPE_MK4 = ItemPipeBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK4)
 
-    val CABLE_MK1 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK1)
-    val CABLE_MK2 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK2)
-    val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK3)
-    val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.breakByTool(FabricToolTags.PICKAXES, 1).requiresTool(), Tier.MK4)
+    val CABLE_MK1 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK1)
+    val CABLE_MK2 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK2)
+    val CABLE_MK3 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK3)
+    val CABLE_MK4 = CableBlock(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque().solidBlock { _, _, _ -> false }.requiresTool(), Tier.MK4)
 
     val COVERABLE_BLOCK_ENTITY_TYPE_MK1 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK1, pos, state) }, FLUID_PIPE_MK1, ITEM_PIPE_MK1, CABLE_MK1).build(null)
 
@@ -262,42 +261,42 @@ object IRBlockRegistry {
     val COVERABLE_BLOCK_ENTITY_TYPE_MK4 = FabricBlockEntityTypeBuilder.create({ pos, state -> BasePipeBlockEntity((state.block as BasePipeBlock).type, Tier.MK4, pos, state) }, FLUID_PIPE_MK4, ITEM_PIPE_MK4, CABLE_MK4).build(null)
 
     val HELIOSTAT_BLOCK = HeliostatBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val HELIOSTAT_BLOCK_ITEM = BlockItem(HELIOSTAT_BLOCK, itemSettings())
     val HELIOSTAT_BLOCK_ENTITY = BlockEntityType.Builder.create(::HeliostatBlockEntity, HELIOSTAT_BLOCK).build(null)
 
     val SOLAR_RECEIVER_BLOCK = SolarReceiverBlock(
-        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.METAL).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val SOLAR_RECEIVER_BLOCK_ITEM = BlockItem(SOLAR_RECEIVER_BLOCK, itemSettings())
     val SOLAR_RECEIVER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarReceiverBlockEntity, SOLAR_RECEIVER_BLOCK).build(null)
 
-    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK = SteamTurbineSteamInputValveBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK, itemSettings())
     val STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK_ENTITY = BlockEntityType.Builder.create(::SteamTurbineSteamInputValveBlockEntity, STEAM_TURBINE_STEAM_INPUT_VALVE_BLOCK).build(null)
 
     val RESISTANT_GLASS_BLOCK = Block(
-        FabricBlockSettings.of(Material.GLASS).requiresTool().nonOpaque().breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F)
+        FabricBlockSettings.of(Material.GLASS).requiresTool().nonOpaque().strength(3F, 6F)
     )
     val RESISTANT_GLASS_BLOCK_ITEM = BlockItem(RESISTANT_GLASS_BLOCK, itemSettings())
 
-    val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val FLUID_VALVE = FluidValveBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val FLUID_VALVE_ITEM = BlockItem(FLUID_VALVE, itemSettings())
 
-    val STEAM_TURBINE_ENERGY_OUTPUT = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ENERGY_OUTPUT = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val STEAM_TURBINE_ENERGY_OUTPUT_ITEM = BlockItem(STEAM_TURBINE_ENERGY_OUTPUT, itemSettings())
 
-    val STEAM_TURBINE_CASING_BLOCK = Block(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_CASING_BLOCK = Block(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val STEAM_TURBINE_CASING_BLOCK_ITEM = BlockItem(STEAM_TURBINE_CASING_BLOCK, itemSettings())
 
-    val STEAM_TURBINE_ROTOR_BLOCK = VerticalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_ROTOR_BLOCK = VerticalFacingBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val STEAM_TURBINE_ROTOR_BLOCK_ITEM = BlockItem(STEAM_TURBINE_ROTOR_BLOCK, itemSettings())
 
-    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val STEAM_TURBINE_PRESSURE_VALVE_BLOCK = HorizontalFacingBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val STEAM_TURBINE_PRESSURE_VALVE_BLOCK_ITEM = BlockItem(STEAM_TURBINE_PRESSURE_VALVE_BLOCK, itemSettings())
 
-    val SOLAR_POWER_PLANT_TOWER_BLOCK = SolarPowerPlantTowerBlock(FabricBlockSettings.of(Material.METAL).breakByTool(FabricToolTags.PICKAXES, 2).strength(3F, 6F))
+    val SOLAR_POWER_PLANT_TOWER_BLOCK = SolarPowerPlantTowerBlock(FabricBlockSettings.of(Material.METAL).strength(3F, 6F))
     val SOLAR_POWER_PLANT_TOWER_BLOCK_ITEM = BlockItem(SOLAR_POWER_PLANT_TOWER_BLOCK, itemSettings())
     val SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY = BlockEntityType.Builder.create(::SolarPowerPlantTowerBlockEntity, SOLAR_POWER_PLANT_TOWER_BLOCK).build(null)
 }

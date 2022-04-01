@@ -9,13 +9,14 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.minecraft.block.Blocks
 import net.minecraft.util.math.intprovider.UniformIntProvider
 import net.minecraft.util.registry.Registry
-import net.minecraft.world.biome.Biome
+import net.minecraft.util.registry.RegistryEntry
+import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.YOffset
-import net.minecraft.world.gen.decorator.CountPlacementModifier
-import net.minecraft.world.gen.decorator.HeightRangePlacementModifier
-import net.minecraft.world.gen.decorator.SquarePlacementModifier
 import net.minecraft.world.gen.feature.*
+import net.minecraft.world.gen.placementmodifier.CountPlacementModifier
+import net.minecraft.world.gen.placementmodifier.HeightRangePlacementModifier
+import net.minecraft.world.gen.placementmodifier.SquarePlacementModifier
 import net.minecraft.world.gen.stateprovider.BlockStateProvider
 
 object WorldGeneration {
@@ -50,7 +51,11 @@ object WorldGeneration {
 
     fun addFeatures() {
         configuredFeatures.forEach { feature ->
-            BiomeModifications.addFeature({ ctx -> feature.biomePredicate(ctx.biome) }, feature.step, feature.placedFeatureKey)
+            BiomeModifications.addFeature(
+                { ctx -> feature.biomePredicate(ctx) },
+                feature.step,
+                feature.placedFeatureKey
+            )
         }
     }
 
@@ -69,11 +74,16 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("tin_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(OreFeatureConfig(tinTargets, 10)),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(14),
-                SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-48), YOffset.fixed(48)))
+            ConfiguredFeature(Feature.ORE, OreFeatureConfig(tinTargets, 10)),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(14),
+                        SquarePlacementModifier.of(),
+                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-48), YOffset.fixed(48))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -93,11 +103,16 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("lead_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(OreFeatureConfig(leadTargets, 6)),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(11),
-                SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32)))
+            ConfiguredFeature(Feature.ORE, OreFeatureConfig(leadTargets, 6)),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(11),
+                        SquarePlacementModifier.of(),
+                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -117,11 +132,16 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("silver_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(OreFeatureConfig(silverTargets, 8)),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(9),
-                SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32)))
+            ConfiguredFeature(Feature.ORE, OreFeatureConfig(silverTargets, 8)),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(9),
+                        SquarePlacementModifier.of(),
+                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -137,11 +157,16 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("tungsten_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(OreFeatureConfig(tungstenTargets, 5)),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(8),
-                SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16)))
+            ConfiguredFeature(Feature.ORE, OreFeatureConfig(tungstenTargets, 5)),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(8),
+                        SquarePlacementModifier.of(),
+                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -161,11 +186,16 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("nikolite_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
-            Feature.ORE.configure(OreFeatureConfig(nikoliteTargets, 7)),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(8),
-                SquarePlacementModifier.of(),
-                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16)))
+            ConfiguredFeature(Feature.ORE, OreFeatureConfig(nikoliteTargets, 7)),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(8),
+                        SquarePlacementModifier.of(),
+                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -180,10 +210,15 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_overworld"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(12),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16)))
+            ConfiguredFeature(sulfurCrystalFeature, DefaultFeatureConfig.INSTANCE),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(12),
+                        HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16))
+                    )
+                )
             },
             IRConfiguredFeature.IS_OVERWORLD
         )
@@ -192,10 +227,15 @@ object WorldGeneration {
         IRConfiguredFeature(
             identifier("sulfur_crystal_nether"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
-            sulfurCrystalFeature.configure(DefaultFeatureConfig.INSTANCE),
-            { feature -> feature.withPlacement(
-                CountPlacementModifier.of(20),
-                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop()))
+            ConfiguredFeature(sulfurCrystalFeature, DefaultFeatureConfig.INSTANCE),
+            { feature ->
+                PlacedFeature(
+                    RegistryEntry.of(feature),
+                    listOf(
+                        CountPlacementModifier.of(20),
+                        HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop())
+                    )
+                )
             },
             IRConfiguredFeature.IS_NETHER
         )
@@ -203,11 +243,20 @@ object WorldGeneration {
     private val acidLakesFeature = IRConfiguredFeature(
         identifier("sulfuric_acid_lake"),
         GenerationStep.Feature.LAKES,
-        Feature.LAKE.configure(
-            LakeFeature.Config(BlockStateProvider.of(IRFluidRegistry.SULFURIC_ACID.defaultState), BlockStateProvider.of(Blocks.COARSE_DIRT.defaultState))
+        ConfiguredFeature(
+            Feature.LAKE,
+            LakeFeature.Config(
+                BlockStateProvider.of(IRFluidRegistry.SULFURIC_ACID.defaultState),
+                BlockStateProvider.of(Blocks.COARSE_DIRT.defaultState)
+            )
         ),
-        { feature -> feature.withPlacement(
-            CountPlacementModifier.of(UniformIntProvider.create(0, 60)))
+        { feature ->
+            PlacedFeature(
+                RegistryEntry.of(feature),
+                listOf(
+                    CountPlacementModifier.of(UniformIntProvider.create(0, 60))
+                )
+            )
         }
-    ) { biome -> biome.category == Biome.Category.SWAMP }
+    ) { ctx -> ctx.biomeKey == BiomeKeys.SWAMP }
 }

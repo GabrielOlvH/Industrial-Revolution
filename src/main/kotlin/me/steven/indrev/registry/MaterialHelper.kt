@@ -5,7 +5,6 @@ import me.steven.indrev.utils.itemSettings
 import net.fabricmc.api.EnvType
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.Material
@@ -31,14 +30,14 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
     }
 
     fun withOre(rawOre: Boolean = true, supplier: (FabricBlockSettings) -> Block = { Block(it) }): MaterialHelper {
-        val ore = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+        val ore = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3f, 3f))
         val identifier = identifier("${id}_ore")
         map[identifier] = {
             Registry.register(Registry.BLOCK, identifier, ore)
             Registry.register(Registry.ITEM, identifier, BlockItem(ore, itemSettings()))
         }
 
-        val deepslateOre = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+        val deepslateOre = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3f, 3f))
         val deepslateId = identifier("deepslate_${id}_ore")
         map[deepslateId] = {
             Registry.register(Registry.BLOCK, deepslateId, deepslateOre)
@@ -46,7 +45,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         }
 
         if (rawOre) {
-            val rawOreBlock = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().breakByTool(FabricToolTags.PICKAXES, 1).strength(3f, 3f))
+            val rawOreBlock = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3f, 3f))
             val rawOreId = identifier("raw_${id}")
             val rawOreBlockId = identifier("raw_${id}_block")
             map[rawOreId] = {
@@ -94,7 +93,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
 
     fun withBlock(): MaterialHelper {
         val block =
-            Block(FabricBlockSettings.of(Material.METAL).requiresTool().breakByTool(FabricToolTags.PICKAXES, 2).strength(5f, 6f))
+            Block(FabricBlockSettings.of(Material.METAL).requiresTool().strength(5f, 6f))
         val id = identifier("${id}_block")
         map[id] = {
             Registry.register(Registry.BLOCK, id, block)

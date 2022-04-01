@@ -5,7 +5,6 @@ import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.bucket
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
@@ -24,7 +23,7 @@ import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-class BiomassComposterBlock : Block(FabricBlockSettings.copyOf(Blocks.COMPOSTER).breakByTool(FabricToolTags.AXES, 1).requiresTool()), BlockEntityProvider {
+class BiomassComposterBlock : Block(FabricBlockSettings.copyOf(Blocks.COMPOSTER)), BlockEntityProvider {
 
     init {
         this.defaultState = stateManager.defaultState.with(CLOSED, false)

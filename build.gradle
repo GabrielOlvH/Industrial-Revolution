@@ -11,9 +11,6 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
-}
-
 repositories {
     maven {
         name = "Modmuss50"
@@ -135,14 +132,14 @@ dependencies {
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
 
-    modRuntime("com.terraformersmc:modmenu:${project.modmenu_version}") {
+    modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
     }
 
     // DashLoader Stuff
     modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
     dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
-    modRuntime("org.yaml:snakeyaml:1.27")
+    modRuntimeOnly("org.yaml:snakeyaml:1.27")
 }
 
 loom {

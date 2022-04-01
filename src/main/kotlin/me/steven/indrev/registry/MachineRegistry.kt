@@ -25,7 +25,6 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
@@ -181,7 +180,6 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             FabricBlockSettings.of(Material.METAL)
                 .sounds(BlockSoundGroup.METAL)
                 .requiresTool()
-                .breakByTool(FabricToolTags.PICKAXES, 2)
                 .strength(5.0f, 6.0f)
         }
 

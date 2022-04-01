@@ -396,7 +396,7 @@ object IRItemRegistry {
     val MATTER_PROJECTOR_MODULE_ITEM = IRModuleItem(DrillModule.MATTER_PROJECTOR, itemSettings().maxCount(1))
     val FORTUNE_MODULE_ITEM = IRModuleItem(DrillModule.FORTUNE, itemSettings().maxCount(1))
     val RANGE_MODULE_ITEM = IRModuleItem(DrillModule.RANGE, itemSettings().maxCount(1))
-    val REACH_MODULE_ITEM = IRModuleItem(GamerAxeModule.REACH, itemSettings().maxCount(1))
+ //   val REACH_MODULE_ITEM = IRModuleItem(GamerAxeModule.REACH, itemSettings().maxCount(1))
     val EFFICIENCY_MODULE_ITEM = IRModuleItem(MiningToolModule.EFFICIENCY, itemSettings().maxCount(1))
     val LOOTING_MODULE_ITEM = IRModuleItem(GamerAxeModule.LOOTING, itemSettings().maxCount(1))
     val FIRE_ASPECT_MODULE_ITEM = IRModuleItem(GamerAxeModule.FIRE_ASPECT, itemSettings().maxCount(1))

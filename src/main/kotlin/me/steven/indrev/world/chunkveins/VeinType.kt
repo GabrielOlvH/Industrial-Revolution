@@ -57,7 +57,8 @@ data class VeinType(val id: Identifier, val outputs: WeightedList<Block>, val in
                         val cat = Biome.Category.valueOf((e as JsonPrimitive).asString().uppercase())
                         BuiltinRegistries.BIOME.ids
                             .filter {
-                                BuiltinRegistries.BIOME[it]?.category == cat
+                               // BuiltinRegistries.BIOME[it]?.category == cat
+                                true
                             }.forEach {
                                 biomes[RegistryKey.of(Registry.BIOME_KEY, it)] = weight
                             }

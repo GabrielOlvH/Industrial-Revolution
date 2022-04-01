@@ -66,7 +66,7 @@ object REIPlugin : REIClientPlugin {
                 tag.putFloat("Progress", 1f)
             }))
 
-        entryRegistry?.removeEntryIf { e -> hide(e.identifier!!) }
+        entryRegistry?.removeEntryIf { e -> hide(e.identifier ?: return@removeEntryIf false) }
     }
 
     override fun registerCategories(registry: CategoryRegistry) {

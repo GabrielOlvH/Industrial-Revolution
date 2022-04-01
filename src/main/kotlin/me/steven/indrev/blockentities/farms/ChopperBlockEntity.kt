@@ -7,11 +7,12 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.*
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags
 import net.minecraft.block.*
+import net.minecraft.item.AxeItem
 import net.minecraft.item.BlockItem
 import net.minecraft.item.BoneMealItem
 import net.minecraft.item.ItemStack
+import net.minecraft.item.SwordItem
 import net.minecraft.loot.context.LootContext
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.server.world.ServerWorld
@@ -29,7 +30,8 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3, 4, 5)
-                2 filter { stack -> stack.isIn(FabricToolTags.AXES) || stack.isIn(FabricToolTags.SWORDS) }
+                //todo tool tags?
+                2 filter { stack -> stack.item is AxeItem || stack.item is SwordItem }
                 3 filter { (_, item) -> item is BoneMealItem }
                 4..5 filter { (stack, item), _ -> stack.isIn(ItemTags.SAPLINGS)
                         || (item is BlockItem && (item.block is MushroomPlantBlock || item.block is BambooBlock)) }
@@ -130,7 +132,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         }
         val block = blockState.block
         when {
-            toolStack.isIn(FabricToolTags.AXES)
+            toolStack.item is AxeItem
                     && (blockState.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM) -> {
                 if (!damageTool(1)) return false
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
@@ -138,7 +140,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
             block is LeavesBlock -> {
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
-            toolStack.isIn(FabricToolTags.SWORDS) && block is BambooBlock && blockPos.y > pos.y -> {
+            toolStack.item is SwordItem && block is BambooBlock && blockPos.y > pos.y -> {
                 val upPos = blockPos.up()
                 val up = chunk.getBlockState(upPos)
                 scannedBlocks.add(upPos)
