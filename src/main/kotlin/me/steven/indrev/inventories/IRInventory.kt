@@ -1,5 +1,6 @@
 package me.steven.indrev.inventories
 
+import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.components.InventoryComponent
 import net.minecraft.inventory.SidedInventory
 import net.minecraft.inventory.SimpleInventory
@@ -34,6 +35,7 @@ class IRInventory(
         outputSlots.contains(slot) && component?.itemConfig?.get(direction)?.output == true
 
     override fun canInsert(slot: Int, stack: ItemStack?, direction: Direction?): Boolean =
+        (if (slot == coolerSlot) stack?.isIn(IndustrialRevolution.COOLERS_TAG) == true else stack?.isIn(IndustrialRevolution.COOLERS_TAG) == false) &&
         (inputSlots.contains(slot) || slot == coolerSlot) && component?.itemConfig?.get(direction)?.input == true && slotPredicate(slot, stack, direction) || stack?.isEmpty == true
 
     override fun getMaxCountPerStack(): Int = maxCount
