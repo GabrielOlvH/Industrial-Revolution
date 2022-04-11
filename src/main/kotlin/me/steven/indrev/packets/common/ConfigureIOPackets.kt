@@ -25,6 +25,7 @@ object ConfigureIOPackets  {
                 blockEntity.getCurrentConfiguration(type)[dir] = mode
                 blockEntity.markDirty()
                 GlobalStateController.update(world, pos, false)
+                world.updateNeighbors(pos, blockEntity.cachedState.block)
             }
         }
 
