@@ -44,8 +44,11 @@ class FluidNetwork(
 
     private val deques = Object2ObjectOpenHashMap<BlockPos, EnumMap<EndpointData.Mode, ReusableArrayDeque<Node>>>()
 
+    private var ticks = 0
+
     override fun tick(world: ServerWorld) {
-        if (world.time % 20 != 0L) return
+        ticks++
+        if (ticks % 20 != 0) return
         val state = Type.FLUID.getNetworkState(world) as FluidNetworkState
         if (isQueueValid()) {
             containers.forEach { (pos, directions) ->

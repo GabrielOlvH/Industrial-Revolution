@@ -43,8 +43,11 @@ class ItemNetwork(
 
     private val deques = Object2ObjectOpenHashMap<BlockPos, EnumMap<EndpointData.Mode, ReusableArrayDeque<Node>>>()
 
+    private var ticks = 0
+
     override fun tick(world: ServerWorld) {
-        if (world.time % 20 != 0L) return
+        ticks++
+        if (ticks % 20 != 0) return
         val state = Type.ITEM.getNetworkState(world) as ItemNetworkState
         if (containers.isEmpty()) return
         else if (queue.isEmpty())
