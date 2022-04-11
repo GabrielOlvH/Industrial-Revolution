@@ -17,9 +17,12 @@ class CableEnergyIo(private val network: EnergyNetwork?, val pos: BlockPos, val 
         if (network == null || direction == null) return 0
         StoragePreconditions.notNegative(maxAmount)
         val inserted = maxAmount.coerceAtMost(network.maxCableTransfer).coerceAtMost(capacity - amount)
-        updateSnapshots(transaction)
-        network.energy += inserted
-        return inserted
+        if (inserted > 0) {
+            updateSnapshots(transaction)
+            network.energy += inserted
+            return inserted
+        }
+        return 0
     }
 
     override fun extract(maxAmount: Long, transaction: TransactionContext?): Long = 0
