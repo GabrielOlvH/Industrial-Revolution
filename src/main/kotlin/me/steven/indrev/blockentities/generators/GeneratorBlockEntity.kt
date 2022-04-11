@@ -12,8 +12,9 @@ abstract class GeneratorBlockEntity(tier: Tier, registry: MachineRegistry, pos: 
 
     override fun machineTick() {
         if (world?.isClient == false) {
-            if (shouldGenerate() && getCapacity() > energy) {
-                this.energy += getGenerationRatio()
+            val ratio = getGenerationRatio()
+            if (shouldGenerate() && getCapacity() > energy + ratio) {
+                this.energy += ratio
                 this.temperatureComponent?.tick(true)
                 workingState = true
             } else {

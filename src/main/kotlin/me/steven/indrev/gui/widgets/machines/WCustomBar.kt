@@ -196,6 +196,18 @@ fun processBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
     return process
 }
 
+fun processBar(blockEntity: BaseBlockEntity, progress: Int, max: Int): WCustomBar {
+    val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
+    val process = object : WCustomBar(RIGHT_PROCESS_EMPTY, RIGHT_PROCESS_FULL,  { properties[progress] }, { properties[max] }, Direction.RIGHT) {
+        override fun addTooltip(tooltip: TooltipBuilder?) {
+            if (properties.get<Int>(max) <= 0) return
+            val percentage = properties.get<Int>(progress) * 100 / properties.get<Int>(max)
+            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+        }
+    }
+    return process
+}
+
 fun upProcessBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
     val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val process = object : WCustomBar(UP_PROCESS_EMPTY, UP_PROCESS_FULL, { properties.get<CraftingComponent<*>>(index).processTime }, { properties.get<CraftingComponent<*>>(index).totalProcessTime }, Direction.DOWN) {

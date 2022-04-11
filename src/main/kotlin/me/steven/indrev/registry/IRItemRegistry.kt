@@ -183,8 +183,7 @@ object IRItemRegistry {
         identifier("heatsink").item(HEATSINK)
         identifier("heat_coil").item(HEAT_COIL)
 
-        identifier("chunk_scanner").item(CHUNK_SCANNER_ITEM)
-        identifier("scan_output").item(SCAN_OUTPUT_ITEM)
+        identifier("ore_data_card").item(ORE_DATA_CARD)
 
         identifier("empty_enhancer").item(DEFAULT_ITEM())
         identifier("buffer_enhancer").item(BUFFER_ENHANCER)
@@ -300,6 +299,7 @@ object IRItemRegistry {
     val LEAD_INGOT = { Registry.ITEM.get(identifier("lead_ingot")) }
     val BRONZE_INGOT = { Registry.ITEM.get(identifier("bronze_ingot")) }
     val SILVER_INGOT = { Registry.ITEM.get(identifier("silver_ingot")) }
+    val ENRICHED_NIKOLITE_DUST = { Registry.ITEM.get(identifier("enriched_nikolite_dust")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
@@ -331,8 +331,7 @@ object IRItemRegistry {
         ToolMaterials.NETHERITE, Tier.MK4, 32000.0, 16f, itemSettings().fireproof()
     )
 
-    val CHUNK_SCANNER_ITEM = IRChunkScannerItem(itemSettings())
-    val SCAN_OUTPUT_ITEM = IRResourceReportItem(itemSettings().maxCount(1))
+    val ORE_DATA_CARD = OreDataCardItem()
 
     val ENERGY_READER = IREnergyReaderItem(itemSettings())
 

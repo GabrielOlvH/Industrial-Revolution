@@ -1,6 +1,6 @@
 package me.steven.indrev.blocks.machine
 
-import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.miningrig.DrillBlockEntity
 import me.steven.indrev.registry.IRBlockRegistry
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider

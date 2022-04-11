@@ -4,12 +4,10 @@ import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.gui.screenhandlers.machines.*
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreenHandler
-import me.steven.indrev.gui.screenhandlers.resreport.ResourceReportScreenHandler
 import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.ScrewdriverScreenHandler
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.utils.registerScreenHandler
-import me.steven.indrev.world.chunkveins.ChunkVeinData
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.screen.ScreenHandlerContext
@@ -41,6 +39,7 @@ val SLAUGHTER_HANDLER = SlaughterScreenHandler.SCREEN_ID.registerScreenHandler(:
 val SAWMILL_HANDLER = SawmillScreenHandler.SCREEN_ID.registerScreenHandler(::SawmillScreenHandler)
 val LASER_HANDLER = LaserEmitterScreenHandler.SCREEN_ID.registerScreenHandler(::LaserEmitterScreenHandler)
 val ELECTROLYTIC_SEPARATOR_HANDLER = ElectrolyticSeparatorScreenHandler.SCREEN_ID.registerScreenHandler(::ElectrolyticSeparatorScreenHandler)
+val DATA_CARD_WRITER_HANDLER = DataCardWriterScreenHandler.SCREEN_ID.registerScreenHandler(::DataCardWriterScreenHandler)
 
 val ELECTRIC_FURNACE_FACTORY_HANDLER = ElectricFurnaceFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceFactoryScreenHandler)
 val PULVERIZER_FACTORY_HANDLER = PulverizerFactoryScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerFactoryScreenHandler)
@@ -88,14 +87,5 @@ val SCREWDRIVER_HANDLER = ScreenHandlerRegistry.registerExtended(ScrewdriverScre
     map[ConfigurationType.ENERGY] = energyConfig
     ScrewdriverScreenHandler(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), map)
 } as ExtendedScreenHandlerType<ScrewdriverScreenHandler>
-
-val RESOURCE_REPORT_HANDLER = ScreenHandlerRegistry.registerExtended(ResourceReportScreenHandler.SCREEN_ID) { syncId, inv, buf ->
-    val pos = buf.readBlockPos()
-    val id = buf.readIdentifier()
-    val explored = buf.readInt()
-    val size = buf.readInt()
-    val veinData = ChunkVeinData(id, size, explored)
-    ResourceReportScreenHandler(syncId, inv, ScreenHandlerContext.create(inv.player.world, pos), veinData)
-} as ExtendedScreenHandlerType<ResourceReportScreenHandler>
 
 val CABINET_HANDLER = CabinetScreenHandler.SCREEN_ID.registerScreenHandler(::CabinetScreenHandler)

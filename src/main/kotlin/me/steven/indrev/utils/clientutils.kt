@@ -2,6 +2,7 @@ package me.steven.indrev.utils
 
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.client.BackgroundPainter
+import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.GeneratorConfig
 import me.steven.indrev.config.HeatMachineConfig
@@ -18,6 +19,7 @@ import net.minecraft.text.Text
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import kotlin.math.atan2
 
 val isClient = FabricLoader.getInstance().environmentType == EnvType.CLIENT
 
@@ -79,6 +81,26 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     }
     RenderSystem.enableTexture()
     RenderSystem.disableBlend()
+}
+
+fun drawCircle(matrices: MatrixStack, value: Int, max: Int, x: Int, y: Int, width: Int, colorProvider: (Int, Int) -> Int) {
+    val maxRadius = width / 2 - 1
+    val minRadius = maxRadius - 3
+
+    val maxAngle = value * 360 / max.toDouble()
+
+    for (xOffset in -maxRadius until maxRadius) {
+        for (yOffset in -maxRadius until maxRadius) {
+            val squaredDist = xOffset * xOffset + yOffset * yOffset
+            val angle = Math.toDegrees(atan2(-xOffset.toDouble(), yOffset.toDouble())) + 180
+
+            if (squaredDist >= minRadius * minRadius && squaredDist < maxRadius * maxRadius && angle < maxAngle) {
+                val color = colorProvider(x + xOffset, y + yOffset)
+                ScreenDrawing.coloredRect(matrices, x + xOffset + width / 2, y + yOffset + width / 2, 1, 1, color)
+            }
+
+        }
+    }
 }
 
 fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {

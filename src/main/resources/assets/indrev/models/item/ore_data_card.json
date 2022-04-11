@@ -1,0 +1,14 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "indrev:item/ore_data_card_empty"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "indrev:empty": 1
+      },
+      "model": "indrev:item/ore_data_card_not_empty"
+    }
+  ]
+}

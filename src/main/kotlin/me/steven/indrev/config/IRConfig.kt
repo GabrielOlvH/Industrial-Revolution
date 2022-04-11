@@ -178,6 +178,8 @@ class Machines {
 
     val miner: MachineConfig = MachineConfig(64, 100.0, 50000, Tier.MK4.io)
 
+    val dataCardWriter: MachineConfig = MachineConfig(128, 100.0, 2500, Tier.MK4.io)
+
     val drill: Long = 256
 
     val fishingMk2: MachineConfig = MachineConfig(8, 400.0, 50000, Tier.MK2.io)

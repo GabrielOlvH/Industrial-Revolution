@@ -2,7 +2,7 @@ package me.steven.indrev.registry
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.cables.BasePipeBlockEntity
-import me.steven.indrev.blockentities.drill.DrillBlockEntity
+import me.steven.indrev.blockentities.miningrig.DrillBlockEntity
 import me.steven.indrev.blockentities.farms.BiomassComposterBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.generators.SteamTurbineSteamInputValveBlockEntity
@@ -34,7 +34,6 @@ import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.BlockItem
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.BlockSoundGroup
-import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import team.reborn.energy.api.EnergyStorage

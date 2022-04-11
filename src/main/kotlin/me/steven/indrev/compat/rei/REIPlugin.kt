@@ -17,7 +17,6 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.hide
-import me.steven.indrev.world.chunkveins.VeinType
 import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -166,23 +165,6 @@ object REIPlugin : REIClientPlugin {
             }
         }
 
-        val recipeHelpers = mutableMapOf<Block, DefaultInformationDisplay>()
-        VeinType.REGISTERED.forEach { (id, type) ->
-            val sum = type.outputs.entries.sumOf { it.weight }
-            type.outputs.entries.forEach { entry ->
-                val block = entry.element
-                val info = recipeHelpers.computeIfAbsent(block) {
-                    val info = DefaultInformationDisplay.createFromEntry(EntryStacks.of(block), TranslatableText(block.translationKey))
-                    info.line(LiteralText("This can be mined by Industrial Revolution's miner in the following veins:"))
-                    info.line(LiteralText.EMPTY)
-                    info
-                }
-                val chance = entry.weight * 100 / sum.toDouble()
-                val chanceString = ((chance * 100.0).roundToInt() / 100.0).toString()
-                info.line(TranslatableText("vein.${id.namespace}.${id.path}").append(" (").append(LiteralText(chanceString)).append("%)"))
-            }
-        }
-        recipeHelpers.forEach { (_, info) -> registry.add(info) }
     }
 
     /*override fun registerOthers(recipeHelper: RecipeHelper?) {

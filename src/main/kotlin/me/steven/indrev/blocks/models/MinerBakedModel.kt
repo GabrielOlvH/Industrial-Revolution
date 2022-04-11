@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks.models
 
 import com.mojang.datafixers.util.Pair
-import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
+import me.steven.indrev.blockentities.miningrig.MiningRigBlockEntity
 import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.utils.blockSpriteId
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext

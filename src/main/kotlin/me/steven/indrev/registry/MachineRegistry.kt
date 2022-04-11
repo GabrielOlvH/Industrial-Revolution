@@ -6,6 +6,8 @@ import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.farms.*
 import me.steven.indrev.blockentities.generators.*
 import me.steven.indrev.blockentities.laser.LaserBlockEntity
+import me.steven.indrev.blockentities.miningrig.DataCardWriterBlockEntity
+import me.steven.indrev.blockentities.miningrig.MiningRigBlockEntity
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntity
 import me.steven.indrev.blockentities.storage.ChargePadBlockEntity
 import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
@@ -591,6 +593,18 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
             .modelProvider {
                 { id -> MinerBakedModel(id) }
             }
+
+        val DATA_CARD_WRITER_REGISTRY = MachineRegistry("data_card_writer", false, Tier.MK4)
+            .blockProvider { tier -> HorizontalFacingMachineBlock(
+                this,
+                SETTINGS(),
+                tier,
+                IRConfig.machines.dataCardWriter,
+                ::DataCardWriterScreenHandler
+            ) }
+            .blockEntityProvider { tier -> { pos, state -> DataCardWriterBlockEntity(tier, pos, state) } }
+            .defaultEnergyProvider()
+            .defaultModelProvider()
 
         val FISHER_REGISTRY = MachineRegistry("fisher", false, Tier.MK2, Tier.MK3, Tier.MK4)
             .blockProvider { tier ->

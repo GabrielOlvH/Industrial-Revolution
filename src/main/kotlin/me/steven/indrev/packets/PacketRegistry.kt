@@ -6,6 +6,7 @@ import me.steven.indrev.packets.common.*
 object PacketRegistry {
     fun registerServer() {
         ConfigureIOPackets.register()
+        DataCardWriteStartPacket.register()
         GuiPropertySyncPacket.registerServer()
         FluidGuiHandInteractionPacket.register()
         ItemPipePackets.register()
@@ -26,6 +27,5 @@ object PacketRegistry {
         SyncAppliedModulesPacket.register()
         SyncConfigPacket.register()
         SyncNetworkServosPacket.register()
-        SyncVeinTypesPacket.register()
     }
 }

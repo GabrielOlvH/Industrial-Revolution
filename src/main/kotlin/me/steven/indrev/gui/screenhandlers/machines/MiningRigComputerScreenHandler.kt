@@ -1,23 +1,24 @@
 package me.steven.indrev.gui.screenhandlers.machines
 
-import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.*
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
+import me.steven.indrev.api.OreDataCards
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.drill.DrillBlockEntity
-import me.steven.indrev.blockentities.farms.MiningRigBlockEntity
+import me.steven.indrev.blockentities.miningrig.DrillBlockEntity
+import me.steven.indrev.blockentities.miningrig.MiningRigBlockEntity
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.gui.screenhandlers.MINING_RIG_HANDLER
+import me.steven.indrev.gui.widgets.misc.WCircleProgressBar
 import me.steven.indrev.gui.widgets.misc.WStaticTooltip
 import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.gui.widgets.misc.WTooltipedItemSlot
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
+import net.minecraft.text.LiteralText
 import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 
@@ -31,28 +32,22 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
     init {
         val root = WGridPanel()
         setRootPanel(root)
-        configure("block.indrev.mining_rig", ctx, playerInventory, blockInventory, invPos = 5.0, widgetPos = 0.7)
+        configure("block.indrev.mining_rig", ctx, playerInventory, blockInventory, invPos = 6.0, widgetPos = 1.5)
 
-        val outputSlots = WTooltipedItemSlot.of(blockInventory, 1, 3, 3, TranslatableText("gui.indrev.output_slot_type"))
-        outputSlots.isInsertingAllowed = false
-        root.add(outputSlots, 6.0, 0.85)
-
-        val scanSlot = WTooltipedItemSlot.of(blockInventory, 14, TranslatableText("gui.indrev.scan_output_slot_type"))
-        root.add(scanSlot, 7.0, 4.3)
-        root.add(object : WWidget() {
-            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-                if (!component!!.get<Boolean>(MiningRigBlockEntity.LOCATION_ID))
-                    ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x88ff6666.toInt())
-            }
-                                    }, 7.0, 4.3)
 
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
             val activeDrills = blockEntity.getActiveDrills()
             val bg = WStaticTooltip()
-            root.add(bg, 1.5, 0.9)
-            bg.setSize(70, 60)
-            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.45, 1.0)
+            root.add(bg, 1.0, 0.9)
+            bg.setSize(142, 85)
+
+            root.add(WText(LiteralText("Insert"), HorizontalAlignment.CENTER, 0x8080), 7.5, 1.9)
+            root.add(WText(LiteralText("data card"), HorizontalAlignment.CENTER, 0x8080), 7.5, 2.6)
+            val cardSlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.scan_output_slo1t_type"))
+            root.add(cardSlot, 7.0, 3.3)
+
+            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.35, 1.0)
 
             val requiredPower = component!!.get<Long>(MiningRigBlockEntity.ENERGY_REQUIRED_ID).toDouble()
             when {
@@ -66,28 +61,27 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                             )
                         }
                     }
-                    root.add(sprite, 3.1, 1.5)
+                    root.add(sprite, 3.0, 1.5)
                     sprite.setSize(16, 16)
                 }
                 activeDrills.isEmpty() -> {
                     val noDrillsText = TranslatableText("block.indrev.drill.no_drills")
-                    root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.45, 1.75)
+                    root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.35, 1.75)
                 }
                 else -> {
                     activeDrills.forEachIndexed { index, drill ->
                         val panel = getDrillInfo(drill)
-                        root.add(panel, 1.6 + if (index > 3) index - 4 else index, 1.4 + if (index > 3) 0.75 else 0.0)
+                        root.add(panel, 1.4 + if (index > 3) index - 4 else index, 1.9 + if (index > 3) 1.1 else 0.0)
                     }
                 }
             }
-            root.add(WText({
-                val totalMultiplier = activeDrills.sumOf { it.getSpeedMultiplier() }
-                TranslatableText("block.indrev.drill.faster", totalMultiplier)
-            }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.1)
         }
         root.add(WText({
-            TranslatableText("block.indrev.mining_rig.mined", "${component!!.get<Int>(MiningRigBlockEntity.EXPLORED_PERCENTAGE_ID)}%")
-        }, HorizontalAlignment.CENTER, 0x8080), 3.45, 3.8)
+            val data = OreDataCards.readNbt(blockInventory.getStack(0)) ?: return@WText LiteralText.EMPTY
+            val remaining = data.maxCycles - data.used
+            LiteralText("$remaining")
+        }, HorizontalAlignment.CENTER, 0x8080), 3.35, 4.4)
+        root.add(WText(TranslatableText("block.indrev.mining_rig.mined"), HorizontalAlignment.CENTER, 0x8080), 3.35, 5.0)
 
         root.validate(this)
     }
@@ -95,15 +89,27 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
     private fun getDrillInfo(blockEntity: DrillBlockEntity): WGridPanel {
         val itemStack = blockEntity.inventory[0]
         val panel = WGridPanel()
-        panel.add(object : WItem(itemStack)  {
-            override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(itemStack.name)
-                val seconds = blockEntity.getSpeedMultiplier()
-                tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds).formatted(Formatting.DARK_GRAY))
-                if (blockEntity.position > 0)
-                    tooltip?.add(TranslatableText("block.indrev.drill.activating").formatted(Formatting.DARK_GRAY))
+
+        panel.add(WItem(itemStack), 0, 0)
+
+        ctx.run { world, pos ->
+            val miningRig = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return@run
+            val tmpPos = miningRig.pos.mutableCopy()
+            tmpPos.y = blockEntity.pos.y
+            val offset = blockEntity.pos.subtract(tmpPos)
+
+            val index = MiningRigBlockEntity.VALID_DRILL_POSITIONS.indexOf(offset)
+            val progress = object : WCircleProgressBar({ component!!.get<Double>(MiningRigBlockEntity.START_DRILL_ID + index).toInt() }, { component!![MiningRigBlockEntity.MAX_SPEED_ID] }, { _, _ -> 0xFF007E7E.toInt()}) {
+                override fun addTooltip(tooltip: TooltipBuilder?) {
+                    tooltip?.add(itemStack.name)
+                    val seconds = blockEntity.getSpeedMultiplier()
+                    tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds).formatted(Formatting.DARK_GRAY))
+                    if (blockEntity.position > 0)
+                        tooltip?.add(TranslatableText("block.indrev.drill.activating").formatted(Formatting.DARK_GRAY))
+                }
             }
-        }, 0, 0)
+            panel.add(progress, 0, 0)
+        }
 
         return panel
     }

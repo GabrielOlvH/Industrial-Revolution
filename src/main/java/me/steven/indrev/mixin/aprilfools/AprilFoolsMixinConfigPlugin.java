@@ -35,8 +35,7 @@ public class AprilFoolsMixinConfigPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT
-                && (AprilFools.isToday() || FabricLoader.getInstance().isDevelopmentEnvironment()) ? mixins : null;
+        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && AprilFools.isToday() ? mixins : null;
     }
 
     @Override

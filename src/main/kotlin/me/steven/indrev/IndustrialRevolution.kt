@@ -11,28 +11,23 @@ import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.networks.NetworkEvents
 import me.steven.indrev.packets.PacketRegistry
 import me.steven.indrev.packets.client.SyncConfigPacket
-import me.steven.indrev.packets.client.SyncVeinTypesPacket
 import me.steven.indrev.recipes.SelfRemainderRecipe
 import me.steven.indrev.recipes.machines.*
 import me.steven.indrev.registry.*
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.world.chunkveins.VeinTypeResourceListener
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.item.Item
 import net.minecraft.item.ItemGroup
 import net.minecraft.item.ItemStack
-import net.minecraft.resource.ResourceType
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvent
 import net.minecraft.tag.TagKey
@@ -91,15 +86,12 @@ object IndustrialRevolution : ModInitializer {
 
         PacketRegistry.registerServer()
 
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(VeinTypeResourceListener())
-
         ServerTickEvents.END_WORLD_TICK.register(NetworkEvents)
         ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(NetworkEvents)
         ServerLifecycleEvents.SERVER_STOPPING.register(NetworkEvents)
 
         ServerPlayConnectionEvents.JOIN.register { handler, _, _ ->
             val player = handler.player
-            SyncVeinTypesPacket.sendVeinTypes(player)
             SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
                 (player as IRServerPlayerEntityExtension).sync()
