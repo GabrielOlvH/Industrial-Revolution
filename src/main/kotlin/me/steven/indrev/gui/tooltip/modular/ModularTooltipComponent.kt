@@ -6,10 +6,11 @@ import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
+import kotlin.math.ceil
 
 class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTooltipComponent(data) {
 
-    override fun getHeight(): Int = if (Screen.hasShiftDown()) 18 else 36
+    override fun getHeight(): Int = if (Screen.hasShiftDown()) 18 else 18 + 18 * (ceil(data.modules.size / 5.0).toInt())
 
     override fun getWidth(textRenderer: TextRenderer): Int {
         val energyWidth = super.getWidth(textRenderer)
