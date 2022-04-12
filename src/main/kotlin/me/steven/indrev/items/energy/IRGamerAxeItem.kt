@@ -2,6 +2,7 @@ package me.steven.indrev.items.energy
 
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
+import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
@@ -29,8 +30,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
 import net.minecraft.tag.BlockTags
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
@@ -58,11 +62,13 @@ class IRGamerAxeItem(
     override fun appendTooltip(
         stack: ItemStack,
         world: World?,
-        tooltip: MutableList<Text>?,
+        tooltip: MutableList<Text>,
         context: TooltipContext?
     ) {
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
+        val active = stack.nbt?.getBoolean("Active") ?: false
+        tooltip.add(TranslatableText("item.indrev.gamer_axe.tooltip.$active", LiteralText("").append(IndustrialRevolutionClient.GAMER_AXE_TOGGLE_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(Formatting.GRAY))
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)
@@ -77,26 +83,6 @@ class IRGamerAxeItem(
         val handler = energyOf(stack) ?: return Optional.empty()
         val modules = getInstalled(stack)
         return Optional.of(ModularTooltipData(handler.amount, handler.capacity, modules) { it.getLevel(stack) })
-    }
-
-    override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
-        if (world?.isClient == false) {
-            var stack = user?.getStackInHand(hand)
-            val tag = stack?.orCreateNbt
-            if (tag?.contains("Active") == false || tag?.contains("Progress") == false) {
-                tag.putBoolean("Active", true)
-                tag.putFloat("Progress", 0f)
-            } else if (tag?.contains("Active") == true) {
-                val active = !tag.getBoolean("Active")
-                val use = unsafeUse(stack, 1)
-                if (active && !use)
-                    return TypedActionResult.pass(stack)
-                if (use) stack = user?.getStackInHand(hand)
-                stack.orCreateNbt.putBoolean("Active", active)
-            }
-            return TypedActionResult.pass(stack)
-        }
-        return super.use(world, user, hand)
     }
 
     override fun useOnBlock(context: ItemUsageContext?): ActionResult {

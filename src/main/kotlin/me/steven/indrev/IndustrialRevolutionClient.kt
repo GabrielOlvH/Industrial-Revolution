@@ -37,6 +37,7 @@ import me.steven.indrev.gui.tooltip.oredatacards.OreDataCardTooltipData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.packets.PacketRegistry
+import me.steven.indrev.packets.common.ToggleGamerAxePacket
 import me.steven.indrev.registry.*
 import me.steven.indrev.tools.modular.IRModularItem
 import me.steven.indrev.utils.IRWorldRenderer
@@ -49,6 +50,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
@@ -56,6 +58,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
@@ -167,7 +170,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
         BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer { be -> be.multiblockComponent } }
         BlockEntityRendererRegistry.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
 
-
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.HEAT_GENERATOR_REGISTRY.setRenderLayer(RenderLayer.getCutout())
@@ -204,6 +206,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
         GlobalStateController.initClient()
 
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(IRWorldRenderer)
+        WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
 
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
@@ -215,6 +218,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 if (hasModularItem)
                     MinecraftClient.getInstance()
                         .setScreen(IRModularControllerScreen(ModularItemConfigurationScreenHandler(client.player!!.inventory)))
+            }
+            while (GAMER_AXE_TOGGLE_KEYBINDING.wasPressed()) {
+                val itemStack = client.player?.mainHandStack ?: break
+                if (itemStack.isOf(IRItemRegistry.GAMER_AXE_ITEM)) {
+                    ClientPlayNetworking.send(ToggleGamerAxePacket.PACKET_ID, PacketByteBufs.empty())
+                }
             }
         }
 
@@ -250,8 +259,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
             helper.register(ReinforcedElytraFeatureRenderer(renderer, ctx.modelLoader))
         })
-
-        WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
 
         TooltipComponentCallback.EVENT.register(TooltipComponentCallback { data ->
             when (data) {
@@ -307,7 +314,16 @@ object IndustrialRevolutionClient : ClientModInitializer {
         KeyBinding(
             "key.indrev.modular",
             InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_UNKNOWN,
+            GLFW.GLFW_KEY_C,
+            "category.indrev"
+        )
+    )
+
+     val GAMER_AXE_TOGGLE_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
+        KeyBinding(
+            "key.indrev.gamer_axe_toggle",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_G,
             "category.indrev"
         )
     )

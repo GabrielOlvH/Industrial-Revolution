@@ -36,6 +36,7 @@ open class IRGuiScreenHandler(
             val blockEntity = world.getBlockEntity(pos) as? BaseBlockEntity ?: return@run
             component = blockEntity.guiSyncableComponent
         }
+
     }
 
     @Environment(EnvType.CLIENT)
