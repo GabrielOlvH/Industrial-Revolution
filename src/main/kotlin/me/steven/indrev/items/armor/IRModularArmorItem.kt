@@ -3,6 +3,7 @@ package me.steven.indrev.items.armor
 import com.google.common.collect.ImmutableMultimap
 import com.google.common.collect.Multimap
 import dev.emi.stepheightentityattribute.StepHeightEntityAttributeMain
+import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.AttributeModifierProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.armor.IRArmorMaterial
@@ -27,7 +28,10 @@ import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
+import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
 import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
@@ -44,6 +48,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
     override val fluidFilter: (FluidVariant) -> Boolean = { it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
 
     override val limit: Long = bucket / 20
+
 
     override fun isUsable(stack: ItemStack): Boolean = ArmorModule.JETPACK.getLevel(stack) > 0
 
@@ -67,6 +72,10 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
+        tooltip?.add(
+            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+                IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
+                Formatting.GRAY))
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false

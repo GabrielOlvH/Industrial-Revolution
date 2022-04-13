@@ -395,6 +395,7 @@
   "item.indrev.gamer_axe.false": "Off",
   "item.indrev.gamer_axe.tooltip.true": "Press %s to toggle off",
   "item.indrev.gamer_axe.tooltip.false": "Press %s to toggle on",
+  "item.indrev.modular_item.tooltip": "Press %s to toggle modules",
   "gui.indrev.button.auto_split": "Auto-Split Stacks",
   "gui.indrev.resourcereport.size": "Vein size: %s",
   "gui.indrev.resourcereport.size.tiny": "Tiny",

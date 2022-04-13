@@ -310,16 +310,16 @@ object IndustrialRevolutionClient : ClientModInitializer {
         AprilFools.init()
     }
 
-    private val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
+    val MODULAR_CONTROLLER_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
         KeyBinding(
             "key.indrev.modular",
             InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_C,
+            GLFW.GLFW_KEY_K,
             "category.indrev"
         )
     )
 
-     val GAMER_AXE_TOGGLE_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
+    val GAMER_AXE_TOGGLE_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
         KeyBinding(
             "key.indrev.gamer_axe_toggle",
             InputUtil.Type.KEYSYM,

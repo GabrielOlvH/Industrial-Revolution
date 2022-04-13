@@ -69,6 +69,7 @@ class IRGamerAxeItem(
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
         val active = stack.nbt?.getBoolean("Active") ?: false
         tooltip.add(TranslatableText("item.indrev.gamer_axe.tooltip.$active", LiteralText("").append(IndustrialRevolutionClient.GAMER_AXE_TOGGLE_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(Formatting.GRAY))
+        tooltip.add(TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(Formatting.GRAY))
     }
 
     override fun getItemBarColor(stack: ItemStack?): Int = getDurabilityBarColor(stack)

@@ -5,6 +5,7 @@ import draylar.magna.api.BlockProcessor
 import draylar.magna.api.MagnaTool
 import draylar.magna.api.reach.ReachDistanceHelper
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen
+import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.CustomEnchantmentProvider
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.gui.screenhandlers.blockblacklister.BlockBlacklisterScreenHandler
@@ -25,8 +26,11 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
+import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
+import net.minecraft.text.TranslatableText
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.hit.BlockHitResult
@@ -60,6 +64,10 @@ class IRModularDrillItem(
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
+        tooltip?.add(
+            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+                IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
+                Formatting.GRAY))
     }
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand): TypedActionResult<ItemStack> {
