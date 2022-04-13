@@ -1,5 +1,6 @@
 package me.steven.indrev.networks.energy
 
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
@@ -9,6 +10,7 @@ import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.insert
 import me.steven.indrev.utils.isLoaded
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
@@ -37,26 +39,42 @@ open class EnergyNetwork(
     var energy = 0L
     val capacity: Long get() = pipes.size * maxCableTransfer
 
+
+    private val maxInputs = Object2LongOpenHashMap<EnergyStorage>()
+    private val storages = mutableListOf<EnergyStorage>()
+
     override fun tick(world: ServerWorld) {
-        val totalInput = insertables.sumOf { pos ->
+        maxInputs.clear()
+        storages.clear()
+
+        insertables.forEach { pos ->
             if (world.isLoaded(pos)) {
-                machines[pos]?.sumOf innerSum@{ dir ->
-                    val handler = energyOf(world, pos, dir) ?: return@innerSum 0L
-                    handler.maxInput
-                } ?: 0
-            } else 0L
-        }
-        if (totalInput <= 0) return
-        insertables.forEach outer@{ pos ->
-            machines[pos]!!.forEach { direction ->
-                if (!world.isLoaded(pos)) return@forEach
-                val energyIo = energyOf(world, pos, direction) ?: return@forEach
-
-                val maxInput = energyIo.maxInput
-                val toTransfer = ((maxInput / totalInput.toDouble()) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
-
-                energy -= energyIo.insert(toTransfer, true)
+                machines[pos]?.forEach { dir ->
+                    val storage = energyOf(world, pos, dir)
+                    if (storage != null)
+                        storages.add(storage)
+                }
             }
+        }
+
+        val totalInput = Transaction.openOuter().use { tx ->
+            storages.sumOf { energyStorage ->
+                val maxInput = energyStorage.insert(MAX_VALUE, tx)
+                if (maxInput > 0)
+                    maxInputs[energyStorage] = maxInput
+                maxInput
+            }.toDouble()
+        }
+
+        if (totalInput <= 0) return
+
+        storages.forEach { energyStorage ->
+            val maxInput = maxInputs.getLong(energyStorage)
+            if (maxInput <= 0) return@forEach
+
+            val toTransfer = ((maxInput / totalInput) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
+
+            energy -= energyStorage.insert(toTransfer, true)
         }
     }
 
@@ -69,8 +87,5 @@ open class EnergyNetwork(
     companion object {
 
         private const val MAX_VALUE = Long.MAX_VALUE - 1L
-
-        private val EnergyStorage.maxInput: Long
-            get() = insert(MAX_VALUE, false)
     }
 }
