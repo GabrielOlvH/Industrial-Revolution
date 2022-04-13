@@ -57,14 +57,12 @@ open class EnergyNetwork(
             }
         }
 
-        val totalInput = Transaction.openOuter().use { tx ->
-            storages.sumOf { energyStorage ->
-                val maxInput = energyStorage.insert(MAX_VALUE, tx)
-                if (maxInput > 0)
-                    maxInputs[energyStorage] = maxInput
-                maxInput
-            }.toDouble()
-        }
+        val totalInput = storages.sumOf { energyStorage ->
+            val maxInput = energyStorage.insert(MAX_VALUE, false)
+            if (maxInput > 0)
+                maxInputs[energyStorage] = maxInput
+            maxInput
+        }.toDouble()
 
         if (totalInput <= 0) return
 
