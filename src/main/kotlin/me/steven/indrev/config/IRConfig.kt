@@ -280,7 +280,7 @@ class Cables {
 class Upgrades  {
     val speedUpgradeModifier = 6.5
     val energyUpgradeModifier = 1.02
-    val bufferUpgradeModifier = 25000.0
+    val bufferUpgradeModifier = 25000
     val damageUpgradeModifier = 3.0
 }
 

@@ -18,7 +18,7 @@ class ElectricFurnaceBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.1, 1300..1700, 2000)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(4, 5, 6, 7), Enhancer.FURNACE, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(4, 5, 6, 7), Enhancer.FURNACE, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slot = 3 }

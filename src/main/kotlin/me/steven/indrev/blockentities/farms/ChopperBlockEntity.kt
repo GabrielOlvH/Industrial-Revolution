@@ -26,7 +26,7 @@ import net.minecraft.world.chunk.Chunk
 class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.CHOPPER_REGISTRY, pos, state) {
     
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(2, 3, 4, 5)
@@ -52,8 +52,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = enhancerComponent?.enhancers ?: return
-        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
+        cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed || ticks % 15 != 0 || !canUse(getEnergyCost()))
             return
         val area = getWorkingArea()
@@ -187,13 +186,6 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return config.energyCost * speedEnhancers
     }
-    
-    fun getBaseValue(enhancer: Enhancer): Double =
-        when (enhancer) {
-            Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-            else -> 0.0
-        }
 
     override fun getWorkingArea(): Box {
         val box = Box(pos)
@@ -207,6 +199,4 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
             else -> 1
         }
     }
-
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 }

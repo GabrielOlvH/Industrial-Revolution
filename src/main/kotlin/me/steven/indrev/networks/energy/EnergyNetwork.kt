@@ -44,6 +44,9 @@ open class EnergyNetwork(
     private val storages = mutableListOf<EnergyStorage>()
 
     override fun tick(world: ServerWorld) {
+
+        if (energy <= 0) return
+
         maxInputs.clear()
         storages.clear()
 
@@ -73,6 +76,8 @@ open class EnergyNetwork(
             val toTransfer = ((maxInput / totalInput) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
 
             energy -= energyStorage.insert(toTransfer, true)
+
+            if (energy <= 0) return
         }
     }
 

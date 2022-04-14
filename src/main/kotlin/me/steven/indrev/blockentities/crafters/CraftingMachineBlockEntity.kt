@@ -7,6 +7,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.CraftingComponent
 import me.steven.indrev.config.BasicMachineConfig
 import me.steven.indrev.config.HeatMachineConfig
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.recipes.IRecipeGetter
 import me.steven.indrev.recipes.machines.IRRecipe
@@ -45,27 +46,19 @@ abstract class CraftingMachineBlockEntity<T : IRRecipe>(tier: Tier, registry: Ma
         if (ticks % 20 == 0 && isSplitOn) { splitStacks() }
     }
 
-    override fun getCapacity(): Long {
-        return Enhancer.getBuffer(enhancerComponent)
+    override fun getProcessingSpeed(): Double {
+        val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
+        val baseSpeed = if (isFullEfficiency)
+            ((config as? HeatMachineConfig)?.processTemperatureBoost ?: 1.0) * config.processSpeed
+        else
+            config.processSpeed
+        return baseSpeed + (IRConfig.upgrades.speedUpgradeModifier * (enhancerComponent?.getCount(Enhancer.SPEED) ?: 0))
     }
 
     override fun getEnergyCost(): Long {
         val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         return (if (temperatureComponent?.isFullEfficiency() == true) config.energyCost * 1.5
         else config.energyCost).toLong() * speedEnhancers
-    }
-
-    open fun getBaseValue(enhancer: Enhancer): Double {
-        val isFullEfficiency = temperatureComponent?.isFullEfficiency() == true
-        return when (enhancer) {
-            Enhancer.SPEED ->
-                if (isFullEfficiency)
-                    ((config as? HeatMachineConfig?)?.processTemperatureBoost ?: 1.0) * config.processSpeed
-                else
-                    config.processSpeed
-            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-            else -> 0.0
-        }
     }
 
     open fun getMaxCount(enhancer: Enhancer): Int {

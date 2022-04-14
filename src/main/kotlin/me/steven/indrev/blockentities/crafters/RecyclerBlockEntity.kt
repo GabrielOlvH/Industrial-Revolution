@@ -15,7 +15,7 @@ class RecyclerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : CraftingMachineBlockEntity<RecyclerRecipe>(tier, MachineRegistry.RECYCLER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = object : EnhancerComponent(intArrayOf(4, 5, 6, 7), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount) {
+        this.enhancerComponent = object : EnhancerComponent(intArrayOf(4, 5, 6, 7), Enhancer.DEFAULT, this::getMaxCount) {
             override fun isLocked(slot: Int, tier: Tier): Boolean = false
         }
 

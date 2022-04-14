@@ -24,7 +24,7 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FISHER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(6, 7, 8, 9), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(6, 7, 8, 9), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slot = 1
@@ -40,11 +40,10 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val maxOutput: Long = 0
 
     override fun machineTick() {
-        val upgrades = enhancerComponent!!.enhancers
         if (!canUse(getEnergyCost())) return
         val rodStack = inventoryComponent!!.inventory.getStack(1)
         if (rodStack.isEmpty || rodStack.item !is FishingRodItem || !use(getEnergyCost())) return
-        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
+        cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed) return
         cooldown = 0.0
         Direction.values().forEach { direction ->
@@ -76,14 +75,6 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         Tier.MK2 -> arrayOf(FISH_IDENTIFIER)
         Tier.MK3 -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, JUNK_IDENTIFIER, JUNK_IDENTIFIER, TREASURE_IDENTIFIER)
         else -> arrayOf(FISH_IDENTIFIER, FISH_IDENTIFIER, FISH_IDENTIFIER, TREASURE_IDENTIFIER)
-    }
-
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
-
-    fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
-        Enhancer.SPEED -> 1.0
-        Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-        else -> 0.0
     }
 
     fun getMaxCount(enhancer: Enhancer): Int {

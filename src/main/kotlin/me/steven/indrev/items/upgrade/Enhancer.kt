@@ -10,14 +10,8 @@ enum class Enhancer {
         val DEFAULT = arrayOf(SPEED, BUFFER)
         val FURNACE = arrayOf(SPEED, BUFFER, BLAST_FURNACE, SMOKER)
 
-        fun getSpeed(enhancers: Map<Enhancer, Int>, provider: EnhancerComponent)
-                = provider.baseValue(SPEED) + (IRConfig.upgrades.speedUpgradeModifier * (enhancers[SPEED] ?: 0))
-
-        fun getDamageMultiplier(enhancers: Map<Enhancer, Int>, provider: EnhancerComponent): Double {
+        fun getDamageMultiplier(enhancers: Map<Enhancer, Int>): Double {
             return (IRConfig.upgrades.damageUpgradeModifier * (enhancers[DAMAGE] ?: 0).toDouble()).coerceAtLeast(1.0)
         }
-
-        fun getBuffer(provider: EnhancerComponent?)
-                = if (provider == null) 0 else (provider.baseValue(BUFFER) + (IRConfig.upgrades.bufferUpgradeModifier * (provider.enhancers[BUFFER] ?: 0))).toLong()
     }
 }

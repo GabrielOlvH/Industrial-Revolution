@@ -22,7 +22,7 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
     CraftingMachineBlockEntity<CondenserRecipe>(tier, MachineRegistry.CONDENSER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             output { slot = 2 }
             coolerSlot = 1

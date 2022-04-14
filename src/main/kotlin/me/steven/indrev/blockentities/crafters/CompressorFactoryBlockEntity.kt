@@ -21,7 +21,7 @@ class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(2, 3, 5, 5), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(2, 3, 5, 5), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(6, 8, 10, 12, 14) }
             output { slots = intArrayOf(7, 9, 11, 13, 15) }

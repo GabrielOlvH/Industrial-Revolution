@@ -22,7 +22,7 @@ class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockSt
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 500..700, 900)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(1, 2, 3, 4), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(1, 2, 3, 4), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             coolerSlot = 0
         }

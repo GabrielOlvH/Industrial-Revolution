@@ -13,7 +13,6 @@ import net.minecraft.inventory.Inventory
 open class EnhancerComponent(
     val slots: IntArray,
     val compatible: Array<Enhancer>,
-    val baseValue: (Enhancer) -> Double,
     val maxSlotCount: (Enhancer) -> Int
 ) {
 

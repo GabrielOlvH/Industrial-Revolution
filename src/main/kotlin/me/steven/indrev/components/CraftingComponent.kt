@@ -47,7 +47,7 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
                 }
                 else if (machine.use(machine.getEnergyCost())) {
                     isCrafting = true
-                    processTime = (processTime + ceil(Enhancer.getSpeed(upgrades, machine.enhancerComponent!!))).coerceAtLeast(0.0).toInt()
+                    processTime = (processTime + ceil(machine.getProcessingSpeed())).coerceAtLeast(0.0).toInt()
                     markDirty()
                     if (processTime >= totalProcessTime) {
                         handleInventories(inventory, inputInventory, recipe)
@@ -82,7 +82,7 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
         output.forEach { stack -> craft(stack) }
 
         if (recipe is IRFluidRecipe) {
-            fluidComponent!!.inputTanks.forEachIndexed { index, slot ->
+            fluidComponent!!.inputTanks.forEach outer@{ slot ->
                 recipe.fluidInput.forEach { volume ->
                     val tank = fluidComponent!![slot]
                     if (tank.resource != volume.resource) return@forEach
@@ -91,7 +91,7 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
                         tank.variant = FluidVariant.blank()
                     tank.amount = amount
                     tank.markDirty()
-                    return@forEachIndexed
+                    return@forEach
                 }
             }
             recipe.fluidOutput.forEach { craft(it) }

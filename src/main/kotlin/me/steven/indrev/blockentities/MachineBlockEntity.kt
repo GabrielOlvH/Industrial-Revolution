@@ -9,6 +9,8 @@ import me.steven.indrev.blocks.machine.MachineBlock
 import me.steven.indrev.components.*
 import me.steven.indrev.components.multiblock.MultiBlockComponent
 import me.steven.indrev.config.IConfig
+import me.steven.indrev.config.IRConfig
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.transferEnergy
@@ -32,7 +34,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     override var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
 
-    internal var energy: Long by autosync(ENERGY_ID, 0L) { value ->
+    var energy: Long by autosync(ENERGY_ID, 0L) { value ->
         when (tier) {
             Tier.CREATIVE -> getCapacity()
             else -> value.coerceIn(0, getCapacity())
@@ -117,7 +119,13 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         }
     }
 
-    open fun getCapacity(): Long = config.maxEnergyStored
+    open fun getCapacity(): Long {
+        return config.maxEnergyStored + (IRConfig.upgrades.bufferUpgradeModifier * (enhancerComponent?.getCount(Enhancer.BUFFER) ?: 0))
+    }
+
+    open fun getProcessingSpeed(): Double {
+        return 1.0 + (IRConfig.upgrades.speedUpgradeModifier * (enhancerComponent?.getCount(Enhancer.SPEED) ?: 0))
+    }
 
     open fun getEnergyCost(): Long = 0
 

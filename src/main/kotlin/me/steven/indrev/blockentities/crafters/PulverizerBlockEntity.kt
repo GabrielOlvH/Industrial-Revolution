@@ -17,7 +17,7 @@ class PulverizerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(5, 6, 7, 8), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(5, 6, 7, 8), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
             output { slots = intArrayOf(3, 4) }

@@ -24,7 +24,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.RANCHER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(15, 16, 17, 18), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(2, 3, 4, 5) }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
@@ -46,8 +46,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override fun machineTick() {
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
-        val upgrades = enhancerComponent!!.enhancers
-        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
+        cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed) return
         val animals = world?.getEntitiesByClass(AnimalEntity::class.java, getWorkingArea()) { true } ?: emptyList()
         if (animals.isEmpty() || !canUse(getEnergyCost())) {
@@ -123,13 +122,6 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         return config.energyCost * speedEnhancers
     }
 
-    fun getBaseValue(enhancer: Enhancer): Double =
-        when (enhancer) {
-            Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-            else -> 0.0
-        }
-
     fun getMaxCount(enhancer: Enhancer): Int {
         return when (enhancer) {
             Enhancer.SPEED -> return 1 
@@ -153,8 +145,6 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         matingLimit = tag.getInt("matingLimit")
         killAfter = tag.getInt("killAfter")
     }
-
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 
     companion object {
         const val FEED_BABIES_ID = 2

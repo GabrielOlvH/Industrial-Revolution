@@ -27,7 +27,7 @@ class IREnhancerItem(settings: Settings, val enhancer: Enhancer) : Item(settings
                 if (!enhancerComponent.compatible.contains(enhancer))
                     tooltip?.add(TranslatableText("item.indrev.enhancers.incompatible").formatted(Formatting.DARK_RED))
                 else
-                    tooltip?.add(TranslatableText("item.indrev.enhancers.count", enhancerComponent.baseValue(enhancer)).formatted(Formatting.AQUA))
+                    tooltip?.add(TranslatableText("item.indrev.enhancers.count", enhancerComponent.maxSlotCount(enhancer)).formatted(Formatting.AQUA))
             }
         }
     }

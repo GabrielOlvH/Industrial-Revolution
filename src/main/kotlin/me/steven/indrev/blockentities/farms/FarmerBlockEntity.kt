@@ -24,7 +24,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.FARMER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(14, 15, 16, 17), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(14, 15, 16, 17), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slots = intArrayOf(1, 2, 3, 4) }
             output { slots = intArrayOf(5, 6, 7, 8, 9, 10, 11, 12, 13) }
@@ -40,8 +40,7 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     private var nextBlocks = emptyList<BlockPos>().iterator()
 
     override fun machineTick() {
-        val upgrades = enhancerComponent!!.enhancers
-        cooldown += Enhancer.getSpeed(upgrades, enhancerComponent!!)
+        cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed) return
         val world = world as ServerWorld
         val energyCost = config.energyCost
@@ -155,12 +154,4 @@ class FarmerBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             else -> 1
         }
     }
-    
-    fun getBaseValue(enhancer: Enhancer): Double = when (enhancer) {
-        Enhancer.SPEED -> 1.0
-        Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-        else -> 0.0
-    }
-
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 }

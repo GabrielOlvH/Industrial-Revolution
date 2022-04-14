@@ -21,7 +21,11 @@ import net.minecraft.util.math.BlockPos
 class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY, pos, state) {
 
     init {
-        this.enhancerComponent = EnhancerComponent(intArrayOf(11, 12, 13, 14), arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE), this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(
+            intArrayOf(11, 12, 13, 14),
+            arrayOf(Enhancer.SPEED, Enhancer.BUFFER, Enhancer.DAMAGE),
+            this::getMaxCount
+        )
         this.inventoryComponent = inventory(this) {
             input { slot = 1 }
             output { slots = intArrayOf(2, 3, 4, 5, 6, 7, 8, 9, 10) }
@@ -39,7 +43,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         if (world?.isClient == true) return
         val inventory = inventoryComponent?.inventory ?: return
         val enhancers = enhancerComponent!!.enhancers
-        cooldown += Enhancer.getSpeed(enhancers, enhancerComponent!!)
+        cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed) return
         val source = DamageSource.player(fakePlayer)
         val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) } ?: emptyList()
@@ -58,7 +62,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
                 if (mob.isAlive) {
                     mob.redirectDrops(inventory) {
-                        mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers, enhancerComponent!!)).toFloat())
+                        mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers)).toFloat())
                     }
                 }
             }
@@ -73,13 +77,6 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         return config.energyCost * speedEnhancers * dmgEnhancers
     }
 
-    fun getBaseValue(enhancer: Enhancer): Double =
-        when (enhancer) {
-            Enhancer.SPEED -> 1.0
-            Enhancer.BUFFER -> config.maxEnergyStored.toDouble()
-            else -> 0.0
-        }
-
     fun getMaxCount(enhancer: Enhancer): Int {
         return when (enhancer) {
             Enhancer.SPEED, Enhancer.DAMAGE -> return 1
@@ -87,6 +84,4 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
             else -> 1
         }
     }
-
-    override fun getCapacity(): Long = Enhancer.getBuffer(enhancerComponent)
 }

@@ -23,7 +23,7 @@ class SmelterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.2, 1700..2500, 2700)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(3, 4, 5, 6), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input { slot = 2 }
         }

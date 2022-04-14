@@ -24,7 +24,7 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
 
     init {
         this.temperatureComponent = TemperatureComponent(this, 0.06, 700..1100, 1400)
-        this.enhancerComponent = EnhancerComponent(intArrayOf(2, 3, 4, 5), Enhancer.DEFAULT, this::getBaseValue, this::getMaxCount)
+        this.enhancerComponent = EnhancerComponent(intArrayOf(2, 3, 4, 5), Enhancer.DEFAULT, this::getMaxCount)
         this.inventoryComponent = inventory(this) {
             input {
                 slots = intArrayOf(6, 7, 9, 10, 12, 13, 15, 16, 18, 19)
