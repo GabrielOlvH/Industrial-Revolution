@@ -91,7 +91,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
         override fun onFinalCommit() {
             super.onFinalCommit()
-            markDirty()
+            markForUpdate()
         }
     }
 
