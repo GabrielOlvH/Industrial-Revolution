@@ -98,11 +98,8 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
     }
 
     fun fromTag(nbt: NbtCompound) {
-        val variant = FluidVariant.fromNbt(nbt.getCompound("variant"))
-        val amt = nbt.getLong("amt")
-
-        this.variant = variant
-        amount = amt
+        this.variant = FluidVariant.fromNbt(nbt.getCompound("variant"))
+        this.amount = nbt.getLong("amt")
     }
 
     inner class ExposedIRFluidTank : SnapshotParticipant<ResourceAmount<FluidVariant>>(), SingleSlotStorage<FluidVariant> by this {

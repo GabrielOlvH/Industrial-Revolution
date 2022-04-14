@@ -36,13 +36,10 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     var energy: Long by autosync(ENERGY_ID, 0L) { value ->
         when (tier) {
-            Tier.CREATIVE -> getCapacity()
-            else -> value.coerceIn(0, getCapacity())
+            Tier.CREATIVE -> energyCapacity
+            else -> value.coerceIn(0, energyCapacity)
         }
     }
-
-    open val maxInput: Long = tier.io
-    open val maxOutput: Long = tier.io
 
     var inventoryComponent: InventoryComponent? = null
     var temperatureComponent: TemperatureComponent? = null
@@ -71,30 +68,15 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
     @Suppress("UNCHECKED_CAST")
     val config: T by lazy { registry.config(tier) as T }
 
+    open val maxInput: Long = tier.io
+    open val maxOutput: Long = tier.io
+    open val energyCapacity: Long get() = config.maxEnergyStored + (IRConfig.upgrades.bufferUpgradeModifier * (enhancerComponent?.getCount(Enhancer.BUFFER) ?: 0))
+
     init {
-        trackLong(MAX_ENERGY_ID) { getCapacity() }
+        trackLong(MAX_ENERGY_ID) { energyCapacity }
     }
 
-    open val storage = object : IREnergyStorage() {
-
-        override fun getAmount(): Long = energy
-
-        override fun setAmount(v: Long) {
-            energy = v
-        }
-
-        override fun getCapacity(): Long = this@MachineBlockEntity.getCapacity()
-
-        override fun getMaxExtract(side: Direction?): Long = maxOutput
-
-        override fun getMaxInsert(side: Direction?): Long = maxInput
-
-        override fun onFinalCommit() {
-            super.onFinalCommit()
-            markForUpdate()
-        }
-    }
-
+    open val storage = MachineEnergyStorage()
 
     protected open fun machineTick() {}
 
@@ -114,13 +96,9 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         machineTick()
         if (isMarkedForUpdate) {
             markDirty()
-            sync()
+            if (syncToWorld) sync()
             isMarkedForUpdate = false
         }
-    }
-
-    open fun getCapacity(): Long {
-        return config.maxEnergyStored + (IRConfig.upgrades.bufferUpgradeModifier * (enhancerComponent?.getCount(Enhancer.BUFFER) ?: 0))
     }
 
     open fun getProcessingSpeed(): Double {
@@ -205,6 +183,32 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
         temperatureComponent?.writeNbt(tag)
         fluidComponent?.toTag(tag)
         multiblockComponent?.writeNbt(tag)
+    }
+
+    override fun fromClientTag(tag: NbtCompound) {
+    }
+
+    override fun toClientTag(tag: NbtCompound) {
+    }
+
+    open inner class MachineEnergyStorage : IREnergyStorage() {
+
+        override fun getAmount(): Long = energy
+
+        override fun setAmount(v: Long) {
+            energy = v
+        }
+
+        override fun getCapacity(): Long = energyCapacity
+
+        override fun getMaxExtract(side: Direction?): Long = maxOutput
+
+        override fun getMaxInsert(side: Direction?): Long = maxInput
+
+        override fun onFinalCommit() {
+            super.onFinalCommit()
+            markForUpdate()
+        }
     }
 
     companion object {

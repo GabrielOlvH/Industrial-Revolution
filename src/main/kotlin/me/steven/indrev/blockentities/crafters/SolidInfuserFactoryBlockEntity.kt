@@ -43,6 +43,8 @@ class SolidInfuserFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
+    override val syncToWorld: Boolean = true
+
     override fun splitStacks() {
         splitStacks(TOP_SLOTS)
         splitStacks(BOTTOM_SLOTS)

@@ -24,19 +24,19 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
             input { slot = 0 }
             output { slot = 0 }
         }
-
     }
+
+    override val syncToWorld: Boolean = true
 
     override val maxOutput: Long = 16384
     override val maxInput: Long = 16384
+    override val energyCapacity: Long = 0L
 
-    val energyIo = ChargePadEnergyIo()
+    val energyIo = ChargePadEnergyStorage()
 
     var hasCollided = false
 
     private fun getItemEnergyIo() = energyOf(inventoryComponent!!.inventory, 0)
-
-    override fun getCapacity(): Long = 0
 
     override fun fromClientTag(tag: NbtCompound) {
         inventoryComponent!!.readNbt(tag)
@@ -46,7 +46,7 @@ class ChargePadBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : Machi
         inventoryComponent!!.writeNbt(tag)
     }
 
-    inner class ChargePadEnergyIo : EnergyStorage {
+    inner class ChargePadEnergyStorage : EnergyStorage {
         override fun getAmount(): Long = getItemEnergyIo()?.amount ?: 0
 
         override fun getCapacity(): Long = getItemEnergyIo()?.capacity ?: 0

@@ -8,6 +8,11 @@ import net.minecraft.util.math.BlockPos
 
 abstract class BaseMachineBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: BlockState)
     : BaseBlockEntity(type, pos, state), InventoryProvider, Configurable, Syncable {
+    /**
+     * Whether the machine should call #sync or not
+     */
+    open val syncToWorld = false
+
     var isMarkedForUpdate: Boolean = true
 
     override fun markForUpdate(condition: () -> Boolean) {

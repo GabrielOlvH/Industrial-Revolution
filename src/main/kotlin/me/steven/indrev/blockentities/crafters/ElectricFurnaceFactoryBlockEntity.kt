@@ -38,6 +38,8 @@ class ElectricFurnaceFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockS
         this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
+    override val syncToWorld: Boolean = true
+
     @Suppress("UNCHECKED_CAST")
     override val type: IRecipeGetter<MixinAbstractCookingRecipe>
         get() {

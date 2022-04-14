@@ -33,6 +33,8 @@ class FluidInfuserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         trackObject(OUTPUT_TANK_ID, fluidComponent!![1])
     }
 
+    override val syncToWorld: Boolean = true
+
     override val type: IRRecipeType<FluidInfuserRecipe> = FluidInfuserRecipe.TYPE
 
     override fun fromClientTag(tag: NbtCompound) {

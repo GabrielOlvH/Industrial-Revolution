@@ -31,6 +31,14 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
         Direction.values().forEach { dir -> this[dir] = TransferMode.NONE }
     }
 
+    fun canInput(direction: Direction): Boolean {
+        return this[direction]?.input == true
+    }
+
+    fun canOutput(direction: Direction): Boolean {
+        return this[direction]?.output == true
+    }
+
     fun writeNbt(tag: NbtCompound?) {
         var transferConfigTag = tag?.getCompound("TransferConfig")
         if (tag?.contains("TransferConfig") == false) {

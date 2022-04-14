@@ -36,6 +36,8 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         this.fluidComponent = FluidComponent({this}, bucket)
     }
 
+    override val syncToWorld: Boolean = true
+
     override val maxInput: Long = config.maxInput
     override val maxOutput: Long = 0
 

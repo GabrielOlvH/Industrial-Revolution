@@ -40,6 +40,8 @@ class ModularWorkbenchBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
     }
 
+    override val syncToWorld: Boolean = true
+
     override val maxOutput: Long = 0
 
     var moduleProcessTime by autosync(PROCESS_TIME_ID, 0)

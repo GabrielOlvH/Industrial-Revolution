@@ -37,6 +37,8 @@ class PulverizerFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
+    override val syncToWorld: Boolean = true
+
     override val type: IRRecipeType<PulverizerRecipe> = PulverizerRecipe.TYPE
 
     override fun fromClientTag(tag: NbtCompound) {

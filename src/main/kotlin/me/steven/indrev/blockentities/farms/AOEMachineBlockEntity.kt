@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 
 abstract class AOEMachineBlockEntity<T : IConfig>(tier: Tier, registry: MachineRegistry, pos: BlockPos, state: BlockState) : MachineBlockEntity<T>(tier, registry, pos, state) {
+    override val syncToWorld: Boolean = true
+
     var renderWorkingArea = false
     abstract var range: Int
     open fun getWorkingArea(): Box {

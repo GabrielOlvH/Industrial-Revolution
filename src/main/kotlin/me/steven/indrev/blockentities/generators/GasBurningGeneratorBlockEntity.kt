@@ -48,7 +48,7 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
 
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (getCapacity() > energy) {
+        else if (energyCapacity > energy) {
             val invFluid = fluidComponent!![0]
             val fluid = invFluid.resource.fluid
             if (invFluid.isEmpty || !IRFluidFuelRegistry.isFuel(fluid)) return false
@@ -59,7 +59,7 @@ class GasBurningGeneratorBlockEntity(pos: BlockPos, state: BlockState) : Generat
             }
         }
 
-        return burnTime > 0 && energy < getCapacity()
+        return burnTime > 0 && energy < energyCapacity
     }
 
     override fun getGenerationRatio(): Long {

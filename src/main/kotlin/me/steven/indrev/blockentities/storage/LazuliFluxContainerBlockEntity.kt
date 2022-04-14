@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.storage
 
-import me.steven.indrev.IREnergyStorage
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
@@ -27,40 +26,16 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
         }
     }
 
+    override val syncToWorld: Boolean = true
+
     override val maxInput: Long = config.maxInput
     override val maxOutput: Long = config.maxOutput
 
     val transferConfig: SideConfiguration = SideConfiguration(ConfigurationType.ENERGY)
-    private var lastWidth = 0f
 
-    override val storage = object : IREnergyStorage() {
+    override val storage = LazuliFluxContainerEnergyStorage()
 
-        override fun getAmount(): Long = energy
-
-        override fun setAmount(v: Long) {
-            energy = v
-        }
-
-        override fun getCapacity(): Long = this@LazuliFluxContainerBlockEntity.getCapacity()
-
-        override fun getMaxInsert(side: Direction?): Long {
-            return if (this@LazuliFluxContainerBlockEntity.transferConfig[side]?.input == true)
-                maxInput
-            else 0
-        }
-
-        override fun getMaxExtract(side: Direction?): Long {
-            return if (side == null || this@LazuliFluxContainerBlockEntity.transferConfig[side]?.output == true)
-                maxOutput
-            else 0
-        }
-
-        override fun onFinalCommit() {
-            super.onFinalCommit()
-            markDirty()
-            update()
-        }
-    }
+    private var clientLastRenderWidth = 0f
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -71,10 +46,10 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     }
 
     private fun update() {
-        val width = floor((((energy.toFloat() / getCapacity().toFloat()) * 0.5f) + 0.25f) * 16)
-        if (width != lastWidth) {
+        val width = floor((((energy.toFloat() / energyCapacity.toFloat()) * 0.5f) + 0.25f) * 16)
+        if (width != clientLastRenderWidth) {
             sync()
-            lastWidth = width
+            clientLastRenderWidth = width
         }
     }
 
@@ -112,5 +87,22 @@ class LazuliFluxContainerBlockEntity(tier: Tier, pos: BlockPos, state: BlockStat
     override fun fromClientTag(tag: NbtCompound) {
         transferConfig.readNbt(tag)
         energy = tag.getLong("energy")
+    }
+
+    inner class LazuliFluxContainerEnergyStorage : MachineEnergyStorage() {
+        override fun getMaxInsert(side: Direction?): Long {
+            return if (side == null || transferConfig.canInput(side)) maxInput
+            else 0
+        }
+
+        override fun getMaxExtract(side: Direction?): Long {
+            return if (side == null || transferConfig.canOutput(side)) maxOutput
+            else 0
+        }
+
+        override fun onFinalCommit() {
+            super.onFinalCommit()
+            update()
+        }
     }
 }

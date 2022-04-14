@@ -38,6 +38,8 @@ class CondenserBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) :
         trackObject(INPUT_TANK_ID, fluidComponent!![0])
     }
 
+    override val syncToWorld: Boolean = true
+
     override val type: IRRecipeType<CondenserRecipe> = CondenserRecipe.TYPE
 
     override fun getMaxCount(enhancer: Enhancer): Int {

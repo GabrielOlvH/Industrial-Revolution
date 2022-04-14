@@ -30,9 +30,11 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         trackLong(CONSUMPTION_RATIO_ID) { getConsumptionRate() }
     }
 
+    override val syncToWorld: Boolean = true
+
     override fun shouldGenerate(): Boolean {
         if (burnTime > 0) burnTime--
-        else if (getCapacity() > energy) {
+        else if (energyCapacity > energy) {
             val tank = fluidComponent!![0]
             val consume = getConsumptionRate()
             if (tank.variant.isOf(Fluids.LAVA)
@@ -43,7 +45,7 @@ class HeatGeneratorBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             }
             markDirty()
         }
-        return burnTime > 0 && energy < getCapacity()
+        return burnTime > 0 && energy < energyCapacity
     }
 
     override fun getGenerationRatio(): Long {

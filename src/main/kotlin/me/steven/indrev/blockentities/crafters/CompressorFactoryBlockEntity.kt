@@ -37,6 +37,8 @@ class CompressorFactoryBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         this.multiblockComponent = MultiBlockComponent(FactoryStructureDefinition.SELECTOR)
     }
 
+    override val syncToWorld: Boolean = true
+
     override val type: IRRecipeType<CompressorRecipe> = CompressorRecipe.TYPE
 
     override fun fromClientTag(tag: NbtCompound) {
