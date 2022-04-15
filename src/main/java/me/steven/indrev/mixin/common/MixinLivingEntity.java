@@ -16,6 +16,7 @@ public abstract class MixinLivingEntity extends Entity {
         super(type, world);
     }
 
+    /*
     @Inject(method = "knockDownwards", at = @At("HEAD"), cancellable = true)
     private void indrev_waterAffinityDownwards(CallbackInfo ci) {
         this.setVelocity(this.getVelocity().add(0.0D, -0.03999999910593033D * 2, 0.0D));
@@ -26,5 +27,5 @@ public abstract class MixinLivingEntity extends Entity {
     private void indrev_waterAffinityUpwards(CallbackInfo ci) {
         this.setVelocity(this.getVelocity().add(0.0D, 0.03999999910593033D * 2, 0.0D));
         ci.cancel();
-    }
+    }*/
 }
