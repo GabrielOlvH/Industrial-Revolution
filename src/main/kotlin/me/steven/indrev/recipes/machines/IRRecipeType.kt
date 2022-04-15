@@ -19,7 +19,7 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
 
     override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
         if (itemStack.isEmpty) return emptyList()
-        else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]!!
+        else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]
         val matches = ImmutableList.copyOf(
             world.recipeManager.getRecipes(this).values
                 .filter { recipe -> recipe.input.any { it.ingredient.test(itemStack) } }
@@ -29,7 +29,7 @@ class IRRecipeType<T : IRRecipe>(val id: Identifier) : IRecipeGetter<T>, RecipeT
     }
 
     override fun getMatchingRecipe(world: ServerWorld, fluidInput: FluidVariant): Collection<T> {
-        if (fluidOnlyRecipeCache.containsKey(fluidInput)) return fluidOnlyRecipeCache[fluidInput]!!
+        if (fluidOnlyRecipeCache.containsKey(fluidInput)) return fluidOnlyRecipeCache[fluidInput]
         val matches = ImmutableList.copyOf(
             world.recipeManager.getRecipes(this).values
                 .filter { recipe -> recipe is IRFluidRecipe && recipe.fluidInput.any { it.resource == fluidInput } }

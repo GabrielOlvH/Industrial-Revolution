@@ -16,7 +16,8 @@ class VanillaCookingRecipeCachedGetter<T : AbstractCookingRecipe>(private val ty
     private val recipeCache: Multimap<Item, T> = HashMultimap.create()
 
     override fun getMatchingRecipe(world: ServerWorld, itemStack: ItemStack): Collection<T> {
-        if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]
+        if (itemStack.isEmpty) return emptyList()
+        else if (recipeCache.containsKey(itemStack.item)) return recipeCache[itemStack.item]
         val matches = world.recipeManager.getRecipes(type).values
             .filter { recipe -> recipe.input.test(itemStack) }
         recipeCache.putAll(itemStack.item, matches)
