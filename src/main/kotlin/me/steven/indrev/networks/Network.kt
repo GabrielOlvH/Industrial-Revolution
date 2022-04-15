@@ -105,7 +105,19 @@ abstract class Network(
 
         abstract fun getNetworkState(world: ServerWorld): NetworkState<T>
 
-        abstract fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>?
+        open fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
+            val state = getNetworkState(world)
+            if (state !is ServoNetworkState<*>) return null
+            return ClientServoNetworkInfo().also {
+                state.endpointData.forEach { (pos, data) ->
+                    val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
+                    data.forEach { (dir, endpointData) ->
+                        info.servos[dir] = endpointData.type
+                    }
+                    it.pipes[pos] = info
+                }
+            }
+        }
 
         companion object {
             val ENERGY = object : Type<EnergyNetwork>(NetworkState.ENERGY_KEY) {
@@ -115,10 +127,6 @@ abstract class Network(
                 override fun createEmpty(world: ServerWorld): EnergyNetwork = EnergyNetwork(world)
 
                 override fun getNetworkState(world: ServerWorld): NetworkState<EnergyNetwork> = world.energyNetworkState
-
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*>? {
-                    return null
-                }
             }
             val FLUID = object : Type<FluidNetwork>(NetworkState.FLUID_KEY) {
 
@@ -127,19 +135,6 @@ abstract class Network(
                 override fun createEmpty(world: ServerWorld): FluidNetwork = FluidNetwork(world)
 
                 override fun getNetworkState(world: ServerWorld): FluidNetworkState = world.fluidNetworkState
-
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
-                    val state = getNetworkState(world)
-                    return ClientServoNetworkInfo().also {
-                        state.endpointData.forEach { (pos, data) ->
-                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
-                            data.forEach { (dir, endpointData) ->
-                                info.servos[dir] = endpointData.type
-                            }
-                            it.pipes[pos] = info
-                        }
-                    }
-                }
             }
             val ITEM = object : Type<ItemNetwork>(NetworkState.ITEM_KEY) {
 
@@ -148,19 +143,6 @@ abstract class Network(
                 override fun createEmpty(world: ServerWorld): ItemNetwork = ItemNetwork(world)
 
                 override fun getNetworkState(world: ServerWorld): ItemNetworkState = world.itemNetworkState
-
-                override fun createClientNetworkInfo(world: ServerWorld): ClientNetworkInfo<*> {
-                    val state = getNetworkState(world)
-                    return ClientServoNetworkInfo().also {
-                        state.endpointData.forEach { (pos, data) ->
-                            val info = ClientServoNodeInfo(pos, Object2ObjectOpenHashMap())
-                            data.forEach { (dir, endpointData) ->
-                                info.servos[dir] = endpointData.type
-                            }
-                            it.pipes[pos] = info
-                        }
-                    }
-                }
             }
 
             fun valueOf(string: String): Type<*> {

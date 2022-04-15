@@ -9,6 +9,7 @@ import me.steven.indrev.gui.widgets.machines.TANK_BOTTOM
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
@@ -115,6 +116,7 @@ private val DIRECTIONS = Direction.values()
 val Fluid?.rawId: Int
     get() = Registry.FLUID.getRawId(this)
 
+inline fun <T> transaction(block: (Transaction) -> T) = Transaction.openOuter().use(block)
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Recipe<Inventory>> RecipeManager.getRecipes(type: RecipeType<T>) = getAllOfType(type) as Map<Identifier, T>

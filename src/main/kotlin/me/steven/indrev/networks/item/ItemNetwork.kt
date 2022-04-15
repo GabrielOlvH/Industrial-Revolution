@@ -142,6 +142,30 @@ class ItemNetwork(
         }
     }
 
+    private fun newtick(pos: BlockPos, dir: Direction, queue: ReusableArrayDeque<Node>, state: ItemNetworkState, data: EndpointData, filterData: ItemFilterData) {
+        val extractable = itemStorageOf(world, pos, dir)
+        var remaining = maxCableTransfer
+        while (queue.isNotEmpty() && remaining > 0) {
+            val node = queue.removeFirst()
+            val (_, targetPos, _, targetDir) = node
+            if (!world.isLoaded(targetPos)) continue
+            val targetData = state.getEndpointData(targetPos.offset(targetDir), targetDir.opposite)
+            val input = targetData == null || targetData.type == EndpointData.Type.INPUT
+            if (!input) continue
+            val targetFilterData = state.getFilterData(targetPos.offset(targetDir), targetDir.opposite)
+
+            fun doMove() {
+                val insertable = itemStorageOf(world, targetPos, targetDir)
+                val moved = StorageUtil.move(extractable, insertable, { filterData.matches(it) && targetFilterData.matches(it) }, remaining, null)
+                remaining -= moved
+                if (moved > 0 && remaining > 0) {
+                    doMove()
+                }
+            }
+            doMove()
+        }
+    }
+
     override fun appendPipe(block: Block, blockPos: BlockPos) {
         val cable = block as? ItemPipeBlock ?: return
         this.tier = cable.tier

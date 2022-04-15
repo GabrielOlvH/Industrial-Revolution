@@ -13,7 +13,6 @@ import net.minecraft.util.math.Direction
 class ClientServoNetworkInfo : ClientNetworkInfo<ClientServoNodeInfo> {
 
     val pipes = Long2ObjectOpenHashMap<ClientServoNodeInfo>()
-
     override fun write(buf: PacketByteBuf) {
         buf.writeInt(pipes.size)
         pipes.forEach { (pos, info) ->

@@ -139,15 +139,15 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
     }
 
     private fun tryStartRecipe(inventory: IRInventory): T? {
-        val inputStacks = inputSlots!!.map { inventory.getStack(it) }
-        val inputFluids = fluidComponent?.inputTanks?.map { fluidComponent!![it] } ?: emptyList()
+        val inputStacks = inputSlots!!.map { inventory.getStack(it) }.filter { !it.isEmpty }
+        val inputFluids = fluidComponent?.inputTanks?.map { fluidComponent!![it] }?.filter { !it.isEmpty } ?: emptyList()
         val recipe =
             type.getMatchingRecipe(world as ServerWorld, inputStacks, inputFluids)
                 .firstOrNull { it.matches(inputStacks, inputFluids) } ?: return null
         if (!recipe.canStart(this)) return null
         processTime = 0
         totalProcessTime = recipe.ticks
-        this.currentRecipe = recipe
+        currentRecipe = recipe
         return recipe
     }
 

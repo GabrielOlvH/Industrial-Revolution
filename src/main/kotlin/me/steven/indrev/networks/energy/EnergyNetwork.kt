@@ -10,6 +10,7 @@ import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.insert
 import me.steven.indrev.utils.isLoaded
+import me.steven.indrev.utils.transaction
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.block.Block
 import net.minecraft.server.world.ServerWorld
@@ -44,7 +45,6 @@ open class EnergyNetwork(
     private val storages = mutableListOf<EnergyStorage>()
 
     override fun tick(world: ServerWorld) {
-
         if (energy <= 0) return
 
         maxInputs.clear()
@@ -60,24 +60,33 @@ open class EnergyNetwork(
             }
         }
 
-        val totalInput = storages.sumOf { energyStorage ->
-            val maxInput = energyStorage.insert(MAX_VALUE, false)
-            if (maxInput > 0)
-                maxInputs[energyStorage] = maxInput
-            maxInput
-        }.toDouble()
+        val totalInput = transaction { tx ->
+            storages.sumOf { energyStorage ->
+                val maxInput = energyStorage.insert(MAX_VALUE, tx)
+                if (maxInput > 0)
+                    maxInputs[energyStorage] = maxInput
+                maxInput
+            }.toDouble()
+        }
 
         if (totalInput <= 0) return
 
-        storages.forEach { energyStorage ->
-            val maxInput = maxInputs.getLong(energyStorage)
-            if (maxInput <= 0) return@forEach
+        transaction { tx ->
+            storages.forEach { energyStorage ->
+                val maxInput = maxInputs.getLong(energyStorage)
+                if (maxInput <= 0) return@forEach
 
-            val toTransfer = ((maxInput / totalInput) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
+                val toTransfer = ((maxInput / totalInput) * energy).toLong().coerceAtMost(maxCableTransfer).coerceAtMost(energy)
 
-            energy -= energyStorage.insert(toTransfer, true)
+                energy -= energyStorage.insert(toTransfer, tx)
 
-            if (energy <= 0) return
+                if (energy <= 0) {
+                    tx.commit()
+                    return
+                }
+            }
+
+            tx.commit()
         }
     }
 
@@ -88,7 +97,6 @@ open class EnergyNetwork(
     }
 
     companion object {
-
         private const val MAX_VALUE = Long.MAX_VALUE - 1L
     }
 }
