@@ -14,9 +14,9 @@ import kotlin.math.pow
 
 object OreDataCards {
 
-    const val MAX_SIZE = 8192
+    const val MAX_SIZE = 2048
     const val MAX_RICNHESS = 1.0
-    const val MAX_PER_CYCLE = 24
+    const val MAX_PER_CYCLE = 8
 
     val MINING_RIG_ALLOWED_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("indrev:mining_rig_allowed"))
 
@@ -87,44 +87,6 @@ object OreDataCards {
         nbt.putInt("Energy", data.energyRequired)
     }
 
-    /**
-     * CREATING:
-     * Richness start at 1.0
-     * Size starts at 64 and caps at 2^5 (32768)
-     * Overflowing will corrupt the data card, making it unusable
-     * Ores need to be inserted by 64 stack
-     * Inserted Ore ->
-     *      Size = Size + 256
-     *      Richness decreases 0.025 for every stack
-     * After inserting different ore type ->
-     *      Size = Size + 1024
-     *      Richness decreases by 0.05 for every stack now
-     *
-     *
-     * Modifiers:
-     *      Enriched Nikolite Dust: increases richness by 0.01 per stack of 16 (max increase is 0.2)
-     *      Redstone: decreases ticks per cycle by 1 tick per stack and increases energy required
-     *      Stone: increases size by a 100 per stack but increases ticks per cycle by 2 ticks
-     *      Emerald: luck mechanic
-     *
-     *
-     * "Luck" mechanic:
-     *      After inserting an emerald, you have: (affected by luck effect)
-     *      95% chance of nothing happening
-     *      3% chance of getting "bad RNG"
-     *      2% chance of getting "good RNG"
-     *      Bad RNG will have a 10% chance of turning a cycle product into stone/trash
-     *      Good RNG will have a 10% chance of doubling a cycle product
-     *      After getting bad or good rng you can no longer use emeralds
-     *
-     *
-     *
-     * USING:
-     * Each cycle increases 'used' by 1
-     * Cycle ticks required = 5 + richness * 35 + modifiers
-     * Ore chance = percentage
-     * Stack size = (10 * richness) + random(MAX_PER_CYCLE * richness) + modifiers
-     */
     data class Data(val entries: List<OreEntry>, val modifiersUsed: MutableMap<Modifier, Int>, val richness: Double, val speed: Int, val rng: Int, val energyRequired: Int, val maxCycles: Int, var used: Int) {
         fun isValid(): Boolean {
             return this != INVALID_DATA && entries.isNotEmpty() && richness > 0 && maxCycles > 0 && maxCycles < MAX_SIZE

@@ -50,18 +50,31 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
     fun tickMining(miningRig: MiningRigBlockEntity, data: OreDataCards.Data) {
         setWorkingState(true)
         miningProgress += getSpeedMultiplier()
+
         if (miningProgress >= data.speed) {
             miningProgress = 0.0
             val item = data.pickRandom(world!!.random)
             val rng = if (data.rng == 1 && world!!.random.nextDouble() < 0.1) 2 else 1
-            val count = ((10 * data.richness) + world!!.random.nextInt((OreDataCards.MAX_PER_CYCLE * data.richness).toInt())).toInt() * rng
-            val stack = ItemStack(item, count)
+            val count = ((5 * data.richness) + world!!.random.nextInt((OreDataCards.MAX_PER_CYCLE * data.richness).toInt())).toInt() * rng
+            var stack = ItemStack(item, count)
+
+            if (data.rng == 1 && world!!.random.nextDouble() > 0.9) {
+                stack.count *= 2
+            } else if (data.rng == -1 && world!!.random.nextDouble() > 0.9) {
+                stack = ItemStack.EMPTY
+            }
 
             miningRig.output(stack)
 
             data.used++
             miningRig.lastMinedItem = ItemStack(item)
             miningRig.sync()
+
+            val drillStack = inventory[0]
+            drillStack.damage(1, world!!.random, null)
+            if (drillStack.damage >= drillStack.maxDamage) {
+                inventory[0] = ItemStack.EMPTY
+            }
 
             if (item is BlockItem)
                 sendBlockBreakPacket(item.block)
@@ -144,10 +157,10 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
     fun getSpeedMultiplier(): Double {
         val item = inventory[0].item
         return if (position > 0) 0.0 else when (item) {
-            IRItemRegistry.STONE_DRILL_HEAD -> 0.5
-            IRItemRegistry.IRON_DRILL_HEAD -> 1.0
-            IRItemRegistry.DIAMOND_DRILL_HEAD -> 2.5
-            IRItemRegistry.NETHERITE_DRILL_HEAD -> 5.0
+            IRItemRegistry.STONE_DRILL_HEAD -> 1.0
+            IRItemRegistry.IRON_DRILL_HEAD -> 2.0
+            IRItemRegistry.DIAMOND_DRILL_HEAD -> 4.0
+            IRItemRegistry.NETHERITE_DRILL_HEAD -> 8.0
             else -> 0.0
         }
     }

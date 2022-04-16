@@ -35,8 +35,12 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         if (totalProcessTime > 0 && use(getEnergyCost())) {
             if (processTime >= totalProcessTime)
                 finish()
-            else
+            else {
                 processTime++
+                workingState = true
+            }
+        } else {
+            workingState = false
         }
     }
 
@@ -44,6 +48,18 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         val inventory = inventoryComponent!!.inventory
         val cardStack = inventory.getStack(0)
         val oldData = OreDataCards.readNbt(cardStack)
+
+        ORES_SLOTS.forEach { slot ->
+            val stack = inventory.getStack(slot)
+            if (!stack.isEmpty && stack.count == 64) {
+                toWrite.add(stack)
+                inventory.setStack(slot, ItemStack.EMPTY)
+            }
+        }
+
+        if (toWrite.isEmpty() && oldData == null) {
+            return
+        }
 
         MODIFIERS_SLOTS.forEach { slot ->
             val stack = inventory.getStack(slot)
@@ -63,12 +79,14 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
                     }
                 }
                 OreDataCards.Modifier.RNG -> {
-                    stack.decrement(1)
-                    val r = world!!.random.nextDouble()
-                    if (r > 0.95 && r <= 0.98) {
-                        level = -1
-                    } else if (r > 0.98) {
-                        level = 1
+                    if (level == 0) {
+                        stack.decrement(1)
+                        val r = world!!.random.nextDouble()
+                        if (r > 0.95 && r <= 0.98) {
+                            level = -1
+                        } else if (r > 0.98) {
+                            level = 1
+                        }
                     }
                 }
                 else -> return@forEach
@@ -76,19 +94,11 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
             modifiersToAdd[modifier] = level - (oldData?.modifiersUsed?.get(modifier) ?: 0)
         }
 
-        ORES_SLOTS.forEach { slot ->
-            val stack = inventory.getStack(slot)
-            if (!stack.isEmpty)
-                toWrite.add(stack)
-            inventory.setStack(slot, ItemStack.EMPTY)
-        }
-
         processTime = 0
         totalProcessTime = 20*10 + (toWrite.size * (5*modifiersToAdd.map { it.value }.sum()))
     }
 
     private fun finish() {
-
         val inventory = inventoryComponent!!.inventory
         val cardStack = inventory.getStack(0)
         val oldData = OreDataCards.readNbt(cardStack)
@@ -106,7 +116,7 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         val energyRequired = (oldData?.energyRequired ?: 32) + 8 * (speedModifier + 1)
 
         val cyclesModifiers = (modifiersToAdd[OreDataCards.Modifier.SIZE] ?: 0) * 128
-        val maxCycles = (oldData?.maxCycles ?: 64) + (toWrite.size * 256) + cyclesModifiers
+        val maxCycles = (oldData?.maxCycles ?: 0) + (toWrite.size * 64) + cyclesModifiers
 
         val items = mutableMapOf<Item, Int>()
         oldData?.entries?.forEach { entry ->

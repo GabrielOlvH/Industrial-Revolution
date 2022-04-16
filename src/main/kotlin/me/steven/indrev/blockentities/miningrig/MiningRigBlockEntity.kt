@@ -73,7 +73,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         val cardStack = inventory.getStack(0)
         val data = OreDataCards.readNbt(cardStack) ?: return
 
-        if (data.isValid() && use(getEnergyCost())) {
+        if (data.isValid() && !data.isEmpty() && use(getEnergyCost())) {
             workingState = true
             val before = data.used
             getActiveDrills().forEach { drill -> drill.tickMining(this, data) }
@@ -90,7 +90,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         var count = stack.count.toLong()
         storageDirections.forEach { dir ->
             val itemStorage = itemStorageOf(world!!, pos.offset(dir), dir.opposite) ?: return@forEach
-            Transaction.openOuter().use { tx ->
+            transaction { tx ->
                 val inserted = itemStorage.insert(variant, count, tx)
                 tx.commit()
                 count -= inserted
