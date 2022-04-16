@@ -40,7 +40,7 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
 
     var position: Double = 1.0
 
-     var miningProgress: Double = 0.0
+    var miningProgress: Double = 0.0
 
     fun setWorkingState(working: Boolean) {
         if (cachedState[DrillBlock.WORKING] != working)

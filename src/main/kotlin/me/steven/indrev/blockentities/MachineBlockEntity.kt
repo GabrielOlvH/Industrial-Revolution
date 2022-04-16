@@ -171,6 +171,7 @@ abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: Mac
 
     override fun fromTag(tag: NbtCompound) {
         inventoryComponent?.readNbt(tag)
+        inventoryComponent?.run { enhancerComponent?.updateEnhancers(inventory) }
         temperatureComponent?.readNbt(tag)
         fluidComponent?.fromTag(tag)
         multiblockComponent?.readNbt(tag)

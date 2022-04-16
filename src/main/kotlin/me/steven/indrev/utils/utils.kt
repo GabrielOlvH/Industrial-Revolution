@@ -7,10 +7,10 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.machines.TANK_BOTTOM
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient

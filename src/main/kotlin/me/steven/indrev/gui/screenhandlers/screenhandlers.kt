@@ -8,8 +8,8 @@ import me.steven.indrev.gui.screenhandlers.storage.CabinetScreenHandler
 import me.steven.indrev.gui.screenhandlers.wrench.ScrewdriverScreenHandler
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.utils.registerScreenHandler
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
-import net.fabricmc.fabric.impl.screenhandler.ExtendedScreenHandlerType
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.util.math.Direction
 import java.util.*

@@ -54,8 +54,8 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     var lastMinedItem: ItemStack = ItemStack.EMPTY
 
-    val storageDirections: EnumSet<Direction> = EnumSet.noneOf(Direction::class.java)
-    val remainingStacks = mutableListOf<ItemStack>()
+    val storageDirections: EnumSet<Direction> = EnumSet.allOf(Direction::class.java)
+    private val remainingStacks = mutableListOf<ItemStack>()
 
     override fun machineTick() {
         val inventory = inventoryComponent?.inventory ?: return
@@ -71,9 +71,9 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
         }
 
         val cardStack = inventory.getStack(0)
-        val data = OreDataCards.readNbt(cardStack) ?: return
+        val data = OreDataCards.readNbt(cardStack)
 
-        if (data.isValid() && !data.isEmpty() && use(getEnergyCost())) {
+        if (data != null && data.isValid() && !data.isEmpty() && use(getEnergyCost())) {
             workingState = true
             val before = data.used
             getActiveDrills().forEach { drill -> drill.tickMining(this, data) }
@@ -81,25 +81,33 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 OreDataCards.writeNbt(cardStack, data)
         } else {
             workingState = false
-            getActiveDrills().forEach { drill -> drill.setWorkingState(false) }
+            getActiveDrills().forEach { drill ->
+                drill.setWorkingState(false)
+                drill.miningProgress = 0.0
+            }
         }
     }
 
     fun output(stack: ItemStack) {
         val variant = ItemVariant.of(stack)
         var count = stack.count.toLong()
-        storageDirections.forEach { dir ->
-            val itemStorage = itemStorageOf(world!!, pos.offset(dir), dir.opposite) ?: return@forEach
-            transaction { tx ->
-                val inserted = itemStorage.insert(variant, count, tx)
-                tx.commit()
-                count -= inserted
+        storageDirections.removeIf { dir ->
+            val itemStorage = itemStorageOf(world!!, pos.offset(dir), dir.opposite) ?: return@removeIf true
+            if (count > 0) {
+                transaction { tx ->
+                    val inserted = itemStorage.insert(variant, count, tx)
+                    tx.commit()
+                    count -= inserted
+                }
             }
 
-            if (count <= 0) return
+            false
         }
-        stack.count = count.toInt()
-        remainingStacks.add(stack)
+
+        if (count > 0) {
+            stack.count = count.toInt()
+            remainingStacks.add(stack)
+        }
     }
 
     fun getActiveDrills(): List<DrillBlockEntity> {

@@ -39,25 +39,6 @@ class MiningRigBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
         )
     }
 
-    override fun onPlaced(
-        world: World?,
-        pos: BlockPos,
-        state: BlockState,
-        placer: LivingEntity?,
-        itemStack: ItemStack?
-    ) {
-        super.onPlaced(world, pos, state, placer, itemStack)
-
-        if (world is ServerWorld) {
-            Direction.values().forEach { dir ->
-                if (itemStorageOf(world, pos.offset(dir), dir) != null) {
-                    val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return
-                    blockEntity.storageDirections.add(dir)
-                }
-            }
-        }
-    }
-
     override fun neighborUpdate(
         state: BlockState?,
         world: World?,
@@ -72,7 +53,7 @@ class MiningRigBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
             val dir = Direction.fromVector(fromPos!!.subtract(pos)) ?: return
             if (itemStorageOf(world, fromPos, dir) != null) {
                 val blockEntity = world.getBlockEntity(pos) as? MiningRigBlockEntity ?: return
-                blockEntity.storageDirections.add(dir)
+                blockEntity.storageDirections.addAll(Direction.values())
             }
         }
     }
