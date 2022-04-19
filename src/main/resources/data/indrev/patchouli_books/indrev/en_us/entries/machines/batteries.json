@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "These machines are used to store Lazuli Flux.$(br)You can see blue and orange arrows on each side. Blue arrows represent energy input and orange arrows represent energy output. You can configure these arrows using a Wrench in Configure Mode."
+      "text": "These machines are used to store Lazuli Flux.$(br)You can see blue and orange arrows on each side. Blue arrows represent energy input and orange arrows represent energy output. You can configure these arrows using a Screwdriver."
     },
     {
       "type": "crafting",

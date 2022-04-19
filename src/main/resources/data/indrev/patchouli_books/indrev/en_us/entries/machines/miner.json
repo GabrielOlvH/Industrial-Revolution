@@ -23,7 +23,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/ore_data_card",
-      "text": "Ore Data Cards store the data necessary for the Mining Rig Computer to virtualize a dimension based on the data written on it."
+      "text": "Ore Data Cards store the data necessary for the Mining Rig Computer to virtualize a dimension based on the data written on it where it mines the ores."
     },
     {
       "type": "crafting",
@@ -52,7 +52,7 @@
     },
     {
       "type": "text",
-      "text": "$(l)A cycle$() c"
+      "text": "$(l)Cycles$() information can be seen on the tooltip. After each cycle the ores will be inserted into a nearby inventory.$(br2)You can see the cycle progress on the Mining Rig Computer screen.$(br)Better Drill Heads can complete cycles faster."
     }
   ]
 }
