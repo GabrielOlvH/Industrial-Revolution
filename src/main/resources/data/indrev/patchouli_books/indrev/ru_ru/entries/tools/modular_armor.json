@@ -1,0 +1,31 @@
+{
+  "name": "Модульная броня",
+  "category": "indrev:tools",
+  "sortnum": 5,
+  "icon": "indrev:modular_armor_helmet",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Модульная броня сама по себе не так уж так себе, но когда ты установишь модули, она может стать очень мощной!$(br2)Цветные модули без рецепта, ты можешь их найти в подземельях."
+    },
+    {
+      "type": "text",
+      "text": "Уровни модуля можно настроить любым для тебя удобным способом, войди в меню $(l)Управления$() и добавь связанную клавишу к \"Конфигурации модульного предмета.\""
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/modular_armor_helmet",
+      "recipe2": "indrev:shaped/modular_armor_chest"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/modular_armor_legs",
+      "recipe2": "indrev:shaped/modular_armor_boots"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/modular_workbench",
+      "text": "Модульный верстак используется для установки модулей к деталям Модульной брони. Учти, что установка модулей требует время и энергии!"
+    }
+  ]
+}

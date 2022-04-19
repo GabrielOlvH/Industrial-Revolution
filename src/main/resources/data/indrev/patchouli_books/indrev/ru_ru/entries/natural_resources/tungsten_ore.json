@@ -1,0 +1,13 @@
+{
+  "name": "Вольфрамовая руда",
+  "category": "indrev:natural_resources",
+  "sortnum": 4,
+  "icon": "indrev:deepslate_tungsten_ore",
+  "pages": [
+    {
+      "type": "spotlight",
+      "item": "indrev:deepslate_tungsten_ore",
+      "text": "$(#686b5b)$(l)Вольфрамовая руда$() — это редкая руда, её можно найти в слое от 0 до 16 только в глубинносланцевом варианте.$(br)$(#686b5b)$(l)Вольфрам$() используется в создании прочных предметов, таких как: Модульная броня."
+    }
+  ]
+}

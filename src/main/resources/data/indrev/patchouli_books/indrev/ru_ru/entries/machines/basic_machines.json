@@ -1,0 +1,60 @@
+{
+  "name": "Основные машины",
+  "category": "indrev:machines",
+  "sortnum": 1,
+  "icon": "indrev:electric_furnace_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Эти машины используются для превращения ресурсов в другие более сложные ресурсы."
+    },
+    {
+      "type": "crafting",
+      "anchor": "electric_furnace",
+      "recipe": "indrev:shaped/electric_furnace_mk1",
+      "text": "$(l)$(o)Электропечь$() делает то же, что и обычная печь, но с использованием Лазуритного флакса вместо угля."
+    },
+    {
+      "type": "crafting",
+      "anchor": "pulverizer",
+      "recipe": "indrev:shaped/pulverizer_mk1",
+      "text": "$(l)$(o)Измельчитель$() по большей части используется для обработки руды в две пыли."
+    },
+    {
+      "type": "crafting",
+      "anchor": "compressor",
+      "recipe": "indrev:shaped/compressor_mk1",
+      "text": "$(l)$(o)Компрессор$() по большей части используется для сжатия слитков в пластины."
+    },
+    {
+      "type": "crafting",
+      "anchor": "infuser",
+      "recipe": "indrev:shaped/solid_infuser_mk1",
+      "text": "$(l)$(o)Твердотельный настойник$() умеет смешивать два ингредиента в другой."
+    },
+    {
+      "type": "crafting",
+      "anchor": "fluid_infuser",
+      "recipe": "indrev:shaped/fluid_infuser_mk1",
+      "text": "$(l)$(o)Жидкостный настойник$() используется для Продвинутого вливания при помощи жидкости. В данный момент, обычно он используется для учетверения руды."
+    },
+    {
+      "type": "crafting",
+      "anchor": "condenser",
+      "recipe": "indrev:shaped/condenser_mk4",
+      "text": "$(l)$(o)Конденсатор$() используется для превращения переплавленных руд в куски, которых можно измельчить, а затем переплавить в слитки."
+    },
+    {
+      "type": "crafting",
+      "anchor": "smelter",
+      "recipe": "indrev:shaped/smelter_mk4",
+      "text": "$(l)$(o)Производственная плавильная печь$() в основном используется для переплавке руд в жидкие. Она обычно используется для улучшенной переработки руды."
+    },
+    {
+      "type": "crafting",
+      "anchor": "recycler",
+      "recipe": "indrev:shaped/recycler_mk2",
+      "text": "$(l)$(o)Переработчик$() может обрабатывать органические ресурсы в биомассу, которую можно использовать для генерации энергии."
+    }
+  ]
+}

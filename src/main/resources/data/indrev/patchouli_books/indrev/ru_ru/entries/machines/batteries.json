@@ -1,0 +1,22 @@
+{
+  "name": "Лазуритовые флаксовые резервуары",
+  "category": "indrev:machines",
+  "sortnum": 3,
+  "icon": "indrev:lazuli_flux_container_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Резервуары используются для хранения Лазуритного флакса (ЛФ).$(br)Ты можешь увидеть синие и оранжевые стрелки с обеих сторон. Синие стрелки изображают вход энергии, а оранжевые стрелки изображают выход энергии. Ты можешь настроить эти стрелки используя Гаечный ключ в Режиме конфигурации."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/lazuli_flux_container_mk1",
+      "recipe2": "indrev:shaped/lazuli_flux_container_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/lazuli_flux_container_mk3",
+      "recipe2": "indrev:shaped/lazuli_flux_container_mk4"
+    }
+  ]
+}

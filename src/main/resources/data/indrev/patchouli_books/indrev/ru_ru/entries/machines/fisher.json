@@ -1,0 +1,13 @@
+{
+  "name": "Рыболов",
+  "category": "indrev:machines",
+  "sortnum": 8,
+  "icon": "indrev:fisher_mk2",
+  "pages": [
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/fisher_mk2",
+      "text": "$(l)Рыболов$() — эта машина предназначена для рыбоводства, а также она поддерживает улучшения.$(br)Требуется лишь одно — Удочка. Учти, она поддерживает зачарования."
+    }
+  ]
+}

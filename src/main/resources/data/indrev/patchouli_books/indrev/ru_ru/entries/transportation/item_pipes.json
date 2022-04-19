@@ -1,0 +1,22 @@
+{
+  "name": "Предметы",
+  "category": "indrev:transportation",
+  "sortnum": 1,
+  "icon": "indrev:item_pipe_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Предметные трубы можно использовать для передачи предметов между инвентарями на большом расстоянии друг от друга.$(br)Чтобы посмотреть сколько можно передать количество предметов, проверь подсказки.$(br)Трубы передают жидкость только в секундах, а не в тиках.$(br)Предметные трубы имеют $(l)продвинутую фильтрацию$(), чтобы посмотреть нажми пкм трубой.$(br2)Понадобятся сервоприводы, прочти главу $(l:transportation/servos)$(t:Перейти к Сервоприводы)Сервоприводы$()."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/item_pipe_mk1",
+      "recipe2": "indrev:shaped/item_pipe_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/item_pipe_mk3",
+      "recipe2": "indrev:shaped/item_pipe_mk4"
+    }
+  ]
+}

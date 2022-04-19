@@ -1,0 +1,36 @@
+{
+  "name": "Генераторы",
+  "category": "indrev:machines",
+  "sortnum": 0,
+  "icon": "indrev:coal_generator_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "$(l)$(o)Генераторы$() используют прочие ресурсы для создания энергии, так называемой Лазуритовый флакс для твоих машин."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/coal_generator_mk1",
+      "text": "$(l)$(o)Угольный генератор$() может использовать не только уголь, но и всё, что может генерировать энергию."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/solar_generator_mk1",
+      "recipe2": "indrev:shaped/solar_generator_mk3"
+    },
+    {
+      "type": "text",
+      "text": "$(l)$(o)Солнечный генератор$() производит энергию до тех пор, пока её охватывает солнечный свет."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/biomass_generator_mk3",
+      "text": "$(l)$(o)Генератор на биомассе$() сжигает $(#00ff00)Биомассу$() для производства энергии."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/heat_generator",
+      "text": "$(l)$(o)Тепловой генератор$() израсходует лаву для производства энергии. Хорошо сочетается с насосом."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "name": "Усилители",
+  "category": "indrev:upgrades",
+  "sortnum": 0,
+  "icon": "indrev:speed_enhancer",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Эти улучшение улучшат некоторые аспекты машины, такие как скорость и использование энергии.$(br2)Машина использует внутри-вставленные улучшения в 4 слота, справа в интерфейсе."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/speed_enhancer",
+      "text": "Данное улучшение увеличит скорость обработки машины за стоимость энергии."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/buffer_enhancer",
+      "text": "Данное улучшение увеличит внутреннюю энергоёмкость машины."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/blast_furnace_enhancer",
+      "text": "Данное улучшение заставит Электропечь принимать рецепты от Доменной печи."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/smoker_enhancer",
+      "text": "Данное улучшение заставит Электропечь принимать рецепты от Коптильни."
+    }
+  ]
+}
