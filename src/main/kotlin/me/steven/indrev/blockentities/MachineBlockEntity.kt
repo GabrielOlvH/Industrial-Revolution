@@ -30,7 +30,7 @@ import kotlin.collections.set
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : BaseMachineBlockEntity(registry.blockEntityType(tier), pos, state) {
 
-    val validConnections = mutableSetOf<Direction>().also { it.addAll(Direction.values()) }
+    val validConnections = Direction.values().toMutableList()
 
     override var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
 

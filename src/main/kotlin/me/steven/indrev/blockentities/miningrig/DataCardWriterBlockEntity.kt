@@ -19,7 +19,7 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         this.inventoryComponent = inventory(this) {
             input {
                 0 filter { itemStack, _ -> itemStack.item == IRItemRegistry.ORE_DATA_CARD }
-                1 until 13 filter { stack, _ -> stack.isIn(OreDataCards.MINING_RIG_ALLOWED_TAG) }
+                1 until 13 filter { stack, _ -> OreDataCards.isAllowed(stack) }
                 13 until 16 filter { stack, _ -> OreDataCards.Modifier.isModifierItem(stack.item) }
             }
         }
@@ -67,7 +67,7 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
             var level = (modifiersToAdd[modifier] ?: 0) + (oldData?.modifiersUsed?.get(modifier) ?: 0)
             when (modifier) {
                 OreDataCards.Modifier.RICHNESS -> {
-                    while (stack.count >= 16 && level < 20) {
+                    while (stack.count >= 16 && level < 40) {
                         stack.decrement(16)
                         level++
                     }
@@ -108,12 +108,13 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         val richnessModifier = ((modifiersToAdd[OreDataCards.Modifier.RICHNESS] ?: 0) * 0.01).coerceAtMost(0.2)
         val richness = ((oldData?.richness ?: 1.0) - (richnessDecrease * toWrite.size) + richnessModifier).coerceIn(richnessDecrease, 1.0)
 
-        val speedModifier = (modifiersToAdd[OreDataCards.Modifier.SPEED] ?: 0) * 20
-        val speed = (oldData?.speed ?: 100) + (richness * 1100) - speedModifier + (modifiersToAdd[OreDataCards.Modifier.SIZE] ?: 0) * 2
+        val speedModifier = ((oldData?.modifiersUsed?.get(OreDataCards.Modifier.SPEED) ?: 0) + (modifiersToAdd[OreDataCards.Modifier.SPEED] ?: 0)) * 20
+        val speed = 100 + (richness * 1100) - speedModifier + (modifiersToAdd[OreDataCards.Modifier.SIZE] ?: 0) * 2
 
         val rng = oldData?.rng ?: modifiersToAdd[OreDataCards.Modifier.RNG] ?: 0
 
-        val energyRequired = (oldData?.energyRequired ?: 32) + 8 * (speedModifier + 1)
+        val oreEnergyRequired = toWrite.sumOf { OreDataCards.getCost(it) * 16 }
+        val energyRequired = (oldData?.energyRequired ?: 32) + 8 * (modifiersToAdd[OreDataCards.Modifier.SPEED] ?: 0) + oreEnergyRequired
 
         val cyclesModifiers = (modifiersToAdd[OreDataCards.Modifier.SIZE] ?: 0) * 128
         val maxCycles = (oldData?.maxCycles ?: 0) + (toWrite.size * 64) + cyclesModifiers

@@ -136,6 +136,12 @@ object IndustrialRevolution : ModInitializer {
     val COOLERS_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, identifier("coolers"))
     val WRENCH_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:wrenches"))
     val SCREWDRIVER_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:screwdrivers"))
+    val NIKOLITE_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:nikolite_ores"))
+    val TIN_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:tin_ores"))
+    val LEAD_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:lead_ores"))
+    val SILVER_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:silver_ores"))
+    val TUNGSTEN_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:tungsten_ores"))
+    val ANCIENT_DEBRIS_ORES: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("c:ancient_debris_ores"))
 
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent(LASER_SOUND_ID)

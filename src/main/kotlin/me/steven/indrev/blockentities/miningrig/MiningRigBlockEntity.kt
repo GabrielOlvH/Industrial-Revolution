@@ -54,7 +54,7 @@ class MiningRigBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     var lastMinedItem: ItemStack = ItemStack.EMPTY
 
-    val storageDirections: EnumSet<Direction> = EnumSet.allOf(Direction::class.java)
+    val storageDirections = Direction.values().toMutableList()
     private val remainingStacks = mutableListOf<ItemStack>()
 
     override fun machineTick() {

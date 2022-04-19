@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " C ",
+    "IFI",
+    "IBI"
+  ],
+  "key": {
+    "F": {
+      "item": "indrev:machine_block"
+    },
+    "C": {
+      "item": "indrev:circuit_mk4"
+    },
+    "I": {
+      "tag": "c:steel_plates"
+    },
+    "B": {
+      "item": "indrev:battery"
+    }
+  },
+  "result": {
+    "item": "indrev:data_card_writer_mk4"
+  }
+}

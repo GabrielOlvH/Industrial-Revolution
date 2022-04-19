@@ -285,7 +285,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 when (modifier) {
                     OreDataCards.Modifier.RICHNESS -> {
                         level = stack.count / 16
-                        remainingLevels = 20 - (data.modifiersUsed[modifier] ?: 0)
+                        remainingLevels = 40 - (data.modifiersUsed[modifier] ?: 0)
                     }
                     OreDataCards.Modifier.SPEED, OreDataCards.Modifier.SIZE -> {
                         level = stack.count / 64

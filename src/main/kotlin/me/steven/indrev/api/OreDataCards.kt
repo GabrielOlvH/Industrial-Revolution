@@ -1,5 +1,6 @@
 package me.steven.indrev.api
 
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
@@ -18,9 +19,15 @@ object OreDataCards {
     const val MAX_RICNHESS = 1.0
     const val MAX_PER_CYCLE = 8
 
-    val MINING_RIG_ALLOWED_TAG: TagKey<Item> = TagKey.of(Registry.ITEM_KEY, Identifier("indrev:mining_rig_allowed"))
-
     val INVALID_DATA = Data(emptyList(), mutableMapOf(), -1.0, -1, -1, -1, -1, -1)
+
+    fun isAllowed(stack: ItemStack): Boolean {
+        return IRConfig.miningRigConfig.allowedTags.any { stack.isIn(TagKey.of(Registry.ITEM_KEY, Identifier(it.key))) }
+    }
+
+    fun getCost(stack: ItemStack): Int {
+        return IRConfig.miningRigConfig.allowedTags.firstNotNullOfOrNull { if (stack.isIn(TagKey.of(Registry.ITEM_KEY, Identifier(it.key)))) it.value else null } ?: 0
+    }
 
     fun readNbt(stack: ItemStack): Data? {
         if (!stack.isOf(IRItemRegistry.ORE_DATA_CARD)) return null
@@ -98,13 +105,13 @@ object OreDataCards {
 
         fun pickRandom(random: Random): Item {
             entries.forEach { entry ->
-                entry.order = random.nextDouble().pow(1.0f / entry.count.toDouble())
+                entry.order = -random.nextFloat().pow(1.0f / entry.count.toFloat())
             }
             return entries.minByOrNull { a -> a.order }!!.item
         }
     }
 
-    data class OreEntry(val item: Item, val count: Int, var order: Double = 0.0)
+    data class OreEntry(val item: Item, val count: Int, var order: Float = 0.0f)
 
     enum class Modifier(val item: Item) {
         RICHNESS(IRItemRegistry.ENRICHED_NIKOLITE_DUST()),

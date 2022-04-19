@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " S ",
+    "IRI",
+    " I "
+  ],
+  "key": {
+    "I": {
+      "tag": "c:iron_plates"
+    },
+    "S": {
+      "item": "minecraft:glass"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "indrev:ore_data_card"
+  }
+}

@@ -7,7 +7,7 @@
     {
       "type": "crafting",
       "recipe": "indrev:shaped/mining_rig_mk4",
-      "text": "The $(l)$(o)Mining Rig Computer$(), when placed inside a $(l:machines/miner#chunk_scanner)$(t:Chunk Scanner)$(l)$(o)$(#0000ff)scanned$() chunk will start mining at cost of energy. Note that it does not break blocks.$(br)The Computer costs $(#1111FF)64LF/tick$() and each Drill will increase energy usage in $(#1111FF)256LF/tick$()"
+      "text": "The Mining Rig Computer has been developed to create virtual dimensions based on ore data cards, allowing you to harvest ores without modifying your world."
     },
     {
       "type": "crafting",
@@ -21,130 +21,38 @@
       "text": "Note that the Drills can be placed connected or diagonally to the Mining Rig Computer."
     },
     {
-      "anchor": "chunk_scanner",
       "type": "crafting",
-      "recipe": "indrev:shaped/chunk_scanner",
-      "text": "The $(l)$(o)Chunk Scanner$() is a tool used to collect geographical data on the chunk's vein type. After being scanned, the Scanner will give you a result which is required by the Miner to work."
+      "recipe": "indrev:shaped/ore_data_card",
+      "text": "Ore Data Cards store the data necessary for the Mining Rig Computer to virtualize a dimension based on the data written on it."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/data_card_writer_mk4",
+      "text": "The Data Card Encoder will encode all the ores and modifiers into your Ore Data Card. You can write multiple times in a card to encode more data."
     },
     {
       "type": "text",
-      "text": "$(l)Note:$()$(br)Once the progress in the Mining Rig Computer hits 100%, the rig will continue more stone, dirt and gravel will be found instead of ore.$(br2)$(br)Not all veins are currently listed here."
+      "text": "When looking inside a Data Card Encoder, the ores and modifiers it can encode will be highlighted in your inventory.$(br2)When encoding, some attributes will change in your card, like richness or size.$(br2)$(br)Tip: search \"#indrev:mining_rig_allowed\" on REI to see all allowed ores!"
     },
     {
-      "anchor": "vein_types",
       "type": "text",
-      "text": "$(br)$(l:machines/miner#peat)$(t:Go to Peat)Peat$()$(br)$(l:machines/miner#lignite)$(t:Go to Lignite)Lignite$()$(br)$(l:machines/miner#bituminous)$(t:Go to Bituminous)Bituminous$()$(br)$(l:machines/miner#anthracite)$(t:Go to Anthracite)Anthracite$()$(br)$(l:machines/miner#siderite)$(t:Go to Siderite)Siderite$()$(br)$(l:machines/miner#limonite)$(t:Go to Limonite)Limonite$()$(br)$(l:machines/miner#hematite)$(t:Go to Hematite)Hematite$()$(br)$(l:machines/miner#magnetite)$(t:Go to Magnetite)Magnetite$()$(br)$(l:machines/miner#chalcopryte)$(t:Go to Chalcopryte)Chalcopryte$()$(br)$(l:machines/miner#cuprite)$(t:Go to Cuprite)Cuprite$()$(br)$(l:machines/miner#cassiterite)$(t:Go to Cassiterite)Cassiterite$()$(br)$(l:machines/miner#stannite)$(t:Go to Stannite)Stannite$()$(br)$(l:machines/miner#cavalerite)$(t:Go to Cavalerite)Cavalerite$()$(br)$(l:machines/miner#quartz)$(t:Go to Quartz)Quartz$()$(br)$(l:machines/miner#nikolite)$(t:Go to Nikolite)Nikolite$()"
+      "text": "$(l)Attributes$() can be observed on your data card tooltip.$(br)These attributes can then be improved by modifiers."
     },
     {
-      "anchor": "peat",
-      "type": "spotlight",
-      "title": "Peat",
-      "item": "minecraft:coal_ore",
-      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's the smallest and poorest coal vein, which means you'll be getting a lot of stone, dirt and some gravel.$(br)It can be found in any biomes, but more commonly in plains, taigas, forests, swamps and icy biomes."
+      "type": "text",
+      "text": "$(l)Storage size$() can be seen by the circle UI in the tooltip. The blue circle represents how many cycles the Mining Rig Computer has left to search on the virtual dimension, which will then turn the circle red. At the end of each cycle, the ores found will be added to a connected inventory.$(br2)Each data slot on the Data Card Encoder will increase the total cycles on the card. It can also be increased by adding Stone as a modifier."
     },
     {
-      "anchor": "lignite",
-      "type": "spotlight",
-      "title": "Lignite",
-      "item": "minecraft:coal_ore",
-      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's the second smallest and poorest coal vein, which means there's still a lot of stone, dirt and gravel here.$(br)It can be found in any biomes, but more commonly in plains, taigas, forests, swamps and biomes."
+      "type": "text",
+      "text": "$(l)Types$() represents the ores that can be generated from this card. Note that the chance of generating each ore is proportional to the amount of the respective ore that was encoded in the card.$(br2)$(#FF1111)Be careful$(), encoding too many types can cause your data card to overflow and be unusable."
     },
     {
-      "anchor": "bituminous",
-      "type": "spotlight",
-      "title": "Bituminous",
-      "item": "minecraft:coal_ore",
-      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's a quite big and rich coal vien, which means you'll find more coal alongside stone, dirt and gravel, but if you're lucky, you might just find some $(#00ffff)$(l)Diamonds$() too.$(br)It can be found in many places but more commonly in deserts, hills, mesas, savannas."
+      "type": "text",
+      "text": "$(l)Richness$() represents the maximum amount of ores that can be generated from each cycle. $(br)This can be increased by adding $(#5300de)Enriched Nikolite Dust$() to the modifier slots."
     },
     {
-      "anchor": "anthracite",
-      "type": "spotlight",
-      "title": "Anthracite",
-      "item": "minecraft:coal_ore",
-      "text": "Mainly composed by $(#000000)$(l)Coal Ore$(), it's a the biggest and richest coal vein, which means there's a lot of coal, alongside stone, dirt, gravel and some $(#00ffff)$(l)Diamonds$() too.$(br)It can be found in many places but more commonly in deserts, hills, mesas, savannas."
-    },
-    {
-      "anchor": "siderite",
-      "type": "spotlight",
-      "title": "Siderite",
-      "item": "minecraft:iron_ore",
-      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the smallest and poorest iron vein, with lots of stone, dirt, and some gravel.$(br)It can be found in many places but more commonly hills, plains, savannas and forests."
-    },
-    {
-      "anchor": "limonite",
-      "type": "spotlight",
-      "title": "Limonite",
-      "item": "minecraft:iron_ore",
-      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the second smallest and poorest iron vein, with lots of of stone, dirt and gravel here.$(br)It can be found in many places but more commonly on hills, plains and deserts."
-    },
-    {
-      "anchor": "hematite",
-      "type": "spotlight",
-      "title": "Hematite",
-      "item": "minecraft:iron_ore",
-      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's a quite big and rich iron vein, with lots of iron alongside stone, dirt and some gravel.$(br)It can be found in many places but more commonly on taigas and mesas."
-    },
-    {
-      "anchor": "magnetite",
-      "type": "spotlight",
-      "title": "Magnetite",
-      "item": "minecraft:iron_ore",
-      "text": "Mainly composed by $(#666666)$(l)Iron Ore$(), it's the biggest and richest iron vein, with lots of iron, alongside stone, dirt and some gravel.$(br)It can be found in many places but more commonly on hills, mesas and deserts."
-    },
-    {
-      "anchor": "chalcopryte",
-      "type": "spotlight",
-      "title": "Chalcopryte",
-      "item": "minecraft:copper_ore",
-      "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), it's the quite rich and very variable vein, with lots of $(#FFA500)$(l)copper$() and $(#666666)$(l)iron$() ores alongside stone, dirt and gravel.$(br)It can be found in many places but more commonly on plains, savannas and forests."
-    },
-    {
-      "anchor": "cuprite",
-      "type": "spotlight",
-      "title": "Cuprite",
-      "item": "minecraft:copper_ore",
-      "text": "Mainly composed by $(#FFA500)$(l)Copper Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size.$(br)It can be found in many places but more commonly on savannas and deserts."
-    },
-    {
-      "anchor": "cassiterite",
-      "type": "spotlight",
-      "title": "Cassiterite",
-      "item": "indrev:tin_ore",
-      "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), it's the only vein that contains only copper, it's not very rich and very variable in size.$(br)It can be found in many places but more commonly on plains, savannas and forests."
-    },
-    {
-      "anchor": "stannite",
-      "type": "spotlight",
-      "title": "Stannite",
-      "item": "indrev:tin_ore",
-      "text": "Mainly composed by $(#999999)$(l)Tin Ore$(), $(#FFA500)$(l)Copper Ore$() and $(#666666)$(l)Iron Ore$(), with lots of tin, alongside $(#666666)$(l)iron$(), $(#FFA500)$(l)copper$(), stone, dirt and gravel.$(br)It can be found in many places but more commonly on hills, mesas and deserts."
-    },
-    {
-      "anchor": "nikolite",
-      "type": "spotlight",
-      "title": "Nikolite",
-      "item": "indrev:nikolite_ore",
-      "text": "Mainly composed by $(#5555BB)$(l)Nikolite Ore$(), $(#FF0000)$(l)Redstone Ore$() and $(#0000FF)$(l)Lapis Ore$(), with lots of stone, dirt and gravel. It can be found in many places but more commonly on taigas and icy biomes."
-    },
-    {
-      "anchor": "cavalerite",
-      "type": "spotlight",
-      "title": "Cavalerite",
-      "item": "minecraft:gold_ore",
-      "text": "$(l)Overworld$()$(br)Mainly composed by $(#FFD700)$(l)Gold Ore$(), it's a small and quite rich gold vein$(br)It can be found in many places but more commonly on taigas and mesas."
-    },
-    {
-      "type": "spotlight",
-      "title": "Cavalerite (Nether)",
-      "item": "minecraft:nether_gold_ore",
-      "text": "$(#ff0000)$(l)Nether$()$(br)It's a quite large and rich $(#FFD700)$(l)Nether Gold Ore$() vein, with lots of netherrack, soulsand, gravel, and if you're very lucky some $(l)$(#000000)Ancient Debris$() too!"
-    },
-    {
-      "anchor": "quartz",
-      "type": "spotlight",
-      "title": "Quartz",
-      "item": "minecraft:nether_quartz_ore",
-      "text": "$(#ff0000)$(l)Nether$()$(br)It's a quite large and rich $(#dddddd)$(l)Quartz$() vein, with lots of netherrack, soulsand and gravel."
+      "type": "text",
+      "text": "$(l)A cycle$() c"
     }
   ]
 }

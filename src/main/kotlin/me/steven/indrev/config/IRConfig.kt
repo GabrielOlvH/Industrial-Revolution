@@ -3,8 +3,14 @@ package me.steven.indrev.config
 import com.google.gson.GsonBuilder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
+import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.item.Item
+import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.tag.ItemTags
+import net.minecraft.tag.TagKey
+import net.minecraft.util.Identifier
 import java.io.File
 
 object IRConfig {
@@ -17,6 +23,7 @@ object IRConfig {
     lateinit var upgrades: Upgrades
     lateinit var oregen: OreGen
     lateinit var hud: Hud
+    lateinit var miningRigConfig: MiningRigConfig
 
     init {
        readConfigs()
@@ -29,6 +36,7 @@ object IRConfig {
         upgrades = readOrCreate("upgrades.json") { Upgrades() }
         oregen = readOrCreate("oregen.json") { OreGen() }
         hud = readOrCreate("hud.json") { Hud() }
+        miningRigConfig = readOrCreate("mining_rig_config.json") { MiningRigConfig() }
     }
 
     private inline fun <reified T> readOrCreate(file: String, default: () -> T): T {
@@ -59,6 +67,7 @@ object IRConfig {
         buf.writeString(gson.toJson(cables))
         buf.writeString(gson.toJson(upgrades))
         buf.writeString(gson.toJson(oregen))
+        buf.writeString(gson.toJson(miningRigConfig))
     }
     
     fun readFromServer(buf: PacketByteBuf) {
@@ -67,6 +76,7 @@ object IRConfig {
         cables = gson.fromJson(buf.readString(), Cables::class.java)
         upgrades = gson.fromJson(buf.readString(), Upgrades::class.java)
         oregen = gson.fromJson(buf.readString(), OreGen::class.java)
+        miningRigConfig = gson.fromJson(buf.readString(), MiningRigConfig::class.java)
     }
 }
 
@@ -292,6 +302,24 @@ class OreGen  {
     val tungsten = true
     val sulfuricAcidLake = true
     val sulfurCrystals = true
+}
+
+class MiningRigConfig {
+    val allowedTags = mutableMapOf(
+        ItemTags.COPPER_ORES.id.toString() to 1,
+        ItemTags.COAL_ORES.id.toString() to 1,
+        ItemTags.GOLD_ORES.id.toString() to 2,
+        ItemTags.IRON_ORES.id.toString() to 2,
+        IndustrialRevolution.NIKOLITE_ORES.id.toString() to 2,
+        IndustrialRevolution.TIN_ORES.id.toString() to 2,
+        ItemTags.REDSTONE_ORES.id.toString() to 2,
+        IndustrialRevolution.LEAD_ORES.id.toString() to 3,
+        IndustrialRevolution.SILVER_ORES.id.toString() to 3,
+        IndustrialRevolution.TUNGSTEN_ORES.id.toString() to 3,
+        ItemTags.DIAMOND_ORES.id.toString() to 4,
+        ItemTags.EMERALD_ORES.id.toString() to 4,
+        IndustrialRevolution.ANCIENT_DEBRIS_ORES.id.toString() to 4
+    )
 }
 
 class Hud {
