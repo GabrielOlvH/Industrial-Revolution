@@ -2,8 +2,6 @@ package me.steven.indrev
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import me.steven.indrev.api.OreDataCards
-import me.steven.indrev.armor.ModuleFeatureRenderer
-import me.steven.indrev.armor.ReinforcedElytraFeatureRenderer
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.crafters.*
 import me.steven.indrev.blockentities.miningrig.DrillBlockEntityRenderer
@@ -12,7 +10,6 @@ import me.steven.indrev.blockentities.generators.HeatGeneratorBlockEntityRendere
 import me.steven.indrev.blockentities.generators.SteamTurbineBlockEntity
 import me.steven.indrev.blockentities.laser.CapsuleBlockEntityRenderer
 import me.steven.indrev.blockentities.laser.LaserBlockEntityRenderer
-import me.steven.indrev.blockentities.miningrig.DataCardWriterBlockEntity
 import me.steven.indrev.blockentities.miningrig.MiningRigBlockEntityRenderer
 import me.steven.indrev.blockentities.modularworkbench.ModularWorkbenchBlockEntityRenderer
 import me.steven.indrev.blockentities.solarpowerplant.HeliostatBlockEntityRenderer
@@ -21,26 +18,16 @@ import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntityRend
 import me.steven.indrev.blockentities.storage.TankBlockEntityRenderer
 import me.steven.indrev.components.multiblock.MultiblockBlockEntityRenderer
 import me.steven.indrev.config.IRConfig
+import me.steven.indrev.events.client.*
 import me.steven.indrev.fluids.FluidType
 import me.steven.indrev.gui.IRInventoryScreen
-import me.steven.indrev.gui.IRModularControllerScreen
 import me.steven.indrev.gui.screenhandlers.*
-import me.steven.indrev.gui.screenhandlers.machines.DataCardWriterScreenHandler
-import me.steven.indrev.gui.screenhandlers.modular.ModularItemConfigurationScreenHandler
 import me.steven.indrev.gui.screenhandlers.pipes.PipeFilterScreen
-import me.steven.indrev.gui.tooltip.energy.EnergyTooltipComponent
-import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipComponent
-import me.steven.indrev.gui.tooltip.modular.ModularTooltipData
-import me.steven.indrev.gui.tooltip.oredatacards.OreDataCardTooltipComponent
-import me.steven.indrev.gui.tooltip.oredatacards.OreDataCardTooltipData
 import me.steven.indrev.networks.Network
 import me.steven.indrev.networks.client.ClientNetworkState
 import me.steven.indrev.packets.PacketRegistry
-import me.steven.indrev.packets.common.ToggleGamerAxePacket
 import me.steven.indrev.registry.*
-import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.IRWorldRenderer
+import me.steven.indrev.events.client.IRWorldRenderer
 import me.steven.indrev.utils.identifier
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.`object`.builder.v1.client.model.FabricModelPredicateProviderRegistry
@@ -50,33 +37,21 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.entity.LivingEntityRenderer
-import net.minecraft.client.render.entity.model.BipedEntityModel
-import net.minecraft.client.render.entity.model.EntityModelLayers
 import net.minecraft.client.util.InputUtil
-import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ElytraItem
 import net.minecraft.screen.PlayerScreenHandler
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
-import net.minecraft.util.Formatting
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
 import org.lwjgl.glfw.GLFW
-import java.util.function.BiFunction
 
 @Suppress("UNCHECKED_CAST")
 object IndustrialRevolutionClient : ClientModInitializer {
@@ -104,7 +79,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRFluidRegistry.OXYGEN_STILL,
             IRFluidRegistry.METHANE_STILL,
         ).forEach { it.registerRender(FluidType.GAS) }
-        IRHudRender
         arrayOf(
             COAL_GENERATOR_HANDLER,
             SOLAR_GENERATOR_HANDLER,
@@ -205,27 +179,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         GlobalStateController.initClient()
 
+
+        HudRenderCallback.EVENT.register(IRHudRenderCallback)
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(IRWorldRenderer)
         WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
 
-        ClientTickEvents.END_CLIENT_TICK.register { client ->
-            while (MODULAR_CONTROLLER_KEYBINDING.wasPressed()) {
-                val playerInventory = MinecraftClient.getInstance().player?.inventory ?: break
-                val hasModularItem = (0 until playerInventory.size())
-                    .associateWith { slot -> playerInventory.getStack(slot) }
-                    .filter { (_, stack) -> stack.item is IRModularItem<*> }
-                    .isNotEmpty()
-                if (hasModularItem)
-                    MinecraftClient.getInstance()
-                        .setScreen(IRModularControllerScreen(ModularItemConfigurationScreenHandler(client.player!!.inventory)))
-            }
-            while (GAMER_AXE_TOGGLE_KEYBINDING.wasPressed()) {
-                val itemStack = client.player?.mainHandStack ?: break
-                if (itemStack.isOf(IRItemRegistry.GAMER_AXE_ITEM)) {
-                    ClientPlayNetworking.send(ToggleGamerAxePacket.PACKET_ID, PacketByteBufs.empty())
-                }
-            }
-        }
+        ClientTickEvents.END_CLIENT_TICK.register(IRClientTickEvents)
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
             ClientSpriteRegistryCallback { _, registry ->
@@ -247,65 +206,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
             IRConfig.readConfigs()
         }
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(LivingEntityFeatureRendererRegistrationCallback { _, renderer, helper, ctx ->
-            val slim = false
-            helper.register(
-                ModuleFeatureRenderer(
-                    renderer as LivingEntityRenderer<LivingEntity, BipedEntityModel<LivingEntity>>,
-                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_INNER_ARMOR else EntityModelLayers.PLAYER_INNER_ARMOR)),
-                    BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR))
-                )
-            )
-
-            helper.register(ReinforcedElytraFeatureRenderer(renderer, ctx.modelLoader))
-        })
-
-        TooltipComponentCallback.EVENT.register(TooltipComponentCallback { data ->
-            when (data) {
-                is ModularTooltipData -> ModularTooltipComponent(data)
-                is EnergyTooltipData -> EnergyTooltipComponent(data)
-                is OreDataCardTooltipData -> OreDataCardTooltipComponent(data)
-                else -> null
-            }
-        })
-
-        ItemTooltipCallback.EVENT.register(ItemTooltipCallback { stack, ctx, lines ->
-            val handler = MinecraftClient.getInstance().player?.currentScreenHandler
-            if (handler is DataCardWriterScreenHandler) {
-
-                val data: OreDataCards.Data = handler.ctx.get { world, pos ->
-                    val blockEntity = world.getBlockEntity(pos) as? DataCardWriterBlockEntity ?: return@get OreDataCards.INVALID_DATA
-                    val cardStack = blockEntity.inventoryComponent!!.inventory.getStack(0)
-                    OreDataCards.readNbt(cardStack) ?: OreDataCards.INVALID_DATA
-                }.orElse(OreDataCards.INVALID_DATA)
-
-                val modifier = OreDataCards.Modifier.byItem(stack.item)
-                var remainingLevels = 0
-                var level = 0
-                when (modifier) {
-                    OreDataCards.Modifier.RICHNESS -> {
-                        level = stack.count / 16
-                        remainingLevels = 40 - (data.modifiersUsed[modifier] ?: 0)
-                    }
-                    OreDataCards.Modifier.SPEED, OreDataCards.Modifier.SIZE -> {
-                        level = stack.count / 64
-                        remainingLevels = 1
-                    }
-                    OreDataCards.Modifier.RNG -> {}
-                    else -> return@ItemTooltipCallback
-                }
-
-                val index = lines.size - if (ctx.isAdvanced) 1 else 0
-
-                val modifierName = TranslatableText(modifier.translationKey)
-                if (remainingLevels <= 0)
-                    lines.add(index, LiteralText("Cannot increase ").append(modifierName).append(" level anymore").formatted(Formatting.RED))
-                else if (level > 0)
-                    lines.add(index, LiteralText("+$level ").append(modifierName).append(" modifiers").formatted(Formatting.GREEN))
-                else
-                    lines.add(index, LiteralText("Not enough to increase ").append(modifierName).formatted(Formatting.RED))
-            }
-        })
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register(IRLivingEntityFeatureRendererCallback)
+        TooltipComponentCallback.EVENT.register(IRTooltipComponentsCallback)
+        ItemTooltipCallback.EVENT.register(MiningRigInfoTooltipCallback)
 
         AprilFools.init()
     }

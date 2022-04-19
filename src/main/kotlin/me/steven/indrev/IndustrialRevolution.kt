@@ -6,6 +6,7 @@ import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
 import me.steven.indrev.datagen.DataGeneratorManager
+import me.steven.indrev.events.common.IRLootTableCallback
 import me.steven.indrev.gui.screenhandlers.COAL_GENERATOR_HANDLER
 import me.steven.indrev.gui.screenhandlers.IRGuiScreenHandler
 import me.steven.indrev.networks.NetworkEvents
@@ -21,6 +22,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
@@ -53,7 +55,7 @@ object IndustrialRevolution : ModInitializer {
         WorldGeneration.init()
         WorldGeneration.addFeatures()
 
-        IRLootTables.register()
+        LootTableLoadingCallback.EVENT.register(IRLootTableCallback)
 
         MachineRegistry
 

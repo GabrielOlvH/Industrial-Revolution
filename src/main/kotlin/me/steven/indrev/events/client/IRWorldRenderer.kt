@@ -1,6 +1,9 @@
-package me.steven.indrev.utils
+package me.steven.indrev.events.client
 
 import me.steven.indrev.IndustrialRevolution
+import me.steven.indrev.utils.component1
+import me.steven.indrev.utils.component2
+import me.steven.indrev.utils.component3
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.client.MinecraftClient

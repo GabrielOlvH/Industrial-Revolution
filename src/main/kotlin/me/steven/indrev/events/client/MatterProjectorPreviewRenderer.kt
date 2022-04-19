@@ -1,4 +1,4 @@
-package me.steven.indrev.registry
+package me.steven.indrev.events.client
 
 import draylar.magna.api.MagnaTool
 import me.steven.indrev.tools.modular.DrillModule

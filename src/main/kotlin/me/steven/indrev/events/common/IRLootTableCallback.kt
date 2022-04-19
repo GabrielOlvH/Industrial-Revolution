@@ -1,30 +1,36 @@
-package me.steven.indrev.registry
+package me.steven.indrev.events.common
 
+import me.steven.indrev.registry.IRItemRegistry
+import net.fabricmc.fabric.api.loot.v1.FabricLootSupplierBuilder
 import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
+import net.minecraft.loot.LootManager
 import net.minecraft.loot.LootPool
 import net.minecraft.loot.condition.RandomChanceLootCondition
 import net.minecraft.loot.entry.ItemEntry
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider
+import net.minecraft.resource.ResourceManager
 import net.minecraft.util.Identifier
 
-object IRLootTables {
-    fun register() {
-        LootTableLoadingCallback.EVENT.register(
-            LootTableLoadingCallback { _, _, id, supplier, _ ->
-                val chance = when (id) {
-                    abandonedMineshaft, simpleDungeon -> 0.3f
-                    buriedTreasure -> 0.4f
-                    woodlandMansion -> 0.5f
-                    endCityTreasure -> 0.6f
-                    else -> return@LootTableLoadingCallback
-                }
-                val builder = LootPool.builder()
-                builder.rolls(ConstantLootNumberProvider.create(1f))
-                colorModules.forEach { builder.with(ItemEntry.builder(it)) }
-                builder.conditionally(RandomChanceLootCondition.builder(chance))
-                supplier.withPool(builder.build())
-            }
-        )
+object IRLootTableCallback : LootTableLoadingCallback {
+    override fun onLootTableLoading(
+        resourceManager: ResourceManager,
+        manager: LootManager,
+        id: Identifier,
+        supplier: FabricLootSupplierBuilder,
+        setter: LootTableLoadingCallback.LootTableSetter
+    ) {
+        val chance = when (id) {
+            abandonedMineshaft, simpleDungeon -> 0.3f
+            buriedTreasure -> 0.4f
+            woodlandMansion -> 0.5f
+            endCityTreasure -> 0.6f
+            else -> return
+        }
+        val builder = LootPool.builder()
+        builder.rolls(ConstantLootNumberProvider.create(1f))
+        colorModules.forEach { builder.with(ItemEntry.builder(it)) }
+        builder.conditionally(RandomChanceLootCondition.builder(chance))
+        supplier.withPool(builder.build())
     }
 
     private val abandonedMineshaft = Identifier("chests/abandoned_mineshaft")
