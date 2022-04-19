@@ -1,0 +1,22 @@
+{
+  "name": "Энергия",
+  "category": "indrev:transportation",
+  "sortnum": 0,
+  "icon": "indrev:cable_mk1",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Кабели можно использовать для передачи энергии между машинами на большом расстоянии друг от друга.$(br)Каждый кабель может передавать определённое количество энергии, которые описываются в подсказке при нажатии Shift.$(br)Если машины работают на малой энергопотреблении, ты можешь попробовать обновить кабели или улучшить свою генерацию энергии."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk1",
+      "recipe2": "indrev:shaped/cable_mk2"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cable_mk3",
+      "recipe2": "indrev:shaped/cable_mk4"
+    }
+  ]
+}

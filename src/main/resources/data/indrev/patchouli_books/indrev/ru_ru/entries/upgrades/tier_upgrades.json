@@ -1,0 +1,27 @@
+{
+  "name": "Повышение уровня",
+  "category": "indrev:upgrades",
+  "sortnum": 1,
+  "icon": "indrev:tier_upgrade_mk2",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Эти улучшения улучшают возможности ввода/вывода машины, но и другие аспекты.$(br2)Пкм по низкоуровневой машине, чтобы её улучшить."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/tier_upgrade_mk2",
+      "text": "Улучшает машины марк. 1 до марк. 2."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/tier_upgrade_mk3",
+      "text": "Улучшает машины марк. 2 до марк. 3."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/tier_upgrade_mk4",
+      "text": "Улучшает машины марк. 3 до марк. 4."
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "name": "Заводы",
+  "category": "indrev:machines",
+  "sortnum": 9,
+  "icon": "indrev:electric_furnace_factory_mk4",
+  "pages": [
+    {
+      "type": "text",
+      "text": "$(l)Заводы$() — это улучшенная версия машин и они могут обрабатывать до 5 предметов одновременно. Также они достаточно умны для разделения предметов, если ты этого захочешь.$(br2)Если учитывать их мощное состояние, невозможно поместить столько энергии в 1 блок, значит тебе нужно будет построить конструкцию."
+    },
+    {
+      "type": "text",
+      "text": "$(l)Требуемые блоки:$()$(br2)$(li)$(l)9x$() Каркасы$(br)$(li)$(l)6x$() Силос$(br)$(li)$(l)3x$() Воздушные каналы$(br)$(li)$(l)3x$() Воздуховоды$(br)$(li)$(l)2x$() Корпуса$(br)$(li)$(l)1x$() Предупреждающие лампы$(br)$(li)$(l)1x$() Регулятор$()$(br2)Ты сможешь визуализировать положения блоков нажатием по заводу."
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/frame",
+      "recipe2": "indrev:shaped/silo"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/intake",
+      "recipe2": "indrev:shaped/duct"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/cabinet",
+      "recipe2": "indrev:shaped/warning_strobe"
+    },
+    {
+      "type": "crafting",
+      "recipe": "indrev:shaped/controller"
+    }
+  ]
+}
