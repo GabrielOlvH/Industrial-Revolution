@@ -44,10 +44,12 @@ abstract class BaseBlockEntity(type: BlockEntityType<*>, pos: BlockPos, state: B
     }
 
     override fun writeNbt(nbt: NbtCompound) {
+        super.writeNbt(nbt)
         toTag(nbt)
     }
 
     override fun readNbt(nbt: NbtCompound) {
+        super.readNbt(nbt)
         if (nbt.contains("#c")) {
             fromClientTag(nbt)
         } else {
