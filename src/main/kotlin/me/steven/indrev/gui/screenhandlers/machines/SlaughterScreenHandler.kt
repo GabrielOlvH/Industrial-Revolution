@@ -18,7 +18,7 @@ import me.steven.indrev.utils.setIcon
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class SlaughterScreenHandler(
     syncId: Int,
@@ -47,12 +47,12 @@ class SlaughterScreenHandler(
             (blockInventory as IRInventory).outputSlots.first(),
             3,
             3,
-            TranslatableText("gui.indrev.output_slot_type")
+            translatable("gui.indrev.output_slot_type")
         )
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.2, 1.0)
 
-        val swordSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.slaughter_input_sword"))
+        val swordSlot = WTooltipedItemSlot.of(blockInventory, 1, translatable("gui.indrev.slaughter_input_sword"))
         swordSlot.setIcon(ctx, blockInventory, 1, SWORD_ICON)
         root.add(swordSlot, 2.5, 1.5)
 
@@ -66,7 +66,7 @@ class SlaughterScreenHandler(
         slider.setValueChangeListener { newValue -> this.value = newValue }
 
         val text = WText({
-            TranslatableText("block.indrev.aoe.range", slider.value)
+            translatable("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
         root.add(text, 1.8, 2.8)
 

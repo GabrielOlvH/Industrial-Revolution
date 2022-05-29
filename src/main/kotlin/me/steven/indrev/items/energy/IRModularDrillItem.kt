@@ -26,9 +26,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
@@ -65,7 +65,7 @@ class IRModularDrillItem(
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
         tooltip?.add(
-            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+            translatable("item.indrev.modular_item.tooltip", literal("").append(
                 IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
                 Formatting.GRAY))
     }

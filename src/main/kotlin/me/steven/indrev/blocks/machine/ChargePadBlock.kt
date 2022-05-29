@@ -15,7 +15,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
@@ -78,11 +78,7 @@ class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
 
     override fun appendTooltip(stack: ItemStack?, view: BlockView?, tooltip: MutableList<Text>?, options: TooltipContext?) {
         super.appendTooltip(stack, view, tooltip, options)
-        tooltip?.add(TranslatableText("block.indrev.charge_pad_mk4.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
-    }
-
-    @Environment(EnvType.CLIENT)
-    override fun randomDisplayTick(state: BlockState?, world: World, pos: BlockPos, random: Random?) {
+        tooltip?.add(translatable("block.indrev.charge_pad_mk4.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC))
     }
 
     companion object {

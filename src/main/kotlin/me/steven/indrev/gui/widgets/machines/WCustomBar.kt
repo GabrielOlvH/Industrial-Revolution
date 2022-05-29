@@ -16,8 +16,8 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.MathHelper
 
@@ -136,8 +136,8 @@ fun energyBar(blockEntity: BaseBlockEntity): WCustomBar {
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val energy = getEnergyString(properties[0])
             val maxEnergy = getEnergyString(properties[1])
-            tooltip?.add(TranslatableText("gui.widget.energy").formatted(Formatting.BLUE))
-            tooltip?.add(LiteralText("$energy / $maxEnergy LF"))
+            tooltip?.add(translatable("gui.widget.energy").formatted(Formatting.BLUE))
+            tooltip?.add(literal("$energy / $maxEnergy LF"))
         }
     }
     energy.setSize(10, 64)
@@ -158,14 +158,14 @@ fun temperatureBar(blockEntity: BaseBlockEntity): WCustomBar {
             /*
             val info = when {
                 temperature > temperatureComponent.optimalRange.last ->
-                    TranslatableText("gui.widget.temperature_info.high").formatted(Formatting.DARK_RED, Formatting.ITALIC)
+                    translatable("gui.widget.temperature_info.high").formatted(Formatting.DARK_RED, Formatting.ITALIC)
                 temperature in temperatureComponent.optimalRange ->
-                    TranslatableText("gui.widget.temperature_info.medium").formatted(Formatting.YELLOW, Formatting.ITALIC)
+                    translatable("gui.widget.temperature_info.medium").formatted(Formatting.YELLOW, Formatting.ITALIC)
                 else ->
-                    TranslatableText("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)
+                    translatable("gui.widget.temperature_info.low").formatted(Formatting.GREEN, Formatting.ITALIC)
             }
-            tooltip?.add(TranslatableText("gui.widget.temperature").formatted(Formatting.BLUE))*/
-            tooltip?.add(LiteralText("$temperature / $maxTemperature °C"))
+            tooltip?.add(translatable("gui.widget.temperature").formatted(Formatting.BLUE))*/
+            tooltip?.add(literal("$temperature / $maxTemperature °C"))
             //tooltip?.add(info)
         }
     }
@@ -190,7 +190,7 @@ fun processBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
             val max = properties.get<CraftingComponent<*>>(index).totalProcessTime
             if (max <= 0) return
             val percentage = progress * 100 / max
-            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+            tooltip?.add(translatable("gui.widget.process", percentage).append(literal("%")))
         }
     }
     return process
@@ -202,7 +202,7 @@ fun processBar(blockEntity: BaseBlockEntity, progress: Int, max: Int): WCustomBa
         override fun addTooltip(tooltip: TooltipBuilder?) {
             if (properties.get<Int>(max) <= 0) return
             val percentage = properties.get<Int>(progress) * 100 / properties.get<Int>(max)
-            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+            tooltip?.add(translatable("gui.widget.process", percentage).append(literal("%")))
         }
     }
     return process
@@ -216,7 +216,7 @@ fun upProcessBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
             val max = properties.get<CraftingComponent<*>>(index).totalProcessTime
             if (max <= 0) return
             val percentage = progress * 100 / max
-            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+            tooltip?.add(translatable("gui.widget.process", percentage).append(literal("%")))
         }
     }
     return process
@@ -229,7 +229,7 @@ fun upProcessBar(blockEntity: BaseBlockEntity, progress: Int, max: Int): WCustom
         override fun addTooltip(tooltip: TooltipBuilder?) {
             if (properties.get<Int>(max) <= 0) return
             val percentage = properties.get<Int>(progress) * 100 / properties.get<Int>(max)
-            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+            tooltip?.add(translatable("gui.widget.process", percentage).append(literal("%")))
         }
     }
     return process
@@ -244,7 +244,7 @@ fun leftProcessBar(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
             val max = properties.get<CraftingComponent<*>>(index).totalProcessTime
             if (max <= 0) return
             val percentage = progress * 100 / max
-            tooltip?.add(TranslatableText("gui.widget.process", percentage).append(LiteralText("%")))
+            tooltip?.add(translatable("gui.widget.process", percentage).append(literal("%")))
         }
     }
     return process

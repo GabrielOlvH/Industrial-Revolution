@@ -19,7 +19,7 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
@@ -313,7 +313,7 @@ object IRItemRegistry {
             tooltip: MutableList<Text>?,
             context: TooltipContext?
         ) {
-            tooltip?.add(TranslatableText("item.indrev.heat_coil.tooltip").formatted(Formatting.BLUE))
+            tooltip?.add(translatable("item.indrev.heat_coil.tooltip").formatted(Formatting.BLUE))
         }
     }
 

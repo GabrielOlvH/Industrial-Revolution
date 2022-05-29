@@ -7,8 +7,8 @@ import me.steven.indrev.utils.energyOf
 import net.minecraft.item.Item
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 
@@ -20,9 +20,9 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
         val machineIo = energyOf(context!!.world as ServerWorld, blockPos!!, context.side)
         if (machineIo != null) {
             val energy = machineIo.amount
-            val text = TranslatableText("item.indrev.energy_reader.use")
+            val text = translatable("item.indrev.energy_reader.use")
                 .formatted(Formatting.BLUE)
-                .append(LiteralText(" $energy LF").formatted(Formatting.WHITE))
+                .append(literal(" $energy LF").formatted(Formatting.WHITE))
             if (blockEntity is MachineBlockEntity<*>) {
                 val energyCost =
                     when {
@@ -31,12 +31,12 @@ class IREnergyReaderItem(settings: Settings) : Item(settings) {
                         else -> -1
                     }
                 if (energyCost > 0) {
-                    val energyCostText = TranslatableText(
+                    val energyCostText = translatable(
                         "item.indrev.energy_reader.use1",
-                        LiteralText(energyCost.toString()).formatted(Formatting.WHITE)
+                        literal(energyCost.toString()).formatted(Formatting.WHITE)
                     ).formatted(Formatting.BLUE)
                     text
-                        .append(LiteralText(" | ").formatted(Formatting.BLACK, Formatting.BOLD))
+                        .append(literal(" | ").formatted(Formatting.BLACK, Formatting.BOLD))
                         .append(energyCostText)
                 }
             }

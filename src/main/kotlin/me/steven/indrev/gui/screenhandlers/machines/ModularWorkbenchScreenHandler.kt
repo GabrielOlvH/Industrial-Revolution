@@ -41,8 +41,8 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundEvents
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import kotlin.math.floor
@@ -169,10 +169,10 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val root = WGridPanel()
         configure("block.indrev.modular_workbench", ctx, playerInventory, blockInventory, root, invPos = 5.0, widgetPos = 0.9)
 
-        val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, TranslatableText("gui.indrev.modular_armor_slot_type"))
+        val armorSlot = WTooltipedItemSlot.of(blockInventory, 2, translatable("gui.indrev.modular_armor_slot_type"))
         root.add(armorSlot, 1.5, 3.5)
 
-        val moduleSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.module_slot_type"))
+        val moduleSlot = WTooltipedItemSlot.of(blockInventory, 1, translatable("gui.indrev.module_slot_type"))
         root.add(moduleSlot, 1.5, 1.0)
 
         val process = query<ModularWorkbenchBlockEntity, WCustomBar> { upProcessBar(it, ModularWorkbenchBlockEntity.INSTALL_TIME_ID, ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID) }
@@ -192,38 +192,38 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
         val armorInfoText = WText({
             val stack = blockInventory.getStack(2)
             if (!stack.isEmpty)
-                TranslatableText(stack.item.translationKey).formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE)
-            else LiteralText.EMPTY
+                translatable(stack.item.translationKey).formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE)
+            else EMPTY
         }, HorizontalAlignment.LEFT)
 
         val moduleToInstall = WText({
             val (stack, item) = blockInventory.getStack(1)
             if (!stack.isEmpty && item is IRModuleItem) {
-                TranslatableText(item.translationKey).formatted(Formatting.GRAY, Formatting.ITALIC)
-            } else LiteralText.EMPTY
+                translatable(item.translationKey).formatted(Formatting.GRAY, Formatting.ITALIC)
+            } else EMPTY
         }, HorizontalAlignment.LEFT)
 
         val modulesInstalled = WText({
             val (stack, item) = blockInventory.getStack(2)
             if (!stack.isEmpty && item is IRModularItem<*>) {
                 val modules = item.getCount(stack).toString()
-                MODULE_COUNT().append(LiteralText(modules).formatted(Formatting.WHITE))
-            } else LiteralText.EMPTY
+                MODULE_COUNT().append(literal(modules).formatted(Formatting.WHITE))
+            } else EMPTY
         }, HorizontalAlignment.LEFT)
 
         val shield = WText({
             val (stack, item) = blockInventory.getStack(2)
             if (!stack.isEmpty && item is IRModularArmorItem) {
                 val shield = item.getMaxShield(ArmorModule.PROTECTION.getLevel(stack)).toString()
-                SHIELD_TEXT().append(LiteralText(shield).formatted(Formatting.WHITE))
-            } else LiteralText.EMPTY
+                SHIELD_TEXT().append(literal(shield).formatted(Formatting.WHITE))
+            } else EMPTY
         }, HorizontalAlignment.LEFT)
 
         val installing = WText({
             val state = component!!.get<ModularWorkbenchBlockEntity.State>(ModularWorkbenchBlockEntity.STATE_ID)
             if (state == ModularWorkbenchBlockEntity.State.INSTALLING) {
                 INSTALLING_TEXT()
-            } else LiteralText.EMPTY
+            } else EMPTY
         }, HorizontalAlignment.LEFT)
 
         val progress = WText({
@@ -236,10 +236,10 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                     ModularWorkbenchBlockEntity.State.MAX_LEVEL -> MAX_LEVEL_TEXT()
                     else -> {
                         val percent = ((progress / component!!.get<Int>(ModularWorkbenchBlockEntity.MAX_INSTALL_TIME_ID).toDouble().coerceAtLeast(1.0)) * 100).toInt()
-                        PROGRESS_TEXT().append(LiteralText("$percent%"))
+                        PROGRESS_TEXT().append(literal("$percent%"))
                     }
                 }
-            } else LiteralText.EMPTY
+            } else EMPTY
         }, HorizontalAlignment.LEFT)
 
         panel.add(installing, 3, 3)
@@ -358,8 +358,8 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             val cur = component!!.get<Int>(ModularWorkbenchBlockEntity.PROCESS_TIME_ID)
             val max = component!!.get<Int>(ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID)
             if (max > 0 && cur != max) {
-                tooltip?.add(LiteralText("Crafting: "))
-                tooltip?.add(LiteralText.EMPTY)
+                tooltip?.add(literal("Crafting: "))
+                tooltip?.add( EMPTY)
             }
             tooltip?.add(*texts.toTypedArray())
         }
@@ -382,12 +382,12 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
     companion object {
         val SCREEN_ID = identifier("modular_workbench_screen")
-        val SHIELD_TEXT = { TranslatableText("gui.indrev.shield").formatted(Formatting.BLUE) }
-        val PROGRESS_TEXT = { TranslatableText("gui.indrev.progress").formatted(Formatting.BLUE) }
-        val MODULE_COUNT = { TranslatableText("gui.indrev.modules_installed").formatted(Formatting.BLUE) }
-        val INSTALLING_TEXT = { TranslatableText("gui.indrev.installing").formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE) }
-        val INCOMPATIBLE_TEXT = { TranslatableText("gui.indrev.incompatible").formatted(Formatting.RED) }
-        val MAX_LEVEL_TEXT = { TranslatableText("gui.indrev.max_level").formatted(Formatting.RED) }
+        val SHIELD_TEXT = { translatable("gui.indrev.shield").formatted(Formatting.BLUE) }
+        val PROGRESS_TEXT = { translatable("gui.indrev.progress").formatted(Formatting.BLUE) }
+        val MODULE_COUNT = { translatable("gui.indrev.modules_installed").formatted(Formatting.BLUE) }
+        val INSTALLING_TEXT = { translatable("gui.indrev.installing").formatted(Formatting.DARK_PURPLE, Formatting.UNDERLINE) }
+        val INCOMPATIBLE_TEXT = { translatable("gui.indrev.incompatible").formatted(Formatting.RED) }
+        val MAX_LEVEL_TEXT = { translatable("gui.indrev.max_level").formatted(Formatting.RED) }
     }
 
 }

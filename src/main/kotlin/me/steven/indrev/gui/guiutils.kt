@@ -24,7 +24,7 @@ import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -53,7 +53,7 @@ fun SyncedGuiDescription.configure(
 ) {
     panel.setSize(150, 120)
     panel.add(createPlayerInventoryPanel(), 0.0, invPos)
-    val title = WText(TranslatableText(titleId), HorizontalAlignment.CENTER, 0x404040)
+    val title = WText(translatable(titleId), HorizontalAlignment.CENTER, 0x404040)
     var titlePos = 4.7
 
     ctx.run { world, blockPos ->
@@ -95,7 +95,7 @@ fun addSplitStackButton(blockEntity: CraftingMachineBlockEntity<*>, blockPos: Bl
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            tooltip?.add(TranslatableText("gui.indrev.button.auto_split"))
+            tooltip?.add(translatable("gui.indrev.button.auto_split"))
         }
     }
     button.setOnClick {
@@ -116,7 +116,7 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
     val slotPanel = WGridPanel()
     for ((i, slot) in enhancerComponent.slots.withIndex()) {
         val s =
-            object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(TranslatableText("gui.indrev.upgrade_slot_type"))) {
+            object : WTooltipedItemSlot(inventory = blockInventory, startIndex = slot, emptyTooltip = mutableListOf(translatable("gui.indrev.upgrade_slot_type"))) {
                 override fun createSlotPeer(inventory: Inventory?, index: Int, x: Int, y: Int): ValidatedSlot {
                     return object : ValidatedSlot(inventory, index, x, y) {
                         override fun getMaxItemCount(stack: ItemStack): Int {
@@ -141,7 +141,7 @@ fun addUpgradeSlots(blockEntity: MachineBlockEntity<*>, blockInventory: Inventor
 fun addTemperatureWidget(blockEntity: MachineBlockEntity<*>, panel: WGridPanel, blockInventory: Inventory, world: World, widgetPos: Double) {
     panel.add(temperatureBar(blockEntity), 0.95, widgetPos)
     val coolerSlot =
-        WTooltipedItemSlot.of(blockInventory, blockEntity.inventoryComponent!!.inventory.coolerSlot!!, TranslatableText("gui.indrev.cooler_slot_type"))
+        WTooltipedItemSlot.of(blockInventory, blockEntity.inventoryComponent!!.inventory.coolerSlot!!, translatable("gui.indrev.cooler_slot_type"))
     if (world.isClient)
         coolerSlot.backgroundPainter = getCoolerSlotPainter(blockInventory, 1)
     panel.add(coolerSlot, 0.75, widgetPos + 2.6)
@@ -151,7 +151,7 @@ fun addAOEWidgets(world: World, blockEntity: AOEMachineBlockEntity<*>, panel: WG
     val buttonPanel = WGridPanel()
     val button = object : WButton() {
         override fun addTooltip(information: TooltipBuilder?) {
-            information?.add(TranslatableText("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
+            information?.add(translatable("block.indrev.aoe.toggle.${blockEntity.renderWorkingArea}"))
         }
     }
     button.setOnClick {

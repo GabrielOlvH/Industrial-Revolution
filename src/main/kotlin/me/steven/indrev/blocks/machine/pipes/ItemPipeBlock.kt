@@ -16,7 +16,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
@@ -37,8 +37,8 @@ class ItemPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, ti
         options: TooltipContext?
     ) {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.itemsec", getMaxTransferRate()).formatted(Formatting.GRAY))
+            translatable("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
+                .append(translatable("gui.indrev.tooltip.itemsec", getMaxTransferRate()).formatted(Formatting.GRAY))
         )
     }
 

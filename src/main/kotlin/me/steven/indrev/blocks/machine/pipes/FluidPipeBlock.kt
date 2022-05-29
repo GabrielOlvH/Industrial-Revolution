@@ -12,7 +12,7 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -29,8 +29,8 @@ class FluidPipeBlock(settings: Settings, tier: Tier) : BasePipeBlock(settings, t
         options: TooltipContext?
     ) {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
-                .append(TranslatableText("gui.indrev.tooltip.fluidsec", getMaxTransferRate()).formatted(Formatting.GRAY))
+            translatable("gui.indrev.tooltip.maxTransferRate").formatted(Formatting.AQUA)
+                .append(translatable("gui.indrev.tooltip.fluidsec", getMaxTransferRate()).formatted(Formatting.GRAY))
         )
     }
 

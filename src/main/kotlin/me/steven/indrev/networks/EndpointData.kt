@@ -3,6 +3,7 @@ package me.steven.indrev.networks
 import me.steven.indrev.utils.ItemFilter
 import me.steven.indrev.utils.fluidStorageOf
 import me.steven.indrev.utils.itemStorageOf
+import me.steven.indrev.utils.sumOf
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.nbt.NbtCompound
@@ -44,12 +45,12 @@ data class EndpointData(var type: Type, var mode: Mode?) {
                             if (type == Type.RETRIEVER)
                                 Comparator.comparing<Any?, Long> { node ->
                                     node as Node
-                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
+                                    fluidStorageOf(world, node.target, node.direction)?.iterator()?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 }.reversed()
                             else
                                 Comparator.comparing { node ->
                                     node as Node
-                                    fluidStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
+                                    fluidStorageOf(world, node.target, node.direction)?.iterator()?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 })
                         tx.abort()
                     }
@@ -63,12 +64,12 @@ data class EndpointData(var type: Type, var mode: Mode?) {
                             (if (type == Type.RETRIEVER)
                                 Comparator.comparing<Any, Long> { node ->
                                     node as Node
-                                    itemStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
+                                    itemStorageOf(world, node.target, node.direction)?.iterator()?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 }.reversed()
                             else
                                 Comparator.comparing { node ->
                                     node as Node
-                                    itemStorageOf(world, node.target, node.direction)?.iterable(tx)?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
+                                    itemStorageOf(world, node.target, node.direction)?.iterator()?.sumOf { v -> if (!filter(v.resource)) 0 else v.amount } ?: 0
                                 })
                         )
                     }

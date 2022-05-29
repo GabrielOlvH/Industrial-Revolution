@@ -20,7 +20,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.OrderedText
 import net.minecraft.text.Style
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
@@ -99,7 +99,7 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Ordere
     val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
     val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, variant.fluid.defaultState) ?: -1
 
-    tooltips.add(TranslatableText("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)).asOrderedText())
+    tooltips.add(translatable("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)).asOrderedText())
 
     val asMb = amount / 81
     val accurate = amount / 81.0
@@ -109,15 +109,15 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Ordere
         else -> ""
     }
     if (capacity > 0)
-        tooltips.add(TranslatableText("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
+        tooltips.add(translatable("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
     else
-        tooltips.add(TranslatableText("$prefix$asMb mB").asOrderedText())
+        tooltips.add(translatable("$prefix$asMb mB").asOrderedText())
 
     if (Screen.hasShiftDown()) {
         if (capacity > 0)
-            tooltips.add(TranslatableText("$amount / $capacity droplets").asOrderedText())
+            tooltips.add(translatable("$amount / $capacity droplets").asOrderedText())
         else
-            tooltips.add(TranslatableText("$amount droplets").asOrderedText())
+            tooltips.add(translatable("$amount droplets").asOrderedText())
     }
     
     return tooltips

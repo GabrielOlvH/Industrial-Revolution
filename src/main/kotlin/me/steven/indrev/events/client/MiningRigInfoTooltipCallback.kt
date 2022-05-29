@@ -7,9 +7,9 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 
 object MiningRigInfoTooltipCallback : ItemTooltipCallback {
@@ -41,14 +41,14 @@ object MiningRigInfoTooltipCallback : ItemTooltipCallback {
 
             val index = lines.size - if (ctx.isAdvanced) 1 else 0
 
-            val modifierName = TranslatableText(modifier.translationKey)
+            val modifierName = translatable(modifier.translationKey)
             if (remainingLevels <= 0)
-                lines.add(index, LiteralText("Cannot increase ").append(modifierName).append(" level anymore").formatted(
+                lines.add(index, literal("Cannot increase ").append(modifierName).append(" level anymore").formatted(
                     Formatting.RED))
             else if (level > 0)
-                lines.add(index, LiteralText("+$level ").append(modifierName).append(" modifiers").formatted(Formatting.GREEN))
+                lines.add(index, literal("+$level ").append(modifierName).append(" modifiers").formatted(Formatting.GREEN))
             else
-                lines.add(index, LiteralText("Not enough to increase ").append(modifierName).formatted(Formatting.RED))
+                lines.add(index, literal("Not enough to increase ").append(modifierName).formatted(Formatting.RED))
         }
     }
 }

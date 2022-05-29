@@ -34,7 +34,7 @@ class WStaticTooltip : WWidget() {
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         bufferBuilder.end()
-        BufferRenderer.draw(bufferBuilder)
+        //BufferRenderer.draw(bufferBuilder)
         RenderSystem.disableBlend()
         RenderSystem.enableTexture()
     }

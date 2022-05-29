@@ -28,9 +28,9 @@ import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
@@ -73,7 +73,7 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
         tooltip?.add(
-            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+            translatable("item.indrev.modular_item.tooltip", literal("").append(
                 IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
                 Formatting.GRAY))
     }

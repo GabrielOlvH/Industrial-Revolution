@@ -13,7 +13,7 @@ import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -35,7 +35,7 @@ class MiningRigBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
     ) {
         super.appendTooltip(stack, view, tooltip, options)
         tooltip?.add(
-            TranslatableText("block.indrev.mining_rig.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC)
+            translatable("block.indrev.mining_rig.tooltip").formatted(Formatting.BLUE, Formatting.ITALIC)
         )
     }
 

@@ -17,9 +17,9 @@ import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
+import net.minecraft.util.math.random.Random
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
-import java.util.*
 
 interface IRRecipe : Recipe<Inventory> {
     val identifier: Identifier

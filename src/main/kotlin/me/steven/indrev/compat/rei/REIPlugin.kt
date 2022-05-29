@@ -21,8 +21,8 @@ import net.minecraft.block.Block
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.recipe.AbstractCookingRecipe
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import java.util.*
 import kotlin.collections.component1
@@ -153,11 +153,11 @@ object REIPlugin : REIClientPlugin {
                 machineRegistry.forEachBlock { tier, block ->
                     val entryStack = EntryStacks.of(block)
                     if (tier != Tier.CREATIVE && tier != Tier.MK1) {
-                        val info = DefaultInformationDisplay.createFromEntry(entryStack, TranslatableText(block.translationKey))
-                        info.lines(TranslatableText("indrev.category.rei.upgrading",
-                            TranslatableText("item.indrev.tier_upgrade_" + tier.toString()
+                        val info = DefaultInformationDisplay.createFromEntry(entryStack, translatable(block.translationKey))
+                        info.lines(translatable("indrev.category.rei.upgrading",
+                            translatable("item.indrev.tier_upgrade_" + tier.toString()
                                 .lowercase(Locale.getDefault())).formatted(Formatting.DARK_GRAY),
-                            TranslatableText(machineRegistry.block(machineRegistry.tiers[machineRegistry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
+                            translatable(machineRegistry.block(machineRegistry.tiers[machineRegistry.tiers.indexOf(tier) - 1]).translationKey).formatted(Formatting.DARK_GRAY),
                             tier.toString()))
                         registry.add(info)
                     }

@@ -28,7 +28,7 @@ interface ImageFactory<T> : DataFactory<T, BufferedImage> {
                     (model as MetalModel).holders.forEach { modelWithColor ->
                         val type = if (model.type == MetalModel.TransformationType.BLOCK) "block" else "item"
                         val resourceId = Identifier(modelWithColor.id.namespace, "textures/$type/${modelWithColor.id.path}.png")
-                        val inputStream = MinecraftClient.getInstance().resourceManager.getResource(resourceId).inputStream
+                        val inputStream = MinecraftClient.getInstance().resourceManager.getResource(resourceId).get().inputStream
                         val overlay = ImageIO.read(inputStream)
                         for (x in 0 until 16) {
                             for (y in 0 until 16) {
@@ -70,7 +70,7 @@ interface ImageFactory<T> : DataFactory<T, BufferedImage> {
                     (model as MetalModel).holders.forEach { modelWithColor ->
                         val type = if (model.type == MetalModel.TransformationType.BLOCK) "block" else "item"
                         val resourceId = Identifier(modelWithColor.id.namespace, "textures/$type/${modelWithColor.id.path}.png")
-                        val inputStream = MinecraftClient.getInstance().resourceManager.getResource(resourceId).inputStream
+                        val inputStream = MinecraftClient.getInstance().resourceManager.getResource(resourceId).get().inputStream
                         val overlay = ImageIO.read(inputStream)
                         for (x in 0 until 16) {
                             for (y in 0 until 16) {

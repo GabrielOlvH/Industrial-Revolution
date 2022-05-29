@@ -13,8 +13,8 @@ import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 
 class HeatGeneratorScreenHandler(
@@ -41,19 +41,19 @@ class HeatGeneratorScreenHandler(
             val blockEntity = world.getBlockEntity(pos) as? HeatGeneratorBlockEntity ?: return@run
             val generatingText = WText({
                 val consumptionRate = (blockEntity.getConsumptionRate(component!![HeatGeneratorBlockEntity.CONSUMPTION_RATIO_ID])).toString()
-                TranslatableText("gui.indrev.heatgen.title", LiteralText(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
+                translatable("gui.indrev.heatgen.title", literal(consumptionRate).formatted(Formatting.DARK_RED)).formatted(Formatting.RED)
             }, HorizontalAlignment.LEFT)
             root.add(generatingText, 2.5, 1.0)
         }
-        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
+        root.add(WText(translatable("gui.indrev.heatgen.pertick").formatted(Formatting.RED), HorizontalAlignment.LEFT), 2.5, 1.6)
 
         val amount = WText({
             val ratio = component!!.get<Long>(HeatGeneratorBlockEntity.GENERATION_RATIO_ID)
-            TranslatableText("gui.indrev.heatgen.generating", LiteralText(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
+            translatable("gui.indrev.heatgen.generating", literal(ratio.toString()).formatted(Formatting.WHITE)).formatted(Formatting.BLUE)
         }, HorizontalAlignment.LEFT)
         root.add(amount, 2.5, 2.6)
 
-        root.add(WText(TranslatableText("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.2)
+        root.add(WText(translatable("gui.indrev.heatgen.pertick").formatted(Formatting.BLUE), HorizontalAlignment.LEFT), 2.5, 3.2)
 
         withBlockEntity<HeatGeneratorBlockEntity> { be ->
             val fluid = fluidTank(be, HeatGeneratorBlockEntity.TANK_ID)

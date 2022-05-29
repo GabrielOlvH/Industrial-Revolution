@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtHelper
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 
@@ -23,8 +23,8 @@ enum class DrillModule(
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)
-        tooltip?.add(TranslatableText("item.indrev.module_parts").formatted(Formatting.BLUE))
-        tooltip?.add(TranslatableText("item.indrev.module_parts_drill").formatted(Formatting.GOLD))
+        tooltip?.add(translatable("item.indrev.module_parts").formatted(Formatting.BLUE))
+        tooltip?.add(translatable("item.indrev.module_parts_drill").formatted(Formatting.GOLD))
     }
 
     companion object {

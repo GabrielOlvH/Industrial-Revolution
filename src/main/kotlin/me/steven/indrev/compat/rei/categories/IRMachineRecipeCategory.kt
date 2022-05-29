@@ -15,7 +15,7 @@ import me.steven.indrev.compat.rei.plugins.IRMachinePlugin
 import me.steven.indrev.recipes.machines.IRFluidRecipe
 import me.steven.indrev.utils.createREIFluidWidget
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Identifier
 
 open class IRMachineRecipeCategory(
@@ -70,7 +70,7 @@ open class IRMachineRecipeCategory(
         return logo
     }
 
-    override fun getTitle(): Text = TranslatableText(categoryName)
+    override fun getTitle(): Text = translatable(categoryName)
 
     override fun getCategoryIdentifier(): CategoryIdentifier<IRMachinePlugin> {
         return CategoryIdentifier.of(identifier)

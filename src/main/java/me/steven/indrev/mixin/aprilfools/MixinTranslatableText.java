@@ -1,16 +1,16 @@
 package me.steven.indrev.mixin.aprilfools;
 
 import me.steven.indrev.IndustrialRevolution;
-import net.minecraft.text.TranslatableText;
+//import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(TranslatableText.class)
+//@Mixin(TranslatableText.class)
 public class MixinTranslatableText {
-    @Shadow @Final private String key;
+/*    @Shadow @Final private String key;
 
     @ModifyVariable(name = "string", at = @At("STORE"), method = "updateTranslations")
     private String owo(String original) {
@@ -36,5 +36,5 @@ public class MixinTranslatableText {
         }
 
         return original;
-    }
+    }*/
 }

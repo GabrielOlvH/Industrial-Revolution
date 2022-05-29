@@ -18,8 +18,9 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
+import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 
 class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -42,12 +43,12 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             root.add(bg, 1.0, 0.9)
             bg.setSize(142, 85)
 
-            root.add(WText(LiteralText("Insert"), HorizontalAlignment.CENTER, 0x8080), 7.5, 1.9)
-            root.add(WText(LiteralText("data card"), HorizontalAlignment.CENTER, 0x8080), 7.5, 2.6)
-            val cardSlot = WTooltipedItemSlot.of(blockInventory, 0, TranslatableText("gui.indrev.scan_output_slo1t_type"))
+            root.add(WText(literal("Insert"), HorizontalAlignment.CENTER, 0x8080), 7.5, 1.9)
+            root.add(WText(literal("data card"), HorizontalAlignment.CENTER, 0x8080), 7.5, 2.6)
+            val cardSlot = WTooltipedItemSlot.of(blockInventory, 0, translatable("gui.indrev.scan_output_slo1t_type"))
             root.add(cardSlot, 7.0, 3.3)
 
-            root.add(WText(TranslatableText("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.35, 1.0)
+            root.add(WText(translatable("block.indrev.drill.active"), HorizontalAlignment.CENTER, 0x8080), 3.35, 1.0)
 
             val requiredPower = component!!.get<Long>(MiningRigBlockEntity.ENERGY_REQUIRED_ID).toDouble()
             when {
@@ -55,8 +56,8 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                     val sprite = object : WSprite(identifier("textures/gui/not_enough_power.png")) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
                             tooltip?.add(
-                                TranslatableText("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED),
-                                TranslatableText("block.indrev.drill.power_required", requiredPower)
+                                translatable("block.indrev.drill.not_enough_power").formatted(Formatting.DARK_RED),
+                                translatable("block.indrev.drill.power_required", requiredPower)
                                     .formatted(Formatting.DARK_RED)
                             )
                         }
@@ -65,7 +66,7 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                     sprite.setSize(16, 16)
                 }
                 activeDrills.isEmpty() -> {
-                    val noDrillsText = TranslatableText("block.indrev.drill.no_drills")
+                    val noDrillsText = translatable("block.indrev.drill.no_drills")
                     root.add(WText(noDrillsText, HorizontalAlignment.CENTER, 0x404040), 3.35, 1.75)
                 }
                 else -> {
@@ -77,11 +78,11 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
             }
         }
         root.add(WText({
-            val data = OreDataCards.readNbt(blockInventory.getStack(0)) ?: return@WText LiteralText.EMPTY
+            val data = OreDataCards.readNbt(blockInventory.getStack(0)) ?: return@WText literal("")
             val remaining = data.maxCycles - data.used
-            LiteralText("$remaining")
+            literal("$remaining")
         }, HorizontalAlignment.CENTER, 0x8080), 3.35, 4.4)
-        root.add(WText(TranslatableText("block.indrev.mining_rig.mined"), HorizontalAlignment.CENTER, 0x8080), 3.35, 5.0)
+        root.add(WText(translatable("block.indrev.mining_rig.mined"), HorizontalAlignment.CENTER, 0x8080), 3.35, 5.0)
 
         root.validate(this)
     }
@@ -103,9 +104,9 @@ class MiningRigComputerScreenHandler(syncId: Int, playerInventory: PlayerInvento
                 override fun addTooltip(tooltip: TooltipBuilder?) {
                     tooltip?.add(itemStack.name)
                     val seconds = blockEntity.getSpeedMultiplier()
-                    tooltip?.add(TranslatableText("block.indrev.drill.faster", seconds).formatted(Formatting.DARK_GRAY))
+                    tooltip?.add(translatable("block.indrev.drill.faster", seconds).formatted(Formatting.DARK_GRAY))
                     if (blockEntity.position > 0)
-                        tooltip?.add(TranslatableText("block.indrev.drill.activating").formatted(Formatting.DARK_GRAY))
+                        tooltip?.add(translatable("block.indrev.drill.activating").formatted(Formatting.DARK_GRAY))
                 }
             }
             panel.add(progress, 0, 0)

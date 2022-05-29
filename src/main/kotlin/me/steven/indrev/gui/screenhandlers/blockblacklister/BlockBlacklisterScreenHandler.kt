@@ -12,12 +12,13 @@ import io.github.cottonmc.cotton.gui.widget.data.InputResult
 import io.github.cottonmc.cotton.gui.widget.data.Insets
 import me.steven.indrev.packets.common.UpdateMiningDrillBlockBlacklistPacket
 import me.steven.indrev.tools.modular.DrillModule
+import me.steven.indrev.utils.literal
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import kotlin.random.Random
@@ -31,7 +32,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
         val stack = { MinecraftClient.getInstance().player!!.mainHandStack }
         val range = DrillModule.RANGE.getLevel(stack())
         if (range <= 0) {
-            panel.add(WLabel("Install at least one Range Module to unlock functionality."), 0, 0)
+            panel.add(WLabel(literal("Install at least one Range Module to unlock functionality.")), 0, 0)
         } else {
             for (x in -range..range) {
                 for (y in -range..range) {
@@ -41,7 +42,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
             }
         }
 
-        val buttonFlipY = WButton(TranslatableText("Mirror vertically"))
+        val buttonFlipY = WButton(translatable("Mirror vertically"))
         buttonFlipY.onClick = Runnable {
             val buf = PacketByteBufs.create()
             buf.writeInt(UpdateMiningDrillBlockBlacklistPacket.Mode.FLIP_Y.ordinal)
@@ -50,7 +51,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
         panel.add(buttonFlipY, range * 2 + 2, 0)
         buttonFlipY.setSize(20, 20)
 
-        val buttonFlipX = WButton(TranslatableText("Mirror horizontally"))
+        val buttonFlipX = WButton(translatable("Mirror horizontally"))
         buttonFlipX.onClick = Runnable {
             val buf = PacketByteBufs.create()
             buf.writeInt(UpdateMiningDrillBlockBlacklistPacket.Mode.FLIP_X.ordinal)
@@ -59,7 +60,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
         panel.add(buttonFlipX, range * 2 + 2, 2)
         buttonFlipX.setSize(20, 20)
 
-        val buttonRotX90 = WButton(TranslatableText("Rotate 90º"))
+        val buttonRotX90 = WButton(translatable("Rotate 90º"))
         buttonRotX90.onClick = Runnable {
             val buf = PacketByteBufs.create()
             buf.writeInt(UpdateMiningDrillBlockBlacklistPacket.Mode.ROT_X_90_CLOCKWISE.ordinal)
@@ -68,7 +69,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
         panel.add(buttonRotX90, range * 2 + 2, 4)
         buttonRotX90.setSize(20, 20)
 
-        val buttonRotX90CCW = WButton(TranslatableText("Rotate 90º Counterclockwise"))
+        val buttonRotX90CCW = WButton(translatable("Rotate 90º Counterclockwise"))
         buttonRotX90CCW.onClick = Runnable {
             val buf = PacketByteBufs.create()
             buf.writeInt(UpdateMiningDrillBlockBlacklistPacket.Mode.ROT_X_90_COUNTERCLOCKWISE.ordinal)
@@ -77,7 +78,7 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
         panel.add(buttonRotX90CCW, range * 2 + 2, 6)
         buttonRotX90CCW.setSize(20, 20)
 
-        val buttonClear = WButton(TranslatableText("Reset"))
+        val buttonClear = WButton(translatable("Reset"))
         buttonClear.onClick = Runnable {
             val buf = PacketByteBufs.create()
             buf.writeInt(UpdateMiningDrillBlockBlacklistPacket.Mode.CLEAR.ordinal)

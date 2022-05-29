@@ -19,7 +19,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 
 class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
@@ -42,7 +42,7 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         val modifierSlots = WItemSlot.of(blockInventory, 13, 1, 3)
         root.add(modifierSlots, 8.0, 0.5)
 
-        val startButton = WButton(LiteralText("Write"))
+        val startButton = WButton(literal("Write"))
         startButton.isEnabled = component!!.get<Int>(DataCardWriterBlockEntity.TOTAL_PROCESS_ID) <= 0
         startButton.onClick = Runnable {
             startButton.isEnabled = false
@@ -53,7 +53,7 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         }
         root.add(startButton, 8.0, 4.5)
 
-        val dataLabel = WLabel("Data")
+        val dataLabel = WLabel(literal("Data"))
         root.add(dataLabel, 1.5, 3.0)
 
         val timeLabel = WDynamicLabel {

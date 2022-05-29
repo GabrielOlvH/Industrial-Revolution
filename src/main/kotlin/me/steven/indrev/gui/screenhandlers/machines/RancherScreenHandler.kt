@@ -17,9 +17,7 @@ import me.steven.indrev.gui.widgets.misc.WText
 import me.steven.indrev.packets.common.UpdateRancherConfigPacket
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
-import me.steven.indrev.utils.add
-import me.steven.indrev.utils.configure
-import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.*
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -27,7 +25,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Identifier
 
 class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -59,9 +56,6 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
 
         feedBabies = component!![RancherBlockEntity.FEED_BABIES_ID]
         mateAdults = component!![RancherBlockEntity.MATE_ADULTS]
-       // matingLimit = properties[RancherBlockEntity.MATING_LIMIT]
-        //killAfter = properties[RancherBlockEntity.KILL_AFTER]
-
 
         root.add(buildMainPanel()) { it.icon(ItemIcon(RANCHER_MK4.asItem())) }
         root.add(buildConfigPanel()) { it.icon(ItemIcon(IRItemRegistry.WRENCH)) }
@@ -101,7 +95,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         slider.setValueChangeListener { newValue -> this.value = newValue }
 
         val text = WText({
-            TranslatableText("block.indrev.aoe.range", slider.value)
+            translatable("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
         mainPanel.add(text, 1.8, 3.3)
 
@@ -111,7 +105,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
     private fun buildConfigPanel(): WWidget {
         val configPanel = WGridPanel()
         val feedBabyInput = WGridPanel()
-        feedBabyInput.add(WLabel("Feed babies"), 0.0, 0.25)
+        feedBabyInput.add(WLabel(literal("Feed babies")), 0.0, 0.25)
 
         feedBabyText.toggle = feedBabies
         feedBabyText.setOnToggle { v -> feedBabies = v }
@@ -119,7 +113,7 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         configPanel.add(feedBabyInput, 1, 1)
 
         val mateAdultsInput = WGridPanel()
-        mateAdultsInput.add(WLabel("Mate adults"), 0.0, 0.25)
+        mateAdultsInput.add(WLabel(literal("Mate adults")), 0.0, 0.25)
 
         mateAdultsText.toggle = mateAdults
         mateAdultsText.setOnToggle { v -> mateAdults = v }
@@ -127,14 +121,14 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         configPanel.add(mateAdultsInput, 1, 3)
 
         val matingLimitInput = WGridPanel()
-        matingLimitInput.add(WLabel("Mating limit"), 0.0, 0.25)
+        matingLimitInput.add(WLabel(literal("Mating limit")), 0.0, 0.25)
 
         matingLimitInput.add(matingLimitText, 4, 0)
         matingLimitText.setSize(34, 18)
         configPanel.add(matingLimitInput, 1, 5)
 
         val killAfterInput = WGridPanel()
-        killAfterInput.add(WLabel("Kill after"), 0.0, 0.25)
+        killAfterInput.add(WLabel(literal("Kill after")), 0.0, 0.25)
 
         killAfterInput.add(killAfterText, 4, 0)
         killAfterText.setSize(34, 18)
@@ -186,8 +180,8 @@ class RancherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
                 buf.writeBlockPos(pos)
                 buf.writeBoolean(feedBabies)
                 buf.writeBoolean(mateAdults)
-                buf.writeInt(matingLimitText.text.toIntOrNull() ?: matingLimit)
-                buf.writeInt(killAfterText.text.toIntOrNull() ?: killAfter)
+                buf.writeInt(matingLimitText.text.trim().toIntOrNull() ?: matingLimit)
+                buf.writeInt(killAfterText.text.trim().toIntOrNull() ?: killAfter)
                 ClientPlayNetworking.send(UpdateRancherConfigPacket.SYNC_RANCHER_CONFIG, buf)
             }
         }

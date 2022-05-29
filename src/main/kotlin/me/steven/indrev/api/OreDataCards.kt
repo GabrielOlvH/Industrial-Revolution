@@ -9,8 +9,8 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
 import net.minecraft.tag.TagKey
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.random.Random
 import net.minecraft.util.registry.Registry
-import java.util.*
 import kotlin.math.pow
 
 object OreDataCards {

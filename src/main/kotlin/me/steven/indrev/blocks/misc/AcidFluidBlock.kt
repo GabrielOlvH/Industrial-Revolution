@@ -10,8 +10,8 @@ import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
-import java.util.*
 
 class AcidFluidBlock(fluid: FlowableFluid, settings: Settings) : FluidBlock(fluid, settings) {
     override fun randomTick(state: BlockState?, world: ServerWorld?, pos: BlockPos?, random: Random?) {

@@ -27,6 +27,7 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.text.OrderedText
+import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
@@ -120,3 +121,14 @@ inline fun <T> transaction(block: (Transaction) -> T) = Transaction.openOuter().
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Recipe<Inventory>> RecipeManager.getRecipes(type: RecipeType<T>) = getAllOfType(type) as Map<Identifier, T>
+
+fun translatable(text: String, vararg args: Any) = Text.translatable(text, args)
+fun literal(text: String) = Text.literal(text)
+
+val EMPTY = literal("")
+
+fun <T> MutableIterator<T>.sumOf(selector: (T) -> Long): Long {
+    var sum = 0L
+    this.forEachRemaining { sum += selector(it) }
+    return sum
+}

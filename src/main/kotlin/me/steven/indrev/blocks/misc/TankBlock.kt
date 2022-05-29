@@ -26,7 +26,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -138,7 +138,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
                 }
                 dropStack(world, pos, stack)
             }
-            state!!.onStacksDropped(world, pos, toolStack)
+            state!!.onStacksDropped(world, pos, toolStack, true)
         }
     }
 
@@ -188,7 +188,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
         }?.firstOrNull() ?: return
         val fluid = volume.amount().asInt(1000)
         tooltip?.addAll(volume.fluidKey.fullTooltip.toTypedArray())
-        tooltip?.add(LiteralText("$fluid / 8000 mB"))
+        tooltip?.add(literal("$fluid / 8000 mB"))
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {

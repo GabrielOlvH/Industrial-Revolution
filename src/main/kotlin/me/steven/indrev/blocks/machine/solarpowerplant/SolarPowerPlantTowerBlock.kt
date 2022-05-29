@@ -14,8 +14,8 @@ import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtLong
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
@@ -56,11 +56,11 @@ class SolarPowerPlantTowerBlock(settings: Settings) : HorizontalFacingBlock(sett
                     heliostat.markDirty()
                     heliostat.sync()
                 }
-                player.sendMessage(LiteralText("Linked Heliostats!"), true)
+                player.sendMessage(literal("Linked Heliostats!"), true)
             } else {
                 val blockEntity = world.getBlockEntity(pos) as? SolarPowerPlantTowerBlockEntity ?: return ActionResult.PASS
                 if (!blockEntity.multiblockComponent.isBuilt(world, pos, state)) {
-                    player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
+                    player.sendMessage(translatable("text.multiblock.not_built"), true)
                     blockEntity.multiblockComponent.toggleRender(player.isSneaking)
                     blockEntity.markDirty()
                     blockEntity.sync()

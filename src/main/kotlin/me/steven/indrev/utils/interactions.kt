@@ -14,7 +14,7 @@ import net.minecraft.block.entity.BlockEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.nbt.NbtLong
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.util.ActionResult
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.math.BlockPos
@@ -56,7 +56,7 @@ fun screwdriver(
         val tagList = stack.orCreateNbt.getList("SelectedHeliostats", 4)
         positions.forEach { long -> tagList.add(NbtLong.of(long)) }
         stack.orCreateNbt.put("SelectedHeliostats", tagList)
-        player?.sendMessage(LiteralText("Click on Solar Power Plant Tower to link the Heliostats."), true)
+        player?.sendMessage(literal("Click on Solar Power Plant Tower to link the Heliostats."), true)
     } else if (blockEntity is MachineBlockEntity<*>) {
         if (ConfigurationType.getTypes(blockEntity).isNotEmpty()) {
             val map = EnumMap<ConfigurationType, SideConfiguration>(ConfigurationType::class.java)

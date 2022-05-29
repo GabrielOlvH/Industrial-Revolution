@@ -26,7 +26,7 @@ import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
@@ -165,7 +165,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
     @Environment(EnvType.CLIENT)
     fun <T : BlockEntity> registerBlockEntityRenderer(renderer: () -> BlockEntityRenderer<T>) {
         blockEntities.forEach { (_, type) ->
-            BlockEntityRendererRegistry.INSTANCE.register(type as BlockEntityType<T>) { _ -> renderer() }
+            BlockEntityRendererRegistry.register(type as BlockEntityType<T>) { _ -> renderer() }
         }
     }
 

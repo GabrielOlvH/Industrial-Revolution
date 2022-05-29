@@ -20,7 +20,7 @@ import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.sound.SoundEvents
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
@@ -59,7 +59,7 @@ class PipeFilterScreenHandler(
             }
 
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(TranslatableText("gui.indrev.whitelist.$isOn"))
+                tooltip?.add(translatable("gui.indrev.whitelist.$isOn"))
             }
         }
         whitelistButton.onToggle = Consumer { value ->
@@ -81,7 +81,7 @@ class PipeFilterScreenHandler(
             }
 
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(TranslatableText("gui.indrev.matchDurability.$isOn"))
+                tooltip?.add(translatable("gui.indrev.matchDurability.$isOn"))
             }
         }
         matchDurabilityButton.onToggle = Consumer { value ->
@@ -103,7 +103,7 @@ class PipeFilterScreenHandler(
             }
             
             override fun addTooltip(tooltip: TooltipBuilder?) {
-                tooltip?.add(TranslatableText("gui.indrev.matchTag.$isOn"))
+                tooltip?.add(translatable("gui.indrev.matchTag.$isOn"))
             }
         }
         matchTagButton.onToggle = Consumer { value ->
@@ -181,8 +181,8 @@ class PipeFilterScreenHandler(
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             tooltip?.add(
-                TranslatableText("item.indrev.servo.mode")
-                .append(TranslatableText("item.indrev.servo.mode.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.BLUE)))
+                translatable("item.indrev.servo.mode")
+                .append(translatable("item.indrev.servo.mode.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.BLUE)))
         }
     }
 

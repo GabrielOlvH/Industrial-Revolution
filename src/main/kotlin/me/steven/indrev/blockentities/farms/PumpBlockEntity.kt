@@ -28,6 +28,7 @@ import java.util.concurrent.Executors
 import kotlin.coroutines.resume
 import kotlin.math.floor
 import kotlin.math.roundToInt
+import kotlin.random.Random
 
 class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state) {
@@ -119,7 +120,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
                 this.continuation = cont
             }
         }
-        directions.shuffled(world.random).associate { dir ->
+        directions.shuffled(RANDOM).associate { dir ->
             val offset = pos.offset(dir)
             val fluidState = server.submitAndGet { world.getFluidState(offset) }
             offset to fluidState
@@ -145,7 +146,7 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override fun isFixed(type: ConfigurationType): Boolean = true
 
     override fun toTag(tag: NbtCompound) {
-        tag?.putDouble("MovingTicks", movingTicks)
+        tag.putDouble("MovingTicks", movingTicks)
         super.toTag(tag)
     }
 
@@ -169,5 +170,6 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             t.isDaemon = true
             t
         }.asCoroutineDispatcher()
+        val RANDOM = Random(System.currentTimeMillis())
     }
 }

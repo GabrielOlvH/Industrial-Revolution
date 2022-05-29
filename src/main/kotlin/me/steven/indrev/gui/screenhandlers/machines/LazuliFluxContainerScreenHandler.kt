@@ -20,7 +20,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ArmorItem
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Identifier
 import java.util.function.Predicate
 
@@ -44,12 +44,12 @@ class LazuliFluxContainerScreenHandler(syncId: Int, playerInventory: PlayerInven
         root.setSize(150, 120)
 
         root.add(
-            WText(TranslatableText("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER, 0x404040),
+            WText(translatable("block.indrev.lazuli_flux_container_1"), HorizontalAlignment.CENTER, 0x404040),
             5.95 + 0.3,
             0.0
         )
         root.add(
-            WText(TranslatableText("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040),
+            WText(translatable("block.indrev.lazuli_flux_container_2"), HorizontalAlignment.CENTER, 0x404040),
             5.95 + 0.3,
             0.7
         )

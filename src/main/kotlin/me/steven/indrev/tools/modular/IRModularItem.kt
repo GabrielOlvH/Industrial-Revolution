@@ -2,7 +2,7 @@ package me.steven.indrev.tools.modular
 
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 
 interface IRModularItem<T : Module> {
@@ -18,10 +18,10 @@ interface IRModularItem<T : Module> {
 
     fun getInstalledTooltip(upgrades: List<Module>, stack: ItemStack, tooltip: MutableList<Text>?) {
         if (upgrades.isNotEmpty()) {
-            tooltip?.add(TranslatableText("item.indrev.modular.upgrade").formatted(Formatting.GOLD))
+            tooltip?.add(translatable("item.indrev.modular.upgrade").formatted(Formatting.GOLD))
             upgrades.forEach { upgrade ->
                 val level = upgrade.getLevel(stack)
-                val text = TranslatableText("item.indrev.modular.upgrade.${upgrade.key}", level)
+                val text = translatable("item.indrev.modular.upgrade.${upgrade.key}", level)
                 if (upgrade.getMaxInstalledLevel(stack) != level)
                     text.formatted(Formatting.ITALIC)
                 tooltip?.add(text.formatted(Formatting.BLUE))

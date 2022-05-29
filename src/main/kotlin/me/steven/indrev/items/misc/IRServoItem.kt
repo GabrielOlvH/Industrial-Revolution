@@ -5,18 +5,14 @@ import me.steven.indrev.blocks.machine.pipes.BasePipeBlock
 import me.steven.indrev.networks.EndpointData
 import me.steven.indrev.networks.ServoNetworkState
 import me.steven.indrev.registry.IRItemRegistry
-import me.steven.indrev.utils.component1
-import me.steven.indrev.utils.component2
-import me.steven.indrev.utils.component3
+import me.steven.indrev.utils.*
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.*
 import net.minecraft.world.World
 
@@ -28,12 +24,12 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         tooltip: MutableList<Text>,
         context: TooltipContext?
     ) {
-        tooltip.add(TranslatableText("$translationKey.tooltip"))
-        tooltip.add(LiteralText.EMPTY)
+        tooltip.add(translatable("$translationKey.tooltip"))
+        tooltip.add(EMPTY)
         val modeString = getMode(stack).toString().lowercase()
-        tooltip.add(TranslatableText("item.indrev.servo.mode")
-            .append(TranslatableText("item.indrev.servo.mode.$modeString").formatted(Formatting.BLUE)))
-        tooltip.add(TranslatableText("item.indrev.servo.mode.$modeString.tooltip").formatted(Formatting.DARK_GRAY))
+        tooltip.add(translatable("item.indrev.servo.mode")
+            .append(translatable("item.indrev.servo.mode.$modeString").formatted(Formatting.BLUE)))
+        tooltip.add(translatable("item.indrev.servo.mode.$modeString.tooltip").formatted(Formatting.DARK_GRAY))
     }
 
     override fun use(world: World?, user: PlayerEntity, hand: Hand?): TypedActionResult<ItemStack> {
@@ -41,8 +37,8 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
         val stack = user.getStackInHand(hand)
         val newMode = getMode(stack).next()
         stack.orCreateNbt.putString("mode", newMode.toString())
-        user.sendMessage(TranslatableText("item.indrev.servo.mode")
-            .append(TranslatableText("item.indrev.servo.mode.${newMode.toString().lowercase()}").formatted(Formatting.BLUE)), true)
+        user.sendMessage(translatable("item.indrev.servo.mode")
+            .append(translatable("item.indrev.servo.mode.${newMode.toString().lowercase()}").formatted(Formatting.BLUE)), true)
         return TypedActionResult.consume(stack)
     }
 
@@ -75,7 +71,7 @@ class IRServoItem(settings: Settings, val type: EndpointData.Type) : Item(settin
                                 else -> {}
                             }
                         }
-                        val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(LiteralText("Failed to put servo"), true)
+                        val data = networkState.getEndpointData(pos, dir, true) ?: return@also context.player!!.sendMessage(literal("Failed to put servo"), true)
                         data.type = type
                         data.mode = getMode(stack)
                         networkState.version++

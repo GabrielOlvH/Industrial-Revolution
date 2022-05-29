@@ -9,7 +9,7 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -41,6 +41,6 @@ class PipeFilterScreenFactory(
         }
     }
 
-    override fun getDisplayName(): Text = LiteralText("Item Filter")
+    override fun getDisplayName(): Text = literal("Item Filter")
 
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.tooltip.TooltipComponent
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.Matrix4f
 
@@ -19,7 +19,7 @@ open class EnergyTooltipComponent(private val data: EnergyTooltipData) : Tooltip
     override fun getWidth(textRenderer: TextRenderer): Int {
         val percentage = if (data.maxEnergy > 0) data.energy * 100 / data.maxEnergy else 0
         val text =
-            LiteralText("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+            literal("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
         return textRenderer.getWidth(text) + 20
     }
 
@@ -45,7 +45,7 @@ open class EnergyTooltipComponent(private val data: EnergyTooltipData) : Tooltip
     ) {
         val percentage = if (data.maxEnergy > 0) data.energy * 100 / data.maxEnergy else 0
         val text =
-            LiteralText("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
+            literal("${getEnergyString(data.energy)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY)
         textRenderer.draw(text, x.toFloat() + 19, (y.toFloat() + 9) - textRenderer.fontHeight / 2, -1, true, matrix4f, immediate, false, 0, 15728880)
     }
 }

@@ -14,7 +14,7 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 
@@ -24,7 +24,7 @@ class CabinetBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBl
 
     override fun size(): Int = 27
 
-    override fun getContainerName(): Text = TranslatableText("block.indrev.cabinet")
+    override fun getContainerName(): Text = translatable("block.indrev.cabinet")
 
     override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
         return CabinetScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos))
