@@ -24,7 +24,11 @@ import net.minecraft.util.math.Direction
 class DrainBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.DRAIN_REGISTRY, pos, state) {
 
     init {
-        this.fluidComponent = FluidComponent({ this }, bucket)
+        this.fluidComponent = object : FluidComponent({ this }, bucket) {
+            init {
+                this.outputTanks = intArrayOf(0)
+            }
+        }
     }
 
     override val maxInput: Long = config.maxInput
