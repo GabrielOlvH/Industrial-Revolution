@@ -25,6 +25,7 @@ import kotlin.collections.component2
 import kotlin.collections.forEach
 import kotlin.collections.isNotEmpty
 import kotlin.collections.set
+import kotlin.random.Random
 
 class ItemNetwork(
     world: ServerWorld,
@@ -46,6 +47,9 @@ class ItemNetwork(
     private var ticks = 0
 
     override fun tick(world: ServerWorld) {
+        if(ticks == 0L){
+            ticks = Random.nextInt(20).toLong()
+        }
         ticks++
         if (ticks % 20 != 0) return
         val state = Type.ITEM.getNetworkState(world) as ItemNetworkState
