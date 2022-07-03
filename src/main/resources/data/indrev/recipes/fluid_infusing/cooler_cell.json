@@ -1,0 +1,17 @@
+{
+  "type": "indrev:fluid_infuse",
+  "ingredients": [
+    {
+      "tag": "c:tin_plates",
+      "count": 4
+    }
+  ],
+  "fluidInput": {
+    "fluid": "indrev:coolant_still",
+    "amount": 81000
+  },
+  "output": {
+    "item": "indrev:cooler_cell"
+  },
+  "processTime": 400
+}
