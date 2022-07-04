@@ -6,7 +6,7 @@
     "pages": [
       {
         "type": "crafting",
-        "recipe": "indrev:shaped/miner_mk4",
+        "recipe": "indrev:shaped/mining_rig_mk4",
         "text": "将$(l)$(o)自动挖矿钻机$()放置在$(l:machines/miner#chunk_scanner)$(t:区块扫描仪)$(l)$(o)$(#0000ff)扫描过$()的区块中即可自动挖矿。它并不会破坏方块。计算机消耗64 LF/刻，而每一个钻头消耗256 LF/刻"
       },
       {
@@ -16,7 +16,7 @@
       },
       {
         "type": "image",
-        "title": "Example",
+        "title": "图例",
         "images": ["indrev:textures/gui/mrc_setup.png"],
         "text": "注意钻头相对钻机本体斜向放置，且钻机对准中间一格。"
       },
