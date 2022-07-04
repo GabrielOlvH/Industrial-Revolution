@@ -1,0 +1,10 @@
+{
+  "name": "item.patchouli.industrial_revolution_book.name",
+  "landing_text": "item.patchouli.industrial_revolution_book.landing",
+  "model": "indrev:guide_book",
+  "version": 1,
+  "subtitle": "你，$(playername)，需要知道的一切",
+  "creative_tab": "indrev.indrev_group",
+  "show_progress": false,
+  "pause_game": false
+}
