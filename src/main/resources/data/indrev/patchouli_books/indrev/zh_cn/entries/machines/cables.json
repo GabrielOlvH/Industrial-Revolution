@@ -1,6 +1,6 @@
 {
     "name": "电缆",
-    "category": "machines",
+    "category": "indrev:machines",
     "sortnum": 2,
     "icon": "indrev:cable_mk1",
     "pages": [
