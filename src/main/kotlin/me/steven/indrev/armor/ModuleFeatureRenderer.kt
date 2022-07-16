@@ -32,7 +32,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
         val item = itemStack.item as? IRModularArmorItem ?: return
         if (item.slotType == equipmentSlot) {
-            (this.contextModel as BipedEntityModel<T>).setAttributes(bipedEntityModel)
+            (this.contextModel as? BipedEntityModel<T>)?.setAttributes(bipedEntityModel) ?: return
             setVisible(bipedEntityModel, equipmentSlot)
             val rgb = item.getColor(itemStack)
             val r = (rgb and 0xFF0000 shr 16) / 255f

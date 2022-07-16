@@ -1,40 +1,47 @@
 package me.steven.indrev.blockentities.farms
 
-import kotlinx.coroutines.*
+import it.unimi.dsi.fastutil.longs.LongArrayFIFOQueue
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.components.FluidComponent
+import me.steven.indrev.components.*
 import me.steven.indrev.config.BasicMachineConfig
+import me.steven.indrev.config.IRConfig
+import me.steven.indrev.inventories.inventory
+import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.drainFluid
-import me.steven.indrev.utils.submitAndGet
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.FluidBlock
 import net.minecraft.block.FluidDrainable
 import net.minecraft.fluid.FlowableFluid
 import net.minecraft.fluid.Fluid
+import net.minecraft.fluid.FluidState
 import net.minecraft.fluid.Fluids
 import net.minecraft.nbt.NbtCompound
-import net.minecraft.server.MinecraftServer
-import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import java.util.concurrent.Executors
-import kotlin.coroutines.resume
 import kotlin.math.floor
 import kotlin.math.roundToInt
-import kotlin.random.Random
 
 class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     : MachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.PUMP_REGISTRY, pos, state) {
 
     init {
-        this.fluidComponent = FluidComponent({this}, bucket)
+        this.fluidComponent = FluidComponent({ this }, bucket)
+        this.enhancerComponent = object : EnhancerComponent(intArrayOf(0, 1, 2, 3), Enhancer.DEFAULT, this::getMaxCount) {
+            override fun isLocked(slot: Int, tier: Tier): Boolean = false
+        }
+        this.inventoryComponent = inventory(this) {
+        }
+
+        trackObject(TANK_ID, fluidComponent!![0])
+        trackDouble(SPEED_ID) { config.processSpeed  - enhancerComponent!!.getCount(Enhancer.SPEED) * 10 }
     }
 
     override val syncToWorld: Boolean = true
@@ -42,96 +49,118 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     override val maxInput: Long = config.maxInput
     override val maxOutput: Long = 0
 
-    var movingTicks = 0.0
-    var isDescending = false
-    var lastYPos = -1
+    var pipePosition = 0.0
+    private var isSearchingDown = false
 
-    var currentTarget: BlockPos = pos
+    private var currentTarget: BlockPos = pos
 
-    var job: Job? = null
-    var continuation: CancellableContinuation<Unit>? = null
-    var count: Int = 0
-    val scanned = mutableSetOf<BlockPos>()
-
-    val directions = mutableListOf(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
+    private val scanned = LongOpenHashSet()
+    private var queue = LongArrayFIFOQueue()
+    private var cooldown = 20.0
 
     override fun machineTick() {
-        val world = world ?: return
-        val fluidComponent = fluidComponent ?: return
-        val currentLevel = floor(movingTicks).toInt()
-        val lookLevel = pos.offset(Direction.DOWN, currentLevel)
-        val currentFluid = world.getFluidState(lookLevel)
+        if (pipePosition == 0.0) {
+            isSearchingDown = true
+        }
 
-        val fluidState = world.getFluidState(currentTarget)
+        if (!isSearchingDown && currentTarget == pos) {
+            searchFluid()
+        }
 
-        if ((fluidState.isEmpty || !fluidState.isStill) && !currentFluid.isEmpty) {
-            val server = (world as ServerWorld).server
+        if (queue.isEmpty) {
+            isSearchingDown = true
+        }
 
-            if (job?.isCancelled != false) {
-                scanned.clear()
-                job = GlobalScope.launch(DISPATCHER) {
-                    val start = pos.offset(Direction.DOWN, floor(movingTicks).toInt())
-                    val startFluid = world.getFluidState(start)
-                    scan(start, getStill(startFluid.fluid), server, scanned)
-                }
-                return
-            } else if (job?.isCompleted == true) {
-                currentTarget = lookLevel
-                job = null
-            } else {
-                count = 0
-                continuation?.resume(Unit)
-                continuation = null
+        if (currentTarget != pos) {
+            cooldown--
+            if (cooldown <= 0) {
+                drainTargetFluid()
             }
         }
 
-        val fluidToPump = world.getFluidState(currentTarget)
+        if (isSearchingDown) {
+            searchDown()
+        }
+    }
 
-        if (!isDescending && ticks % config.processSpeed.toInt() == 0 && canUse(config.energyCost)) {
-            if (!fluidToPump.isEmpty && canUse(config.energyCost) && fluidComponent[0].isEmpty) {
-                val blockState = world.getBlockState(currentTarget)
-                val block = blockState?.block
-                if (block is FluidDrainable && block is FluidBlock) {
-                    val drained = block.drainFluid(world, currentTarget, blockState)
-                    if (drained != Fluids.EMPTY) {
-                        fluidComponent[0].insert(FluidVariant.of(drained), bucket, true)
-                        use(config.energyCost)
+    private fun searchFluid() {
+        val currentLevel = floor(pipePosition).toInt()
+        val lookLevel = pos.offset(Direction.DOWN, currentLevel)
+        val currentFluid = world!!.getFluidState(lookLevel)
+        val targetFluid = world!!.getFluidState(currentTarget)
+
+        if (currentFluid.isEmpty) {
+            isSearchingDown = true
+            return
+        }
+
+        if ((targetFluid.isEmpty || !targetFluid.isStill) && !currentFluid.isEmpty) {
+            scanned.clear()
+            val searching = BlockPos.Mutable()
+            val neighbor = BlockPos.Mutable()
+            while (!queue.isEmpty) {
+                val packedPos = queue.dequeue()
+                searching.set(BlockPos.unpackLongX(packedPos), BlockPos.unpackLongY(packedPos), BlockPos.unpackLongZ(packedPos))
+                SEARCH_DIRECTIONS.forEach { dir ->
+                    neighbor.set(searching.x + dir.offsetX, searching.y + dir.offsetY, searching.z + dir.offsetZ)
+                    if (neighbor.getSquaredDistance(lookLevel) < IRConfig.machines.pumpMaxRange * IRConfig.machines.pumpMaxRange
+                        && scanned.add(neighbor.asLong())
+                        && getStill(world!!.getFluidState(neighbor).fluid) == getStill(currentFluid.fluid)) {
+                        queue.enqueue(neighbor.asLong())
                     }
                 }
+                val fluidState = world!!.getFluidState(searching)
+                if (fluidState.isStill && !fluidState.isEmpty && fluidState.fluid == getStill(currentFluid.fluid)) {
+                    currentTarget = searching
+                    break
+                }
             }
-        } else if (currentFluid?.isEmpty == false && lookLevel.y < lastYPos) {
-            isDescending = false
-            movingTicks = movingTicks.roundToInt().toDouble()
-        } else if ((lookLevel == pos || (world.isAir(lookLevel) && currentFluid?.isEmpty != false)) && use(2)) {
-            movingTicks += 0.01
+        }
+    }
+
+    private fun getFluidTouchingPipe(): FluidState {
+        val currentLevel = floor(pipePosition).toInt()
+        val lookLevel = pos.offset(Direction.DOWN, currentLevel)
+        return world!!.getFluidState(lookLevel)
+    }
+
+    private fun drainTargetFluid() {
+        val fluidToPump = world!!.getFluidState(currentTarget)
+        if (!fluidToPump.isEmpty && canUse(config.energyCost) && fluidComponent!![0].isEmpty) {
+            val blockState = world!!.getBlockState(currentTarget)
+            val block = blockState?.block
+            if (block is FluidDrainable && block is FluidBlock) {
+                val drained = block.drainFluid(world!!, currentTarget, blockState)
+                if (drained != Fluids.EMPTY) {
+                    fluidComponent!![0].insert(FluidVariant.of(drained), bucket, true)
+                    use(getEnergyCost())
+                    cooldown = config.processSpeed - enhancerComponent!!.getCount(Enhancer.SPEED) * 10
+                }
+                currentTarget = pos
+            }
+        }
+    }
+
+    override fun getEnergyCost(): Long {
+        return config.energyCost * (enhancerComponent!!.getCount(Enhancer.SPEED) + 1)
+    }
+
+    private fun searchDown() {
+        if (use(2)) {
+            pipePosition += 0.01
             sync()
+            val fluid = getFluidTouchingPipe()
+            if (!fluid.isEmpty) {
+                isSearchingDown = false
+                pipePosition = pipePosition.roundToInt().toDouble()
+                queue = LongArrayFIFOQueue()
+                val currentLevel = floor(pipePosition).toInt()
+                queue.enqueue(pos.offset(Direction.DOWN, currentLevel).asLong())
+            }
         }
     }
 
     private fun getStill(fluid: Fluid): Fluid = if (fluid is FlowableFluid) fluid.still else fluid
-
-    private suspend fun scan(pos: BlockPos, fluid: Fluid, server: MinecraftServer, scanned: MutableSet<BlockPos>) {
-        val world = world ?: return
-        val centerBlock = this.pos.offset(Direction.DOWN, floor(movingTicks).toInt())
-
-        count++
-        if (count > 10) {
-            suspendCancellableCoroutine { cont: CancellableContinuation<Unit> ->
-                this.continuation = cont
-            }
-        }
-        directions.shuffled(RANDOM).associate { dir ->
-            val offset = pos.offset(dir)
-            val fluidState = server.submitAndGet { world.getFluidState(offset) }
-            offset to fluidState
-        }.entries.sortedByDescending { if (it.value.isStill) 20 else it.value.level }.forEach { (offset, fluidState) ->
-            if (offset != centerBlock && fluidState.fluid == fluid) {
-                currentTarget = offset
-                job?.cancel()
-            } else if (scanned.add(offset) && getStill(fluidState.fluid) == fluid && !fluidState.isStill)
-                scan(offset, fluid, server, scanned)
-        }
-    }
 
     override fun applyDefault(
         state: BlockState,
@@ -144,32 +173,36 @@ class PumpBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     override fun isFixed(type: ConfigurationType): Boolean = true
+    fun getMaxCount(enhancer: Enhancer): Int {
+        return when (enhancer) {
+            Enhancer.SPEED -> return 1
+            Enhancer.BUFFER -> 4
+            else -> 1
+        }
+    }
+
 
     override fun toTag(tag: NbtCompound) {
-        tag.putDouble("MovingTicks", movingTicks)
+        tag.putDouble("MovingTicks", pipePosition)
         super.toTag(tag)
     }
 
     override fun fromTag(tag: NbtCompound) {
-        movingTicks = tag.getDouble("MovingTicks")
+        pipePosition = tag.getDouble("MovingTicks")
         super.fromTag(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        movingTicks = tag.getDouble("MovingTicks")
+        pipePosition = tag.getDouble("MovingTicks")
     }
 
     override fun toClientTag(tag: NbtCompound) {
-        tag.putDouble("MovingTicks", movingTicks)
+        tag.putDouble("MovingTicks", pipePosition)
     }
 
     companion object {
-        val DISPATCHER = Executors.newSingleThreadExecutor {
-            val t = Thread(it)
-            t.name = "IR Pump Thread"
-            t.isDaemon = true
-            t
-        }.asCoroutineDispatcher()
-        val RANDOM = Random(System.currentTimeMillis())
+        const val TANK_ID = 2
+        const val SPEED_ID = 3
+        val SEARCH_DIRECTIONS = mutableListOf(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)
     }
 }

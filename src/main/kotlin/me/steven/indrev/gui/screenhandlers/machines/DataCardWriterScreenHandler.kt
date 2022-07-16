@@ -29,7 +29,13 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         ctx
     ) {
     init {
-        val root = WGridPanel()
+        val startButton = WButton(literal("Write"))
+        val root = object : WGridPanel() {
+            override fun tick() {
+                super.tick()
+                startButton.isEnabled = component!!.get<Int>(DataCardWriterBlockEntity.TOTAL_PROCESS_ID) <= 0
+            }
+        }
         setRootPanel(root)
         configure("block.indrev.data_card_writer", ctx, playerInventory, blockInventory, invPos = 5.7, widgetPos = 0.85)
 
@@ -42,16 +48,14 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         val modifierSlots = WItemSlot.of(blockInventory, 13, 1, 3)
         root.add(modifierSlots, 8.0, 0.5)
 
-        val startButton = WButton(literal("Write"))
-        startButton.isEnabled = component!!.get<Int>(DataCardWriterBlockEntity.TOTAL_PROCESS_ID) <= 0
         startButton.onClick = Runnable {
-            startButton.isEnabled = false
 
             val buf = PacketByteBufs.create()
             ctx.run { _, pos -> buf.writeBlockPos(pos) }
             ClientPlayNetworking.send(DataCardWriteStartPacket.START_PACKET, buf)
         }
-        root.add(startButton, 8.0, 4.5)
+        root.add(startButton, 7.65, 4.5)
+        startButton.setSize(28, 20)
 
         val dataLabel = WLabel(literal("Data"))
         root.add(dataLabel, 1.5, 3.0)
@@ -60,8 +64,7 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
             val processTime = component!!.get<Int>(DataCardWriterBlockEntity.PROCESS_ID)
             val totalProcessTime = component!!.get<Int>(DataCardWriterBlockEntity.TOTAL_PROCESS_ID)
             val remaining = (totalProcessTime - processTime) / 20
-            if (remaining > 0)
-            "${remaining}s" else ""
+            if (remaining > 0) "${remaining}s" else ""
         }
         timeLabel.setAlignment(HorizontalAlignment.CENTER)
         root.add(timeLabel, 4.1, 2.1)
