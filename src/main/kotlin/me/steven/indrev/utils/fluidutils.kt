@@ -164,6 +164,7 @@ fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: L
 
 const val FULL_LIGHT = 0x00F000F0
 
+// Original code from https://github.com/AztechMC/Modern-Industrialization/blob/f38dc066be9e249ac604a1d188786b9d4abf5c54/src/main/java/aztech/modern_industrialization/util/RenderHelper.java#L126
 fun drawFluidInTank(
     world: World,
     pos: BlockPos,
