@@ -1,26 +1,33 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
+import com.mojang.blaze3d.systems.RenderSystem
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.fabric.api.transfer.v1.storage.base.ResourceAmount
 import net.minecraft.block.BlockState
 import net.minecraft.block.Blocks
 import net.minecraft.block.FluidBlock
+import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.screen.Screen
+import net.minecraft.client.render.*
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.OrderedText
 import net.minecraft.text.Style
-import me.steven.indrev.utils.translatable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
@@ -82,9 +89,9 @@ fun IRFluidAmount.toPacket(buf: PacketByteBuf) {
     buf.writeLong(amount)
 }
 
-fun IRFluidAmount.renderGuiRect(x0: Double, y0: Double, x1: Double, y1: Double) {
+/*fun IRFluidAmount.renderGuiRect(x0: Double, y0: Double, x1: Double, y1: Double) {
     FluidKeys.get(resource.fluid).withAmount(FluidAmount.BUCKET).renderGuiRect(x0, y0, x1, y1)
-}
+}*/
 
 fun fromPacket(buf: PacketByteBuf): IRFluidAmount {
     val res = FluidVariant.fromPacket(buf)
@@ -121,5 +128,86 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Ordere
     }
     
     return tooltips
+}
 
+fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: Long, x: Int, y: Int, width: Int, height: Int) {
+    val client = MinecraftClient.getInstance()
+    RenderSystem.setShaderTexture(0, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
+    RenderSystem.setShader(GameRenderer::getPositionColorTexShader)
+    val fluidRender = FluidRenderHandlerRegistry.INSTANCE.get(resource.fluid) ?: return
+    val fluidColor = fluidRender.getFluidColor(client.world, client.player!!.blockPos, resource.fluid.defaultState)
+    val sprite = fluidRender.getFluidSprites(client.world, BlockPos.ORIGIN, resource.fluid.defaultState)[0]
+    val r = (fluidColor shr 16 and 255) / 255f
+    val g = (fluidColor shr 8 and 255) / 255f
+    val b = (fluidColor and 255) / 255f
+
+    val tess = Tessellator.getInstance()
+    tess.buffer.run {
+        val matrix = matrices.peek().positionMatrix
+
+        var percentage = (amt / max.toFloat()) * height.toFloat()
+
+        repeat((percentage / 16f).toInt()) { i ->
+            val p = if (percentage > 16f) 16f else percentage
+            begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE)
+            vertex(matrix, x.toFloat(), y - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, sprite.minV).next()
+            vertex(matrix, x + width.toFloat(), y - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.minU, sprite.minV).next()
+            val atlasHeight = sprite.height / (sprite.maxV - sprite.minV)
+            vertex(matrix, x + width.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.minU, (sprite.maxV - ((sprite.height - p) / atlasHeight))).next()
+            vertex(matrix, x.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, (sprite.maxV - ((sprite.height - p) / atlasHeight))).next()
+            tess.draw()
+            percentage -= p
+        }
+    }
+
+}
+
+const val FULL_LIGHT = 0x00F000F0
+
+fun drawFluidInTank(
+    world: World,
+    pos: BlockPos,
+    ms: MatrixStack,
+    vcp: VertexConsumerProvider,
+    fluid: FluidVariant,
+    fill: Float
+) {
+    val width = 1.5f/16f
+    var fill = fill
+    val vc = vcp.getBuffer(RenderLayer.getTranslucent())
+    val sprite = FluidVariantRendering.getSprite(fluid)
+    val color = FluidRenderHandlerRegistry.INSTANCE.get(fluid.fluid).getFluidColor(world, pos, fluid.fluid.defaultState)
+    val r = (color shr 16 and 255) / 256f
+    val g = (color shr 8 and 255) / 256f
+    val b = (color and 255) / 256f
+
+    // Make sure fill is within [TANK_W, 1 - TANK_W]
+    fill = width + (1 - 2 * width) * Math.min(1f, Math.max(fill, 0f))
+    // Top and bottom positions of the fluid inside the tank
+    var topHeight = fill
+    var bottomHeight: Float = width
+    // Render gas from top to bottom
+    if (FluidVariantAttributes.isLighterThanAir(fluid)) {
+        topHeight = 1 - width
+        bottomHeight = 1 - fill
+    }
+    val renderer = RendererAccess.INSTANCE.renderer!!
+    for (direction in Direction.values()) {
+        val emitter: QuadEmitter = renderer.meshBuilder().emitter
+        if (direction.axis.isVertical) {
+            emitter.square(
+                direction,
+                width,
+                width,
+                1 - width,
+                1 - width,
+                if (direction == Direction.UP) 1 - topHeight else bottomHeight
+            )
+        } else {
+            emitter.square(direction, width, bottomHeight, 1 - width, topHeight, width)
+        }
+        emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
+        emitter.spriteColor(0, -1, -1, -1, -1)
+        vc.quad(ms.peek(), emitter.toBakedQuad(0, sprite, false), r, g, b, FULL_LIGHT, OverlayTexture.DEFAULT_UV)
+    }
 }

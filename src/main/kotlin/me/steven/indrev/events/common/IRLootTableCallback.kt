@@ -1,23 +1,25 @@
 package me.steven.indrev.events.common
 
 import me.steven.indrev.registry.IRItemRegistry
-import net.fabricmc.fabric.api.loot.v1.FabricLootSupplierBuilder
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents
+import net.fabricmc.fabric.api.loot.v2.LootTableSource
 import net.minecraft.loot.LootManager
 import net.minecraft.loot.LootPool
+import net.minecraft.loot.LootTable
 import net.minecraft.loot.condition.RandomChanceLootCondition
 import net.minecraft.loot.entry.ItemEntry
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider
 import net.minecraft.resource.ResourceManager
 import net.minecraft.util.Identifier
 
-object IRLootTableCallback : LootTableLoadingCallback {
-    override fun onLootTableLoading(
+object IRLootTableCallback : LootTableEvents.Modify {
+
+    override fun modifyLootTable(
         resourceManager: ResourceManager,
-        manager: LootManager,
-        id: Identifier,
-        supplier: FabricLootSupplierBuilder,
-        setter: LootTableLoadingCallback.LootTableSetter
+        lootManager: LootManager?,
+        id: Identifier?,
+        tableBuilder: LootTable.Builder,
+        source: LootTableSource?
     ) {
         val chance = when (id) {
             abandonedMineshaft, simpleDungeon -> 0.3f
@@ -30,7 +32,7 @@ object IRLootTableCallback : LootTableLoadingCallback {
         builder.rolls(ConstantLootNumberProvider.create(1f))
         colorModules.forEach { builder.with(ItemEntry.builder(it)) }
         builder.conditionally(RandomChanceLootCondition.builder(chance))
-        supplier.withPool(builder.build())
+        tableBuilder.pool(builder.build())
     }
 
     private val abandonedMineshaft = Identifier("chests/abandoned_mineshaft")

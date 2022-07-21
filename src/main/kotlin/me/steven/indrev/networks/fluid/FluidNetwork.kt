@@ -1,6 +1,5 @@
 package me.steven.indrev.networks.fluid
 
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
 import me.steven.indrev.api.machines.Tier
@@ -141,9 +140,5 @@ class FluidNetwork(
         val cable = block as? FluidPipeBlock ?: return
         this.tier = cable.tier
         super.appendPipe(block, blockPos)
-    }
-
-    companion object {
-        private val NO_FLUID_FILTER = FluidFilter { true }
     }
 }

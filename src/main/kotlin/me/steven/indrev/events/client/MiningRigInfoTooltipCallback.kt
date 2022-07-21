@@ -24,8 +24,8 @@ object MiningRigInfoTooltipCallback : ItemTooltipCallback {
                 DataCardWriterBlockEntity.ORES_SLOTS.forEach { slot ->
                     val oreStack = blockEntity.inventoryComponent!!.inventory.getStack(slot)
                     if (oreStack.equals(stack) && stack.count < 64) {
-                        lines.add(index, LiteralText("Missing ${64-stack.count} blocks.").formatted(Formatting.RED))
-                        lines.add(index, LiteralText("Not enough blocks to collect data.").formatted(Formatting.RED))
+                        lines.add(index, literal("Missing ${64-stack.count} blocks.").formatted(Formatting.RED))
+                        lines.add(index, literal("Not enough blocks to collect data.").formatted(Formatting.RED))
                     }
                 }
             }

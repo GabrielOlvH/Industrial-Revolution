@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import me.steven.indrev.blocks.misc.BiomassComposterBlock
 import me.steven.indrev.utils.bucket
 import me.steven.indrev.utils.identifier
@@ -46,12 +45,12 @@ class BiomassComposterBlockEntityRenderer : BlockEntityRenderer<BiomassComposter
             push()
             val vol = entity.fluidInv.amount / bucket.toDouble()
             translate(0.0, vol, 0.0)
-            entity.fluidInv.render(FACE, vertexConsumers, matrices)
+            //entity.fluidInv.render(FACE, vertexConsumers, matrices)
             pop()
         }
     }
 
     companion object {
-        private val FACE = listOf(FluidRenderFace.createFlatFaceY(0.125, 0.0, 0.125, 0.875, 0.0, 0.875, 1.0, true, false))
+        //private val FACE = listOf(FluidRenderFace.createFlatFaceY(0.125, 0.0, 0.125, 0.875, 0.0, 0.875, 1.0, true, false))
     }
 }

@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
@@ -55,7 +55,7 @@ object IndustrialRevolution : ModInitializer {
         WorldGeneration.init()
         WorldGeneration.addFeatures()
 
-        LootTableLoadingCallback.EVENT.register(IRLootTableCallback)
+        LootTableEvents.MODIFY.register(IRLootTableCallback)
 
         MachineRegistry
 

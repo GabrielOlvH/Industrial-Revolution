@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.generators
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
 import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
 import me.steven.indrev.utils.IRFluidTank
 import net.minecraft.client.render.VertexConsumerProvider
@@ -34,7 +33,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
     }
 
     private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
-        val yMax = (((inputVolume.amount / (4f*81000)) * 10.0) / 16.0).coerceAtLeast(0.1)
+        /*val yMax = (((inputVolume.amount / (4f*81000)) * 10.0) / 16.0).coerceAtLeast(0.1)
         val face =
             listOf(
                 FluidRenderFace.createFlatFaceZ(0.01, 0.1, 0.99, 0.99, yMax, 0.99, 2.0, true, false),
@@ -42,7 +41,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
                 FluidRenderFace.createFlatFaceX(0.01, 0.1, 0.8, 0.01, yMax, 0.99, 2.0, false, false),
                 FluidRenderFace.createFlatFaceX(0.99, 0.1, 0.8, 0.99, yMax, 0.99, 2.0, true, false)
             )
-        inputVolume.render(face, vcp, this)
+        inputVolume.render(face, vcp, this)*/
     }
 
 }

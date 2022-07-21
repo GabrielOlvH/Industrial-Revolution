@@ -1,8 +1,5 @@
 package me.steven.indrev.utils
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import me.steven.indrev.components.DefaultSyncableObject
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.SyncableObject
@@ -15,7 +12,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant
-import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
@@ -36,14 +32,16 @@ class IRFluidTank(val index: Int, val component: () -> FluidComponent) : SingleV
         return nbt
     }
 
-    fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
+    /*fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
         if (!variant.isBlank)
             FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).render(faces, vcp, matrices)
-    }
+    }*/
 
-    fun renderGuiRect(x0: Double, y0: Double, x1: Double, y1: Double) {
-        if (!variant.isBlank)
-            FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).renderGuiRect(x0, y0, x1, y1)
+    fun renderGuiRect(matrices: MatrixStack, x: Int, y: Int, width: Int, height: Int) {
+        if (!variant.isBlank) {
+            //FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).renderGuiRect(x0, y0, x1, y1)
+            renderInGui(matrices, resource, amount, capacity, x, y, width, height)
+        }
     }
 
     override fun onFinalCommit() {

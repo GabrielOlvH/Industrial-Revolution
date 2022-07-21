@@ -96,15 +96,16 @@ fun fluidTank(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
             val barSize = (barMax * percent).toInt()
             if (barSize > 0) {
                 var t = top
-                t -= barSize
+               // t += barSize
 
                 val tank = properties.get<IRFluidTank>(index)
                 tank
                     .renderGuiRect(
-                        left.toDouble() + 1,
-                        t.toDouble() + 1 + height,
-                        left + width.toDouble() - 1,
-                        t + barSize.toDouble() - 1 + height
+                        matrices,
+                        left + 1,
+                        top + height - 1,
+                        width - 2,
+                        height - 2
                     )
             }
             ScreenDrawing.texturedRect(matrices, left, top, this.width, this.height, TANK_TOP, -1)

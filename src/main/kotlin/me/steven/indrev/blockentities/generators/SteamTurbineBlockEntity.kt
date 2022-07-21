@@ -1,6 +1,5 @@
 package me.steven.indrev.blockentities.generators
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.components.autosync
@@ -30,7 +29,7 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
     var efficiency by autosync(EFFICIENCY, 1.0)
 
     var generatingTicks = 0
-    var totalInserted: FluidAmount = FluidAmount.ZERO
+    //var totalInserted: FluidAmount = FluidAmount.ZERO
 
     init {
         trackLong(GENERATING) { getGenerationRatio() * 100 }
@@ -39,30 +38,30 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
 
     // used for the screen handler
     @Environment(EnvType.CLIENT)
-    var consuming: FluidAmount = FluidAmount.ZERO
+   // var consuming: FluidAmount = FluidAmount.ZERO
 
-    override fun getGenerationRatio(): Long {
-        val radius = getRadius()
-        val eff  = totalInserted.div(20).asInexactDouble()
-        return (((eff * 2) / (radius.toDouble() / 7)) * 2048).toLong()
-    }
+    //override fun getGenerationRatio(): Long {
+        //val radius = getRadius()
+        //val eff  = totalInserted.div(20).asInexactDouble()
+        //return (((eff * 2) / (radius.toDouble() / 7)) * 2048).toLong()
+   // }
 
     override fun shouldGenerate(): Boolean {
-        if (generatingTicks <= 0) {
+       /* if (generatingTicks <= 0) {
             if (!totalInserted.isZero) {
                 generatingTicks = 20
                 fluidComponent!![0].extract(Long.MAX_VALUE, true)
             } else
                 return false
         }
-        generatingTicks--
-        if (generatingTicks <= 0) totalInserted = FluidAmount.ZERO
+        generatingTicks--*/
+      //  if (generatingTicks <= 0) totalInserted = FluidAmount.ZERO
         return true
     }
 
-    private fun getConsumptionRatio(): FluidAmount {
-        return totalInserted.div(20)
-    }
+   // private fun getConsumptionRatio(): FluidAmount {
+       // return totalInserted.div(20)
+    //}
 
     private fun getRadius(): Int {
         //return 7
@@ -109,12 +108,12 @@ class SteamTurbineBlockEntity(pos: BlockPos, state: BlockState) : GeneratorBlock
     }
 
     override fun toClientTag(tag: NbtCompound) {
-        tag.put("Consuming", getConsumptionRatio().toNbt())
+       // tag.put("Consuming", getConsumptionRatio().toNbt())
         multiblockComponent?.writeNbt(tag)
     }
 
     override fun fromClientTag(tag: NbtCompound) {
-        consuming = FluidAmount.fromNbt(tag.getCompound("Consuming")) ?: consuming
+      //  consuming = FluidAmount.fromNbt(tag.getCompound("Consuming")) ?: consuming
         multiblockComponent?.readNbt(tag)
     }
 

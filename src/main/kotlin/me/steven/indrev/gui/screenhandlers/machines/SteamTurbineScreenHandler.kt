@@ -29,10 +29,11 @@ class SteamTurbineScreenHandler(syncId: Int, playerInventory: PlayerInventory, c
 
             root.add(WDynamicLabel { "  Efficiency: " + String.format("%.2f", blockEntity.efficiency) }, 1, 1)
             root.add(WDynamicLabel {
-                val a = blockEntity.consuming.asInt(1000).coerceAtLeast(1)
-                val inexact = blockEntity.consuming.asInt(1000)
-                val prefix = if (inexact > a) ">" else if (inexact < a) "<" else ""
-                "  Consuming: $prefix$a mB"
+               // val a = blockEntity.consuming.asInt(1000).coerceAtLeast(1)
+               // val inexact = blockEntity.consuming.asInt(1000)
+               // val prefix = if (inexact > a) ">" else if (inexact < a) "<" else ""
+                //"  Consuming: $prefix$a mB"
+                                   ""
             }, 1, 2)
             root.add(WDynamicLabel { "  Generating: ${propertyDelegate[SteamTurbineBlockEntity.GENERATING] / 100.0}" }, 1, 3)
 

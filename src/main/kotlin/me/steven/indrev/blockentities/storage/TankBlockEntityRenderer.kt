@@ -1,7 +1,6 @@
 package me.steven.indrev.blockentities.storage
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import me.steven.indrev.blocks.misc.TankBlock
+import me.steven.indrev.utils.drawFluidInTank
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
@@ -10,12 +9,15 @@ class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
     override fun render(
         entity: TankBlockEntity,
         tickDelta: Float,
-        matrices: MatrixStack?,
-        vertexConsumers: VertexConsumerProvider?,
+        matrices: MatrixStack,
+        vertexConsumers: VertexConsumerProvider,
         light: Int,
         overlay: Int
     ) {
-        val fluidComponent = entity.fluidComponent
+        val tank = entity.fluidComponent[0]
+        if (!tank.isEmpty)
+            drawFluidInTank(entity.world!!, entity.pos, matrices, vertexConsumers, tank.resource, tank.amount / tank.capacity.toFloat())
+       /* val fluidComponent = entity.fluidComponent
         val volume = fluidComponent[0]
         if (volume.isEmpty) return
         val fluid = volume.amount
@@ -44,6 +46,6 @@ class TankBlockEntityRenderer : BlockEntityRenderer<TankBlockEntity> {
             face.light = light;
         }
 
-        volume.render(faces, vertexConsumers, matrices);
+        volume.render(faces, vertexConsumers, matrices);*/
     }
 }
