@@ -25,12 +25,13 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.WorldAccess
+import java.util.EnumSet
 import kotlin.collections.set
 
 abstract class MachineBlockEntity<T : IConfig>(val tier: Tier, val registry: MachineRegistry, pos: BlockPos, state: BlockState)
     : BaseMachineBlockEntity(registry.blockEntityType(tier), pos, state) {
 
-    val validConnections = Direction.values().toMutableList()
+    val validConnections: EnumSet<Direction> = EnumSet.allOf(Direction::class.java)
 
     override var guiSyncableComponent: GuiSyncableComponent? = GuiSyncableComponent()
 
