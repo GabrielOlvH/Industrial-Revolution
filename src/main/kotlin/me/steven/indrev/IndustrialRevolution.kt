@@ -96,7 +96,7 @@ object IndustrialRevolution : ModInitializer {
             val player = handler.player
             SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
-                (player as IRServerPlayerEntityExtension).sync()
+                player.sync()
             }
         }
 

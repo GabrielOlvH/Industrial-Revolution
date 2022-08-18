@@ -184,7 +184,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
             val tankTag = tanksTag.getCompound(key).getCompound("fluids")
             IRFluidAmount(FluidVariant.fromNbt(tankTag.getCompound("variant")), tankTag.getLong("amt"))
         }?.firstOrNull() ?: return
-        tooltip?.addAll(getTooltip(volume.resource, volume.amount, bucket*8).map { it as Text })
+        tooltip?.addAll(getTooltip(volume.resource, volume.amount, bucket*8))
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {

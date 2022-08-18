@@ -28,12 +28,14 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.OrderedText
 import net.minecraft.text.Style
+import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.util.*
 import java.util.function.LongFunction
+import kotlin.math.ceil
 
 
 //these are just for reference, they're not used much
@@ -101,12 +103,12 @@ fun fromPacket(buf: PacketByteBuf): IRFluidAmount {
 
 infix fun Long.of(variant: FluidVariant) = IRFluidAmount(variant, this)
 
-fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<OrderedText> {
-    val tooltips = mutableListOf<OrderedText>()
+fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Text> {
+    val tooltips = mutableListOf<Text>()
     val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
     val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, variant.fluid.defaultState) ?: -1
 
-    tooltips.add(translatable("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)).asOrderedText())
+    tooltips.add(translatable("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)))
 
     val asMb = amount / 81
     val accurate = amount / 81.0
@@ -116,15 +118,15 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Ordere
         else -> ""
     }
     if (capacity > 0)
-        tooltips.add(translatable("$prefix$asMb / ${capacity / 81} mB").asOrderedText())
+        tooltips.add(translatable("$prefix$asMb / ${capacity / 81} mB"))
     else
-        tooltips.add(translatable("$prefix$asMb mB").asOrderedText())
+        tooltips.add(translatable("$prefix$asMb mB"))
 
     if (Screen.hasShiftDown()) {
         if (capacity > 0)
-            tooltips.add(translatable("$amount / $capacity droplets").asOrderedText())
+            tooltips.add(translatable("$amount / $capacity droplets"))
         else
-            tooltips.add(translatable("$amount droplets").asOrderedText())
+            tooltips.add(translatable("$amount droplets"))
     }
     
     return tooltips
@@ -147,7 +149,7 @@ fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: L
 
         var percentage = (amt / max.toFloat()) * height.toFloat()
 
-        repeat((percentage / 16f).toInt()) { i ->
+        repeat(ceil(percentage / 16).toInt()) { i ->
             val p = if (percentage > 16f) 16f else percentage
             begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE)
             vertex(matrix, x.toFloat(), y - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, sprite.minV).next()
@@ -173,7 +175,7 @@ fun drawFluidInTank(
     fluid: FluidVariant,
     fill: Float
 ) {
-    val width = 1.5f/16f
+    val width = 1.8f/16f
     var fill = fill
     val vc = vcp.getBuffer(RenderLayer.getTranslucent())
     val sprite = FluidVariantRendering.getSprite(fluid)

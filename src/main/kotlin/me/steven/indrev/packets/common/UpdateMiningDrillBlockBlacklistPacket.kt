@@ -1,5 +1,7 @@
 package me.steven.indrev.packets.common
 
+import draylar.magna.api.MagnaTool
+import me.steven.indrev.items.energy.IRMiningDrillItem
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
@@ -65,12 +67,31 @@ object UpdateMiningDrillBlockBlacklistPacket {
                 update(stack, flipped)
             }
         }),
+        INVERT({ _, server, player ->
+            server.execute {
+                val stack = player.mainHandStack
+                val item = stack.item
+                if (item is MagnaTool) {
+                    val inverted = mutableListOf<BlockPos>()
+                    val positions = DrillModule.getBlacklistedPositions(stack)
+                    val range = item.getRadius(stack)
+                    for (x in -range..range) {
+                        for (y in -range..range) {
+                            val pos = BlockPos(x, -y, 0)
+                            if (!positions.contains(pos))
+                                inverted.add(pos)
+                        }
+                    }
+                    update(stack, inverted)
+                }
+            }
+        }),
         CLEAR({ _, server, player ->
             server.execute {
                 val stack = player.mainHandStack
                 update(stack, emptyList())
             }
-        }),
+        });
     }
 
     private fun update(stack: ItemStack, blacklist: List<BlockPos>) {

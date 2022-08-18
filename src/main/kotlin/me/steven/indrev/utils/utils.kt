@@ -96,7 +96,7 @@ fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid:
         renderInGui(matrices, fluid.resource, fluid.amount, fluid.amount, startPoint.x + 1, startPoint.y + 1+50, 14, 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
             val information = mutableListOf<OrderedText>()
-            information.addAll(getTooltip(fluid.resource, fluid.amount, -1))
+            information.addAll(getTooltip(fluid.resource, fluid.amount, -1).map { it.asOrderedText() })
             MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
         }
     })

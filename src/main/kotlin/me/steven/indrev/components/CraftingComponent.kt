@@ -41,7 +41,7 @@ open class CraftingComponent<T : IRRecipe>(private val index: Int, val machine: 
         when {
             isProcessing() -> {
                 val recipe = currentRecipe
-                val upgrades = machine.enhancerComponent!!.enhancers
+                machine.enhancerComponent!!.enhancers
                 if (recipe?.matches(inputInventory, inputTanks) != true) {
                     tryStartRecipe(inventory) ?: reset().also { markDirty() }
                 }

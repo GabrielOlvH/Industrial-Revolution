@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack
 
 class ReinforcedElytraItem : ArmorItem(IRArmorMaterial.STEEL_ELYTRA, EquipmentSlot.CHEST, itemSettings().maxDamage(800)), FabricElytraItem {
 
-
     override fun useCustomElytra(entity: LivingEntity, chestStack: ItemStack, tickElytra: Boolean): Boolean {
         return canFallFly(chestStack) && super.useCustomElytra(entity, chestStack, tickElytra)
     }
@@ -23,7 +22,7 @@ class ReinforcedElytraItem : ArmorItem(IRArmorMaterial.STEEL_ELYTRA, EquipmentSl
         fun canFallFly(itemStack: ItemStack): Boolean {
             return (itemStack.isOf(IRItemRegistry.REINFORCED_ELYTRA) && ElytraItem.isUsable(itemStack))
                     || (itemStack.isOf(IRItemRegistry.MODULAR_ARMOR_CHEST)
-                     && ArmorModule.ELYTRA.getLevel(itemStack) > 0
+                    && ArmorModule.ELYTRA.getLevel(itemStack) > 0
                     && energyOf(itemStack)!!.amount > 0)
         }
 

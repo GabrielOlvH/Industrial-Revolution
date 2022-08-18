@@ -16,8 +16,9 @@ object MatterProjectorPreviewRenderer : WorldRenderEvents.BeforeEntities {
         val stack = player.mainHandStack
         val item = stack.item
         if (player.isSneaking && DrillModule.MATTER_PROJECTOR.isInstalled(stack) && item is MagnaTool && target is BlockHitResult) {
+            val blockState = context.world().getBlockState(target.blockPos)
             item.blockFinder.findPositions(context.world(), player, item.getRadius(stack)).forEach { pos ->
-                val blockState = context.world().getBlockState(pos)
+
                 val offset = pos.offset(target.side)
                 if (context.world().getBlockState(offset).material.isReplaceable) {
                     val cameraPos = MinecraftClient.getInstance().gameRenderer.camera.pos
@@ -25,7 +26,7 @@ object MatterProjectorPreviewRenderer : WorldRenderEvents.BeforeEntities {
                     val y = offset.y - cameraPos.y
                     val z = offset.z - cameraPos.z
                     context.matrixStack().push()
-                    context.matrixStack().translate(x, y, z)
+                    context.matrixStack().translate(x+0.2, y, z+0.2)
                     context.matrixStack().scale(0.6f, 0.6f, 0.6f)
                     MinecraftClient.getInstance().blockRenderManager.renderBlockAsEntity(blockState, context.matrixStack(), context.consumers(), 0xFF, OverlayTexture.DEFAULT_UV)
                     context.matrixStack().pop()

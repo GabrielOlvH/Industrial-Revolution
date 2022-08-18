@@ -95,9 +95,6 @@ fun fluidTank(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
 
             val barSize = (barMax * percent).toInt()
             if (barSize > 0) {
-                var t = top
-               // t += barSize
-
                 val tank = properties.get<IRFluidTank>(index)
                 tank
                     .renderGuiRect(

@@ -20,6 +20,7 @@ import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.*
 import net.minecraft.text.Text
 import me.steven.indrev.utils.translatable
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
@@ -216,6 +217,7 @@ object IRItemRegistry {
 
         identifier("modular_armor_helmet").item(MODULAR_ARMOR_HELMET)
         identifier("modular_armor_chest").item(MODULAR_ARMOR_CHEST)
+        FluidStorage.ITEM.registerForItems({ stack, ctx -> JetpackHandler.JetpackFluidStorage(MODULAR_ARMOR_CHEST, ctx) }, MODULAR_ARMOR_CHEST)
         identifier("modular_armor_legs").item(MODULAR_ARMOR_LEGGINGS)
         identifier("modular_armor_boots").item(MODULAR_ARMOR_BOOTS)
 
