@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
+import net.minecraft.block.OreBlock
 import net.minecraft.block.Material
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.entity.EquipmentSlot
@@ -29,7 +30,7 @@ class MaterialHelper(private val id: String, private val block: MaterialHelper.(
         return this
     }
 
-    fun withOre(rawOre: Boolean = true, supplier: (FabricBlockSettings) -> Block = { Block(it) }): MaterialHelper {
+    fun withOre(rawOre: Boolean = true, supplier: (FabricBlockSettings) -> Block = { OreBlock(it) }): MaterialHelper {
         val ore = supplier(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3f, 3f))
         val identifier = identifier("${id}_ore")
         map[identifier] = {
