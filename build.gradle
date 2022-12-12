@@ -81,7 +81,7 @@ repositories {
     }
     maven {
         name = "Cafeteria Development"
-        url = 'https://maven.cafeteria.dev'
+        url = 'https://maven.cafeteria.dev/releases'
         content {
             includeGroup 'dev.cafeteria'
             includeGroup 'me.luligabi'
@@ -130,7 +130,7 @@ dependencies {
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
-    dependencies.ext.lib("me.luligabi:NoIndium:1.0")
+    dependencies.ext.lib("me.luligabi:NoIndium:1.1.0+1.19")
 
     modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -140,6 +140,7 @@ dependencies {
     modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
     dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
     modRuntimeOnly("org.yaml:snakeyaml:1.27")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 loom {
@@ -208,3 +209,13 @@ publishing {
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "17"
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

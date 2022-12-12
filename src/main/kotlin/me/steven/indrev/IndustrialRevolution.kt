@@ -96,14 +96,14 @@ object IndustrialRevolution : ModInitializer {
             val player = handler.player
             SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
-                player.sync()
+                player.indrev_sync()
             }
         }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
-                if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
-                    player.sync()
+                if (player is IRServerPlayerEntityExtension && player.indrev_shouldSync()) {
+                    player.indrev_sync()
                 }
             }
         }

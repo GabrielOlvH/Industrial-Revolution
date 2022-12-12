@@ -29,7 +29,7 @@
         "value": "me.steven.indrev.IndustrialRevolutionClient"
       }
     ],
-    "rei_common": [
+    "rei_client": [
       {
         "adapter": "kotlin",
         "value": "me.steven.indrev.compat.rei.REIPlugin"
