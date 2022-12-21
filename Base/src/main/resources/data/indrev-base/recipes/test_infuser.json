@@ -1,0 +1,24 @@
+{
+  "type": "indrev-base:chemical_infuser",
+  "input": [
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "fluidInput": [
+    {
+      "fluid": "minecraft:water"
+    }
+  ],
+  "output": [
+    {
+      "item": "minecraft:cobblestone"
+    }
+  ],
+  "fluidOutput": [
+    {
+      "fluid": "minecraft:lava"
+    }
+  ],
+  "ticks": 200
+}

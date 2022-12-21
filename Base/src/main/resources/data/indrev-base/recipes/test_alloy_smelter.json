@@ -1,0 +1,17 @@
+{
+  "type": "indrev-base:alloy_smelter",
+  "input": [
+    {
+      "item": "minecraft:stone"
+    },
+    {
+      "item": "minecraft:dirt"
+    }
+  ],
+  "output": [
+    {
+      "item": "minecraft:coarse_dirt"
+    }
+  ],
+  "ticks": 200
+}

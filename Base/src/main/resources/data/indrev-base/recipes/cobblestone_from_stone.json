@@ -1,0 +1,14 @@
+{
+  "type": "indrev-base:pulverizer",
+  "input": [
+    {
+      "item": "minecraft:stone"
+    }
+  ],
+  "output": [
+    {
+      "item": "minecraft:cobblestone"
+    }
+  ],
+  "ticks": 200
+}

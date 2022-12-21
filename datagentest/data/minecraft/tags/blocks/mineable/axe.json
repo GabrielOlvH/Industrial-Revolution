@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "indrev:biomass_composter",
+    "indrev:plank_block",
+    "indrev:planks"
+  ]
+}
