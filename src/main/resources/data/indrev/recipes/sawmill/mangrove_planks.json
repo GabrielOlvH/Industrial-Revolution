@@ -1,0 +1,22 @@
+{
+  "type": "indrev:sawmill",
+  "ingredients": {
+    "tag": "minecraft:mangrove_logs"
+  },
+  "output": [
+    {
+      "item": "minecraft:mangrove_planks",
+      "count": 6
+    },
+    {
+      "item": "minecraft:stick",
+      "count": 2,
+      "chance": 0.5
+    },
+    {
+      "item": "indrev:sawdust",
+      "count": 3
+    }
+  ],
+  "processTime": 200
+}
