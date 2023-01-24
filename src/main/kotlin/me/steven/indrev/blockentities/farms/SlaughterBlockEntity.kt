@@ -8,6 +8,9 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.redirectDrops
+import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.use
+
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.boss.WitherEntity
@@ -15,8 +18,10 @@ import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.decoration.ArmorStandEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.SwordItem
+import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
+import team.reborn.energy.api.base.SimpleBatteryItem
 
 class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMachineBlockEntity<BasicMachineConfig>(tier, MachineRegistry.SLAUGHTER_REGISTRY, pos, state) {
 
@@ -53,14 +58,11 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         } else workingState = true
         val swordStack = inventory.inputSlots.map { inventory.getStack(it) }.firstOrNull { it.item is SwordItem }
         fakePlayer.inventory.selectedSlot = 0
-        if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
+        if (swordStack != null && !swordStack.isEmpty && swordStack.item is SwordItem) {
             val swordItem = swordStack.item as SwordItem
             use(getEnergyCost())
             mobs.forEach { mob ->
-                swordStack.damage(1, world?.random, null)
-                if (swordStack.damage >= swordStack.maxDamage) swordStack.decrement(1)
-
-                if (mob.isAlive) {
+                if (mob.isAlive && damageToolOrUseEnergy(swordStack)) {
                     mob.redirectDrops(inventory) {
                         mob.damage(source, (swordItem.attackDamage * Enhancer.getDamageMultiplier(enhancers)).toFloat())
                     }
@@ -70,7 +72,22 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         fakePlayer.inventory.clear()
         cooldown = 0.0
     }
-
+    
+    private fun damageToolOrUseEnergy(swordItem : ItemStack) : Boolean {
+        if (swordItem.item is SimpleBatteryItem){
+            return (swordItem.item as SimpleBatteryItem).tryUseEnergy(swordItem,1);
+        }
+        else if (energyOf(swordItem) != null){
+            return energyOf(swordItem)!!.use(1)
+        }
+        else {
+            if (!swordItem.isDamageable) return false
+            swordItem.damage(1, world?.random, null)
+            if (swordItem.damage >= swordItem.maxDamage) swordItem.decrement(1)
+            return true
+        }
+    }
+    
     override fun getEnergyCost(): Long {
         val speedEnhancers = (enhancerComponent!!.getCount(Enhancer.SPEED) * 2).coerceAtLeast(1)
         val dmgEnhancers = (enhancerComponent!!.getCount(Enhancer.DAMAGE) * 8).coerceAtLeast(1)
