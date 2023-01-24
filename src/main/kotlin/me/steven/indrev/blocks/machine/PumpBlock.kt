@@ -2,6 +2,7 @@ package me.steven.indrev.blocks.machine
 
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
+import me.steven.indrev.gui.screenhandlers.machines.PumpScreenHandler
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.block.BlockState
 import net.minecraft.block.ShapeContext
@@ -17,7 +18,7 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
     settings,
     Tier.MK1,
     IRConfig.machines.pump,
-    null) {
+    ::PumpScreenHandler) {
 
     override fun getOutlineShape(
         state: BlockState?,

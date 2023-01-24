@@ -19,10 +19,10 @@ class ItemFilterData(
         if (filter.isEmpty()) return !whitelist
         val findMatches = filter.filter { it.item == itemStack.item }
         if (findMatches.isEmpty()) return !whitelist
-        var valid = true
-        if (valid && matchDurability) valid = findMatches.any { it.damage == itemStack.toStack().damage }
-        if (valid && matchTag) valid = findMatches.any { it.nbt == itemStack.nbt }
-        if (valid) return whitelist
+        var match = true
+        if (matchDurability) match = findMatches.any { it.damage == itemStack.toStack().damage }
+        if (match && matchTag) match = findMatches.any { it.nbt == itemStack.nbt }
+        if (match) return whitelist
         return !whitelist
     }
 
@@ -43,6 +43,6 @@ class ItemFilterData(
     }
 
     companion object {
-        val ACCEPTING_FILTER_DATA = ItemFilterData(false, false, false)
+        val ACCEPTING_FILTER_DATA = ItemFilterData()
     }
 }

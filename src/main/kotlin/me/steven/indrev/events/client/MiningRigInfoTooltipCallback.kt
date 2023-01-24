@@ -17,6 +17,19 @@ object MiningRigInfoTooltipCallback : ItemTooltipCallback {
         val handler = MinecraftClient.getInstance().player?.currentScreenHandler
         if (handler is DataCardWriterScreenHandler) {
 
+            val index = lines.size - if (ctx.isAdvanced) 1 else 0
+
+            handler.ctx.run { world, pos ->
+                val blockEntity = world.getBlockEntity(pos) as? DataCardWriterBlockEntity ?: return@run
+                DataCardWriterBlockEntity.ORES_SLOTS.forEach { slot ->
+                    val oreStack = blockEntity.inventoryComponent!!.inventory.getStack(slot)
+                    if (oreStack.equals(stack) && stack.count < 64) {
+                        lines.add(index, LiteralText("Missing ${64-stack.count} blocks.").formatted(Formatting.RED))
+                        lines.add(index, LiteralText("Not enough blocks to collect data.").formatted(Formatting.RED))
+                    }
+                }
+            }
+
             val data: OreDataCards.Data = handler.ctx.get { world, pos ->
                 val blockEntity = world.getBlockEntity(pos) as? DataCardWriterBlockEntity ?: return@get OreDataCards.INVALID_DATA
                 val cardStack = blockEntity.inventoryComponent!!.inventory.getStack(0)
@@ -38,8 +51,6 @@ object MiningRigInfoTooltipCallback : ItemTooltipCallback {
                 OreDataCards.Modifier.RNG -> {}
                 else -> return
             }
-
-            val index = lines.size - if (ctx.isAdvanced) 1 else 0
 
             val modifierName = TranslatableText(modifier.translationKey)
             if (remainingLevels <= 0)

@@ -60,17 +60,17 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 pop()
             }
             pop()
-            val currentY = floor(entity.movingTicks).toInt()
+            val currentY = floor(entity.pipePosition).toInt()
             for (y in 1..currentY) {
                 push()
                 translate(0.0, -y.toDouble(), 0.0)
                 renderModel(vertexConsumers, entity)
                 pop()
             }
-            if (currentY.toDouble() != entity.movingTicks) {
+            if (currentY.toDouble() != entity.pipePosition) {
                 push()
                 scale(1.01f, 1f, 1.01f)
-                translate(-0.005, -entity.movingTicks, -0.005)
+                translate(-0.005, -entity.pipePosition, -0.005)
                 renderModel(vertexConsumers, entity)
                 pop()
             }
