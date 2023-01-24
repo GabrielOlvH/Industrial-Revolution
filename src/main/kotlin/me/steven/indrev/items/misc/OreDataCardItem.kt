@@ -15,7 +15,7 @@ import net.minecraft.world.World
 import java.util.*
 import kotlin.math.roundToInt
 
-class OreDataCardItem : Item(itemSettings()) {
+class OreDataCardItem : Item(itemSettings().maxCount(1)) {
     override fun appendTooltip(
         stack: ItemStack,
         world: World?,

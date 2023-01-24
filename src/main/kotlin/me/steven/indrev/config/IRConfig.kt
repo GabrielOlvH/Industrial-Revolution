@@ -202,7 +202,9 @@ class Machines {
 
     val drain: MachineConfig = MachineConfig(4, 20.0, 1000, Tier.MK1.io)
 
-    val pump: MachineConfig = MachineConfig(4, 20.0, 50, Tier.MK1.io)
+    val pump: MachineConfig = MachineConfig(32, 50.0, 50, Tier.MK1.io)
+
+    val pumpMaxRange: Int = 64
 
     val smelter: HeatMachineConfig = HeatMachineConfig(64, 4.0, 2.0,50000, Tier.MK4.io)
 
