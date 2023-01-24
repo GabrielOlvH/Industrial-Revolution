@@ -34,7 +34,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
                 2 filter { stack -> stack.item is AxeItem || stack.item is SwordItem }
                 3 filter { (_, item) -> item is BoneMealItem }
                 4..5 filter { (stack, item), _ -> stack.isIn(ItemTags.SAPLINGS)
-                        || (item is BlockItem && (item.block is MushroomPlantBlock || item.block is BambooBlock)) }
+                        || (item is BlockItem && (item.block is MushroomPlantBlock || item.block is BambooBlock || item.block is FungusBlock)) }
             }
             output { slots = intArrayOf(6, 7, 8, 9, 10, 11, 12, 13, 14) }
             coolerSlot = 1
@@ -131,8 +131,11 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
         }
         val block = blockState.block
         when {
-            toolStack.item is AxeItem
-                    && (blockState.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM) -> {
+            toolStack.item is AxeItem && block !is FungusBlock
+                    && (blockState.isIn(BlockTags.LOGS) || block is MushroomBlock || block == Blocks.MUSHROOM_STEM ||
+                    block == Blocks.SHROOMLIGHT || block is NetherWartBlock || block == Blocks.WARPED_WART_BLOCK || block is RootsBlock || block is WeepingVinesBlock || block is WeepingVinesPlantBlock ||
+                    block is TwistingVinesPlantBlock || block is TwistingVinesBlock ||
+                    block.defaultState?.material == Material.NETHER_SHOOTS || block.defaultState?.material == Material.NETHER_WOOD) -> {
                 if (!damageTool(1)) return false
                 world?.setBlockState(blockPos, Blocks.AIR.defaultState, 3)
             }
@@ -168,7 +171,7 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
             }
             block is AirBlock
                     && item is BlockItem
-                    && (itemStack.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock)
+                    && (itemStack.isIn(ItemTags.SAPLINGS) || item.block is MushroomPlantBlock || item.block is BambooBlock || item.block is FungusBlock)
                     && item.block.defaultState.canPlaceAt(world, pos)
                     && itemStack.count > 1 -> {
                 if (item.block is BambooBlock)
