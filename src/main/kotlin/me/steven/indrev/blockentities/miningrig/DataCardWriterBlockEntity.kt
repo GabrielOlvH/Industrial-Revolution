@@ -5,6 +5,7 @@ import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.autosync
 import me.steven.indrev.config.BasicMachineConfig
+import me.steven.indrev.config.IRConfig
 import me.steven.indrev.inventories.inventory
 import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
@@ -140,6 +141,10 @@ class DataCardWriterBlockEntity (tier: Tier, pos: BlockPos, state: BlockState)
         toWrite.clear()
         processTime = 0
         totalProcessTime = 0
+    }
+
+    override fun getEnergyCost(): Long {
+        return IRConfig.machines.dataCardWriter.energyCost
     }
 
     companion object {

@@ -22,6 +22,7 @@ val GAS_BURNING_GENERATOR_HANDLER = GasBurningGeneratorScreenHandler.SCREEN_ID.r
 val BATTERY_HANDLER = LazuliFluxContainerScreenHandler.SCREEN_ID.registerScreenHandler(::LazuliFluxContainerScreenHandler)
 val ELECTRIC_FURNACE_HANDLER = ElectricFurnaceScreenHandler.SCREEN_ID.registerScreenHandler(::ElectricFurnaceScreenHandler)
 val PULVERIZER_HANDLER = PulverizerScreenHandler.SCREEN_ID.registerScreenHandler(::PulverizerScreenHandler)
+val PUMP_HANDLER = PumpScreenHandler.SCREEN_ID.registerScreenHandler(::PumpScreenHandler)
 val COMPRESSOR_HANDLER = CompressorScreenHandler.SCREEN_ID.registerScreenHandler(::CompressorScreenHandler)
 val SOLID_INFUSER_HANDLER = SolidInfuserScreenHandler.SCREEN_ID.registerScreenHandler(::SolidInfuserScreenHandler)
 val RECYCLER_HANDLER = RecyclerScreenHandler.SCREEN_ID.registerScreenHandler(::RecyclerScreenHandler)

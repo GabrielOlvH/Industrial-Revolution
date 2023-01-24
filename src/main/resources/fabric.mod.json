@@ -38,7 +38,7 @@
     "fabric-datagen": [
       {
         "adapter": "kotlin",
-        "value": "me.steven.indrev.IndustrialRevolutionDatagen"
+        "value": "me.steven.indrev.datagen.IndustrialRevolutionDatagen"
       }
     ]
   },

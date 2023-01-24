@@ -207,6 +207,8 @@ open class MachineBlock(
         notify: Boolean
     ) {
         val blockEntity = world?.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return
+
+        blockEntity.validConnections.clear()
         blockEntity.validConnections.addAll(Direction.values())
     }
 

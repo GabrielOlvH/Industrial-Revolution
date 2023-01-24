@@ -18,7 +18,7 @@ class IndustrialRevolutionDatagen : DataGeneratorEntrypoint {
             Registry.BLOCK.ids.forEach { id ->
                 if (id.namespace == IndustrialRevolution.MOD_ID) {
                     val block = Registry.BLOCK.get(id)
-                    if (block.defaultState.material == Material.METAL || block.defaultState.material == Material.STONE) {
+                    if (block.defaultState.material == Material.METAL || block.defaultState.material == Material.STONE || block.defaultState.material == Material.GLASS) {
                         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(block)
                     }
                     if (block.defaultState.material == Material.WOOD) {
