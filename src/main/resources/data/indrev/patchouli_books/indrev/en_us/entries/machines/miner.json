@@ -32,7 +32,7 @@
     },
     {
       "type": "text",
-      "text": "When looking inside a Data Card Encoder, the ores and modifiers it can encode will be highlighted in your inventory.$(br2)When encoding, some attributes will change in your card, like richness or size.$(br2)$(br)Tip: search \"#indrev:mining_rig_allowed\" on REI to see all allowed ores!"
+      "text": "When looking inside a Data Card Encoder, the ores and modifiers it can encode will be highlighted in your inventory.$(br2)When encoding, some attributes will change in your card, like richness or size.$(br2)$(br)Tip: search \"$indrev:mining_rig_allowed\" on REI to see all allowed ores!"
     },
     {
       "type": "text",
