@@ -18,10 +18,10 @@ import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.utils.add
 import me.steven.indrev.utils.configure
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.literal
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
 
 class PumpScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
@@ -39,7 +39,7 @@ class PumpScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Scre
             root.add(fluid, 8, 1)
         }
 
-        root.add(WLabel("1 bucket every" ), 1, 1)
+        root.add(WLabel(literal("1 bucket every")), 1, 1)
         root.add(WDynamicLabel { "${component!!.get<Int>(PumpBlockEntity.SPEED_ID)} ticks" }, 1, 2)
 
 

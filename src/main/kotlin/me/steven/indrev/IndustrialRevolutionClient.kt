@@ -180,7 +180,6 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         GlobalStateController.initClient()
 
-
         HudRenderCallback.EVENT.register(IRHudRenderCallback)
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register(IRWorldRenderer)
         WorldRenderEvents.BEFORE_ENTITIES.register(MatterProjectorPreviewRenderer)
@@ -228,6 +227,15 @@ object IndustrialRevolutionClient : ClientModInitializer {
             "key.indrev.gamer_axe_toggle",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_G,
+            "category.indrev"
+        )
+    )
+
+    val JETPACK_TOGGLE_KEYBINDING: KeyBinding = KeyBindingHelper.registerKeyBinding(
+        KeyBinding(
+            "key.indrev.jetpack_toggle",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_J,
             "category.indrev"
         )
     )

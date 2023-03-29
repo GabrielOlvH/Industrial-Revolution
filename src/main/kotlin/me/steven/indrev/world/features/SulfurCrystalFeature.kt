@@ -13,8 +13,11 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.gen.feature.DefaultFeatureConfig
 import net.minecraft.world.gen.feature.Feature
 import net.minecraft.world.gen.feature.util.FeatureContext
+import kotlin.random.Random
 
 class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<DefaultFeatureConfig>(codec) {
+
+    private val RANDOM = Random(1)
 
     override fun generate(
         context: FeatureContext<DefaultFeatureConfig>
@@ -33,7 +36,7 @@ class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
         coveredArea.forEach { x, y, z ->
             if (context.world.isOutOfHeightLimit(y)) return@forEach
             mutablePos.set(x, y, z)
-            DIRECTIONS_LIST.shuffled(random).forEach { dir ->
+            DIRECTIONS_LIST.shuffled(RANDOM).forEach { dir ->
                 val blockState = world?.getBlockState(mutablePos)
                 val pos = mutablePos.offset(dir)
                 val airState = world?.getBlockState(pos)

@@ -37,7 +37,7 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.BlockRotation
 import net.minecraft.util.Hand
@@ -45,9 +45,10 @@ import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
 import net.minecraft.world.WorldAccess
-import java.util.*
+import java.util.EnumMap
 
 open class MachineBlock(
     val registry: MachineRegistry,
@@ -94,7 +95,7 @@ open class MachineBlock(
             return screwdriver(world, pos!!, state!!, blockEntity, player, stack)
         } else if (blockEntity.multiblockComponent != null
             && !blockEntity.multiblockComponent!!.isBuilt(world, pos!!, blockEntity.cachedState, true)) {
-            player.sendMessage(TranslatableText("text.multiblock.not_built"), true)
+            player.sendMessage(translatable("text.multiblock.not_built"), true)
             blockEntity.multiblockComponent?.toggleRender(player.isSneaking)
             blockEntity.markDirty()
             blockEntity.sync()
@@ -170,7 +171,7 @@ open class MachineBlock(
                 }
                 dropStack(world, pos, stack)
             }
-            state!!.onStacksDropped(world, pos, toolStack)
+            state!!.onStacksDropped(world, pos, toolStack, true)
         }
     }
 

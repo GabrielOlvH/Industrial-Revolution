@@ -14,7 +14,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
@@ -98,7 +98,7 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
         val configuration = this
 
         if (configuration.type == ConfigurationType.ITEM) {
-            val autoPushBtn = WToggleButton(TranslatableText("item.indrev.wrench.autopush"))
+            val autoPushBtn = WToggleButton(translatable("item.indrev.wrench.autopush"))
             autoPushBtn.toggle = configuration.autoPush
             autoPushBtn.onToggle = Consumer { v ->
                 configuration.autoPush = v
@@ -110,7 +110,7 @@ data class SideConfiguration(val type: ConfigurationType, private val transferCo
                 ClientPlayNetworking.send(ConfigureIOPackets.UPDATE_AUTO_OPERATION_PACKET_ID, buf)
             }
             root.add(autoPushBtn, 0, 4)
-            val autoPullBtn = WToggleButton(TranslatableText("item.indrev.wrench.autopull"))
+            val autoPullBtn = WToggleButton(translatable("item.indrev.wrench.autopull"))
             autoPullBtn.toggle = configuration.autoPull
             autoPullBtn.onToggle = Consumer { v ->
                 configuration.autoPull = v

@@ -4,7 +4,7 @@ import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 
 enum class GamerAxeModule(
@@ -19,8 +19,8 @@ enum class GamerAxeModule(
 
     override fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
         super.getTooltip(stack, tooltip)
-        tooltip?.add(TranslatableText("item.indrev.module_parts").formatted(Formatting.BLUE))
-        tooltip?.add(TranslatableText("item.indrev.module_parts_gamer_axe").formatted(Formatting.GOLD))
+        tooltip?.add(translatable("item.indrev.module_parts").formatted(Formatting.BLUE))
+        tooltip?.add(translatable("item.indrev.module_parts_gamer_axe").formatted(Formatting.GOLD))
     }
 
     companion object {

@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -32,13 +33,13 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import team.reborn.energy.api.EnergyStorage;
 
 import java.util.List;
 import java.util.Map;
@@ -56,8 +57,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     private double lastShield = 0.0;
     private final Object2IntMap<ArmorModule> oldAppliedModules = new Object2IntOpenHashMap<>();
 
-    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
-        super(world, pos, yaw, profile);
+    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
+        super(world, pos, yaw, gameProfile, publicKey);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -93,7 +94,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
 
     @Inject(method = "worldChanged", at = @At("TAIL"))
     private void indrev_syncOnDimChange(ServerWorld origin, CallbackInfo ci) {
-        sync();
+        indrev_sync();
         AccessorextensionsKt.getFluidNetworkState(origin).onDimChange(this);
         AccessorextensionsKt.getItemNetworkState(origin).onDimChange(this);
     }
@@ -202,12 +203,12 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     }
 
     @Override
-    public boolean shouldSync() {
+    public boolean indrev_shouldSync() {
         return !oldAppliedModules.equals(getAppliedModules()) || lastShield != getShieldDurability();
     }
 
     @Override
-    public void sync() {
+    public void indrev_sync() {
         lastShield = getShieldDurability();
         oldAppliedModules.clear();
         oldAppliedModules.putAll(getAppliedModules());

@@ -18,7 +18,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import java.util.*
 
 class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext, val configs: EnumMap<ConfigurationType, SideConfiguration>) :
@@ -37,7 +37,7 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
         root.setSize(100, 128)
         root.insets = Insets.ROOT_PANEL
 
-        val titleText = WText(TranslatableText("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
+        val titleText = WText(translatable("item.indrev.wrench.title"), HorizontalAlignment.LEFT, 0x404040)
         root.add(titleText, 0.3, 0.4)
         ctx.run { world, pos ->
             val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@run

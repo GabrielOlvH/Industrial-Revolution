@@ -11,7 +11,7 @@ import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import java.util.function.Predicate
 
 class MiningRigDrillScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
@@ -26,7 +26,7 @@ class MiningRigDrillScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         val root = WGridPanel()
         setRootPanel(root)
 
-        root.add(WText(TranslatableText("block.indrev.drill"), HorizontalAlignment.LEFT, 0x404040), 0.0, -0.1)
+        root.add(WText(translatable("block.indrev.drill"), HorizontalAlignment.LEFT, 0x404040), 0.0, -0.1)
 
         val slot = WItemSlot.of(blockInventory, 0)
         slot.filter = Predicate { stack -> DrillBlockEntity.isValidDrill(stack.item) }

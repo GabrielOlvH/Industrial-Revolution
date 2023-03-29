@@ -1,12 +1,10 @@
 package me.steven.indrev.blocks.misc
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import me.steven.indrev.blockentities.Syncable
 import me.steven.indrev.blockentities.storage.TankBlockEntity
 import me.steven.indrev.components.FluidComponent
 import me.steven.indrev.registry.IRBlockRegistry
-import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.fluidStorageOf
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil
@@ -26,7 +24,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.stat.Stats
 import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
-import net.minecraft.text.LiteralText
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -138,7 +136,7 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
                 }
                 dropStack(world, pos, stack)
             }
-            state!!.onStacksDropped(world, pos, toolStack)
+            state!!.onStacksDropped(world, pos, toolStack, true)
         }
     }
 
@@ -183,12 +181,10 @@ class TankBlock(settings: Settings) : Block(settings), BlockEntityProvider {
         val tag = stack?.nbt
         val tanksTag = tag?.getCompound("tanks") ?: return
         val volume = tanksTag.keys?.map { key ->
-            val tankTag = tanksTag.getCompound(key)
-            FluidVolume.fromTag(tankTag.getCompound("fluids"))
+            val tankTag = tanksTag.getCompound(key).getCompound("fluids")
+            IRFluidAmount(FluidVariant.fromNbt(tankTag.getCompound("variant")), tankTag.getLong("amt"))
         }?.firstOrNull() ?: return
-        val fluid = volume.amount().asInt(1000)
-        tooltip?.addAll(volume.fluidKey.fullTooltip.toTypedArray())
-        tooltip?.add(LiteralText("$fluid / 8000 mB"))
+        tooltip?.addAll(getTooltip(volume.resource, volume.amount, bucket*8))
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {

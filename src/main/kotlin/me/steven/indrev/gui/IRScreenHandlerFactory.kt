@@ -1,5 +1,6 @@
 package me.steven.indrev.gui
 
+import me.steven.indrev.utils.literal
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -22,6 +23,6 @@ open class IRScreenHandlerFactory(
         buf.writeBlockPos(pos)
     }
 
-    override fun getDisplayName(): Text? = null
+    override fun getDisplayName(): Text? = literal("test")
 
 }

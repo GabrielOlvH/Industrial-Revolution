@@ -11,7 +11,7 @@ import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.setIcon
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
@@ -27,7 +27,7 @@ class FisherScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: Sc
 
         root.add(WItemSlot.of(blockInventory, 2, 2, 2), 3.7, 0.7)
 
-        val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, TranslatableText("gui.indrev.fishingrod"))
+        val fishingRodSlot = WTooltipedItemSlot.of(blockInventory, 1, translatable("gui.indrev.fishingrod"))
         fishingRodSlot.setIcon(ctx, blockInventory, 1, FISHING_ROD_ICON)
         root.add(fishingRodSlot, 4.2, 3.0)
 

@@ -104,13 +104,8 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         override fun exactView(transaction: TransactionContext?, resource: FluidVariant?): StorageView<FluidVariant>? {
             return super.exactView(transaction, resource)
         }
-
-        override fun iterable(transaction: TransactionContext?): MutableIterable<StorageView<FluidVariant>> {
-            return super.iterable(transaction)
-        }
-
-        override fun iterator(transaction: TransactionContext?): MutableIterator<StorageView<FluidVariant>> {
-            return super.iterator(transaction)
+        override fun iterator(): MutableIterator<StorageView<FluidVariant>> {
+            return super.iterator()
         }
     }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "indrev:item/module_controlled_destruction"
+  }
+}

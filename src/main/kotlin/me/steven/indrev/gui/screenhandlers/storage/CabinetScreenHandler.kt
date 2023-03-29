@@ -10,7 +10,7 @@ import me.steven.indrev.utils.add
 import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class CabinetScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
@@ -23,7 +23,7 @@ class CabinetScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: S
         val root = WGridPanel()
         setRootPanel(root)
 
-        root.add(WText(TranslatableText("block.indrev.cabinet"), HorizontalAlignment.LEFT, 0x404040), 0.0, -0.1)
+        root.add(WText(translatable("block.indrev.cabinet"), HorizontalAlignment.LEFT, 0x404040), 0.0, -0.1)
 
         root.add(WItemSlot.of(blockInventory, 0, 9, 3), 0.0, 0.6)
 

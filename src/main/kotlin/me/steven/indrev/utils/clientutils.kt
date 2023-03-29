@@ -14,9 +14,9 @@ import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import kotlin.math.atan2
@@ -70,14 +70,14 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
         vertex(matrix, xx2, yy2, 0.0f).color(g1, h1, k1, f1).next()
         vertex(matrix, xx1, yy1, 0.0f).color(g1, h1, k1, f1).next()
         end()
-        BufferRenderer.draw(this)
+      //  BufferRenderer.draw(this)
         begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
         vertex(matrix, xx1, yy1, 0.0f).color(g2, h2, k2, f2).next()
         vertex(matrix, xx2, yy2, 0.0f).color(g2, h2, k2, f2).next()
         vertex(matrix, xx2, yy1, 0.0f).color(g2, h2, k2, f2).next()
         vertex(matrix, xx1, yy1, 0.0f).color(g2, h2, k2, f2).next()
         end()
-        BufferRenderer.draw(this)
+      //  BufferRenderer.draw(this)
     }
     RenderSystem.enableTexture()
     RenderSystem.disableBlend()
@@ -107,7 +107,7 @@ fun buildEnergyTooltip(stack: ItemStack?, tooltip: MutableList<Text>?) {
     val handler = energyOf(stack) ?: return
     if (handler.amount > 0) {
         val percentage = handler.amount * 100 / handler.capacity
-        tooltip?.add(LiteralText("${getEnergyString(handler.amount)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
+        tooltip?.add(literal("${getEnergyString(handler.amount)} LF (${percentage.toInt()}%)").formatted(Formatting.GRAY))
     }
 }
 
@@ -150,19 +150,19 @@ fun buildMachineTooltip(config: Any, tooltip: MutableList<Text>?) {
         }
     } else {
         tooltip?.add(
-            TranslatableText("gui.indrev.tooltip.press_shift", LiteralText("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.AQUA)).formatted(Formatting.GRAY)
+            translatable("gui.indrev.tooltip.press_shift", literal("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.AQUA)).formatted(Formatting.GRAY)
         )
     }
 }
 
 private fun configText(key: String, value: String): Text {
-    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
-        .append(LiteralText(value).formatted(Formatting.GRAY))
+    return translatable("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
+        .append(literal(value).formatted(Formatting.GRAY))
 }
 
 private fun configText(key: String, unit: String, value: Any): Text {
-    return TranslatableText("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
-        .append(TranslatableText("gui.indrev.tooltip.$unit", value).formatted(Formatting.GRAY))
+    return translatable("gui.indrev.tooltip.$key").formatted(Formatting.AQUA)
+        .append(translatable("gui.indrev.tooltip.$unit", value).formatted(Formatting.GRAY))
 }
 
 fun getEnergyString(energy: Long): String =

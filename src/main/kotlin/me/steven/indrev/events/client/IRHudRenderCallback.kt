@@ -84,7 +84,6 @@ object IRHudRenderCallback : HudRenderCallback {
         val state = world.getBlockState(hit.blockPos)
         val block = state?.block as? MachineBlock
 
-
         client.itemRenderer.renderInGui(stack, x, y)
 
         if (block != null && block.registry.upgradeable && block.tier == item.from) {

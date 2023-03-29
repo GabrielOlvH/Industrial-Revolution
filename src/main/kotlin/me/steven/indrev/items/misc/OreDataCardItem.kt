@@ -7,9 +7,9 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.item.TooltipData
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import java.util.*
@@ -24,12 +24,12 @@ class OreDataCardItem : Item(itemSettings().maxCount(1)) {
     ) {
         val data = OreDataCards.readNbt(stack) ?: return
         if (!data.isValid()) {
-            tooltip.add(LiteralText("Invalid data card!").formatted(Formatting.RED))
+            tooltip.add(literal("Invalid data card!").formatted(Formatting.RED))
         }
     }
 
     override fun getName(stack: ItemStack): Text {
-        return if (OreDataCards.readNbt(stack) == null) TranslatableText("item.indrev.empty_ore_data_card")
+        return if (OreDataCards.readNbt(stack) == null) translatable("item.indrev.empty_ore_data_card")
         else super.getName(stack)
     }
 

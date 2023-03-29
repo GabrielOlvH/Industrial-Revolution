@@ -29,7 +29,7 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
@@ -102,7 +102,7 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
 
     override fun size(): Int = 1
 
-    override fun getContainerName(): Text = TranslatableText("block.indrev.drill")
+    override fun getContainerName(): Text = translatable("block.indrev.drill")
 
     override fun createScreenHandler(syncId: Int, playerInventory: PlayerInventory): ScreenHandler {
         return MiningRigDrillScreenHandler(syncId, playerInventory, ScreenHandlerContext.create(world, pos))

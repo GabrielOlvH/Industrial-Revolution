@@ -4,8 +4,8 @@ plugins {
     id "org.jetbrains.kotlin.jvm"
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -68,6 +68,7 @@ repositories {
         content {
             includeGroup "com.github.Technici4n"
             includeGroup "com.github.Draylar"
+            includeGroup "com.github.GabrielOlvH"
             includeGroup "com.github.Draylar.omega-config"
             includeGroup "com.github.emilyploszaj"
         }
@@ -80,7 +81,7 @@ repositories {
     }
     maven {
         name = "Cafeteria Development"
-        url = 'https://maven.cafeteria.dev'
+        url = 'https://maven.cafeteria.dev/releases'
         content {
             includeGroup 'dev.cafeteria'
             includeGroup 'me.luligabi'
@@ -125,14 +126,11 @@ dependencies {
     dependencies.ext.lib("teamreborn:energy:${project.tr_energy_version}")
     dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
     dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
-    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
-    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
-    dependencies.ext.lib("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    dependencies.ext.lib("com.github.Draylar:magna:${project.magna_version}")
+    dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
     dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
-    dependencies.ext.lib("me.luligabi:NoIndium:1.0")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
+    dependencies.ext.lib("me.luligabi:NoIndium:1.1.0+1.19")
 
     modRuntimeOnly("com.terraformersmc:modmenu:${project.modmenu_version}") {
         exclude group: "net.fabricmc.fabric-api", module: "fabric-api"
@@ -142,6 +140,7 @@ dependencies {
     modCompileOnly("net.oskarstrom:DashLoader:2.0-dev12")
     dependencies.ext.lib("io.activej:activej-serializer:${project.activej_version}", true)
     modRuntimeOnly("org.yaml:snakeyaml:1.27")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 loom {
@@ -161,7 +160,7 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     it.options.encoding = "UTF-8"
-    it.options.release = 16
+    it.options.release = 17
 }
 
 
@@ -209,4 +208,14 @@ publishing {
     }
 }
 
-compileKotlin.kotlinOptions.jvmTarget = "16"
+compileKotlin.kotlinOptions.jvmTarget = "17"
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

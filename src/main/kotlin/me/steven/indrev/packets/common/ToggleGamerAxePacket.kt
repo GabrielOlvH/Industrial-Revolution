@@ -4,8 +4,8 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.TypedActionResult
 
@@ -27,9 +27,9 @@ object ToggleGamerAxePacket {
                         if (itemIo.amount > 0) {
                             stack.orCreateNbt.putBoolean("Active", active)
                             val color = if (active) Formatting.GREEN else Formatting.RED
-                            player.sendMessage(LiteralText("").append(stack.name).formatted(stack.rarity.formatting).append(": ").append(TranslatableText("item.indrev.gamer_axe.$active").formatted(color, Formatting.BOLD)), true)
+                            player.sendMessage(literal("").append(stack.name).formatted(stack.rarity.formatting).append(": ").append(translatable("item.indrev.gamer_axe.$active").formatted(color, Formatting.BOLD)), true)
                         } else {
-                            player.sendMessage(LiteralText("Not enough energy!"), true)
+                            player.sendMessage(literal("Not enough energy!"), true)
                         }
                     }
                 }

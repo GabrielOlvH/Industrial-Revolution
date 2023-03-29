@@ -1,8 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys
 import me.steven.indrev.blockentities.BaseBlockEntity
 import me.steven.indrev.blocks.misc.BiomassComposterBlock
 import me.steven.indrev.registry.IRBlockRegistry
@@ -81,10 +78,10 @@ class BiomassComposterBlockEntity(pos: BlockPos, state: BlockState) : BaseBlockE
 
         override fun getBlankVariant(): FluidVariant = FluidVariant.blank()
 
-        fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
-            if (!variant.isBlank)
-                FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).render(faces, vcp, matrices)
-        }
+      //  fun render(faces: List<FluidRenderFace?>?, vcp: VertexConsumerProvider?, matrices: MatrixStack?) {
+          //  if (!variant.isBlank)
+           //     FluidKeys.get(variant.fluid).withAmount(FluidAmount.BUCKET).render(faces, vcp, matrices)
+       // }
     }
 
     inner class BiomassComposterItemInv : SingleVariantStorage<ItemVariant>() {

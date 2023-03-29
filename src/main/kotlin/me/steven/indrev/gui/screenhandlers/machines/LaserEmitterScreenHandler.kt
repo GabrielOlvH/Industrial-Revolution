@@ -12,7 +12,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class LaserEmitterScreenHandler(
     syncId: Int,
@@ -30,7 +30,7 @@ class LaserEmitterScreenHandler(
         setRootPanel(root)
         root.insets = Insets.ROOT_PANEL
 
-        val label = WLabel(TranslatableText("block.indrev.laser_emitter_mk4"))
+        val label = WLabel(translatable("block.indrev.laser_emitter_mk4"))
         root.add(label, 0, 0)
         label.setSize(75, 0)
 

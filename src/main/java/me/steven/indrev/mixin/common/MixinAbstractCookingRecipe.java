@@ -1,6 +1,5 @@
 package me.steven.indrev.mixin.common;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import me.steven.indrev.components.CraftingComponent;
 import me.steven.indrev.recipes.machines.IRRecipe;
 import me.steven.indrev.recipes.machines.entries.InputEntry;
@@ -9,10 +8,10 @@ import me.steven.indrev.utils.IRFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 @Mixin(AbstractCookingRecipe.class)
 public abstract class MixinAbstractCookingRecipe implements IRRecipe {

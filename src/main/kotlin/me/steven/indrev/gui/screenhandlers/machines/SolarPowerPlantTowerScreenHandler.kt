@@ -8,6 +8,7 @@ import me.steven.indrev.gui.screenhandlers.SOLAR_POWER_PLANT_TOWER_HANDLER
 import me.steven.indrev.gui.widgets.machines.fluidTank
 import me.steven.indrev.gui.widgets.machines.temperatureBar
 import me.steven.indrev.utils.identifier
+import me.steven.indrev.utils.literal
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
@@ -27,7 +28,7 @@ class SolarPowerPlantTowerScreenHandler(
         val root = WGridPanel()
         setRootPanel(root)
 
-        root.add(WLabel("Solar Power Plant Tower"), 0, 0)
+        root.add(WLabel(literal("Solar Power Plant Tower")), 0, 0)
 
         withBlockEntity<SolarPowerPlantTowerBlockEntity> { be ->
             val wFluid = fluidTank(be, SolarPowerPlantTowerBlockEntity.INPUT_TANK_ID)

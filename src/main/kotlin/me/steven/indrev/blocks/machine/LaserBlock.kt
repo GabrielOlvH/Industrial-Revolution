@@ -17,8 +17,8 @@ import net.minecraft.state.StateManager
 import net.minecraft.state.property.BooleanProperty
 import net.minecraft.state.property.Properties
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
-import java.util.*
 
 class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineBlock(
     registry, settings, Tier.MK4, IRConfig.machines.laser, ::LaserEmitterScreenHandler

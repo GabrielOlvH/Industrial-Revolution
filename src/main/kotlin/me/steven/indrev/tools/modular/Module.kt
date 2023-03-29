@@ -3,9 +3,9 @@ package me.steven.indrev.tools.modular
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 
 interface Module {
@@ -30,12 +30,12 @@ interface Module {
     }
 
     fun getTooltip(stack: ItemStack, tooltip: MutableList<Text>?) {
-        val titleText = TranslatableText("item.indrev.module_${key}.tooltip")
+        val titleText = translatable("item.indrev.module_${key}.tooltip")
         tooltip?.add(titleText.formatted(Formatting.BLUE, Formatting.ITALIC))
-        tooltip?.add(LiteralText(" "))
+        tooltip?.add(literal(" "))
         if (Screen.hasShiftDown()) {
             if (this != ArmorModule.COLOR) {
-                val maxLevelText = TranslatableText("item.indrev.module_max_level", LiteralText(maxLevel.toString()).formatted(Formatting.GOLD))
+                val maxLevelText = translatable("item.indrev.module_max_level", literal(maxLevel.toString()).formatted(Formatting.GOLD))
                 tooltip?.add(maxLevelText.formatted(Formatting.BLUE))
             }
         }

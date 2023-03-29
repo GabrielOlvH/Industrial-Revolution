@@ -19,7 +19,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 
 class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory, ctx: ScreenHandlerContext) :
     IRGuiScreenHandler(
@@ -29,7 +29,7 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         ctx
     ) {
     init {
-        val startButton = WButton(LiteralText("Write"))
+        val startButton = WButton(literal("Write"))
         val root = object : WGridPanel() {
             override fun tick() {
                 super.tick()
@@ -57,7 +57,7 @@ class DataCardWriterScreenHandler(syncId: Int, playerInventory: PlayerInventory,
         root.add(startButton, 7.65, 4.5)
         startButton.setSize(28, 20)
 
-        val dataLabel = WLabel("Data")
+        val dataLabel = WLabel(literal("Data"))
         root.add(dataLabel, 1.5, 3.0)
 
         val timeLabel = WDynamicLabel {

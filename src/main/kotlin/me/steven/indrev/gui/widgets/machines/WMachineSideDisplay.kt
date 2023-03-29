@@ -9,8 +9,8 @@ import me.steven.indrev.utils.draw2Colors
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -44,17 +44,17 @@ class WMachineSideDisplay(
     }
 
     override fun addTooltip(tooltip: TooltipBuilder?) {
-        val modeText = TranslatableText("item.indrev.wrench.mode",
-            TranslatableText("item.indrev.wrench.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.WHITE)
+        val modeText = translatable("item.indrev.wrench.mode",
+            translatable("item.indrev.wrench.${mode.toString().lowercase(Locale.getDefault())}").formatted(Formatting.WHITE)
         ).formatted(Formatting.BLUE)
-        val side = TranslatableText("item.indrev.wrench.side.${side.toString().lowercase(Locale.getDefault())}")
-            .append(LiteralText(" (")
-                .append(TranslatableText("item.indrev.wrench.side.${direction.toString().lowercase(Locale.getDefault())}"))
-                .append(LiteralText(")"))).formatted(Formatting.WHITE)
+        val side = translatable("item.indrev.wrench.side.${side.toString().lowercase(Locale.getDefault())}")
+            .append(literal(" (")
+                .append(translatable("item.indrev.wrench.side.${direction.toString().lowercase(Locale.getDefault())}"))
+                .append(literal(")"))).formatted(Formatting.WHITE)
         tooltip?.add(modeText, side)
         val blockState = world.getBlockState(blockPos.offset(direction))
         if (!blockState.isAir) {
-            val neighbor = TranslatableText("item.indrev.wrench.connected", blockState.block.name)
+            val neighbor = translatable("item.indrev.wrench.connected", blockState.block.name)
             tooltip?.add(neighbor)
         }
     }

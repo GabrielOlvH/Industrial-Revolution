@@ -20,8 +20,8 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Item
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.text.LiteralText
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.literal
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
 
@@ -59,13 +59,13 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
                         }
 
                         override fun addTooltip(tooltip: TooltipBuilder?) {
-                            tooltip?.add(TranslatableText(moduleItem.translationKey))
+                            tooltip?.add(translatable(moduleItem.translationKey))
                         }
                     })
                     val maxLevel = module.getMaxInstalledLevel(stack)
                     val slider = object : WSlider(0, maxLevel, Axis.HORIZONTAL) {
                         override fun addTooltip(tooltip: TooltipBuilder?) {
-                            tooltip?.add(LiteralText("${value * 100 / maxLevel}%"))
+                            tooltip?.add(literal("${value * 100 / maxLevel}%"))
                         }
                     }
                     slider.value = module.getLevel(stack)
@@ -87,7 +87,7 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
                         null,
                         iconProvider(stack.item),
                         tabPanel,
-                        { it.add(TranslatableText(stack.item.translationKey)) })
+                        { it.add(translatable(stack.item.translationKey)) })
                 )
             }
 

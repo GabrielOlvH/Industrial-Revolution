@@ -13,7 +13,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class SolarGeneratorScreenHandler(
     syncId: Int,
@@ -38,8 +38,8 @@ class SolarGeneratorScreenHandler(
             sprite.setSize(19, 10)
 
             val text = WText({
-                if (blockEntity.shouldGenerate()) TranslatableText("gui.indrev.solar.on")
-                else TranslatableText("gui.indrev.heatgen.idle")
+                if (blockEntity.shouldGenerate()) translatable("gui.indrev.solar.on")
+                else translatable("gui.indrev.heatgen.idle")
             }, HorizontalAlignment.CENTER, 0x404040)
             root.add(text, 5.0, 2.7)
         }

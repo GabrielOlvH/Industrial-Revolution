@@ -22,9 +22,9 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.sound.SoundCategory
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.math.*
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
-import java.util.*
 
 class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_EMITTER_REGISTRY, pos, state) {
 

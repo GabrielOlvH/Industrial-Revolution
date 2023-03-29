@@ -29,7 +29,7 @@
         "value": "me.steven.indrev.IndustrialRevolutionClient"
       }
     ],
-    "rei": [
+    "rei_client": [
       {
         "adapter": "kotlin",
         "value": "me.steven.indrev.compat.rei.REIPlugin"
@@ -61,7 +61,7 @@
     "fabricloader": ">=0.7.1",
     "fabric": ">=0.32.0",
     "fabric-language-kotlin": ">=1.6.0",
-    "minecraft": ">=1.18.2",
+    "minecraft": ">=1.19",
     "libgui": "*"
   }
 }

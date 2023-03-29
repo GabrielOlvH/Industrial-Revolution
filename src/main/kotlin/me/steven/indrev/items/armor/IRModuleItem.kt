@@ -6,9 +6,9 @@ import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 
@@ -23,7 +23,7 @@ open class IRModuleItem(val module: Module, settings: Settings) : Item(settings)
         if (Screen.hasShiftDown()) {
             module.getTooltip(stack, tooltip)
         } else {
-            tooltip?.add(TranslatableText("gui.indrev.tooltip.press_shift", LiteralText("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.BLUE, Formatting.ITALIC)).formatted(Formatting.BLUE, Formatting.ITALIC))
+            tooltip?.add(translatable("gui.indrev.tooltip.press_shift", literal("").append(KeyBinding.getLocalizedName("key.keyboard.left.shift").get()).formatted(Formatting.BLUE, Formatting.ITALIC)).formatted(Formatting.BLUE, Formatting.ITALIC))
         }
     }
 }

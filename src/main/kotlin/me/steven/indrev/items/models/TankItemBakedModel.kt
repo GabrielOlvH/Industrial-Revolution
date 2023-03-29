@@ -1,13 +1,14 @@
 package me.steven.indrev.items.models
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume
 import com.mojang.datafixers.util.Pair
+import me.steven.indrev.utils.IRFluidAmount
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.minecraft.block.BlockState
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.model.*
@@ -22,8 +23,8 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.random.Random
 import net.minecraft.world.BlockRenderView
-import java.util.*
 import java.util.function.Function
 import java.util.function.Supplier
 
@@ -56,7 +57,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
         val world = player?.world
         val pos = player?.blockPos
 
-        val fluid = volume.rawFluid ?: Fluids.EMPTY
+        val fluid = volume.resource.fluid ?: Fluids.EMPTY
         val fluidRenderHandler = FluidRenderHandlerRegistry.INSTANCE.get(fluid) ?: return
         val fluidColor = fluidRenderHandler.getFluidColor(world, pos, fluid.defaultState)
         val fluidSprite = fluidRenderHandler.getFluidSprites(world, pos, fluid.defaultState)[0]
@@ -68,7 +69,7 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
         val emitter = context.emitter
 
-        val p = (volume.amount().asLong(1L) / 8f).coerceAtMost(0.9f)
+        val p = (volume.amount()/81000f / 8f).coerceAtMost(0.9f)
         emitter.draw(Direction.UP, fluidSprite, 0.09375f, 0.09f, 0.9f, 0.90625f, (0.9f - p) + 0.09575f)
         emitter.draw(Direction.NORTH, fluidSprite, 0.09375f, 0.06f, 0.9f, p, 0.09575f)
         emitter.draw(Direction.SOUTH, fluidSprite, 0.09375f, 0.06f, 0.9f, p, 0.09575f)
@@ -118,11 +119,13 @@ class TankItemBakedModel : UnbakedModel, BakedModel, FabricBakedModel {
 
     override fun isBuiltin(): Boolean = false
 
-    private fun readNbt(tag: NbtCompound?): FluidVolume? {
+    private fun readNbt(tag: NbtCompound?): IRFluidAmount? {
         val tanksTag = tag?.getCompound("tanks")
+
         tanksTag?.keys?.forEach { key ->
-            val tankTag = tanksTag.getCompound(key)
-            return FluidVolume.fromTag(tankTag.getCompound("fluids"))
+            val index = key.toInt()
+            val tankTag = tanksTag.getCompound(key).getCompound("fluids")
+            return IRFluidAmount(FluidVariant.fromNbt(tankTag.getCompound("variant")), tankTag.getLong("amt"))
         }
         return null
     }

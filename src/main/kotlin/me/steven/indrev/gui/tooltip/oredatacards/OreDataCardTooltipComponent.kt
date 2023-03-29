@@ -8,7 +8,7 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.Matrix4f
 
@@ -18,7 +18,7 @@ class OreDataCardTooltipComponent(val data: OreDataCardTooltipData) : TooltipCom
     }
 
     override fun getWidth(textRenderer: TextRenderer): Int {
-        val text = LiteralText("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(LiteralText("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
+        val text = literal("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(literal("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
         return textRenderer.getWidth(text) + 9
     }
 
@@ -30,7 +30,7 @@ class OreDataCardTooltipComponent(val data: OreDataCardTooltipData) : TooltipCom
         vertexConsumers: VertexConsumerProvider.Immediate?
     ) {
 
-        val speed = LiteralText("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(LiteralText("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
+        val speed = literal("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(literal("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
         textRenderer.draw(speed, x.toFloat() + 3, y.toFloat() + 4 + 18 * 3 + (18 * (data.cardData.entries.size / 4)),  -1, false, matrix, vertexConsumers, false, 0, 15728880)
 
         val dataTxt = "${(data.cardData.maxCycles - data.cardData.used) * 100 / OreDataCards.MAX_SIZE}%"
@@ -38,7 +38,7 @@ class OreDataCardTooltipComponent(val data: OreDataCardTooltipData) : TooltipCom
         textRenderer.draw(dataTxt, x.toFloat() + textRenderer.getWidth(speed)  - 17- width / 2, y.toFloat() + 15, -1, false, matrix, vertexConsumers, false, 0, 15728880)
         textRenderer.draw("Types", x.toFloat() + 3, y.toFloat() + 5,  0x007E7E, false, matrix, vertexConsumers, false, 0, 15728880)
 
-        val richness = LiteralText("Richness: ").styled { s -> s.withColor(0x007E7E) }.append(LiteralText("${(data.cardData.richness * 100).toInt()}%").formatted(Formatting.WHITE))
+        val richness = literal("Richness: ").styled { s -> s.withColor(0x007E7E) }.append(literal("${(data.cardData.richness * 100).toInt()}%").formatted(Formatting.WHITE))
         textRenderer.draw(richness, x.toFloat() + 3, y.toFloat() + 4 + 18 * 2 + (18 * (data.cardData.entries.size / 4)),  -1, false, matrix, vertexConsumers, false, 0, 15728880)
 
         if (data.cardData.rng == -1) {
@@ -57,7 +57,7 @@ class OreDataCardTooltipComponent(val data: OreDataCardTooltipData) : TooltipCom
         z: Int
     ) {
 
-        val text = LiteralText("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(LiteralText("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
+        val text = literal("Cycle: ").styled { s -> s.withColor(0x007E7E) }.append(literal("${data.cardData.speed} ticks (${data.cardData.energyRequired} LF/tick)").formatted(Formatting.WHITE))
 
         data.cardData.entries.forEachIndexed { index, entry ->
             itemRenderer.renderInGui(ItemStack(entry.item), x + 6 + (index % 3 * 18), y + 17 + (18 * (index / 3)))

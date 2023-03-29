@@ -1,8 +1,5 @@
 package me.steven.indrev.blockentities.farms
 
-import alexiil.mc.lib.attributes.fluid.render.FluidRenderFace
-import me.steven.indrev.blocks.machine.HorizontalFacingMachineBlock
-import me.steven.indrev.utils.IRFluidTank
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.OverlayTexture
@@ -12,8 +9,6 @@ import net.minecraft.client.render.WorldRenderer
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.ModelIdentifier
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
 import kotlin.math.floor
 
 class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
@@ -28,7 +23,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
         matrices.run {
 
             push()
-            val inputVolume = entity.fluidComponent!![0]
+            /*val inputVolume = entity.fluidComponent!![0]
             if (!inputVolume.isEmpty) {
 
                 translate(0.5, 0.5, 0.5)
@@ -58,7 +53,7 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
                 matrices.translate(0.1284, 0.0, 0.1285)
                 renderFluid(inputVolume, vertexConsumers)
                 pop()
-            }
+            }*/
             pop()
             val currentY = floor(entity.pipePosition).toInt()
             for (y in 1..currentY) {
@@ -86,19 +81,19 @@ class PumpBlockEntityRenderer : BlockEntityRenderer<PumpBlockEntity> {
         )
     }
 
-    private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
+ //   private fun MatrixStack.renderFluid(inputVolume: IRFluidTank, vcp: VertexConsumerProvider) {
 
-        inputVolume.render(FACES, vcp, this)
-    }
+      //  inputVolume.render(FACES, vcp, this)
+   // }
 
     override fun rendersOutsideBoundingBox(blockEntity: PumpBlockEntity?): Boolean = true
 
     companion object {
-        val FACES = listOf(
+    /*    val FACES = listOf(
             FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32, 0.556, 0.31, 0.32, 2.0, false, false),
             FluidRenderFace.createFlatFaceZ(0.443, 0.15, 0.32+ (0.55-0.443), 0.556, 0.31, 0.32+ (0.55-0.443), 2.0, true, false),
             FluidRenderFace.createFlatFaceX(0.443, 0.15, 0.323, 0.443, 0.31, 0.426, 2.0, false, false),
             FluidRenderFace.createFlatFaceX(0.443+ (0.55-0.443), 0.15, 0.323, 0.443+ (0.55-0.443), 0.31, 0.426, 2.0, true, false)
-        )
+        )*/
     }
 }

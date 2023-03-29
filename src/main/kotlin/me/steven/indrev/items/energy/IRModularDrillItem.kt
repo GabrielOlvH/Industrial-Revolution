@@ -26,9 +26,9 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
-import net.minecraft.text.LiteralText
+import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
@@ -65,7 +65,7 @@ class IRModularDrillItem(
         if (Screen.hasShiftDown())
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
         tooltip?.add(
-            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+            translatable("item.indrev.modular_item.tooltip", literal("").append(
                 IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
                 Formatting.GRAY))
     }
@@ -86,9 +86,9 @@ class IRModularDrillItem(
 
         val world = context.world
         val player = context.player!!
-
+        val blockState = world.getBlockState(context.blockPos)
         blockFinder.findPositions(world, context.player, getRadius(context.stack)).forEach { pos ->
-            val blockState = world.getBlockState(pos)
+
             val offset = pos.offset(context.side)
             if (world.getBlockState(offset).material.isReplaceable) {
                 val stackToRemove = ItemStack(blockState.block)
@@ -98,6 +98,8 @@ class IRModularDrillItem(
                     if (removed.item == stackToRemove.item && removed.count == 1) {
                         world.setBlockState(offset, blockState)
                     }
+                } else if (player.isCreative) {
+                    world.setBlockState(offset, blockState)
                 }
             }
         }
@@ -180,16 +182,17 @@ class IRModularDrillItem(
 
     companion object {
         fun filterBlacklistedBlocks(center: BlockPos, blockHitResult: BlockHitResult, playerEntity: PlayerEntity, stack: ItemStack, blocks: MutableList<BlockPos>) {
+            val blacklistedPositions = DrillModule.getBlacklistedPositions(stack)
             blocks.removeIf { pos ->
 
                 var offset = pos.subtract(center)
                 if (blockHitResult.side.axis.isVertical) {
                     offset = BlockPos(offset.x, offset.z, offset.y)
                     if (playerEntity.horizontalFacing.axis == Direction.Axis.Z) {
-                        offset = BlockPos(offset.x* -playerEntity.horizontalFacing.offsetZ, offset.y* playerEntity.horizontalFacing.offsetZ, offset.z)
+                        offset = BlockPos(offset.x * -playerEntity.horizontalFacing.offsetZ, offset.y * playerEntity.horizontalFacing.offsetZ, offset.z)
                     }
                     else if (playerEntity.horizontalFacing.axis == Direction.Axis.X) {
-                        offset = BlockPos(offset.y *playerEntity.horizontalFacing.offsetX, offset.x* playerEntity.horizontalFacing.offsetX, offset.z)
+                        offset = BlockPos(offset.y * playerEntity.horizontalFacing.offsetX, offset.x * playerEntity.horizontalFacing.offsetX, offset.z)
                     }
                 } else if (blockHitResult.side.axis == Direction.Axis.X) {
                     offset = BlockPos(offset.z * -blockHitResult.side.offsetX, offset.y, offset.x)
@@ -197,7 +200,7 @@ class IRModularDrillItem(
                     offset = BlockPos(offset.x * blockHitResult.side.offsetZ, offset.y, offset.z)
                 }
 
-                DrillModule.getBlacklistedPositions(stack).contains(offset)
+                blacklistedPositions.contains(offset)
             }
 
         }

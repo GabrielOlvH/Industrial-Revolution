@@ -12,8 +12,7 @@ import me.steven.indrev.items.energy.IREnergyItem
 import me.steven.indrev.registry.IRFluidRegistry
 import me.steven.indrev.tools.modular.ArmorModule
 import me.steven.indrev.tools.modular.IRModularItem
-import me.steven.indrev.utils.bucket
-import me.steven.indrev.utils.energyOf
+import me.steven.indrev.utils.*
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -28,9 +27,7 @@ import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.DyeableArmorItem
 import net.minecraft.item.ItemStack
-import net.minecraft.text.LiteralText
 import net.minecraft.text.Text
-import net.minecraft.text.TranslatableText
 import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
@@ -47,14 +44,13 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
 
     override val fluidFilter: (FluidVariant) -> Boolean = { it.isOf(IRFluidRegistry.HYDROGEN_STILL) }
 
-    override val limit: Long = bucket / 20
-
+    override val capacity: Long = bucket * 10
 
     override fun isUsable(stack: ItemStack): Boolean = ArmorModule.JETPACK.getLevel(stack) > 0
 
     fun getFluidItemBarStep(stack: ItemStack): Int {
         val volume = getFuelStored(stack)
-        return (13.0 - (((limit - volume.amount()) * 13) / limit)).roundToInt()
+        return (13.0 - (((capacity - volume.amount()) * 13) / capacity)).roundToInt()
     }
 
     fun getFluidItemBarColor(stack: ItemStack): Int = FluidRenderHandlerRegistry.INSTANCE.get(getFuelStored(stack).resource.fluid).getFluidColor(null, null, null)
@@ -70,12 +66,24 @@ class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Setting
     override fun isEnchantable(stack: ItemStack?): Boolean = false
 
     override fun appendTooltip(stack: ItemStack, world: World?, tooltip: MutableList<Text>?, context: TooltipContext?) {
-        if (Screen.hasShiftDown())
+        if (Screen.hasShiftDown()) {
             getInstalledTooltip(getInstalled(stack), stack, tooltip)
+        }
+        val fuel = getFuelStored(stack)
+        if (fuel.amount > 0) {
+            tooltip?.add(EMPTY)
+            tooltip?.addAll(getTooltip(fuel.resource, fuel.amount, capacity))
+            tooltip?.add(EMPTY)
+        }
         tooltip?.add(
-            TranslatableText("item.indrev.modular_item.tooltip", LiteralText("").append(
+            translatable("item.indrev.modular_item.tooltip", literal("").append(
                 IndustrialRevolutionClient.MODULAR_CONTROLLER_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
                 Formatting.GRAY))
+        if (ArmorModule.JETPACK.isInstalled(stack))
+            tooltip?.add(
+                translatable("item.indrev.jetpack.tooltip", literal("").append(
+                    IndustrialRevolutionClient.JETPACK_TOGGLE_KEYBINDING.boundKeyLocalizedText).formatted(Formatting.AQUA)).formatted(
+                    Formatting.GRAY))
     }
 
     override fun canRepair(stack: ItemStack?, ingredient: ItemStack?): Boolean = false

@@ -17,7 +17,7 @@ import me.steven.indrev.utils.identifier
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.screen.ScreenHandlerContext
-import net.minecraft.text.TranslatableText
+import me.steven.indrev.utils.translatable
 
 class FarmerScreenHandler(
     syncId: Int,
@@ -43,10 +43,10 @@ class FarmerScreenHandler(
         root.add(outputFrame, 5.1, 0.7)
         outputFrame.setSize(58, 62)
 
-        val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, TranslatableText("gui.indrev.output_slot_type"))
+        val outputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).outputSlots.first(), 3, 3, translatable("gui.indrev.output_slot_type"))
         outputSlot.isInsertingAllowed = false
         root.add(outputSlot, 5.2, 1.0)
-        val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, TranslatableText("gui.indrev.farmer_input_slot_type"))
+        val inputSlot = WTooltipedItemSlot.of(blockInventory, (blockInventory as IRInventory).inputSlots.first(), 2, 2, translatable("gui.indrev.farmer_input_slot_type"))
         root.add(inputSlot, 2.0, 1.0)
 
         val slider = WSlider(1, 10, Axis.HORIZONTAL)
@@ -59,7 +59,7 @@ class FarmerScreenHandler(
         slider.setValueChangeListener { newValue -> this.value = newValue }
 
         val text = WText({
-            TranslatableText("block.indrev.aoe.range", slider.value)
+            translatable("block.indrev.aoe.range", slider.value)
         }, HorizontalAlignment.LEFT)
         root.add(text, 1.8, 3.3)
 

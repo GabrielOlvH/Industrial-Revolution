@@ -22,7 +22,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.loot.v1.event.LootTableLoadingCallback
+import net.fabricmc.fabric.api.loot.v2.LootTableEvents
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes
 import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper
@@ -55,7 +55,7 @@ object IndustrialRevolution : ModInitializer {
         WorldGeneration.init()
         WorldGeneration.addFeatures()
 
-        LootTableLoadingCallback.EVENT.register(IRLootTableCallback)
+        LootTableEvents.MODIFY.register(IRLootTableCallback)
 
         MachineRegistry
 
@@ -96,14 +96,14 @@ object IndustrialRevolution : ModInitializer {
             val player = handler.player
             SyncConfigPacket.sendConfig(player)
             if (player is IRServerPlayerEntityExtension) {
-                (player as IRServerPlayerEntityExtension).sync()
+                player.indrev_sync()
             }
         }
 
         ServerTickEvents.START_SERVER_TICK.register { server ->
             server.playerManager.playerList.forEach { player ->
-                if (player is IRServerPlayerEntityExtension && player.shouldSync()) {
-                    player.sync()
+                if (player is IRServerPlayerEntityExtension && player.indrev_shouldSync()) {
+                    player.indrev_sync()
                 }
             }
         }
