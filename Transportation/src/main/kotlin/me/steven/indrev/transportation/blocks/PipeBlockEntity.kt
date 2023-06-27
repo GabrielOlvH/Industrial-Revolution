@@ -7,6 +7,7 @@ import me.steven.indrev.transportation.networks.ConnectionType
 import net.fabricmc.fabric.api.rendering.data.v1.RenderAttachmentBlockEntity
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntity
+import net.minecraft.client.MinecraftClient
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket
 import net.minecraft.server.world.ServerWorld
@@ -47,6 +48,10 @@ class PipeBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(PIPE_BLOCK
             val value = configNbt.getInt(key)
             config[key.toInt()] = value
         }
+
+        if (nbt.getBoolean("#c")) {
+            MinecraftClient.getInstance().worldRenderer.updateBlock(world, pos, null, null, 0)
+        }
     }
 
     override fun writeNbt(nbt: NbtCompound) {
@@ -57,7 +62,7 @@ class PipeBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(PIPE_BLOCK
     }
 
     fun sync() {
-        Preconditions.checkNotNull(world) // Maintain distinct failure case from below
+        Preconditions.checkNotNull(world)
         check(world is ServerWorld) { "Cannot call sync() on the logical client! Did you check world.isClient first?" }
         (world as ServerWorld).chunkManager.markForUpdate(getPos())
     }
@@ -69,6 +74,7 @@ class PipeBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(PIPE_BLOCK
     override fun toInitialChunkDataNbt(): NbtCompound {
         val nbt = super.toInitialChunkDataNbt()
         writeNbt(nbt)
+        nbt.putBoolean("#c", true)
         return nbt
     }
 

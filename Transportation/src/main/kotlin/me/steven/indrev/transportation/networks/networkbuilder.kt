@@ -12,21 +12,31 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import java.util.*
+import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-val EXECUTOR = Executors.newCachedThreadPool(ThreadFactoryBuilder().setNameFormat("IR Network Builder Thread %d").build())
+val EXECUTOR: ExecutorService = Executors.newCachedThreadPool(ThreadFactoryBuilder().setNameFormat("IR Network Builder Thread %d").build())
 
 private val DIRECTIONS = Direction.values()
 
 fun update(world: ServerWorld, pos: BlockPos, newBlock: Block, block: PipeBlock) {
     val networkManager = world.networkManager
+    var oldNetwork = networkManager.networksByPos[pos.asLong()]
+    if (oldNetwork != null) networkManager.remove(oldNetwork)
+
     if (newBlock == block) {
         createNetwork(networkManager, pos, world, block)
     } else {
-        val oldNetwork = networkManager.networksByPos[pos.asLong()]
-        if (oldNetwork != null) networkManager.remove(oldNetwork)
         for (dir in DIRECTIONS) {
             val offset = pos.offset(dir)
+
+            oldNetwork = networkManager.networksByPos[offset.asLong()]
+            if (oldNetwork != null) networkManager.remove(oldNetwork)
+        }
+
+        for (dir in DIRECTIONS) {
+            val offset = pos.offset(dir)
+
             if (world.getBlockState(offset).isOf(block)) {
                 createNetwork(networkManager, offset, world, block)
             }
@@ -36,48 +46,84 @@ fun update(world: ServerWorld, pos: BlockPos, newBlock: Block, block: PipeBlock)
 
 private fun createNetwork(manager: NetworkManager, pos: BlockPos, world: ServerWorld, block: PipeBlock) {
     val network = block.createNetwork(world)
+    network.tier = block.tier
     dfs(network, pos, world, block, LongOpenHashSet())
     if (network.nodes.isNotEmpty()) {
         manager.networks.add(network)
+        network.nodes.forEach { (pos, _) ->
+            if (!network.containers.contains(pos)) {
+                world.networkManager.networksByPos.put(pos, network)
+            }
+        }
         manager.syncToAllPlayers(network)
         EXECUTOR.submit {
+            println("BEFORE")
             calculateDistances(network)
+            println("AFTER")
             network.ready = true
         }
     }
 }
 
+fun dfs2(network: PipeNetwork<*>, pos: BlockPos, world: ServerWorld, pipe: PipeBlock, searched: LongOpenHashSet) {
+    val longPos = pos.asLong()
+    if (!searched.add(longPos)) return
+
+    var connections = PipeConnections(0)
+    var connCount = 0
+    val block = world.getBlockState(pos)
+    for (dir in DIRECTIONS) {
+        val offset = pos.offset(dir)
+
+        if (block.isOf(pipe)) {
+            dfs2(network, offset, world, pipe, searched)
+        } else {
+            continue
+        }
+
+        val neighbor = world.getBlockState(offset)
+        if (neighbor.isOf(pipe) || network.isValidStorage(world, offset, dir.opposite)) {
+            connections = connections.with(dir)
+            connCount++
+        }
+    }
+    if (connCount > 0)
+        network.nodes[longPos] = NetworkNode(pos, connections, connCount, Long2IntOpenHashMap())
+}
 
 fun dfs(network: PipeNetwork<*>, pos: BlockPos, world: ServerWorld, block: PipeBlock, searched: LongOpenHashSet) {
     if (!searched.add(pos.asLong())) return
     var connections = 0
     var neighborCount = 0
-    val current = world.getBlockState(pos)
+    //val current = world.getBlockState(pos)
+
     for (dir in DIRECTIONS) {
         val offset = pos.offset(dir)
-        val neighbor = world.getBlockState(offset)
-        if (!neighbor.isOf(block)) {
-            if (!network.isValidStorage(world, offset, dir.opposite)) continue
-            else network.containers.add(offset.asLong())
-        }
-        dfs(network, offset, world, block, searched)
 
-        if (current.isOf(block) || neighbor.isOf(block)) {
-            connections = connections or (1 shl dir.id)
-            neighborCount++
-        }
+        val neighbor = world.getBlockState(offset)
+        if (neighbor.isOf(block))
+            dfs(network, offset, world, block, searched)
+        else if (network.isValidStorage(world, offset, dir.opposite)) {
+            network.containers.add(offset.asLong())
+            if (network.nodes.contains(offset.asLong())) {
+                val node = network.nodes[offset.asLong()]
+                network.nodes[offset.asLong()] = NetworkNode(offset, node.connections.with(dir.opposite), node.connectionCount + 1, node.distances)
+            } else {
+                network.nodes[offset.asLong()] = NetworkNode(offset, PipeConnections(0).with(dir.opposite), 1, Long2IntOpenHashMap())
+            }
+        } else continue
+
+        connections = connections or (1 shl dir.id)
+        neighborCount++
     }
     network.nodes[pos.asLong()] = NetworkNode(pos, PipeConnections(connections), neighborCount, Long2IntOpenHashMap())
-    val previous = world.networkManager.networksByPos.put(pos.asLong(), network)
-    if (previous != null)
-        world.networkManager.remove(previous)
 }
 
 fun calculateDistances(network: PipeNetwork<*>) {
     val mutable = BlockPos.Mutable()
     network.nodes.forEach { (pos, node) ->
         if (node.isCorner()) {
-            node.distances.defaultReturnValue(Int.MAX_VALUE)
+            node.distances.defaultReturnValue(99999)
             mutable.set(pos)
             calculateDistances(network, node, node, mutable, 0, LongOpenHashSet(), node.distances)
         }
@@ -105,7 +151,7 @@ fun calculateDistances(network: PipeNetwork<*>, rootNode: NetworkNode, node: Net
 
 fun findShortestPath(network: PipeNetwork<*>, pos1: BlockPos, pos2: BlockPos, path: MutableList<Long>): Int {
     val dist = Long2IntOpenHashMap()
-    dist.defaultReturnValue(9999)
+    dist.defaultReturnValue(99999)
     val visited = LongOpenHashSet()
     val orig = pos1.asLong()
     val dest = pos2.asLong()

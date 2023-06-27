@@ -34,12 +34,9 @@ abstract class StoragePipeNetwork<T>(world: ServerWorld) : PipeNetwork<Storage<T
                     when (type) {
                         ConnectionType.ROUND_ROBIN -> tickRoundRobin(offset, direction.opposite, paths)
 
-                        ConnectionType.NEAREST_FIRST -> {
-                        }
+                        ConnectionType.NEAREST_FIRST -> tickNearestFirst(offset, direction.opposite, paths)
 
-                        ConnectionType.FARTHEST_FIRST -> {
-
-                        }
+                        ConnectionType.FARTHEST_FIRST -> tickFarthestFirst(offset, direction.opposite, paths)
 
                         else -> {}
                     }
@@ -47,6 +44,15 @@ abstract class StoragePipeNetwork<T>(world: ServerWorld) : PipeNetwork<Storage<T
             }
         }
         tickingPositions.clear()
+    }
+
+    private fun doMove(tx: Transaction, view: StorageView<T>, resource: T, amount: Long, path: Path): Long {
+        val dest = path.nodes[0]
+        val destNode = nodes[dest]
+        val destDir = destNode.connections.getDirections()[0]
+        mutablePos.set(dest)
+        val destStorage = find(world, mutablePos, destDir) ?: return 0
+        return move(tx, view, destStorage, resource, path, amount)
     }
 
     private fun tickRoundRobin(pos: BlockPos, direction: Direction, paths: List<Path>) {
@@ -60,12 +66,54 @@ abstract class StoragePipeNetwork<T>(world: ServerWorld) : PipeNetwork<Storage<T
                 val resource = view.resource
                 val amount = (view.amount.coerceAtMost(remaining) / paths.size).coerceAtLeast(minimumTransferable)
                 paths.forEach { path ->
-                    val dest = path.nodes[0]
+                    if (remaining > 0)
+                        remaining -= doMove(tx, view, resource, amount, path)
+                  /*  val dest = path.nodes[0]
                     val destNode = nodes[dest]
                     val destDir = destNode.connections.getDirections()[0]
                     mutablePos.set(dest)
                     val destStorage = find(world, mutablePos, destDir) ?: return@forEach
-                    remaining -= move(tx, view, destStorage, resource, path, amount)
+                    remaining -= move(tx, view, destStorage, resource, path, amount)*/
+                }
+            }
+            tx.commit()
+        }
+    }
+
+    private fun tickNearestFirst(pos: BlockPos, direction: Direction, paths: List<Path>) {
+        transaction { tx ->
+            val storage = find(world, pos, direction) ?: return
+            var remaining = maximumTransferable
+            val it = storage.iterator()
+            while (it.hasNext() && remaining > 0) {
+                val view = it.next()
+                if (view.isResourceBlank || view.amount == 0L) continue
+                val resource = view.resource
+                val amount = (view.amount.coerceAtMost(remaining)).coerceAtLeast(minimumTransferable)
+
+                paths.sortedBy { it.dist }.forEach { path ->
+                    if (remaining > 0)
+                        remaining -= doMove(tx, view, resource, amount, path)
+                }
+            }
+            tx.commit()
+        }
+    }
+
+    private fun tickFarthestFirst(pos: BlockPos, direction: Direction, paths: List<Path>) {
+        transaction { tx ->
+            val storage = find(world, pos, direction) ?: return
+            var remaining = maximumTransferable
+            val it = storage.iterator()
+            while (it.hasNext() && remaining > 0) {
+                val view = it.next()
+                if (view.isResourceBlank || view.amount == 0L) continue
+                val resource = view.resource
+                val amount = (view.amount.coerceAtMost(remaining)).coerceAtLeast(minimumTransferable)
+
+                paths.sortedByDescending { it.dist }.forEach { path ->
+                    if (remaining > 0)
+                        remaining -= doMove(tx, view, resource, amount, path)
                 }
             }
             tx.commit()

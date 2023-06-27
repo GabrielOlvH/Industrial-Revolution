@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.Tier
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
@@ -17,7 +17,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.math.Vec3f
 
 open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactory.Context) : BlockEntityRenderer<MachineBlockEntity<*>> {
-    private var model: me.steven.indrev.blocks.MachineBakedModel? = null
+    private var model: MachineBakedModel? = null
 
     override fun render(
         entity: MachineBlockEntity<*>,
@@ -28,7 +28,7 @@ open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactor
         overlay: Int
     ) {
         if (model == null) {
-            model = ctx.renderManager.getModel(entity.cachedState) as? me.steven.indrev.blocks.MachineBakedModel ?: return
+            model = ctx.renderManager.getModel(entity.cachedState) as? MachineBakedModel ?: return
         }
 
         val vc = vertexConsumers.getBuffer(RenderLayer.getCutout())
@@ -82,6 +82,12 @@ open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactor
             }
         }
 
+        fun getMesh(tier: Tier): Mesh? {
+            if (TIER_MESHES.contains(tier)) return TIER_MESHES[tier]
+            getQuads(tier)
+            return TIER_MESHES[tier]
+        }
+
         fun getQuads(tier: Tier): List<BakedQuad>? {
             if (TIER_QUADS.contains(tier)) return TIER_QUADS[tier]
 
@@ -94,7 +100,7 @@ open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactor
                 emitter.square(side, 0f, 0f, 1f, 1f, -2e-4f * 2)
                 emitter.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV)
                 emitter.spriteColor(0, -1, -1, -1, -1)
-                val uv = me.steven.indrev.blocks.MachineBakedModel.MachineTextureUV.BY_DIRECTION[side]!!
+                val uv = MachineBakedModel.MachineTextureUV.BY_DIRECTION[side]!!
                 emitter.sprite(0, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v1.toDouble()))
                 emitter.sprite(1, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
                 emitter.sprite(2, 0, sprite.getFrameU(uv.u2.toDouble()), sprite.getFrameV(uv.v2.toDouble()))

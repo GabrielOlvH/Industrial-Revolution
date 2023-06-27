@@ -3,11 +3,13 @@ package me.steven.indrev.transportation.networks.types
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet
+import me.steven.indrev.api.Tier
 import me.steven.indrev.transportation.blocks.PipeBlockEntity
 import me.steven.indrev.transportation.networks.*
 import me.steven.indrev.transportation.packets.AddPipeRenderDataPacket
 import me.steven.indrev.transportation.utils.nested
 import me.steven.indrev.transportation.utils.transaction
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView
@@ -22,6 +24,10 @@ import net.minecraft.world.World
 abstract class PipeNetwork<T>(val world: ServerWorld) {
 
     private var cachedPacket: PacketByteBuf? = null
+
+    val apiCache = Long2ObjectOpenHashMap<BlockApiCache<T, Direction>>()
+
+    var tier = Tier.MK1
 
     val nodes = Long2ObjectOpenHashMap<NetworkNode>()
     val containers = LongOpenHashSet()
@@ -42,9 +48,9 @@ abstract class PipeNetwork<T>(val world: ServerWorld) {
         ticks++
     }
 
-    abstract fun find(world: World, pos: BlockPos, direction: Direction): T?
+    abstract fun find(world: ServerWorld, pos: BlockPos, direction: Direction): T?
 
-    fun isValidStorage(world: World, blockPos: BlockPos, direction: Direction): Boolean {
+    fun isValidStorage(world: ServerWorld, blockPos: BlockPos, direction: Direction): Boolean {
         return find(world, blockPos, direction) != null
     }
 

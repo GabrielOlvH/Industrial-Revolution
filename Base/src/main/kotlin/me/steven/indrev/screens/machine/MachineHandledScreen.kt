@@ -39,7 +39,7 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
         handler.tick()
     }
 
-    override fun render(matrices: MatrixStack?, mouseX: Int, mouseY: Int, delta: Float) {
+    override fun render(matrices: MatrixStack, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(matrices, mouseX, mouseY, delta)
         val w = getWidgetAt(handler.widgets.reversed(), mouseX.toDouble(), mouseY.toDouble())
         val data = w?.tooltipData?.invoke()
@@ -48,6 +48,7 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
             w.tooltipBuilder?.invoke(tooltip)
             if (tooltip.isNotEmpty() || data != null) renderTooltip(matrices, tooltip, Optional.ofNullable(data), mouseX, mouseY)
         }
+        w?.drawMouseover(matrices, w.x + x, w.y + y, mouseX, mouseY)
         drawMouseoverTooltip(matrices, mouseX, mouseY)
     }
 

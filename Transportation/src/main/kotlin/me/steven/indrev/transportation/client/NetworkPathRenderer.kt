@@ -38,7 +38,7 @@ object NetworkPathRenderer : WorldRenderEvents.AfterTranslucent {
         val green = ColorHelper.Argb.getGreen(color) / 255f
         val blue = ColorHelper.Argb.getBlue(color) / 255f
 
-        val width =  0.15f
+        val width =  0.12f
 
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader)
         RenderSystem.disableCull()

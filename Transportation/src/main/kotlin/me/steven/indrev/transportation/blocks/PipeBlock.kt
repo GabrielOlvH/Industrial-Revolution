@@ -1,6 +1,7 @@
 package me.steven.indrev.transportation.blocks
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap
+import me.steven.indrev.api.Tier
 import me.steven.indrev.transportation.networks.*
 import me.steven.indrev.transportation.networks.types.PipeNetwork
 import me.steven.indrev.transportation.networks.types.StoragePipeNetwork
@@ -32,7 +33,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import java.util.function.IntFunction
 
-abstract class PipeBlock : Block(FabricBlockSettings.copyOf(Blocks.GLASS).solidBlock { _, _, _ -> false }.nonOpaque()) {
+abstract class PipeBlock(val tier: Tier) : Block(FabricBlockSettings.copyOf(Blocks.GLASS).solidBlock { _, _, _ -> false }.nonOpaque()) {
 
     abstract fun createNetwork(world: ServerWorld): PipeNetwork<*>
 

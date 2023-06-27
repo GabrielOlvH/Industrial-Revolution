@@ -1,4 +1,4 @@
-package me.steven.indrev.utils
+package me.steven.indrev.api
 
 enum class Tier(val asString: String, val transferCapacity: Long) {
     MK1("mk1", 32),

@@ -1,6 +1,7 @@
 package me.steven.indrev.transportation.client.models
 
 import com.mojang.datafixers.util.Pair
+import me.steven.indrev.transportation.blocks.PipeBlock
 import me.steven.indrev.transportation.networks.ClientPipeNetworkData
 import me.steven.indrev.transportation.utils.PipeConnections
 import net.fabricmc.fabric.api.renderer.v1.Renderer
@@ -9,6 +10,7 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
@@ -45,19 +47,21 @@ open class PipeModel(
         spriteIdCollection.forEachIndexed { idx, spriteIdentifier ->
             spriteArray[idx] = textureGetter.apply(spriteIdentifier)
         }
-
         val center = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)!!
         meshArray[0] = buildDefaultMesh(center)
         transform = center.transformation
         val sideModel = loader.getOrLoadModel(modelIdCollection[1])
-        meshArray[1] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
-        meshArray[2] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
-        meshArray[3] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId)!!)// SOUTH
-        meshArray[4] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId)!!)// WEST
-        meshArray[5] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
-        meshArray[6] = buildDefaultMesh(sideModel.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
-
+        buildRotatedMeshes(meshArray, sideModel, loader, textureGetter, modelId)
         return this
+    }
+
+    fun buildRotatedMeshes(array: Array<Mesh?>, model: UnbakedModel, loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, modelId: Identifier?) {
+        array[1] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
+        array[2] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
+        array[3] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId)!!) // SOUTH
+        array[4] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId)!!) // WEST
+        array[5] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
+        array[6] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
     }
 
     fun buildDefaultMesh(model: BakedModel): Mesh {
@@ -127,18 +131,18 @@ open class PipeModel(
             if (coverState.isOpaque) return
         }*/
 
-
         context.meshConsumer().accept(meshArray[0])
         val value = ClientPipeNetworkData.renderData.get(pos.asLong())
-        if (value == -1) return
-        val connections = PipeConnections(value)
+        if (value != -1) {
+            val connections = PipeConnections(value)
 
-        if (connections.contains(Direction.NORTH)) context.meshConsumer().accept(meshArray[1])
-        if (connections.contains(Direction.EAST)) context.meshConsumer().accept(meshArray[2])
-        if (connections.contains(Direction.SOUTH)) context.meshConsumer().accept(meshArray[3])
-        if (connections.contains(Direction.WEST)) context.meshConsumer().accept(meshArray[4])
-        if (connections.contains(Direction.UP)) context.meshConsumer().accept(meshArray[5])
-        if (connections.contains(Direction.DOWN)) context.meshConsumer().accept(meshArray[6])
+            if (connections.contains(Direction.NORTH)) context.meshConsumer().accept(meshArray[1])
+            if (connections.contains(Direction.EAST)) context.meshConsumer().accept(meshArray[2])
+            if (connections.contains(Direction.SOUTH)) context.meshConsumer().accept(meshArray[3])
+            if (connections.contains(Direction.WEST)) context.meshConsumer().accept(meshArray[4])
+            if (connections.contains(Direction.UP)) context.meshConsumer().accept(meshArray[5])
+            if (connections.contains(Direction.DOWN)) context.meshConsumer().accept(meshArray[6])
+        }
     }
 
     override fun emitItemQuads(stack: ItemStack?, p1: Supplier<Random>, context: RenderContext) {

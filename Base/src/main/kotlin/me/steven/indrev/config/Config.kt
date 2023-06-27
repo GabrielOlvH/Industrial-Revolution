@@ -1,6 +1,6 @@
 package me.steven.indrev.config
 
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.Tier
 
 val machinesConfig = Machines()
 

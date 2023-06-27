@@ -11,6 +11,8 @@ dependencies {
     include project(path: ":Base", configuration: "namedElements")
     api project(path: ":Transportation", configuration: "namedElements")
     include project(path: ":Transportation", configuration: "namedElements")
+    api project(path: ":API", configuration: "namedElements")
+    include project(path: ":API", configuration: "namedElements")
 }
 
 allprojects {

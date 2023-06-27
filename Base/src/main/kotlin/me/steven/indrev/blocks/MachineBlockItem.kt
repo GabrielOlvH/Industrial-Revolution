@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.Tier
 import me.steven.indrev.utils.itemSettings
 import net.minecraft.advancement.criterion.Criteria
 import net.minecraft.block.Block

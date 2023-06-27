@@ -25,6 +25,10 @@ class WidgetCheckbox : Widget() {
         }
     }
 
+    override fun drawMouseover(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        DrawableHelper.fill(matrices, x, y, x + width, y+ height, 0x99555555.toInt())
+    }
+
     override fun onClick(mouseX: Double, mouseY: Double, button: Int) {
         checked = !checked
         onChange?.invoke(checked)

@@ -1,9 +1,9 @@
 package me.steven.indrev.blockentities
 
+import me.steven.indrev.api.Tier
 import me.steven.indrev.components.*
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.utils.Directions
-import me.steven.indrev.utils.Tier
 import me.steven.indrev.utils.Upgrade
 import me.steven.indrev.utils.energyOf
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory

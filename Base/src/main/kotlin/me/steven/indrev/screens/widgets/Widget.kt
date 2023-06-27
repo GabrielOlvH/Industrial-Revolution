@@ -19,6 +19,10 @@ abstract class Widget {
 
     }
 
+    open fun drawMouseover(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+
+    }
+
     fun setTooltip(builder: (MutableList<Text>) -> Unit): Widget {
         this.tooltipBuilder = builder
         return this

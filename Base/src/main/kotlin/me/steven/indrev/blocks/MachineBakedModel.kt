@@ -1,7 +1,7 @@
 package me.steven.indrev.blocks
 
 import com.mojang.datafixers.util.Pair
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.Tier
 import me.steven.indrev.utils.blockSpriteId
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
@@ -106,8 +106,7 @@ open class MachineBakedModel(val id: String, val hasOnModel: Boolean) : UnbakedM
 
     override fun getParticleSprite(): Sprite? = idleSprite
 
-    override fun getTransformation(): ModelTransformation =
-        me.steven.indrev.blocks.MachineBakedModel.Companion.TRANSFORM
+    override fun getTransformation(): ModelTransformation = TRANSFORM
 
     override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
 
@@ -120,15 +119,15 @@ open class MachineBakedModel(val id: String, val hasOnModel: Boolean) : UnbakedM
         randomSupplier: Supplier<Random>,
         ctx: RenderContext
     ) {
-        ctx.pushTransform(rotateQuads(state[me.steven.indrev.blocks.MachineBlock.Companion.FACING]))
+        ctx.pushTransform(rotateQuads(state[MachineBlock.FACING]))
         ctx.meshConsumer().accept(idleMesh)
         ctx.popTransform()
     }
 
     override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
         ctx.meshConsumer().accept(idleMesh)
-        val item = stack.item as? me.steven.indrev.blocks.MachineBlockItem ?: return
-        val mesh = me.steven.indrev.blocks.MachineBlockEntityRenderer.Companion.TIER_MESHES[item.tier] ?: return
+        val item = stack.item as? MachineBlockItem ?: return
+        val mesh = MachineBlockEntityRenderer.getMesh(item.tier) ?: return
         ctx.meshConsumer().accept(mesh)
     }
 

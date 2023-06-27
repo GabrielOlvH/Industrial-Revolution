@@ -5,7 +5,7 @@ import me.steven.indrev.events.client.MachineModelLoader
 import me.steven.indrev.packets.client.ClientPackets
 import me.steven.indrev.screens.MACHINE_SCREEN_HANDLER
 import me.steven.indrev.screens.machine.MachineHandledScreen
-import me.steven.indrev.utils.Tier
+import me.steven.indrev.api.Tier
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback

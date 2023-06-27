@@ -6,11 +6,14 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import me.steven.indrev.transportation.utils.PipeConnections
 import me.steven.indrev.transportation.utils.nested
 import me.steven.indrev.transportation.utils.transaction
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
+import java.util.function.LongFunction
 
 class EnergyPipeNetwork(world: ServerWorld) : PipeNetwork<EnergyStorage>(world) {
 
@@ -130,7 +133,9 @@ class EnergyPipeNetwork(world: ServerWorld) : PipeNetwork<EnergyStorage>(world) 
         }
     }
 
-    override fun find(world: World, pos: BlockPos, direction: Direction): EnergyStorage? {
-        return EnergyStorage.SIDED.find(world, pos, direction)
+    override fun find(world: ServerWorld, pos: BlockPos, direction: Direction): EnergyStorage? {
+        return apiCache.computeIfAbsent(pos.asLong(), LongFunction {
+            BlockApiCache.create(EnergyStorage.SIDED, world, pos)
+        }).find(direction)
     }
 }

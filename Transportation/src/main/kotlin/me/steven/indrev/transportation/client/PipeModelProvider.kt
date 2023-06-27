@@ -14,21 +14,39 @@ import net.minecraft.util.Identifier
 object PipeModelProvider : ModelVariantProvider {
 
     private val itemPipeModel by lazy {
-        StoragePipeModel(
-            mutableListOf(identifier("block/item_pipe_center"), identifier("block/item_pipe_side")),
-            mutableListOf(blockSpriteId("block/item_pipe_mk1"))
-        )
+        Array(4) { i ->
+            StoragePipeModel(
+                mutableListOf(identifier("block/item_pipe_center_mk${i+1}"), identifier("block/item_pipe_side_mk${i+1}")),
+                mutableListOf(blockSpriteId("block/item_pipe_mk${i + 1}"))
+            )
+        }
+    }
+
+    private val fluidPipeModel by lazy {
+        Array(4) { i ->
+            StoragePipeModel(
+                mutableListOf(identifier("block/fluid_pipe_center_mk${i+1}"), identifier("block/fluid_pipe_side_mk${i+1}")),
+                mutableListOf(blockSpriteId("block/fluid_pipe_mk${i + 1}"))
+            )
+        }
     }
 
     private val cableModel by lazy {
-        PipeModel(
-            mutableListOf(identifier("block/cable_center"), identifier("block/cable_side")),
-            mutableListOf(blockSpriteId("block/energy_cable_mk1"))
-        )
+        Array(4) { i ->
+            PipeModel(
+                mutableListOf(identifier("block/cable_center_mk${i+1}"), identifier("block/cable_side_mk${i+1}")),
+                mutableListOf(blockSpriteId("block/energy_cable_mk${i + 1}"))
+            )
+        }
     }
 
     override fun loadModelVariant(modelId: ModelIdentifier, context: ModelProviderContext): UnbakedModel? {
-        if (modelId.namespace != MOD_ID) return null
-        return if (modelId.path == "item_pipe") itemPipeModel else if (modelId.path == "cable") cableModel else null
+        return when {
+            modelId.namespace != MOD_ID -> return null
+            modelId.path.startsWith("item_pipe") -> itemPipeModel[modelId.path.last().digitToInt()-1]
+            modelId.path.startsWith("cable") -> cableModel[modelId.path.last().digitToInt()-1]
+            modelId.path.startsWith("fluid_pipe") -> fluidPipeModel[modelId.path.last().digitToInt()-1]
+            else -> null
+        }
     }
 }

@@ -2,7 +2,6 @@ package me.steven.indrev.transportation.client.models
 
 import com.mojang.datafixers.util.Pair
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
-import me.steven.indrev.transportation.networks.ConnectionType
 import me.steven.indrev.transportation.utils.blockSpriteId
 import me.steven.indrev.transportation.utils.identifier
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
@@ -33,12 +32,7 @@ class StoragePipeModel(
         modelId: Identifier?
     ): BakedModel {
         val outputModel = loader.getOrLoadModel(identifier("block/pipe_output"))
-        outputMeshes[1] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
-        outputMeshes[2] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
-        outputMeshes[3] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId)!!)// SOUTH
-        outputMeshes[4] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId)!!)// WEST
-        outputMeshes[5] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
-        outputMeshes[6] = buildDefaultMesh(outputModel.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
+        buildRotatedMeshes(outputMeshes, outputModel, loader, textureGetter, modelId)
         return super.bake(loader, textureGetter, rotationContainer, modelId)
     }
 
@@ -50,7 +44,7 @@ class StoragePipeModel(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): MutableCollection<SpriteIdentifier> {
-        return mutableListOf(*super.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).toTypedArray(), blockSpriteId("block/pipe_output"))
+        return mutableListOf(*super.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences).toTypedArray(), blockSpriteId("block/servos"))
     }
 
     override fun emitBlockQuads(
@@ -63,10 +57,19 @@ class StoragePipeModel(
         super.emitBlockQuads(world, state, pos, randSupplier, context)
 
         val blockView = world as RenderAttachedBlockView
-        val attatchment = blockView.getBlockEntityRenderAttachment(pos)
-        val config = attatchment as? Int2IntOpenHashMap ?: return
+        val attachment = blockView.getBlockEntityRenderAttachment(pos)
+        val config = attachment as? Int2IntOpenHashMap ?: return
         config.forEach { (dirId, modeId) ->
-            context.meshConsumer().accept(outputMeshes[dirId])
+            val meshId = when (dirId) {
+                Direction.NORTH.id -> 1
+                Direction.EAST.id -> 2
+                Direction.SOUTH.id -> 3
+                Direction.WEST.id -> 4
+                Direction.UP.id -> 5
+                Direction.DOWN.id -> 6
+                else -> 0
+            }
+            context.meshConsumer().accept(outputMeshes[meshId])
         }
     }
 }

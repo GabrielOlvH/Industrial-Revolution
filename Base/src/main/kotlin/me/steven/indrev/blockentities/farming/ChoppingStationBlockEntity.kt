@@ -45,7 +45,7 @@ class ChoppingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmBlo
                 queue = getArea().toList().iterator()
             }
             val stack = axe.resource.toStack(axe.amount.toInt())
-            while (queue.hasNext()) {
+            while (queue.hasNext() && actions > 0) {
                 val pos = queue.next()
                 val state = world!!.getBlockState(pos)
                 if (state.registryEntry.isIn(BlockTags.LOGS) && useEnergy(2)) {
@@ -58,11 +58,9 @@ class ChoppingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmBlo
                 } else if (!state.registryEntry.isIn(BlockTags.LEAVES) || !useEnergy(1)) continue
                 world!!.removeBlock(pos, false)
 
-                insertLoot(state, pos, stack)
+                insertLoot(state, pos, stack, OUTPUT_SLOTS)
 
                 actions--
-                if (actions <= 0)
-                    break
             }
             axe.set(stack)
         }
@@ -76,24 +74,6 @@ class ChoppingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmBlo
 
     override fun getArea(): Box {
         return super.getArea().stretch(0.0, getRange() * 2.0, 0.0)
-    }
-
-    private fun insertLoot(state: BlockState, pos: BlockPos, stack: ItemStack) {
-        val ctx = LootContext.Builder(world as ServerWorld)
-            .parameter(LootContextParameters.BLOCK_STATE, state)
-            .parameter(LootContextParameters.ORIGIN, Vec3d(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()))
-            .parameter(LootContextParameters.TOOL, stack)
-            .build(LootContextTypes.BLOCK)
-        tx { tx ->
-            world!!.server!!.lootManager.getTable(state.block.lootTableId).generateLoot(ctx) { stack ->
-                val inserted = inventory.insert(OUTPUT_SLOTS, ItemVariant.of(stack), stack.count.toLong(), tx)
-                if (inserted < stack.count) {
-                    stack.decrement(inserted.toInt())
-                    ItemScatterer.spawn(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), stack)
-                }
-            }
-            tx.commit()
-        }
     }
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {

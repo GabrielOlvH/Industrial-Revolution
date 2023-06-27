@@ -1,0 +1,7 @@
+archivesBaseName = 'indrev-api'
+
+repositories {
+}
+
+dependencies {
+}

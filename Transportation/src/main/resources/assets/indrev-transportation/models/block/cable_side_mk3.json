@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "indrev-transportation:block/energy_cable_mk3",
+		"particle": "indrev-transportation:block/energy_cable_mk3"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 6],
+			"to": [10, 5, 10],
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [11, 0, 6, 4], "rotation": 270, "texture": "#1"},
+				"east": {"uv": [6, 0, 11, 4], "rotation": 90, "texture": "#1"},
+				"south": {"uv": [6, 0, 11, 4], "rotation": 90, "texture": "#1"},
+				"west": {"uv": [11, 0, 6, 4], "rotation": 270, "texture": "#1"},
+				"up": {"uv": [11, 0, 15, 4], "texture": "#1"},
+				"down": {"uv": [11, 0, 15, 4], "rotation": 180, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "cable",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "cable_connector",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [0]
+				}
+			]
+		}
+	]
+}

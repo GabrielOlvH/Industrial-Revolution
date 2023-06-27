@@ -21,6 +21,10 @@ value class PipeConnections(val value: Int = 0) {
 
     fun getDirections(): List<Direction> = Direction.values().filter(this::contains)
 
+    override fun toString(): String {
+        return "Connections[" + getDirections() + "]"
+    }
+
     companion object {
         val ALL = PipeConnections(*Direction.values())
     }

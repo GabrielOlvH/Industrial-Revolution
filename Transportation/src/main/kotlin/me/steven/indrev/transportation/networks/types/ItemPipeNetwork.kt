@@ -2,6 +2,7 @@ package me.steven.indrev.transportation.networks.types
 
 import me.steven.indrev.transportation.networks.Path
 import me.steven.indrev.transportation.packets.ShowPipePathPacket
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
@@ -11,6 +12,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.world.World
+import java.util.function.LongFunction
 
 class ItemPipeNetwork(world: ServerWorld) : StoragePipeNetwork<ItemVariant>(world) {
 
@@ -40,7 +42,9 @@ class ItemPipeNetwork(world: ServerWorld) : StoragePipeNetwork<ItemVariant>(worl
         ShowPipePathPacket.send(playerEntity, buf)
     }
 
-    override fun find(world: World, pos: BlockPos, direction: Direction): Storage<ItemVariant>? {
-        return ItemStorage.SIDED.find(world, pos, direction)
+    override fun find(world: ServerWorld, pos: BlockPos, direction: Direction): Storage<ItemVariant>? {
+        return apiCache.computeIfAbsent(pos.asLong(), LongFunction {
+            BlockApiCache.create(ItemStorage.SIDED, world, pos)
+        }).find(direction)
     }
 }
