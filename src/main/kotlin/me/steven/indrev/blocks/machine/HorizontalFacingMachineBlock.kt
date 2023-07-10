@@ -25,7 +25,7 @@ open class HorizontalFacingMachineBlock(
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)
-        return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing?.opposite)
+        return this.defaultState.with(HORIZONTAL_FACING, ctx?.horizontalPlayerFacing?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {

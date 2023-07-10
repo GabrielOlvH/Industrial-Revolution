@@ -21,10 +21,10 @@ import net.minecraft.item.*
 import net.minecraft.text.Text
 import me.steven.indrev.utils.translatable
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
+import net.minecraft.registry.Registries
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Rarity
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
 import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
@@ -294,14 +294,14 @@ object IRItemRegistry {
 
     val HAMMER = IRCraftingToolItem(itemSettings().maxDamage(32))
 
-    val STEEL_INGOT = { Registry.ITEM.get(identifier("steel_ingot")) }
-    val STEEL_PLATE = { Registry.ITEM.get(identifier("steel_plate")) }
-    val COPPER_INGOT = { Registry.ITEM.get(identifier("copper_ingot")) }
-    val TIN_INGOT = { Registry.ITEM.get(identifier("tin_ingot")) }
-    val LEAD_INGOT = { Registry.ITEM.get(identifier("lead_ingot")) }
-    val BRONZE_INGOT = { Registry.ITEM.get(identifier("bronze_ingot")) }
-    val SILVER_INGOT = { Registry.ITEM.get(identifier("silver_ingot")) }
-    val ENRICHED_NIKOLITE_DUST = { Registry.ITEM.get(identifier("enriched_nikolite_dust")) }
+    val STEEL_INGOT = { Registries.ITEM.get(identifier("steel_ingot")) }
+    val STEEL_PLATE = { Registries.ITEM.get(identifier("steel_plate")) }
+    val COPPER_INGOT = { Registries.ITEM.get(identifier("copper_ingot")) }
+    val TIN_INGOT = { Registries.ITEM.get(identifier("tin_ingot")) }
+    val LEAD_INGOT = { Registries.ITEM.get(identifier("lead_ingot")) }
+    val BRONZE_INGOT = { Registries.ITEM.get(identifier("bronze_ingot")) }
+    val SILVER_INGOT = { Registries.ITEM.get(identifier("silver_ingot")) }
+    val ENRICHED_NIKOLITE_DUST = { Registries.ITEM.get(identifier("enriched_nikolite_dust")) }
 
     val BIOMASS = DEFAULT_ITEM()
 
@@ -372,10 +372,10 @@ object IRItemRegistry {
     val JETPACK_MK3 = JetpackItem(Tier.MK3)
     val JETPACK_MK4 = JetpackItem(Tier.MK4)
 
-    val MODULAR_ARMOR_HELMET = IRModularArmorItem(EquipmentSlot.HEAD, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_CHEST = IRModularArmorItem(EquipmentSlot.CHEST, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(EquipmentSlot.LEGS, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
-    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(EquipmentSlot.FEET, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_HELMET = IRModularArmorItem(ArmorItem.Type.HELMET, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_CHEST = IRModularArmorItem(ArmorItem.Type.CHESTPLATE, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_LEGGINGS = IRModularArmorItem(ArmorItem.Type.LEGGINGS, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
+    val MODULAR_ARMOR_BOOTS = IRModularArmorItem(ArmorItem.Type.BOOTS, 250000, itemSettings().rarity(Rarity.EPIC).customDamage(EnergyDamageHandler))
 
     val PROTECTION_MODULE_ITEM = IRModuleItem(ArmorModule.PROTECTION, itemSettings().maxCount(1))
     val SPEED_MODULE_ITEM = IRModuleItem(ArmorModule.SPEED, itemSettings().maxCount(1))

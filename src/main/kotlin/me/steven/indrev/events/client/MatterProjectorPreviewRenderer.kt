@@ -20,7 +20,7 @@ object MatterProjectorPreviewRenderer : WorldRenderEvents.BeforeEntities {
             item.blockFinder.findPositions(context.world(), player, item.getRadius(stack)).forEach { pos ->
 
                 val offset = pos.offset(target.side)
-                if (context.world().getBlockState(offset).material.isReplaceable) {
+                if (context.world().getBlockState(offset).isReplaceable) {
                     val cameraPos = MinecraftClient.getInstance().gameRenderer.camera.pos
                     val x = offset.x - cameraPos.x
                     val y = offset.y - cameraPos.y

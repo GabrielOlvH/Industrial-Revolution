@@ -7,6 +7,7 @@ import me.steven.indrev.utils.blockSpriteId
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.render.model.BakedModel
+import net.minecraft.client.render.model.Baker
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
@@ -25,7 +26,7 @@ class MinerBakedModel(id: String) : MachineBakedModel(id) {
     var screenSprite: Sprite? = null
 
     override fun bake(
-        loader: ModelLoader,
+        loader: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
@@ -35,14 +36,14 @@ class MinerBakedModel(id: String) : MachineBakedModel(id) {
         return super.bake(loader, textureGetter, rotationContainer, modelId)
     }
 
-    override fun getTextureDependencies(
+   /* override fun getTextureDependencies(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): MutableCollection<SpriteIdentifier> {
         val deps = super.getTextureDependencies(unbakedModelGetter, unresolvedTextureReferences)
         deps.add(screenSpriteId)
         return deps
-    }
+    }*/
 
     override fun emitBlockQuads(
         blockView: BlockRenderView,

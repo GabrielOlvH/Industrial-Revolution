@@ -30,9 +30,10 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import me.steven.indrev.utils.translatable
+import net.minecraft.registry.Registries
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 import net.minecraft.world.World
 
 class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBlockEntity(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE, pos, state), ExtendedScreenHandlerFactory {
@@ -93,7 +94,7 @@ class DrillBlockEntity(pos: BlockPos, state: BlockState) : LootableContainerBloc
                 if (xOffset * xOffset + yOffset * yOffset + zOffset * zOffset < 64 * 64) {
                     val buf = PacketByteBuf(Unpooled.buffer())
                     buf.writeBlockPos(pos)
-                    buf.writeInt(Registry.BLOCK.getRawId(block))
+                    buf.writeInt(Registries.BLOCK.getRawId(block))
                     ServerPlayNetworking.send(serverPlayerEntity, MiningRigSpawnBlockParticlesPacket.BLOCK_BREAK_PACKET, buf)
                 }
             }

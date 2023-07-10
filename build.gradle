@@ -127,7 +127,7 @@ dependencies {
     dependencies.ext.lib("io.github.cottonmc:LibGui:${project.libgui_version}")
     dependencies.ext.lib("vazkii.patchouli:Patchouli:${project.patchouli_version}")
     dependencies.ext.lib("com.github.GabrielOlvH:magna:${project.magna_version}")
-    dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.0.1")
+    dependencies.ext.lib("com.github.emilyploszaj:step-height-entity-attribute:v1.2.0")
     dependencies.ext.lib("dev.cafeteria:fake-player-api:${project.fakeplayerapi_version}")
     dependencies.ext.lib("me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}", true)
     dependencies.ext.lib("me.luligabi:NoIndium:1.1.0+1.19")
@@ -211,11 +211,11 @@ publishing {
 compileKotlin.kotlinOptions.jvmTarget = "17"
 compileKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }
 compileTestKotlin {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 }

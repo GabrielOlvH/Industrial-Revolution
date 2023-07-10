@@ -4,8 +4,9 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.world.ClientWorld
+import net.minecraft.registry.Registries
 import net.minecraft.sound.SoundCategory
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 
 object MiningRigSpawnBlockParticlesPacket {
 
@@ -15,17 +16,17 @@ object MiningRigSpawnBlockParticlesPacket {
         ClientPlayNetworking.registerGlobalReceiver(BLOCK_BREAK_PACKET) { client, _, buf, _ ->
             val pos = buf.readBlockPos().down()
             val blockRawId = buf.readInt()
-            val block = Registry.BLOCK.get(blockRawId)
+            val block = Registries.BLOCK.get(blockRawId)
             client.execute {
                 MinecraftClient.getInstance().particleManager.addBlockBreakParticles(pos, block.defaultState)
                 val blockSoundGroup = block.getSoundGroup(block.defaultState)
                 (client.player!!.world as ClientWorld).playSound(
+                    null,
                     pos,
                     blockSoundGroup.breakSound,
                     SoundCategory.BLOCKS,
                     (blockSoundGroup.getVolume() + 1.0f) / 4.0f,
-                    blockSoundGroup.getPitch() * 0.8f,
-                    false
+                    blockSoundGroup.getPitch() * 0.8f
                 )
             }
         }

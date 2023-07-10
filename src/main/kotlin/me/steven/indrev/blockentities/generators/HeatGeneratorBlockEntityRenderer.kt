@@ -6,7 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 
 class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockEntity> {
     override fun render(
@@ -24,7 +24,7 @@ class HeatGeneratorBlockEntityRenderer : BlockEntityRenderer<HeatGeneratorBlockE
                 val direction = entity.cachedState[HorizontalFacingMachineBlock.HORIZONTAL_FACING]
                     .let { if (it.axis == Direction.Axis.X) it.opposite else it }
                 translate(0.5, 0.5, 0.5)
-                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(direction.asRotation()))
+                multiply(RotationAxis.POSITIVE_Y.rotationDegrees(direction.asRotation()))
                 translate(-0.5, -0.5, -0.5)
                 matrices.renderFluid(volume, vertexConsumers)
                 pop()

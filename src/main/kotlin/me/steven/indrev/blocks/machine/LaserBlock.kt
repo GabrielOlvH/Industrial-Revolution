@@ -59,11 +59,11 @@ class LaserBlock(registry: MachineRegistry, settings: Settings) : FacingMachineB
 
     companion object {
         val POWERED: BooleanProperty = Properties.POWERED
-        val LASER_DAMAGE_SOURCE = object : DamageSource("laser") {
+        /*val LASER_DAMAGE_SOURCE = object : DamageSource("laser") {
             init {
                 setFire()
                 setBypassesArmor()
             }
-        }
+        }*/
     }
 }

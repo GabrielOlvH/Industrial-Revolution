@@ -26,7 +26,7 @@ class MultiblockBlockEntityRenderer<T : BlockEntity>(val provider: (T) -> MultiB
             val rotated = offset.rotate(rotation)
             val blockPos = entity.pos.subtract(rotated)
             val blockState = entity.world!!.getBlockState(blockPos)
-            if (blockState.material.isReplaceable) {
+            if (blockState.isReplaceable) {
                 matrices.translate(-rotated.x.toDouble() + 0.25, -rotated.y.toDouble() + 0.25, -rotated.z.toDouble() + 0.25)
                 matrices.scale(0.5f, 0.5f, 0.5f)
                 MinecraftClient.getInstance().blockRenderManager

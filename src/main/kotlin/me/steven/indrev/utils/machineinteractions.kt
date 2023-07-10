@@ -84,7 +84,7 @@ private fun canMergeItems(first: ItemStack, second: ItemStack): Boolean =
     first.item == second.item
             && first.damage == second.damage
             && first.count < first.maxCount
-            && ItemStack.areNbtEqual(first, second)
+            && ItemStack.areEqual(first, second)
 
 private fun getInvAt(world: World, pos: BlockPos): Inventory? {
     val blockState = world.getBlockState(pos)

@@ -38,6 +38,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvents;
@@ -320,17 +321,21 @@ public class WCustomTabPanel extends WPanel {
             return InputResult.PROCESSED;
         }
 
+
         @Environment(EnvType.CLIENT)
         @Override
-        public void onKeyPressed(int ch, int key, int modifiers) {
+        public InputResult onKeyPressed(int ch, int key, int modifiers) {
             if (isActivationKey(ch)) {
                 onClick(0, 0, 0);
+                return InputResult.PROCESSED;
             }
+            return InputResult.IGNORED;
         }
 
         @Environment(EnvType.CLIENT)
         @Override
-        public void paint(MatrixStack matrices, int x, int y, int mouseX, int mouseY) {
+        public void paint(DrawContext ctx, int x, int y, int mouseX, int mouseY) {
+            MatrixStack matrices = ctx.getMatrices();
             TextRenderer renderer = MinecraftClient.getInstance().textRenderer;
             Text title = data.getTitle();
             Icon icon = data.getIcon();
@@ -345,9 +350,9 @@ public class WCustomTabPanel extends WPanel {
                 }
             }
 
-            (selected ? WCustomTabPanel.Painters.SELECTED_TAB : WCustomTabPanel.Painters.UNSELECTED_TAB).paintBackground(matrices, x, y, this);
+            (selected ? WCustomTabPanel.Painters.SELECTED_TAB : WCustomTabPanel.Painters.UNSELECTED_TAB).paintBackground(ctx, x, y, this);
             if (isFocused()) {
-                (selected ? WCustomTabPanel.Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(matrices, x, y, this);
+                (selected ? WCustomTabPanel.Painters.SELECTED_TAB_FOCUS_BORDER : Painters.UNSELECTED_TAB_FOCUS_BORDER).paintBackground(ctx, x, y, this);
             }
 
             int iconX = 6;
@@ -365,11 +370,11 @@ public class WCustomTabPanel extends WPanel {
                     color = selected ? WLabel.DEFAULT_TEXT_COLOR : 0xEEEEEE;
                 }
 
-                ScreenDrawing.drawString(matrices, title.asOrderedText(), align, x + titleX, y + titleY, width, color);
+                ScreenDrawing.drawString(ctx, title.asOrderedText(), align, x + titleX, y + titleY, width, color);
             }
 
             if (icon != null) {
-                icon.paint(matrices, x + iconX, (y + (height - TAB_PADDING - ICON_SIZE) / 2) + 1, ICON_SIZE);
+                icon.paint(ctx, x + iconX, (y + (height - TAB_PADDING - ICON_SIZE) / 2) + 1, ICON_SIZE);
             }
         }
 

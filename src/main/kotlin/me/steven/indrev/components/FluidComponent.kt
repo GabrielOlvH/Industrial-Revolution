@@ -29,7 +29,7 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
     private val exposedSides = EnumMap<Direction, ExposedFluidComponent>(Direction::class.java)
 
 
-    fun getCachedSide(dir: Direction): ExposedFluidComponent {
+    fun getCachedSide(dir: Direction?): ExposedFluidComponent {
         val exposed = exposedSides[dir]
         if (exposed == null || (!unsided && exposed.mode != transferConfig[dir])) {
             exposedSides[dir] = ExposedFluidComponent(dir, transferConfig[dir]!!)
@@ -37,8 +37,8 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         return exposedSides[dir]!!
     }
 
-    open fun getValidTanks(dir: Direction): IntArray =
-        if (unsided) IntArray(tankCount) { it }
+    open fun getValidTanks(dir: Direction?): IntArray =
+        if (unsided || dir == null) IntArray(tankCount) { it }
         else if (transferConfig[dir]!!.input) inputTanks
         else if (transferConfig[dir]!!.output) outputTanks else IntArray(0)
 
@@ -76,7 +76,7 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
         transferConfig.readNbt(tag)
     }
 
-    inner class ExposedFluidComponent(val dir: Direction, val mode: TransferMode) : CombinedStorage<FluidVariant, IRFluidTank.ExposedIRFluidTank>(mutableListOf()) {
+    inner class ExposedFluidComponent(val dir: Direction?, val mode: TransferMode) : CombinedStorage<FluidVariant, IRFluidTank.ExposedIRFluidTank>(mutableListOf()) {
 
         init {
             parts.addAll(getValidTanks(dir).map { this@FluidComponent.parts[it].exposed })
@@ -101,8 +101,8 @@ open class FluidComponent(val syncable: () -> Syncable, val limit: Long, val tan
 
         override fun getVersion(): Long = this@FluidComponent.version
 
-        override fun exactView(transaction: TransactionContext?, resource: FluidVariant?): StorageView<FluidVariant>? {
-            return super.exactView(transaction, resource)
+        override fun exactView(resource: FluidVariant?): StorageView<FluidVariant>? {
+            return super.exactView(resource)
         }
         override fun iterator(): MutableIterator<StorageView<FluidVariant>> {
             return super.iterator()

@@ -29,10 +29,10 @@ import net.minecraft.item.AxeItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ItemUsageContext
 import net.minecraft.item.ToolMaterial
-import net.minecraft.tag.BlockTags
 import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
 import me.steven.indrev.utils.translatable
+import net.minecraft.registry.tag.BlockTags
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand

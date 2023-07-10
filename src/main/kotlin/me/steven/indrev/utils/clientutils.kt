@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack
 import me.steven.indrev.utils.literal
 import net.minecraft.text.Text
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import kotlin.math.atan2
@@ -59,9 +60,9 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
     val h2 = (color2 shr 8 and 255) / 255.0f
     val k2 = (color2 and 255) / 255.0f
 
-    RenderSystem.setShader { GameRenderer.getPositionColorShader() }
+    RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
     RenderSystem.enableBlend()
-    RenderSystem.disableTexture()
+    //RenderSystem.disableTexture()
     RenderSystem.defaultBlendFunc()
     Tessellator.getInstance().buffer.run {
         begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR)
@@ -79,11 +80,11 @@ fun draw2Colors(matrices: MatrixStack, x1: Int, y1: Int, x2: Int, y2: Int, color
         end()
       //  BufferRenderer.draw(this)
     }
-    RenderSystem.enableTexture()
+  //  RenderSystem.enableTexture()
     RenderSystem.disableBlend()
 }
 
-fun drawCircle(matrices: MatrixStack, value: Int, max: Int, x: Int, y: Int, width: Int, colorProvider: (Int, Int) -> Int) {
+fun drawCircle(context: DrawContext, value: Int, max: Int, x: Int, y: Int, width: Int, colorProvider: (Int, Int) -> Int) {
     val maxRadius = width / 2 - 1
     val minRadius = maxRadius - 3
 
@@ -96,7 +97,7 @@ fun drawCircle(matrices: MatrixStack, value: Int, max: Int, x: Int, y: Int, widt
 
             if (squaredDist >= minRadius * minRadius && squaredDist < maxRadius * maxRadius && angle < maxAngle) {
                 val color = colorProvider(x + xOffset, y + yOffset)
-                ScreenDrawing.coloredRect(matrices, x + xOffset + width / 2, y + yOffset + width / 2, 1, 1, color)
+                ScreenDrawing.coloredRect(context, x + xOffset + width / 2, y + yOffset + width / 2, 1, 1, color)
             }
 
         }

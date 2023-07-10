@@ -9,7 +9,7 @@ import net.minecraft.util.math.Direction
 import team.reborn.energy.api.EnergyStorage
 
 interface ServerWorldExtension {
-    fun indrev_getEnergyCache(): Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction>>
+    fun indrev_getEnergyCache(): Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction?>>
 
     fun indrev_getEnergyNetworkState(): EnergyNetworkState
 

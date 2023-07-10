@@ -22,19 +22,21 @@ import net.minecraft.item.Item
 import net.minecraft.network.PacketByteBuf
 import me.steven.indrev.utils.literal
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 
 class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : LightweightGuiDescription() {
 
     val iconProvider: (Item) -> Icon? = { item ->
-        val id = Registry.ITEM.getId(item)
+        val id = Registries.ITEM.getId(item)
         val textureId = Identifier(id.namespace, "textures/item/${id.path}.png")
-        Icon { _, x, y, size ->
+        Icon { ctx, x, y, size ->
             if (item is IRGamerAxeItem)
-                ScreenDrawing.texturedRect(MatrixStack(), x, y, size, size, textureId, 0f, 0f, 1f, 0.14285714f, -1)
+                ScreenDrawing.texturedRect(ctx, x, y, size, size, textureId, 0f, 0f, 1f, 0.14285714f, -1)
             else
-                ScreenDrawing.texturedRect(MatrixStack(), x, y, size, size, textureId, -1)
+                ScreenDrawing.texturedRect(ctx, x, y, size, size, textureId, -1)
         }
     }
 
@@ -54,8 +56,8 @@ class ModularItemConfigurationScreenHandler(playerInventory: PlayerInventory) : 
                     val icon = iconProvider(moduleItem!!)
                     val moduleBox = WBox(Axis.VERTICAL)
                     moduleBox.add(object : WWidget() {
-                        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-                            icon?.paint(matrices, x, y, width)
+                        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                            icon?.paint(ctx, x, y, width)
                         }
 
                         override fun addTooltip(tooltip: TooltipBuilder?) {

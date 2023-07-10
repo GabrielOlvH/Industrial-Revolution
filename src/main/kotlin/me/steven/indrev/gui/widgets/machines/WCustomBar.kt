@@ -18,6 +18,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.network.PacketByteBuf
 import me.steven.indrev.utils.literal
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.MathHelper
 
@@ -25,8 +26,9 @@ open class WCustomBar(val bg: Texture, val bar: Texture, val value: () -> Int, v
 
     override fun canResize(): Boolean = false
 
-    override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(matrices, x, y, getWidth(), getHeight(), bg, -0x1)
+    override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        val matrices = ctx.matrices
+        ScreenDrawing.texturedRect(ctx, x, y, getWidth(), getHeight(), bg, -0x1)
 
         val maxVal: Int = max()
         var percent: Float = (value() / maxVal.toFloat()).coerceIn(0f, 1f)
@@ -44,24 +46,24 @@ open class WCustomBar(val bg: Texture, val bar: Texture, val value: () -> Int, v
                 val left = x;
                 var top = y + getHeight();
                 top -= barSize;
-                drawBar(matrices, left, top, getWidth(), barSize, bar.u1(), MathHelper.lerp(percent, bar.v2(), bar.v1()), bar.u2(), bar.v2());
+                drawBar(ctx, left, top, getWidth(), barSize, bar.u1(), MathHelper.lerp(percent, bar.v2(), bar.v1()), bar.u2(), bar.v2());
             }
             Direction.RIGHT -> {
-                drawBar(matrices, x, y, barSize, getHeight(),  bar.u1(), bar.v1(), MathHelper.lerp(percent, bar.u1(), bar.u2()), bar.v2())
+                drawBar(ctx, x, y, barSize, getHeight(),  bar.u1(), bar.v1(), MathHelper.lerp(percent, bar.u1(), bar.u2()), bar.v2())
             }
             Direction.DOWN -> {
-                drawBar(matrices, x, y, getWidth(), barSize,bar.u1(), bar.v1(), bar.u2(), MathHelper.lerp(percent, bar.v1(), bar.v2()))
+                drawBar(ctx, x, y, getWidth(), barSize,bar.u1(), bar.v1(), bar.u2(), MathHelper.lerp(percent, bar.v1(), bar.v2()))
             }
             Direction.LEFT -> {
                 var left = x + getWidth()
                 left -= barSize
-                drawBar(matrices, left, y, barSize, getHeight(), MathHelper.lerp(percent, bar.u2(), bar.u1()), bar.v1(), bar.u2(), bar.v2())
+                drawBar(ctx, left, y, barSize, getHeight(), MathHelper.lerp(percent, bar.u2(), bar.u1()), bar.v1(), bar.u2(), bar.v2())
             }
         }
     }
 
-    open fun drawBar(matrices: MatrixStack, left: Int, top: Int, width: Int, height: Int,  u1: Float, v1: Float, u2: Float, v2: Float) {
-        ScreenDrawing.texturedRect(matrices, left, top, width, height, bar.image(), u1, v1, u2, v2, -1);
+    open fun drawBar(ctx: DrawContext, left: Int, top: Int, width: Int, height: Int,  u1: Float, v1: Float, u2: Float, v2: Float) {
+        ScreenDrawing.texturedRect(ctx, left, top, width, height, bar.image(), u1, v1, u2, v2, -1);
     }
 
     enum class Direction {
@@ -84,7 +86,7 @@ val TANK_TOP = Texture(identifier("textures/gui/tank_top.png"))
 fun fluidTank(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
     val properties = blockEntity.guiSyncableComponent ?: error("$blockEntity does not provide gui_syncable component")
     val tank = object : WCustomBar(TANK_BOTTOM, TANK_TOP, { 1 }, { 1 }, Direction.UP) {
-        override fun drawBar(matrices: MatrixStack, left: Int, top: Int, width: Int, height: Int, u1: Float, v1: Float, u2: Float, v2: Float) {
+        override fun drawBar(ctx: DrawContext, left: Int, top: Int, width: Int, height: Int, u1: Float, v1: Float, u2: Float, v2: Float) {
 
             val maxVal: Long = properties.get<IRFluidTank>(index).capacity
             var percent: Float = (properties.get<IRFluidTank>(index).amount / maxVal.toFloat()).coerceIn(0f, 1f)
@@ -98,14 +100,14 @@ fun fluidTank(blockEntity: BaseBlockEntity, index: Int): WCustomBar {
                 val tank = properties.get<IRFluidTank>(index)
                 tank
                     .renderGuiRect(
-                        matrices,
+                        ctx.matrices,
                         left + 1,
                         top + height - 1,
                         width - 2,
                         height - 2
                     )
             }
-            ScreenDrawing.texturedRect(matrices, left, top, this.width, this.height, TANK_TOP, -1)
+            ScreenDrawing.texturedRect(ctx, left, top, this.width, this.height, TANK_TOP, -1)
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {

@@ -20,8 +20,9 @@ import net.minecraft.loot.provider.number.ConstantLootNumberProvider
 import net.minecraft.predicate.NumberRange
 import net.minecraft.predicate.item.EnchantmentPredicate
 import net.minecraft.predicate.item.ItemPredicate
+import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 import java.io.File
 
 class LootTableGenerator(val root: File, namespace: String, fallback: (Block) -> JsonFactory<Block>)
@@ -29,8 +30,8 @@ class LootTableGenerator(val root: File, namespace: String, fallback: (Block) ->
 
     override fun generate(): Int {
         var count = 0
-        Registry.BLOCK.ids.filter { id -> id.namespace == namespace }.forEach {
-            val block = Registry.BLOCK.get(it)
+        Registries.BLOCK.ids.filter { id -> id.namespace == namespace }.forEach {
+            val block = Registries.BLOCK.get(it)
             if (block.asItem() != null && block.asItem() != Items.AIR && generate(it, block)) {
                 count++
             }
@@ -49,7 +50,7 @@ class LootTableGenerator(val root: File, namespace: String, fallback: (Block) ->
                         )
                         .type(LootContextTypes.BLOCK)
                         .build()
-                    return LootManager.toJson(lootTable).asJsonObject
+                    return null //LootManager.toJson(lootTable).asJsonObject
                 }
 
             }
@@ -58,9 +59,9 @@ class LootTableGenerator(val root: File, namespace: String, fallback: (Block) ->
         val ORE_DROP: (Block) -> JsonFactory<Block> = { block ->
             object : JsonFactory<Block> {
                 override fun generate(): JsonObject? {
-                    val blockId = Registry.BLOCK.getId(block)
+                    val blockId = Registries.BLOCK.getId(block)
                     val rawOreId = "raw_${blockId.path.replace("deepslate_", "").replace("_ore", "")}"
-                    val rawOre = Registry.ITEM.get(Identifier(blockId.namespace, rawOreId))
+                    val rawOre = Registries.ITEM.get(Identifier(blockId.namespace, rawOreId))
                     val lootTable = LootTable.builder()
                         .pool(
                             LootPool.builder()
@@ -89,7 +90,7 @@ class LootTableGenerator(val root: File, namespace: String, fallback: (Block) ->
 
                         .type(LootContextTypes.BLOCK)
                         .build()
-                    return LootManager.toJson(lootTable).asJsonObject
+                    return null//LootManager.toJson(lootTable).asJsonObject
                 }
             }
         }

@@ -7,6 +7,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.gui.widgets.machines.TANK_BOTTOM
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction
 import net.minecraft.block.Block
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.tooltip.TooltipPositioner
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.fluid.Fluid
@@ -23,6 +25,7 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeManager
 import net.minecraft.recipe.RecipeType
+import net.minecraft.registry.Registries
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.ScreenHandlerContext
@@ -32,7 +35,8 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.ChunkPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
+import org.joml.Vector2i
 
 
 val EMPTY_INT_ARRAY = intArrayOf()
@@ -42,26 +46,31 @@ fun identifier(id: String) = Identifier(IndustrialRevolution.MOD_ID, id)
 fun blockSpriteId(id: String) = SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier(id))
 
 fun Identifier.block(block: Block): Identifier {
-    Registry.register(Registry.BLOCK, this, block)
+    Registry.register(Registries.BLOCK, this, block)
     return this
 }
 
 fun Identifier.fluid(fluid: Fluid): Identifier {
-    Registry.register(Registry.FLUID, this, fluid)
+    Registry.register(Registries.FLUID, this, fluid)
     return this
 }
 
 fun Identifier.item(item: Item): Identifier {
-    Registry.register(Registry.ITEM, this, item)
+    Registry.register(Registries.ITEM, this, item)
+    if (!hide(this)) {
+        ItemGroupEvents.modifyEntriesEvent(IndustrialRevolution.MOD_GROUP_KEY).register { entries ->
+            entries.add(item)
+        }
+    }
     return this
 }
 
 fun Identifier.blockEntityType(entityType: BlockEntityType<*>): Identifier {
-    Registry.register(Registry.BLOCK_ENTITY_TYPE, this, entityType)
+    Registry.register(Registries.BLOCK_ENTITY_TYPE, this, entityType)
     return this
 }
 
-fun itemSettings(): FabricItemSettings = FabricItemSettings().group(IndustrialRevolution.MOD_GROUP)
+fun itemSettings(): FabricItemSettings = FabricItemSettings()//.group(IndustrialRevolution.MOD_GROUP) //TODO
 
 fun <T : ScreenHandler> Identifier.registerScreenHandler(
     f: (Int, PlayerInventory, ScreenHandlerContext) -> T
@@ -84,7 +93,7 @@ fun getFluidFromJson(json: JsonElement): Array<IRFluidAmount> {
     } else {
         val json = json.asJsonObject
         val fluidId = json.get("fluid").asString
-        val fluidKey = FluidVariant.of(Registry.FLUID.get(Identifier(fluidId)))
+        val fluidKey = FluidVariant.of(Registries.FLUID.get(Identifier(fluidId)))
         val fluidAmount = json.get("amount").asLong
         return arrayOf(fluidAmount of fluidKey)
     }
@@ -92,12 +101,13 @@ fun getFluidFromJson(json: JsonElement): Array<IRFluidAmount> {
 
 fun createREIFluidWidget(widgets: MutableList<Widget>, startPoint: Point, fluid: IRFluidAmount) {
     widgets.add(Widgets.createTexturedWidget(TANK_BOTTOM.image, startPoint.x, startPoint.y, 0f, 0f, 16, 52, 16, 52))
-    widgets.add(Widgets.createDrawableWidget { _, matrices, mouseX, mouseY, _ ->
+    widgets.add(Widgets.createDrawableWidget { ctx, mouseX, mouseY, _ ->
+        val matrices = ctx.matrices
         renderInGui(matrices, fluid.resource, fluid.amount, fluid.amount, startPoint.x + 1, startPoint.y + 1+50, 14, 50)
         if (mouseX > startPoint.x && mouseX < startPoint.x + 16 && mouseY > startPoint.y && mouseY < startPoint.y + 52) {
             val information = mutableListOf<OrderedText>()
             information.addAll(getTooltip(fluid.resource, fluid.amount, -1).map { it.asOrderedText() })
-            MinecraftClient.getInstance().currentScreen?.renderOrderedTooltip(matrices, information, mouseX, mouseY)
+            MinecraftClient.getInstance().currentScreen?.setTooltip(information, { screenWidth, screenHeight, x, y, width, height -> Vector2i(mouseX, mouseY) }, true)
         }
     })
 }
@@ -116,7 +126,7 @@ fun unpack(byte: Byte): List<Direction> {
 private val DIRECTIONS = Direction.values()
 
 val Fluid?.rawId: Int
-    get() = Registry.FLUID.getRawId(this)
+    get() = Registries.FLUID.getRawId(this)
 
 inline fun <T> transaction(block: (Transaction) -> T) = Transaction.openOuter().use(block)
 

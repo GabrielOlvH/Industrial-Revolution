@@ -14,11 +14,13 @@ import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
+import net.minecraft.registry.DynamicRegistryManager
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.random.Random
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 
 interface IRRecipe : Recipe<Inventory> {
@@ -30,9 +32,9 @@ interface IRRecipe : Recipe<Inventory> {
     override fun getId(): Identifier = identifier
 
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("craft(Random)"), DeprecationLevel.ERROR)
-    override fun craft(inv: Inventory?): ItemStack = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
+    override fun craft(inv: Inventory?, registryManager: DynamicRegistryManager?): ItemStack = throw IllegalArgumentException("Unsupported method for Industrial Revolution's recipes")
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("output"), DeprecationLevel.ERROR)
-    override fun getOutput(): ItemStack = outputs.firstOrNull()?.stack ?: ItemStack.EMPTY
+    override fun getOutput(registryManager: DynamicRegistryManager?): ItemStack = outputs.firstOrNull()?.stack ?: ItemStack.EMPTY
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("input"), DeprecationLevel.ERROR)
     override fun getIngredients(): DefaultedList<Ingredient> = DefaultedList.of()
     @Deprecated("Unsupported method for Industrial Revolution's recipes", replaceWith = ReplaceWith("matches(Inventory, FluidVolume?)"), DeprecationLevel.ERROR)
@@ -152,7 +154,7 @@ interface IRRecipe : Recipe<Inventory> {
         fun itemStackFromJson(json: JsonObject): OutputEntry? {
             val itemId = json.get("item").asString
             if (itemId == "empty") return null
-            val item = Registry.ITEM.get(Identifier(itemId))
+            val item = Registries.ITEM.get(Identifier(itemId))
             val output = ItemStack { item }
             if (output.isEmpty) println("empty $itemId")
             output.count = JsonHelper.getInt(json, "count", 1)

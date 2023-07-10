@@ -13,9 +13,9 @@ import me.steven.indrev.registry.IRItemRegistry
 import me.steven.indrev.registry.MachineRegistry
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Items
+import net.minecraft.registry.Registries
 import net.minecraft.util.DyeColor
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -84,7 +84,7 @@ class DataGeneratorManager(namespace: String) {
         MachineRegistry.MAP.values.distinct().forEach { registry ->
             if (registry.upgradeable) {
                 arrayOf(Tier.MK1, Tier.MK2, Tier.MK3).forEach { tier ->
-                    materialRecipeGenerator.register("${Registry.ITEM.getId(registry.block(Tier.MK1).asItem()).toString().replace("_mk1", "")}_${tier.id}_to_${tier.next().id}", upgradeMachineRecipe(registry, tier, tier.next()))
+                    materialRecipeGenerator.register("${Registries.ITEM.getId(registry.block(Tier.MK1).asItem()).toString().replace("_mk1", "")}_${tier.id}_to_${tier.next().id}", upgradeMachineRecipe(registry, tier, tier.next()))
                 }
             }
         }
@@ -92,15 +92,15 @@ class DataGeneratorManager(namespace: String) {
         itemModelGenerator.register(IRItemRegistry.GAMER_AXE_ITEM, JsonFactory.nullFactory())
         itemModelGenerator.register(IRBlockRegistry.DRILL_BOTTOM.asItem(), JsonFactory.nullFactory())
 
-        Registry.BLOCK.forEach { block ->
-            val id = Registry.BLOCK.getId(block)
+        Registries.BLOCK.forEach { block ->
+            val id = Registries.BLOCK.getId(block)
             if (id.namespace == namespace && id.path.contains("ore") && !id.path.contains("purified"))
                 lootTableGenerator.register(block, LootTableGenerator.ORE_DROP(block))
         }
 
         MetalSpriteRegistry.MATERIAL_PROVIDERS.forEach { (id, model) ->
             val itemId = Identifier(id.namespace, id.path)
-            val item = Registry.ITEM.get(itemId)
+            val item = Registries.ITEM.get(itemId)
             if (item != Items.AIR) {
                 if (item is BlockItem) {
                     blockModelGenerator.register(item.block, BlockModelGenerator.CUBE_ALL(item.block))
@@ -280,11 +280,11 @@ class DataGeneratorManager(namespace: String) {
                 val json = JsonObject()
                 json.addProperty("type", "crafting_shapeless")
                 val ingredients = JsonArray()
-                ingredients.add(JsonObject().also { it.addProperty("item", Registry.ITEM.getId(registry.block(from).asItem()).toString()) })
-                ingredients.add(JsonObject().also { it.addProperty("item", Registry.ITEM.getId(IRMachineUpgradeItem.fromTier(from)).toString()) })
+                ingredients.add(JsonObject().also { it.addProperty("item", Registries.ITEM.getId(registry.block(from).asItem()).toString()) })
+                ingredients.add(JsonObject().also { it.addProperty("item", Registries.ITEM.getId(IRMachineUpgradeItem.fromTier(from)).toString()) })
                 json.add("ingredients", ingredients)
                 val output = JsonObject()
-                output.addProperty("item", Registry.ITEM.getId(registry.block(to).asItem()).toString())
+                output.addProperty("item", Registries.ITEM.getId(registry.block(to).asItem()).toString())
                 json.add("result", output)
                 return json
             }

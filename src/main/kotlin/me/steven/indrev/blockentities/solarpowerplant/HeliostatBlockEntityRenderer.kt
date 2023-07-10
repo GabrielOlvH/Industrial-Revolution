@@ -7,7 +7,7 @@ import net.minecraft.client.render.RenderLayers
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 
 class HeliostatBlockEntityRenderer : BlockEntityRenderer<HeliostatBlockEntity> {
     override fun render(
@@ -24,8 +24,8 @@ class HeliostatBlockEntityRenderer : BlockEntityRenderer<HeliostatBlockEntity> {
             push()
             val state = Blocks.GLASS_PANE.defaultState.with(HorizontalConnectingBlock.WEST, true).with(HorizontalConnectingBlock.EAST, true)
             matrices.translate(0.5, 0.5, 0.5)
-            matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(entity.yaw))
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(entity.pitch))
+            matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(entity.yaw))
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(entity.pitch))
             matrices.translate(-0.5, -0.5, -0.5)
             val buffer = vertexConsumers?.getBuffer(RenderLayers.getBlockLayer(state))
             MinecraftClient.getInstance().blockRenderManager.renderBlock(state, entity.pos, entity.world, this, buffer, false, entity.world!!.random)

@@ -17,7 +17,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.world.World
 import kotlin.math.roundToInt
 
-class JetpackItem(tier: Tier) : ArmorItem(IRArmorMaterial.JETPACK, EquipmentSlot.CHEST, itemSettings().maxCount(1)), JetpackHandler {
+class JetpackItem(tier: Tier) : ArmorItem(IRArmorMaterial.JETPACK, Type.CHESTPLATE, itemSettings().maxCount(1)), JetpackHandler {
 
     init {
         FluidStorage.ITEM.registerForItems({ _, ctx -> JetpackHandler.JetpackFluidStorage(this, ctx) }, this)

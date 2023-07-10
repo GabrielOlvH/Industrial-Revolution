@@ -7,10 +7,11 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.nbt.NbtList
-import net.minecraft.tag.TagKey
+import net.minecraft.registry.Registries
+import net.minecraft.registry.RegistryKeys
+import net.minecraft.registry.tag.TagKey
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.random.Random
-import net.minecraft.util.registry.Registry
 import kotlin.math.pow
 
 object OreDataCards {
@@ -22,11 +23,11 @@ object OreDataCards {
     val INVALID_DATA = Data(emptyList(), mutableMapOf(), -1.0, -1, -1, -1, -1, -1)
 
     fun isAllowed(stack: ItemStack): Boolean {
-        return IRConfig.miningRigConfig.allowedTags.any { stack.isIn(TagKey.of(Registry.ITEM_KEY, Identifier(it.key))) }
+        return IRConfig.miningRigConfig.allowedTags.any { stack.isIn(TagKey.of(RegistryKeys.ITEM, Identifier(it.key))) }
     }
 
     fun getCost(stack: ItemStack): Int {
-        return IRConfig.miningRigConfig.allowedTags.firstNotNullOfOrNull { if (stack.isIn(TagKey.of(Registry.ITEM_KEY, Identifier(it.key)))) it.value else null } ?: 0
+        return IRConfig.miningRigConfig.allowedTags.firstNotNullOfOrNull { if (stack.isIn(TagKey.of(RegistryKeys.ITEM, Identifier(it.key)))) it.value else null } ?: 0
     }
 
     fun readNbt(stack: ItemStack): Data? {
@@ -37,7 +38,7 @@ object OreDataCards {
         val entries = mutableListOf<OreEntry>()
         entriesNbt.forEach { element ->
             val itemId = (element as NbtCompound).getString("ItemId")
-            val optional = Registry.ITEM.getOrEmpty(Identifier(itemId))
+            val optional = Registries.ITEM.getOrEmpty(Identifier(itemId))
             if (!optional.isPresent) {
                 return INVALID_DATA
             }
@@ -71,7 +72,7 @@ object OreDataCards {
         val entriesNbt = NbtList()
         data.entries.forEach { entry ->
             val entryNbt = NbtCompound()
-            entryNbt.putString("ItemId", Registry.ITEM.getId(entry.item).toString())
+            entryNbt.putString("ItemId", Registries.ITEM.getId(entry.item).toString())
             entryNbt.putInt("Count", entry.count)
             entriesNbt.add(entryNbt)
         }

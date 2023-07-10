@@ -2,6 +2,7 @@ package me.steven.indrev.armor
 
 import me.steven.indrev.registry.IRItemRegistry
 import net.minecraft.entity.EquipmentSlot
+import net.minecraft.item.ArmorItem
 import net.minecraft.item.ArmorMaterial
 import net.minecraft.recipe.Ingredient
 import net.minecraft.sound.SoundEvent
@@ -58,8 +59,8 @@ enum class IRArmorMaterial(
     override fun getEquipSound(): SoundEvent = equipSound
     override fun getRepairIngredient(): Ingredient? = repairIngredient()
     override fun getEnchantability(): Int = enchantability
-    override fun getProtectionAmount(slot: EquipmentSlot): Int = this.armorValues[slot.entitySlotId]
-    override fun getDurability(slot: EquipmentSlot): Int = BASE_DURABILITY[slot.entitySlotId] * durabilityMultiplier
+    override fun getProtection(type: ArmorItem.Type): Int = this.armorValues[type.equipmentSlot.entitySlotId]
+    override fun getDurability(type: ArmorItem.Type): Int      = BASE_DURABILITY[type.equipmentSlot.entitySlotId] * durabilityMultiplier
     override fun getKnockbackResistance(): Float = knockbackResistance
     override fun getToughness(): Float = toughness
 

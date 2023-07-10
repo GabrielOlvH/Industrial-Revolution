@@ -26,18 +26,18 @@ import net.fabricmc.api.Environment
 import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.block.Block
 import net.minecraft.block.BlockState
-import net.minecraft.block.Material
+import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.RenderLayer
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.minecraft.client.render.model.UnbakedModel
 import net.minecraft.client.util.SpriteIdentifier
 import net.minecraft.item.BlockItem
@@ -138,7 +138,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         return this
     }
 
-    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction) -> EnergyStorage?): MachineRegistry {
+    fun energyProvider(provider: (Tier) -> (BlockEntity, Direction?) -> EnergyStorage?): MachineRegistry {
         blockEntities.forEach { (tier, type) ->
             EnergyStorage.SIDED.registerForBlockEntities(provider(tier), type)
         }
@@ -147,7 +147,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
     fun defaultEnergyProvider(): MachineRegistry = energyProvider { { be, side -> (be as? MachineBlockEntity<*>)?.storage?.getSideStorage(side) } }
 
-    fun fluidStorageProvider(provider: (Tier) -> (BlockEntity, Direction) -> Storage<FluidVariant>?): MachineRegistry {
+    fun fluidStorageProvider(provider: (Tier) -> (BlockEntity, Direction?) -> Storage<FluidVariant>?): MachineRegistry {
         blockEntities.forEach { (tier, type) ->
             FluidStorage.SIDED.registerForBlockEntities(provider(tier), type)
         }
@@ -156,7 +156,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
 
     fun defaultFluidStorageProvider(): MachineRegistry {
         blockEntities.forEach { (_, type) ->
-            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir) }, type)
+            FluidStorage.SIDED.registerForBlockEntities({ be, dir ->  (be as MachineBlockEntity<*>).fluidComponent?.getCachedSide(dir!!) }, type)
         }
         return this
     }
@@ -165,7 +165,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
     @Environment(EnvType.CLIENT)
     fun <T : BlockEntity> registerBlockEntityRenderer(renderer: () -> BlockEntityRenderer<T>) {
         blockEntities.forEach { (_, type) ->
-            BlockEntityRendererRegistry.register(type as BlockEntityType<T>) { _ -> renderer() }
+            BlockEntityRendererFactories.register(type as BlockEntityType<T>) { _ -> renderer() }
         }
     }
 
@@ -179,7 +179,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val MAP = hashMapOf<Identifier, MachineRegistry>()
 
         private val SETTINGS = {
-            FabricBlockSettings.of(Material.METAL)
+            FabricBlockSettings.copyOf(Blocks.IRON_BLOCK)
                 .sounds(BlockSoundGroup.METAL)
                 .requiresTool()
                 .strength(5.0f, 6.0f)
@@ -653,7 +653,7 @@ class MachineRegistry(private val key: String, val upgradeable: Boolean = true, 
         val LASER_EMITTER_REGISTRY = MachineRegistry("laser_emitter", false, Tier.MK4)
             .blockProvider { LaserBlock(this, SETTINGS().nonOpaque()) }
             .blockEntityProvider { { pos, state -> LaserBlockEntity(pos, state) } }
-            .energyProvider { { be, dir -> if (dir.opposite == be.cachedState[FacingMachineBlock.FACING]) (be as LaserBlockEntity).storage.getSideStorage(dir) else null } }
+            .energyProvider { { be, dir -> if (dir?.opposite == be.cachedState[FacingMachineBlock.FACING]) (be as LaserBlockEntity).storage.getSideStorage(dir) else null } }
             .noModelProvider()
 
         val STEAM_TURBINE_REGISTRY = MachineRegistry("steam_turbine", false, Tier.MK4)

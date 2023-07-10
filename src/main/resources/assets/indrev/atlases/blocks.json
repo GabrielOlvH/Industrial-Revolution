@@ -1,0 +1,32 @@
+{
+  "sources": [
+    {
+      "type": "single",
+      "resource": "indrev:block/lazuli_flux_container_lf_level"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:gui/hud_damaged"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:gui/hud_regenerating"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:gui/hud_default"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:particle/laser_particle_1"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:particle/laser_particle_2"
+    },
+    {
+      "type": "single",
+      "resource": "indrev:particle/laser_particle_3"
+    }
+  ]
+}

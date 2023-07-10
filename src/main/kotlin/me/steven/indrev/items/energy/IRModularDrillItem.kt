@@ -48,14 +48,14 @@ class IRModularDrillItem(
     settings: Settings
 ) : IRMiningDrillItem(toolMaterial, tier, maxStored, baseMiningSpeed, settings), MagnaTool, IRModularItem<Module>, CustomEnchantmentProvider {
 
-    override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
-        val material = state?.material
+
+    override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState): Float {
         val hasEnergy = (energyOf(stack)?.amount ?: 0) > 0
         val level = MiningToolModule.EFFICIENCY.getLevel(stack)
         var speedMultiplier = (level + 1) * 2
         if (level == 5) speedMultiplier *= 50
         return when {
-            SUPPORTED_MATERIALS.contains(material) && hasEnergy -> baseMiningSpeed + speedMultiplier.toFloat()
+            state.isIn(SUPPORTED_MATERIALS) && hasEnergy -> baseMiningSpeed + speedMultiplier.toFloat()
             !hasEnergy -> 0F
             else -> super.getMiningSpeedMultiplier(stack, state)
         }
@@ -90,7 +90,7 @@ class IRModularDrillItem(
         blockFinder.findPositions(world, context.player, getRadius(context.stack)).forEach { pos ->
 
             val offset = pos.offset(context.side)
-            if (world.getBlockState(offset).material.isReplaceable) {
+            if (world.getBlockState(offset).isReplaceable) {
                 val stackToRemove = ItemStack(blockState.block)
                 val slot = player.inventory.getSlotWithStack(stackToRemove)
                 if (slot >= 0) {

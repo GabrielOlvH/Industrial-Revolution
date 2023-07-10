@@ -8,6 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.RotationAxis
 
 class LaserBlockEntityRenderer : BlockEntityRenderer<LaserBlockEntity> {
 
@@ -26,11 +27,12 @@ class LaserBlockEntityRenderer : BlockEntityRenderer<LaserBlockEntity> {
             push()
             translate(direction.unitVector.x.toDouble(), direction.unitVector.y.toDouble(), direction.unitVector.z.toDouble())
             translate(0.5, 0.5, 0.5)
+
             val rotation = direction.let {
                 when {
-                    it.axis.isHorizontal -> it.rotateYCounterclockwise().unitVector.getDegreesQuaternion(90f)
-                    it == Direction.DOWN -> Direction.EAST.unitVector.getDegreesQuaternion(180f)
-                    else -> it.unitVector.getDegreesQuaternion(90f)
+                    it.axis.isHorizontal -> RotationAxis.of(it.rotateYCounterclockwise().unitVector).rotationDegrees(90f)
+                    it == Direction.DOWN -> RotationAxis.of(Direction.EAST.unitVector).rotationDegrees(180f)
+                    else -> RotationAxis.of(it.unitVector).rotationDegrees(90f)
                 }
             }
             multiply(rotation)

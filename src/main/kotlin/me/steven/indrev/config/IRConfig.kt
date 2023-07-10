@@ -3,14 +3,9 @@ package me.steven.indrev.config
 import com.google.gson.GsonBuilder
 import me.steven.indrev.IndustrialRevolution
 import me.steven.indrev.api.machines.Tier
-import me.steven.indrev.registry.IRItemRegistry
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.item.Item
-import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.tag.ItemTags
-import net.minecraft.tag.TagKey
-import net.minecraft.util.Identifier
+import net.minecraft.registry.tag.ItemTags
 import java.io.File
 
 object IRConfig {

@@ -66,7 +66,7 @@ class ChargePadBlock(registry: MachineRegistry, settings: Settings, tier: Tier) 
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
         super.getPlacementState(ctx)
-        return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing)
+        return this.defaultState.with(HORIZONTAL_FACING, ctx?.horizontalPlayerFacing)
     }
 
     override fun onEntityCollision(state: BlockState?, world: World?, pos: BlockPos?, entity: Entity?) {

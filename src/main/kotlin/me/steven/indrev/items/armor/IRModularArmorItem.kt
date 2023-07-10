@@ -35,8 +35,8 @@ import team.reborn.energy.impl.SimpleItemEnergyStorageImpl
 import java.util.*
 import kotlin.math.roundToInt
 
-class IRModularArmorItem(slot: EquipmentSlot, maxStored: Long, settings: Settings) :
-    DyeableArmorItem(IRArmorMaterial.MODULAR, slot, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, JetpackHandler, FabricElytraItem {
+class IRModularArmorItem(type: ArmorItem.Type, maxStored: Long, settings: Settings) :
+    DyeableArmorItem(IRArmorMaterial.MODULAR, type, settings), IRModularItem<ArmorModule>, AttributeModifierProvider, IREnergyItem, JetpackHandler, FabricElytraItem {
 
     init {
         EnergyStorage.ITEM.registerForItems({ _, ctx -> SimpleItemEnergyStorageImpl.createSimpleStorage(ctx, maxStored, Tier.MK4.io, Tier.MK4.io) }, this)

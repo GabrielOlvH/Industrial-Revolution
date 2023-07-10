@@ -5,7 +5,6 @@ import me.steven.indrev.gui.tooltip.energy.EnergyTooltipData
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.use
 import net.minecraft.block.BlockState
-import net.minecraft.block.Material
 import net.minecraft.client.item.TooltipContext
 import net.minecraft.client.item.TooltipData
 import net.minecraft.entity.LivingEntity
@@ -13,6 +12,7 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.item.PickaxeItem
 import net.minecraft.item.ToolMaterial
+import net.minecraft.registry.tag.BlockTags
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -26,11 +26,12 @@ open class IRMiningDrillItem(
     settings: Settings
 ) : PickaxeItem(toolMaterial, 0, 0F, settings.maxDamage(-1)), IREnergyItem {
 
-    override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState?): Float {
-        val material = state?.material
+
+    override fun getMiningSpeedMultiplier(stack: ItemStack, state: BlockState): Float {
+        val canMine = state.isIn(SUPPORTED_MATERIALS)
         val hasEnergy = (energyOf(stack)?.amount ?: 0) > 0
         return when {
-            SUPPORTED_MATERIALS.contains(material) && hasEnergy -> baseMiningSpeed
+            canMine && hasEnergy -> baseMiningSpeed
             !hasEnergy -> 0F
             else -> super.getMiningSpeedMultiplier(stack, state)
         }
@@ -78,18 +79,6 @@ open class IRMiningDrillItem(
     }
 
     companion object {
-        val SUPPORTED_MATERIALS = arrayOf(
-            Material.METAL,
-            Material.STONE,
-            Material.WOOD,
-            Material.BAMBOO,
-            Material.COBWEB,
-            Material.PISTON,
-            Material.GOURD,
-            Material.SOIL,
-            Material.SOLID_ORGANIC,
-            Material.LEAVES,
-            Material.AGGREGATE
-        )
+        val SUPPORTED_MATERIALS = BlockTags.PICKAXE_MINEABLE // TODO create custom tag with shovel, pickaxe and axe
     }
 }

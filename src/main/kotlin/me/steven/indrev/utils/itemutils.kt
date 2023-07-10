@@ -1,5 +1,6 @@
 package me.steven.indrev.utils
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
@@ -14,12 +15,12 @@ import java.util.function.LongFunction
 
 typealias ItemFilter = (ItemVariant) -> Boolean
 
-val itemApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<ItemVariant>, Direction>>>()
+val itemApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<ItemVariant>, Direction?>>>()
 
 fun itemStorageOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Storage<ItemVariant>? {
     return itemApiCache
         .computeIfAbsent(world) { Long2ObjectOpenHashMap() }
-        .computeIfAbsent(blockPos.asLong(), LongFunction { BlockApiCache.create(ItemStorage.SIDED, world, blockPos) })
+        .computeIfAbsent(blockPos.asLong(), Long2ObjectFunction { BlockApiCache.create(ItemStorage.SIDED, world, blockPos) })
         .find(direction)
 }
 

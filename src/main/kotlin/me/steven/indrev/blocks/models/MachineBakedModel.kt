@@ -29,9 +29,10 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.BlockRenderView
+import org.joml.Vector3f
 import java.util.Locale
 import java.util.function.Function
 import java.util.function.Supplier
@@ -62,7 +63,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
     }
 
     override fun bake(
-        loader: ModelLoader,
+        loader: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
@@ -106,7 +107,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
     private fun List<SpriteIdentifier>.processSprites(arr: Array<Sprite?>, textureGetter: Function<SpriteIdentifier, Sprite>) {
         forEachIndexed { index, id ->
             val sprite = textureGetter.apply(id)
-            if (sprite.id != MissingSprite.getMissingSpriteId()) {
+            if (sprite.contents.id != MissingSprite.getMissingSpriteId()) {
                 arr[index] = sprite
                 if (isEmissive(sprite))
                     emissives.add(sprite)
@@ -115,19 +116,22 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
     }
 
     //don't judge me
-    fun isEmissive(sprite: Sprite?) = sprite?.id?.toString()?.contains("emissive") == true
+    fun isEmissive(sprite: Sprite?) = sprite?.contents?.id?.toString()?.contains("emissive") == true
 
     override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
+    override fun setParents(modelLoader: Function<Identifier, UnbakedModel>?) {
 
-    override fun getTextureDependencies(
-        unbakedModelGetter: Function<Identifier, UnbakedModel>?,
-        unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> {
-        val list = mutableListOf(baseSpriteId)
-        list.addAll(overlayIds)
-        list.addAll(workingOverlayIds)
-        return list
     }
+
+    /*    override fun getTextureDependencies(
+            unbakedModelGetter: Function<Identifier, UnbakedModel>?,
+            unresolvedTextureReferences: MutableSet<Pair<String, String>>?
+        ): MutableCollection<SpriteIdentifier> {
+            val list = mutableListOf(baseSpriteId)
+            list.addAll(overlayIds)
+            list.addAll(workingOverlayIds)
+            return list
+        }*/
 
     override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> =
         mutableListOf()
@@ -179,7 +183,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
         if (emissives.contains(sprite))
             material(MATERIAL)
         val uv =
-            if (sprite.width == 16 && sprite.height == 16) MachineTextureUV.FULL
+            if (sprite.contents.width == 16 && sprite.contents.height == 16) MachineTextureUV.FULL
             else MachineTextureUV.BY_DIRECTION[side]!!
         sprite(0, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v1.toDouble()))
         sprite(1, 0, sprite.getFrameU(uv.u1.toDouble()), sprite.getFrameV(uv.v2.toDouble()))
@@ -193,7 +197,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
      * Source: https://github.com/Haven-King/Automotion
      */
     fun rotateQuads(direction: Direction): RenderContext.QuadTransform = RenderContext.QuadTransform { q ->
-        val rotate = Vec3f.POSITIVE_Y.getDegreesQuaternion(
+        val rotate = RotationAxis.POSITIVE_Y.rotationDegrees(
             when (direction) {
                 Direction.NORTH -> 0f
                 Direction.EAST -> 270f
@@ -203,7 +207,7 @@ open class MachineBakedModel(val id: String) : UnbakedModel, BakedModel, FabricB
             }
         )
 
-        val tmp = Vec3f()
+        val tmp = Vector3f()
         for (i in 0..3) {
             q.copyPos(i, tmp)
             tmp.add(-0.5f, -0.5f, -0.5f)

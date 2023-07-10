@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,6 +24,7 @@ import net.minecraft.item.FoodComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.encryption.PlayerPublicKey;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -47,6 +49,10 @@ import java.util.Map;
 @Mixin(ServerPlayerEntity.class)
 public abstract class MixinServerPlayerEntity extends PlayerEntity implements IRServerPlayerEntityExtension {
 
+    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
+        super(world, pos, yaw, gameProfile);
+    }
+
     @Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
 
     @Shadow public abstract void playSound(SoundEvent event, SoundCategory category, float volume, float pitch);
@@ -56,10 +62,6 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     private float lastDmg = 0f;
     private double lastShield = 0.0;
     private final Object2IntMap<ArmorModule> oldAppliedModules = new Object2IntOpenHashMap<>();
-
-    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
-        super(world, pos, yaw, gameProfile, publicKey);
-    }
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void indrev_applyEffects(CallbackInfo ci) {
@@ -86,7 +88,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
         if (shouldApplyToShield(source)) {
             float leftover = (float) applyDamageToShield(amount);
             if (amount > leftover)
-                world.playSoundFromEntity(null, this, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.PLAYERS, 1f, 0.0001f);
+                getWorld().playSoundFromEntity(null, this, SoundEvents.BLOCK_CHAIN_BREAK, SoundCategory.PLAYERS, 1f, 0.0001f);
             return leftover;
         } else
             return amount;
@@ -100,9 +102,9 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
     }
 
     private boolean shouldApplyToShield(DamageSource source) {
-        if (source.equals(DamageSource.FALL)) return isApplied(ArmorModule.FEATHER_FALLING);
-        else if (source.isFire()) return isApplied(ArmorModule.FIRE_RESISTANCE);
-        else return !source.equals(DamageSource.STARVE) && !source.equals(DamageSource.DROWN);
+        if (source.isIn(DamageTypeTags.IS_FALL)) return isApplied(ArmorModule.FEATHER_FALLING);
+        else if (source.isIn(DamageTypeTags.IS_FIRE)) return isApplied(ArmorModule.FIRE_RESISTANCE);
+        else return !source.isOf(DamageTypes.STARVE )&& !source.isIn(DamageTypeTags.IS_DROWNING);
     }
 
     private void applyArmorEffects() {
@@ -137,8 +139,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                     ItemStack stack = inventory.getStack(slot);
                                     FoodComponent food = stack.getItem().getFoodComponent();
                                     if (food != null && !food.isAlwaysEdible() && !HelperextensionsKt.hasNegativeEffects(food) && food.getHunger() <= 20 - hunger.getFoodLevel() && EnergyutilsKt.extract(inventory, cSlot, 30)) {
-                                        stack.finishUsing(world, player);
-                                        player.eatFood(world, stack);
+                                        stack.finishUsing(getWorld(), player);
+                                        player.eatFood(getWorld(), stack);
                                     }
                                     if (!hungerManager.isNotFull()) break;
                                 }
@@ -148,7 +150,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                                 IRPortableChargerItem.Companion.chargeItemsInInv(cSlot, player.getInventory());
                             break;
                         case SOLAR_PANEL:
-                            if (world.isDay() && world.isSkyVisible(player.getBlockPos().up(2))) {
+                            if (getWorld().isDay() && getWorld().isSkyVisible(player.getBlockPos().up(2))) {
                                 for (int x = 0; x < 4; x++) {
                                     EnergyutilsKt.insert(inventory, cSlot - x, 75L * level);
                                 }
@@ -177,7 +179,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity implements IR
                     Vec3i offset = new Vec3i(8, 8, 8);
                     Box area = new Box(getBlockPos().subtract(offset), getBlockPos().add(offset));
                     Vec3d blockCenter = HelperextensionsKt.toVec3d(getBlockPos()).add(0.5, 0.5, 0.5);
-                    world.getOtherEntities(this, area, (entity) -> entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity).forEach(entity -> {
+                    getWorld().getOtherEntities(this, area, (entity) -> entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity).forEach(entity -> {
                         if ((entity instanceof ItemEntity itemEntity && !itemEntity.cannotPickup())
                                 || (entity instanceof ExperienceOrbEntity xpEntity && xpEntity.age > 40)) {
                             Vec3d v = entity.getPos().relativize(blockCenter).normalize().multiply(0.2);

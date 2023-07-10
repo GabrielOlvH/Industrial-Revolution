@@ -8,7 +8,9 @@ import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.entity.feature.ArmorFeatureRenderer
 import net.minecraft.client.render.entity.feature.FeatureRendererContext
 import net.minecraft.client.render.entity.model.BipedEntityModel
+import net.minecraft.client.render.entity.model.EntityModelLoader
 import net.minecraft.client.render.item.ItemRenderer
+import net.minecraft.client.render.model.BakedModelManager
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.entity.LivingEntity
@@ -18,8 +20,9 @@ import net.minecraft.util.Identifier
 class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : BipedEntityModel<T>>(
     context: FeatureRendererContext<T, M>,
     private val leggingsModel: A,
-    private val bodyModel: A
-) : ArmorFeatureRenderer<T, M, A>(context, leggingsModel, bodyModel) {
+    private val bodyModel: A,
+    modelLoader: BakedModelManager
+) : ArmorFeatureRenderer<T, M, A>(context, leggingsModel, bodyModel, modelLoader) {
 
     override fun render(matrixStack: MatrixStack, vertexConsumerProvider: VertexConsumerProvider, i: Int, livingEntity: T, f: Float, g: Float, h: Float, j: Float, k: Float, l: Float) {
         renderArmor(matrixStack, vertexConsumerProvider, livingEntity, EquipmentSlot.CHEST, i, getArmor(EquipmentSlot.CHEST))
@@ -32,7 +35,7 @@ class ModuleFeatureRenderer<T : LivingEntity, M : BipedEntityModel<T>, A : Biped
         val itemStack = livingEntity.getEquippedStack(equipmentSlot)
         val item = itemStack.item as? IRModularArmorItem ?: return
         if (item.slotType == equipmentSlot) {
-            (this.contextModel as? BipedEntityModel<T>)?.setAttributes(bipedEntityModel) ?: return
+            (this.contextModel as? BipedEntityModel<T>)?.copyBipedStateTo(bipedEntityModel) ?: return
             setVisible(bipedEntityModel, equipmentSlot)
             val rgb = item.getColor(itemStack)
             val r = (rgb and 0xFF0000 shr 16) / 255f

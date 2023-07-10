@@ -2,6 +2,7 @@ package me.steven.indrev.gui.tooltip.modular
 
 import me.steven.indrev.gui.tooltip.energy.EnergyTooltipComponent
 import net.minecraft.client.font.TextRenderer
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.util.math.MatrixStack
@@ -24,15 +25,8 @@ class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTool
         return cX.coerceAtLeast(energyWidth)
     }
 
-    override fun drawItems(
-        textRenderer: TextRenderer,
-        x: Int,
-        y: Int,
-        matrices: MatrixStack,
-        itemRenderer: ItemRenderer,
-        z: Int
-    ) {
-        super.drawItems(textRenderer, x, y, matrices, itemRenderer, z)
+    override fun drawItems(textRenderer: TextRenderer, x: Int, y: Int, ctx: DrawContext) {
+        super.drawItems(textRenderer, x, y, ctx)
         if (Screen.hasShiftDown()) return
 
         var cX = x
@@ -42,7 +36,7 @@ class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTool
             cX += level * 5
             repeat(level) {
                 cX -= 5
-                itemRenderer.renderInGui(ItemStack(module.item.asItem()), cX, cY)
+                ctx.drawItemInSlot(textRenderer,ItemStack(module.item.asItem()), cX, cY)
             }
             cX += (level * 5) + 18
             if (index + 1 % 5 == 0) {

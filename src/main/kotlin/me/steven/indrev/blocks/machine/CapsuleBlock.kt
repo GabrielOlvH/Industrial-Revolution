@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.`object`.builder.v1.block.FabricBlockSettings
 import net.minecraft.block.Block
 import net.minecraft.block.BlockEntityProvider
 import net.minecraft.block.BlockState
-import net.minecraft.block.Material
+import net.minecraft.block.Blocks
 import net.minecraft.block.entity.BlockEntity
 import net.minecraft.block.entity.BlockEntityTicker
 import net.minecraft.block.entity.BlockEntityType
@@ -22,7 +22,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 
-class CapsuleBlock : Block(FabricBlockSettings.of(Material.GLASS).requiresTool().nonOpaque().strength(1f, 1f)), BlockEntityProvider {
+class CapsuleBlock : Block(FabricBlockSettings.copyOf(Blocks.GLASS).requiresTool().nonOpaque().strength(1f, 1f)), BlockEntityProvider {
     override fun onUse(
         state: BlockState?,
         world: World,

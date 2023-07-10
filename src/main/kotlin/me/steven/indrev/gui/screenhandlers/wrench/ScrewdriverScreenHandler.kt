@@ -64,8 +64,8 @@ class ScrewdriverScreenHandler(syncId: Int, playerInventory: PlayerInventory, ct
         root.validate(this)
     }
 
-    override fun close(player: PlayerEntity?) {
-        super.close(player)
+    override fun onClosed(player: PlayerEntity?) {
+        super.onClosed(player)
         if (player is ServerPlayerEntity) {
             ctx.run { world, pos ->
                 val blockEntity = world.getBlockEntity(pos) as? LazuliFluxContainerBlockEntity ?: return@run

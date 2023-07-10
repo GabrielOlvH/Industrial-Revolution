@@ -2,21 +2,22 @@ package me.steven.indrev.gui.widgets.misc
 
 import com.mojang.blaze3d.systems.RenderSystem
 import io.github.cottonmc.cotton.gui.widget.WWidget
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.render.*
 import net.minecraft.client.render.VertexFormat.DrawMode
 import net.minecraft.client.util.math.MatrixStack
-import net.minecraft.util.math.Matrix4f
+import org.joml.Matrix4f
 
 class WStaticTooltip : WWidget() {
-    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        drawTooltipBackground(matrices ?: return, x, y, width, height)
+    override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        drawTooltipBackground(ctx.matrices, x, y, width, height)
     }
 
     @Suppress("DEPRECATION")
     private fun drawTooltipBackground(matrices: MatrixStack, x: Int, y: Int, width: Int, height: Int) {
         val tessellator = Tessellator.getInstance()
         val bufferBuilder = tessellator.buffer
-        RenderSystem.setShader { GameRenderer.getPositionColorShader() }
+        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
         bufferBuilder.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR)
         val matrix4f = matrices.peek().positionMatrix
         val z = 0
@@ -30,12 +31,12 @@ class WStaticTooltip : WWidget() {
         fillGradient(matrix4f, bufferBuilder, x - 3, y - 3, x + width + 3, y - 3 + 1, z, 1347420415, 1347420415)
         fillGradient(matrix4f, bufferBuilder, x - 3, y + height + 2, x + width + 3, y + height + 3, z, 1344798847, 1344798847)
         RenderSystem.enableDepthTest()
-        RenderSystem.disableTexture()
+        //RenderSystem.disableTexture()
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
         tessellator.draw()
         RenderSystem.disableBlend()
-        RenderSystem.enableTexture()
+      //  RenderSystem.enableTexture()
     }
 
     private fun fillGradient(matrix4f: Matrix4f?, bufferBuilder: BufferBuilder, xStart: Int, yStart: Int, xEnd: Int, yEnd: Int, i: Int, j: Int, k: Int) {

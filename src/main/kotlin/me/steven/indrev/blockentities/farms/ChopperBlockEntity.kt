@@ -14,10 +14,11 @@ import net.minecraft.item.BoneMealItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.SwordItem
 import net.minecraft.loot.context.LootContext
+import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
+import net.minecraft.registry.tag.BlockTags
+import net.minecraft.registry.tag.ItemTags
 import net.minecraft.server.world.ServerWorld
-import net.minecraft.tag.BlockTags
-import net.minecraft.tag.ItemTags
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
@@ -95,10 +96,11 @@ class ChopperBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMach
             }
             brokenBlocks.forEach { (blockPos, blockState) ->
                 val droppedStacks = blockState.getDroppedStacks(
-                    LootContext.Builder(world as ServerWorld).random(world?.random)
-                        .parameter(LootContextParameters.ORIGIN, blockPos.toVec3d())
-                        .parameter(LootContextParameters.TOOL, axeStack)
-                )
+                    LootContextParameterSet.Builder(world as ServerWorld)
+                        .add(LootContextParameters.ORIGIN, blockPos.toVec3d())
+                        .add(LootContextParameters.BLOCK_STATE, blockState)
+                        .add(LootContextParameters.TOOL, ItemStack.EMPTY))
+
                 droppedStacks.forEach {
                     if (!inventory.output(it))
                         ItemScatterer.spawn(world, blockPos.x.toDouble(), blockPos.y.toDouble(), blockPos.z.toDouble(), it)

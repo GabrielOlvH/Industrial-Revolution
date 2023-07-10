@@ -20,14 +20,11 @@ import java.util.function.Supplier
 
 object EmptyModel : UnbakedModel, BakedModel, FabricBakedModel {
     override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
-
-    override fun getTextureDependencies(
-        unbakedModelGetter: Function<Identifier, UnbakedModel>?,
-        unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> = mutableListOf()
+    override fun setParents(modelLoader: Function<Identifier, UnbakedModel>?) {
+    }
 
     override fun bake(
-        loader: ModelLoader?,
+        loader: Baker?,
         textureGetter: Function<SpriteIdentifier, Sprite>?,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?

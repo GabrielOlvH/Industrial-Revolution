@@ -10,7 +10,7 @@ import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Direction
 import team.reborn.energy.api.EnergyStorage
 
-val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction>>
+val ServerWorld.energyIoCache: Long2ObjectOpenHashMap<BlockApiCache<EnergyStorage, Direction?>>
     get() = (this as ServerWorldExtension).indrev_getEnergyCache()
 
 val ServerWorld.energyNetworkState: EnergyNetworkState

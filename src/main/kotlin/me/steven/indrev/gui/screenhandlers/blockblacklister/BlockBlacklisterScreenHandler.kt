@@ -18,6 +18,7 @@ import me.steven.indrev.utils.translatable
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
@@ -126,11 +127,12 @@ class BlockBlacklisterScreenHandler : LightweightGuiDescription() {
             }
         }
 
-        override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-            ScreenDrawing.coloredRect(matrices, x - 1, y - 1, width + 2, height + 2, 0xFF000000.toInt())
-            ScreenDrawing.texturedRect(matrices, x, y, width, height, texture, -1)
+
+        override fun paint(context: DrawContext?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            ScreenDrawing.coloredRect(context, x - 1, y - 1, width + 2, height + 2, 0xFF000000.toInt())
+            ScreenDrawing.texturedRect(context, x, y, width, height, texture, -1)
             if (!isSelected) {
-                ScreenDrawing.coloredRect(matrices, x, y, width, height, 0xAA000000.toInt())
+                ScreenDrawing.coloredRect(context, x, y, width, height, 0xAA000000.toInt())
             }
         }
 

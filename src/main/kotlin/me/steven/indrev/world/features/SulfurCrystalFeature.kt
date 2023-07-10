@@ -6,7 +6,7 @@ import me.steven.indrev.registry.IRBlockRegistry
 import me.steven.indrev.utils.any
 import me.steven.indrev.utils.forEach
 import net.minecraft.block.Blocks
-import net.minecraft.block.Material
+import net.minecraft.registry.tag.BlockTags
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.util.math.Direction
@@ -41,7 +41,7 @@ class SulfurCrystalFeature(codec: Codec<DefaultFeatureConfig>) : Feature<Default
                 val pos = mutablePos.offset(dir)
                 val airState = world?.getBlockState(pos)
                 val state = IRBlockRegistry.SULFUR_CRYSTAL_CLUSTER.defaultState.with(SulfurCrystalBlock.FACING, dir)
-                if (blockState?.material == Material.STONE && airState?.isAir == true && state.canPlaceAt(world, pos)) {
+                if ((blockState?.isIn(BlockTags.STONE_ORE_REPLACEABLES) == true || blockState?.isIn(BlockTags.DEEPSLATE_ORE_REPLACEABLES) == true) && airState?.isAir == true && state.canPlaceAt(world, pos)) {
                     world.setBlockState(pos, state, 2)
                     return true
                 }

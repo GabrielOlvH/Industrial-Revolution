@@ -25,6 +25,7 @@ import net.minecraft.util.math.*
 import net.minecraft.util.math.random.Random
 import net.minecraft.world.World
 import net.minecraft.world.explosion.Explosion
+import org.joml.Vector3f
 
 class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(Tier.MK4, MachineRegistry.LASER_EMITTER_REGISTRY, pos, state) {
 
@@ -88,7 +89,7 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
         }
         world?.getEntitiesByClass(Entity::class.java, damageArea) { true }?.forEach {
             it.setOnFireFor(1000)
-            it.damage(LaserBlock.LASER_DAMAGE_SOURCE, 2f)
+         //   it.damage(LaserBlock.LASER_DAMAGE_SOURCE, 2f)
         }
 
         val tag = stack.orCreateNbt
@@ -165,15 +166,15 @@ class LaserBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<Ma
             pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(),
             3f,
             true,
-            Explosion.DestructionType.DESTROY
+            World.ExplosionSourceType.BLOCK
         )
     }
 
     companion object {
-        private fun Direction.vec3f() = Vec3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
+        private fun Direction.vec3f() = Vector3f(offsetX.toFloat(), offsetY.toFloat(), offsetZ.toFloat())
 
-        private fun scale(v: Vec3f, scale: Float): Vec3f {
-            return Vec3f(v.x * scale, v.y * scale, v.z * scale)
+        private fun scale(v: Vector3f, scale: Float): Vector3f {
+            return Vector3f(v.x * scale, v.y * scale, v.z * scale)
         }
     }
 }

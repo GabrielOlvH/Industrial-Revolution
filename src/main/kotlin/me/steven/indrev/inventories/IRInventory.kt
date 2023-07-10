@@ -63,7 +63,7 @@ class IRInventory(
     }
 
     private fun canCombine(one: ItemStack, two: ItemStack): Boolean
-            = one.item === two.item && ItemStack.areNbtEqual(one, two)
+            = one.item === two.item && ItemStack.areEqual(one, two)
 
     private fun transfer(source: ItemStack, target: ItemStack) {
         val i = this.maxCountPerStack.coerceAtMost(target.maxCount)

@@ -1,5 +1,6 @@
 package me.steven.indrev.utils
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
@@ -15,12 +16,12 @@ import java.util.function.LongFunction
 fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): EnergyStorage? {
     return world.energyIoCache.computeIfAbsent(
         blockPos.asLong(),
-        LongFunction { BlockApiCache.create(EnergyStorage.SIDED, world, blockPos) }).find(direction)
+        Long2ObjectFunction { BlockApiCache.create(EnergyStorage.SIDED, world, blockPos) }).find(direction)
 }
 
 fun energyOf(itemStack: ItemStack?): EnergyStorage? {
     return if (itemStack == null || itemStack.isEmpty) null
-    else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.withInitial(itemStack))
+    else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.withConstant(itemStack))
 }
 
 fun energyOf(inv: Inventory?, slot: Int): EnergyStorage? {

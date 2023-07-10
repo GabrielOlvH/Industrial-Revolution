@@ -22,7 +22,8 @@ object IRLivingEntityFeatureRendererCallback : LivingEntityFeatureRendererRegist
             ModuleFeatureRenderer(
                 renderer as LivingEntityRenderer<LivingEntity, BipedEntityModel<LivingEntity>>,
                 BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_INNER_ARMOR else EntityModelLayers.PLAYER_INNER_ARMOR)),
-                BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR))
+                BipedEntityModel(ctx.getPart(if (slim) EntityModelLayers.PLAYER_SLIM_OUTER_ARMOR else EntityModelLayers.PLAYER_OUTER_ARMOR)),
+                ctx.modelManager
             )
         )
 

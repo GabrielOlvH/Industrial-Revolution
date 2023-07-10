@@ -4,9 +4,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.registry.Registry;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public final class AprilFools {
     public static void init() {
         if (isToday()) {
             ItemTooltipCallback.EVENT.register((itemStack, tooltipContext, list) -> {
-                String itemNamespace = Registry.ITEM.getId(itemStack.getItem()).getNamespace();
+                String itemNamespace = Registries.ITEM.getId(itemStack.getItem()).getNamespace();
                 if (itemNamespace.equals(IndustrialRevolution.MOD_ID) && list.size() > 1) {
                     list.add(Text.literal("")); // break line
                     list.add(Text.literal("every good modpack uses forge...").formatted(Formatting.ITALIC));

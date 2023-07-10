@@ -60,7 +60,7 @@ class ElectrolyticSeparatorBlockEntity(tier: Tier, pos: BlockPos, state: BlockSt
             this.outputTanks = intArrayOf(1, 2)
         }
 
-        override fun getValidTanks(dir: Direction): IntArray {
+        override fun getValidTanks(dir: Direction?): IntArray {
             return when (transferConfig[dir]!!) {
                 TransferMode.OUTPUT_FIRST -> intArrayOf(1)
                 TransferMode.OUTPUT_SECOND -> intArrayOf(2)

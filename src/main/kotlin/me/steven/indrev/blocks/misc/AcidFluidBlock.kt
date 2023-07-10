@@ -35,16 +35,16 @@ class AcidFluidBlock(fluid: FlowableFluid, settings: Settings) : FluidBlock(flui
     }
 
     override fun onEntityCollision(state: BlockState?, world: World, pos: BlockPos?, entity: Entity?) {
-        if (world.time % 15 == 0L)
-            entity?.damage(ACID_DAMAGE_SOURCE, 4f)
+      //  if (world.time % 15 == 0L)
+           // entity?.damage(ACID_DAMAGE_SOURCE, 4f)
     }
 
     companion object {
-        val ACID_DAMAGE_SOURCE = object : DamageSource("acid") {
+       /* val ACID_DAMAGE_SOURCE = object : DamageSource("acid") {
             init {
                 setBypassesArmor()
                 setUnblockable()
             }
-        }
+        }*/
     }
 }

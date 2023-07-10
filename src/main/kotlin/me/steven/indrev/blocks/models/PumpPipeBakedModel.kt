@@ -3,6 +3,7 @@ package me.steven.indrev.blocks.models
 import com.mojang.datafixers.util.Pair
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.render.model.BakedModel
+import net.minecraft.client.render.model.Baker
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.UnbakedModel
@@ -21,8 +22,11 @@ class PumpPipeBakedModel : UnbakedModel {
     private val modelIdentifier = identifier("block/pump_pipe")
     private var bakedModel: BakedModel? = null
 
+    override fun setParents(modelLoader: Function<Identifier, UnbakedModel>?) {
+    }
+
     override fun bake(
-        loader: ModelLoader,
+        loader: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
@@ -33,10 +37,10 @@ class PumpPipeBakedModel : UnbakedModel {
 
     override fun getModelDependencies(): MutableCollection<Identifier> = mutableListOf()
 
-    override fun getTextureDependencies(
+   /* override fun getTextureDependencies(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
     ): MutableCollection<SpriteIdentifier> {
         return spriteIdCollection
-    }
+    }*/
 }

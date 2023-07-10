@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.book.CookingRecipeCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.random.Random;
@@ -39,7 +40,7 @@ public abstract class MixinAbstractCookingRecipe implements IRRecipe {
     private OutputEntry[] indrev_outputEntries;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void a(RecipeType<?> type, Identifier id, String group, Ingredient input, ItemStack output, float experience, int cookTime, CallbackInfo ci) {
+    private void a(RecipeType type, Identifier id, String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime, CallbackInfo ci) {
         this.indrev_inputEntries = new InputEntry[] { new InputEntry(input, 1) };
         this.indrev_outputEntries = new OutputEntry[] { new OutputEntry(output, 1d) };
     }

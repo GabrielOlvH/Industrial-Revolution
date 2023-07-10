@@ -44,7 +44,7 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
     lateinit var transform: ModelTransformation
 
     override fun bake(
-        loader: ModelLoader,
+        loader: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
@@ -88,10 +88,10 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
 
     override fun getModelDependencies(): MutableCollection<Identifier> = modelIdCollection
 
-    override fun getTextureDependencies(
+    /*override fun getTextureDependencies(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> = spriteIdCollection
+    ): MutableCollection<SpriteIdentifier> = spriteIdCollection*/
 
     override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> = mutableListOf()
 
@@ -110,6 +110,10 @@ abstract class BasePipeModel(val tier: Tier, val type: String) : BakedModel, Fab
     override fun getOverrides(): ModelOverrideList = ModelOverrideList.EMPTY
 
     override fun isVanillaAdapter(): Boolean = false
+
+    override fun setParents(modelLoader: Function<Identifier, UnbakedModel>?) {
+
+    }
 
     override fun emitBlockQuads(
         world: BlockRenderView,

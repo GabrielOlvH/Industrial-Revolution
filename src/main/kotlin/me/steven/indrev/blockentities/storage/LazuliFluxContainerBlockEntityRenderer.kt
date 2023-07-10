@@ -11,7 +11,7 @@ import net.minecraft.client.texture.Sprite
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 import kotlin.math.absoluteValue
 import kotlin.math.floor
 import kotlin.math.sin
@@ -44,21 +44,21 @@ class LazuliFluxContainerBlockEntityRenderer : BlockEntityRenderer<LazuliFluxCon
             translate(0.0, 0.0, offset)
 
             translate(0.5, 0.5, 0.5)
-            multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90f))
+            multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f))
             translate(-0.5, -0.5, -0.5)
             translate(0.0, 0.0, -offset)
             drawOverlay(this, 0.25f, 0f, maxX, 1f, color, sprite, vertexConsumers, Direction.EAST, width, tickDelta, time)
             translate(0.0, 0.0, offset)
 
             translate(0.5, 0.5, 0.5)
-            multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90f))
+            multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f))
             translate(-0.5, -0.5, -0.5)
             translate(-0.0, 0.0, -offset)
             drawOverlay(this, 0.25f, 0f, maxX, 1f, color, sprite, vertexConsumers, Direction.SOUTH, width, tickDelta, time)
             translate(0.0, 0.0, offset)
 
             translate(0.5, 0.5, 0.5)
-            multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90f))
+            multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90f))
             translate(-0.5, -0.5, -0.5)
             translate(0.0, 0.0, -offset)
             drawOverlay(this, 0.25f, 0f, maxX, 1f, color, sprite, vertexConsumers, Direction.WEST, width, tickDelta, time)

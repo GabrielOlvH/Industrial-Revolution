@@ -13,6 +13,7 @@ import me.steven.indrev.utils.toVec3d
 import net.minecraft.block.BlockState
 import net.minecraft.item.FishingRodItem
 import net.minecraft.loot.context.LootContext
+import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
@@ -51,13 +52,13 @@ class FisherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             if (world?.isWater(pos) == true) {
                 val identifiers = getIdentifiers(tier)
                 val id = identifiers[world!!.random!!.nextInt(identifiers.size)]
-                val lootTable = (world as ServerWorld).server.lootManager.getTable(id)
-                val ctx = LootContext.Builder(world as ServerWorld).random(world!!.random)
-                    .parameter(LootContextParameters.ORIGIN, pos.toVec3d())
-                    .parameter(LootContextParameters.TOOL, rodStack)
-                    .build(LootContextTypes.FISHING)
-                val loot = lootTable.generateLoot(ctx)
-                loot.forEach { stack -> inventoryComponent?.inventory?.output(stack) }
+                val lootTable = (world as ServerWorld).server.lootManager.getLootTable(id)
+                val ctx = LootContext.Builder(LootContextParameterSet.Builder(world as ServerWorld)
+                    .add(LootContextParameters.ORIGIN, pos.toVec3d())
+                    .add(LootContextParameters.TOOL, rodStack)
+                    .build(LootContextTypes.FISHING))
+                    .build(null)
+                lootTable.generateLoot(ctx) { stack -> inventoryComponent?.inventory?.output(stack) }
                 rodStack?.apply {
                     damage++
                     if (damage >= maxDamage) decrement(1)

@@ -13,6 +13,7 @@ import me.steven.indrev.utils.component2
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.render.GameRenderer
 import net.minecraft.client.render.Tessellator
 import net.minecraft.client.render.VertexFormat
@@ -26,12 +27,13 @@ import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.util.hit.BlockHitResult
 
 object IRHudRenderCallback : HudRenderCallback {
-    override fun onHudRender(matrices: MatrixStack, tickDelta: Float) {
-        renderModularArmorHud(matrices)
-        renderTierUpgrade(matrices)
+
+    override fun onHudRender(ctx: DrawContext, tickDelta: Float) {
+        renderModularArmorHud(ctx)
+        renderTierUpgrade(ctx)
     }
 
-    private fun renderModularArmorHud(matrices: MatrixStack) {
+    private fun renderModularArmorHud(ctx: DrawContext) {
         val client = MinecraftClient.getInstance()
         val player = client.player
         if (player is IRPlayerEntityExtension && player.getMaxShieldDurability() > 0) {
@@ -52,10 +54,10 @@ object IRHudRenderCallback : HudRenderCallback {
             val sprite = client.getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(spriteId)
             texturedRect(x + 5, y + 50, 16, 16, sprite, color, 0.8f)
 
-            ScreenDrawing.texturedRect(matrices, x, y, 90, 62, HUD_MAIN, color, 0.8f)
-            ScreenDrawing.texturedRect(matrices, x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
+            ScreenDrawing.texturedRect(ctx, x, y, 90, 62, HUD_MAIN, color, 0.8f)
+            ScreenDrawing.texturedRect(ctx, x + 7, y + 33, 83, 20, HOLDER, color, 0.3f)
             val shieldText = "${player.shieldDurability.toInt()}/${player.getMaxShieldDurability().toInt()}"
-            ScreenDrawing.drawStringWithShadow(matrices, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
+            ScreenDrawing.drawStringWithShadow(ctx, shieldText, HorizontalAlignment.CENTER, x + 20, y + 56, client.textRenderer.getWidth(shieldText), color)
             player.armorItems.forEach { stack ->
                 val item = stack.item as? ArmorItem ?: return@forEach
                 val xOffset = 21 * when (item.slotType) {
@@ -65,13 +67,14 @@ object IRHudRenderCallback : HudRenderCallback {
                     HEAD -> 0
                     else -> return@forEach
                 }
-                client.itemRenderer.renderInGui(stack, x + 9 + xOffset, y + 35)
-                client.itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, x + 9 + xOffset, y + 35)
+                ctx.drawItemInSlot(client.textRenderer, stack, x + 9 + xOffset, y + 35)
+                //client.itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, x + 9 + xOffset, y + 35)
             }
         }
     }
 
-    private fun renderTierUpgrade(matrices: MatrixStack) {
+    private fun renderTierUpgrade(ctx: DrawContext) {
+        val matrices = ctx.matrices
         val client = MinecraftClient.getInstance()
         val world = client.world ?: return
         val player = client.player ?: return
@@ -84,22 +87,22 @@ object IRHudRenderCallback : HudRenderCallback {
         val state = world.getBlockState(hit.blockPos)
         val block = state?.block as? MachineBlock
 
-        client.itemRenderer.renderInGui(stack, x, y)
+        ctx.drawItemInSlot(client.textRenderer, stack, x, y)
 
         if (block != null && block.registry.upgradeable && block.tier == item.from) {
             matrices.push()
             matrices.scale(0.5f, 0.5f, 0.5f)
-            client.textRenderer.draw(matrices, "Right Click to upgrade machine", x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+            ctx.drawText(client.textRenderer, "Right Click to upgrade machine", x + 16 + 64 + 64 + 64 + 42, y + 64 + 64 + 13, -1, true)
             matrices.pop()
 
-            client.itemRenderer.renderInGui(ItemStack(block), x + 8, y + 16)
+            ctx.drawItemInSlot(client.textRenderer, ItemStack(block), x + 8, y + 16)
             RenderSystem.disableDepthTest()
-            ScreenDrawing.texturedRect(matrices, x + 8 + 16 + 2, y + 16, 16, 16, ARROW, -1)
-            ScreenDrawing.texturedRect(matrices, x + 8 + 16 + 6, y + 18, 16, 16, CHECKMARK, -1)
-            client.itemRenderer.renderInGui(ItemStack(block.registry.block(item.to)), x + 8 + 32 + 4, y + 16)
+            ScreenDrawing.texturedRect(ctx, x + 8 + 16 + 2, y + 16, 16, 16, ARROW, -1)
+            ScreenDrawing.texturedRect(ctx, x + 8 + 16 + 6, y + 18, 16, 16, CHECKMARK, -1)
+            ctx.drawItemInSlot(client.textRenderer, ItemStack(block.registry.block(item.to)), x + 8 + 32 + 4, y + 16)
         } else {
             RenderSystem.disableDepthTest()
-            ScreenDrawing.texturedRect(matrices, x + 5, y + 5, 16, 16, X, -1)
+            ScreenDrawing.texturedRect(ctx, x + 5, y + 5, 16, 16, X, -1)
             RenderSystem.enableDepthTest()
             matrices.push()
             matrices.scale(0.5f, 0.5f, 0.5f)
@@ -111,7 +114,7 @@ object IRHudRenderCallback : HudRenderCallback {
                 else -> "This should not happen!"
             }
 
-            client.textRenderer.draw(matrices, txt,  x.toFloat() + 16 + 64 + 64 + 64 + 42, y.toFloat()+ 64 + 64 + 13, -1)
+            ctx.drawText(client.textRenderer, txt,  x + 16 + 64 + 64 + 64 + 42, y+ 64 + 64 + 13, -1, true)
             matrices.pop()
         }
 
@@ -134,7 +137,7 @@ object IRHudRenderCallback : HudRenderCallback {
         RenderSystem.depthMask(false)
         RenderSystem.enableBlend()
         RenderSystem.defaultBlendFunc()
-        RenderSystem.setShader { GameRenderer.getPositionTexShader() }
+        RenderSystem.setShader { GameRenderer.getPositionTexProgram() }
         RenderSystem.setShaderColor(r, g, b, opacity)
         RenderSystem.setShaderTexture(0, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
         Tessellator.getInstance().run {

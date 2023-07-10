@@ -1,7 +1,6 @@
 package me.steven.indrev.fluids
 
 import me.steven.indrev.utils.identifier
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.client.MinecraftClient
@@ -20,11 +19,11 @@ enum class FluidType(val stillId: Identifier, val flowId: Identifier) {
     var sprites = arrayOfNulls<Sprite>(2)
 
     fun registerReloadListener() {
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
+    /*    ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
             .register(ClientSpriteRegistryCallback { _, registry ->
                 registry.register(stillId)
                 registry.register(flowId)
-            })
+            })*/
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
             .registerReloadListener(object : SimpleSynchronousResourceReloadListener {
                 override fun reload(manager: ResourceManager?) {

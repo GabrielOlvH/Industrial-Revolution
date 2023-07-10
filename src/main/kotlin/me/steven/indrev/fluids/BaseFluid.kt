@@ -17,10 +17,7 @@ import net.minecraft.state.StateManager
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.world.BlockRenderView
-import net.minecraft.world.BlockView
-import net.minecraft.world.WorldAccess
-import net.minecraft.world.WorldView
+import net.minecraft.world.*
 
 abstract class BaseFluid(
     val identifier: Identifier,
@@ -38,7 +35,7 @@ abstract class BaseFluid(
 
     override fun getTickRate(world: WorldView?): Int = 5
 
-    override fun isInfinite(): Boolean = false
+    override fun isInfinite(world: World?): Boolean  = false
 
     override fun getFlowSpeed(world: WorldView?): Int = 2
 

@@ -1,6 +1,7 @@
 package me.steven.indrev.utils
 
 import com.mojang.blaze3d.systems.RenderSystem
+import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
@@ -24,6 +25,7 @@ import net.minecraft.fluid.Fluid
 import net.minecraft.fluid.Fluids
 import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
+import net.minecraft.registry.Registries
 import net.minecraft.screen.PlayerScreenHandler
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.OrderedText
@@ -31,7 +33,7 @@ import net.minecraft.text.Style
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 import net.minecraft.world.World
 import java.util.*
 import java.util.function.LongFunction
@@ -63,12 +65,12 @@ fun FluidBlock.drainFluid(world: World, pos: BlockPos, state: BlockState): Fluid
 }
 
 //TODO fuck weakhashmaps
-val fluidApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<FluidVariant>, Direction>>>()
+val fluidApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<FluidVariant>, Direction?>>>()
 
 fun fluidStorageOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Storage<FluidVariant>? {
     return fluidApiCache
         .computeIfAbsent(world) { Long2ObjectOpenHashMap() }
-        .computeIfAbsent(blockPos.asLong(), LongFunction { BlockApiCache.create(FluidStorage.SIDED, world, blockPos) })
+        .computeIfAbsent(blockPos.asLong(), Long2ObjectFunction { BlockApiCache.create(FluidStorage.SIDED, world, blockPos) })
         .find(direction)
 }
 
@@ -105,7 +107,7 @@ infix fun Long.of(variant: FluidVariant) = IRFluidAmount(variant, this)
 
 fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Text> {
     val tooltips = mutableListOf<Text>()
-    val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
+    val id = Registries.BLOCK.getId(variant.fluid.defaultState.blockState.block)
     val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, variant.fluid.defaultState) ?: -1
 
     tooltips.add(translatable("block.${id.namespace}.${id.path}").setStyle(Style.EMPTY.withColor(color)))
@@ -135,7 +137,7 @@ fun getTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Text> 
 fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: Long, x: Int, y: Int, width: Int, height: Int) {
     val client = MinecraftClient.getInstance()
     RenderSystem.setShaderTexture(0, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
-    RenderSystem.setShader(GameRenderer::getPositionColorTexShader)
+    RenderSystem.setShader(GameRenderer::getPositionColorTexProgram)
     val fluidRender = FluidRenderHandlerRegistry.INSTANCE.get(resource.fluid) ?: return
     val fluidColor = fluidRender.getFluidColor(client.world, client.player!!.blockPos, resource.fluid.defaultState)
     val sprite = fluidRender.getFluidSprites(client.world, BlockPos.ORIGIN, resource.fluid.defaultState)[0]
@@ -154,9 +156,9 @@ fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: L
             begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE)
             vertex(matrix, x.toFloat(), y - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, sprite.minV).next()
             vertex(matrix, x + width.toFloat(), y - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.minU, sprite.minV).next()
-            val atlasHeight = sprite.height / (sprite.maxV - sprite.minV)
-            vertex(matrix, x + width.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.minU, (sprite.maxV - ((sprite.height - p) / atlasHeight))).next()
-            vertex(matrix, x.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, (sprite.maxV - ((sprite.height - p) / atlasHeight))).next()
+            val atlasHeight = sprite.contents.height / (sprite.maxV - sprite.minV)
+            vertex(matrix, x + width.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.minU, (sprite.maxV - ((sprite.contents.height - p) / atlasHeight))).next()
+            vertex(matrix, x.toFloat(), y - p - (i * 16f), 0f).color(r, g, b, 1f).texture(sprite.maxU, (sprite.maxV - ((sprite.contents.height - p) / atlasHeight))).next()
             tess.draw()
             percentage -= p
         }

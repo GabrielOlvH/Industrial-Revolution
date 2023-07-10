@@ -19,12 +19,13 @@ import net.minecraft.client.render.entity.model.ElytraEntityModel
 import net.minecraft.client.render.entity.model.PlayerEntityModel
 import net.minecraft.client.render.item.ItemRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
+import net.minecraft.client.render.model.json.ModelTransformationMode
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.EquipmentSlot
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 
 class ModularWorkbenchBlockEntityRenderer : BlockEntityRenderer<ModularWorkbenchBlockEntity> {
 
@@ -60,8 +61,8 @@ class ModularWorkbenchBlockEntityRenderer : BlockEntityRenderer<ModularWorkbench
                 } else 0.0
                 val time = entity.world?.time ?: 1
                 translate(0.5, yOffset, 0.5)
-                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
-                multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180f))
+                multiply(RotationAxis.POSITIVE_Y.rotationDegrees((time + tickDelta) * 4))
+                multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180f))
                 val lightMapCoords = WorldRenderer.getLightmapCoordinates(entity.world, entity.pos)
                 renderArmor(this, vertexConsumers, itemStack, lightMapCoords)
                 pop()
@@ -72,8 +73,8 @@ class ModularWorkbenchBlockEntityRenderer : BlockEntityRenderer<ModularWorkbench
                 push()
                 val time = entity.world?.time ?: 1
                 translate(0.5, 0.35, 0.5)
-                multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((time + tickDelta) * 4))
-                MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformation.Mode.GROUND, lightCoord, overlay, matrices, vertexConsumers, 0)
+                multiply(RotationAxis.POSITIVE_Y.rotationDegrees((time + tickDelta) * 4))
+                MinecraftClient.getInstance().itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightCoord, overlay, matrices, vertexConsumers, entity.world, 0)
                 pop()
             }
         }

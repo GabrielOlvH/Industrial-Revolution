@@ -7,10 +7,9 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.SideConfiguration
 import me.steven.indrev.utils.draw2Colors
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.util.math.MatrixStack
 import me.steven.indrev.utils.literal
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.util.Formatting
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
@@ -33,14 +32,14 @@ class WMachineSideDisplay(
         this.height = y
     }
 
-    override fun paint(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        ScreenDrawing.texturedRect(matrices, x, y, width, height, TEXTURE_ID, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
+    override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        ScreenDrawing.texturedRect(ctx, x, y, width, height, TEXTURE_ID, side.u1 / 16f, side.v1 / 16f, side.u2 / 16f, side.v2 / 16f, -1)
         if (mode == TransferMode.INPUT_OUTPUT)
-            draw2Colors(matrices, x, y, x + width, y + height, TransferMode.INPUT.rgb, TransferMode.OUTPUT.rgb)
+            draw2Colors(ctx.matrices, x, y, x + width, y + height, TransferMode.INPUT.rgb, TransferMode.OUTPUT.rgb)
         else if (mode != TransferMode.NONE)
-            DrawableHelper.fill(matrices, x, y, x + width, y + height, mode.rgb.toInt())
+            ctx.fill( x, y, x + width, y + height, mode.rgb.toInt())
         if (isWithinBounds(mouseX, mouseY))
-            DrawableHelper.fill(matrices, x, y, x + width, y + height, -2130706433)
+            ctx.fill(x, y, x + width, y + height, -2130706433)
     }
 
     override fun addTooltip(tooltip: TooltipBuilder?) {

@@ -43,6 +43,8 @@ import net.minecraft.screen.ScreenHandlerContext
 import net.minecraft.sound.SoundEvents
 import me.steven.indrev.utils.literal
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.item.TooltipContext
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import kotlin.math.floor
@@ -266,16 +268,15 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
         var clickAction: () -> Unit = {}
 
-        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             val hovered = mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height
-            ScreenDrawing.drawBeveledPanel(matrices, x, y, width, height)
-            if (hovered) ScreenDrawing.coloredRect(matrices, x, y, width, height, 0x887d88ff.toInt())
-            MinecraftClient.getInstance().itemRenderer.renderInGui(itemStack, x + 1, y + 1)
+            ScreenDrawing.drawBeveledPanel(ctx, x, y, width, height)
+            if (hovered) ScreenDrawing.coloredRect(ctx, x, y, width, height, 0x887d88ff.toInt())
+            ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, itemStack, x + 1, y + 1)
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            val texts = itemStack.getTooltip(MinecraftClient.getInstance().player)
-            { MinecraftClient.getInstance().options.advancedItemTooltips }
+            val texts = itemStack.getTooltip(MinecraftClient.getInstance().player, if (MinecraftClient.getInstance().options.advancedItemTooltips) TooltipContext.ADVANCED else TooltipContext.BASIC)
             tooltip?.add(*texts.toTypedArray())
         }
 
@@ -298,22 +299,21 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
 
         var hidden = true
 
-        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (!hidden) {
-                super.paint(matrices, x, y, mouseX, mouseY)
+                super.paint(ctx, x, y, mouseX, mouseY)
                 if (preview != null) {
                     val renderer = MinecraftClient.getInstance().itemRenderer
-                    renderer.renderInGui(preview, x + 1, y + 1)
+                    ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, preview, x + 1, y + 1)
                     RenderSystem.disableDepthTest()
-                    ScreenDrawing.coloredRect(matrices, x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
+                    ScreenDrawing.coloredRect(ctx, x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
                 }
             }
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
             if (!blockInventory.getStack(index + 3).isEmpty) return
-            val texts = preview?.getTooltip(MinecraftClient.getInstance().player)
-            { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
+            val texts = preview?.getTooltip(MinecraftClient.getInstance().player, if (MinecraftClient.getInstance().options.advancedItemTooltips) TooltipContext.ADVANCED else TooltipContext.BASIC)  ?: return
             tooltip?.add(*texts.toTypedArray())
         }
 
@@ -328,32 +328,31 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             isInsertingAllowed = false
         }
 
-        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-            super.paint(matrices, x, y, mouseX, mouseY)
+        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            super.paint(ctx, x, y, mouseX, mouseY)
             if (selected != null) {
                 val cur = component!!.get<Int>(ModularWorkbenchBlockEntity.PROCESS_TIME_ID)
                 val max = component!!.get<Int>(ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID)
                 val renderer = MinecraftClient.getInstance().itemRenderer
-                renderer.renderInGui(selected!!.outputs[0].stack, x + 1, y + 1)
+                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, selected!!.outputs[0].stack, x + 1, y + 1)
                 RenderSystem.disableDepthTest()
                 val a = 255 - ((cur / max.toDouble()) * 255).toInt()
-                ScreenDrawing.coloredRect(matrices, x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
+                ScreenDrawing.coloredRect(ctx, x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
                 RenderSystem.enableDepthTest()
 
                 if (cur > 0 && max > 0 && cur != max) {
                     val txt = "${(cur / max.toDouble() * 100).toInt() }%"
                     val width = MinecraftClient.getInstance().textRenderer.getWidth(txt)
-                    MinecraftClient.getInstance().textRenderer.draw(matrices, txt, x.toFloat() + 10 - (width / 2), y.toFloat() + 25, 0x404040)
+                    ctx.drawText(MinecraftClient.getInstance().textRenderer, txt, x + 10 - (width / 2), y + 25, 0x404040, true)
 
                     val s = sin(world.time.toDouble() / 5) * 10
-                    ScreenDrawing.coloredRect(matrices, x - 3, (y + s).toInt() + 8, this.width + 6, 2, 0x99578bfa.toInt())
+                    ScreenDrawing.coloredRect(ctx, x - 3, (y + s).toInt() + 8, this.width + 6, 2, 0x99578bfa.toInt())
                 }
             }
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
-            val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player)
-            { MinecraftClient.getInstance().options.advancedItemTooltips } ?: return
+            val texts = selected?.outputs?.get(0)?.stack?.getTooltip(MinecraftClient.getInstance().player, if (MinecraftClient.getInstance().options.advancedItemTooltips) TooltipContext.ADVANCED else TooltipContext.BASIC) ?: return
 
             val cur = component!!.get<Int>(ModularWorkbenchBlockEntity.PROCESS_TIME_ID)
             val max = component!!.get<Int>(ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID)

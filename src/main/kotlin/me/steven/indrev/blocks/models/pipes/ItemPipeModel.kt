@@ -11,6 +11,7 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
 import net.minecraft.client.render.model.BakedModel
+import net.minecraft.client.render.model.Baker
 import net.minecraft.client.render.model.ModelBakeSettings
 import net.minecraft.client.render.model.ModelLoader
 import net.minecraft.client.render.model.ModelRotation
@@ -36,7 +37,7 @@ class ItemPipeModel(tier: Tier) : BasePipeModel(tier, "item_pipe") {
     val outputServoModels = arrayOfNulls<BakedModel>(6)
 
     override fun bake(
-        loader: ModelLoader,
+        loader: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?

@@ -7,9 +7,14 @@ import me.steven.indrev.world.features.IRConfiguredFeature
 import me.steven.indrev.world.features.SulfurCrystalFeature
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.minecraft.block.Blocks
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
+import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.registry.tag.BlockTags
+import net.minecraft.structure.rule.BlockMatchRuleTest
+import net.minecraft.structure.rule.RuleTest
+import net.minecraft.structure.rule.TagMatchRuleTest
 import net.minecraft.util.math.intprovider.UniformIntProvider
-import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryEntry
 import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.YOffset
@@ -47,7 +52,10 @@ object WorldGeneration {
         }
     }
 
-    private val configuredFeatures = mutableListOf<IRConfiguredFeature>()
+    private var STONE_ORE_REPLACEABLES: RuleTest = TagMatchRuleTest(BlockTags.STONE_ORE_REPLACEABLES)
+    private var DEEPSLATE_ORE_REPLACEABLES: RuleTest = TagMatchRuleTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES)
+
+    val configuredFeatures = mutableListOf<IRConfiguredFeature>()
 
     fun addFeatures() {
         configuredFeatures.forEach { feature ->
@@ -61,11 +69,11 @@ object WorldGeneration {
 
     private val tinTargets = ImmutableList.of(
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.STONE_ORE_REPLACEABLES,
+            STONE_ORE_REPLACEABLES,
             IRBlockRegistry.TIN_ORE().defaultState
         ),
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+            DEEPSLATE_ORE_REPLACEABLES,
             IRBlockRegistry.DEEPSLATE_TIN_ORE().defaultState
         )
     )
@@ -75,26 +83,22 @@ object WorldGeneration {
             identifier("tin_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             ConfiguredFeature(Feature.ORE, OreFeatureConfig(tinTargets, 10)),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(14),
-                        SquarePlacementModifier.of(),
-                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-48), YOffset.fixed(48))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(14),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-48), YOffset.fixed(48))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
     private val leadTargets = ImmutableList.of(
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.STONE_ORE_REPLACEABLES,
+            STONE_ORE_REPLACEABLES,
             IRBlockRegistry.LEAD_ORE().defaultState
         ),
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+            DEEPSLATE_ORE_REPLACEABLES,
             IRBlockRegistry.DEEPSLATE_LEAD_ORE().defaultState
         )
     )
@@ -104,26 +108,22 @@ object WorldGeneration {
             identifier("lead_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             ConfiguredFeature(Feature.ORE, OreFeatureConfig(leadTargets, 6)),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(11),
-                        SquarePlacementModifier.of(),
-                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(11),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
     private val silverTargets = ImmutableList.of(
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.STONE_ORE_REPLACEABLES,
+            STONE_ORE_REPLACEABLES,
             IRBlockRegistry.SILVER_ORE().defaultState
         ),
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+            DEEPSLATE_ORE_REPLACEABLES,
             IRBlockRegistry.DEEPSLATE_SILVER_ORE().defaultState
         )
     )
@@ -133,22 +133,18 @@ object WorldGeneration {
             identifier("silver_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             ConfiguredFeature(Feature.ORE, OreFeatureConfig(silverTargets, 8)),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(9),
-                        SquarePlacementModifier.of(),
-                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(9),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-32), YOffset.fixed(32))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
     private val tungstenTargets = ImmutableList.of(
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+            DEEPSLATE_ORE_REPLACEABLES,
             IRBlockRegistry.DEEPSLATE_TUNGSTEN_ORE().defaultState
         )
     )
@@ -158,26 +154,22 @@ object WorldGeneration {
             identifier("tungsten_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             ConfiguredFeature(Feature.ORE, OreFeatureConfig(tungstenTargets, 5)),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(8),
-                        SquarePlacementModifier.of(),
-                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(8),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
     private val nikoliteTargets = ImmutableList.of(
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.STONE_ORE_REPLACEABLES,
+            STONE_ORE_REPLACEABLES,
             IRBlockRegistry.NIKOLITE_ORE().defaultState
         ),
         OreFeatureConfig.createTarget(
-            OreConfiguredFeatures.DEEPSLATE_ORE_REPLACEABLES,
+            DEEPSLATE_ORE_REPLACEABLES,
             IRBlockRegistry.DEEPSLATE_NIKOLITE_ORE().defaultState
         )
     )
@@ -187,21 +179,17 @@ object WorldGeneration {
             identifier("nikolite_ore"),
             GenerationStep.Feature.UNDERGROUND_ORES,
             ConfiguredFeature(Feature.ORE, OreFeatureConfig(nikoliteTargets, 7)),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(8),
-                        SquarePlacementModifier.of(),
-                        HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(8),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.trapezoid(YOffset.aboveBottom(-16), YOffset.fixed(16))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
     private val sulfurCrystalFeature: SulfurCrystalFeature = Registry.register(
-        Registry.FEATURE,
+        Registries.FEATURE,
         identifier("sulfur_crystal"),
         SulfurCrystalFeature(DefaultFeatureConfig.CODEC)
     )
@@ -211,15 +199,11 @@ object WorldGeneration {
             identifier("sulfur_crystal_overworld"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
             ConfiguredFeature(sulfurCrystalFeature, DefaultFeatureConfig.INSTANCE),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(12),
-                        HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16))
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(12),
+                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.fixed(16))
+            ),
             IRConfiguredFeature.IS_OVERWORLD
         )
 
@@ -228,15 +212,11 @@ object WorldGeneration {
             identifier("sulfur_crystal_nether"),
             GenerationStep.Feature.UNDERGROUND_DECORATION,
             ConfiguredFeature(sulfurCrystalFeature, DefaultFeatureConfig.INSTANCE),
-            { feature ->
-                PlacedFeature(
-                    RegistryEntry.of(feature),
-                    listOf(
-                        CountPlacementModifier.of(20),
-                        HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop())
-                    )
-                )
-            },
+
+            listOf(
+                CountPlacementModifier.of(20),
+                HeightRangePlacementModifier.uniform(YOffset.getBottom(), YOffset.getTop())
+            ),
             IRConfiguredFeature.IS_NETHER
         )
 
@@ -250,13 +230,10 @@ object WorldGeneration {
                 BlockStateProvider.of(Blocks.COARSE_DIRT.defaultState)
             )
         ),
-        { feature ->
-            PlacedFeature(
-                RegistryEntry.of(feature),
-                listOf(
-                    CountPlacementModifier.of(UniformIntProvider.create(0, 60))
-                )
-            )
-        }
+
+        listOf(
+            CountPlacementModifier.of(UniformIntProvider.create(0, 60))
+        )
+
     ) { ctx -> ctx.biomeKey == BiomeKeys.SWAMP }
 }

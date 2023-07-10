@@ -5,7 +5,8 @@ import me.steven.indrev.datagen.DataGenerator
 import me.steven.indrev.datagen.JsonFactory
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import java.io.File
 
 class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> JsonFactory<Item>)
@@ -13,8 +14,8 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
 
     override fun generate(): Int {
         var count = 0
-        Registry.ITEM.ids.filter { id -> id.namespace == namespace }.forEach {
-            val item = Registry.ITEM.get(it)
+        Registries.ITEM.ids.filter { id -> id.namespace == namespace }.forEach {
+            val item = Registries.ITEM.get(it)
             if (item.asItem() != null && generate(it, item)) {
                 count++
             }
@@ -26,7 +27,7 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
         val DEFAULT_ITEM: (Item) -> JsonFactory<Item> = { item ->
             object : JsonFactory<Item> {
                 override fun generate(): JsonObject {
-                    val id = Registry.ITEM.getId(item)
+                    val id = Registries.ITEM.getId(item)
                     val obj = JsonObject()
                     if (item is BlockItem) {
                         obj.addProperty("parent", "${id.namespace}:block/${id.path}")
@@ -44,7 +45,7 @@ class ItemModelGenerator(val root: File, namespace: String, fallback: (Item) -> 
         val HANDHELD: (Item) -> JsonFactory<Item> = { item ->
             object : JsonFactory<Item> {
                 override fun generate(): JsonObject {
-                    val id = Registry.ITEM.getId(item)
+                    val id = Registries.ITEM.getId(item)
                     val obj = JsonObject()
                     obj.addProperty("parent", "item/handheld")
                     val texturesObj = JsonObject()

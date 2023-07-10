@@ -4,6 +4,7 @@ import io.github.cottonmc.cotton.gui.client.ScreenDrawing
 import io.github.cottonmc.cotton.gui.widget.WWidget
 import io.github.cottonmc.cotton.gui.widget.data.HorizontalAlignment
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.text.Text
 
@@ -18,14 +19,14 @@ class WText(
         color
     )
 
-    override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+    override fun paint(context: DrawContext?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
         var alignedX = x.toDouble()
         val text = string()
         if (alignment == HorizontalAlignment.CENTER) {
             alignedX -= MinecraftClient.getInstance().textRenderer.getWidth(text) / 2.0
-            MinecraftClient.getInstance().textRenderer.draw(matrices, text, alignedX.toFloat(), y.toFloat(), color)
+            context?.drawText(MinecraftClient.getInstance().textRenderer, text, alignedX.toInt(), y.toInt(), color, true)
             return
         }
-        ScreenDrawing.drawString(matrices, text.asOrderedText(), alignment, alignedX.toInt(), y, this.width, color)
+        ScreenDrawing.drawString(context, text.asOrderedText(), alignment, alignedX.toInt(), y, this.width, color)
     }
 }

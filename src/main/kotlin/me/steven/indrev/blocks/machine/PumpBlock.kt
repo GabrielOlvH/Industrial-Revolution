@@ -34,7 +34,7 @@ class PumpBlock(registry: MachineRegistry, settings: Settings) : HorizontalFacin
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return this.defaultState.with(HORIZONTAL_FACING, ctx?.playerFacing)
+        return this.defaultState.with(HORIZONTAL_FACING, ctx?.horizontalPlayerFacing)
     }
 
     companion object {

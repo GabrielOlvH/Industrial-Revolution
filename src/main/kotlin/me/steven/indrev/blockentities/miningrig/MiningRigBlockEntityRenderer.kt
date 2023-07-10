@@ -5,9 +5,10 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.VertexConsumerProvider
 import net.minecraft.client.render.block.entity.BlockEntityRenderer
 import net.minecraft.client.render.model.json.ModelTransformation
+import net.minecraft.client.render.model.json.ModelTransformationMode
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 
 class MiningRigBlockEntityRenderer : BlockEntityRenderer<MiningRigBlockEntity> {
     override fun render(
@@ -32,9 +33,9 @@ class MiningRigBlockEntityRenderer : BlockEntityRenderer<MiningRigBlockEntity> {
                     return
                 }
             }
-            multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(direction.asRotation()))
+            multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(direction.asRotation()))
             scale(0.3f, 0.3f, 0.01f)
-            MinecraftClient.getInstance().itemRenderer.renderItem(entity.lastMinedItem, ModelTransformation.Mode.GUI, 15728880, overlay, this, vertexConsumers, 0)
+            MinecraftClient.getInstance().itemRenderer.renderItem(entity.lastMinedItem, ModelTransformationMode.GUI, 15728880, overlay, this, vertexConsumers, entity.world, 0)
             pop()
         }
     }

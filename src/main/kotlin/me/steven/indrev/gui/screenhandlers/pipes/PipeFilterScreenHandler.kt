@@ -13,7 +13,6 @@ import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawableHelper
 import net.minecraft.client.sound.PositionedSoundInstance
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
@@ -21,6 +20,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.sound.SoundEvents
 import me.steven.indrev.utils.translatable
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.item.TooltipContext
+import net.minecraft.client.render.model.json.ModelTransformationMode
 import net.minecraft.util.Formatting
 import net.minecraft.util.collection.DefaultedList
 import net.minecraft.util.math.BlockPos
@@ -53,9 +55,9 @@ class PipeFilterScreenHandler(
 
         val whitelistButton = object : WToggleButton(WHITELIST_ICON, BLACKLIST_ICON) {
 
-            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
-                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(ctx, x, y, mouseX, mouseY)
+                super.paint(ctx, x + 1, y + 1, mouseX, mouseY)
             }
 
             override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -75,9 +77,9 @@ class PipeFilterScreenHandler(
 
         val matchDurabilityButton = object : WToggleButton(MATCH_DURABILITY_ICON, IGNORE_DURABILITY_ICON) {
 
-            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
-                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(ctx, x, y, mouseX, mouseY)
+                super.paint(ctx, x + 1, y + 1, mouseX, mouseY)
             }
 
             override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -97,9 +99,9 @@ class PipeFilterScreenHandler(
 
         val matchTagButton = object : WToggleButton(MATCH_NBT_ICON, IGNORE_NBT_ICON) {
 
-            override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-                WButton().also { it.setSize(20, 20) }.paint(matrices, x, y, mouseX, mouseY)
-                super.paint(matrices, x + 1, y + 1, mouseX, mouseY)
+            override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+                WButton().also { it.setSize(20, 20) }.paint(ctx, x, y, mouseX, mouseY)
+                super.paint(ctx, x + 1, y + 1, mouseX, mouseY)
             }
             
             override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -136,12 +138,12 @@ class PipeFilterScreenHandler(
 
     inner class WFilterSlot(val index: Int) : WWidget() {
 
-        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-            ScreenDrawing.drawBeveledPanel(matrices, x, y, height, width, -1207959552, 1275068416, -1191182337)
-            MinecraftClient.getInstance().itemRenderer.renderInGui(backingList[index], x + 1, y + 1)
-            MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
+        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+            ScreenDrawing.drawBeveledPanel(ctx, x, y, height, width, -1207959552, 1275068416, -1191182337)
+            ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
+        //    MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
             if (mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height)
-                DrawableHelper.fill(matrices, x + 1, y + 1, x + 17, y + 17, -2130706433)
+                ctx.fill(x + 1, y + 1, x + 17, y + 17, -2130706433)
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {
@@ -156,17 +158,17 @@ class PipeFilterScreenHandler(
         override fun addTooltip(tooltip: TooltipBuilder?) {
             val itemStack = backingList[index]
             if (!itemStack.isEmpty)
-                tooltip?.add(*itemStack.getTooltip(playerInventory.player) { MinecraftClient.getInstance().options.advancedItemTooltips }.toTypedArray())
+                tooltip?.add(*itemStack.getTooltip(playerInventory.player, if (MinecraftClient.getInstance().options.advancedItemTooltips ) TooltipContext.ADVANCED else TooltipContext.BASIC).toTypedArray())
         }
     }
 
     inner class WServoMode : WWidget() {
 
-        override fun paint(matrices: MatrixStack?, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (type == EndpointData.Type.OUTPUT)
-                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y - 2)
+                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y - 2)
             else if (type == EndpointData.Type.RETRIEVER)
-                MinecraftClient.getInstance().itemRenderer.renderInGui(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y - 2)
+                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y - 2)
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {

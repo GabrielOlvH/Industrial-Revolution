@@ -73,8 +73,8 @@ class SlaughterScreenHandler(
         root.validate(this)
     }
 
-    override fun close(player: PlayerEntity?) {
-        super.close(player)
+    override fun onClosed(player: PlayerEntity?) {
+        super.onClosed(player)
         AOEMachineBlockEntity.sendValueUpdatePacket(value, ctx)
     }
 

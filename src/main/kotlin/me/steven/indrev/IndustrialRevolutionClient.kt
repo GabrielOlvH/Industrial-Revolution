@@ -38,16 +38,15 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
+import net.minecraft.client.gui.screen.ingame.HandledScreens
 import net.minecraft.client.option.KeyBinding
 import net.minecraft.client.particle.FlameParticle
 import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.minecraft.client.util.InputUtil
 import net.minecraft.item.ElytraItem
 import net.minecraft.screen.PlayerScreenHandler
@@ -116,9 +115,9 @@ object IndustrialRevolutionClient : ClientModInitializer {
             DATA_CARD_WRITER_HANDLER,
             PUMP_HANDLER
         ).forEach { handler ->
-            ScreenRegistry.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
+            HandledScreens.register(handler) { controller, inv, _ -> IRInventoryScreen(controller, inv.player) }
         }
-        ScreenRegistry.register(PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
+        HandledScreens.register(PIPE_FILTER_HANDLER) { controller, inv, _ -> PipeFilterScreen(controller, inv.player) }
 
         MachineRegistry.CHOPPER_REGISTRY.registerBlockEntityRenderer(::ChopperBlockEntityRenderer)
         MachineRegistry.RANCHER_REGISTRY.registerBlockEntityRenderer(::AOEMachineBlockEntityRenderer)
@@ -138,12 +137,12 @@ object IndustrialRevolutionClient : ClientModInitializer {
         MachineRegistry.HEAT_GENERATOR_REGISTRY.registerBlockEntityRenderer(::HeatGeneratorBlockEntityRenderer)
         MachineRegistry.LASER_EMITTER_REGISTRY.registerBlockEntityRenderer(::LaserBlockEntityRenderer)
         MachineRegistry.STEAM_TURBINE_REGISTRY.registerBlockEntityRenderer { MultiblockBlockEntityRenderer<SteamTurbineBlockEntity> { be -> be.multiblockComponent!! } }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer { be -> be.multiblockComponent } }
-        BlockEntityRendererRegistry.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
+        BlockEntityRendererFactories.register(IRBlockRegistry.TANK_BLOCK_ENTITY) { TankBlockEntityRenderer() }
+        BlockEntityRendererFactories.register(IRBlockRegistry.DRILL_BLOCK_ENTITY_TYPE) { DrillBlockEntityRenderer() }
+        BlockEntityRendererFactories.register(IRBlockRegistry.CAPSULE_BLOCK_ENTITY) { CapsuleBlockEntityRenderer() }
+        BlockEntityRendererFactories.register(IRBlockRegistry.BIOMASS_COMPOSTER_BLOCK_ENTITY) { BiomassComposterBlockEntityRenderer() }
+        BlockEntityRendererFactories.register(IRBlockRegistry.SOLAR_POWER_PLANT_TOWER_BLOCK_ENTITY) { MultiblockBlockEntityRenderer { be -> be.multiblockComponent } }
+        BlockEntityRendererFactories.register(IRBlockRegistry.HELIOSTAT_BLOCK_ENTITY) { HeliostatBlockEntityRenderer() }
 
         MachineRegistry.MODULAR_WORKBENCH_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
         MachineRegistry.PUMP_REGISTRY.setRenderLayer(RenderLayer.getTranslucent())
@@ -186,7 +185,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(IRClientTickEvents)
 
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
+       /* ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(
             ClientSpriteRegistryCallback { _, registry ->
                 registry.register(identifier("block/lazuli_flux_container_lf_level"))
                 registry.register(identifier("gui/hud_damaged"))
@@ -196,7 +195,7 @@ object IndustrialRevolutionClient : ClientModInitializer {
                 registry.register(identifier("particle/laser_particle_1"))
                 registry.register(identifier("particle/laser_particle_2"))
                 registry.register(identifier("particle/laser_particle_3"))
-            })
+            })*/
 
         ParticleFactoryRegistry.getInstance().register(IndustrialRevolution.LASER_PARTICLE) { spriteProvider ->
             FlameParticle.Factory(spriteProvider)

@@ -13,7 +13,7 @@ open class HorizontalFacingBlock(settings: Settings) : HorizontalFacingBlock(set
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext?): BlockState? {
-        return defaultState.with(FACING, ctx?.playerFacing?.opposite)
+        return defaultState.with(FACING, ctx?.horizontalPlayerFacing?.opposite)
     }
 
     override fun appendProperties(builder: StateManager.Builder<Block, BlockState>?) {
