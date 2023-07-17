@@ -5,19 +5,17 @@ import me.steven.indrev.blockentities.crafting.CraftingMachineBlockEntity
 import me.steven.indrev.components.MachineFluidInventory
 import me.steven.indrev.packets.common.ClickFluidWidgetPacket
 import me.steven.indrev.recipes.MachineRecipe
-import me.steven.indrev.utils.ProcessingBoost
-import me.steven.indrev.utils.argb
-import me.steven.indrev.utils.getFluidTooltip
+import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.renderInGui
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.text.MutableText
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.math.MathHelper
 
 open class WidgetBar(
     val background: Identifier,
@@ -28,31 +26,33 @@ open class WidgetBar(
     val current: () -> Long,
     val max: () -> Long
     ) : Widget() {
-
-    override fun draw(matrices: MatrixStack, x: Int, y: Int) {
+        var prev = 0f
+    override fun draw(ctx: DrawContext, x: Int, y: Int) {
         RenderSystem.enableBlend()
-        RenderSystem.setShaderTexture(0, background)
-        DrawableHelper.drawTexture(matrices, x, y, 0f, 0f, width, height, width, height)
 
-        drawBar(matrices, x, y)
+        ctx.drawTexture(background, x, y, 0f, 0f, width, height, width, height)
+
+        drawBar(ctx, x, y)
 
     }
 
-    open fun drawBar(matrices: MatrixStack, x: Int, y: Int) {
+    open fun drawBar(ctx: DrawContext, x: Int, y: Int) {
         if (current() <= 0) return
-        RenderSystem.setShaderTexture(0, bar)
+        val value = MathHelper.lerp(MinecraftClient.getInstance().tickDelta, prev, (current() / max().toFloat()).coerceIn(0f, 1f))
+        prev = value
         when (direction) {
             Direction.UP -> {
-                val p = (((current() / max().toFloat()).coerceIn(0f, 1f) * height) / height.toFloat())
+                val p = ((value * height) / height.toFloat())
                 val size = (height * p).toInt()
-                DrawableHelper.drawTexture(matrices, x, y + height - size, width, size, 0f, height - size.toFloat(), width, size, width, height)
+                ctx.drawTexture(bar, x, y + height - size, width, size, 0f, height - size.toFloat(), width, size, width, height)
             }
+
             Direction.DOWN -> TODO()
             Direction.LEFT -> TODO()
             Direction.RIGHT -> {
-                val p = (((current() / max().toFloat()).coerceIn(0f, 1f) * width) / width.toFloat())
+                val p = ((value * width) / width.toFloat())
                 val size = (width * p).toInt()
-                DrawableHelper.drawTexture(matrices, x, y, width-size, height, 0f, 0f, width-size, height, width, height)
+                ctx.drawTexture(bar, x, y, width - size, height, 0f, 0f, width - size, height, width, height)
             }
         }
     }
@@ -77,7 +77,13 @@ open class WidgetBar(
             } as WidgetBar
         }
 
-        fun temperatureBar(current: () -> Long, max: () -> Long, average: Int, heating: () -> Boolean, hasCooler: () -> Boolean): WidgetBar {
+        fun temperatureBar(
+            current: () -> Long,
+            max: () -> Long,
+            average: Int,
+            heating: () -> Boolean,
+            hasCooler: () -> Boolean
+        ): WidgetBar {
             return WidgetBar(
                 identifier("textures/gui/widgets/widget_temperature_empty.png"),
                 identifier("textures/gui/widgets/widget_temperature_full.png"),
@@ -88,14 +94,21 @@ open class WidgetBar(
                 max
             ).setTooltip { tooltip ->
                 tooltip.add(Text.literal("Temperature").styled { s -> s.withColor(0x3c00f0) })
-                tooltip.add(Text.literal("${current()} / ${max()} ºC").append(Text.literal(if (heating()) " \u2197" else " \u2198").styled { s -> s.withColor(0x3c00f0).withBold(true) }))
-                if (current() in average-250..average+250) {
+                tooltip.add(
+                    Text.literal("${current()} / ${max()} ºC").append(
+                        Text.literal(if (heating()) " \u2197" else " \u2198")
+                            .styled { s -> s.withColor(0x3c00f0).withBold(true) })
+                )
+                if (current() in average - 250..average + 250) {
                     if (heating() || hasCooler()) {
                         tooltip.add(Text.literal("50% boost").styled { s -> s.withColor(0x3cf000).withItalic(true) })
                     }
 
                     if (!heating() && !hasCooler()) {
-                        tooltip.add(Text.literal("Insert cooler to boost while cooling down").formatted(Formatting.BLUE, Formatting.ITALIC))
+                        tooltip.add(
+                            Text.literal("Insert cooler to boost while cooling down")
+                                .formatted(Formatting.BLUE, Formatting.ITALIC)
+                        )
                     }
                 }
             } as WidgetBar
@@ -128,11 +141,20 @@ open class WidgetBar(
                 { fluidInv[slot].capacity },
                 { fluidInv[slot].capacity }
             ) {
-                override fun drawBar(matrices: MatrixStack, x: Int, y: Int) {
+                override fun drawBar(ctx: DrawContext, x: Int, y: Int) {
                     val fluidSlot = fluidInv[slot]
                     if (!fluidSlot.isEmpty())
-                        renderInGui(matrices, fluidSlot.resource, fluidSlot.amount, fluidSlot.capacity, x + 1, y - 1 + height, width - 2,height - 2)
-                    super.drawBar(matrices, x, y)
+                        renderInGui(
+                            ctx.matrices,
+                            fluidSlot.resource,
+                            fluidSlot.amount,
+                            fluidSlot.capacity,
+                            x + 1,
+                            y - 1 + height,
+                            width - 2,
+                            height - 2
+                        )
+                    super.drawBar(ctx, x, y)
                 }
 
                 override fun onClick(mouseX: Double, mouseY: Double, button: Int) {
@@ -151,7 +173,14 @@ open class WidgetBar(
         }
 
 
-        fun processBar(current: () -> Int, max: () -> Int, recipeProvider: () -> MachineRecipe?, text: MutableText = Text.literal("Processing"), machine: CraftingMachineBlockEntity): WidgetBar {
+        fun processBar(
+            current: () -> Int,
+            max: () -> Int,
+            recipeProvider: () -> MachineRecipe?,
+            troubleshooter: Troubleshooter,
+            text: MutableText = Text.literal("Processing"),
+            machine: CraftingMachineBlockEntity
+        ): WidgetBar {
             return object : WidgetBar(
                 identifier("textures/gui/widgets/widget_processing_empty.png"),
                 identifier("textures/gui/widgets/widget_processing_full.png"),
@@ -161,25 +190,34 @@ open class WidgetBar(
                 { current().toLong() },
                 { max().toLong() }
             ) {
-                override fun drawBar(matrices: MatrixStack, x: Int, y: Int) {
+                override fun drawBar(ctx: DrawContext, x: Int, y: Int) {
                     if (ProcessingBoost.getActiveBoosts(machine).isNotEmpty()) {
                         val (alpha, red, green, blue) = argb(0xFFFFA8A8.toInt())
-                        RenderSystem.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
+                        ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
                     }
-                    super.drawBar(matrices, x, y)
+                    super.drawBar(ctx, x, y)
+
+                    if (!troubleshooter.isEmpty()) {
+                        ctx.setShaderColor(1f, 1f, 1f, 1f)
+                        ctx.drawTexture(identifier("textures/gui/widgets/widget_warning.png"), x, y, 0f,0f, width, height, width, height)
+                    }
                 }
             }.setTooltip { tooltip ->
-                if (current() > 0) {
-                    val percentage = current() / max().toDouble() * 100
-                    tooltip.add(text.copy().append(Text.literal(": ")).styled { s -> s.withColor(0x3c00f0) }
-                        .append(Text.literal("${100-percentage.toInt()}%").formatted(Formatting.WHITE)))
-                    tooltip.add(Text.empty())
-                }
-                val recipe = recipeProvider()
-                if (recipe != null) {
-                    val boosts = ProcessingBoost.getActiveBoosts(machine)
-                    tooltip.add(ProcessingBoost.appendTickTime(boosts, recipe, machine.config?.processingSpeed ?: 1.0))
-                    boosts.forEach { it.append(tooltip) }
+                if (!troubleshooter.isEmpty()) {
+                    troubleshooter.appendMessages(tooltip)
+                } else {
+
+                    if (current() > 0) {
+                        val percentage = current() / max().toDouble() * 100
+                        tooltip.add(text.copy().append(Text.literal(": ")).styled { s -> s.withColor(0x3c00f0) }
+                            .append(Text.literal("${100 - percentage.toInt()}%").formatted(Formatting.WHITE)))
+                    }
+                    val recipe = recipeProvider()
+                    if (recipe != null) {
+                        val boosts = ProcessingBoost.getActiveBoosts(machine)
+                        tooltip.add(ProcessingBoost.appendTickTime(boosts, recipe, machine.config?.processingSpeed ?: 1.0))
+                        boosts.forEach { it.append(tooltip) }
+                    }
                 }
             } as WidgetBar
         }

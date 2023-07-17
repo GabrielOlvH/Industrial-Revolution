@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap
 
 object ClientPipeNetworkData {
 
-    const val PATH_RENDER_TIME = 40
+    const val PATH_RENDER_TIME = 10
 
     val renderData = Long2IntOpenHashMap()
     val renderSnapshot = Long2IntOpenHashMap()

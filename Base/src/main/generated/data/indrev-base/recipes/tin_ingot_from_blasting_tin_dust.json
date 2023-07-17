@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.0,
+  "group": "tin_dust",
+  "ingredient": {
+    "item": "indrev-base:tin_dust"
+  },
+  "result": "indrev-base:tin_ingot"
+}

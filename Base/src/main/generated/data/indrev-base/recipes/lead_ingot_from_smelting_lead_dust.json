@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.0,
+  "group": "lead_dust",
+  "ingredient": {
+    "item": "indrev-base:lead_dust"
+  },
+  "result": "indrev-base:lead_ingot"
+}

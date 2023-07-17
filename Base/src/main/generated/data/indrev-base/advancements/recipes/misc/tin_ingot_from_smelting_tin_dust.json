@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:tin_ingot_from_smelting_tin_dust"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_dust": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "indrev-base:tin_dust"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_tin_dust",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:tin_ingot_from_smelting_tin_dust"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -3,9 +3,8 @@ package me.steven.indrev.screens.widgets
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawableHelper
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.sound.SoundEvents
 
 class WidgetCheckbox : Widget() {
@@ -15,18 +14,17 @@ class WidgetCheckbox : Widget() {
     var checked = false
     var onChange: ((Boolean) -> Unit)? = null
 
-    override fun draw(matrices: MatrixStack, x: Int, y: Int) {
-        RenderSystem.setShaderTexture(0, CHECKBOX)
-        DrawableHelper.drawTexture(matrices, x + 2, y + 2, 0f, 0f, 6, 6, 6, 6)
+    override fun draw(ctx: DrawContext, x: Int, y: Int) {
+        ctx.drawTexture(CHECKBOX, x + 2, y + 2, 0f, 0f, 6, 6, 6, 6)
 
         if (checked) {
             RenderSystem.setShaderTexture(0, CHECKMARK)
-            DrawableHelper.drawTexture(matrices, x + 2, y + 1, 0f, 0f, 9, 6, 9, 6)
+            ctx.drawTexture(CHECKMARK, x + 2, y + 1, 0f, 0f, 9, 6, 9, 6)
         }
     }
 
-    override fun drawMouseover(matrices: MatrixStack, x: Int, y: Int, mouseX: Int, mouseY: Int) {
-        DrawableHelper.fill(matrices, x, y, x + width, y+ height, 0x99555555.toInt())
+    override fun drawMouseover(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
+        ctx.fill(x+ 2, y+2, x + width-2, y+ height-2, 0x99555555.toInt())
     }
 
     override fun onClick(mouseX: Double, mouseY: Double, button: Int) {

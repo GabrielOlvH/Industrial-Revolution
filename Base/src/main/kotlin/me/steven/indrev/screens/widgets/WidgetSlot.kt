@@ -6,8 +6,7 @@ import me.steven.indrev.screens.machine.MachineScreenHandler
 import me.steven.indrev.screens.machine.MachineSlot
 import me.steven.indrev.utils.argb
 import me.steven.indrev.utils.identifier
-import net.minecraft.client.gui.DrawableHelper
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
@@ -17,26 +16,37 @@ class WidgetSlot(val index: Int, val inv: MachineItemInventory, val color: Int =
     var overlay: Identifier? = null
     var filter: ((ItemStack) -> Boolean)? = null
 
-    override fun draw(matrices: MatrixStack, x: Int, y: Int) {
+    override fun draw(ctx: DrawContext, x: Int, y: Int) {
+        ctx.matrices.push()
+        ctx.matrices.translate(0.0, 0.0, 20.0)
         if (slotTexture != null) {
-            RenderSystem.setShaderTexture(0, slotTexture)
-
             val (alpha, red, green, blue) = argb(color)
-            RenderSystem.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
             if (!big) {
-                DrawableHelper.drawTexture(matrices, x - (width - 18) / 2, y - (height - 18) / 2, 0f, 0f, width, height, width, height)
+
+                ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
+                ctx.drawTexture(slotTexture, x - (width - 18) / 2, y - (height - 18) / 2, 0f, 0f, width, height, width, height)
             } else {
-                DrawableHelper.drawTexture(matrices, x - 6, y - 6, 0f, 0f, 30, 30, 30, 30)
+                ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
+                ctx.drawTexture(slotTexture, x - 6, y - 6, 0f, 0f, 30, 30, 30, 30)
             }
         }
 
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
+        ctx.setShaderColor(1f, 1f, 1f, 1f)
 
         if (overlay != null && inv[index].isEmpty()) {
-            RenderSystem.setShaderTexture(0, overlay)
-            DrawableHelper.drawTexture(matrices, x + 1, y + 1, 0f, 0f, 16, 16, 16, 16)
+            ctx.drawTexture(overlay, x + 1, y + 1, 0f, 0f, 16, 16, 16, 16)
         }
+        ctx.matrices.pop()
     }
+
+    override fun drawHighlight(ctx: DrawContext, x: Int, y: Int, width: Int, height: Int) {
+        if (!big)
+            super.drawHighlight(ctx, x- (width - 18) / 2, y- (height - 18) / 2, width, height)
+        else
+            super.drawHighlight(ctx, x - 6, y - 6, 30, 30)
+    }
+
+
 
     override fun validate(handler: MachineScreenHandler) {
         handler.addSlot0(MachineSlot(inv, index, x + 1, y + 1, filter))

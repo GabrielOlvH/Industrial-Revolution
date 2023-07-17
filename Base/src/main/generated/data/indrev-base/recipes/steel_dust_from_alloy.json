@@ -1,0 +1,24 @@
+{
+  "type": "indrev-base:alloy_smelter",
+  "cost": 1,
+  "input": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "tag": "c:iron_dusts"
+    },
+    {
+      "chance": 1.0,
+      "count": 1,
+      "tag": "c:coal_dusts"
+    }
+  ],
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 2,
+      "item": "indrev-base:steel_dust"
+    }
+  ],
+  "ticks": 200
+}

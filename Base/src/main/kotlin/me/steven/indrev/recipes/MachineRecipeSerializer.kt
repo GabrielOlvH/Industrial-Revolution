@@ -5,15 +5,15 @@ import me.steven.indrev.utils.bucket
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.RecipeSerializer
+import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
 import net.minecraft.util.JsonHelper
-import net.minecraft.util.registry.Registry
 
 class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
 
     override fun read(id: Identifier, json: JsonObject): MachineRecipe {
         val typeId = json.get("type").asString
-        val type = Registry.RECIPE_TYPE.get(Identifier(typeId))!!
+        val type = Registries.RECIPE_TYPE.get(Identifier(typeId))!!
         val itemInput = JsonHelper.getArray(json, "input", null)?.map { elem ->
             val obj = elem.asJsonObject
             val ingredient = Ingredient.fromJson(obj)
@@ -25,7 +25,7 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
         val itemOutput = JsonHelper.getArray(json, "output", null)?.map { elem ->
             val obj = elem.asJsonObject
             val itemId = obj.get("item").asString
-            val item = Registry.ITEM.get(Identifier(itemId))
+            val item = Registries.ITEM.get(Identifier(itemId))
             val count = JsonHelper.getInt(obj, "count", 1)
             val chance = JsonHelper.getDouble(obj, "chance", 1.0)
             MachineRecipe.RecipeItemOutput(item, count, chance)
@@ -34,7 +34,7 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
         val fluidInput = JsonHelper.getArray(json, "fluidInput", null)?.map { elem ->
             val obj = elem.asJsonObject
             val fluidId = obj.get("fluid").asString
-            val fluid = Registry.FLUID.get(Identifier(fluidId))
+            val fluid = Registries.FLUID.get(Identifier(fluidId))
             val amount = JsonHelper.getLong(obj, "amount", bucket)
             val chance = JsonHelper.getDouble(obj, "chance", 1.0)
             MachineRecipe.RecipeFluidInput(fluid, amount, chance)
@@ -43,7 +43,7 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
         val fluidOutput = JsonHelper.getArray(json, "fluidOutput", null)?.map { elem ->
             val obj = elem.asJsonObject
             val fluidId = obj.get("fluid").asString
-            val fluid = Registry.FLUID.get(Identifier(fluidId))
+            val fluid = Registries.FLUID.get(Identifier(fluidId))
             val amount = JsonHelper.getLong(obj, "amount", bucket)
             val chance = JsonHelper.getDouble(obj, "chance", 1.0)
             MachineRecipe.RecipeFluidOutput(fluid, amount, chance)
@@ -56,7 +56,7 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
     }
 
     override fun write(buf: PacketByteBuf, recipe: MachineRecipe) {
-        buf.writeIdentifier(Registry.RECIPE_TYPE.getId(recipe.type))
+        buf.writeIdentifier(Registries.RECIPE_TYPE.getId(recipe.type))
 
         buf.writeInt(recipe.itemInput.size)
         recipe.itemInput.forEach { input ->
@@ -67,21 +67,21 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
 
         buf.writeInt(recipe.itemOutput.size)
         recipe.itemOutput.forEach { output ->
-            buf.writeIdentifier(Registry.ITEM.getId(output.item))
+            buf.writeIdentifier(Registries.ITEM.getId(output.item))
             buf.writeInt(output.count)
             buf.writeDouble(output.chance)
         }
 
         buf.writeInt(recipe.fluidInput.size)
         recipe.fluidInput.forEach { input ->
-            buf.writeIdentifier(Registry.FLUID.getId(input.fluid))
+            buf.writeIdentifier(Registries.FLUID.getId(input.fluid))
             buf.writeLong(input.amount)
             buf.writeDouble(input.chance)
         }
 
         buf.writeInt(recipe.fluidOutput.size)
         recipe.fluidOutput.forEach { output ->
-            buf.writeIdentifier(Registry.FLUID.getId(output.fluid))
+            buf.writeIdentifier(Registries.FLUID.getId(output.fluid))
             buf.writeLong(output.amount)
             buf.writeDouble(output.chance)
         }
@@ -92,7 +92,7 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
 
 
     override fun read(id: Identifier, buf: PacketByteBuf): MachineRecipe {
-        val type = Registry.RECIPE_TYPE.getOrEmpty(buf.readIdentifier()).orElseThrow()
+        val type = Registries.RECIPE_TYPE.getOrEmpty(buf.readIdentifier()).orElseThrow()
 
         val inputItems = (0 until buf.readInt()).map {
             val ing = Ingredient.fromPacket(buf)
@@ -102,21 +102,21 @@ class MachineRecipeSerializer : RecipeSerializer<MachineRecipe> {
         }.toTypedArray()
 
         val outputItems = (0 until buf.readInt()).map {
-            val item = Registry.ITEM.get(buf.readIdentifier())
+            val item = Registries.ITEM.get(buf.readIdentifier())
             val count = buf.readInt()
             val chance = buf.readDouble()
             MachineRecipe.RecipeItemOutput(item, count, chance)
         }.toTypedArray()
 
         val inputFluids = (0 until buf.readInt()).map {
-            val fluid = Registry.FLUID.get(buf.readIdentifier())
+            val fluid = Registries.FLUID.get(buf.readIdentifier())
             val count = buf.readLong()
             val chance = buf.readDouble()
             MachineRecipe.RecipeFluidInput(fluid, count, chance)
         }.toTypedArray()
 
         val outputFluids = (0 until buf.readInt()).map {
-            val fluid = Registry.FLUID.get(buf.readIdentifier())
+            val fluid = Registries.FLUID.get(buf.readIdentifier())
             val count = buf.readLong()
             val chance = buf.readDouble()
             MachineRecipe.RecipeFluidOutput(fluid, count, chance)

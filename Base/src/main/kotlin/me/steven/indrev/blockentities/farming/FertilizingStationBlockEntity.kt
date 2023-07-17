@@ -49,7 +49,7 @@ class FertilizingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarm
                 val state = world!!.getBlockState(pos)
                 val block = state.block
                 if (block is Fertilizable && block.canGrow(world, world!!.random, pos, state)) {
-                    if (!useEnergy(1)) break
+                    if (!useEnergy(1, troubleshooter)) break
                     block.grow(world as ServerWorld, world!!.random, pos, state)
                     boneMeal.decrement(1)
                     actions--

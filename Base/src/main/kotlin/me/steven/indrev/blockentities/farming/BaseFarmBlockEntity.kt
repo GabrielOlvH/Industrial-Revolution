@@ -4,12 +4,14 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.items.RangeCardItem
+import me.steven.indrev.utils.Troubleshooter
 import me.steven.indrev.utils.tx
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.minecraft.block.BlockState
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.context.LootContext
+import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
@@ -23,9 +25,17 @@ abstract class BaseFarmBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, 
     : MachineBlockEntity<T>(type, pos, state) {
 
     var renderWorkingArea = false
+    var troubleshooter: Troubleshooter = properties.sync(Troubleshooter(TROUBLESHOOTER_CODE_ID))
 
+    protected fun inventoryUpdate() {
+        markDirty()
+        if (troubleshooter.contains(Troubleshooter.NO_SPACE) && inventory.parts.all { it.amount <= it.capacity })
+            troubleshooter.solve(Troubleshooter.NO_SPACE)
+    }
     fun getRange(): Int {
-        return (inventory[0].resource.item as? RangeCardItem)?.range ?: 0
+        val r = (inventory[0].resource.item as? RangeCardItem)?.range ?: 0
+        troubleshooter.test(Troubleshooter.NO_RANGE, r != 0)
+        return r
     }
 
     open fun getRenderColor() = 0xFF0000
@@ -39,20 +49,26 @@ abstract class BaseFarmBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, 
     }
 
     protected fun insertLoot(state: BlockState, pos: BlockPos, stack: ItemStack, outSlots: IntArray) {
-        val ctx = LootContext.Builder(world as ServerWorld)
-            .parameter(LootContextParameters.BLOCK_STATE, state)
-            .parameter(LootContextParameters.ORIGIN, Vec3d(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()))
-            .parameter(LootContextParameters.TOOL, stack)
-            .build(LootContextTypes.BLOCK)
         tx { tx ->
-            world!!.server!!.lootManager.getTable(state.block.lootTableId).generateLoot(ctx) { stack ->
+            world!!.server!!.lootManager.getLootTable(state.block.lootTableId).generateLoot(
+                LootContextParameterSet.Builder(world as ServerWorld)
+                    .add(LootContextParameters.BLOCK_STATE, state)
+                    .add(LootContextParameters.ORIGIN, Vec3d(pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()))
+                    .add(LootContextParameters.TOOL, stack)
+                    .build(LootContextTypes.BLOCK)
+            ) { stack ->
                 val inserted = inventory.insert(outSlots, ItemVariant.of(stack), stack.count.toLong(), tx)
                 if (inserted < stack.count) {
-                    stack.decrement(inserted.toInt())
-                    ItemScatterer.spawn(world, pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble(), stack)
+                    val overflowed = inventory.insertOverflow(outSlots, ItemVariant.of(stack), stack.count.toLong() - inserted, tx)
+                    if (overflowed)
+                        troubleshooter.offer(Troubleshooter.NO_SPACE)
                 }
             }
             tx.commit()
         }
+    }
+
+    companion object {
+        const val TROUBLESHOOTER_CODE_ID = 3
     }
 }

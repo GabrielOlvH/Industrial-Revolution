@@ -11,8 +11,9 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
+import net.minecraft.registry.Registries
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
+import net.minecraft.registry.Registry
 
 const val MOD_ID = "indrev-transportation"
 
@@ -47,34 +48,34 @@ val FLUID_PIPE_MK4_BLOCK_ITEM = BlockItem(FLUID_PIPE_MK4_BLOCK, Item.Settings())
 val PIPE_BLOCK_ENTITY = FabricBlockEntityTypeBuilder.create(::PipeBlockEntity, ITEM_PIPE_MK1_BLOCK, ITEM_PIPE_MK2_BLOCK, ITEM_PIPE_MK3_BLOCK, ITEM_PIPE_MK4_BLOCK, CABLE_MK1_BLOCK, CABLE_MK2_BLOCK, CABLE_MK3_BLOCK, CABLE_MK4_BLOCK, FLUID_PIPE_MK1_BLOCK, FLUID_PIPE_MK2_BLOCK, FLUID_PIPE_MK3_BLOCK, FLUID_PIPE_MK4_BLOCK).build()
 
 fun init() {
-    Registry.register(Registry.BLOCK_ENTITY_TYPE, Identifier(MOD_ID, "pipe"), PIPE_BLOCK_ENTITY)
+    Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier(MOD_ID, "pipe"), PIPE_BLOCK_ENTITY)
 
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "item_pipe_mk1"), ITEM_PIPE_MK1_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "item_pipe_mk1"), ITEM_PIPE_MK1_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "item_pipe_mk2"), ITEM_PIPE_MK2_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "item_pipe_mk2"), ITEM_PIPE_MK2_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "item_pipe_mk3"), ITEM_PIPE_MK3_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "item_pipe_mk3"), ITEM_PIPE_MK3_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "item_pipe_mk4"), ITEM_PIPE_MK4_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "item_pipe_mk4"), ITEM_PIPE_MK4_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "item_pipe_mk1"), ITEM_PIPE_MK1_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "item_pipe_mk1"), ITEM_PIPE_MK1_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "item_pipe_mk2"), ITEM_PIPE_MK2_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "item_pipe_mk2"), ITEM_PIPE_MK2_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "item_pipe_mk3"), ITEM_PIPE_MK3_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "item_pipe_mk3"), ITEM_PIPE_MK3_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "item_pipe_mk4"), ITEM_PIPE_MK4_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "item_pipe_mk4"), ITEM_PIPE_MK4_BLOCK_ITEM)
 
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "cable_mk1"), CABLE_MK1_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "cable_mk1"), CABLE_MK1_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "cable_mk2"), CABLE_MK2_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "cable_mk2"), CABLE_MK2_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "cable_mk3"), CABLE_MK3_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "cable_mk3"), CABLE_MK3_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "cable_mk4"), CABLE_MK4_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "cable_mk4"), CABLE_MK4_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "cable_mk1"), CABLE_MK1_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "cable_mk1"), CABLE_MK1_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "cable_mk2"), CABLE_MK2_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "cable_mk2"), CABLE_MK2_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "cable_mk3"), CABLE_MK3_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "cable_mk3"), CABLE_MK3_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "cable_mk4"), CABLE_MK4_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "cable_mk4"), CABLE_MK4_BLOCK_ITEM)
 
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk1"), FLUID_PIPE_MK1_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "fluid_pipe_mk1"), FLUID_PIPE_MK1_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk2"), FLUID_PIPE_MK2_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "fluid_pipe_mk2"), FLUID_PIPE_MK2_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk3"), FLUID_PIPE_MK3_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "fluid_pipe_mk3"), FLUID_PIPE_MK3_BLOCK_ITEM)
-    Registry.register(Registry.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk4"), FLUID_PIPE_MK4_BLOCK)
-    Registry.register(Registry.ITEM, Identifier(MOD_ID, "fluid_pipe_mk4"), FLUID_PIPE_MK4_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk1"), FLUID_PIPE_MK1_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "fluid_pipe_mk1"), FLUID_PIPE_MK1_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk2"), FLUID_PIPE_MK2_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "fluid_pipe_mk2"), FLUID_PIPE_MK2_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk3"), FLUID_PIPE_MK3_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "fluid_pipe_mk3"), FLUID_PIPE_MK3_BLOCK_ITEM)
+    Registry.register(Registries.BLOCK, Identifier(MOD_ID, "fluid_pipe_mk4"), FLUID_PIPE_MK4_BLOCK)
+    Registry.register(Registries.ITEM, Identifier(MOD_ID, "fluid_pipe_mk4"), FLUID_PIPE_MK4_BLOCK_ITEM)
 
     ServerLifecycleEvents.SERVER_STOPPED.register(ServerEvents)
     ServerTickEvents.START_WORLD_TICK.register(ServerEvents)

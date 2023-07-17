@@ -12,8 +12,8 @@ import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.BlockItem
+import net.minecraft.registry.tag.ItemTags
 import net.minecraft.screen.ScreenHandler
-import net.minecraft.tag.ItemTags
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 
@@ -42,7 +42,7 @@ class PlantingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmBlo
 
             while (queue.hasNext()) {
                 val pos = queue.next()
-                if (world!!.getBlockState(pos).material.isReplaceable && state.canPlaceAt(world, pos)) {
+                if (world!!.getBlockState(pos).isReplaceable && state.canPlaceAt(world, pos)) {
                     if (!useEnergy(1)) break
                     world?.setBlockState(pos, state)
                     saplings.decrement(1)

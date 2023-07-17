@@ -7,9 +7,8 @@ import me.steven.indrev.screens.MACHINE_SCREEN_HANDLER
 import me.steven.indrev.screens.machine.MachineHandledScreen
 import me.steven.indrev.api.Tier
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback
 import net.minecraft.client.gui.screen.ingame.HandledScreens
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.minecraft.screen.PlayerScreenHandler
 
 fun initClient() {
@@ -18,10 +17,10 @@ fun initClient() {
 
     ModelLoadingRegistry.INSTANCE.registerVariantProvider { MachineModelLoader }
     MACHINES.forEach { (_, machine) ->
-        BlockEntityRendererRegistry.register(machine.type) { ctx -> machine.blockEntityRenderer(ctx) }
+        BlockEntityRendererFactories.register(machine.type) { ctx -> machine.blockEntityRenderer(ctx) }
     }
 
-    ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register { _, registry ->
+   /* ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register { _, registry ->
         Tier.values().forEach { t -> registry.register(t.getOverlaySprite().textureId) }
-    }
+    }*/
 }

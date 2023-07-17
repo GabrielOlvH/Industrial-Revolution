@@ -1,5 +1,6 @@
 package me.steven.indrev.transportation.networks.types
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
@@ -16,7 +17,7 @@ class FluidPipeNetwork(world: ServerWorld) : StoragePipeNetwork<FluidVariant>(wo
     override val maximumTransferable: Long = 81_000L
 
     override fun find(world: ServerWorld, pos: BlockPos, direction: Direction): Storage<FluidVariant>? {
-        return apiCache.computeIfAbsent(pos.asLong(), LongFunction {
+        return apiCache.computeIfAbsent(pos.asLong(), Long2ObjectFunction {
             BlockApiCache.create(FluidStorage.SIDED, world, pos)
         }).find(direction)
     }

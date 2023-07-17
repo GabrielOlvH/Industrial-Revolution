@@ -79,7 +79,7 @@ class MachineRecipeProvider(val type: RecipeType<out Recipe<Inventory>>) {
                 recipe.id,
                 recipe.type,
                 recipe.ingredients.map { ing -> MachineRecipe.RecipeItemInput(ing, 1, 1.0) }.toTypedArray(),
-                arrayOf(MachineRecipe.RecipeItemOutput(recipe.output.item, recipe.output.count, 1.0)),
+                arrayOf(MachineRecipe.RecipeItemOutput(recipe.getOutput(null).item, recipe.getOutput(null).count, 1.0)),
                 emptyArray(),
                 emptyArray(),
                 recipe.cookTime,

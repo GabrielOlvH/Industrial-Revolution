@@ -1,0 +1,24 @@
+{
+  "type": "indrev-base:alloy_smelter",
+  "cost": 1,
+  "input": [
+    {
+      "chance": 1.0,
+      "count": 3,
+      "tag": "c:copper_dusts"
+    },
+    {
+      "chance": 1.0,
+      "count": 1,
+      "tag": "c:tin_dusts"
+    }
+  ],
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 4,
+      "item": "indrev-base:bronze_dust"
+    }
+  ],
+  "ticks": 200
+}

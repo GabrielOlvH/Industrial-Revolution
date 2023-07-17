@@ -25,7 +25,7 @@ abstract class MachineInventory<T : TransferVariant<*>, V: MachineInventory.Slot
 
     operator fun get(index: Int): V = if (index < size) parts[index] else error("Out of bounds")
 
-    fun getSide(dir: Direction) = sidedInventories[dir.id]
+    fun getSide(dir: Direction?) = if (dir == null) this else sidedInventories[dir.id]
 
     fun writeNbt(): NbtCompound {
         val inv = NbtList()
@@ -71,9 +71,42 @@ abstract class MachineInventory<T : TransferVariant<*>, V: MachineInventory.Slot
         return amount
     }
 
+    fun insertOverflow(slots: IntArray, resource: T, maxAmount: Long, transaction: TransactionContext): Boolean {
+        StoragePreconditions.notNegative(maxAmount)
+        var amount: Long = 0
+        var overflowed = false
+        for ((index, part) in parts.withIndex()) {
+            if (slots.contains(index)) {
+                amount += part.insertOverflow(resource, maxAmount - amount, transaction)
+                if (part.getAmount() > part.capacity) overflowed = true
+                if (amount == maxAmount) break
+            }
+        }
+
+        return overflowed
+    }
+
     abstract fun exists(): Boolean
 
     abstract class Slot<T : TransferVariant<*>>(val onChange: () -> Unit) : SingleVariantStorage<T>() {
+
+        fun insertOverflow(insertedVariant: T, maxAmount: Long, transaction: TransactionContext?): Long {
+            StoragePreconditions.notBlankNotNegative(insertedVariant, maxAmount)
+            if ((insertedVariant == variant || variant.isBlank) && canInsert(insertedVariant)) {
+                val insertedAmount = maxAmount.coerceAtMost(amount)
+                if (insertedAmount > 0) {
+                    updateSnapshots(transaction)
+                    if (variant.isBlank) {
+                        variant = insertedVariant
+                        amount = insertedAmount
+                    } else {
+                        amount += insertedAmount
+                    }
+                    return insertedAmount
+                }
+            }
+            return 0
+        }
 
         fun isEmpty() = isResourceBlank || amount <= 0
 

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:tungsten_ingot_from_smelting_tungsten_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tungsten_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "indrev-base:tungsten_ore"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_tungsten_ore",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:tungsten_ingot_from_smelting_tungsten_ore"
+    ]
+  },
+  "sends_telemetry_event": false
+}

@@ -96,10 +96,7 @@ abstract class PipeBlock(val tier: Tier) : Block(FabricBlockSettings.copyOf(Bloc
     companion object {
 
         val SHAPE_CACHE: ThreadLocal<Int2ObjectOpenHashMap<VoxelShape>> = ThreadLocal.withInitial {
-            object : Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f) {
-                override fun rehash(newN: Int) {
-                }
-            }
+            Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f)
         }
 
         val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)

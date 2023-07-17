@@ -2,11 +2,13 @@ package me.steven.indrev.screens.machine
 
 import me.steven.indrev.screens.widgets.Widget
 import me.steven.indrev.screens.widgets.WidgetGroup
+import me.steven.indrev.screens.widgets.WidgetSprite
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.screen.ingame.HandledScreen
-import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.text.Text
+import net.minecraft.util.math.MathHelper
 import java.util.*
 import kotlin.math.pow
 
@@ -20,14 +22,23 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
         this.titleX = (this.backgroundWidth / 2) - (MinecraftClient.getInstance().textRenderer.getWidth(this.getTitle())/2) - 8
     }
 
-    override fun drawBackground(matrices: MatrixStack, delta: Float, mouseX: Int, mouseY: Int) {
-        renderBackground(matrices)
-        handler.widgets.forEach { w -> w.draw(matrices, w.x + x, w.y + y) }
+    var lastProgress = 0.0
+
+    override fun drawBackground(ctx: DrawContext, delta: Float, mouseX: Int, mouseY: Int) {
+        renderBackground(ctx)
+           val c1 = 1.70158
+        val c3 = c1 + 1
+        handler.ioConfig.x = 18+(-118 * (1 + c3 * (lastProgress-1).pow(3.0) + c1 * (lastProgress-1).pow(2))).toInt()
+        lastProgress = MathHelper.lerp(delta.toDouble(), lastProgress, handler.openIoConfigAnimationProgress)
+        WidgetSprite(MachineScreenHandler.DEFAULT_BG, 194, 201).draw(ctx, x-8, y-11)
+
+        handler.widgets.forEach { w -> w.drawHighlight(ctx, w.x + x, w.y + y, w.width, w.height) }
+        handler.widgets.forEach { w -> w.draw(ctx, w.x + x, w.y + y) }
     }
 
-    override fun drawForeground(matrices: MatrixStack?, mouseX: Int, mouseY: Int) {
-        textRenderer.draw(matrices, title, titleX.toFloat(), titleY.toFloat(), 0xECECEC)
-        textRenderer.draw(matrices, playerInventoryTitle, playerInventoryTitleX.toFloat(), playerInventoryTitleY.toFloat(), 0xECECEC)
+    override fun drawForeground(ctx: DrawContext, mouseX: Int, mouseY: Int) {
+        ctx.drawText(textRenderer, title, titleX, titleY, 0xECECEC, false)
+        ctx.drawText(textRenderer, playerInventoryTitle, playerInventoryTitleX, playerInventoryTitleY, 0xECECEC, false)
     }
 
     override fun isClickOutsideBounds(mouseX: Double, mouseY: Double, left: Int, top: Int, button: Int): Boolean {
@@ -39,17 +50,16 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
         handler.tick()
     }
 
-    override fun render(matrices: MatrixStack, mouseX: Int, mouseY: Int, delta: Float) {
-        super.render(matrices, mouseX, mouseY, delta)
-        val w = getWidgetAt(handler.widgets.reversed(), mouseX.toDouble(), mouseY.toDouble())
-        val data = w?.tooltipData?.invoke()
-        if (w?.tooltipBuilder != null || data != null) {
+    override fun render(ctx: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
+        super.render(ctx, mouseX, mouseY, delta)
+        val w = handler.widgets.reversed().firstOrNull { w -> isPointWithinBounds(w.x, w.y, w.width, w.height, mouseX.toDouble(), mouseY.toDouble()) }
+        if (w?.tooltipBuilder != null ) {
             val tooltip = mutableListOf<Text>()
             w.tooltipBuilder?.invoke(tooltip)
-            if (tooltip.isNotEmpty() || data != null) renderTooltip(matrices, tooltip, Optional.ofNullable(data), mouseX, mouseY)
+            if (tooltip.isNotEmpty()) ctx.drawTooltip(textRenderer, tooltip,  mouseX, mouseY)
         }
-        w?.drawMouseover(matrices, w.x + x, w.y + y, mouseX, mouseY)
-        drawMouseoverTooltip(matrices, mouseX, mouseY)
+        w?.drawMouseover(ctx, x+w.x, y+w.y, mouseX, mouseY)
+        drawMouseoverTooltip(ctx, mouseX, mouseY)
     }
 
     override fun mouseClicked(mouseX: Double, mouseY: Double, button: Int): Boolean {

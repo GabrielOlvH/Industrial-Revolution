@@ -4,6 +4,7 @@ import me.steven.indrev.api.Tier
 import me.steven.indrev.components.*
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.utils.Directions
+import me.steven.indrev.utils.Troubleshooter
 import me.steven.indrev.utils.Upgrade
 import me.steven.indrev.utils.energyOf
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory
@@ -85,6 +86,7 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
         ticks++
         if (world!!.isClient)
             return
+        if (tier == Tier.CREATIVE) this.energy = capacity
         Direction.values().forEach { dir ->
             if (!connectedEnergyInventories.contains(dir)) return@forEach
             val storage = energyOf(world as ServerWorld, pos, dir)
@@ -135,12 +137,21 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
     }
 
     fun hasEnergy(amount: Long): Boolean {
-        if (energy < amount) return false
-        return true
+        return energy >= amount
     }
 
     fun useEnergy(amount: Long): Boolean {
         if (energy < amount) return false
+        energy -= amount
+        return true
+    }
+
+    fun useEnergy(amount: Long, troubleshooter: Troubleshooter): Boolean {
+        if (energy < amount) {
+            troubleshooter.offer(Troubleshooter.NO_ENERGY)
+            return false
+        }
+        troubleshooter.solve(Troubleshooter.NO_ENERGY)
         energy -= amount
         return true
     }

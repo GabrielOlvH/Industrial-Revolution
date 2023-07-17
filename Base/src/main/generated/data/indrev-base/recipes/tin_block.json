@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    },
+    {
+      "item": "indrev-base:tin_ingot"
+    }
+  ],
+  "result": {
+    "item": "indrev-base:tin_block"
+  }
+}

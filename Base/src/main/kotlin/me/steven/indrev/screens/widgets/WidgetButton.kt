@@ -2,9 +2,8 @@ package me.steven.indrev.screens.widgets
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gui.DrawableHelper
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.sound.PositionedSoundInstance
-import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.sound.SoundEvents
 import net.minecraft.util.Identifier
 
@@ -17,12 +16,11 @@ open class WidgetButton(val icon: Identifier) : Widget() {
     var enabled = true
     var disabledIcon: Identifier? = null
 
-    override fun draw(matrices: MatrixStack, x: Int, y: Int) {
-        RenderSystem.setShaderTexture(0, if (!enabled && disabledIcon != null) disabledIcon else icon)
+    override fun draw(ctx: DrawContext, x: Int, y: Int) {
         RenderSystem.enableBlend()
-        DrawableHelper.drawTexture(matrices, x, y, 0f, 0f, width, height, width, height)
+        ctx.drawTexture(if (!enabled && disabledIcon != null) disabledIcon else icon, x, y, 0f, 0f, width, height, width, height)
         if (!enabled && disabledIcon == null) {
-            DrawableHelper.fill(matrices, x, y, x + width, y + height, 0x99999999.toInt())
+            ctx.fill(x, y, x + width, y + height, 0x99999999.toInt())
         }
     }
 

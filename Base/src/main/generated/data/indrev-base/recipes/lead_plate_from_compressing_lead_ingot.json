@@ -1,0 +1,19 @@
+{
+  "type": "indrev-base:compressor",
+  "cost": 1,
+  "input": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "indrev-base:lead_ingot"
+    }
+  ],
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "indrev-base:lead_plate"
+    }
+  ],
+  "ticks": 200
+}

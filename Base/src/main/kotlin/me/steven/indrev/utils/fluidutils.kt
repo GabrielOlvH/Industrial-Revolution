@@ -1,5 +1,6 @@
 package me.steven.indrev.utils
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectFunction
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
@@ -8,23 +9,23 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage
 import net.minecraft.client.gui.screen.Screen
 import net.minecraft.item.ItemStack
+import net.minecraft.registry.Registries
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.text.Text
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.World
 import java.util.WeakHashMap
 import java.util.function.LongFunction
 
 const val bucket = 81000L
 
-val fluidApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<FluidVariant>, Direction>>>()
+val fluidApiCache = WeakHashMap<World, Long2ObjectOpenHashMap<BlockApiCache<Storage<FluidVariant>, Direction?>>>()
 
 fun fluidStorageOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Storage<FluidVariant>? {
     return fluidApiCache
         .computeIfAbsent(world) { Long2ObjectOpenHashMap() }
-        .computeIfAbsent(blockPos.asLong(), LongFunction { BlockApiCache.create(FluidStorage.SIDED, world, blockPos) })
+        .computeIfAbsent(blockPos.asLong(), Long2ObjectFunction { BlockApiCache.create(FluidStorage.SIDED, world, blockPos) })
         .find(direction)
 }
 
@@ -42,7 +43,7 @@ fun fluidStorageOf(itemStack: ItemStack?): Storage<FluidVariant>? {
 
 fun getFluidTooltip(variant: FluidVariant, amount: Long, capacity: Long): List<Text> {
     val tooltips = mutableListOf<Text>()
-    val id = Registry.BLOCK.getId(variant.fluid.defaultState.blockState.block)
+    val id = Registries.BLOCK.getId(variant.fluid.defaultState.blockState.block)
     val color = FluidRenderHandlerRegistry.INSTANCE.get(variant.fluid)?.getFluidColor(null, null, variant.fluid.defaultState) ?: -1
 
     tooltips.add(Text.translatable("block.${id.namespace}.${id.path}").styled { s -> s.withColor(color) })

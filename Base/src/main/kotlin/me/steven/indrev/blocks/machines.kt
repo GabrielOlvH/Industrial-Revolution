@@ -9,7 +9,6 @@ import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.block.BlockState
-import net.minecraft.block.Material
 import net.minecraft.block.entity.BlockEntityType
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory
 import net.minecraft.client.render.model.UnbakedModel
@@ -41,7 +40,7 @@ val CHOPPING_STATION = createMachine(identifier("chopping_station"), ALL_TIERS, 
 val HARVESTING_STATION = createMachine(identifier("harvesting_station"), ALL_TIERS, ::HarvestingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 
 fun createMachine(id: Identifier, tiers: Array<Tier>, blockEntityProvider: (BlockPos, BlockState) -> MachineBlockEntity<*>, unbakedModelProvider: () -> UnbakedModel, blockEntityRenderer: ( BlockEntityRendererFactory.Context) -> MachineBlockEntityRenderer = { MachineBlockEntityRenderer(it) }): Machine {
-    val block = MachineBlock(blockSettings(Material.METAL), blockEntityProvider)
+    val block = MachineBlock(blockSettings(), blockEntityProvider)
     val blockItems = tiers.map {
         val blockItem = MachineBlockItem(block, it)
         Identifier(id.namespace, "${id.path}_${it.asString}").item(blockItem)

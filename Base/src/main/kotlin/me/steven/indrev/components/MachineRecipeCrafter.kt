@@ -3,6 +3,7 @@ package me.steven.indrev.components
 import me.steven.indrev.blockentities.crafting.CraftingMachineBlockEntity
 import me.steven.indrev.recipes.MachineRecipe
 import me.steven.indrev.recipes.MachineRecipeProvider
+import me.steven.indrev.utils.Troubleshooter
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
 import net.minecraft.client.MinecraftClient
@@ -17,6 +18,10 @@ class MachineRecipeCrafter(override val syncId: Int, val provider: MachineRecipe
     constructor(syncId: Int, provider: MachineRecipeProvider, inputSlots: IntArray, outputSlots: IntArray) : this(syncId, provider, inputSlots, outputSlots, intArrayOf(), intArrayOf())
 
     override var isDirty: Boolean = false
+        get() {
+            if (troubleshooter.isDirty) return true
+            return field
+        }
 
     var processTime = 0.0
         set(value) {
@@ -30,16 +35,20 @@ class MachineRecipeCrafter(override val syncId: Int, val provider: MachineRecipe
         }
     var currentRecipe: MachineRecipe? = null
 
+    var troubleshooter: Troubleshooter = Troubleshooter(-1)
+
     fun tick(blockEntity: CraftingMachineBlockEntity, recipeManager: RecipeManager) {
         val inventory = blockEntity.inventory
         val fluidInventory = blockEntity.fluidInventory
         blockEntity.temperatureController.heating = false
-        if (currentRecipe != null && blockEntity.useEnergy(currentRecipe!!.cost)) {
-            processTime -= blockEntity.getProcessingSpeed()
-            blockEntity.temperatureController.heating = true
-            if (processTime <= 0)
-                finishRecipe(inventory, fluidInventory, recipeManager)
-            blockEntity.idle = false
+        if (currentRecipe != null) {
+            if (blockEntity.useEnergy(currentRecipe!!.cost, troubleshooter)) {
+                processTime -= blockEntity.getProcessingSpeed()
+                blockEntity.temperatureController.heating = true
+                if (processTime <= 0)
+                    finishRecipe(inventory, fluidInventory, recipeManager)
+                blockEntity.idle = false
+            }
         } else blockEntity.idle = true
     }
 
@@ -68,7 +77,8 @@ class MachineRecipeCrafter(override val syncId: Int, val provider: MachineRecipe
         outputSlots.forEachIndexed { index, slotIndex ->
             if (index >= recipe.itemOutput.size) return@forEachIndexed
             val slot = inventory[slotIndex]
-            if (!slot.isEmpty() && (slot.isOf(recipe.itemOutput[index].item) && slot.capacity - slot.amount < recipe.itemOutput[index].count)) {
+            if (!slot.isEmpty() && (!slot.isOf(recipe.itemOutput[index].item) || slot.capacity - slot.amount < recipe.itemOutput[index].count)) {
+                troubleshooter.offer(Troubleshooter.NO_SPACE)
                 return false
             }
         }
@@ -76,11 +86,13 @@ class MachineRecipeCrafter(override val syncId: Int, val provider: MachineRecipe
         fluidOutputSlots.forEachIndexed { index, slotIndex ->
             if (index >= recipe.fluidOutput.size) return@forEachIndexed
             val slot = fluidInventory[slotIndex]
-            if (!slot.isEmpty() && (slot.resource.isOf(recipe.fluidOutput[index].fluid) && slot.capacity - slot.amount < recipe.itemOutput[index].count)) {
+            if (!slot.isEmpty() && (!slot.resource.isOf(recipe.fluidOutput[index].fluid) || slot.capacity - slot.amount < recipe.itemOutput[index].count)) {
+                troubleshooter.offer(Troubleshooter.NO_SPACE)
                 return false
             }
         }
 
+        troubleshooter.solve(Troubleshooter.NO_SPACE)
         return true
     }
 
@@ -149,12 +161,14 @@ class MachineRecipeCrafter(override val syncId: Int, val provider: MachineRecipe
         buf.writeDouble(processTime)
         buf.writeInt(totalProcessTime)
         buf.writeString(currentRecipe?.id?.toString() ?: "")
+        troubleshooter.toPacket(buf)
     }
 
     override fun fromPacket(buf: PacketByteBuf) {
         processTime = buf.readDouble()
         totalProcessTime = buf.readInt()
         val recipeId = buf.readString()
+        troubleshooter.fromPacket(buf)
         currentRecipe = when {
             recipeId.isNotEmpty() -> {
                 val recipeManager = MinecraftClient.getInstance().networkHandler?.recipeManager

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "minecraft:tin_dust_from_pulverizing_tin_plate"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_plate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "indrev-base:tin_plate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_tin_plate",
+      "has_the_recipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "minecraft:tin_dust_from_pulverizing_tin_plate"
+    ]
+  },
+  "sends_telemetry_event": true
+}

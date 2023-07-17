@@ -11,9 +11,9 @@ import me.steven.indrev.packets.common.UpdateMachineIOPacket
 import me.steven.indrev.screens.MACHINE_SCREEN_HANDLER
 import me.steven.indrev.screens.widgets.*
 import me.steven.indrev.utils.*
-import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
-import net.minecraft.client.util.math.MatrixStack
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ItemStack
@@ -37,9 +37,9 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
     }
 
     private var animationState = AnimationState.CLOSED
-    private var openIoConfigAnimationProgress = 0.0
+    var openIoConfigAnimationProgress = 0.0
     private val openIoConfigButton = WidgetButton(identifier("textures/gui/icons/open_io_screen_icon.png"))
-    private val ioConfig: WidgetGroup
+    val ioConfig: WidgetGroup
     private val ioButtonsWidgets = mutableListOf<Widget>()
     private val typeWidgets = mutableListOf<WidgetIOConfigMode>()
     private var config = blockEntity.inventory.sidedConfiguration
@@ -50,7 +50,13 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
     init {
         val ioWidgets = mutableListOf<Widget>()
         ioWidgets.add(WidgetSprite(identifier("textures/gui/small_gui.png"), 88, 132))
-        ioConfig = WidgetGroup(ioWidgets)
+        ioConfig = object : WidgetGroup(ioWidgets) {
+            override fun draw(ctx: DrawContext, x: Int, y: Int) {
+                ctx.enableScissor(0, 0, x - this.x - 4,  1000)
+                super.draw(ctx, x, y)
+                ctx.disableScissor()
+            }
+        }
 
         openIoConfigButton.tooltipBuilder = { tooltip ->
             if (openIoConfigButton.enabled) {
@@ -65,7 +71,7 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
         MachineSide.values().forEach { side ->
             val dir = side.direction
             val button = object : WidgetButton(identifier("textures/block/electric_furnace.png")) {
-                override fun draw(matrices: MatrixStack, x: Int, y: Int) {
+                override fun draw(ctx: DrawContext, x: Int, y: Int) {
                     val (a, r, g, b) = argb(
                         when {
                             config.getMode(dir).allowInput -> INPUT_COLOR
@@ -75,7 +81,7 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
                     )
                     RenderSystem.setShaderColor(r / 255f, g / 255f, b / 255f, a / 255f)
                     RenderSystem.setShaderTexture(0, icon)
-                    drawTexturedQuad(matrices.peek().positionMatrix, x, x + width, y, y + height, 0, side.u1/16f, side.u2/16f, side.v1/16f, side.v2/16f)
+                    drawTexturedQuad(ctx.matrices.peek().positionMatrix, x, x + width, y, y + height, 0, side.u1/16f, side.u2/16f, side.v1/16f, side.v2/16f)
                     RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
                 }
             }
@@ -169,12 +175,14 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
 
     fun addDefaultBackground() = add(WidgetSprite(DEFAULT_BG, 194, 201), -8, -11)
 
-    fun addEnergyBar(blockEntity: MachineBlockEntity<*>) {
-        add(WidgetBar.energyBar({ blockEntity.energy }, { blockEntity.capacity }), grid(8), grid(0) - 4)
+    fun addEnergyBar(blockEntity: MachineBlockEntity<*>, highlight: () -> Boolean = { false }) {
+        val w = WidgetBar.energyBar({ blockEntity.energy }, { blockEntity.capacity })
+        w.highlight = highlight
+        add(w, grid(8), grid(0) - 4)
     }
 
     fun addProcessBar(machine: CraftingMachineBlockEntity, crafter: MachineRecipeCrafter, text: MutableText, x: Int, y: Int) {
-        add(WidgetBar.processBar({ crafter.processTime.toInt() }, { crafter.totalProcessTime }, { crafter.currentRecipe }, text, machine), x, y)
+        add(WidgetBar.processBar({ crafter.processTime.toInt() }, { crafter.totalProcessTime }, { crafter.currentRecipe }, crafter.troubleshooter, text, machine), x, y)
     }
 
     fun addUpgradeSlots(upgrades: MachineUpgrades, x: Int = 195-12, y: Int = 0) {
@@ -195,11 +203,12 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
 
     fun addRangeCardSlot(blockEntity: BaseFarmBlockEntity<*>, x: Int = 195-12, y: Int = 90) {
         val widgets = mutableListOf<Widget>()
-        widgets.add(WidgetSprite(identifier("textures/gui/range_card_slot.png"), 37, 43))
+        widgets.add(WidgetSprite(identifier("textures/gui/range_card_panel.png"), 37, 43))
 
         val slotWidget = WidgetSlot(0, blockEntity.inventory, -1, false)
+        slotWidget.highlight = { blockEntity.troubleshooter.contains(Troubleshooter.NO_RANGE) }
         slotWidget.filter = { stack -> stack.item is RangeCardItem }
-        slotWidget.slotTexture = null
+        slotWidget.slotTexture = identifier("textures/gui/range_card_slot.png")
         slotWidget.x = 12
         slotWidget.y = 7
         slotWidget.width = 18
@@ -288,7 +297,7 @@ open class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventor
         autoOutputCheckbox.checked = config.autoOutput
     }
 
-    override fun transferSlot(player: PlayerEntity, index: Int): ItemStack {
+    override fun quickMove(player: PlayerEntity, index: Int): ItemStack {
         var itemStack = ItemStack.EMPTY
         val slot = slots[index]
         if (slot.hasStack()) {

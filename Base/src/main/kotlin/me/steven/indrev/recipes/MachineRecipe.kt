@@ -8,6 +8,7 @@ import net.minecraft.recipe.Ingredient
 import net.minecraft.recipe.Recipe
 import net.minecraft.recipe.RecipeSerializer
 import net.minecraft.recipe.RecipeType
+import net.minecraft.registry.DynamicRegistryManager
 import net.minecraft.util.Identifier
 import net.minecraft.world.World
 
@@ -24,13 +25,13 @@ open class MachineRecipe(
 
     override fun matches(inventory: Inventory, world: World): Boolean = throw UnsupportedOperationException()
 
-    override fun craft(inventory: Inventory?): ItemStack = throw UnsupportedOperationException()
+    override fun craft(inventory: Inventory?, registryManager: DynamicRegistryManager?): ItemStack = throw UnsupportedOperationException()
 
     override fun fits(width: Int, height: Int): Boolean = throw UnsupportedOperationException()
 
     override fun isIgnoredInRecipeBook(): Boolean = true
 
-    override fun getOutput(): ItemStack {
+    override fun getOutput(registryManager: DynamicRegistryManager?): ItemStack {
         return ItemStack(itemOutput[0].item, itemOutput[0].count)
     }
 

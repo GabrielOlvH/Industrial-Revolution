@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "indrev-base:lead_ore",
+    "indrev-base:deepslate_lead_ore"
+  ]
+}

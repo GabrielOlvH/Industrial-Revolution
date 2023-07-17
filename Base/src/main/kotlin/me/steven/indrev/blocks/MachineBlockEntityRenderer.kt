@@ -14,7 +14,7 @@ import net.minecraft.client.render.model.BakedQuad
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.Vec3f
+import net.minecraft.util.math.RotationAxis
 
 open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactory.Context) : BlockEntityRenderer<MachineBlockEntity<*>> {
     private var model: MachineBakedModel? = null
@@ -39,7 +39,7 @@ open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactor
             if (facing != Direction.NORTH) {
                 matrices.push()
                 matrices.translate(0.5, 0.5, 0.5)
-                matrices.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(facing.opposite.asRotation()))
+                matrices.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(facing.opposite.asRotation()))
                 matrices.translate(-0.5, -0.5, -0.5)
             }
 

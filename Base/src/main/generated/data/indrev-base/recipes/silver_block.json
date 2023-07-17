@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    },
+    {
+      "item": "indrev-base:silver_ingot"
+    }
+  ],
+  "result": {
+    "item": "indrev-base:silver_block"
+  }
+}

@@ -39,7 +39,7 @@ class HarvestingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmB
             while (queue.hasNext() && actions > 0) {
                 val pos = queue.next()
                 val state = world!!.getBlockState(pos)
-                if (state.block is PlantBlock && useEnergy(2)) {
+                if (state.block is PlantBlock && useEnergy(2, troubleshooter)) {
                     world!!.removeBlock(pos, false)
                     insertLoot(state, pos, ItemStack.EMPTY, OUTPUT_SLOTS)
                 }

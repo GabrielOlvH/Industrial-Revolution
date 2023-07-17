@@ -25,7 +25,7 @@ abstract class PipeNetwork<T>(val world: ServerWorld) {
 
     private var cachedPacket: PacketByteBuf? = null
 
-    val apiCache = Long2ObjectOpenHashMap<BlockApiCache<T, Direction>>()
+    val apiCache = Long2ObjectOpenHashMap<BlockApiCache<T, Direction?>>()
 
     var tier = Tier.MK1
 

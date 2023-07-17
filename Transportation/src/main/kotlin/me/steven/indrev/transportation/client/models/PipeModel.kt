@@ -1,7 +1,6 @@
 package me.steven.indrev.transportation.client.models
 
 import com.mojang.datafixers.util.Pair
-import me.steven.indrev.transportation.blocks.PipeBlock
 import me.steven.indrev.transportation.networks.ClientPipeNetworkData
 import me.steven.indrev.transportation.utils.PipeConnections
 import net.fabricmc.fabric.api.renderer.v1.Renderer
@@ -10,7 +9,6 @@ import net.fabricmc.fabric.api.renderer.v1.material.BlendMode
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder
-import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext
 import net.minecraft.block.BlockState
@@ -39,7 +37,7 @@ open class PipeModel(
     lateinit var transform: ModelTransformation
 
     override fun bake(
-        loader: ModelLoader,
+        baker: Baker,
         textureGetter: Function<SpriteIdentifier, Sprite>,
         rotationContainer: ModelBakeSettings?,
         modelId: Identifier?
@@ -47,21 +45,21 @@ open class PipeModel(
         spriteIdCollection.forEachIndexed { idx, spriteIdentifier ->
             spriteArray[idx] = textureGetter.apply(spriteIdentifier)
         }
-        val center = loader.getOrLoadModel(modelIdCollection[0]).bake(loader, textureGetter, rotationContainer, modelId)!!
+        val center = baker.getOrLoadModel(modelIdCollection[0]).bake(baker, textureGetter, rotationContainer, modelId)!!
         meshArray[0] = buildDefaultMesh(center)
         transform = center.transformation
-        val sideModel = loader.getOrLoadModel(modelIdCollection[1])
-        buildRotatedMeshes(meshArray, sideModel, loader, textureGetter, modelId)
+        val sideModel = baker.getOrLoadModel(modelIdCollection[1])
+        buildRotatedMeshes(meshArray, sideModel, baker, textureGetter, modelId)
         return this
     }
 
-    fun buildRotatedMeshes(array: Array<Mesh?>, model: UnbakedModel, loader: ModelLoader, textureGetter: Function<SpriteIdentifier, Sprite>, modelId: Identifier?) {
-        array[1] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
-        array[2] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
-        array[3] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y180, modelId)!!) // SOUTH
-        array[4] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X270_Y270, modelId)!!) // WEST
-        array[5] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
-        array[6] = buildDefaultMesh(model.bake(loader, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
+    fun buildRotatedMeshes(array: Array<Mesh?>, model: UnbakedModel, baker: Baker, textureGetter: Function<SpriteIdentifier, Sprite>, modelId: Identifier?) {
+        array[1] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X270_Y0, modelId)!!) // NORTH
+        array[2] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X270_Y90, modelId)!!) // EAST
+        array[3] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X270_Y180, modelId)!!) // SOUTH
+        array[4] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X270_Y270, modelId)!!) // WEST
+        array[5] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X180_Y0, modelId)!!) // UP
+        array[6] = buildDefaultMesh(model.bake(baker, textureGetter, ModelRotation.X0_Y0, modelId)!!) // DOWN
     }
 
     fun buildDefaultMesh(model: BakedModel): Mesh {
@@ -77,10 +75,13 @@ open class PipeModel(
 
     override fun getModelDependencies(): MutableCollection<Identifier> = modelIdCollection
 
-    override fun getTextureDependencies(
+   /* override fun getTextureDependencies(
         unbakedModelGetter: Function<Identifier, UnbakedModel>?,
         unresolvedTextureReferences: MutableSet<Pair<String, String>>?
-    ): MutableCollection<SpriteIdentifier> = spriteIdCollection
+    ): MutableCollection<SpriteIdentifier> = spriteIdCollection*/
+
+    override fun setParents(modelLoader: Function<Identifier, UnbakedModel>?) {
+    }
 
     override fun getQuads(state: BlockState?, face: Direction?, random: Random?): MutableList<BakedQuad> = mutableListOf()
 

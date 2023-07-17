@@ -1,0 +1,19 @@
+{
+  "type": "indrev-base:pulverizer",
+  "cost": 1,
+  "input": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "minecraft:coal"
+    }
+  ],
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "indrev-base:coal_dust"
+    }
+  ],
+  "ticks": 200
+}

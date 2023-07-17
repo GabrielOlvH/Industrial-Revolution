@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.0,
+  "group": "silver_dust",
+  "ingredient": {
+    "item": "indrev-base:silver_dust"
+  },
+  "result": "indrev-base:silver_ingot"
+}

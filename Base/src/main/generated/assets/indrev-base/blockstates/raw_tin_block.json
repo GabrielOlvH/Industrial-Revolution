@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "indrev-base:block/raw_tin_block"
+    }
+  }
+}

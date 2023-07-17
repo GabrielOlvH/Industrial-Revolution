@@ -15,16 +15,19 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.Item
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
+import net.minecraft.registry.Registries
 import net.minecraft.state.StateManager
+import net.minecraft.state.property.DirectionProperty
 import net.minecraft.state.property.Properties
+import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
+import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.random.Random
-import net.minecraft.util.registry.Registry
 import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
@@ -42,7 +45,7 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
 
         EnergyStorage.SIDED.registerForBlocks({ _, _, _, be, dir ->
             val blockEntity = be as? MachineBlockEntity<*> ?: return@registerForBlocks null
-            return@registerForBlocks blockEntity.energyInventories[dir.id]
+            return@registerForBlocks blockEntity.energyInventories[dir!!.id]
         }, this)
 
         this.defaultState = this.stateManager.defaultState.with(FACING, Direction.NORTH)
@@ -52,14 +55,14 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
 
     override fun asItem(): Item {
         if (cachedItems == null) {
-            cachedItems = MACHINES[Registry.BLOCK.getId(this)]?.blockItems
+            cachedItems = MACHINES[Registries.BLOCK.getId(this)]?.blockItems
         }
         return cachedItems!![0]
     }
 
     override fun getPickStack(world: BlockView, pos: BlockPos, state: BlockState): ItemStack {
         if (cachedItems == null) {
-            cachedItems = MACHINES[Registry.BLOCK.getId(this)]?.blockItems
+            cachedItems = MACHINES[Registries.BLOCK.getId(this)]?.blockItems
         }
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ItemStack(cachedItems!![0])
         return ItemStack(cachedItems!![blockEntity.tier.ordinal % cachedItems!!.size])
@@ -70,7 +73,7 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
     }
 
     override fun getPlacementState(ctx: ItemPlacementContext): BlockState? {
-        return defaultState.with(FACING, ctx.playerFacing.opposite)
+        return defaultState.with(FACING, ctx.horizontalPlayerFacing.opposite)
     }
 
     override fun onUse(
@@ -143,6 +146,6 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
     }
 
     companion object {
-        val FACING = Properties.HORIZONTAL_FACING
+        val FACING: DirectionProperty = Properties.HORIZONTAL_FACING
     }
 }

@@ -1,6 +1,7 @@
 package me.steven.indrev.blockentities.crafting
 
 import me.steven.indrev.blocks.ELECTRIC_FURNACE
+import me.steven.indrev.blocks.MachineBlock
 import me.steven.indrev.components.*
 import me.steven.indrev.config.CraftingMachineConfig
 import me.steven.indrev.config.machinesConfig
@@ -10,6 +11,7 @@ import me.steven.indrev.screens.machine.grid
 import me.steven.indrev.screens.widgets.WidgetSlot
 import me.steven.indrev.utils.INPUT_COLOR
 import me.steven.indrev.utils.OUTPUT_COLOR
+import me.steven.indrev.utils.Troubleshooter
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
@@ -31,13 +33,16 @@ class ElectricFurnaceBlockEntity(pos: BlockPos, state: BlockState) : CraftingMac
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
         handler.addDefaultBackground()
-        handler.addEnergyBar(this)
+        handler.addEnergyBar(this) { crafters[0].troubleshooter.contains(Troubleshooter.NO_ENERGY) }
         handler.addTemperatureBar(temperatureController)
         handler.addUpgradeSlots(upgrades)
 
         handler.add(WidgetSlot(0, inventory, INPUT_COLOR), grid(2) + 4, grid(1) + 12)
         handler.addProcessBar(this, crafters[0], Text.literal("Smelting"), grid(3) + 8 + 6, grid(1) + 12)
-        handler.add(WidgetSlot(1, inventory, OUTPUT_COLOR, true), grid(5) + 9, grid(1) + 12)
+        val outSlot = WidgetSlot(1, inventory, OUTPUT_COLOR, true)
+        outSlot.highlight = { crafters[0].troubleshooter.contains(Troubleshooter.NO_SPACE) }
+        handler.add(outSlot, grid(5) + 9, grid(1) + 12)
+
 
         handler.addPlayerInventorySlots()
         return handler

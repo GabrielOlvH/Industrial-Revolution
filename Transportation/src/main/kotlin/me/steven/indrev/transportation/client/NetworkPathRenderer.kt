@@ -8,7 +8,7 @@ import net.minecraft.client.MinecraftClient
 import net.minecraft.client.render.*
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.ColorHelper
-import net.minecraft.util.math.Vec3f
+import org.joml.Vector3f
 
 object NetworkPathRenderer : WorldRenderEvents.AfterTranslucent {
     override fun afterTranslucent(ctx: WorldRenderContext) {
@@ -31,8 +31,8 @@ object NetworkPathRenderer : WorldRenderEvents.AfterTranslucent {
 
     fun render(context: WorldRenderContext, pos1: BlockPos, pos2: BlockPos, color: Int, alpha: Float) {
 
-        val start = Vec3f(pos1.x + 0.5f, pos1.y + 0.5f, pos1.z + 0.5f)
-        val end = Vec3f(pos2.x + 0.5f, pos2.y + 0.5f, pos2.z + 0.5f)
+        val start = Vector3f(pos1.x + 0.5f, pos1.y + 0.5f, pos1.z + 0.5f)
+        val end = Vector3f(pos2.x + 0.5f, pos2.y + 0.5f, pos2.z + 0.5f)
 
         val red = ColorHelper.Argb.getRed(color) / 255f
         val green = ColorHelper.Argb.getGreen(color) / 255f
@@ -40,7 +40,7 @@ object NetworkPathRenderer : WorldRenderEvents.AfterTranslucent {
 
         val width =  0.12f
 
-        RenderSystem.setShader(GameRenderer::getRenderTypeLinesShader)
+        RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram)
         RenderSystem.disableCull()
         RenderSystem.enableBlend()
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f)

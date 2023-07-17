@@ -1,0 +1,24 @@
+{
+  "type": "indrev-base:alloy_smelter",
+  "cost": 1,
+  "input": [
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "indrev-base:nikolite_dust"
+    },
+    {
+      "chance": 1.0,
+      "count": 1,
+      "item": "indrev-base:diamond_dust"
+    }
+  ],
+  "output": [
+    {
+      "chance": 1.0,
+      "count": 2,
+      "item": "indrev-base:enriched_nikolite_dust"
+    }
+  ],
+  "ticks": 200
+}

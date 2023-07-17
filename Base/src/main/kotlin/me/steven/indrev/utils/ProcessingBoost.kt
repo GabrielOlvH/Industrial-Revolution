@@ -14,9 +14,9 @@ class ProcessingBoost(val text: MutableText, val multiplier: Double, val color: 
 
     companion object {
         fun appendTickTime(boosts: List<ProcessingBoost>, recipe: MachineRecipe, processSpeed: Double): MutableText {
-                val text = Text.literal("Time: ")
+                val text = Text.literal("")
                 val ticksText = Text.literal(" ticks")
-                val originalTicks = Text.literal("${recipe.ticks / processSpeed}")
+                val originalTicks = Text.literal(format(recipe.ticks / processSpeed))
                 if (boosts.isNotEmpty()) {
                     var multiplier = processSpeed
                     var prevText = originalTicks
