@@ -2,6 +2,7 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.api.Tier
+import me.steven.indrev.blockentities.storage.LazuliFluxContainer
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
@@ -16,8 +17,8 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import net.minecraft.util.math.RotationAxis
 
-open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactory.Context) : BlockEntityRenderer<MachineBlockEntity<*>> {
-    private var model: MachineBakedModel? = null
+open class MachineBlockEntityRenderer(val ctx: BlockEntityRendererFactory.Context) : BlockEntityRenderer<MachineBlockEntity<*>> {
+    var model: MachineBakedModel? = null
 
     override fun render(
         entity: MachineBlockEntity<*>,
@@ -71,6 +72,9 @@ open class MachineBlockEntityRenderer(private val ctx: BlockEntityRendererFactor
     companion object {
         private val TIER_QUADS = mutableMapOf<Tier, List<BakedQuad>>()
         val TIER_MESHES = mutableMapOf<Tier, Mesh>()
+
+        private val LAZULI_FLUX_TIER_QUADS = mutableMapOf<Tier, List<BakedQuad>>()
+        val LAZULI_FLUX_TIER_MESHES = mutableMapOf<Tier, Mesh>()
 
         fun rotate(face: Direction, dir: Direction): Direction {
             if (face.axis.isVertical) return face

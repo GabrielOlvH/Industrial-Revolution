@@ -52,7 +52,7 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
     val properties: MachineProperties = MachineProperties()
 
     var energy by properties.sync(ENERGY_ID, 0L)
-    var capacity by properties.sync(ENERGY_CAPACITY_ID, 1000L)
+    var capacity by properties.sync(ENERGY_CAPACITY_ID, config?.capacity ?: 1000L)
     val energyInventories = Array(6) { EnergyInventory(Direction.byId(it)) }
 
     var connectedEnergyInventories = Directions.ALL
@@ -201,6 +201,10 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
         if (fluidInventory.exists()) fluidInventory.sidedConfiguration.forceDefault = !upgrades.contains(Upgrade.AUTOMATED_FLUID_TRANSFER)
     }
 
+    open fun getMaxInput(dir: Direction) = maxInput
+
+    open fun getMaxOutput(dir: Direction) = maxOutput
+
     inner class EnergyInventory(val dir: Direction) : SnapshotParticipant<Long>(), EnergyStorage {
 
         override fun createSnapshot(): Long = energy
@@ -214,7 +218,7 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
         override fun insert(maxAmount: Long, transaction: TransactionContext): Long {
             StoragePreconditions.notNegative(maxAmount)
 
-            val inserted = maxInput.coerceAtMost(maxAmount.coerceAtMost(capacity - amount))
+            val inserted = getMaxInput(dir).coerceAtMost(maxAmount.coerceAtMost(capacity - amount))
 
             if (inserted > 0) {
                 updateSnapshots(transaction)
@@ -230,7 +234,7 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
         override fun extract(maxAmount: Long, transaction: TransactionContext): Long {
             StoragePreconditions.notNegative(maxAmount)
 
-            val extracted = maxOutput.coerceAtMost(maxAmount.coerceAtMost(amount))
+            val extracted = getMaxOutput(dir).coerceAtMost(maxAmount.coerceAtMost(amount))
 
             if (extracted > 0) {
                 updateSnapshots(transaction)

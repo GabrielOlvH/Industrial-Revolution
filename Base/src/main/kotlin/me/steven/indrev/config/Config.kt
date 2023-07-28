@@ -20,6 +20,8 @@ class Machines {
     val chemicalInfuser = craftingMachine()
 
     val compressor = craftingMachine()
+    
+    val lazuliFluxContainer = TieredConfig<MachineConfig>(mk1LazuliFluxContainer(), mk2LazuliFluxContainer(), mk3LazuliFluxContainer(), mk4LazuliFluxContainer())
 }
 
 open class MachineConfig(open val capacity: Long, open val maxInput: Long, open val maxOutput: Long)
@@ -49,3 +51,11 @@ private fun mk2CraftingMachine() = CraftingMachineConfig(2.0, 0.5, 16, 4000, Tie
 private fun mk3CraftingMachine() = CraftingMachineConfig(4.0, 0.5, 32, 8000, Tier.MK3.transferCapacity)
 
 private fun mk4CraftingMachine() = CraftingMachineConfig(8.0, 0.5, 64, 16000, Tier.MK4.transferCapacity)
+
+private fun mk1LazuliFluxContainer() = MachineConfig( 10000, Tier.MK1.transferCapacity, Tier.MK1.transferCapacity)
+
+private fun mk2LazuliFluxContainer() = MachineConfig(50000, Tier.MK2.transferCapacity, Tier.MK2.transferCapacity)
+
+private fun mk3LazuliFluxContainer() = MachineConfig(100000, Tier.MK3.transferCapacity, Tier.MK3.transferCapacity)
+
+private fun mk4LazuliFluxContainer() = MachineConfig( 250000, Tier.MK4.transferCapacity, Tier.MK4.transferCapacity)

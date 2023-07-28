@@ -1,6 +1,8 @@
 package me.steven.indrev.utils
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainer
+import me.steven.indrev.blocks.ELECTRIC_FURNACE
 import net.minecraft.item.ItemConvertible
 import net.minecraft.item.Items
 import net.minecraft.text.Text
@@ -21,5 +23,13 @@ enum class ConfigurationTypes(val icon: ItemConvertible, val text: Text, val upg
         { it.fluidInventory.exists() },
         { it.fluidInventory.sidedConfiguration },
         { it.upgrades.contains(Upgrade.AUTOMATED_FLUID_TRANSFER) }
+    ),
+    ENERGY(
+        ELECTRIC_FURNACE.block.asItem(),
+        Text.literal("Energy I/O Configuration"),
+        Text.empty(),
+        { it is LazuliFluxContainer },
+        { (it as LazuliFluxContainer).sideConfig },
+        { true }
     )
 }

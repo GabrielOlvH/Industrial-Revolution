@@ -1,6 +1,7 @@
 package me.steven.indrev.packets.common
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainer
 import me.steven.indrev.utils.ConfigurationTypes
 import me.steven.indrev.utils.SidedConfiguration
 import me.steven.indrev.utils.identifier
@@ -25,9 +26,11 @@ object UpdateMachineIOPacket {
                     blockEntity.inventory.sidedConfiguration.setMode(dir, mode)
                 } else if (type == ConfigurationTypes.FLUID && blockEntity.fluidInventory.exists()) {
                     blockEntity.fluidInventory.sidedConfiguration.setMode(dir, mode)
+                } else if (type == ConfigurationTypes.ENERGY && blockEntity is LazuliFluxContainer) {
+                    blockEntity.sideConfig.setMode(dir, mode)
                 } else return@execute
                 blockEntity.markDirty()
-
+                blockEntity.world?.updateNeighbors(pos, blockEntity.cachedState.block)
             }
         }
     }

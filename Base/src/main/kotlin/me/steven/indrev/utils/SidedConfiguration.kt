@@ -57,7 +57,6 @@ class SidedConfiguration {
             val mode = Mode.BY_ID[modeId]
             map[dir] = mode
         }
-
     }
 
     enum class Mode(val id: Int, val allowInput: Boolean, val allowOutput: Boolean) {
