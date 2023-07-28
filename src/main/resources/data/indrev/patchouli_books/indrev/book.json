@@ -6,5 +6,6 @@
   "subtitle": "Everything you, $(playername), need to know about $(l)$(o)Industrial Revolution",
   "creative_tab": "indrev.indrev_group",
   "show_progress": false,
-  "pause_game": false
+  "pause_game": false,
+  "use_resource_pack": true
 }
