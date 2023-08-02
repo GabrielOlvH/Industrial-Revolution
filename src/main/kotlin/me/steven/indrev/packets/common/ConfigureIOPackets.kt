@@ -4,8 +4,10 @@ import me.steven.indrev.api.machines.TransferMode
 import me.steven.indrev.api.sideconfigs.ConfigurationType
 import me.steven.indrev.blockentities.GlobalStateController
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.networks.Network
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking
+import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.Direction
 
 object ConfigureIOPackets  {
@@ -26,6 +28,8 @@ object ConfigureIOPackets  {
                 blockEntity.markDirty()
                 GlobalStateController.update(world, pos, false)
                 world.updateNeighbors(pos, blockEntity.cachedState.block)
+                val networkState = Network.Type.ENERGY.getNetworkState(world as ServerWorld)
+                Network.handleUpdate(networkState, pos.offset(dir))
             }
         }
 
