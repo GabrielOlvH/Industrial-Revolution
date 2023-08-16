@@ -36,7 +36,7 @@ class ModularTooltipComponent(private val data: ModularTooltipData) : EnergyTool
             cX += level * 5
             repeat(level) {
                 cX -= 5
-                ctx.drawItemInSlot(textRenderer,ItemStack(module.item.asItem()), cX, cY)
+                ctx.drawItem(ItemStack(module.item.asItem()), cX, cY)
             }
             cX += (level * 5) + 18
             if (index + 1 % 5 == 0) {

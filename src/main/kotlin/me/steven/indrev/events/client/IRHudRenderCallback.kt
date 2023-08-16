@@ -67,7 +67,7 @@ object IRHudRenderCallback : HudRenderCallback {
                     HEAD -> 0
                     else -> return@forEach
                 }
-                ctx.drawItemInSlot(client.textRenderer, stack, x + 9 + xOffset, y + 35)
+                ctx.drawItem(stack, x + 9 + xOffset, y + 35)
                 //client.itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, x + 9 + xOffset, y + 35)
             }
         }
@@ -87,7 +87,7 @@ object IRHudRenderCallback : HudRenderCallback {
         val state = world.getBlockState(hit.blockPos)
         val block = state?.block as? MachineBlock
 
-        ctx.drawItemInSlot(client.textRenderer, stack, x, y)
+        ctx.drawItem(stack, x, y)
 
         if (block != null && block.registry.upgradeable && block.tier == item.from) {
             matrices.push()
@@ -95,11 +95,11 @@ object IRHudRenderCallback : HudRenderCallback {
             ctx.drawText(client.textRenderer, "Right Click to upgrade machine", x + 16 + 64 + 64 + 64 + 42, y + 64 + 64 + 13, -1, true)
             matrices.pop()
 
-            ctx.drawItemInSlot(client.textRenderer, ItemStack(block), x + 8, y + 16)
+            ctx.drawItem(ItemStack(block), x + 8, y + 16)
             RenderSystem.disableDepthTest()
             ScreenDrawing.texturedRect(ctx, x + 8 + 16 + 2, y + 16, 16, 16, ARROW, -1)
             ScreenDrawing.texturedRect(ctx, x + 8 + 16 + 6, y + 18, 16, 16, CHECKMARK, -1)
-            ctx.drawItemInSlot(client.textRenderer, ItemStack(block.registry.block(item.to)), x + 8 + 32 + 4, y + 16)
+            ctx.drawItem(ItemStack(block.registry.block(item.to)), x + 8 + 32 + 4, y + 16)
         } else {
             RenderSystem.disableDepthTest()
             ScreenDrawing.texturedRect(ctx, x + 5, y + 5, 16, 16, X, -1)

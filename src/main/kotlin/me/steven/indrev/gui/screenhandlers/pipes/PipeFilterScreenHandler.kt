@@ -140,7 +140,7 @@ class PipeFilterScreenHandler(
 
         override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             ScreenDrawing.drawBeveledPanel(ctx, x, y, height, width, -1207959552, 1275068416, -1191182337)
-            ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
+            ctx.drawItem(backingList[index], x + 1, y + 1)
         //    MinecraftClient.getInstance().itemRenderer.renderGuiItemOverlay(MinecraftClient.getInstance().textRenderer, backingList[index], x + 1, y + 1)
             if (mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height)
                 ctx.fill(x + 1, y + 1, x + 17, y + 17, -2130706433)
@@ -166,9 +166,9 @@ class PipeFilterScreenHandler(
 
         override fun paint(ctx: DrawContext, x: Int, y: Int, mouseX: Int, mouseY: Int) {
             if (type == EndpointData.Type.OUTPUT)
-                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y - 2)
+                ctx.drawItem(ItemStack(IRItemRegistry.SERVO_OUTPUT), x + 1, y - 2)
             else if (type == EndpointData.Type.RETRIEVER)
-                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y - 2)
+                ctx.drawItem(ItemStack(IRItemRegistry.SERVO_RETRIEVER), x + 1, y - 2)
         }
 
         override fun onClick(x: Int, y: Int, button: Int): InputResult {

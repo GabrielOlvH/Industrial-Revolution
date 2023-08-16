@@ -272,7 +272,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
             val hovered = mouseX >= 0 && mouseY >= 0 && mouseX < width && mouseY < height
             ScreenDrawing.drawBeveledPanel(ctx, x, y, width, height)
             if (hovered) ScreenDrawing.coloredRect(ctx, x, y, width, height, 0x887d88ff.toInt())
-            ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, itemStack, x + 1, y + 1)
+            ctx.drawItem(itemStack, x + 1, y + 1)
         }
 
         override fun addTooltip(tooltip: TooltipBuilder?) {
@@ -304,7 +304,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                 super.paint(ctx, x, y, mouseX, mouseY)
                 if (preview != null) {
                     val renderer = MinecraftClient.getInstance().itemRenderer
-                    ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, preview, x + 1, y + 1)
+                    ctx.drawItem(preview, x + 1, y + 1)
                     RenderSystem.disableDepthTest()
                     ScreenDrawing.coloredRect(ctx, x + 1, y + 1, 16, 16, 0xb08b8b8b.toInt())
                 }
@@ -334,7 +334,7 @@ class ModularWorkbenchScreenHandler(syncId: Int, playerInventory: PlayerInventor
                 val cur = component!!.get<Int>(ModularWorkbenchBlockEntity.PROCESS_TIME_ID)
                 val max = component!!.get<Int>(ModularWorkbenchBlockEntity.MAX_PROCESS_TIME_ID)
                 val renderer = MinecraftClient.getInstance().itemRenderer
-                ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, selected!!.outputs[0].stack, x + 1, y + 1)
+                ctx.drawItem(selected!!.outputs[0].stack, x + 1, y + 1)
                 RenderSystem.disableDepthTest()
                 val a = 255 - ((cur / max.toDouble()) * 255).toInt()
                 ScreenDrawing.coloredRect(ctx, x + 1, y + 1, 16, 16, a shl 24 or 0x8b8b8b)
