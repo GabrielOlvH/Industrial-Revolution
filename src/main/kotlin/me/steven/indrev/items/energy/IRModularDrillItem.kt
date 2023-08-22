@@ -1,9 +1,9 @@
 package me.steven.indrev.items.energy
 
-import draylar.magna.api.BlockFinder
-import draylar.magna.api.BlockProcessor
-import draylar.magna.api.MagnaTool
-import draylar.magna.api.reach.ReachDistanceHelper
+import dev.draylar.magna.api.BlockFinder
+import dev.draylar.magna.api.BlockProcessor
+import dev.draylar.magna.api.MagnaTool
+import dev.draylar.magna.api.reach.ReachDistanceHelper
 import io.github.cottonmc.cotton.gui.client.CottonClientScreen
 import me.steven.indrev.IndustrialRevolutionClient
 import me.steven.indrev.api.CustomEnchantmentProvider

@@ -1,6 +1,6 @@
 package me.steven.indrev.packets.common
 
-import draylar.magna.api.MagnaTool
+import dev.draylar.magna.api.MagnaTool
 import me.steven.indrev.items.energy.IRMiningDrillItem
 import me.steven.indrev.tools.modular.DrillModule
 import me.steven.indrev.utils.identifier

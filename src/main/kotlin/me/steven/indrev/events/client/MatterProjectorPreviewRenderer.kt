@@ -1,6 +1,6 @@
 package me.steven.indrev.events.client
 
-import draylar.magna.api.MagnaTool
+import dev.draylar.magna.api.MagnaTool
 import me.steven.indrev.tools.modular.DrillModule
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
