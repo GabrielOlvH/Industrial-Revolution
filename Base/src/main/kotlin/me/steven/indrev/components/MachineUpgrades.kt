@@ -5,7 +5,7 @@ import me.steven.indrev.utils.Upgrade
 import net.minecraft.nbt.NbtCompound
 
 open class MachineUpgrades(val upgrades: Array<Upgrade>, val onChange: () -> Unit) {
-    val inventory = MachineItemInventory(size = 4, canInsert = inSlots(0, 1, 2, 3), canExtract = outSlots(0, 1, 2, 3), onChange = onChange)
+    val inventory = MachineItemInventory(size = 4, canInsert = inSlots(0, 1, 2, 3) { v -> v.item is UpgradeItem }, canExtract = outSlots(0, 1, 2, 3), onChange = onChange)
 
     fun exists() = this != NullMachineUpgrades
 

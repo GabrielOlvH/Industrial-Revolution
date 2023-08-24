@@ -1,9 +1,7 @@
 package me.steven.indrev.items
 
-import me.steven.indrev.utils.Material
-import me.steven.indrev.utils.Upgrade
+import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
-import me.steven.indrev.utils.item
 import net.minecraft.item.Item
 
 val ALL_ITEMS = mutableListOf<Item>()
@@ -15,6 +13,8 @@ val OVERCLOCKER_8X_ITEM = UpgradeItem(Upgrade.OVERCLOCKER_8X)
 val AUTOMATED_ITEM_TRANSFER_ITEM = UpgradeItem(Upgrade.AUTOMATED_ITEM_TRANSFER)
 val AUTOMATED_FLUID_TRANSFER_ITEM = UpgradeItem(Upgrade.AUTOMATED_FLUID_TRANSFER)
 val FUEL_EFFICIENCY_ITEM = UpgradeItem(Upgrade.FUEL_EFFICIENCY)
+
+val HEAT_SINK = Item(itemSettings())
 
 val IRON = Material.create("iron", Material.Type.DUST, Material.Type.PLATE)
 val GOLD = Material.create("gold", Material.Type.DUST, Material.Type.PLATE)
@@ -47,4 +47,6 @@ fun registerItems() {
     for (x in 1 ..9) {
         identifier("farm_station_${x}_range_card").item(RangeCardItem(x))
     }
+
+    identifier("heatsink").item(HEAT_SINK)
 }

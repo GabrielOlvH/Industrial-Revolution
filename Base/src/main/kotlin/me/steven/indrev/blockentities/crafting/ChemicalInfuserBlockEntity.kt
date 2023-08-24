@@ -33,7 +33,6 @@ class ChemicalInfuserBlockEntity(pos: BlockPos, state: BlockState) : CraftingMac
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
-        handler.addDefaultBackground()
         handler.addEnergyBar(this)
         handler.addTemperatureBar(temperatureController)
         handler.addUpgradeSlots(upgrades)

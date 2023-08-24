@@ -142,6 +142,7 @@ class IndustrialRevolutionDatagen : DataGeneratorEntrypoint {
                         itemModelGenerator.register(item, Models.GENERATED)
                 }
             }
+            itemModelGenerator.register(HEAT_SINK, Models.GENERATED)
         }
     }
 }

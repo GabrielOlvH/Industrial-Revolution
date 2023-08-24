@@ -10,10 +10,9 @@ import net.minecraft.client.gui.DrawContext
 import net.minecraft.item.ItemStack
 import net.minecraft.util.Identifier
 
-class WidgetSlot(val index: Int, val inv: MachineItemInventory, val color: Int = -1, val big: Boolean = false) : WidgetSprite(MACHINE_SLOT_TEXTURE, 22, 22) {
+class WidgetSlot(val index: Int, val inv: MachineItemInventory, val color: Int = -1, val big: Boolean = false, var overlay: Identifier? = null) : WidgetSprite(MACHINE_SLOT_TEXTURE, 22, 22) {
 
     var slotTexture: Identifier? = if(big) MACHINE_BIG_SLOT_TEXTURE else MACHINE_SLOT_TEXTURE
-    var overlay: Identifier? = null
     var filter: ((ItemStack) -> Boolean)? = null
 
     override fun draw(ctx: DrawContext, x: Int, y: Int) {

@@ -32,7 +32,6 @@ class AlloySmelterBlockEntity(pos: BlockPos, state: BlockState) : CraftingMachin
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
-        handler.addDefaultBackground()
         handler.addEnergyBar(this)
         handler.addUpgradeSlots(upgrades)
 

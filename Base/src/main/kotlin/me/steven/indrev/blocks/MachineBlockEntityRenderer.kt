@@ -73,9 +73,6 @@ open class MachineBlockEntityRenderer(val ctx: BlockEntityRendererFactory.Contex
         private val TIER_QUADS = mutableMapOf<Tier, List<BakedQuad>>()
         val TIER_MESHES = mutableMapOf<Tier, Mesh>()
 
-        private val LAZULI_FLUX_TIER_QUADS = mutableMapOf<Tier, List<BakedQuad>>()
-        val LAZULI_FLUX_TIER_MESHES = mutableMapOf<Tier, Mesh>()
-
         fun rotate(face: Direction, dir: Direction): Direction {
             if (face.axis.isVertical) return face
             return when (dir) {

@@ -28,7 +28,6 @@ abstract class Widget {
         if (highlight()) {
 
             ctx.matrices.push()
-            ctx.matrices.translate(0.0, 0.0, 10.0)
             ctx.drawTexture(identifier("textures/gui/widgets/widget_warning_highlight.png"), x - 3, y - 3, 0f, 0f, width + 6, height + 6, 128, 128)
 
             ctx.matrices.pop()

@@ -43,17 +43,19 @@ val PLANTING_STATION = createMachine(identifier("planting_station"), ALL_TIERS, 
 val FERTILIZING_STATION = createMachine(identifier("fertilizing_station"), ALL_TIERS, ::FertilizingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 val CHOPPING_STATION = createMachine(identifier("chopping_station"), ALL_TIERS, ::ChoppingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 val HARVESTING_STATION = createMachine(identifier("harvesting_station"), ALL_TIERS, ::HarvestingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
+val SLAUGHTER_STATION =  createMachine(identifier("slaughter_station"), ALL_TIERS, ::SlaughterStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
+
 val LAZULI_FLUX_CONTAINER = createMachine(identifier("lazuli_flux_container"), ALL_TIERS, ::LazuliFluxContainer, {
     val model = object : MachineBakedModel("lazuli_flux_container", false) {
         override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
             ctx.meshConsumer().accept(idleMesh)
             val item = stack.item as? MachineBlockItem ?: return
-
-           // ctx.meshConsumer().accept(mesh)
+            val mesh = LazulIFluxContainerBlockEntityRenderer.getMesh(item.tier) ?: return
+            ctx.meshConsumer().accept(mesh)
         }
     }
     model
-})
+}, ::LazulIFluxContainerBlockEntityRenderer)
 
 fun createMachine(id: Identifier, tiers: Array<Tier>, blockEntityProvider: (BlockPos, BlockState) -> MachineBlockEntity<*>, unbakedModelProvider: () -> UnbakedModel, blockEntityRenderer: ( BlockEntityRendererFactory.Context) -> MachineBlockEntityRenderer = { MachineBlockEntityRenderer(it) }): Machine {
     val block = MachineBlock(blockSettings(), blockEntityProvider)

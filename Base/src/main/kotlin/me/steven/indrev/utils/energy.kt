@@ -5,6 +5,8 @@ import me.steven.indrev.extensions.energyIoCache
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
+import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleSlotStorage
 import net.minecraft.inventory.Inventory
 import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
@@ -21,7 +23,7 @@ fun energyOf(world: ServerWorld, blockPos: BlockPos, direction: Direction): Ener
 
 fun energyOf(itemStack: ItemStack?): EnergyStorage? {
     return if (itemStack == null || itemStack.isEmpty) null
-    else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.withInitial(itemStack))
+    else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.withConstant(itemStack))
 }
 
 fun energyOf(inv: Inventory?, slot: Int): EnergyStorage? {
@@ -29,3 +31,12 @@ fun energyOf(inv: Inventory?, slot: Int): EnergyStorage? {
     return if (itemStack == null || itemStack.isEmpty) null
     else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.ofSingleSlot(InventoryStorage.of(inv, null).getSlot(slot)))
 }
+
+
+
+fun energyOf(slot: SingleSlotStorage<ItemVariant>): EnergyStorage? {
+    val itemStack = slot.resource.toStack(slot.amount.toInt())
+    return if (itemStack == null || itemStack.isEmpty) null
+    else EnergyStorage.ITEM.find(itemStack, ContainerItemContext.ofSingleSlot(slot))
+}
+

@@ -27,7 +27,6 @@ class PulverizerBlockEntity(pos: BlockPos, state: BlockState) : CraftingMachineB
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
-        handler.addDefaultBackground()
         handler.addEnergyBar(this)
         handler.addUpgradeSlots(upgrades)
 

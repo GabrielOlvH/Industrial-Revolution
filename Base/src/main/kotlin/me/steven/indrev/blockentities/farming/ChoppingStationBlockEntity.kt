@@ -50,7 +50,7 @@ class ChoppingStationBlockEntity(pos: BlockPos, state: BlockState) : BaseFarmBlo
                 val state = world!!.getBlockState(pos)
                 if (state.registryEntry.isIn(BlockTags.LOGS) && useEnergy(2, troubleshooter)) {
                     stack.damage(1, world!!.random, null)
-                    if (stack.damage >= stack.maxDamage) {
+                    if (stack.maxDamage > 0 && stack.damage >= stack.maxDamage) {
                         stack.decrement(1)
                         axe.set(stack)
                         axe = findAxeStack() ?: break

@@ -1,6 +1,7 @@
 package me.steven.indrev.screens
 
 import me.steven.indrev.blockentities.MachineBlockEntity
+import me.steven.indrev.blockentities.storage.LazuliFluxContainer
 import me.steven.indrev.screens.machine.MachineScreenHandler
 import me.steven.indrev.utils.identifier
 import me.steven.indrev.utils.screenHandlerType
@@ -21,6 +22,7 @@ private fun <T : ScreenHandler> createType(): ExtendedScreenHandlerType<T> {
                 playerInv.player.world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return@ExtendedFactory null
             if (blockEntity.inventory.exists()) blockEntity.inventory.sidedConfiguration.fromPacket(buf)
             if (blockEntity.fluidInventory.exists()) blockEntity.fluidInventory.sidedConfiguration.fromPacket(buf)
+            if (blockEntity is LazuliFluxContainer) blockEntity.sideConfig.fromPacket(buf)
             blockEntity.createMenu(syncId, playerInv, playerInv.player) as T
         })
 }

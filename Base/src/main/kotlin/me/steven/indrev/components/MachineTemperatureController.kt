@@ -1,5 +1,6 @@
 package me.steven.indrev.components
 
+import me.steven.indrev.items.HEAT_SINK
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.util.math.random.Random
@@ -8,7 +9,7 @@ open class MachineTemperatureController(override val syncId: Int, val average: I
 
     override var isDirty: Boolean = false
 
-    val coolerInventory = MachineItemInventory(size = 1, canInsert = inSlots(0), canExtract = outSlots(0), onChange = onChange)
+    val coolerInventory = MachineItemInventory(size = 1, canInsert = inSlots(0) { v -> v.isOf(HEAT_SINK)}, canExtract = outSlots(0), onChange = onChange)
 
     var heating = false
     var temperature = 25.0

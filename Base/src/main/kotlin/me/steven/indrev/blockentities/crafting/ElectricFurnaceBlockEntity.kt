@@ -32,7 +32,6 @@ class ElectricFurnaceBlockEntity(pos: BlockPos, state: BlockState) : CraftingMac
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
-        handler.addDefaultBackground()
         handler.addEnergyBar(this) { crafters[0].troubleshooter.contains(Troubleshooter.NO_ENERGY) }
         handler.addTemperatureBar(temperatureController)
         handler.addUpgradeSlots(upgrades)

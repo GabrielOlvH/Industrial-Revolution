@@ -3,6 +3,7 @@
   "package": "me.steven.indrev.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "EntityMixin",
     "RecipeManagerAccessor",
     "ServerWorldMixin"
   ],

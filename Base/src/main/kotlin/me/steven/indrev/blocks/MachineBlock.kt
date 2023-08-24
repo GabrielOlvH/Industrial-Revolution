@@ -45,7 +45,7 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
 
         EnergyStorage.SIDED.registerForBlocks({ _, _, _, be, dir ->
             val blockEntity = be as? MachineBlockEntity<*> ?: return@registerForBlocks null
-            return@registerForBlocks blockEntity.energyInventories[dir!!.id]
+            return@registerForBlocks blockEntity.energyInventories[dir?.id ?: MachineBlockEntity.ITEM_ENERGY_INVENTORY_VIEW]
         }, this)
 
         this.defaultState = this.stateManager.defaultState.with(FACING, Direction.NORTH)

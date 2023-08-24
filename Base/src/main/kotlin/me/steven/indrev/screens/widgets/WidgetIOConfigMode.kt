@@ -31,7 +31,7 @@ class WidgetIOConfigMode(val type: ConfigurationTypes, var selected: Boolean, va
             ctx.fill(x, y, x + width, y + height, 0xFF000099.toInt())
             ctx.fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xFF444499.toInt())
         }
-        ctx.drawItemInSlot(MinecraftClient.getInstance().textRenderer, ItemStack(type.icon), x + 1, y + 1)
+        ctx.drawItem(ItemStack(type.icon), x + 1, y + 1)
     }
 
     override fun onClick(mouseX: Double, mouseY: Double, button: Int) {

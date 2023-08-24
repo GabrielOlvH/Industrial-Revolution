@@ -42,7 +42,7 @@ abstract class BaseFarmBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, 
 
     fun getActionCount() = (2.0.pow(tier.ordinal) + upgrades.getSpeedMultiplier() * 2).toInt()
 
-    open fun getArea(): Box {
+    fun getArea(): Box {
         val range = getRange()
         return Box(pos.offset(cachedState[MachineBlock.FACING].opposite, range + 1))
             .expand(range.toDouble(), 0.0, range.toDouble())
