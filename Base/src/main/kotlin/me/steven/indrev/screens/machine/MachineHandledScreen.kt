@@ -17,16 +17,29 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
 
 
     init {
-        this.backgroundWidth = 194
-        this.backgroundHeight = 201
+
+        if (!handler.extended) {
+            this.backgroundWidth = 194
+            this.backgroundHeight = 201
+            handler.background.add(WidgetSprite(MachineScreenHandler.DEFAULT_BG, 194, 201).also {
+                it.x = -8
+                it.y = -11
+            })
+        }
+        else {
+            this.backgroundWidth = 240
+            this.backgroundHeight = 201
+            this.playerInventoryTitleX = 8+23
+            handler.background.add(WidgetSprite(MachineScreenHandler.EXTENDED_BG, 240, 201).also {
+                it.x = -8
+                it.y = -11
+            })
+        }
+
         this.playerInventoryTitleY = this.backgroundHeight - 112
         this.titleY = 0
         this.titleX = (this.backgroundWidth / 2) - (MinecraftClient.getInstance().textRenderer.getWidth(this.getTitle())/2) - 8
 
-        handler.background.add(WidgetSprite(MachineScreenHandler.DEFAULT_BG, 194, 201).also {
-            it.x = -8
-            it.y = -11
-        })
     }
 
 
@@ -66,7 +79,7 @@ class MachineHandledScreen<T : MachineScreenHandler>(handler: T, playerInventory
 
     override fun render(ctx: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
         super.render(ctx, mouseX, mouseY, delta)
-        val w = handler.widgets.reversed().firstOrNull { w -> isPointWithinBounds(w.x, w.y, w.width, w.height, mouseX.toDouble(), mouseY.toDouble()) }
+        val w = getWidgetAt(handler.widgets.reversed(), mouseX.toDouble(), mouseY.toDouble())
         if (w?.tooltipBuilder != null ) {
             val tooltip = mutableListOf<Text>()
             w.tooltipBuilder?.invoke(tooltip)

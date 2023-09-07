@@ -1,24 +1,27 @@
-// 1.20.1	2023-07-13T18:30:23.8843041	Industrial Revolution/Model Definitions
+// 1.20.1	2023-08-31T12:58:05.8405239	Industrial Revolution/Model Definitions
 2cb3d1b788ca6b393d9cb54403ee476baedfb96b assets\indrev-base\models\item\lead_dust.json
 50d75050b3f84f59dcfb0896fefe5004694398d6 assets\indrev-base\blockstates\bronze_block.json
 7727f72d23c3d9365ab43806f6eacd726b6522dd assets\indrev-base\models\block\raw_tungsten_block.json
 49cdb4b3fa71d7890af4c661adf4bcb95d4b476d assets\indrev-base\models\block\deepslate_tungsten_ore.json
 8c9526c1b156ddae3adab10c021c913fabf32f42 assets\indrev-base\models\item\coal_dust.json
+8979791ca9d8d456e6305e1212bcf83d3a8e43b9 assets\indrev-base\models\item\tier_upgrade_mk3.json
 f21cc465d8a747be72f205e153bd2abf60de4f4b assets\indrev-base\models\block\silver_block.json
 1102e03ceac2b87d76409c4f218aca455d2458fc assets\indrev-base\blockstates\raw_silver_block.json
 850bdaa5747013244f0bbf2b7c1d65e23798fbb5 assets\indrev-base\models\item\tungsten_nugget.json
 4a7537817fccb6bcb894097f262e6aeb8e3ada39 assets\indrev-base\models\block\raw_tin_block.json
 4abf12503a59fb180e297270c8b387970229a50c assets\indrev-base\models\item\bronze_ingot.json
 04337f6e4b8250e3434e7fafd04d6aacb84cee5e assets\indrev-base\models\block\silver_ore.json
+50fa626ab47f063fc72c285ccfb4d006e3327687 assets\indrev-base\models\item\tier_upgrade_mk2.json
 64abfd8abfe35d7ad6c3024595fe10b451f5340f assets\indrev-base\models\item\deepslate_silver_ore.json
 a6e4392d6a774009d0638238d83971a687e4e671 assets\indrev-base\models\item\bronze_block.json
-d089e5e37ce61f71188fe217d4549cdcf51b4469 assets\indrev-base\models\item\silver_block.json
 ca6a4354104b03e7cf24a202448f6872f63c98f6 assets\indrev-base\models\item\silver_dust.json
+d089e5e37ce61f71188fe217d4549cdcf51b4469 assets\indrev-base\models\item\silver_block.json
 2fb3c606cdc22eb285ebd6976120d050d7cd1f33 assets\indrev-base\models\item\copper_nugget.json
 f77c1fea248541d336bd9be41dc9cb58568d2c26 assets\indrev-base\models\item\tungsten_ore.json
 42c5f5cc5cbfb95bbcd144ec0ec6fea029917a8b assets\indrev-base\models\item\tin_block.json
 d12b2fbef0ef6cf9601cc7d05123875f00941190 assets\indrev-base\blockstates\silver_ore.json
 eab4d5ac4eedba34c812a9c7255dd9e4b15e85ef assets\indrev-base\models\item\raw_tin_block.json
+ba65a571e16aee0fe82cc0d2a86db751c3f0c622 assets\indrev-base\models\item\tier_upgrade_mk4.json
 2bec05382ac7e58557e43e0871390908811781e7 assets\indrev-base\models\block\lead_ore.json
 dce34c0ae64558aed2ad18163a5e50645c60f9fc assets\indrev-base\models\item\steel_block.json
 4b744f29a43e089f09fdef8909ed1cc63765d886 assets\indrev-base\blockstates\tin_block.json
@@ -31,6 +34,7 @@ ff38eb54b1a788dd98936afa4c6bc6f0c4523a1a assets\indrev-base\blockstates\deepslat
 51f4811dc4fec9c798369c3af9db479cf1e229cb assets\indrev-base\models\item\enriched_nikolite_dust.json
 0b39703b8864badfbacb2ca7502a2be99bd4a1cc assets\indrev-base\models\item\diamond_dust.json
 5db0f5c7ae01c2518c67d2e804b1716f2668dc97 assets\indrev-base\models\item\tin_ore.json
+49ae327c1bc88eb4bf3a6999fcc6b2bdc807a1a6 assets\indrev-base\models\item\heatsink.json
 e8517f7071797b065c65bb0ce1b034d71a01fd7b assets\indrev-base\blockstates\raw_lead_block.json
 436cfe6cc7a75faa9b81e95e4eae5f88ec6185df assets\indrev-base\models\item\steel_nugget.json
 fbb6ee9a4b05ef8e6a976faa8f6328e242e798f6 assets\indrev-base\models\item\tin_ingot.json
@@ -51,6 +55,7 @@ c8ab2687b328bf0452db5890b7e683014c53b600 assets\indrev-base\models\item\enriched
 b56d11c29133b1b082bffe88318019148cbf39c5 assets\indrev-base\models\item\nikolite_ingot.json
 28d4d8e2baac389ba301925709380e18d34b29c1 assets\indrev-base\models\block\deepslate_lead_ore.json
 c3ba120c60d707b98898b8caf54a953bffdc1150 assets\indrev-base\models\item\lead_ingot.json
+0b71bffad71ca0414eab90540b6517ef2163ffd5 assets\indrev-base\models\item\circuit_mk3.json
 0fcd010149b2fb11958b3c888066e9ff16247cb8 assets\indrev-base\models\block\lead_block.json
 f37ec2be3894931c4e05c4c69e76fe697e451fb8 assets\indrev-base\models\block\tungsten_ore.json
 7f6cdfda9422390b15315cae4b37e45116c5efc8 assets\indrev-base\models\block\deepslate_silver_ore.json
@@ -65,8 +70,8 @@ f568c5929e11aedd0e9902796a6a1cd863be5f49 assets\indrev-base\models\block\steel_b
 78fd04eef493742cc390bea08a18c0fdf42a3f5e assets\indrev-base\models\item\copper_dust.json
 792c18e670ca8364324f376e7b791a28e4e60ffc assets\indrev-base\models\item\raw_silver_block.json
 d1f25d4e7f20080aa274637c601e16b13638a18b assets\indrev-base\models\block\electrum_block.json
-4955cf54c4d9377bf215ac42085cdf1f90deedc8 assets\indrev-base\blockstates\deepslate_nikolite_ore.json
 afecaea80ee65fc642bc93a563dc14debcfb7369 assets\indrev-base\blockstates\raw_tungsten_block.json
+4955cf54c4d9377bf215ac42085cdf1f90deedc8 assets\indrev-base\blockstates\deepslate_nikolite_ore.json
 f059b126e82648503d94800e7e2a0c485fecc9a7 assets\indrev-base\models\item\electrum_nugget.json
 a4468c49d99c9c5e55b2879cd9cce86e2375afaa assets\indrev-base\blockstates\lead_ore.json
 75fe5a1aa353af3c191f1f71c326bec49288238f assets\indrev-base\models\item\raw_tungsten_block.json
@@ -76,14 +81,16 @@ b37d62d879eede8a25fe3c72b533112fbfee0fea assets\indrev-base\models\item\gold_dus
 b52c6fd4d48c66a98829fbb1c1d6a3f0a881262c assets\indrev-base\models\item\raw_tungsten.json
 948880a2d86d84801914cc6eb60993f7d39612c1 assets\indrev-base\models\item\bronze_nugget.json
 e252935c8a16c1f2aedadc2ca85af2df927123a5 assets\indrev-base\models\item\silver_plate.json
+f639052cfc8f7e29e21f2294b0ffc78278cc065a assets\indrev-base\models\item\circuit_mk4.json
 6c7a95d9e722d43852800ef093db2026f4e05eb9 assets\indrev-base\models\item\electrum_block.json
 97c73bb021251abb8604c70acc2c769499acb030 assets\indrev-base\models\item\bronze_plate.json
-007a36e9a3414e6ddf46ec861807b650727eadf4 assets\indrev-base\models\item\lead_block.json
 e7b46003c430a99f385b59061bfefbcd5d2c953e assets\indrev-base\models\item\electrum_dust.json
+007a36e9a3414e6ddf46ec861807b650727eadf4 assets\indrev-base\models\item\lead_block.json
 f181f20cd7e7d4916cafa818692c179cdc95dcae assets\indrev-base\models\item\deepslate_tin_ore.json
 bab3b6f0c76c5d8c04e286e2dbe9687aecf8a76e assets\indrev-base\blockstates\deepslate_lead_ore.json
 843dc44ed8c85d40f09d410bbb7452f0a3884b0b assets\indrev-base\blockstates\steel_block.json
 9f88c5949f0ac88e4b55e5c00722fba7692d7e5a assets\indrev-base\models\item\copper_plate.json
+b20c851247d99c0716654709f861f8a15c8f0ca5 assets\indrev-base\models\item\circuit_mk1.json
 374a14ae2c3370af2a39646fe699e7397b54abca assets\indrev-base\models\item\tin_plate.json
 c953235dc6d88198e296310cd0f639df6a29b39e assets\indrev-base\models\item\nikolite_dust.json
 8a3cefb083ae4dbae586a5350cf9c79644e22348 assets\indrev-base\models\block\nikolite_ore.json
@@ -93,6 +100,7 @@ d22a0fb6c9d66bb2fc986e7c7437da55eb614ea4 assets\indrev-base\models\item\electrum
 0da7faae9262acb4765e035c4464828462719965 assets\indrev-base\models\block\raw_lead_block.json
 4bce65debc44ff218a1d17c39a63d60d4ad0319a assets\indrev-base\models\item\steel_ingot.json
 cf825fde4d74731f2e97181179590e47088f91d9 assets\indrev-base\models\item\nikolite_ore.json
+39f3fa326c1517ac30fae5e266b7d17d1cd6a1df assets\indrev-base\models\item\circuit_mk2.json
 26bc8e4d761ccabcd5647ee7edf793f6415d458e assets\indrev-base\blockstates\tungsten_block.json
 f9691419c58d2a2d99a5e54c5d7edb6376565084 assets\indrev-base\models\item\lead_nugget.json
 e35141bce7b37963711d0f1ec5824162b9073ad0 assets\indrev-base\blockstates\raw_tin_block.json

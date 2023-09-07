@@ -7,6 +7,7 @@ import me.steven.indrev.components.inSlots
 import me.steven.indrev.components.outSlots
 import me.steven.indrev.config.MachineConfig
 import me.steven.indrev.config.machinesConfig
+import me.steven.indrev.packets.client.SyncEnergyPacket
 import me.steven.indrev.screens.machine.MachineScreenHandler
 import me.steven.indrev.screens.machine.grid
 import me.steven.indrev.screens.widgets.WidgetEntity
@@ -16,10 +17,10 @@ import me.steven.indrev.utils.INPUT_COLOR
 import me.steven.indrev.utils.SidedConfiguration
 import me.steven.indrev.utils.energyOf
 import me.steven.indrev.utils.identifier
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs
 import net.minecraft.block.BlockState
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.BoneMealItem
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.screen.ScreenHandler
 import net.minecraft.server.network.ServerPlayerEntity
@@ -29,18 +30,31 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
 import team.reborn.energy.api.EnergyStorageUtil
 
-class LazuliFluxContainer(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(LAZULI_FLUX_CONTAINER.type, pos, state) {
+class LazuliFluxContainerBlockEntity(pos: BlockPos, state: BlockState) : MachineBlockEntity<MachineConfig>(LAZULI_FLUX_CONTAINER.type, pos, state) {
 
     override val config: MachineConfig get() = machinesConfig.lazuliFluxContainer.get(tier)
     override val inventory: MachineItemInventory = MachineItemInventory(1, inSlots(0), outSlots(0), onChange = ::markForUpdate)
 
     val sideConfig: SidedConfiguration = SidedConfiguration()
 
+    private var lastSyncedWidth = -1f
+
     init {
         sideConfig.forceDefault = false
     }
 
     override fun machineTick() {
+        val width = ((energy.toFloat() / capacity.toFloat()) * 0.5f) + 0.25f
+        if (width != lastSyncedWidth) {
+            lastSyncedWidth = width
+            val buf = PacketByteBufs.create()
+            buf.writeLong(energy)
+            buf.writeBlockPos(pos)
+            world?.players?.filter { it.blockPos.getSquaredDistance(pos) < 16*16 }?.forEach { player ->
+                if (player is ServerPlayerEntity) SyncEnergyPacket.send(player, buf)
+            }
+        }
+
         val itemEnergy = energyOf(inventory[0]) ?: return
         EnergyStorageUtil.move(energyInventories[ITEM_ENERGY_INVENTORY_VIEW], itemEnergy, Long.MAX_VALUE, null)
     }
@@ -63,10 +77,10 @@ class LazuliFluxContainer(pos: BlockPos, state: BlockState) : MachineBlockEntity
         handler.addEnergyBar(this)
 
         handler.add(WidgetEntity({ player!! }, false), grid(1), 10)
-        handler.add(WidgetVanillaSlot(36, inv, overlay = EMPTY_HELMET_SLOT_TEXTURE), grid(0), grid(0)+2)
-        handler.add(WidgetVanillaSlot(37, inv, overlay = EMPTY_CHESTPLATE_SLOT_TEXTURE), grid(0), grid(1)+2)
-        handler.add(WidgetVanillaSlot(38, inv, overlay = EMPTY_LEGGINGS_SLOT_TEXTURE), grid(0), grid(2)+2)
-        handler.add(WidgetVanillaSlot(39, inv, overlay = EMPTY_BOOTS_SLOT_TEXTURE), grid(0), grid(3)+2)
+        handler.add(WidgetVanillaSlot(36, inv, overlay = EMPTY_BOOTS_SLOT_TEXTURE), grid(0), grid(3)+2)
+        handler.add(WidgetVanillaSlot(37, inv, overlay = EMPTY_LEGGINGS_SLOT_TEXTURE), grid(0), grid(2)+2)
+        handler.add(WidgetVanillaSlot(38, inv, overlay = EMPTY_CHESTPLATE_SLOT_TEXTURE), grid(0), grid(1)+2)
+        handler.add(WidgetVanillaSlot(39, inv, overlay = EMPTY_HELMET_SLOT_TEXTURE), grid(0), grid(0)+2)
         handler.add(WidgetVanillaSlot(40, inv, overlay = EMPTY_OFFHAND_ARMOR_SLOT), grid(4), grid(3)+2)
 
         handler.add(WidgetSlot(0, inventory, color = INPUT_COLOR, overlay = POWER_ICON), grid(6), grid(1)-9)

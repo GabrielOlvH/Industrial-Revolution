@@ -25,7 +25,8 @@ class WidgetIOConfigMode(val type: ConfigurationTypes, var selected: Boolean, va
 
     override fun draw(ctx: DrawContext, x: Int, y: Int) {
         if (!enabled) {
-            ctx.fill(x, y, x + width, y + height, 0xFFFF0000.toInt())
+            ctx.fill(x, y, x + width, y + height, 0xFF990000.toInt())
+            ctx.fill(x + 1, y + 1, x + width - 1, y + height - 1, 0xFF994444.toInt())
         }
         if (selected) {
             ctx.fill(x, y, x + width, y + height, 0xFF000099.toInt())

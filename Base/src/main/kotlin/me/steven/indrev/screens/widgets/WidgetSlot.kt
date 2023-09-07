@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.components.MachineItemInventory
 import me.steven.indrev.screens.machine.MachineScreenHandler
 import me.steven.indrev.screens.machine.MachineSlot
-import me.steven.indrev.utils.argb
+import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.item.ItemStack
@@ -19,7 +19,7 @@ class WidgetSlot(val index: Int, val inv: MachineItemInventory, val color: Int =
         ctx.matrices.push()
         ctx.matrices.translate(0.0, 0.0, 20.0)
         if (slotTexture != null) {
-            val (alpha, red, green, blue) = argb(color)
+            val (alpha, red, green, blue) = color
             if (!big) {
 
                 ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)

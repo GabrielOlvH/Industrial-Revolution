@@ -2,7 +2,7 @@ package me.steven.indrev.screens.machine
 
 import com.mojang.blaze3d.systems.RenderSystem
 import me.steven.indrev.blockentities.MachineBlockEntity
-import me.steven.indrev.blockentities.storage.LazuliFluxContainer
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.packets.common.ToggleAutoInputOutputPacket
 import me.steven.indrev.packets.common.UpdateMachineIOPacket
 import me.steven.indrev.screens.widgets.*
@@ -47,13 +47,12 @@ class IOTabHelper(val blockEntity: MachineBlockEntity<*>) {
             val dir = side.direction
             val button = object : WidgetButton(identifier("textures/block/electric_furnace.png")) {
                 override fun draw(ctx: DrawContext, x: Int, y: Int) {
-                    val (a, r, g, b) = argb(
+                    val (a, r, g, b) =
                         when {
                             config.getMode(dir).allowInput -> INPUT_COLOR
                             config.getMode(dir).allowOutput -> OUTPUT_COLOR
                             else -> -1
                         }
-                    )
                     RenderSystem.setShaderColor(r / 255f, g / 255f, b / 255f, a / 255f)
                     RenderSystem.setShaderTexture(0, icon)
                     drawTexturedQuad(
@@ -70,6 +69,9 @@ class IOTabHelper(val blockEntity: MachineBlockEntity<*>) {
                     )
                     RenderSystem.setShaderColor(1f, 1f, 1f, 1f)
                 }
+            }
+            button.tooltipBuilder = {
+
             }
             button.click = { _, _, _ ->
                 val mode = config.getMode(dir).next()
@@ -169,7 +171,7 @@ class IOTabHelper(val blockEntity: MachineBlockEntity<*>) {
 
     fun tick() {
         openIoConfigButton.enabled =
-            blockEntity.upgrades.contains(Upgrade.AUTOMATED_FLUID_TRANSFER) || blockEntity.upgrades.contains(Upgrade.AUTOMATED_ITEM_TRANSFER) || blockEntity is LazuliFluxContainer
+            blockEntity.upgrades.contains(Upgrade.AUTOMATED_FLUID_TRANSFER) || blockEntity.upgrades.contains(Upgrade.AUTOMATED_ITEM_TRANSFER) || blockEntity is LazuliFluxContainerBlockEntity
         if (!openIoConfigButton.enabled) {
             animationState = MachineScreenHandler.AnimationState.CLOSED
             typeWidgets.forEach { it.shown = false }

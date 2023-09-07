@@ -1,5 +1,6 @@
 package me.steven.indrev.items
 
+import me.steven.indrev.api.Tier
 import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
 import net.minecraft.item.Item
@@ -15,6 +16,15 @@ val AUTOMATED_FLUID_TRANSFER_ITEM = UpgradeItem(Upgrade.AUTOMATED_FLUID_TRANSFER
 val FUEL_EFFICIENCY_ITEM = UpgradeItem(Upgrade.FUEL_EFFICIENCY)
 
 val HEAT_SINK = Item(itemSettings())
+
+val TIER_UPGRADE_MK2 = TierUpgradeItem(Tier.MK1, Tier.MK2)
+val TIER_UPGRADE_MK3 = TierUpgradeItem(Tier.MK2, Tier.MK3)
+val TIER_UPGRADE_MK4 = TierUpgradeItem(Tier.MK3, Tier.MK4)
+
+val CIRCUIT_MK1 = item()
+val CIRCUIT_MK2 = item()
+val CIRCUIT_MK3 = item()
+val CIRCUIT_MK4 = item()
 
 val IRON = Material.create("iron", Material.Type.DUST, Material.Type.PLATE)
 val GOLD = Material.create("gold", Material.Type.DUST, Material.Type.PLATE)
@@ -49,4 +59,14 @@ fun registerItems() {
     }
 
     identifier("heatsink").item(HEAT_SINK)
+
+    identifier("tier_upgrade_mk2").item(TIER_UPGRADE_MK2)
+    identifier("tier_upgrade_mk3").item(TIER_UPGRADE_MK3)
+    identifier("tier_upgrade_mk4").item(TIER_UPGRADE_MK4)
+
+    identifier("circuit_mk1").item(CIRCUIT_MK1)
+    identifier("circuit_mk2").item(CIRCUIT_MK2)
+    identifier("circuit_mk3").item(CIRCUIT_MK3)
+    identifier("circuit_mk4").item(CIRCUIT_MK4)
+
 }

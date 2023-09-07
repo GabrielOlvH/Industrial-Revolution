@@ -33,15 +33,16 @@ class ChemicalInfuserBlockEntity(pos: BlockPos, state: BlockState) : CraftingMac
 
     override fun createMenu(syncId: Int, inv: PlayerInventory, player: PlayerEntity): ScreenHandler {
         val handler = MachineScreenHandler(syncId, inv, this)
+        handler.extended = true
         handler.addEnergyBar(this)
         handler.addTemperatureBar(temperatureController)
         handler.addUpgradeSlots(upgrades)
 
-        handler.add(WidgetBar.fluidTank(fluidInventory, 0, pos), grid(1) + 7, grid(0) + 4)
-        handler.add(WidgetSlot(0, inventory, INPUT_COLOR), grid(2) + 14, grid(1) + 9)
-        handler.addProcessBar(this, crafters[0], Text.literal("Infusing"), grid(3) + 18, grid(1) + 9)
-        handler.add(WidgetSlot(1, inventory, OUTPUT_COLOR), grid(6) - 15, grid(1) + 9)
-        handler.add(WidgetBar.fluidTank(fluidInventory, 1, pos), grid(7) - 12, grid(0) + 4)
+        handler.add(WidgetBar.fluidTank(fluidInventory, 0, pos), grid(2), grid(0) + 4)
+        handler.add(WidgetSlot(0, inventory, INPUT_COLOR), grid(4)-8, grid(1) + 9)
+        handler.addProcessBar(this, crafters[0], Text.literal("Infusing"), grid(5)+5, grid(1) + 9)
+        handler.add(WidgetSlot(1, inventory, OUTPUT_COLOR), grid(6)+16, grid(1) + 9)
+        handler.add(WidgetBar.fluidTank(fluidInventory, 1, pos), grid(8)+4, grid(0) + 4)
 
         handler.addPlayerInventorySlots()
         return handler

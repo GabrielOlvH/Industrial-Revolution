@@ -36,6 +36,8 @@ internal fun identifier(path: String) = Identifier(MOD_ID, path)
 
 fun blockSpriteId(id: String) = SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, identifier(id))
 
+fun item(): Item = Item(itemSettings())
+
 fun itemSettings(): FabricItemSettings = FabricItemSettings()
 
 fun blockSettings(): FabricBlockSettings = FabricBlockSettings.create()
@@ -76,20 +78,13 @@ fun Identifier.createRecipeType(type: MachineRecipeType): MachineRecipeType {
     return type
 }
 
-fun argb(argb: Int): IntArray {
-    val alpha = argb shr 24 and 0x000000FF
-    val red = argb shr 16 and 0x000000FF
-    val green = argb shr 8 and 0x000000FF
-    val blue = argb and 0x000000FF
-    return intArrayOf(alpha, red, green, blue)
-}
+operator fun Int.component1() = this shr 24 and 0x000000FF
 
-fun rgb(rgb: Int): IntArray {
-    val red = rgb shr 16 and 0x000000FF
-    val green = rgb shr 8 and 0x000000FF
-    val blue = rgb and 0x000000FF
-    return intArrayOf(red, green, blue)
-}
+operator fun Int.component2() = this shr 16 and 0x000000FF
+
+operator fun Int.component3() = this shr 8 and 0x000000FF
+
+operator fun Int.component4() = this and 0x000000FF
 
 fun renderInGui(matrices: MatrixStack, resource: FluidVariant, amt: Long, max: Long, x: Int, y: Int, width: Int, height: Int) {
     val client = MinecraftClient.getInstance()

@@ -5,7 +5,7 @@ import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.blockentities.SolidFuelGeneratorBlockEntity
 import me.steven.indrev.blockentities.crafting.*
 import me.steven.indrev.blockentities.farming.*
-import me.steven.indrev.blockentities.storage.LazuliFluxContainer
+import me.steven.indrev.blockentities.storage.LazuliFluxContainerBlockEntity
 import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
@@ -44,21 +44,22 @@ val FERTILIZING_STATION = createMachine(identifier("fertilizing_station"), ALL_T
 val CHOPPING_STATION = createMachine(identifier("chopping_station"), ALL_TIERS, ::ChoppingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 val HARVESTING_STATION = createMachine(identifier("harvesting_station"), ALL_TIERS, ::HarvestingStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 val SLAUGHTER_STATION =  createMachine(identifier("slaughter_station"), ALL_TIERS, ::SlaughterStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
+val RANCHER_STATION =  createMachine(identifier("rancher_station"), ALL_TIERS, ::RancherStationBlockEntity) { BaseFarmBlockEntityRenderer(it) }
 
-val LAZULI_FLUX_CONTAINER = createMachine(identifier("lazuli_flux_container"), ALL_TIERS, ::LazuliFluxContainer, {
+val LAZULI_FLUX_CONTAINER = createMachine(identifier("lazuli_flux_container"), ALL_TIERS, ::LazuliFluxContainerBlockEntity, {
     val model = object : MachineBakedModel("lazuli_flux_container", false) {
         override fun emitItemQuads(stack: ItemStack, randomSupplier: Supplier<Random>?, ctx: RenderContext) {
             ctx.meshConsumer().accept(idleMesh)
             val item = stack.item as? MachineBlockItem ?: return
-            val mesh = LazulIFluxContainerBlockEntityRenderer.getMesh(item.tier) ?: return
+            val mesh = LazuliFluxContainerBlockEntityRenderer.getMesh(item.tier) ?: return
             ctx.meshConsumer().accept(mesh)
         }
     }
     model
-}, ::LazulIFluxContainerBlockEntityRenderer)
+}, ::LazuliFluxContainerBlockEntityRenderer)
 
 fun createMachine(id: Identifier, tiers: Array<Tier>, blockEntityProvider: (BlockPos, BlockState) -> MachineBlockEntity<*>, unbakedModelProvider: () -> UnbakedModel, blockEntityRenderer: ( BlockEntityRendererFactory.Context) -> MachineBlockEntityRenderer = { MachineBlockEntityRenderer(it) }): Machine {
-    val block = MachineBlock(blockSettings(), blockEntityProvider)
+    val block = MachineBlock(id, blockSettings(), blockEntityProvider)
     val blockItems = tiers.map {
         val blockItem = MachineBlockItem(block, it)
         Identifier(id.namespace, "${id.path}_${it.asString}").item(blockItem)

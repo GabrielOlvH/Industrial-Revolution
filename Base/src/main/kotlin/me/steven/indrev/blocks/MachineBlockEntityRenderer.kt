@@ -2,7 +2,6 @@ package me.steven.indrev.blocks
 
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.api.Tier
-import me.steven.indrev.blockentities.storage.LazuliFluxContainer
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView
@@ -65,8 +64,6 @@ open class MachineBlockEntityRenderer(val ctx: BlockEntityRendererFactory.Contex
             val faceLight = WorldRenderer.getLightmapCoordinates(entity.world, entity.cachedState, mutable)
             vc.quad(matrices.peek(), quad, 1f, 1f, 1f, faceLight, overlay)
         }
-
-
     }
 
     companion object {

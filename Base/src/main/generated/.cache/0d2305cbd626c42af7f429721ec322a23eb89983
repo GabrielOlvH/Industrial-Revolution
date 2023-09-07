@@ -1,4 +1,4 @@
-// 1.20.1	2023-07-13T18:30:23.87678	Industrial Revolution/Recipes
+// 1.20.1	2023-08-31T12:58:05.8355208	Industrial Revolution/Recipes
 0981c9cd8224d8ccdb6b645069f4f7a2ad021365 data\indrev-base\recipes\silver_ingot_from_blasting_deepslate_silver_ore.json
 f4bee4598d93c65f4b6ea236b1f2c069c6eb1740 data\indrev-base\recipes\tin_ingot_from_smelting_deepslate_tin_ore.json
 400b32491539f94de4395ac47672ae14a8350765 data\indrev-base\recipes\tin_dust_from_pulverizing_tin_ingot.json
@@ -118,8 +118,8 @@ ab99b209218f1d21c7519f8d79f4763a9c94611d data\indrev-base\advancements\recipes\m
 439f4d0eadee2d84bc3ea58eb89fba64bca5386a data\indrev-base\advancements\recipes\misc\gold_ingot_from_blasting_gold_dust.json
 ecdd3bc7842d512996ad7c6c35746911db57b982 data\indrev-base\advancements\recipes\misc\tungsten_dust_from_pulverizing_tungsten_plate.json
 95d0642d29f8c6079df45b645ca63749ef8e3974 data\indrev-base\recipes\tin_block.json
-55ae1f48af965542fbc3fe1b6fb2adb4bd97dd4b data\indrev-base\recipes\lead_dust_from_pulverizing_lead_plate.json
 68583685802065d2a8f67c734e9c957789445c37 data\indrev-base\recipes\tin_plate_from_compressing_tin_ingot.json
+55ae1f48af965542fbc3fe1b6fb2adb4bd97dd4b data\indrev-base\recipes\lead_dust_from_pulverizing_lead_plate.json
 07379f6ab173c300d2adf51d281ecaf8cda2e468 data\indrev-base\advancements\recipes\misc\silver_ingot_from_smelting_silver_dust.json
 b52df043791af068a641d550ac8350268bc0219e data\indrev-base\advancements\recipes\misc\copper_ingot_from_smelting_copper_dust.json
 4886b395ed64336433708df9bfb52577549e8e82 data\indrev-base\recipes\tungsten_ingot_from_blasting_deepslate_tungsten_ore.json

@@ -15,6 +15,7 @@ import net.minecraft.screen.ScreenHandler
 import net.minecraft.screen.slot.Slot
 import net.minecraft.text.MutableText
 import net.minecraft.text.Text
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.Direction
 
 class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventory, val blockEntity: MachineBlockEntity<*>) : ScreenHandler(MACHINE_SCREEN_HANDLER, syncId) {
@@ -22,6 +23,7 @@ class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventory, va
     val properties = mutableListOf<SyncableObject>()
     val background = mutableListOf<WidgetSprite>()
     val widgets: MutableList<Widget> = mutableListOf()
+    var extended = false
 
     init {
         blockEntity.properties.properties.forEach { property ->
@@ -39,14 +41,14 @@ class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventory, va
     fun addEnergyBar(blockEntity: MachineBlockEntity<*>, highlight: () -> Boolean = { false }) {
         val w = WidgetBar.energyBar({ blockEntity.energy }, { blockEntity.capacity })
         w.highlight = highlight
-        add(w, grid(8), grid(0) - 4)
+        add(w, grid(8) + if (extended) 23*2 else 0, grid(0) - 4)
     }
 
     fun addProcessBar(machine: CraftingMachineBlockEntity, crafter: MachineRecipeCrafter, text: MutableText, x: Int, y: Int) {
         add(WidgetBar.processBar({ crafter.processTime.toInt() }, { crafter.totalProcessTime }, { crafter.currentRecipe }, crafter.troubleshooter, text, machine), x, y)
     }
 
-    fun addUpgradeSlots(upgrades: MachineUpgrades, x: Int = 195-12, y: Int = 0) {
+    fun addUpgradeSlots(upgrades: MachineUpgrades, x: Int = (if (extended) 241 else 195) -12, y: Int = 0) {
         val widgets = mutableListOf<Widget>()
         widgets.add(WidgetSprite(identifier("textures/gui/upgrade_slots.png"), 37, 86))
         upgrades.inventory.forEachIndexed { index, _ ->
@@ -113,11 +115,11 @@ class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventory, va
     fun addPlayerInventorySlots() {
         for (i in 0 until 3) {
             for (j in 0 until 9) {
-                addSlot(Slot(playerInventory, j + i * 9 + 9, 9 + j * 18, 84 + i * 18 + 15))
+                addSlot(Slot(playerInventory, j + i * 9 + 9, 9 + j * 18 + if (extended) 23 else 0, 84 + i * 18 + 15))
             }
         }
         for (i in 0 until 9) {
-            addSlot(Slot(playerInventory, i, 9 + i * 18, 142 + 15))
+            addSlot(Slot(playerInventory, i, 9 + i * 18 + if (extended) 23 else 0, 142 + 15))
         }
     }
 
@@ -156,6 +158,7 @@ class MachineScreenHandler(syncId: Int, val playerInventory: PlayerInventory, va
 
     companion object {
         val DEFAULT_BG = identifier("textures/gui/background.png")
+        val EXTENDED_BG = identifier("textures/gui/extended_background.png")
     }
 
     enum class AnimationState {

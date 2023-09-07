@@ -68,11 +68,6 @@ abstract class MachineBlockEntity<T : MachineConfig>(type: BlockEntityType<*>, p
         hand: Hand,
         hit: BlockHitResult
     ): ActionResult {
-        if (player.isSneaking) {
-            tier = Tier.values()[(tier.ordinal + 1) % 4]
-            sync()
-            return ActionResult.SUCCESS
-        }
         if (player.openHandledScreen(this).isPresent) {
             return ActionResult.SUCCESS
         }

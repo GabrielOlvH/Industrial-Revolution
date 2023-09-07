@@ -6,7 +6,9 @@ import me.steven.indrev.packets.client.ClientPackets
 import me.steven.indrev.screens.MACHINE_SCREEN_HANDLER
 import me.steven.indrev.screens.machine.MachineHandledScreen
 import me.steven.indrev.api.Tier
+import me.steven.indrev.events.client.OutlineRenderer
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.minecraft.client.gui.screen.ingame.HandledScreens
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories
 import net.minecraft.screen.PlayerScreenHandler
@@ -20,7 +22,5 @@ fun initClient() {
         BlockEntityRendererFactories.register(machine.type) { ctx -> machine.blockEntityRenderer(ctx) }
     }
 
-   /* ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register { _, registry ->
-        Tier.values().forEach { t -> registry.register(t.getOverlaySprite().textureId) }
-    }*/
+    WorldRenderEvents.BLOCK_OUTLINE.register(OutlineRenderer)
 }

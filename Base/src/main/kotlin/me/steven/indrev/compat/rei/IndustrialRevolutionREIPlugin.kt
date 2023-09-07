@@ -14,9 +14,7 @@ import me.steven.indrev.blocks.*
 import me.steven.indrev.recipes.*
 import me.steven.indrev.screens.machine.grid
 import me.steven.indrev.screens.widgets.WidgetSlot
-import me.steven.indrev.utils.INPUT_COLOR
-import me.steven.indrev.utils.OUTPUT_COLOR
-import me.steven.indrev.utils.argb
+import me.steven.indrev.utils.*
 import me.steven.indrev.utils.identifier
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.gui.Element
@@ -105,7 +103,7 @@ class IndustrialRevolutionREIPlugin : REIClientPlugin {
             }
 
             override fun render(ctx: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-                val (alpha, red, green, blue) = argb(color)
+                val (alpha, red, green, blue) = color
                 ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
                 if (!big) {
                     ctx.drawTexture(WidgetSlot.MACHINE_SLOT_TEXTURE, point.x - (22 - 18) / 2, point.y - (22 - 18) / 2, 0f, 0f, 22, 22, 22, 22)

@@ -192,7 +192,7 @@ open class WidgetBar(
             ) {
                 override fun drawBar(ctx: DrawContext, x: Int, y: Int) {
                     if (ProcessingBoost.getActiveBoosts(machine).isNotEmpty()) {
-                        val (alpha, red, green, blue) = argb(0xFFFFA8A8.toInt())
+                        val (alpha, red, green, blue) = 0xFFFFA8A8.toInt()
                         ctx.setShaderColor(red / 256f, green / 256f, blue / 256f, alpha / 256f)
                     }
                     super.drawBar(ctx, x, y)

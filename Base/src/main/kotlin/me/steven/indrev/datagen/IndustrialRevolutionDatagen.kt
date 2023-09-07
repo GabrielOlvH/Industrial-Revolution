@@ -142,7 +142,10 @@ class IndustrialRevolutionDatagen : DataGeneratorEntrypoint {
                         itemModelGenerator.register(item, Models.GENERATED)
                 }
             }
-            itemModelGenerator.register(HEAT_SINK, Models.GENERATED)
+
+            arrayOf(HEAT_SINK, TIER_UPGRADE_MK2, TIER_UPGRADE_MK3, TIER_UPGRADE_MK4, CIRCUIT_MK1, CIRCUIT_MK2, CIRCUIT_MK3, CIRCUIT_MK4).forEach { item ->
+                itemModelGenerator.register(item, Models.GENERATED)
+            }
         }
     }
 }

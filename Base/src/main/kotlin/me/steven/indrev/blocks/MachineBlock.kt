@@ -1,7 +1,9 @@
 package me.steven.indrev.blocks
 
+import me.steven.indrev.api.Tier
 import me.steven.indrev.blockentities.MachineBlockEntity
 import me.steven.indrev.components.MachineItemInventory
+import me.steven.indrev.items.TierUpgradeItem
 import me.steven.indrev.utils.Directions
 import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant
@@ -23,6 +25,7 @@ import net.minecraft.text.Text
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.Hand
+import net.minecraft.util.Identifier
 import net.minecraft.util.ItemScatterer
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
@@ -32,7 +35,7 @@ import net.minecraft.world.BlockView
 import net.minecraft.world.World
 import team.reborn.energy.api.EnergyStorage
 
-class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos, BlockState) -> BlockEntity) : Block(settings), BlockEntityProvider {
+class MachineBlock(val id: Identifier, settings: Settings, private val blockEntityFactory: (BlockPos, BlockState) -> BlockEntity) : Block(settings), BlockEntityProvider {
 
     init {
         ItemStorage.SIDED.registerForBlocks({ _, _, _, be, dir ->
@@ -86,6 +89,16 @@ class MachineBlock(settings: Settings, private val blockEntityFactory: (BlockPos
     ): ActionResult {
         if (world.isClient) return ActionResult.SUCCESS
         val blockEntity = world.getBlockEntity(pos) as? MachineBlockEntity<*> ?: return ActionResult.PASS
+        val stack = player.getStackInHand(hand)
+        val item = stack.item
+        val machine = MACHINES[id]
+        if (item is TierUpgradeItem && machine != null && item.canUse(blockEntity, machine)) {
+            blockEntity.tier = item.to
+            blockEntity.markDirty()
+            blockEntity.sync()
+            if (!player.isCreative) stack.decrement(1)
+            return ActionResult.SUCCESS
+        }
         return blockEntity.onUse(state, world, pos, player, hand, hit)
     }
 
