@@ -9,6 +9,7 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.redirectDrops
+import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.block.BlockState
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.entity.passive.AnimalEntity
@@ -37,7 +38,6 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "rancher") }
     var feedBabies: Boolean by autosync(FEED_BABIES_ID, true)
     var mateAdults: Boolean by autosync(MATE_ADULTS, true)
     var matingLimit: Int by autosync(MATING_LIMIT, 16)
@@ -54,6 +54,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
             return
         } else workingState = true
         val swordStack = inventory.inputSlots.map { inventory.getStack(it) }.firstOrNull { it.item is SwordItem }
+        val fakePlayer = FakePlayer.get(world as ServerWorld)
         fakePlayer.inventory.selectedSlot = 0
         if (swordStack != null && !swordStack.isEmpty && swordStack.damage < swordStack.maxDamage) {
             val swordItem = swordStack.item as SwordItem
@@ -93,6 +94,7 @@ class RancherBlockEntity(tier: Tier, pos: BlockPos, state: BlockState)
     }
 
     private fun tryFeed(size: Int, animalEntity: AnimalEntity, stack: ItemStack): ActionResult {
+        val fakePlayer = FakePlayer.get(world as ServerWorld)
         if (animalEntity.isBreedingItem(stack)) {
             val breedingAge: Int = animalEntity.breedingAge
             if (!world!!.isClient && breedingAge == 0 && animalEntity.canEat() && size <= matingLimit && mateAdults) {

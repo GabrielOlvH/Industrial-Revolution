@@ -8,6 +8,7 @@ import me.steven.indrev.inventories.inventory
 import me.steven.indrev.items.upgrade.Enhancer
 import me.steven.indrev.registry.MachineRegistry
 import me.steven.indrev.utils.redirectDrops
+import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.block.BlockState
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.boss.WitherEntity
@@ -37,7 +38,6 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
 
     var cooldown = 0.0
     override var range = 5
-    private val fakePlayer by lazy { IndustrialRevolution.FAKE_PLAYER_BUILDER.create(world!!.server, world as ServerWorld, "slaughter") }
 
     override fun machineTick() {
         if (world?.isClient == true) return
@@ -45,6 +45,7 @@ class SlaughterBlockEntity(tier: Tier, pos: BlockPos, state: BlockState) : AOEMa
         val enhancers = enhancerComponent!!.enhancers
         cooldown += getProcessingSpeed()
         if (cooldown < config.processSpeed) return
+        val fakePlayer = FakePlayer.get(world as ServerWorld)
         val source = world?.damageSources?.playerAttack(fakePlayer)
         val mobs = world?.getEntitiesByClass(LivingEntity::class.java, getWorkingArea()) { e -> e !is PlayerEntity && e !is ArmorStandEntity && !e.isDead && !e.isInvulnerableTo(source) && (e !is WitherEntity || e.invulnerableTimer <= 0) } ?: emptyList()
         if (mobs.isEmpty() || !canUse(getEnergyCost())) {

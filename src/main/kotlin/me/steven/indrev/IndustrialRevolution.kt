@@ -1,7 +1,5 @@
 package me.steven.indrev
 
-import dev.cafeteria.fakeplayerapi.server.FakePlayerBuilder
-import dev.cafeteria.fakeplayerapi.server.FakeServerPlayer
 import me.steven.indrev.api.IRServerPlayerEntityExtension
 import me.steven.indrev.api.machines.Tier
 import me.steven.indrev.config.IRConfig
@@ -153,13 +151,4 @@ object IndustrialRevolution : ModInitializer {
     val LASER_SOUND_ID = identifier("laser")
     val LASER_SOUND_EVENT = SoundEvent.of(LASER_SOUND_ID)
     val LASER_PARTICLE = FabricParticleTypes.simple()
-
-    val FAKE_PLAYER_BUILDER = FakePlayerBuilder(identifier("default_fake_player")) { builder, server, world, profile ->
-        object : FakeServerPlayer(builder, server, world, profile) {
-            override fun isCreative(): Boolean = false
-            override fun isSpectator(): Boolean = false
-            override fun playSound(sound: SoundEvent?, volume: Float, pitch: Float) {}
-            override fun playSound(event: SoundEvent?, category: SoundCategory?, volume: Float, pitch: Float) {}
-        }
-    }
 }
