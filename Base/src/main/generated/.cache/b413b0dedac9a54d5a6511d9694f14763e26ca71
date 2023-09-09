@@ -1,4 +1,4 @@
-// 1.20.1	2023-08-31T12:58:05.8447601	Industrial Revolution/Tags for minecraft:item
+// 1.20.1	2023-09-09T11:42:24.6385935	Industrial Revolution/Tags for minecraft:item
 da5a47c16611227821a1bd97c07ab5be2548cfb7 data\c\tags\items\tin_blocks.json
 e29f59711f533dbd1f41e1603775e21aee923816 data\c\tags\items\bronze_plates.json
 84ea60d745583a3108e714417641b35efa98ff5a data\c\tags\items\steel_dusts.json
@@ -35,11 +35,11 @@ dae60ffd552a0ec0efcfc739056674b33988f661 data\c\tags\items\raw_lead_ores.json
 49486713b63f5db6a3b4c86345057f82fb1d69fe data\c\tags\items\tin_ores.json
 014b1fef5fc541af52bc185b6c67fc35ce5e6fc0 data\c\tags\items\gold_dusts.json
 8711354a98b884ab4ec01fe2e8206b2845dd4bd2 data\c\tags\items\tungsten_ores.json
-3f4038d63dc35b28511860a7f6e9e03aedde5389 data\c\tags\items\raw_tin_ores.json
 03059be5875b620f21c5e8df4abc187164b2f4d5 data\c\tags\items\electrum_blocks.json
+3f4038d63dc35b28511860a7f6e9e03aedde5389 data\c\tags\items\raw_tin_ores.json
 fedbe22c2a186e00a153862d5a704037e1926488 data\c\tags\items\silver_ores.json
-d5b6a9423027df88beafcd49d9464148bc67b8e3 data\c\tags\items\copper_nuggets.json
 e0543f22ee03deaca857a789f03b7c6c9b2c6d06 data\c\tags\items\iron_plates.json
+d5b6a9423027df88beafcd49d9464148bc67b8e3 data\c\tags\items\copper_nuggets.json
 8d9cbf419856165e4abf00cef76612b34f15c36b data\c\tags\items\copper_plates.json
 b03e49a68f639ea64abbfa02f769afea2bc009bd data\c\tags\items\lead_nuggets.json
 0ea829beee27e72856e24dbd3584f7ddfe3222ce data\c\tags\items\tungsten_ingots.json
@@ -56,7 +56,7 @@ d06e42efdf90ff20c40671ae40c3e5ae2c4f04d4 data\c\tags\items\gold_plates.json
 55626fc23fc59abd4eaea60f3eb38f2a9fc9aa5b data\c\tags\items\tin_dusts.json
 506c5372a02d79825f8d715ce5d12c5ead6e2fa0 data\c\tags\items\silver_ingots.json
 40042992dbf71465318c9a32c066253cdfbe9a6b data\c\tags\items\silver_dusts.json
-6d5304dffebd86a7587578bc96c598929988a98d data\c\tags\items\tin_ingots.json
 6485c7d711749acbb3d7952f0f390734325bf4e7 data\c\tags\items\bronze_dusts.json
 24cfc800241ecc06b1bdc350be02d4ea8b1fa827 data\c\tags\items\bronze_nuggets.json
+6d5304dffebd86a7587578bc96c598929988a98d data\c\tags\items\tin_ingots.json
 cf8198c6e13c09d1139edd215852e76fc6295142 data\c\tags\items\lead_ores.json

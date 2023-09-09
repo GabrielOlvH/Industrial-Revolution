@@ -1,4 +1,4 @@
-// 1.20.1	2023-08-31T12:58:05.8405239	Industrial Revolution/Model Definitions
+// 1.20.1	2023-09-09T11:42:24.6310362	Industrial Revolution/Model Definitions
 2cb3d1b788ca6b393d9cb54403ee476baedfb96b assets\indrev-base\models\item\lead_dust.json
 50d75050b3f84f59dcfb0896fefe5004694398d6 assets\indrev-base\blockstates\bronze_block.json
 7727f72d23c3d9365ab43806f6eacd726b6522dd assets\indrev-base\models\block\raw_tungsten_block.json
@@ -11,11 +11,11 @@ f21cc465d8a747be72f205e153bd2abf60de4f4b assets\indrev-base\models\block\silver_
 4a7537817fccb6bcb894097f262e6aeb8e3ada39 assets\indrev-base\models\block\raw_tin_block.json
 4abf12503a59fb180e297270c8b387970229a50c assets\indrev-base\models\item\bronze_ingot.json
 04337f6e4b8250e3434e7fafd04d6aacb84cee5e assets\indrev-base\models\block\silver_ore.json
-50fa626ab47f063fc72c285ccfb4d006e3327687 assets\indrev-base\models\item\tier_upgrade_mk2.json
 64abfd8abfe35d7ad6c3024595fe10b451f5340f assets\indrev-base\models\item\deepslate_silver_ore.json
+50fa626ab47f063fc72c285ccfb4d006e3327687 assets\indrev-base\models\item\tier_upgrade_mk2.json
 a6e4392d6a774009d0638238d83971a687e4e671 assets\indrev-base\models\item\bronze_block.json
-ca6a4354104b03e7cf24a202448f6872f63c98f6 assets\indrev-base\models\item\silver_dust.json
 d089e5e37ce61f71188fe217d4549cdcf51b4469 assets\indrev-base\models\item\silver_block.json
+ca6a4354104b03e7cf24a202448f6872f63c98f6 assets\indrev-base\models\item\silver_dust.json
 2fb3c606cdc22eb285ebd6976120d050d7cd1f33 assets\indrev-base\models\item\copper_nugget.json
 f77c1fea248541d336bd9be41dc9cb58568d2c26 assets\indrev-base\models\item\tungsten_ore.json
 42c5f5cc5cbfb95bbcd144ec0ec6fea029917a8b assets\indrev-base\models\item\tin_block.json
@@ -84,8 +84,8 @@ e252935c8a16c1f2aedadc2ca85af2df927123a5 assets\indrev-base\models\item\silver_p
 f639052cfc8f7e29e21f2294b0ffc78278cc065a assets\indrev-base\models\item\circuit_mk4.json
 6c7a95d9e722d43852800ef093db2026f4e05eb9 assets\indrev-base\models\item\electrum_block.json
 97c73bb021251abb8604c70acc2c769499acb030 assets\indrev-base\models\item\bronze_plate.json
-e7b46003c430a99f385b59061bfefbcd5d2c953e assets\indrev-base\models\item\electrum_dust.json
 007a36e9a3414e6ddf46ec861807b650727eadf4 assets\indrev-base\models\item\lead_block.json
+e7b46003c430a99f385b59061bfefbcd5d2c953e assets\indrev-base\models\item\electrum_dust.json
 f181f20cd7e7d4916cafa818692c179cdc95dcae assets\indrev-base\models\item\deepslate_tin_ore.json
 bab3b6f0c76c5d8c04e286e2dbe9687aecf8a76e assets\indrev-base\blockstates\deepslate_lead_ore.json
 843dc44ed8c85d40f09d410bbb7452f0a3884b0b assets\indrev-base\blockstates\steel_block.json

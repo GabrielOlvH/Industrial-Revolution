@@ -5,9 +5,12 @@ import me.steven.indrev.transportation.blocks.CableBlock
 import me.steven.indrev.transportation.blocks.FluidPipeBlock
 import me.steven.indrev.transportation.blocks.ItemPipeBlock
 import me.steven.indrev.transportation.blocks.PipeBlockEntity
+import me.steven.indrev.transportation.events.PlayerEvents
 import me.steven.indrev.transportation.events.ServerEvents
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.item.BlockItem
 import net.minecraft.item.Item
@@ -79,4 +82,6 @@ fun init() {
 
     ServerLifecycleEvents.SERVER_STOPPED.register(ServerEvents)
     ServerTickEvents.START_WORLD_TICK.register(ServerEvents)
+    ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register(ServerEvents)
+    ServerPlayConnectionEvents.JOIN.register(PlayerEvents)
 }

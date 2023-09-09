@@ -21,7 +21,7 @@ import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
 abstract class StoragePipeBlock(tier: Tier) : PipeBlock(tier), BlockEntityProvider {
-    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = null
+    override fun createBlockEntity(pos: BlockPos, state: BlockState): BlockEntity? = PipeBlockEntity(pos, state)
 
     override fun <T : BlockEntity?> getTicker(
         world: World,
@@ -51,7 +51,7 @@ abstract class StoragePipeBlock(tier: Tier) : PipeBlock(tier), BlockEntityProvid
             val pipeNetwork = world.networkManager.networksByPos[pos.asLong()] ?: return ActionResult.PASS
             val offset = pos.offset(dir)
             if (pipeNetwork.contains(offset) && pipeNetwork.isValidStorage(world, offset, dir.opposite)) {
-                val blockEntity = getOrCreateBlockEntity(world, player as ServerPlayerEntity, pos, state)
+                val blockEntity = world.getBlockEntity(pos) as? PipeBlockEntity ?: return ActionResult.PASS//getOrCreateBlockEntity(world, player as ServerPlayerEntity, pos, state)
                 val type = blockEntity.cycle(dir)
                 blockEntity.markDirty()
                 blockEntity.sync()

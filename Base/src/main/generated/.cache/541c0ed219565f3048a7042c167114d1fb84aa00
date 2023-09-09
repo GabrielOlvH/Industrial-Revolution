@@ -1,4 +1,4 @@
-// 1.20.1	2023-08-31T12:58:05.8325086	Industrial Revolution/Tags for minecraft:block
+// 1.20.1	2023-09-09T11:42:24.615457	Industrial Revolution/Tags for minecraft:block
 9fa79297d02e6c88f142eba37b882487f0f08726 data\c\tags\blocks\raw_tungsten_blocks.json
 d5091a3ae279a4a04c47e3920eb57f56fe77e1e4 data\c\tags\blocks\raw_tin_blocks.json
 fedbe22c2a186e00a153862d5a704037e1926488 data\c\tags\blocks\silver_ores.json
@@ -13,5 +13,5 @@ c8cc0d6808e9e7167aa30acf3c051fa3e6cd7abe data\c\tags\blocks\steel_blocks.json
 ab17837a1ec92b743b7ca29359ab72b269df7089 data\c\tags\blocks\raw_silver_blocks.json
 49486713b63f5db6a3b4c86345057f82fb1d69fe data\c\tags\blocks\tin_ores.json
 03059be5875b620f21c5e8df4abc187164b2f4d5 data\c\tags\blocks\electrum_blocks.json
-b3c634475c1cab77756f09044cdf4543aa46f47c data\c\tags\blocks\bronze_blocks.json
 75c34d27161916e459841c89ec77a59132c870ee data\c\tags\blocks\silver_blocks.json
+b3c634475c1cab77756f09044cdf4543aa46f47c data\c\tags\blocks\bronze_blocks.json

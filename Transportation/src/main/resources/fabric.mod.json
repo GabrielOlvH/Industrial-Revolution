@@ -23,6 +23,9 @@
     ],
     "client": [
       "me.steven.indrev.transportation.IndustrialRevolutionTransportationClientKt::initClient"
+    ],
+    "fabric-datagen": [
+      "me.steven.indrev.transportation.datagen.IndustrialRevolutionTransportationDatagen"
     ]
   },
   "mixins": [

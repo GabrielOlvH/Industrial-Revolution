@@ -78,8 +78,6 @@ class PipeBlockEntity(pos: BlockPos, state: BlockState) : BlockEntity(PIPE_BLOCK
         return nbt
     }
 
-
-
     override fun getRenderAttachmentData(): Int2IntOpenHashMap {
         return config
     }

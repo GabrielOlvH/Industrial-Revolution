@@ -22,23 +22,20 @@ object NetworkPathRenderer : WorldRenderEvents.AfterTranslucent {
             while (it.hasNext()) {
                 val n = it.next()
                 val alpha = time / ClientPipeNetworkData.PATH_RENDER_TIME.toFloat()
-                render(ctx, BlockPos.fromLong(c), BlockPos.fromLong(n), 0x49c5f2, alpha.coerceAtMost(.5f))
+                render(ctx, BlockPos.fromLong(c), BlockPos.fromLong(n), 0x49c5f2, alpha.coerceAtMost(.5f),  0.12f)
                 c = n
             }
             matrices.pop()
         }
     }
 
-    fun render(context: WorldRenderContext, pos1: BlockPos, pos2: BlockPos, color: Int, alpha: Float) {
-
+    fun render(context: WorldRenderContext, pos1: BlockPos, pos2: BlockPos, color: Int, alpha: Float, width: Float) {
         val start = Vector3f(pos1.x + 0.5f, pos1.y + 0.5f, pos1.z + 0.5f)
         val end = Vector3f(pos2.x + 0.5f, pos2.y + 0.5f, pos2.z + 0.5f)
 
         val red = ColorHelper.Argb.getRed(color) / 255f
         val green = ColorHelper.Argb.getGreen(color) / 255f
         val blue = ColorHelper.Argb.getBlue(color) / 255f
-
-        val width =  0.12f
 
         RenderSystem.setShader(GameRenderer::getRenderTypeLinesProgram)
         RenderSystem.disableCull()

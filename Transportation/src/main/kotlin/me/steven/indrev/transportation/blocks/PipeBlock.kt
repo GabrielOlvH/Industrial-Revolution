@@ -99,14 +99,14 @@ abstract class PipeBlock(val tier: Tier) : Block(FabricBlockSettings.copyOf(Bloc
             Int2ObjectOpenHashMap<VoxelShape>(64, 0.25f)
         }
 
-        val DOWN_SHAPE: VoxelShape = createCuboidShape(6.5, 0.0, 6.5, 9.5, 6.5, 9.5)
-        val UP_SHAPE: VoxelShape = createCuboidShape(6.5, 9.5, 6.5, 9.5, 16.0, 9.5)
-        val SOUTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 9.5, 9.5, 9.5, 16.0)
-        val NORTH_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 0.0, 9.5, 9.5, 6.5)
-        val EAST_SHAPE: VoxelShape = createCuboidShape(9.5, 6.5, 6.5, 16.0, 9.5, 9.5)
-        val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 6.5, 6.5, 6.5, 9.5, 9.5)
+        val DOWN_SHAPE: VoxelShape = createCuboidShape(5.5, 0.0, 5.5, 10.5, 5.5, 10.5)
+        val UP_SHAPE: VoxelShape = createCuboidShape(5.5, 10.5, 5.5, 10.5, 15.5, 10.5)
+        val SOUTH_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 10.5, 10.5, 10.5, 15.5)
+        val NORTH_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 0.0, 10.5, 10.5, 5.5)
+        val EAST_SHAPE: VoxelShape = createCuboidShape(10.5, 5.5, 5.5, 15.5, 10.5, 10.5)
+        val WEST_SHAPE: VoxelShape = createCuboidShape(0.0, 5.5, 5.5, 5.5, 10.5, 10.5)
 
-        val CENTER_SHAPE: VoxelShape = createCuboidShape(6.5, 6.5, 6.5, 9.5, 9.5, 9.5)
+        val CENTER_SHAPE: VoxelShape = createCuboidShape(5.5, 5.5, 5.5, 10.5, 10.5, 10.5)
 
         private fun getShape(direction: Direction): VoxelShape {
             var shape = VoxelShapes.empty()

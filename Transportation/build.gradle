@@ -1,4 +1,4 @@
-archivesBaseName = 'indrev-base'
+archivesBaseName = 'indrev-transportation'
 
 repositories {
 }
@@ -6,4 +6,28 @@ repositories {
 dependencies {
     api project(path: ":API", configuration: "namedElements")
     include project(path: ":API", configuration: "namedElements")
+}
+
+loom {
+    runs {
+        datagenClient {
+            inherit client
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.modid=indrev-transportation"
+
+            runDir "build/datagen"
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += [
+                    'src/main/generated'
+            ]
+        }
+    }
 }
